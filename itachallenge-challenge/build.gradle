@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'jacoco'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.itachallenge.challenge'
+        )
+    }
+}
+
+group = 'ita.challenges'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+// JaCoCo configuration: https://docs.gradle.org/current/userguide/jacoco_plugin.html
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.7
+            }
+        }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+    }
+}
