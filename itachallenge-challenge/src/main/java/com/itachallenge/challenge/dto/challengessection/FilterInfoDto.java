@@ -1,10 +1,12 @@
 package com.itachallenge.challenge.dto.challengessection;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 public class FilterInfoDto {
 
     private final String filterName;
@@ -22,16 +24,16 @@ public class FilterInfoDto {
         this.visibility = visibility;
     }
 
-    public static FilterInfoDto forDifficulties(){
-        List<String> options = List.of("Fácil", "Media", "Difícil");  //TODO: get from enum
-        List<String> minRoleWithFilterNotHidden = List.of("ROLE_GUEST");  //TODO: get from enum
-        return new FilterInfoDto("Dificultad",options,false, minRoleWithFilterNotHidden);
-    }
-
     public static FilterInfoDto forLanguages(){
         List<String> options = List.of("Javascript", "Java", "PHP", "Python");  //TODO: get from enum
         List<String> minRoleWithFilterNotHidden = List.of("ROLE_GUEST");  //TODO: get from enum
         return new FilterInfoDto("Lenguaje",options,false, minRoleWithFilterNotHidden);
+    }
+
+    public static FilterInfoDto forDifficulties(){
+        List<String> options = List.of("Fácil", "Media", "Difícil");  //TODO: get from enum
+        List<String> minRoleWithFilterNotHidden = List.of("ROLE_GUEST");  //TODO: get from enum
+        return new FilterInfoDto("Dificultad",options,false, minRoleWithFilterNotHidden);
     }
 
     public static FilterInfoDto forProgress(){
