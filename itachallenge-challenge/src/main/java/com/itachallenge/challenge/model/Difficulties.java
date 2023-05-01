@@ -2,8 +2,7 @@ package com.itachallenge.challenge.model;
 
 public enum Difficulties {
     X; //TODO
-
-    public String toUpperCase(){
+     public String getFriendlyValue(){
         return null; //TODO
     }
 }

@@ -2,8 +2,7 @@ package com.itachallenge.challenge.model;
 
 public enum Progress {
     X; //TODO
-
-    public String toUpperCase(){
+    public String getFriendlyValue(){
         return null; //TODO
     }
 }
