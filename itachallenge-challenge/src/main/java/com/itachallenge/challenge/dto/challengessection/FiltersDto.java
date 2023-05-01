@@ -20,7 +20,7 @@ public class FiltersDto {
     }
 
     public static FiltersDto withAllFilters(){
-        return new FiltersDto(List.of(FilterInfoDto.forLanguages(), FilterInfoDto.forDifficulties(), FilterInfoDto.forProgress()));
+        return new FiltersDto(List.of(FilterInfoDto.forTechnologies(), FilterInfoDto.forDifficulties(), FilterInfoDto.forProgress()));
     }
 
     public int getCount(){
