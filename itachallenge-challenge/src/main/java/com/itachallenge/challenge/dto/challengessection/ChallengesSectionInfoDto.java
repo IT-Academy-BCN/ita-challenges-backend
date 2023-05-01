@@ -20,7 +20,7 @@ public class ChallengesSectionInfoDto {
         this.sortInfo = sortInfo;
     }
 
-    public static ChallengesSectionInfoDto withAllOptions(){
+    public static ChallengesSectionInfoDto withAllInfo(){
         return new ChallengesSectionInfoDto(FiltersDto.withAllFilters(), SortInfoDto.withAllOptions());
     }
 }
