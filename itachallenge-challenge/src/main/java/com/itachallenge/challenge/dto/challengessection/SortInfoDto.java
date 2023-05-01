@@ -1,7 +1,10 @@
 package com.itachallenge.challenge.dto.challengessection;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class SortInfoDto {
 
     private final List<String> options;
