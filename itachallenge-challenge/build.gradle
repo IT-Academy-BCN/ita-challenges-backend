@@ -30,6 +30,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
 
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -37,6 +40,8 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
 
 }
