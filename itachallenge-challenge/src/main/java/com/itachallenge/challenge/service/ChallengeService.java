@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 public class ChallengeService {
 
     public Mono<ChallengesSectionInfoDto> getChallengesSectionOptions(){
-        return null; //TODO
+        return Mono.just(ChallengesSectionInfoDto.withAllInfo());
     }
 }

@@ -35,5 +35,4 @@ public class ChallengeController {
     public Mono<ChallengesSectionInfoDto> getChallengesSectionOptions(){
         return challengeService.getChallengesSectionOptions();
     }
-
 }
