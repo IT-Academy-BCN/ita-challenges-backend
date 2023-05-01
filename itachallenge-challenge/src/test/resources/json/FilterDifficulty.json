@@ -1,0 +1,13 @@
+{
+  "filterName": "Dificultad",
+  "options": [
+    "Fácil",
+    "Media",
+    "Difícil"
+  ],
+  "uniqueOption": false,
+  "visibility": [
+    "ROLE_GUEST"
+  ],
+  "count": 3
+}
