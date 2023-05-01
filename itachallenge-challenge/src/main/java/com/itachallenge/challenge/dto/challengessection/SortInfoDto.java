@@ -9,7 +9,11 @@ import java.util.List;
 @Setter
 public class SortInfoDto {
 
-    private final List<String> options;
+    private List<String> options;
+
+    private SortInfoDto() {
+        //for tests when deserialization
+    }
 
     private SortInfoDto(List<String> options) {
         this.options = options;

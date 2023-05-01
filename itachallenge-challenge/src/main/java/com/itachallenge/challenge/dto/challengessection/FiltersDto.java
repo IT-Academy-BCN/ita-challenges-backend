@@ -11,6 +11,10 @@ public class FiltersDto {
 
     private List<FilterInfoDto> filtersInfo;
 
+    private FiltersDto() {
+        //for tests when deserialization
+    }
+
     private FiltersDto(List<FilterInfoDto> filtersInfo) {
         this.filtersInfo = filtersInfo;
     }

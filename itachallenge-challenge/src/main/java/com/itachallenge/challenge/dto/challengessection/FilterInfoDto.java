@@ -17,6 +17,10 @@ public class FilterInfoDto {
 
     private List<String> visibility;
 
+    private FilterInfoDto() {
+        //for tests when deserialization
+    }
+
     private FilterInfoDto(String filterName, List<String> options, boolean uniqueOption, List<String> visibility) {
         this.filterName = filterName;
         this.options = options;
