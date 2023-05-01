@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,16 +31,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static reactor.core.publisher.Mono.when;
 
-@ExtendWith(SpringExtension.class)
-//@WebFluxTest(controllers = ChallengeController.class)
-@SpringBootTest
+//@ExtendWith(SpringExtension.class)
+@WebFluxTest(controllers = ChallengeController.class)
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@AutoConfigureWebTestClient
 class ChallengeControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
 
-    @MockBean
-    private ChallengeService challengeService;
+    //@MockBean
+    //private ChallengeService challengeService;
 
     @Test
     void test() {
@@ -52,7 +54,8 @@ class ChallengeControllerTest {
 
         ChallengesSectionInfoDto expected = mapJsonFileToObject(
                 "json/ChallengesSectionInfo.json", ChallengesSectionInfoDto.class);
-        when(challengeService.getChallengesSectionOptions()).thenReturn(Mono.just(expected));
+
+        //when(challengeService.getChallengesSectionOptions()).thenReturn(Mono.just(expected));
 
         webTestClient.get()
                 .uri(ChallengeController.SECTION)
@@ -62,8 +65,6 @@ class ChallengeControllerTest {
                 .expectBody(ChallengesSectionInfoDto.class)
                 .value(Assertions::assertNotNull)
                 .consumeWith(result -> assertThat(result).usingRecursiveComparison().isEqualTo(expected));
-
-
     }
 
     <T> T mapJsonFileToObject(String jsonPath, Class<T> targetClass){

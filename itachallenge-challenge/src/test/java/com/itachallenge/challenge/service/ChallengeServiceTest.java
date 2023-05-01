@@ -29,6 +29,7 @@ class ChallengeServiceTest {
     @Autowired
     private ChallengeService challengeService;
 
+
     @Test
     @DisplayName("Get Challenges Section Options Test")
     void getChallengesSectionOptionsTest(){
