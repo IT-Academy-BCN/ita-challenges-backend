@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ChallengeControllerTest {
+class ChallengeControllerTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals(1, 1);
     }
 }
