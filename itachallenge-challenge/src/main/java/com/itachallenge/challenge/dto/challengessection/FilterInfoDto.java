@@ -1,5 +1,8 @@
 package com.itachallenge.challenge.dto.challengessection;
 
+import com.itachallenge.challenge.model.Difficulties;
+import com.itachallenge.challenge.model.Progress;
+import com.itachallenge.challenge.model.Technologies;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,20 +31,20 @@ public class FilterInfoDto {
         this.visibility = visibility;
     }
 
-    public static FilterInfoDto forLanguages(){
-        List<String> options = List.of("Javascript", "Java", "PHP", "Python");  //TODO: get from enum
+    public static FilterInfoDto forTechnologies(){
+        List<String> options = Technologies.getAllValues();
         List<String> minRoleWithFilterNotHidden = List.of("ROLE_GUEST");  //TODO: get from enum
         return new FilterInfoDto("Lenguaje",options,false, minRoleWithFilterNotHidden);
     }
 
     public static FilterInfoDto forDifficulties(){
-        List<String> options = List.of("Fácil", "Media", "Difícil");  //TODO: get from enum
+        List<String> options = Difficulties.getAllValues();
         List<String> minRoleWithFilterNotHidden = List.of("ROLE_GUEST");  //TODO: get from enum
         return new FilterInfoDto("Dificultad",options,false, minRoleWithFilterNotHidden);
     }
 
     public static FilterInfoDto forProgress(){
-        List<String> options = List.of("No empezados", "Falta completar", "Completados");  //TODO: get from enum
+        List<String> options = Progress.getAllValues();
         List<String> minRoleWithFilterNotHidden = List.of("ROLE_USER");  //TODO: get from enum
         return new FilterInfoDto("Progreso",options,false, minRoleWithFilterNotHidden);
     }

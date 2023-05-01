@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.dto.challengessection;
 
+import com.itachallenge.challenge.model.SortingOptions;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,7 +21,7 @@ public class SortInfoDto {
     }
 
     public static SortInfoDto withAllOptions(){
-        return new SortInfoDto(List.of("Popularidad","Fecha")); //TODO: get from enum
+        return new SortInfoDto(SortingOptions.getAllValues());
     }
 
     public int getCount(){
