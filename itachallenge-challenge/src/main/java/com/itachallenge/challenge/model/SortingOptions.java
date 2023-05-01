@@ -12,7 +12,6 @@ public enum SortingOptions {
     }
 
     public String getFriendlyValue(){
-
         return value;
     }
 }

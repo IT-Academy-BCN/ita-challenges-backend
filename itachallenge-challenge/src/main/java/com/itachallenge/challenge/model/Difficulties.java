@@ -1,8 +1,18 @@
 package com.itachallenge.challenge.model;
 
 public enum Difficulties {
-    X; //TODO
-     public String getFriendlyValue(){
-        return null; //TODO
+
+    EASY("Fácil"),
+    MEDIUM("Media"),
+    HARD("Difícil");
+
+    private final String value;
+
+    Difficulties(String value) {
+        this.value = value;
+    }
+
+    public String getFriendlyValue(){
+        return value;
     }
 }
