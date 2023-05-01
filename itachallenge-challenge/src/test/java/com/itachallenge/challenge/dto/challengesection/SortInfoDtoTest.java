@@ -2,7 +2,6 @@ package com.itachallenge.challenge.dto.challengesection;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.challenge.dto.challengessection.FiltersDto;
 import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
