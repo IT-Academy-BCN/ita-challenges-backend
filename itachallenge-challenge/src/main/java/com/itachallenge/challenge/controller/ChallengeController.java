@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 
-import com.itachallenge.challenge.dto.challengessection.ChallengesSectionOptionsDto;
+import com.itachallenge.challenge.dto.challengessection.ChallengesSectionInfoDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
-    public Mono<ChallengesSectionOptionsDto> getChallengesSectionOptions(){
+    public Mono<ChallengesSectionInfoDto> getChallengesSectionOptions(){
         return null; //TODO
     }
 

@@ -1,8 +1,8 @@
 package com.itachallenge.challenge.dto.challengessection;
 
-public class SortingOptionsDto {
+public class FiltersDto {
 
-    public static SortingOptionsDto withAllOptions(){
+    public static FiltersDto withAllFilters(){
         return null; //TODO
     }
 }
