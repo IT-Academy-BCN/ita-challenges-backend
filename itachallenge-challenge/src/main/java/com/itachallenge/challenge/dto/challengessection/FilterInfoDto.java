@@ -9,13 +9,13 @@ import java.util.List;
 @Setter
 public class FilterInfoDto {
 
-    private final String filterName;
+    private String filterName;
 
-    private final List<String> options;
+    private List<String> options;
 
-    private final boolean uniqueOption;
+    private boolean uniqueOption;
 
-    private final List<String> visibility;
+    private List<String> visibility;
 
     private FilterInfoDto(String filterName, List<String> options, boolean uniqueOption, List<String> visibility) {
         this.filterName = filterName;
