@@ -38,6 +38,8 @@ dependencies {
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    //for suite tests
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-engine', version: '1.8.1'
 
     //lombok
     compileOnly 'org.projectlombok:lombok:1.18.26'
