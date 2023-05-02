@@ -3,8 +3,11 @@ package com.itachallenge.challenge.dto.challengesection;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
+import com.itachallenge.challenge.model.SortingOptions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 
@@ -13,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +25,10 @@ class SortInfoDtoTest {
     @Test
     @DisplayName("Init SortInfoDto with all options info test.")
     void withAllFiltersTest(){
+        try(MockedStatic<SortingOptions> SortingEnumMocked = Mockito.mockStatic(SortingOptions.class)) {
+            List<String> values = List.of("Popularidad", "Fecha");
+            SortingEnumMocked.when(SortingOptions::getAllValues).thenReturn(values);
+        }
         SortInfoDto result = SortInfoDto.withAllOptions();
         SortInfoDto expected = mapJsonFileToObject("json/SortInfo.json", SortInfoDto.class);
         assertThat(result).usingRecursiveComparison().isEqualTo(expected);
