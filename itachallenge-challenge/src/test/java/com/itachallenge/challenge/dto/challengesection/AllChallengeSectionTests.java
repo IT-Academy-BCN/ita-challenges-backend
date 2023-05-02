@@ -3,7 +3,7 @@ package com.itachallenge.challenge.dto.challengesection;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
-/*
+
 @Suite
 @SelectClasses({
         ChallengesSectionInfoDtoTest.class,
@@ -11,7 +11,5 @@ import org.junit.platform.suite.api.Suite;
         FilterInfoDtoTest.class,
         SortInfoDtoTest.class
 })
-
- */
 public class AllChallengeSectionTests {
 }
