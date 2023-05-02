@@ -24,40 +24,26 @@ repositories {
 }
 
 dependencies {
-
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.0.6'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-commons', version: '4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
 
-    implementation group: 'org.springframework', name: 'spring-context-support', version: '5.3.15'
-    implementation group: 'org.springframework', name: 'spring-orm', version: '5.3.13'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.6.1'
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
-
-
-
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.6.1'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-    testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
+    testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
 
-    testCompileOnly 'org.projectlombok:lombok:1.18.26'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    //lombok
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
-
-
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-
-
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
 }
 
