@@ -2,9 +2,12 @@ package com.itachallenge.challenge.dto.challengesection;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.dto.challengessection.FilterInfoDto;
 import com.itachallenge.challenge.dto.challengessection.FiltersDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 
@@ -22,6 +25,18 @@ class FilterDtoTest {
     @Test
     @DisplayName("Init FiltersDto with all filters test.")
     void withAllFiltersTest(){
+        FilterInfoDto expectedTechnologies = mapJsonFileToObject(
+                "json/FilterTechnology.json", FilterInfoDto.class);
+        FilterInfoDto expectedDifficulties = mapJsonFileToObject(
+                "json/FilterDifficulty.json", FilterInfoDto.class);
+        FilterInfoDto expectedProgress = mapJsonFileToObject(
+                "json/FilterProgress.json", FilterInfoDto.class);
+        try(MockedStatic<FilterInfoDto> filterDtoMocked = Mockito.mockStatic(FilterInfoDto.class)) {
+            filterDtoMocked.when(FilterInfoDto::forTechnologies).thenReturn(expectedTechnologies);
+            filterDtoMocked.when(FilterInfoDto::forDifficulties).thenReturn(expectedDifficulties);
+            filterDtoMocked.when(FilterInfoDto::forProgress).thenReturn(expectedProgress);
+        }
+
         FiltersDto result = FiltersDto.withAllFilters();
         FiltersDto expected = mapJsonFileToObject("json/Filters.json", FiltersDto.class);
         assertThat(result).usingRecursiveComparison().isEqualTo(expected);
