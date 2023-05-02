@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class ChallengeService {
 
-    public Mono<ChallengesSectionInfoDto> getChallengesSectionOptions(){
+    public Mono<ChallengesSectionInfoDto> getChallengesSectionInfo(){
         return Mono.just(ChallengesSectionInfoDto.withAllInfo());
     }
 }
