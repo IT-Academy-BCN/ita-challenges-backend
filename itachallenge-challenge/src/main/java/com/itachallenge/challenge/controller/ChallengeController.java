@@ -18,9 +18,8 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
     public static final String CHALLENGE = "/itachallenge/api/v1/challenge";
-    public static final String TEST_DEMO = CHALLENGE+"/test";
-
-    public static final String SECTION = CHALLENGE+"/section";
+    public static final String TEST_DEMO = "/test";
+    public static final String SECTION = "/section";
 
 
     private final ChallengeService challengeService;
@@ -33,6 +32,6 @@ public class ChallengeController {
 
     @GetMapping(value = SECTION)
     public Mono<ChallengesSectionInfoDto> getChallengesSectionOptions(){
-        return challengeService.getChallengesSectionOptions();
+        return challengeService.getChallengesSectionInfo();
     }
 }
