@@ -7,5 +7,5 @@ import org.junit.platform.suite.api.Suite;
 @SelectClasses({
         ChallengeControllerTest.class
 })
-public class AllControllerTest {
+public class AllControllersTest {
 }

@@ -1,7 +1,8 @@
 package com.itachallenge.challenge.controller;
 
 
-import com.itachallenge.challenge.dto.challengessection.ChallengesSectionInfoDto;
+import com.itachallenge.challenge.dto.challengessection.FiltersDto;
+import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
 import com.itachallenge.challenge.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +20,9 @@ public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
     public static final String CHALLENGE = "/itachallenge/api/v1/challenge";
     public static final String TEST_DEMO = "/test";
-    public static final String SECTION = "/section";
+    public static final String FILTERS = "/filters";
+
+    public static final String SORT = "/sortOptions";
 
 
     private final ChallengeService challengeService;
@@ -30,8 +33,15 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
-    @GetMapping(value = SECTION)
-    public Mono<ChallengesSectionInfoDto> getChallengesSectionOptions(){
-        return challengeService.getChallengesSectionInfo();
+    @GetMapping(value = FILTERS)
+    public Mono<FiltersDto> getChallengesFilters(){
+        return challengeService.getChallengesFilters();
+    }
+
+    @GetMapping(value = SORT)
+    public Mono<SortInfoDto> getChallengesSortInfo(){
+        return challengeService.getChallengesSortInfo();
     }
 }
+
+
