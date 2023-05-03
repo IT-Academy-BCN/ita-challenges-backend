@@ -2,6 +2,7 @@ package com.itachallenge.challenge;
 
 import com.itachallenge.challenge.controller.AllControllersTest;
 import com.itachallenge.challenge.helper.AllHelpersTest;
+import com.itachallenge.challenge.integration.AllIntegrationsTest;
 import com.itachallenge.challenge.service.AllServiceTests;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
@@ -10,7 +11,8 @@ import org.junit.platform.suite.api.Suite;
 @SelectClasses({
         AllHelpersTest.class,
         AllServiceTests.class,
-        AllControllersTest.class
+        AllControllersTest.class,
+        AllIntegrationsTest.class
 })
 public class AllTests {
 }

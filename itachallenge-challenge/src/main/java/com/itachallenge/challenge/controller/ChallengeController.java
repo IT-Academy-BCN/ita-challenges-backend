@@ -18,8 +18,9 @@ public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
     public static final String CHALLENGE = "/itachallenge/api/v1/challenge";
     public static final String TEST_DEMO = "/test";
-    public static final String FILTERS = "/filters";
 
+    public static final String CHALLENGES = "/getAllChallenges";
+    public static final String FILTERS = "/filters";
     public static final String SORT = "/sortOptions";
 
 

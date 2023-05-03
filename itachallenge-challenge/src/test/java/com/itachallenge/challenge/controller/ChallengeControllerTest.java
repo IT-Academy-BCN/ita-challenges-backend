@@ -37,9 +37,9 @@ class ChallengeControllerTest {
 
     @Test
     @DisplayName("GET filters options test")
-    void getChallengesSectionOptionsTest(){
-        String jsonPath = "json/Filters.json";
-        String expected =  resourceHelper.readResourceAsString(jsonPath);
+    void getChallengesFiltersTest(){
+        String filterJsonPath = "json/Filters.json";
+        String expected =  resourceHelper.readResourceAsString(filterJsonPath);
         when(challengeService.getDummyFilters()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.FILTERS;
@@ -56,8 +56,8 @@ class ChallengeControllerTest {
     @Test
     @DisplayName("GET sorting info test")
     void getChallengesSortInfoTest(){
-        String jsonPath = "json/SortInfo.json";
-        String expected =  resourceHelper.readResourceAsString(jsonPath);
+        String sortJsonPath = "json/SortInfo.json";
+        String expected =  resourceHelper.readResourceAsString(sortJsonPath);
         when(challengeService.getDummySortInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.SORT;
