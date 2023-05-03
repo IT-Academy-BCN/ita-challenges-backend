@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.dto.challengessection.FiltersDto;
-import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -9,25 +7,17 @@ import reactor.core.publisher.Mono;
 @Service
 public class ChallengeService {
 
-    public Mono<FiltersDto> getChallengesFilters(){
-        FiltersDto filtersDto = initDummyFilters();
-        return Mono.just(filtersDto);
-    }
-
-    private FiltersDto initDummyFilters(){
+    public Mono<String> getDummyFilters(){
         ResourceHelper resourceHelper = new ResourceHelper();
-        String dummyJsonPath = "json/Filters.json";
-        return resourceHelper.mapResource(dummyJsonPath, FiltersDto.class);
+        String dummyFiltersJsonPath = "json/Filters.json";
+        String filters = resourceHelper.readResourceAsString(dummyFiltersJsonPath);
+        return Mono.just(filters);
     }
 
-    public Mono<SortInfoDto> getChallengesSortInfo(){
-        SortInfoDto sortInfoDto = initDummySortInfo();
-        return Mono.just(sortInfoDto);
-    }
-
-    private SortInfoDto initDummySortInfo() {
+    public Mono<String> getDummySortInfo(){
         ResourceHelper resourceHelper = new ResourceHelper();
-        String dummyJsonPath = "json/SortInfo.json";
-        return resourceHelper.mapResource(dummyJsonPath, SortInfoDto.class);
+        String dummySortInfoJsonPath = "json/SortInfo.json";
+        String sortInfo = resourceHelper.readResourceAsString(dummySortInfoJsonPath);
+        return Mono.just(sortInfo);
     }
 }

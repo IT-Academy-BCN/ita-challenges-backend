@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.dto.challengessection.FiltersDto;
-import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import com.itachallenge.challenge.service.ChallengeService;
 import org.junit.jupiter.api.Assertions;
@@ -41,8 +39,8 @@ class ChallengeControllerTest {
     @DisplayName("GET filters options test")
     void getChallengesSectionOptionsTest(){
         String jsonPath = "json/Filters.json";
-        FiltersDto expected =  resourceHelper.mapResource(jsonPath, FiltersDto.class);
-        when(challengeService.getChallengesFilters()).thenReturn(Mono.just(expected));
+        String expected =  resourceHelper.readResourceAsString(jsonPath);
+        when(challengeService.getDummyFilters()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.FILTERS;
         webTestClient.get()
@@ -50,17 +48,17 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(FiltersDto.class)
+                .expectBody(String.class)
                 .value(Assertions::assertNotNull)
-                .value(result -> assertThat(result).usingRecursiveComparison().isEqualTo(expected));
+                .value(result -> assertThat(result).isEqualTo(expected));
     }
 
     @Test
     @DisplayName("GET sorting info test")
     void getChallengesSortInfoTest(){
         String jsonPath = "json/SortInfo.json";
-        SortInfoDto expected =  resourceHelper.mapResource(jsonPath, SortInfoDto.class);
-        when(challengeService.getChallengesSortInfo()).thenReturn(Mono.just(expected));
+        String expected =  resourceHelper.readResourceAsString(jsonPath);
+        when(challengeService.getDummySortInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.SORT;
         webTestClient.get()
@@ -68,8 +66,8 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(SortInfoDto.class)
+                .expectBody(String.class)
                 .value(Assertions::assertNotNull)
-                .value(result -> assertThat(result).usingRecursiveComparison().isEqualTo(expected));
+                .value(result -> assertThat(result).isEqualTo(expected));
     }
 }

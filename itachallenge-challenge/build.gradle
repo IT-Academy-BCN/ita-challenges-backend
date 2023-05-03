@@ -28,6 +28,8 @@ dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-commons', version: '4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
+    //apache commons
+    implementation 'commons-io:commons-io:2.11.0'
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')

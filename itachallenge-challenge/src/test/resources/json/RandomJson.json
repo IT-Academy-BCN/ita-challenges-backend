@@ -7,6 +7,7 @@
   ],
   "uniqueOption": true,
   "visibility": [
-    "ROLE_X", "ROLE_Y"
+    "ROLE_X",
+    "ROLE_Y"
   ]
 }

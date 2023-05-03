@@ -1,8 +1,6 @@
 package com.itachallenge.challenge.controller;
 
 
-import com.itachallenge.challenge.dto.challengessection.FiltersDto;
-import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
 import com.itachallenge.challenge.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,13 +32,13 @@ public class ChallengeController {
     }
 
     @GetMapping(value = FILTERS)
-    public Mono<FiltersDto> getChallengesFilters(){
-        return challengeService.getChallengesFilters();
+    public Mono<String> getChallengesFilters(){
+        return challengeService.getDummyFilters();
     }
 
     @GetMapping(value = SORT)
-    public Mono<SortInfoDto> getChallengesSortInfo(){
-        return challengeService.getChallengesSortInfo();
+    public Mono<String> getChallengesSortInfo(){
+        return challengeService.getDummySortInfo();
     }
 }
 

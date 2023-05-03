@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.dto.challengessection.FiltersDto;
-import com.itachallenge.challenge.dto.challengessection.SortInfoDto;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -34,11 +32,11 @@ class ChallengeServiceTest {
     @DisplayName("Get all challenge's filters available Test")
     void getChallengesFiltersTest(){
         String jsonPath = "json/Filters.json";
-        FiltersDto expected = resourceHelper.mapResource(jsonPath, FiltersDto.class);
+        String expected = resourceHelper.readResourceAsString(jsonPath);
 
-        Mono<FiltersDto> result = challengeService.getChallengesFilters();
+        Mono<String> result = challengeService.getDummyFilters();
         StepVerifier.create(result)
-                .assertNext(dto -> assertThat(dto).usingRecursiveComparison().isEqualTo(expected))
+                .assertNext(dto -> assertThat(dto).isEqualTo(expected))
                 .verifyComplete();
     }
 
@@ -46,11 +44,11 @@ class ChallengeServiceTest {
     @DisplayName("Get all challenge's sorting options Test")
     void getChallengesSortInfoTest(){
         String jsonPath = "json/SortInfo.json";
-        SortInfoDto expected = resourceHelper.mapResource(jsonPath, SortInfoDto.class);
+        String expected = resourceHelper.readResourceAsString(jsonPath);
 
-        Mono<SortInfoDto> result = challengeService.getChallengesSortInfo();
+        Mono<String> result = challengeService.getDummySortInfo();
         StepVerifier.create(result)
-                .assertNext(dto -> assertThat(dto).usingRecursiveComparison().isEqualTo(expected))
+                .assertNext(dto -> assertThat(dto).isEqualTo(expected))
                 .verifyComplete();
     }
 }

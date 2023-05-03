@@ -1,49 +1,45 @@
 package com.itachallenge.challenge.helper;
-
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.exceptions.ResourceException;
+import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.FileCopyUtils;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
+
 
 public class ResourceHelper {
 
-    private ObjectMapper mapper;
-
-    private InputStream inputStream;
-
-    private Reader reader;
-
-    public ResourceHelper() {
-        mapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    public byte[] readResourceAsByteArray (String resourcePath) {
+        try {
+            File file = new ClassPathResource(resourcePath).getFile();
+            return FileUtils.readFileToByteArray(file);
+        } catch (IOException e) {
+            throw new ResourceException(e.getMessage());
+        }
     }
 
-    /**
-     * Works if target class is X.class (or X[].class)
-     * Ex of invalid ->
-     *      List<X>.class does not compile
-     *      List.class compiles, but returns a List<Object>
-     *  So, ff the targe is a generic wrapper, USE THE OTHERS METHODS
-     *
-     * @param resourcePath
-     * @param targetClass: mut be X.class (or X[].class).
-     * @return
-     * @param <T>
-     */
-    public <T> T mapResource(String resourcePath, Class<T> targetClass){
+
+    //https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
+    public String readResourceAsString (String resourcePath) {
         try {
-            inputStream = new ClassPathResource(resourcePath).getInputStream();
-            reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            String json = FileCopyUtils.copyToString(reader);
-            return mapper.readValue(json, targetClass);
+            File file = new ClassPathResource(resourcePath).getFile();
+            return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ResourceException(e.getMessage());
+        }
+    }
+
+    public String readResourceAsStringV2(String resourcePath){
+        try {
+            InputStream inputStream = new ClassPathResource(resourcePath).getInputStream();
+            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+            String resourceString = FileCopyUtils.copyToString(reader);
+            //.copyToString closes the reader
+            inputStream.close();
+            return resourceString;
+        } catch (IOException e) {
+            throw new ResourceException(e.getMessage());
         }
     }
 }
