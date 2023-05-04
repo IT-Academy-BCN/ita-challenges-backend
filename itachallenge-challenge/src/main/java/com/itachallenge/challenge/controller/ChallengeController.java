@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +19,9 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
+    public static final String CHALLENGES = "/getAllChallenges";
+
+
     @Autowired
     ChallengeService challengeService;
 
@@ -29,11 +31,10 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
-    @GetMapping(value = "/getAllChallenges", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<String> getAllChallenges(@RequestParam(defaultValue = "0") int offset,
-                                         @RequestParam(defaultValue = "10") int limit) throws IOException {
+    @GetMapping(value = CHALLENGES, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<String> getAllChallenges() throws IOException {
 
-        return challengeService.getAllChallenges(offset,limit);
+        return challengeService.getAllChallenges();
 
     }
 
