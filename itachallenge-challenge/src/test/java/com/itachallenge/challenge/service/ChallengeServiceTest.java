@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.helper.ResourceHelper;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,6 +33,7 @@ class ChallengeServiceTest {
 
     @Test
     @DisplayName("Get all challenge's filters available Test")
+    @SneakyThrows(IOException.class)
     void getChallengesFiltersTest(){
         String jsonPath = "json/Filters.json";
         String expected = resourceHelper.readResourceAsString(jsonPath);
@@ -42,6 +46,7 @@ class ChallengeServiceTest {
 
     @Test
     @DisplayName("Get all challenge's sorting options Test")
+    @SneakyThrows(IOException.class)
     void getChallengesSortInfoTest(){
         String jsonPath = "json/SortInfo.json";
         String expected = resourceHelper.readResourceAsString(jsonPath);

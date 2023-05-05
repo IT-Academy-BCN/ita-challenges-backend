@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.helper.ResourceHelper;
 import com.itachallenge.challenge.service.ChallengeService;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -37,6 +40,7 @@ class ChallengeControllerTest {
 
     @Test
     @DisplayName("GET filters options test")
+    @SneakyThrows(IOException.class)
     void getChallengesFiltersTest(){
         String filterJsonPath = "json/Filters.json";
         String expected =  resourceHelper.readResourceAsString(filterJsonPath);
@@ -55,6 +59,7 @@ class ChallengeControllerTest {
 
     @Test
     @DisplayName("GET sorting info test")
+    @SneakyThrows(IOException.class)
     void getChallengesSortInfoTest(){
         String sortJsonPath = "json/SortInfo.json";
         String expected =  resourceHelper.readResourceAsString(sortJsonPath);
