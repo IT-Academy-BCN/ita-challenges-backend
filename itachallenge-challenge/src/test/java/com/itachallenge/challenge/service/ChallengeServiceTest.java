@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class ChallengeServiceTest {
+public class ChallengeServiceTest {
 
     @Autowired
     private ChallengeService challengeService;

@@ -1,18 +1,18 @@
 package com.itachallenge.challenge;
 
-import com.itachallenge.challenge.controller.AllControllersTest;
-import com.itachallenge.challenge.helper.AllHelpersTest;
-import com.itachallenge.challenge.integration.AllIntegrationsTest;
-import com.itachallenge.challenge.service.AllServiceTests;
+import com.itachallenge.challenge.controller.ChallengeControllerTest;
+import com.itachallenge.challenge.helper.ResourceHelperTest;
+import com.itachallenge.challenge.integration.ChallengeIT;
+import com.itachallenge.challenge.service.ChallengeServiceTest;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
 @SelectClasses({
-        AllHelpersTest.class,
-        AllServiceTests.class,
-        AllControllersTest.class,
-        AllIntegrationsTest.class
+        ResourceHelperTest.class,
+        ChallengeServiceTest.class,
+        ChallengeControllerTest.class,
+        ChallengeIT.class
 })
 public class AllTests {
 }

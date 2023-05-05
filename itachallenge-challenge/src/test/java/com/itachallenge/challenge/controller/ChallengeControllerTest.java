@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeController.class)
-class ChallengeControllerTest {
+public class ChallengeControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
