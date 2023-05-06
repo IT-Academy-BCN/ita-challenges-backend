@@ -42,9 +42,9 @@ public class ChallengeControllerTest {
     @DisplayName("GET filters options test")
     @SneakyThrows(IOException.class)
     void getChallengesFiltersTest(){
-        String filterJsonPath = "json/Filters.json";
+        String filterJsonPath = "json/FiltersInfoResponse.json";
         String expected =  resourceHelper.readResourceAsString(filterJsonPath);
-        when(challengeService.getDummyFilters()).thenReturn(Mono.just(expected));
+        when(challengeService.getDummyFiltersInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.FILTERS;
         webTestClient.get()
@@ -61,7 +61,7 @@ public class ChallengeControllerTest {
     @DisplayName("GET sorting info test")
     @SneakyThrows(IOException.class)
     void getChallengesSortInfoTest(){
-        String sortJsonPath = "json/SortInfo.json";
+        String sortJsonPath = "json/SortInfoResponse.json";
         String expected =  resourceHelper.readResourceAsString(sortJsonPath);
         when(challengeService.getDummySortInfo()).thenReturn(Mono.just(expected));
 

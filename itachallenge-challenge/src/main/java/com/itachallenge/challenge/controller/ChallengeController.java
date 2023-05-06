@@ -21,7 +21,7 @@ public class ChallengeController {
 
     public static final String CHALLENGES = "/getAllChallenges";
     public static final String FILTERS = "/filters";
-    public static final String SORT = "/sortOptions";
+    public static final String SORT = "/sort-options";
 
 
     private final ChallengeService challengeService;
@@ -34,7 +34,7 @@ public class ChallengeController {
 
     @GetMapping(value = FILTERS)
     public Mono<String> getChallengesFilters(){
-        return challengeService.getDummyFilters();
+        return challengeService.getDummyFiltersInfo();
     }
 
     @GetMapping(value = SORT)

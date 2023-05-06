@@ -11,8 +11,7 @@
       "uniqueOption": false,
       "visibility": [
         "ROLE_GUEST"
-      ],
-      "count": 4
+      ]
     },
     {
       "filterName": "Dificultad",
@@ -24,8 +23,7 @@
       "uniqueOption": false,
       "visibility": [
         "ROLE_GUEST"
-      ],
-      "count": 3
+      ]
     },
     {
       "filterName": "Progreso",
@@ -37,9 +35,7 @@
       "uniqueOption": false,
       "visibility": [
         "ROLE_USER"
-      ],
-      "count": 3
+      ]
     }
-  ],
-  "count": 3
+  ]
 }
