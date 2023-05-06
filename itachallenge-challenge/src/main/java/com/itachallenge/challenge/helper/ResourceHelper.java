@@ -14,7 +14,18 @@ public class ResourceHelper {
     private String resourcePath;
 
     public ResourceHelper() {
-        //in prevision of others futures constructors (more appropriates for testing)
+        //TODO: refactor constructor and method
+        /*
+        No implementado para no 'molestar ni crear conflicto' a alfonso en la implementación feature#5
+        Simplemente es:
+            Now:
+            new ResourceHelper().readResourceAsString(path);
+            Once refactored:
+            new ResourceHelper(path).readResourceAsString();
+         Clase mucho mejor diseñada y cohesiva si tiene como atributo el Resource "que va a manipular".
+         Futuros métodos más simples (ej: mapResourceToTargetClass(Class<T> targetClass) ).
+            No es YAGNI, si los tests lo usan se reduciría bastante su código y se eviatría copy paste.
+         */
     }
 
     //https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
