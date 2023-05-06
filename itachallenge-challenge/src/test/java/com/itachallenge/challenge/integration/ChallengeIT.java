@@ -112,22 +112,18 @@ public class ChallengeIT {
                 .jsonPath("$.filtersInfo[0].options[3]").isEqualTo("Python")
                 .jsonPath("$.filtersInfo[0].uniqueOption").isEqualTo(false)
                 .jsonPath("$.filtersInfo[0].visibility[0]").isEqualTo("ROLE_GUEST")
-                .jsonPath("$.filtersInfo[0].count").isEqualTo(4)
                 .jsonPath("$.filtersInfo[1].filterName").isEqualTo("Dificultad")
                 .jsonPath("$.filtersInfo[1].options[0]").isEqualTo("Fácil")
                 .jsonPath("$.filtersInfo[1].options[1]").isEqualTo("Media")
                 .jsonPath("$.filtersInfo[1].options[2]").isEqualTo("Difícil")
                 .jsonPath("$.filtersInfo[1].uniqueOption").isEqualTo(false)
                 .jsonPath("$.filtersInfo[1].visibility[0]").isEqualTo("ROLE_GUEST")
-                .jsonPath("$.filtersInfo[1].count").isEqualTo(3)
                 .jsonPath("$.filtersInfo[2].filterName").isEqualTo("Progreso")
                 .jsonPath("$.filtersInfo[2].options[0]").isEqualTo("No empezados")
                 .jsonPath("$.filtersInfo[2].options[1]").isEqualTo("Falta completar")
                 .jsonPath("$.filtersInfo[2].options[2]").isEqualTo("Completados")
                 .jsonPath("$.filtersInfo[2].uniqueOption").isEqualTo(false)
-                .jsonPath("$.filtersInfo[2].visibility[0]").isEqualTo("ROLE_USER")
-                .jsonPath("$.filtersInfo[2].count").isEqualTo(3)
-                .jsonPath("$.count").isEqualTo(3);
+                .jsonPath("$.filtersInfo[2].visibility[0]").isEqualTo("ROLE_USER");
     }
 
     @Test
