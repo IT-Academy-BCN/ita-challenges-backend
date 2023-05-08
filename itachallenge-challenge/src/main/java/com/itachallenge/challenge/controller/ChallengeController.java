@@ -34,7 +34,7 @@ public class ChallengeController {
 
     @GetMapping(value = FILTERS)
     public Mono<String> getChallengesFilters(){
-        return challengeService.getDummyFilters();
+        return challengeService.getDummyFiltersInfo();
     }
 
     @GetMapping(value = SORT)
