@@ -21,7 +21,7 @@ public class ChallengeController {
 
     public static final String CHALLENGES = "/getAllChallenges";
     public static final String FILTERS = "/filters";
-    public static final String SORT = "/sort-options";
+    public static final String SORT = "/sortOptions";
 
 
     private final ChallengeService challengeService;
