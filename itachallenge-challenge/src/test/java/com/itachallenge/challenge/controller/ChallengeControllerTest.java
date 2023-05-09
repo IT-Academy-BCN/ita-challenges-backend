@@ -10,16 +10,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ExtendWith(SpringExtension.class)
@@ -32,12 +35,6 @@ public class ChallengeControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    private static ResourceHelper resourceHelper;
-
-    @BeforeAll
-    static void setUp(){
-        resourceHelper = new ResourceHelper();
-    }
 
 
     @Test
@@ -46,24 +43,24 @@ public class ChallengeControllerTest {
     }
 
 
-    //TEST FAILED: Expected 200 Ok, Actual 404 Not_Found
-    @DisplayName("Get All Challenges Test")
+    @DisplayName("Get All Challenges Controller Test")
     @Test
-    void getAllChallengesTest() throws IOException {
+    void shouldGetAllChallenges() throws IOException {
 
-        String resourceJsonPath = "/data-challenge.json";
-        String expected =  resourceHelper.readResourceAsString(resourceJsonPath);
+        String jsonFile = "C:\\Users\\Alfonso\\ita-challenges-backend\\itachallenge-challenge\\src\\test\\resources\\data-challenge.json";
+        String uri = "http://localhost:8762/itachallenge/api/v1/challenge/getAllChallenges";
+
+
+        byte[] jsonData = Files.readAllBytes(Paths.get(jsonFile));
+        String expected = new String(jsonData, "UTF-8");
         when(challengeService.getAllChallenges()).thenReturn(Mono.just(expected));
 
-        String uri = ChallengeController.CHALLENGES;
-        webTestClient.get()
-                .uri(uri)
+        webTestClient.get().uri(uri)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
-                .value(Assertions::assertNotNull)
-                .value(result -> assertThat(result).isEqualTo(expected));
+                .isEqualTo(expected);
 
 
     }

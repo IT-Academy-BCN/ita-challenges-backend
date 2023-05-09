@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import com.itachallenge.challenge.service.ChallengeService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +17,14 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class ChallengeServiceTest {
@@ -29,7 +35,7 @@ public class ChallengeServiceTest {
 
     private static ResourceHelper resourceHelper;
 
-    @DisplayName("Get All Challenges Test")
+    @DisplayName("Get All Challenges Test with StepVerifier")
     @Test
     void getAllChallengesTest() throws IOException {
 
@@ -40,20 +46,21 @@ public class ChallengeServiceTest {
                 .verifyComplete();
     }
 
+    @DisplayName("Get All Challenges and ResourceHelper Test")
     @Test
     void shouldGetAllChallenges() throws IOException {
 
-        InputStream inputStream = new ClassPathResource("data-challenge.json").getInputStream();
+        resourceHelper = mock(ResourceHelper.class);
+        String jsonFile = "C:\\Users\\Alfonso\\ita-challenges-backend\\itachallenge-challenge\\src\\test\\resources\\data-challenge.json";
 
-        ObjectMapper objectMapper = new ObjectMapper();
+        byte[] jsonData = Files.readAllBytes(Paths.get(jsonFile));
+        String expected = new String(jsonData, "UTF-8");
+        when(resourceHelper.readResourceAsString(jsonFile)).thenReturn(expected);
 
-        String result = challengeService.getAllChallenges().block();
+        Mono<String> result = challengeService.getAllChallenges();
 
-        JsonNode jsonNode = objectMapper.readTree(result);
-
-        assertFalse(jsonNode.isEmpty());
-        assertTrue(jsonNode.size() > 0);
-
+        String actualJson = result.block();
+        Assertions.assertEquals(expected, actualJson);
 
 
     }
