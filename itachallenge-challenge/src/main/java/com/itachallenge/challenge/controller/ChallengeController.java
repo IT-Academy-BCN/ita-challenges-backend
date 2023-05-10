@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
+    @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
         log.info("** Saludos desde el logger **");
