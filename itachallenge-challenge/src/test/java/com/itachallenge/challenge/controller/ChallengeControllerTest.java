@@ -1,22 +1,16 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.helper.ResourceHelper;
 import com.itachallenge.challenge.service.ChallengeService;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeController.class)
-public class ChallengeControllerTest {
+class ChallengeControllerTest {
 
     @MockBean
     private ChallengeService challengeService;
@@ -38,14 +32,14 @@ public class ChallengeControllerTest {
 
 
     @Test
-    public void test() {
+    void test() {
         assertEquals(1, 1);
     }
 
 
     @DisplayName("Get All Challenges Controller Test")
     @Test
-    void shouldGetAllChallenges() throws IOException {
+    void getAllChallengesControllerTest() throws IOException {
 
         String jsonFile = "C:\\Users\\Alfonso\\ita-challenges-backend\\itachallenge-challenge\\src\\test\\resources\\data-challenge.json";
         String uri = "http://localhost:8762/itachallenge/api/v1/challenge/getAllChallenges";
