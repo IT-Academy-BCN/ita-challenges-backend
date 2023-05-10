@@ -1,0 +1,52 @@
+{
+  "resources": [
+    {
+      "id": "string1",
+      "title": "My Resource in Javascript",
+      "slug": "my-resource-in-javascript",
+      "description": "Lorem ipsum javascript",
+      "url": "https://tutorials.cat/learn/javascript",
+      "resourceType": "BLOG",
+      "createdAt": "string",
+      "updatedAt": "string",
+      "user": {
+        "name": "string",
+        "email": "user@example.cat"
+      },
+      "topics": [
+        {
+          "id": "string",
+          "name": "Listas",
+          "slug": "string",
+          "categoryId": "string",
+          "createdAt": "string",
+          "updatedAt": "string"
+        }
+      ]
+    },
+    {
+      "id": "string2",
+      "title": "My Resource in Javascript",
+      "slug": "my-resource-in-javascript",
+      "description": "Lorem ipsum javascript",
+      "url": "https://tutorials.cat/learn/javascript",
+      "resourceType": "BLOG",
+      "createdAt": "string",
+      "updatedAt": "string",
+      "user": {
+        "name": "string",
+        "email": "user@example.cat"
+      },
+      "topics": [
+        {
+          "id": "string",
+          "name": "Listas",
+          "slug": "string",
+          "categoryId": "string",
+          "createdAt": "string",
+          "updatedAt": "string"
+        }
+      ]
+    }
+  ]
+}
