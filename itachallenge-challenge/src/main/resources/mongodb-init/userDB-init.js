@@ -1,4 +1,5 @@
-//use challenges  creo la bd
+//DB challenges
+//use challenges
 
 db.createUser(
   {
