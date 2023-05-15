@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.controller;
 
-
+import io.swagger.v3.oas.annotations.Operation;
 import com.itachallenge.challenge.service.ChallengeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,10 +23,10 @@ public class ChallengeController {
     public static final String FILTERS = "/filters";
     public static final String SORT = "/sortOptions";
 
-
     private final ChallengeService challengeService;
 
-    @GetMapping(value = TEST_DEMO)
+    @Operation(summary = "Testing the App")
+    @GetMapping(value = "/test")
     public String test() {
         log.info("** Saludos desde el logger **");
         return "Hello from ITA Challenge!!!";
@@ -42,5 +42,3 @@ public class ChallengeController {
         return challengeService.getDummySortInfo();
     }
 }
-
-
