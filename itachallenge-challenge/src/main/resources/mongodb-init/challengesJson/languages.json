@@ -1,6 +1,6 @@
 [
       {
-        "id_language": "1c4bca18-f606-483a-ad39-be67dd09aadd",
+        "id_language": "1",
         "language_name": "Javascript",
         "id_challenge":[
             "dcacb291-b4aa-4029-8e9b-284c8ca80296",
@@ -29,7 +29,7 @@
         ]
       },
       {
-        "id_language": "723aed6c-1f68-4b93-a139-cecf2289a8ee",
+        "id_language": "2",
         "language_name": "Java",
         "id_challenge":[
             "dcacb291-b4aa-4029-8e9b-284c8ca80296",
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "id_language": "dff5818c-a2ba-4caf-a809-f2a3a4c7cffa",
+        "id_language": "3",
         "language_name": "PHP",
         "id_challenge":[
             "dcacb291-b4aa-4029-8e9b-284c8ca80296",
@@ -91,7 +91,7 @@
         ]
       },
       {
-        "id_language": "08568b7a-1700-48f3-8ea6-7a0199d6fb1a",
+        "id_language": "4",
         "language_name": "Python",
         "id_challenge":[
             "c0c7510b-f867-4375-b46f-0c164f30429f",
