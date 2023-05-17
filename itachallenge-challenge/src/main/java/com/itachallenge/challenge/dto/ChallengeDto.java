@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 public class ChallengeDto {
@@ -11,7 +12,7 @@ public class ChallengeDto {
     //Usar/Ampliar constructores / setters según necesidad
     //Canviar types en caso que facilite inicializar el objeto
     @JsonProperty("id_challenge")
-    private String challengeId; //main info
+    private UUID challengeId; //main info
     @JsonProperty("challenge_title")
     private String title; //main info
     private String level; //main info
