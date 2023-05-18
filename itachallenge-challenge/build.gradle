@@ -62,6 +62,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.9'
 
     //**VERSION PRUEBA
     //testImplementation 'org.mockito:mockito-core:3.11.2'

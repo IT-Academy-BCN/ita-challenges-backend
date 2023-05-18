@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.053s</div>
+<div class="counter">0.003s</div>
 <p>duration</p>
 </div>
 </td>
@@ -76,25 +76,12 @@
 <a name="test()"></a>
 <h3 class="failures">test()</h3>
 <span class="code">
-<pre>java.lang.IllegalStateException: Could not initialize plugin: interface org.mockito.plugins.MockMaker (alternate: null)
-	at org.mockito.internal.configuration.plugins.PluginLoader$1.invoke(PluginLoader.java:84)
-	at jdk.proxy3/jdk.proxy3.$Proxy122.isTypeMockable(Unknown Source)
-	at org.mockito.internal.util.MockUtil.typeMockabilityOf(MockUtil.java:78)
-	at org.mockito.internal.util.MockCreationValidator.validateType(MockCreationValidator.java:22)
-	at org.mockito.internal.creation.MockSettingsImpl.validatedSettings(MockSettingsImpl.java:274)
-	at org.mockito.internal.creation.MockSettingsImpl.build(MockSettingsImpl.java:235)
-	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:86)
-	at org.mockito.Mockito.mock(Mockito.java:2101)
-	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79)
-	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28)
-	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25)
-	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44)
-	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72)
-	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:73)
-	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47)
-	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81)
-	at org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener.initMocks(MockitoTestExecutionListener.java:83)
-	at org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener.prepareTestInstance(MockitoTestExecutionListener.java:60)
+<pre>java.lang.IllegalStateException: Failed to load ApplicationContext
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:132)
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124)
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:118)
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:83)
+	at org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener.prepareTestInstance(SpringBootDependencyInjectionTestExecutionListener.java:43)
 	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248)
 	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138)
 	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$8(ClassBasedTestDescriptor.java:363)
@@ -178,45 +165,34 @@
 	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
-Caused by: java.lang.IllegalStateException: Internal problem occurred, please report it. Mockito is unable to load the default implementation of class that is a part of Mockito distribution. Failed to load interface org.mockito.plugins.MockMaker
-	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.create(DefaultMockitoPlugins.java:104)
-	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.getDefaultPlugin(DefaultMockitoPlugins.java:78)
-	at org.mockito.internal.configuration.plugins.PluginLoader.loadPlugin(PluginLoader.java:75)
-	at org.mockito.internal.configuration.plugins.PluginLoader.loadPlugin(PluginLoader.java:50)
-	at org.mockito.internal.configuration.plugins.PluginRegistry.&lt;init&gt;(PluginRegistry.java:27)
-	at org.mockito.internal.configuration.plugins.Plugins.&lt;clinit&gt;(Plugins.java:22)
-	at org.mockito.internal.configuration.GlobalConfiguration.tryGetPluginAnnotationEngine(GlobalConfiguration.java:50)
-	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:80)
-	... 85 more
-Caused by: java.lang.reflect.InvocationTargetException
-	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
-	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
-	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
-	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
-	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
-	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.create(DefaultMockitoPlugins.java:102)
-	... 92 more
-Caused by: org.mockito.exceptions.base.MockitoInitializationException: 
-It seems like you are running Mockito with an incomplete or inconsistent class path. Byte Buddy could not be loaded.
-
-Byte Buddy is available on Maven Central as 'net.bytebuddy:byte-buddy' with the module name 'net.bytebuddy'.
-For the inline mock maker, 'net.bytebuddy:byte-buddy-agent' with the module name 'net.bytebuddy.agent' is also required.
-Normally, your IDE or build tool (such as Maven or Gradle) should take care of your class path completion but 
-	at app//org.mockito.internal.exceptions.Reporter.missingByteBuddyDependency(Reporter.java:1208)
-	at app//org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.&lt;init&gt;(InlineByteBuddyMockMaker.java:25)
-	... 98 more
-Caused by: java.lang.NoClassDefFoundError: net/bytebuddy/utility/GraalImageCode
-	at org.mockito.internal.creation.bytebuddy.SubclassInjectionLoader.&lt;init&gt;(SubclassInjectionLoader.java:34)
-	at org.mockito.internal.creation.bytebuddy.SubclassBytecodeGenerator.&lt;init&gt;(SubclassBytecodeGenerator.java:75)
-	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.&lt;init&gt;(InlineBytecodeGenerator.java:107)
-	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.&lt;init&gt;(InlineDelegateByteBuddyMockMaker.java:321)
-	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.&lt;init&gt;(InlineByteBuddyMockMaker.java:23)
-	... 98 more
-Caused by: java.lang.ClassNotFoundException: net.bytebuddy.utility.GraalImageCode
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520)
-	... 103 more
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'challengeController': Unsatisfied dependency expressed through field 'challengeService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.itachallenge.challenge.services.ChallengeService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at app//org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:659)
+	at app//org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:639)
+	at app//org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119)
+	at app//org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399)
+	at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431)
+	at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619)
+	at app//org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542)
+	at app//org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335)
+	at app//org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at app//org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333)
+	at app//org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208)
+	at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:953)
+	at app//org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918)
+	at app//org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583)
+	at app//org.springframework.boot.SpringApplication.refresh(SpringApplication.java:730)
+	at app//org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:412)
+	at app//org.springframework.boot.SpringApplication.run(SpringApplication.java:302)
+	at app//org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:121)
+	at app//org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	at app//org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124)
+	... 87 more
+Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.itachallenge.challenge.services.ChallengeService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1799)
+	at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1355)
+	at app//org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1309)
+	at app//org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:656)
+	... 106 more
 </pre>
 </span>
 </div>
@@ -233,7 +209,7 @@ Caused by: java.lang.ClassNotFoundException: net.bytebuddy.utility.GraalImageCod
 </thead>
 <tr>
 <td class="failures">test()</td>
-<td class="failures">0.053s</td>
+<td class="failures">0.003s</td>
 <td class="failures">failed</td>
 </tr>
 </table>
@@ -241,23 +217,24 @@ Caused by: java.lang.ClassNotFoundException: net.bytebuddy.utility.GraalImageCod
 <div id="tab2" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>10:20:26.330 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
-10:20:26.463 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
-10:20:26.976 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.itachallenge.challenge.controller.ChallengeControllerTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
-10:20:27.141 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.itachallenge.challenge.controller.ChallengeControllerTest], using SpringBootContextLoader
-10:20:27.187 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: class path resource [com/itachallenge/challenge/controller/ChallengeControllerTest-context.xml] does not exist
-10:20:27.190 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: class path resource [com/itachallenge/challenge/controller/ChallengeControllerTestContext.groovy] does not exist
-10:20:27.193 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
-10:20:27.209 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: ChallengeControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-10:20:27.723 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.itachallenge.challenge.controller.ChallengeControllerTest]
-10:20:28.871 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [C:\Users\Usuario\Desktop\IT Academy\ita-challenges-backend\itachallenge-challenge\build\classes\java\main\com\itachallenge\challenge\App.class]
-10:20:28.880 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.itachallenge.challenge.App for test class com.itachallenge.challenge.controller.ChallengeControllerTest
-10:20:29.863 [Test worker] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.itachallenge.challenge.controller.ChallengeControllerTest]: using defaults.
-10:20:29.865 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener]
-10:20:29.998 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@709f0202, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@654e6a90, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@14168e1, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@16a5c7e4, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@1e225820, org.springframework.test.context.support.DirtiesContextTestExecutionListener@8aeab9e, org.springframework.test.context.transaction.TransactionalTestExecutionListener@2a2dc0a, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@3a00b15d, org.springframework.test.context.event.EventPublishingTestExecutionListener@36ef1d65, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@4be0a27d, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@5f366587, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@6003ad65, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@2ec99035, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@60743cdb, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@c02670f]
-10:20:30.035 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@671d03bb testClass = ChallengeControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@6babffb5 testClass = ChallengeControllerTest, locations = '{}', classes = '{class com.itachallenge.challenge.App}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@b835727, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@3d5790ea, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6631cb64, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@140d1230, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@39c385d6, org.springframework.boot.test.web.reactive.server.WebTestClientContextCustomizer@44550792, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@51f49060], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
-10:20:30.398 [Test worker] DEBUG org.springframework.boot.ApplicationServletEnvironment - Activating profiles []
-10:20:30.402 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}
+<pre>13:00:39.384 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+13:00:39.399 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+13:00:39.452 [Test worker] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.itachallenge.challenge.controller.ChallengeControllerTest] from class [org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper]
+13:00:39.466 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.itachallenge.challenge.controller.ChallengeControllerTest], using SpringBootContextLoader
+13:00:39.472 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: class path resource [com/itachallenge/challenge/controller/ChallengeControllerTest-context.xml] does not exist
+13:00:39.472 [Test worker] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: class path resource [com/itachallenge/challenge/controller/ChallengeControllerTestContext.groovy] does not exist
+13:00:39.472 [Test worker] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+13:00:39.473 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.itachallenge.challenge.controller.ChallengeControllerTest]: ChallengeControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+13:00:39.548 [Test worker] DEBUG org.springframework.test.context.support.ActiveProfilesUtils - Could not find an 'annotation declaring class' for annotation type [org.springframework.test.context.ActiveProfiles] and class [com.itachallenge.challenge.controller.ChallengeControllerTest]
+13:00:39.642 [Test worker] DEBUG org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider - Identified candidate component class: file [/home/Jonatan/projects/IntelliJ_projects/IT-Academy/ita-challenges-backend/itachallenge-challenge/build/classes/java/main/com/itachallenge/challenge/App.class]
+13:00:39.643 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.itachallenge.challenge.App for test class com.itachallenge.challenge.controller.ChallengeControllerTest
+13:00:39.647 [Test worker] DEBUG org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper - @TestExecutionListeners is not present for class [com.itachallenge.challenge.controller.ChallengeControllerTest]: using defaults.
+13:00:39.647 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener]
+13:00:39.667 [Test worker] INFO org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@4b0f2299, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@33063f5b, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@15405bd6, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@352ed70d, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@70730db, org.springframework.test.context.support.DirtiesContextTestExecutionListener@5793b87, org.springframework.test.context.transaction.TransactionalTestExecutionListener@12704e15, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@512575e9, org.springframework.test.context.event.EventPublishingTestExecutionListener@6f1a16fe, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@2373ad99, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@33634f04, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@4993febc, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7601bc96, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@48a0c8aa, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@6192a5d5]
+13:00:39.671 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@446626a7 testClass = ChallengeControllerTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [ReactiveWebMergedContextConfiguration@429f7919 testClass = ChallengeControllerTest, locations = '{}', classes = '{class com.itachallenge.challenge.App}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@504e1599, org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@730e5763, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@ae1566ee, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@c3fd8c27, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@11d4dbd6, [ImportsContextCustomizer@4a2929a4 key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration, org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.reactive.ReactiveOAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@572e6fd9, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@12abdfb, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@0], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map[[empty]]], class annotated with @DirtiesContext [false] with mode [null].
+13:00:40.587 [Test worker] DEBUG org.springframework.test.context.support.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@446626a7 testClass = ChallengeControllerTest, testInstance = com.itachallenge.challenge.controller.ChallengeControllerTest@79d63a4f, testMethod = [null], testException = [null], mergedContextConfiguration = [ReactiveWebMergedContextConfiguration@429f7919 testClass = ChallengeControllerTest, locations = '{}', classes = '{class com.itachallenge.challenge.App}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.OverrideAutoConfigurationContextCustomizerFactory$DisableAutoConfigurationContextCustomizer@504e1599, org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@730e5763, org.springframework.boot.test.autoconfigure.filter.TypeExcludeFiltersContextCustomizer@ae1566ee, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@c3fd8c27, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@11d4dbd6, [ImportsContextCustomizer@4a2929a4 key = [org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration, org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration, org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration, org.springframework.boot.autoconfigure.jsonb.JsonbAutoConfiguration, org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration, org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration, org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration, org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration, org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration, org.springframework.boot.autoconfigure.validation.ValidationAutoConfiguration, org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration, org.springframework.boot.autoconfigure.web.reactive.error.ErrorWebFluxAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.client.reactive.ReactiveOAuth2ClientAutoConfiguration, org.springframework.boot.autoconfigure.security.oauth2.resource.reactive.ReactiveOAuth2ResourceServerAutoConfiguration, org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.reactive.WebTestClientAutoConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@572e6fd9, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@12abdfb, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@0], contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false, 'org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener.mocks' -&gt; org.mockito.internal.configuration.InjectingAnnotationEngine$$Lambda$464/0x0000000800edb780@2e2b9f53]]].
+13:00:40.682 [Test worker] DEBUG org.springframework.boot.ApplicationReactiveWebEnvironment - Activating profiles []
+13:00:40.719 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTestContextBootstrapper=true}
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -267,34 +244,63 @@ Caused by: java.lang.ClassNotFoundException: net.bytebuddy.utility.GraalImageCod
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::                (v2.6.2)
 
-2023-05-18 10:20:34.030  INFO 13708 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : Starting ChallengeControllerTest using Java 17.0.7 on PC-TortoSala with PID 13708 (started by Usuario in C:\Users\Usuario\Desktop\IT Academy\ita-challenges-backend\itachallenge-challenge)
-2023-05-18 10:20:34.042  INFO 13708 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : No active profile set, falling back to default profiles: default
-2023-05-18 10:20:46.602  INFO 13708 --- [    Test worker] org.mongodb.driver.cluster               : Cluster created with settings {hosts=[localhost:27017], mode=SINGLE, requiredClusterType=UNKNOWN, serverSelectionTimeout='30000 ms'}
-2023-05-18 10:20:48.278  INFO 13708 --- [localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:1, serverValue:172}] to localhost:27017
-2023-05-18 10:20:48.280  INFO 13708 --- [localhost:27017] org.mongodb.driver.connection            : Opened connection [connectionId{localValue:2, serverValue:173}] to localhost:27017
-2023-05-18 10:20:48.285  INFO 13708 --- [localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=17, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=449497600}
-2023-05-18 10:20:55.840  INFO 13708 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : Started ChallengeControllerTest in 25.431 seconds (JVM running for 39.402)
-2023-05-18 10:21:01.902 ERROR 13708 --- [    Test worker] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@16a5c7e4] to prepare test instance [com.itachallenge.challenge.controller.ChallengeControllerTest@ab70bf2]
+2023-05-18 13:00:41.236  INFO 44913 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : Starting ChallengeControllerTest using Java 17.0.1 on omega with PID 44913 (started by Jonatan in /home/Jonatan/projects/IntelliJ_projects/IT-Academy/ita-challenges-backend/itachallenge-challenge)
+2023-05-18 13:00:41.237  INFO 44913 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : No active profile set, falling back to default profiles: default
+2023-05-18 13:00:41.668 ERROR 44913 --- [    Test worker] o.s.b.d.LoggingFailureAnalysisReporter   : 
 
-java.lang.IllegalStateException: Could not initialize plugin: interface org.mockito.plugins.MockMaker (alternate: null)
-	at org.mockito.internal.configuration.plugins.PluginLoader$1.invoke(PluginLoader.java:84) ~[mockito-core-5.3.1.jar:na]
-	at jdk.proxy3/jdk.proxy3.$Proxy122.isTypeMockable(Unknown Source) ~[na:na]
-	at org.mockito.internal.util.MockUtil.typeMockabilityOf(MockUtil.java:78) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.util.MockCreationValidator.validateType(MockCreationValidator.java:22) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.MockSettingsImpl.validatedSettings(MockSettingsImpl.java:274) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.MockSettingsImpl.build(MockSettingsImpl.java:235) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.MockitoCore.mock(MockitoCore.java:86) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.Mockito.mock(Mockito.java:2101) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.MockAnnotationProcessor.processAnnotationForMock(MockAnnotationProcessor.java:79) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:28) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.MockAnnotationProcessor.process(MockAnnotationProcessor.java:25) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.IndependentAnnotationEngine.createMockFor(IndependentAnnotationEngine.java:44) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.IndependentAnnotationEngine.process(IndependentAnnotationEngine.java:72) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.InjectingAnnotationEngine.processIndependentAnnotations(InjectingAnnotationEngine.java:73) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.InjectingAnnotationEngine.process(InjectingAnnotationEngine.java:47) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:81) ~[mockito-core-5.3.1.jar:na]
-	at org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener.initMocks(MockitoTestExecutionListener.java:83) ~[spring-boot-test-2.6.2.jar:2.6.2]
-	at org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener.prepareTestInstance(MockitoTestExecutionListener.java:60) ~[spring-boot-test-2.6.2.jar:2.6.2]
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field challengeService in com.itachallenge.challenge.controller.ChallengeController required a bean of type 'com.itachallenge.challenge.services.ChallengeService' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.itachallenge.challenge.services.ChallengeService' in your configuration.
+
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.6.2)
+
+2023-05-18 13:00:41.703  INFO 44913 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : Starting ChallengeControllerTest using Java 17.0.1 on omega with PID 44913 (started by Jonatan in /home/Jonatan/projects/IntelliJ_projects/IT-Academy/ita-challenges-backend/itachallenge-challenge)
+2023-05-18 13:00:41.703  INFO 44913 --- [    Test worker] c.i.c.c.ChallengeControllerTest          : No active profile set, falling back to default profiles: default
+2023-05-18 13:00:41.775 ERROR 44913 --- [    Test worker] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Field challengeService in com.itachallenge.challenge.controller.ChallengeController required a bean of type 'com.itachallenge.challenge.services.ChallengeService' that could not be found.
+
+The injection point has the following annotations:
+	- @org.springframework.beans.factory.annotation.Autowired(required=true)
+
+
+Action:
+
+Consider defining a bean of type 'com.itachallenge.challenge.services.ChallengeService' in your configuration.
+
+2023-05-18 13:00:41.781 ERROR 44913 --- [    Test worker] o.s.test.context.TestContextManager      : Caught exception while allowing TestExecutionListener [org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@70730db] to prepare test instance [com.itachallenge.challenge.controller.ChallengeControllerTest@79d63a4f]
+
+java.lang.IllegalStateException: Failed to load ApplicationContext
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:132) ~[spring-test-5.3.13.jar:5.3.13]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:124) ~[spring-test-5.3.13.jar:5.3.13]
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.injectDependencies(DependencyInjectionTestExecutionListener.java:118) ~[spring-test-5.3.13.jar:5.3.13]
+	at org.springframework.test.context.support.DependencyInjectionTestExecutionListener.prepareTestInstance(DependencyInjectionTestExecutionListener.java:83) ~[spring-test-5.3.13.jar:5.3.13]
+	at org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener.prepareTestInstance(SpringBootDependencyInjectionTestExecutionListener.java:43) ~[spring-boot-test-autoconfigure-2.6.2.jar:2.6.2]
 	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:248) ~[spring-test-5.3.13.jar:5.3.13]
 	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:138) ~[spring-test-5.3.13.jar:5.3.13]
 	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$8(ClassBasedTestDescriptor.java:363) ~[junit-jupiter-engine-5.8.2.jar:5.8.2]
@@ -378,45 +384,34 @@ java.lang.IllegalStateException: Could not initialize plugin: interface org.mock
 	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65) ~[na:na]
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69) ~[gradle-worker.jar:na]
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74) ~[gradle-worker.jar:na]
-Caused by: java.lang.IllegalStateException: Internal problem occurred, please report it. Mockito is unable to load the default implementation of class that is a part of Mockito distribution. Failed to load interface org.mockito.plugins.MockMaker
-	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.create(DefaultMockitoPlugins.java:104) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.getDefaultPlugin(DefaultMockitoPlugins.java:78) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.plugins.PluginLoader.loadPlugin(PluginLoader.java:75) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.plugins.PluginLoader.loadPlugin(PluginLoader.java:50) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.plugins.PluginRegistry.&lt;init&gt;(PluginRegistry.java:27) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.plugins.Plugins.&lt;clinit&gt;(Plugins.java:22) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.configuration.GlobalConfiguration.tryGetPluginAnnotationEngine(GlobalConfiguration.java:50) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.MockitoAnnotations.openMocks(MockitoAnnotations.java:80) ~[mockito-core-5.3.1.jar:na]
-	... 85 common frames omitted
-Caused by: java.lang.reflect.InvocationTargetException: null
-	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
-	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
-	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
-	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
-	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
-	at org.mockito.internal.configuration.plugins.DefaultMockitoPlugins.create(DefaultMockitoPlugins.java:102) ~[mockito-core-5.3.1.jar:na]
-	... 92 common frames omitted
-Caused by: org.mockito.exceptions.base.MockitoInitializationException: 
-It seems like you are running Mockito with an incomplete or inconsistent class path. Byte Buddy could not be loaded.
-
-Byte Buddy is available on Maven Central as 'net.bytebuddy:byte-buddy' with the module name 'net.bytebuddy'.
-For the inline mock maker, 'net.bytebuddy:byte-buddy-agent' with the module name 'net.bytebuddy.agent' is also required.
-Normally, your IDE or build tool (such as Maven or Gradle) should take care of your class path completion but 
-	at org.mockito.internal.exceptions.Reporter.missingByteBuddyDependency(Reporter.java:1208) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.&lt;init&gt;(InlineByteBuddyMockMaker.java:25) ~[mockito-core-5.3.1.jar:na]
-	... 98 common frames omitted
-Caused by: java.lang.NoClassDefFoundError: net/bytebuddy/utility/GraalImageCode
-	at org.mockito.internal.creation.bytebuddy.SubclassInjectionLoader.&lt;init&gt;(SubclassInjectionLoader.java:34) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.bytebuddy.SubclassBytecodeGenerator.&lt;init&gt;(SubclassBytecodeGenerator.java:75) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.bytebuddy.InlineBytecodeGenerator.&lt;init&gt;(InlineBytecodeGenerator.java:107) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.bytebuddy.InlineDelegateByteBuddyMockMaker.&lt;init&gt;(InlineDelegateByteBuddyMockMaker.java:321) ~[mockito-core-5.3.1.jar:na]
-	at org.mockito.internal.creation.bytebuddy.InlineByteBuddyMockMaker.&lt;init&gt;(InlineByteBuddyMockMaker.java:23) ~[mockito-core-5.3.1.jar:na]
-	... 98 common frames omitted
-Caused by: java.lang.ClassNotFoundException: net.bytebuddy.utility.GraalImageCode
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:520) ~[na:na]
-	... 103 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'challengeController': Unsatisfied dependency expressed through field 'challengeService'; nested exception is org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.itachallenge.challenge.services.ChallengeService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:659) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:639) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:953) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918) ~[spring-context-5.3.14.jar:5.3.14]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.14.jar:5.3.14]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:730) ~[spring-boot-2.6.2.jar:2.6.2]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:412) ~[spring-boot-2.6.2.jar:2.6.2]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:302) ~[spring-boot-2.6.2.jar:2.6.2]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:121) ~[spring-boot-test-2.6.2.jar:2.6.2]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99) ~[spring-test-5.3.13.jar:5.3.13]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:124) ~[spring-test-5.3.13.jar:5.3.13]
+	... 87 common frames omitted
+Caused by: org.springframework.beans.factory.NoSuchBeanDefinitionException: No qualifying bean of type 'com.itachallenge.challenge.services.ChallengeService' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {@org.springframework.beans.factory.annotation.Autowired(required=true)}
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.raiseNoMatchingBeanFound(DefaultListableBeanFactory.java:1799) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1355) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1309) ~[spring-beans-5.3.14.jar:5.3.14]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:656) ~[spring-beans-5.3.14.jar:5.3.14]
+	... 106 common frames omitted
 
 </pre>
 </span>
@@ -429,7 +424,7 @@ Caused by: java.lang.ClassNotFoundException: net.bytebuddy.utility.GraalImageCod
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 8.0</a> at 18 may 2023 10:21:06</p>
+<a href="http://www.gradle.org">Gradle 8.0</a> at May 18, 2023, 1:00:41 PM</p>
 </div>
 </div>
 </body>
