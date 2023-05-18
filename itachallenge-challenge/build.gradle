@@ -1,7 +1,9 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.0.6'
+    id 'org.springframework.boot' version '2.6.2'
     id 'jacoco'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+
 }
 
 jar {
@@ -25,40 +27,50 @@ repositories {
 
 dependencies {
 
-    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.0.6'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '2.6.2'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-commons', version: '4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:2.6.1'
-
-    implementation 'org.mongodb:mongodb-driver-sync'
-
-    implementation 'io.projectreactor:reactor-core'
-    compileOnly 'org.projectlombok:lombok:1.18.20'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.projectlombok:lombok:1.18.20'
+    //testImplementation 'junit:junit:4.13.1'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'javax.validation:validation-api:2.0.1.Final'
 
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
-
+/*
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    //testing nuevos
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.6.1'
+ */
+    //testing
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
-    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.6.1'
-    testImplementation group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '3.3.1'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
+    //**VERSION PRUEBA
+    //testImplementation 'org.mockito:mockito-core:3.11.2'
+    //testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    //testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    //**TUTORIAL
+    //testImplementation 'org.mockito:mockito-junit-jupiter:4.6.1'
+    //**PROYECTO ANTERIOR
+    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.1.0'
 
 }
 

@@ -2,6 +2,8 @@ package com.itachallenge.challenge.services;
 
 import com.itachallenge.challenge.document.Challenge;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -10,12 +12,15 @@ import java.util.UUID;
 
 @Service
 public class ChallengeServiceImp implements ChallengeService {
+    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
     @Autowired
     private ChallengeRepository challengeRepository;
 
     @Override
     public Mono<Challenge> getChallengeId(UUID id) {
         Mono<Challenge> challenge = challengeRepository.findById(id);
+        //control
+        log.info("Object challenge in getChallengeId(): " + challenge.blockOptional().isPresent());
 
         // Comprueba si existe el desafío
         return challenge.switchIfEmpty(Mono.error(new IllegalArgumentException("ID challenge: " + id + " does not exist in the database.")));
@@ -29,6 +34,14 @@ public class ChallengeServiceImp implements ChallengeService {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    //prueba para generar objetos challenge con uuid aleatorios
+    @Override
+    public Challenge createChallenge() {
+        Challenge challenge = new Challenge();
+
+        return challengeRepository.save(challenge).block();
     }
 
 }

@@ -11,7 +11,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponseMessage> handleResponseStatusException(ResponseStatusException ex) {
-        HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
+        HttpStatus statusCode = ex.getStatus();
         ErrorResponseMessage errorResponseMessage = new ErrorResponseMessage(statusCode.value(), ex.getReason());
         return ResponseEntity.status(statusCode).body(errorResponseMessage);
     }
