@@ -59,7 +59,7 @@ public class ChallengeController {
             throw e;
         } catch (Exception e) {
             log.error("An Exception was thrown with Internal Server Error response: " + e.getMessage());
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
