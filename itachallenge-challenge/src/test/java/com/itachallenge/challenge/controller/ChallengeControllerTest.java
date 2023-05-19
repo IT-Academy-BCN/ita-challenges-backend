@@ -23,11 +23,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.server.ResponseStatusException;
+
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -72,6 +71,7 @@ public class ChallengeControllerTest {
         assertEquals(1, 1);
     }
 
+
     @Test
     public void testGetOneChallengeValidUUID() {
         Challenge challenge = new Challenge();
@@ -89,7 +89,6 @@ public class ChallengeControllerTest {
 
     @Test
     public void testGetOneChallengeNotValidUUID() {
-
         when(challengeService.isValidUUID(INVALID_ID)).thenReturn(false);
 
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
