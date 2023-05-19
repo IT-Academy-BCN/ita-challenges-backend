@@ -55,13 +55,14 @@ dependencies {
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
+    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    testImplementation group: 'net.bytebuddy', name: 'byte-buddy', version: '1.12.9'
 
     //**VERSION PRUEBA
     //testImplementation 'org.mockito:mockito-core:3.11.2'
@@ -70,7 +71,7 @@ dependencies {
     //**TUTORIAL
     //testImplementation 'org.mockito:mockito-junit-jupiter:4.6.1'
     //**PROYECTO ANTERIOR
-    //testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.1.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.1.0'
 
 }
 

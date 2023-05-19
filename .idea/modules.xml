@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita-challenges-backend.itachallenge-challenge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita-challenges-backend.itachallenge-challenge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita.challenges.ita-challenges-backend.itachallenge-challenge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita.challenges.ita-challenges-backend.itachallenge-challenge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-challenge/itachallenge-challenge.ita-challenges-backend.itachallenge-challenge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-challenge/itachallenge-challenge.ita-challenges-backend.itachallenge-challenge.main.iml" />
     </modules>
   </component>
 </project>
