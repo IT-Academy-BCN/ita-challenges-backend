@@ -3,8 +3,8 @@
         "id_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
         "challenge_title": "Sociis Industries",
         "level": "EASY",
-        "creation_date": "Mar 25, 2023",
-        "details": {
+        "creation_date": "2023-02-8",
+        "detail": {
             "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
             "examples": [
                 {
@@ -24,7 +24,7 @@
                     "example_text": "Aenean quis maximus purus. Quisque sit amet"
                 }
             ],
-            "notes": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
+            "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
         },
         "languages": [
             "1",
@@ -51,8 +51,8 @@
         "id_challenge": "c0c7510b-f867-4375-b46f-0c164f30429f",
         "challenge_title": "Interdum Enim Corp.",
         "level": "MEDIUM",
-        "creation_date": "Feb 19, 2023",
-        "details": {
+        "creation_date": "2022-10-27",
+        "detail": {
             "description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
             "examples": [
                 {
@@ -68,7 +68,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "urna. Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna."
+            "note": "urna. Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna."
         },
         "languages": [
             "1",
@@ -97,8 +97,8 @@
         "id_challenge": "5c1a97e5-1cca-4144-9981-2de1fb73b178",
         "challenge_title": "Blandit Viverra Incorporated",
         "level": "HARD",
-        "creation_date": "Dec 30, 2023",
-        "details": {
+        "creation_date": "2023-02-8",
+        "detail": {
             "description": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt,",
             "examples": [
                 {
@@ -114,7 +114,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales. Mauris blandit"
+            "note": "ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales. Mauris blandit"
         },
         "languages": [
             "1",
@@ -139,8 +139,8 @@
         "id_challenge": "d2ce221e-cb49-42d6-b43b-b66eba4ca52d",
         "challenge_title": "Vitae Orci Phasellus Inc.",
         "level": "EASY",
-        "creation_date": "Sep 30, 2022",
-        "details": {
+        "creation_date": "2023-06-20",
+        "detail": {
             "description": "Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget mollis lectus pede",
             "examples": [
                 {
@@ -156,7 +156,7 @@
                     "example_text": "Aenean quis maximus purus. Quisque sit amet"
                 }
             ],
-            "notes": "Aliquam adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non"
+            "note": "Aliquam adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non"
         },
         "languages": [
             "1",
@@ -185,8 +185,8 @@
         "id_challenge": "cf38ddd2-776d-4bad-a182-39840114dfc5",
         "challenge_title": "Malesuada Vel Corporation",
         "level": "HARD",
-        "creation_date": "Oct 1, 2023",
-        "details": {
+        "creation_date": "2023-09-18",
+        "detail": {
             "description": "ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu",
             "examples": [
                 {
@@ -202,7 +202,7 @@
                     "example_text": "Aenean quis maximus purus. Quisque sit amet"
                 }
             ],
-            "notes": "sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing lobortis risus."
+            "note": "sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing lobortis risus."
         },
         "languages": [
             "1",
@@ -227,8 +227,8 @@
         "id_challenge": "5f71e51d-1e3e-44a2-bc97-158021f1a344",
         "challenge_title": "Sem Consequat Nec Incorporated",
         "level": "HARD",
-        "creation_date": "Mar 21, 2024",
-        "details": {
+        "creation_date": "2022-09-3",
+        "detail": {
             "description": "dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque",
             "examples": [
                 {
@@ -244,7 +244,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut,"
+            "note": "Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut,"
         },
         "languages": [
             "1",
@@ -273,8 +273,8 @@
         "id_challenge": "124684b8-3272-4f29-9b82-8f8f1e0db6fc",
         "challenge_title": "Tincidunt LLP",
         "level": "EASY",
-        "creation_date": "Jul 11, 2022",
-        "details": {
+        "creation_date": "2024-01-6",
+        "detail": {
             "description": "nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla dignissim. Maecenas ornare egestas ligula. Nullam feugiat",
             "level": "HARD",
             "examples": [
@@ -291,7 +291,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu, euismod ac, fermentum vel, mauris. Integer sem"
+            "note": "ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu, euismod ac, fermentum vel, mauris. Integer sem"
         },
         "languages": [
             "2",
@@ -316,8 +316,8 @@
         "id_challenge": "a3960f5e-e820-4f8e-9cfd-6e952ae236d7",
         "challenge_title": "Vitae Dolor Donec Inc.",
         "level": "EASY",
-        "creation_date": "Oct 4, 2023",
-        "details": {
+        "creation_date": "2022-11-9",
+        "detail": {
             "description": "aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie",
             "examples": [
                 {
@@ -333,7 +333,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "non, luctus sit amet, faucibus ut, nulla. Cras eu tellus eu augue porttitor interdum. Sed auctor odio a purus. Duis elementum, dui quis accumsan convallis, ante lectus convallis"
+            "note": "non, luctus sit amet, faucibus ut, nulla. Cras eu tellus eu augue porttitor interdum. Sed auctor odio a purus. Duis elementum, dui quis accumsan convallis, ante lectus convallis"
         },
         "languages": [
             "1",
@@ -360,8 +360,8 @@
         "id_challenge": "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a",
         "challenge_title": "Interdum Libero Dui Corporation",
         "level": "MEDIUM",
-        "creation_date": "Mar 10, 2023",
-        "details": {
+        "creation_date": "2023-11-27",
+        "detail": {
             "description": "neque. In ornare sagittis felis. Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac",
             "examples": [
                 {
@@ -377,7 +377,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "luctus felis purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim, gravida sit amet, dapibus id, blandit"
+            "note": "luctus felis purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim, gravida sit amet, dapibus id, blandit"
         },
         "languages": [
             "4"
@@ -400,8 +400,8 @@
         "id_challenge": "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
         "challenge_title": "Risus Varius Orci PC",
         "level": "MEDIUM",
-        "creation_date": "Nov 18, 2023",
-        "details": {
+        "creation_date": "2023-09-12",
+        "detail": {
             "description": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a,",
             "examples": [
                 {
@@ -417,7 +417,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare"
+            "note": "laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare"
         },
         "languages": [
             "1",
@@ -444,8 +444,8 @@
         "id_challenge": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0",
         "challenge_title": "Elit Pharetra Ut Industries",
         "level": "EASY",
-        "creation_date": "Sep 12, 2022",
-        "details": {
+        "creation_date": "2022-12-24",
+        "detail": {
             "description": "rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut srsus luctus, ipsum leo elementum sem, vitae aliquam eros",
             "examples": [
                 {
@@ -461,7 +461,7 @@
                     "example_text": "Aenean quis maximus purus. Quisque sit amet"
                 }
             ],
-            "notes": "cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida."
+            "note": "cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida."
         },
         "languages": [
             "2",
@@ -488,8 +488,8 @@
         "id_challenge": "c1bcc067-f787-4a6f-867a-834193de6032",
         "challenge_title": "Libero Dui Consulting",
         "level": "EASY",
-        "creation_date": "Mar 16, 2024",
-        "details": {
+        "creation_date": "2022-05-27",
+        "detail": {
             "description": "augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras dolor",
             "examples": [
                 {
@@ -505,7 +505,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "hendrerit a, arcu. Sed et libero. Proin mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non,"
+            "note": "hendrerit a, arcu. Sed et libero. Proin mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non,"
         },
         "languages": [
             "1",
@@ -534,8 +534,8 @@
         "id_challenge": "7c55adc0-f985-4829-a2a6-e7571d1be7de",
         "challenge_title": "Metus Corporation",
         "level": "MEDIUM",
-        "creation_date": "Mar 11, 2024",
-        "details": {
+        "creation_date": "2023-05-1",
+        "detail": {
             "description": "cursus purus. Nullam scelerisque neque sed sem egestas blandit. Nam nulla magna, malesuada vel, convallis in, cursus et, eros. Proin",
             "examples": [
                 {
@@ -551,7 +551,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed, facilisis vitae, orci. Phasellus dapibus quam quis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada"
+            "note": "lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed, facilisis vitae, orci. Phasellus dapibus quam quis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada"
         },
         "languages": [
             "1",
@@ -576,8 +576,8 @@
         "id_challenge": "6c340690-692c-43f7-a39b-3926eabc0e91",
         "challenge_title": "Primis In PC",
         "level": "HARD",
-        "creation_date": "Dec 18, 2023",
-        "details": {
+        "creation_date": "2024-02-24",
+        "detail": {
             "description": "nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget, volutpat ornare, facilisis",
             "examples": [
                 {
@@ -593,7 +593,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus,"
+            "note": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus,"
         },
         "languages": [
             "1",
@@ -618,8 +618,8 @@
         "id_challenge": "866853b8-ae7d-4daf-8c82-5e6f653e0fc1",
         "challenge_title": "Ipsum Ac Industries",
         "level": "EASY",
-        "creation_date": "Jan 9, 2024",
-        "details": {
+        "creation_date": "2024-02-10",
+        "detail": {
             "description": "dignissim. Maecenas ornare egestas ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla",
             "examples": [
                 {
@@ -635,7 +635,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus"
+            "note": "Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus"
         },
         "languages": [
             "1",
@@ -664,8 +664,8 @@
         "id_challenge": "18c323ce-025c-4f21-8152-8e46bc94c690",
         "challenge_title": "Massa Lobortis PC",
         "level": "HARD",
-        "creation_date": "Apr 7, 2023",
-        "details": {
+        "creation_date": "2023-04-28",
+        "detail": {
             "description": "condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Donec tincidunt. Donec",
             "examples": [
                 {
@@ -681,7 +681,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim. Etiam imperdiet dictum magna. Ut tincidunt orci quis lectus. Nullam suscipit, est ac facilisis facilisis, magna tellus faucibus"
+            "note": "hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim. Etiam imperdiet dictum magna. Ut tincidunt orci quis lectus. Nullam suscipit, est ac facilisis facilisis, magna tellus faucibus"
         },
         "languages": [
             "1",
@@ -710,8 +710,8 @@
         "id_challenge": "4ca047df-326e-4e56-affa-5541f63ab0af",
         "challenge_title": "Non Associates",
         "level": "HARD",
-        "creation_date": "Oct 26, 2023",
-        "details": {
+        "creation_date": "2023-05-20",
+        "detail": {
             "description": "quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla",
             "examples": [
                 {
@@ -727,7 +727,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "pretium aliquet, metus urna convallis erat, eget tincidunt dui augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras"
+            "note": "pretium aliquet, metus urna convallis erat, eget tincidunt dui augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras"
         },
         "languages": [
             "1",
@@ -754,8 +754,8 @@
         "id_challenge": "462d7617-477d-497f-8bd2-2fa5d897f20f",
         "challenge_title": "Magna Nam Ligula LLP",
         "level": "EASY",
-        "creation_date": "Jan 11, 2024",
-        "details": {
+        "creation_date": "2023-08-15",
+        "detail": {
             "description": "purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim,",
             "examples": [
                 {
@@ -771,7 +771,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Duis volutpat nunc sit amet metus. Aliquam erat volutpat. Nulla facilisis. Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget"
+            "note": "Duis volutpat nunc sit amet metus. Aliquam erat volutpat. Nulla facilisis. Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget"
         },
         "languages": [
             "1",
@@ -798,8 +798,8 @@
         "id_challenge": "4345bf25-9dbe-429f-80e5-42e68b2f8a85",
         "challenge_title": "Sapien Incorporated",
         "level": "HARD",
-        "creation_date": "Dec 18, 2022",
-        "details": {
+        "creation_date": "2023-08-19",
+        "detail": {
             "description": "Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae,",
             "examples": [
                 {
@@ -815,7 +815,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Pellentesque tincidunt tempus risus. Donec egestas. Duis ac arcu. Nunc mauris. Morbi non sapien molestie orci tincidunt adipiscing. Mauris molestie pharetra nibh. Aliquam ornare, libero at auctor ullamcorper,"
+            "note": "Pellentesque tincidunt tempus risus. Donec egestas. Duis ac arcu. Nunc mauris. Morbi non sapien molestie orci tincidunt adipiscing. Mauris molestie pharetra nibh. Aliquam ornare, libero at auctor ullamcorper,"
         },
         "languages": [
             "1",
@@ -842,8 +842,8 @@
         "id_challenge": "1f87630e-8c61-464e-8385-391f90d0b1d1",
         "challenge_title": "Pede Cum Associates",
         "level": "EASY",
-        "creation_date": "Sep 6, 2023",
-        "details": {
+        "creation_date": "2023-04-23",
+        "detail": {
             "description": "nec mauris blandit mattis. Cras eget nisi dictum augue malesuada malesuada. Integer id magna et ipsum cursus vestibulum. Mauris magna.",
             "examples": [
                 {
@@ -859,7 +859,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut"
+            "note": "ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut"
         },
         "languages": [
             "1",
@@ -884,8 +884,8 @@
         "id_challenge": "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
         "challenge_title": "Pellentesque Ultricies Dignissim Limited",
         "level": "MEDIUM",
-        "creation_date": "Feb 7, 2024",
-        "details": {
+        "creation_date": "2023-10-29",
+        "detail": {
             "description": "magna sed dui. Fusce aliquam, enim nec tempus scelerisque, lorem ipsum sodales purus, in molestie tortor nibh sit amet orci.",
             "examples": [
                 {
@@ -901,7 +901,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "eu neque pellentesque massa lobortis ultrices. Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper"
+            "note": "eu neque pellentesque massa lobortis ultrices. Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper"
         },
         "languages": [
             "1",
@@ -928,8 +928,8 @@
         "id_challenge": "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
         "challenge_title": "Neque Nullam Corporation",
         "level": "MEDIUM",
-        "creation_date": "Sep 19, 2022",
-        "details": {
+        "creation_date": "2023-06-12",
+        "detail": {
             "description": "auctor ullamcorper, nisl arcu iaculis enim, sit amet ornare lectus justo eu arcu. Morbi sit amet massa. Quisque porttitor eros",
             "examples": [
                 {
@@ -945,7 +945,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non dui nec urna suscipit"
+            "note": "In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non dui nec urna suscipit"
         },
         "languages": [
             "1",
@@ -972,8 +972,8 @@
         "id_challenge": "d0a82421-de75-46a5-903e-69e4addf7e75",
         "challenge_title": "Mi Aliquam Corporation",
         "level": "HARD",
-        "creation_date": "Nov 22, 2022",
-        "details": {
+        "creation_date": "2024-05-2",
+        "detail": {
             "description": "ligula consectetuer rhoncus. Nullam velit dui, semper et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim lacus. Aliquam rutrum lorem",
             "examples": [
                 {
@@ -989,7 +989,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "ridiculus mus. Proin vel nisl. Quisque fringilla euismod enim. Etiam gravida molestie arcu. Sed eu nibh vulputate mauris sagittis placerat. Cras dictum ultricies ligula. Nullam enim. Sed nulla"
+            "note": "ridiculus mus. Proin vel nisl. Quisque fringilla euismod enim. Etiam gravida molestie arcu. Sed eu nibh vulputate mauris sagittis placerat. Cras dictum ultricies ligula. Nullam enim. Sed nulla"
         },
         "languages": [
             "1",
@@ -1016,8 +1016,8 @@
         "id_challenge": "cebd2d65-8562-4691-a066-f1d1b3d7be86",
         "challenge_title": "Eu Turpis Ltd",
         "level": "HARD",
-        "creation_date": "Nov 10, 2023",
-        "details": {
+        "creation_date": "2023-11-28",
+        "detail": {
             "description": "quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in",
             "examples": [
                 {
@@ -1033,7 +1033,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a, dui. Cras pellentesque. Sed dictum. Proin eget odio."
+            "note": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a, dui. Cras pellentesque. Sed dictum. Proin eget odio."
         },
         "languages": [
             "4"
@@ -1056,8 +1056,8 @@
         "id_challenge": "9818b618-b740-479d-8aac-962cd3e77cdd",
         "challenge_title": "Et Arcu Ltd",
         "level": "HARD",
-        "creation_date": "Sep 13, 2023",
-        "details": {
+        "creation_date": "2022-12-2",
+        "detail": {
             "description": "Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci.",
             "examples": [
                 {
@@ -1073,7 +1073,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem. Pellentesque ut"
+            "note": "eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem. Pellentesque ut"
         },
         "languages": [
             "4"
@@ -1096,8 +1096,8 @@
         "id_challenge": "468c70e7-57ea-4fba-b57d-73034ad5aa5f",
         "challenge_title": "Felis Eget Corporation",
         "level": "MEDIUM",
-        "creation_date": "Nov 19, 2023",
-        "details": {
+        "creation_date": "2024-04-27",
+        "detail": {
             "description": "neque. Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum.",
             "examples": [
                 {
@@ -1113,7 +1113,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu,"
+            "note": "vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu,"
         },
         "languages": [
             "4"
@@ -1136,8 +1136,8 @@
         "id_challenge": "6f189158-881c-4165-ad08-1c306c7752db",
         "challenge_title": "Metus Associates",
         "level": "EASY",
-        "creation_date": "Jan 31, 2023",
-        "details": {
+        "creation_date": "2023-07-23",
+        "detail": {
             "description": "dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut, pellentesque eget,",
             "examples": [
                 {
@@ -1153,7 +1153,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non, vestibulum nec, euismod in, dolor. Fusce feugiat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam auctor,"
+            "note": "vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non, vestibulum nec, euismod in, dolor. Fusce feugiat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam auctor,"
         },
         "languages": [
             "3",
@@ -1178,8 +1178,8 @@
         "id_challenge": "d43506aa-266b-4ea4-af29-e3b75e3879d6",
         "challenge_title": "Arcu Aliquam Institute",
         "level": "EASY",
-        "creation_date": "Jan 1, 2023",
-        "details": {
+        "creation_date": "2023-08-18",
+        "detail": {
             "description": "rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim.",
             "examples": [
                 {
@@ -1195,7 +1195,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet ante. Vivamus non lorem vitae odio sagittis semper. Nam tempor diam"
+            "note": "ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet ante. Vivamus non lorem vitae odio sagittis semper. Nam tempor diam"
         },
         "languages": [
             "1",
@@ -1220,8 +1220,8 @@
         "id_challenge": "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e",
         "challenge_title": "Egestas Duis Institute",
         "level": "HARD",
-        "creation_date": "Feb 10, 2023",
-        "details": {
+        "creation_date": "2023-08-25",
+        "detail": {
             "description": "semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus.",
             "examples": [
                 {
@@ -1237,7 +1237,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper pretium neque. Morbi quis urna. Nunc quis arcu vel"
+            "note": "est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper pretium neque. Morbi quis urna. Nunc quis arcu vel"
         },
         "languages": [
             "1",
@@ -1262,8 +1262,8 @@
         "id_challenge": "92fc9c85-206a-473c-a79a-a37e54939125",
         "challenge_title": "Proin Inc.",
         "level": "EASY",
-        "creation_date": "Aug 4, 2022",
-        "details": {
+        "creation_date": "2023-10-27",
+        "detail": {
             "description": "massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus. Nunc ac sem ut dolor dapibus gravida. Aliquam tincidunt,",
             "examples": [
                 {
@@ -1279,7 +1279,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "commodo hendrerit. Donec porttitor tellus non magna. Nam ligula elit, pretium et, rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent"
+            "note": "commodo hendrerit. Donec porttitor tellus non magna. Nam ligula elit, pretium et, rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent"
         },
         "languages": [
             "1",
@@ -1304,8 +1304,8 @@
         "id_challenge": "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4",
         "challenge_title": "Tincidunt Nibh Phasellus Company",
         "level": "EASY",
-        "creation_date": "Feb 18, 2024",
-        "details": {
+        "creation_date": "2022-10-31",
+        "detail": {
             "description": "Nunc mauris elit, dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue",
             "examples": [
                 {
@@ -1321,7 +1321,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Nunc laoreet lectus quis massa. Mauris vestibulum, neque sed dictum eleifend, nunc risus varius orci, in consequat enim diam vel arcu. Curabitur ut odio vel est tempor bibendum."
+            "note": "Nunc laoreet lectus quis massa. Mauris vestibulum, neque sed dictum eleifend, nunc risus varius orci, in consequat enim diam vel arcu. Curabitur ut odio vel est tempor bibendum."
         },
         "languages": [
             "2",
@@ -1346,8 +1346,8 @@
         "id_challenge": "6646a97f-17a7-49d6-b325-6db9e84a456f",
         "challenge_title": "Class Foundation",
         "level": "HARD",
-        "creation_date": "Mar 21, 2024",
-        "details": {
+        "creation_date": "2022-05-30",
+        "detail": {
             "description": "sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed,",
             "examples": [
                 {
@@ -1363,7 +1363,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "id nunc interdum feugiat. Sed nec metus facilisis lorem tristique aliquet. Phasellus fermentum convallis ligula. Donec luctus aliquet odio. Etiam ligula tortor, dictum eu, placerat eget, venenatis a,"
+            "note": "id nunc interdum feugiat. Sed nec metus facilisis lorem tristique aliquet. Phasellus fermentum convallis ligula. Donec luctus aliquet odio. Etiam ligula tortor, dictum eu, placerat eget, venenatis a,"
         },
         "languages": [
             "2",
@@ -1388,8 +1388,8 @@
         "id_challenge": "72bc6c83-e9b1-4f25-9000-58af4d49ab9c",
         "challenge_title": "Dolor Quisque Incorporated",
         "level": "EASY",
-        "creation_date": "Jul 6, 2022",
-        "details": {
+        "creation_date": "2023-01-27",
+        "detail": {
             "description": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel",
             "examples": [
                 {
@@ -1405,7 +1405,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing"
+            "note": "malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing"
         },
         "languages": [
             "2",
@@ -1430,8 +1430,8 @@
         "id_challenge": "41a5f6f7-b294-4ec8-ab66-3e629faee136",
         "challenge_title": "Ornare Associates",
         "level": "EASY",
-        "creation_date": "May 15, 2023",
-        "details": {
+        "creation_date": "2023-03-19",
+        "detail": {
             "description": "elit, a feugiat tellus lorem eu metus. In lorem. Donec elementum, lorem ut aliquam iaculis, lacus pede sagittis augue, eu",
             "examples": [
                 {
@@ -1447,7 +1447,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus. Aenean sed pede nec ante blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem,"
+            "note": "eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus. Aenean sed pede nec ante blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem,"
         },
         "languages": [
             "2"
@@ -1470,8 +1470,8 @@
         "id_challenge": "67e62585-93e7-485e-8d78-0cd1e9331886",
         "challenge_title": "Orci Lobortis Augue Corporation",
         "level": "MEDIUM",
-        "creation_date": "Aug 11, 2022",
-        "details": {
+        "creation_date": "2024-02-15",
+        "detail": {
             "description": "dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus",
             "examples": [
                 {
@@ -1487,7 +1487,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "Nam tempor diam dictum sapien. Aenean massa. Integer vitae nibh. Donec est mauris, rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo"
+            "note": "Nam tempor diam dictum sapien. Aenean massa. Integer vitae nibh. Donec est mauris, rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo"
         },
         "languages": [
             "2"
@@ -1510,8 +1510,8 @@
         "id_challenge": "577f459b-a1f9-4905-a689-a060677d393d",
         "challenge_title": "Arcu Industries",
         "level": "MEDIUM",
-        "creation_date": "Aug 6, 2022",
-        "details": {
+        "creation_date": "2022-11-9",
+        "detail": {
             "description": "adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada",
             "examples": [
                 {
@@ -1527,7 +1527,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "molestie sodales. Mauris blandit enim consequat purus. Maecenas libero est, congue a, aliquet vel, vulputate eu, odio. Phasellus at augue id ante dictum cursus. Nunc mauris elit, dictum"
+            "note": "molestie sodales. Mauris blandit enim consequat purus. Maecenas libero est, congue a, aliquet vel, vulputate eu, odio. Phasellus at augue id ante dictum cursus. Nunc mauris elit, dictum"
         },
         "languages": [
             "2"
@@ -1550,8 +1550,8 @@
         "id_challenge": "ea9a9b70-273c-4322-acc4-ac4950558a4a",
         "challenge_title": "Lectus Pede Industries",
         "level": "HARD",
-        "creation_date": "Sep 9, 2022",
-        "details": {
+        "creation_date": "2024-01-17",
+        "detail": {
             "description": "nulla ante, iaculis nec, eleifend non, dapibus rutrum, justo. Praesent luctus. Curabitur egestas nunc sed libero. Proin sed turpis nec",
             "examples": [
                 {
@@ -1567,7 +1567,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "mattis. Integer eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem."
+            "note": "mattis. Integer eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem."
         },
         "languages": [
             "3",
@@ -1592,8 +1592,8 @@
         "id_challenge": "c6656d38-f592-4be2-b256-7c4015333445",
         "challenge_title": "Maecenas Mi Felis Company",
         "level": "HARD",
-        "creation_date": "Aug 22, 2023",
-        "details": {
+        "creation_date": "2022-09-26",
+        "detail": {
             "description": "Quisque porttitor eros nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget,",
             "examples": [
                 {
@@ -1609,7 +1609,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin orci sem eget massa. Suspendisse eleifend. Cras sed leo. Cras"
+            "note": "velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin orci sem eget massa. Suspendisse eleifend. Cras sed leo. Cras"
         },
         "languages": [
             "1",
@@ -1634,8 +1634,8 @@
         "id_challenge": "40728c9c-a557-4d12-bf8f-3747d0924197",
         "challenge_title": "Sodales PC",
         "level": "MEDIUM",
-        "creation_date": "Oct 9, 2023",
-        "details": {
+        "creation_date": "2023-09-10",
+        "detail": {
             "description": "Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac tellus. Suspendisse sed dolor. Fusce",
             "examples": [
                 {
@@ -1651,7 +1651,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel sapien imperdiet ornare. In faucibus. Morbi vehicula. Pellentesque"
+            "note": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel sapien imperdiet ornare. In faucibus. Morbi vehicula. Pellentesque"
         },
         "languages": [
             "1",
@@ -1676,8 +1676,8 @@
         "id_challenge": "eb7a15e4-499e-481d-a909-6acc642b0c09",
         "challenge_title": "Mauris Eu Corp.",
         "level": "MEDIUM",
-        "creation_date": "Jan 17, 2024",
-        "details": {
+        "creation_date": "2023-02-27",
+        "detail": {
             "description": "auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat.",
             "examples": [
                 {
@@ -1693,7 +1693,7 @@
                     "example_text": "Mauris feugiat massa et suscipit malesuada."
                 }
             ],
-            "notes": "metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus"
+            "note": "metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus"
         },
         "languages": [
             "1",
