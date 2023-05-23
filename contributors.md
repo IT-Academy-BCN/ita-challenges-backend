@@ -15,4 +15,3 @@ Josep Salgado https://github.com/josepSSBCN
 Christian Gálvez - https://github.com/ChrisGalHur
 
 Anna Santasusana - https://github.com/AnnaSantasusana
-
