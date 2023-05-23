@@ -1,6 +1,5 @@
 rootProject.name = 'ita-challenges-backend'
 include 'itachallenge-challenge'
-include 'ita-challenges-score'
 include 'itachallenge-score'
 include 'itachallenge-user'
 
