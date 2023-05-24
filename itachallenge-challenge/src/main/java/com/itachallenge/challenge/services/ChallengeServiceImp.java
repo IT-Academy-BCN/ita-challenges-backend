@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.services;
 
-import com.itachallenge.challenge.document.Challenge;
-import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.repositories.ChallengeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

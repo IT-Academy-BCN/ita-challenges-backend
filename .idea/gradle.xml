@@ -11,7 +11,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ita-challenges-score" />
             <option value="$PROJECT_DIR$/itachallenge-challenge" />
+            <option value="$PROJECT_DIR$/itachallenge-score" />
+            <option value="$PROJECT_DIR$/itachallenge-user" />
           </set>
         </option>
       </GradleProjectSettings>

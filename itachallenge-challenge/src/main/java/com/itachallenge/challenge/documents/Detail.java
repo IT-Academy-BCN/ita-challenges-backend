@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.document;
+package com.itachallenge.challenge.documents;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

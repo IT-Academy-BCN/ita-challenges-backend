@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.document;
+package com.itachallenge.challenge.documents;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,14 +9,21 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
 
-@Document(collection="resources")
+@Document(collection="solutions")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Resource {
-    @Id
-    private UUID resourceId;
+public class Solution {
 
-    @Field(name="resource")
-    private String resource;
+    @Id
+    private UUID solutionId;
+
+    @Field(name="solution")
+    private String solution;
+
+    @Field(name="challengeId")
+    private UUID challengeId;
+
+    @Field(name="languageId")
+    private UUID languageId;
 }

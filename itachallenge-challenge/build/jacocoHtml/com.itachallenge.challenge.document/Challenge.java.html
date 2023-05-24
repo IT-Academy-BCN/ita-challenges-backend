@@ -2,7 +2,6 @@
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -11,36 +10,45 @@ import java.util.Date;
 import java.util.UUID;
 
 @Document(collection=&quot;challenges&quot;)
-<span class="nc" id="L14">@AllArgsConstructor</span>
-<span class="fc" id="L15">@NoArgsConstructor</span>
-<span class="pc bpc" id="L16" title="53 of 54 branches missed.">@Data</span>
+<span class="nc" id="L13">@AllArgsConstructor</span>
+//@NoArgsConstructor
+<span class="nc bnc" id="L15" title="All 54 branches missed.">@Data</span>
 public class Challenge {
 
     @Id
-<span class="nc" id="L20">    private UUID challengeId;</span>
+<span class="nc" id="L19">    private UUID challengeId;</span>
 
     @Field(name=&quot;name&quot;)
-<span class="nc" id="L23">    private String name;</span>
+<span class="nc" id="L22">    private String name;</span>
 
     @Field(name=&quot;level&quot;)
-<span class="nc" id="L26">    private Level level;</span>
+<span class="nc" id="L25">    private Level level;</span>
 
     @Field(name=&quot;creationDate&quot;)
-<span class="nc" id="L29">    private Date creationDate;</span>
+<span class="nc" id="L28">    private Date creationDate;</span>
 
     @Field(name=&quot;details&quot;)
-<span class="nc" id="L32">    private Detail details;</span>
+<span class="nc" id="L31">    private Detail details;</span>
 
     @Field(name=&quot;solutions&quot;)
-<span class="nc" id="L35">    private Solution[] solutions;</span>
+<span class="nc" id="L34">    private Solution[] solutions;</span>
 
     @Field(name=&quot;languages&quot;)
-<span class="nc" id="L38">    private Language[] languages;</span>
+<span class="nc" id="L37">    private Language[] languages;</span>
 
     @Field(name=&quot;resources&quot;)
-<span class="nc" id="L41">    private Resource[] resources;</span>
+<span class="nc" id="L40">    private Resource[] resources;</span>
 
     @Field(name=&quot;related&quot;)
-<span class="nc" id="L44">    private Challenge[] related;</span>
+<span class="nc" id="L43">    private Challenge[] related;</span>
+
+    //pureba para crear challenge en bd
+<span class="nc" id="L46">    public Challenge() {</span>
+<span class="nc" id="L47">        this.challengeId = UUID.randomUUID();</span>
+<span class="nc" id="L48">    }</span>
+
+<span class="nc" id="L50">    public Challenge(UUID challengeId) {</span>
+<span class="nc" id="L51">        this.challengeId = challengeId;</span>
+<span class="nc" id="L52">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

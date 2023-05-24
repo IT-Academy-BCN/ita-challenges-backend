@@ -1,6 +1,7 @@
-package com.itachallenge.challenge.controller;
+package com.itachallenge.challenge.controllers;
 
-import com.itachallenge.challenge.document.Challenge;
+import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import com.itachallenge.challenge.services.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
+    private ErrorResponseMessage errorMessage;
 
     @Autowired
     private ChallengeService challengeService;
@@ -36,9 +38,9 @@ public class ChallengeController {
             boolean validUUID = challengeService.isValidUUID(id.toString());
 
             if (!validUUID) {
-                String errorMessage = "Invalid ID format.";
+                errorMessage = new ErrorResponseMessage(HttpStatus.NOT_FOUND.value(), "Invalid ID format.");
                 log.error(errorMessage + " ID: " + id + ", incorrect.");
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage.getMessage());
             }
 
             Mono<Challenge> challenge = challengeService.getChallengeId(UUID.fromString(id))

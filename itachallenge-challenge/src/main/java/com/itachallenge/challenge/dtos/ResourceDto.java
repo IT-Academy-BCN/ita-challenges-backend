@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.dto;
+package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

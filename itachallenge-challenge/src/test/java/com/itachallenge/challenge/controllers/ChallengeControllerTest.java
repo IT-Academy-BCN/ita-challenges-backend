@@ -1,11 +1,11 @@
-package com.itachallenge.challenge.controller;
+package com.itachallenge.challenge.controllers;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.mockito.Mockito.*;
 
-import com.itachallenge.challenge.document.Challenge;
+import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.services.ChallengeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,13 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,7 @@ import reactor.test.StepVerifier;
 import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(controllers = ChallengeController.class, excludeAutoConfiguration = {ReactiveSecurityAutoConfiguration.class})
+@WebFluxTest(controllers = ChallengeController.class)
 public class ChallengeControllerTest {
     //variables
     private final static String VALID_ID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
@@ -47,7 +46,7 @@ public class ChallengeControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
-    @Mock
+    @MockBean
     private ChallengeService challengeService;
     @InjectMocks
     private ChallengeController challengeController;

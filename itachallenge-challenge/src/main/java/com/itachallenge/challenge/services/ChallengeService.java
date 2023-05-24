@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.services;
 
-import com.itachallenge.challenge.document.Challenge;
+import com.itachallenge.challenge.documents.Challenge;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;

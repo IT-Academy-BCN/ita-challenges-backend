@@ -1,6 +1,6 @@
-package com.itachallenge.challenge.repository;
+package com.itachallenge.challenge.repositories;
 
-import com.itachallenge.challenge.document.Challenge;
+import com.itachallenge.challenge.documents.Challenge;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 

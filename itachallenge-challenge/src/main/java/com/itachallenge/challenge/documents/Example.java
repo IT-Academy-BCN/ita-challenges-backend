@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.document;
+package com.itachallenge.challenge.documents;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,15 +9,16 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
 
-@Document(collection="languages")
+@Document(collection="examples")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Language {
+public class Example {
 
     @Id
-    private UUID languageId;
+    private UUID ExampleId;
 
-    @Field(name="language")
-    private String language;
+    @Field(name="detailsId")
+    private UUID detailsId;
+
 }
