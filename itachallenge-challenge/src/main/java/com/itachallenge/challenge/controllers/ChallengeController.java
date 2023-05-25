@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.controllers;
 
-import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import com.itachallenge.challenge.services.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,7 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/getOne/{id}")
-    public ResponseEntity<Mono<Challenge>> getOneChallenge(@PathVariable("id") String id) {
+    public ResponseEntity<Mono<ChallengeDto>> getOneChallenge(@PathVariable("id") String id) {
 
         try {
             boolean validUUID = challengeService.isValidUUID(id.toString());
@@ -43,7 +43,7 @@ public class ChallengeController {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage.getMessage());
             }
 
-            Mono<Challenge> challenge = challengeService.getChallengeId(UUID.fromString(id))
+            Mono<ChallengeDto> challenge = challengeService.getChallengeId(UUID.fromString(id))
                     .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                     .onErrorResume(error -> {
                         if (error instanceof IllegalArgumentException) {
@@ -64,12 +64,12 @@ public class ChallengeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+/*
     //prueba para crear challenge en bd
     @PostMapping(path = "/add")
     public ResponseEntity<Challenge> createChallenge() {
         Challenge challenge = challengeService.createChallenge();
         return new ResponseEntity<>(challenge, HttpStatus.CREATED);
     }
-
+*/
 }

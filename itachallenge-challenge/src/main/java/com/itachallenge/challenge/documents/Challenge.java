@@ -1,25 +1,28 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Document(collection="challenges")
 @AllArgsConstructor
 //@NoArgsConstructor
 @Data
+@Builder
 public class Challenge {
 
     @Id
     private UUID challengeId;
 
     @Field(name="name")
-    private String name;
+    private String title;
 
     @Field(name="level")
     private Level level;
@@ -40,7 +43,7 @@ public class Challenge {
     private Resource[] resources;
 
     @Field(name="related")
-    private Challenge[] related;
+    private List<String> related;
 
     //pureba para crear challenge en bd
     public Challenge() {

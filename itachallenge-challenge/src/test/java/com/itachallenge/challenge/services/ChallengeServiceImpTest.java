@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.repositories.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ public class ChallengeServiceImpTest {
         Challenge challenge = new Challenge();
         when(challengeRepository.findById(VALID_ID)).thenReturn(Mono.just(challenge));
 
-        Mono<Challenge> result = challengeService.getChallengeId(VALID_ID);
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
         assertNotNull(result.block());
         assertEquals(challenge, result.block());

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import static org.mockito.Mockito.*;
 
-import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.services.ChallengeService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,12 +73,12 @@ public class ChallengeControllerTest {
 
     @Test
     public void testGetOneChallengeValidUUID() {
-        Challenge challenge = new Challenge();
+        ChallengeDto challenge = new ChallengeDto();
 
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         when(challengeService.getChallengeId(UUID.fromString(VALID_ID))).thenReturn(Mono.just(challenge));
 
-        ResponseEntity<Mono<Challenge>> response = challengeController.getOneChallenge(VALID_ID);
+        ResponseEntity<Mono<ChallengeDto>> response = challengeController.getOneChallenge(VALID_ID);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(challenge, response.getBody().block());
@@ -107,7 +107,7 @@ public class ChallengeControllerTest {
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         when(challengeService.getChallengeId(UUID.fromString(VALID_ID))).thenReturn(Mono.empty());
 
-        Mono<Challenge> challenge = challengeController.getOneChallenge(VALID_ID).getBody();
+        Mono<ChallengeDto> challenge = challengeController.getOneChallenge(VALID_ID).getBody();
 
         StepVerifier.create(challenge)
                 .expectError(ResponseStatusException.class)
@@ -123,8 +123,8 @@ public class ChallengeControllerTest {
         Mockito.when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         Mockito.when(challengeService.getChallengeId(Mockito.any())).thenReturn(Mono.error(exception));
 
-        ResponseEntity<Mono<Challenge>> responseEntity = challengeController.getOneChallenge(VALID_ID);
-        Mono<Challenge> challenge = responseEntity.getBody();
+        ResponseEntity<Mono<ChallengeDto>> responseEntity = challengeController.getOneChallenge(VALID_ID);
+        Mono<ChallengeDto> challenge = responseEntity.getBody();
 
         StepVerifier.create(challenge)
                 .expectErrorMatches(error -> error instanceof ResponseStatusException
@@ -141,7 +141,7 @@ public class ChallengeControllerTest {
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         when(challengeService.getChallengeId(any(UUID.class))).thenThrow(new RuntimeException(MESSAGE_INTERNAL_SERVER_ERROR));
 
-        ResponseEntity<Mono<Challenge>> response = challengeController.getOneChallenge(VALID_ID);
+        ResponseEntity<Mono<ChallengeDto>> response = challengeController.getOneChallenge(VALID_ID);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 
