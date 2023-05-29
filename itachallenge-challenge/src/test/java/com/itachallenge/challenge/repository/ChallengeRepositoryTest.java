@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.controller;
+package com.itachallenge.challenge.repository;
 
 import ac.simons.spring.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import com.itachallenge.challenge.documents.Challenge;
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -18,38 +19,49 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
+//@PropertySource("classpath:persistence-test.properties")
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ChallengeRepositoryTest {
 
+    @Autowired
+    private ChallengeRepository challengeRepository;
+
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
             .withStartupTimeout(Duration.ofSeconds(60));
 
-
     @DynamicPropertySource
-    static void initMongoProperties(@NotNull DynamicPropertyRegistry registry) {
-        System.out.println("container url: {}" + container.getReplicaSetUrl("challengeDB"));
+    static void initMongoProperties(DynamicPropertyRegistry registry) {
+        System.out.println("container url: {}" + container.getReplicaSetUrl("challenges"));
         System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
 
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challengeDB"));
+        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
     }
 
-    @Autowired
-    private ChallengeRepository challengeRepository;
+
+
+    @BeforeEach
+    public void setUp(){
+       // assertNotNull(challengeRepository);
+/*        challengeRepository.deleteAll().block();
+        Challenge challenge1 = new Challenge("23", "Loops");
+        Challenge challenge2 = new Challenge("24", "If-Else");
+        challengeRepository.saveAll(Flux.just(challenge1, challenge2)).blockLast();*/
+    }
 
 
     @Test
     void testDB() {
-        Challenge challenge1 = new Challenge();
+/*        Challenge challenge1 = new Challenge();
         System.out.println("=========");
-        System.out.println(challenge1);
+        System.out.println(challenge1);*/
         assertNotNull(challengeRepository);
+        assertTrue(true);
     }
 
     /*@BeforeEach

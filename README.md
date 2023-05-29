@@ -2,7 +2,7 @@
 
 ### Versiones necesarias
 
-- Gradle 7.4.1
+- Gradle 8.1.1
 - Java 17.0.1
 
 ### Módulos del proyecto

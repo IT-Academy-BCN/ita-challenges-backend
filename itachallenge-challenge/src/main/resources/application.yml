@@ -1,14 +1,15 @@
 spring:
   application:
     name: itachallenge-challenge
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
-
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: challengeDB
+      uri: mongodb://adminChallenge:01TZFSLwZ0@localhost:27017/challenges
+      #uri: mongodb://adminChallenge:01TZFSLwZ0@0.0.0.0:27018/challenges # docker
 
 springdoc:
   swagger-ui:

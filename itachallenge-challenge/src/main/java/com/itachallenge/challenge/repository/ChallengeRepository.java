@@ -6,14 +6,12 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-@Repository
-public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, String> {
+public interface ChallengeRepository extends ReactiveMongoRepository<Challenge,String> {
 
+    @Override
     Mono<Challenge> findById(String id);
 
-
-    Mono<Challenge> findByName(String name);
-
+    @Override
     Mono<Challenge> save (Challenge challenge);
 
 
