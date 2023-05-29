@@ -26,11 +26,11 @@ public class ResourceHelperTest {
                 "  ]\r\n" +
                 "}";
 
-        ResourceHelper resourceHelper = new ResourceHelper();
         String jsonPath = "json/RandomJson.json";
+        ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
         String result  = null;
         try {
-            result = resourceHelper.readResourceAsString(jsonPath);
+            result = resourceHelper.readResourceAsString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
