@@ -1,9 +1,8 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.config.DummiesConfig;
+import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +17,6 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,37 +29,21 @@ public class ChallengeServiceTest {
     private ChallengeService challengeService;
 
     @MockBean
-    private DummiesConfig dummiesConfig;
-
-    private static ResourceHelper resourceHelper;
-
-    @BeforeAll
-    static void setUp(){
-        resourceHelper = new ResourceHelper();
-    }
+    private PropertiesConfig config;
 
     @Test
     @DisplayName("Get all challenge's filters available Test")
     @SneakyThrows(IOException.class)
     void getChallengesFiltersInfoTest(){
         String jsonPath = "json/FiltersInfoResponse.json";
-        String expected = resourceHelper.readResourceAsString(jsonPath);
+        String expected =  new ResourceHelper(jsonPath).readResourceAsString();
 
-        when(dummiesConfig.getFilterPath()).thenReturn(jsonPath);
+        when(config.getFiltersData()).thenReturn(expected);
 
-        MockedConstruction.MockInitializer<ResourceHelper> configureResourceHelperMock =
-                (mock, context) ->
-                        when(mock.readResourceAsString(anyString())).thenReturn(expected);
-
-        try (MockedConstruction<ResourceHelper> mockedResourceHelper =
-                     mockConstruction(ResourceHelper.class,
-                    configureResourceHelperMock )) {
-
-            Mono<String> result = challengeService.getDummyFiltersInfo();
-            StepVerifier.create(result)
-                    .assertNext(filterInfo -> assertThat(filterInfo).isEqualTo(expected))
-                    .verifyComplete();
-        }
+        Mono<String> result = challengeService.getFiltersInfo();
+        StepVerifier.create(result)
+                .assertNext(filterInfo -> assertThat(filterInfo).isEqualTo(expected))
+                .verifyComplete();
     }
 
     @Test
@@ -69,22 +51,13 @@ public class ChallengeServiceTest {
     @SneakyThrows(IOException.class)
     void getChallengesSortInfoTest(){
         String jsonPath = "json/SortInfoResponse.json";
-        String expected = resourceHelper.readResourceAsString(jsonPath);
+        String expected =  new ResourceHelper(jsonPath).readResourceAsString();
 
-        when(dummiesConfig.getSortPath()).thenReturn("");
+        when(config.getSortData()).thenReturn(expected);
 
-        MockedConstruction.MockInitializer<ResourceHelper> configureResourceHelperMock =
-                (mock, context) ->
-                        when(mock.readResourceAsString(anyString())).thenReturn(expected);
-
-        try (MockedConstruction<ResourceHelper> mockedResourceHelper =
-                     mockConstruction(ResourceHelper.class,
-                             configureResourceHelperMock )) {
-
-            Mono<String> result = challengeService.getDummySortInfo();
-            StepVerifier.create(result)
-                    .assertNext(sortInfo -> assertThat(sortInfo).isEqualTo(expected))
-                    .verifyComplete();
-        }
+        Mono<String> result = challengeService.getSortInfo();
+        StepVerifier.create(result)
+                .assertNext(sortInfo -> assertThat(sortInfo).isEqualTo(expected))
+                .verifyComplete();
     }
 }

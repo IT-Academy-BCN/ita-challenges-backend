@@ -4,7 +4,6 @@ import com.itachallenge.challenge.helper.ResourceHelper;
 import com.itachallenge.challenge.service.ChallengeService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,16 +30,13 @@ public class ChallengeControllerTest {
     @MockBean
     private ChallengeService challengeService;
 
-    private ResourceHelper resourceHelper;
-
     @Test
     @DisplayName("GET filters options test")
     @SneakyThrows(IOException.class)
     void getChallengesFiltersTest(){
         String filterJsonPath = "json/FiltersInfoResponse.json";
-        resourceHelper = new ResourceHelper(filterJsonPath);
-        String expected =  resourceHelper.readResourceAsString();
-        when(challengeService.getDummyFiltersInfo()).thenReturn(Mono.just(expected));
+        String expected =  new ResourceHelper(filterJsonPath).readResourceAsString();
+        when(challengeService.getFiltersInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.FILTERS;
         webTestClient.get()
@@ -58,9 +54,8 @@ public class ChallengeControllerTest {
     @SneakyThrows(IOException.class)
     void getChallengesSortInfoTest(){
         String sortJsonPath = "json/SortInfoResponse.json";
-        resourceHelper = new ResourceHelper(sortJsonPath);
-        String expected =  resourceHelper.readResourceAsString();
-        when(challengeService.getDummySortInfo()).thenReturn(Mono.just(expected));
+        String expected =  new ResourceHelper(sortJsonPath).readResourceAsString();
+        when(challengeService.getSortInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.SORT;
         webTestClient.get()
