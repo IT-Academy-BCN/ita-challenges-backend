@@ -31,6 +31,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.4'
+    implementation 'eu.michael-simons:datamongotest-autoconfigure-spring-boot:0.0.2'
+
+
+
+    implementation 'io.projectreactor:reactor-core'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
 
@@ -40,6 +49,14 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
+
+    testImplementation group: 'org.testcontainers', name: 'mongodb', version: '1.17.6'
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.6'
+    //testImplementation 'org.springframework.test:spring-test:5.3.14'
+    //testImplementation group: 'org.springframework', name: 'spring-test', version: '5.2'
+    //testImplementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:2.2.9.RELEASE'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.6.1'
+
 
 
 }
