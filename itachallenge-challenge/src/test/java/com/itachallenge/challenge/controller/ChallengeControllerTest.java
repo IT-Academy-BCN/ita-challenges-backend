@@ -10,4 +10,9 @@ public class ChallengeControllerTest {
     public void test() {
         assertEquals(1, 1);
     }
+
+    @Test
+    void deleteByResourceId() {
+
+    }
 }
