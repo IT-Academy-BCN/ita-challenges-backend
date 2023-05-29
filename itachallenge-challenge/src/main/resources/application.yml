@@ -38,3 +38,10 @@ logging:
 #  file:
 #    name: itachallenge-challenge.log
 
+#dummies
+dummy:
+  filters-info:
+    path: "json/filters-info-dummy.json"
+  sort-info:
+    path: "json/sort-info-dummy.json"
+
