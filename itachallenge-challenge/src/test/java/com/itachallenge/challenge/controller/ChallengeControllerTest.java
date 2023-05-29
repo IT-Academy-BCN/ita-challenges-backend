@@ -31,19 +31,15 @@ public class ChallengeControllerTest {
     @MockBean
     private ChallengeService challengeService;
 
-    private static ResourceHelper resourceHelper;
-
-    @BeforeAll
-    static void setUp(){
-        resourceHelper = new ResourceHelper();
-    }
+    private ResourceHelper resourceHelper;
 
     @Test
     @DisplayName("GET filters options test")
     @SneakyThrows(IOException.class)
     void getChallengesFiltersTest(){
         String filterJsonPath = "json/FiltersInfoResponse.json";
-        String expected =  resourceHelper.readResourceAsString(filterJsonPath);
+        resourceHelper = new ResourceHelper(filterJsonPath);
+        String expected =  resourceHelper.readResourceAsString();
         when(challengeService.getDummyFiltersInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.FILTERS;
@@ -62,7 +58,8 @@ public class ChallengeControllerTest {
     @SneakyThrows(IOException.class)
     void getChallengesSortInfoTest(){
         String sortJsonPath = "json/SortInfoResponse.json";
-        String expected =  resourceHelper.readResourceAsString(sortJsonPath);
+        resourceHelper = new ResourceHelper(sortJsonPath);
+        String expected =  resourceHelper.readResourceAsString();
         when(challengeService.getDummySortInfo()).thenReturn(Mono.just(expected));
 
         String uri = ChallengeController.CHALLENGE+ChallengeController.SORT;
