@@ -1,5 +1,6 @@
 package com.itachallenge.challenge;
 
+import com.itachallenge.challenge.config.PropertiesConfigTest;
 import com.itachallenge.challenge.controller.ChallengeControllerTest;
 import com.itachallenge.challenge.helper.ResourceHelperTest;
 import com.itachallenge.challenge.service.ChallengeServiceTest;
@@ -9,8 +10,9 @@ import org.junit.platform.suite.api.Suite;
 @Suite
 @SelectClasses({
         ResourceHelperTest.class,
+        PropertiesConfigTest.class,
         ChallengeServiceTest.class,
-        ChallengeControllerTest.class
+        ChallengeControllerTest.class,
 })
 public class AllTests {
 }

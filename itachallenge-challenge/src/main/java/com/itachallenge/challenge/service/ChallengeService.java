@@ -12,10 +12,10 @@ public class ChallengeService {
     private final PropertiesConfig config;
 
     public Mono<String> getFiltersInfo(){
-        return Mono.just(config.getFiltersData());
+        return Mono.just(config.loadFiltersData());
     }
 
     public Mono<String> getSortInfo(){
-        return Mono.just(config.getSortData());
+        return Mono.just(config.loadSortData());
     }
 }

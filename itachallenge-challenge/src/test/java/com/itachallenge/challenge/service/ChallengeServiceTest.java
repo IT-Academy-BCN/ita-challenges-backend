@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockedConstruction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +16,6 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
-import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -38,7 +36,7 @@ public class ChallengeServiceTest {
         String jsonPath = "json/FiltersInfoResponse.json";
         String expected =  new ResourceHelper(jsonPath).readResourceAsString();
 
-        when(config.getFiltersData()).thenReturn(expected);
+        when(config.loadFiltersData()).thenReturn(expected);
 
         Mono<String> result = challengeService.getFiltersInfo();
         StepVerifier.create(result)
@@ -53,7 +51,7 @@ public class ChallengeServiceTest {
         String jsonPath = "json/SortInfoResponse.json";
         String expected =  new ResourceHelper(jsonPath).readResourceAsString();
 
-        when(config.getSortData()).thenReturn(expected);
+        when(config.loadSortData()).thenReturn(expected);
 
         Mono<String> result = challengeService.getSortInfo();
         StepVerifier.create(result)

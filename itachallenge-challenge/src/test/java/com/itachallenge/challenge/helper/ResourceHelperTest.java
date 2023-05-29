@@ -28,7 +28,7 @@ public class ResourceHelperTest {
 
         String jsonPath = "json/RandomJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
-        String result  = null;
+        String result;
         try {
             result = resourceHelper.readResourceAsString();
         } catch (IOException e) {

@@ -32,13 +32,13 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
-    @Operation(summary = "Filters availables for challenges")
+    @Operation(summary = "Filters available for challenges")
     @GetMapping(value = FILTERS)
     public Mono<String> getChallengesFilters(){
         return challengeService.getFiltersInfo();
     }
 
-    @Operation(summary = "Sorting options availables for challenges")
+    @Operation(summary = "Sorting options available for challenges")
     @GetMapping(value = SORT)
     public Mono<String> getChallengesSortInfo(){
         return challengeService.getSortInfo();
