@@ -1,6 +1,6 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-user
   jmx:
     enabled: true
 
@@ -36,12 +36,5 @@ logging:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-challenge.log
-
-#dummies
-dummy:
-  filters-info:
-    path: "json/filters-info-dummy.json"
-  sort-info:
-    path: "json/sort-info-dummy.json"
+#    name: itachallenge-user.log
 
