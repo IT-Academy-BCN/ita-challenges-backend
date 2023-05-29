@@ -1,13 +1,12 @@
 package com.itachallenge.challenge.repository;
 
-import ac.simons.spring.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -22,7 +21,6 @@ import java.time.Duration;
 import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
-//@PropertySource("classpath:persistence-test.properties")
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -47,7 +45,7 @@ public class ChallengeRepositoryTest {
 
     @BeforeEach
     public void setUp(){
-       // assertNotNull(challengeRepository);
+      assertNotNull(challengeRepository);
 /*        challengeRepository.deleteAll().block();
         Challenge challenge1 = new Challenge("23", "Loops");
         Challenge challenge2 = new Challenge("24", "If-Else");
@@ -60,8 +58,6 @@ public class ChallengeRepositoryTest {
 /*        Challenge challenge1 = new Challenge();
         System.out.println("=========");
         System.out.println(challenge1);*/
-        assertNotNull(challengeRepository);
-        assertTrue(true);
     }
 
     /*@BeforeEach
