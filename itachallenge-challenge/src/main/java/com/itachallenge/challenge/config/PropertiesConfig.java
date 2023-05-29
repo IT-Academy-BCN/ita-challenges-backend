@@ -15,8 +15,4 @@ public class PropertiesConfig {
 
     @Value("${url.maxBytesInMemory}")
     private Integer maxBytesInMemory;
-
-    //TODO: add ita-wiki urls (also in properties) once we know where + how request resources
-    // (see HttpProxy + test)
-
 }

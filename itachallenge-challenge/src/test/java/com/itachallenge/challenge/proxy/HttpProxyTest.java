@@ -1,20 +1,16 @@
 package com.itachallenge.challenge.proxy;
 
 import com.itachallenge.challenge.dto.wiki.WikiResourceDto;
-import com.itachallenge.challenge.dto.wiki.WikiResourcesDto;
+import com.itachallenge.challenge.helper.ResourceHelper;
 import io.netty.channel.ChannelOption;
 import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.apache.commons.io.FileUtils;
-import org.assertj.core.util.Strings;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -24,9 +20,7 @@ import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.test.StepVerifier;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -35,13 +29,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@PropertySource("classpath:application-test.yml")
 class HttpProxyTest {
 
 	@Autowired
+	private Environment env;
+
+	@Autowired
 	private HttpProxy httpProxy;
+
 	private static MockWebServer mockWebServer;
-	private final String RESOURCES_JSON_PATH = "json/2Resources.json";
+
+	private final String RESOURCE_JSON_PATH = "json/OneResource.json";
 
 
 	@BeforeAll
@@ -51,27 +49,6 @@ class HttpProxyTest {
 
 	}
 
-	//@MockBean
-	//private PropertiesConfig config;
-
-	/*
-		A) No se puede poner el codigo en @BeforeAll (con ProxyConfig static).
-			-> Debido a que config is null.
-		B) Tanto si indico el codigo a mockear en @BeforeEach como en el @Test:
-		org.springframework.core.io.buffer.DataBufferLimitException: Exceeded limit on max bytes to buffer : 0
-		-> 	el client NO se configura correctamente (cuando, en el costructor, se llama al config
-		C) Añadiendo el application-test.yml sigue dando el mismo error
-	*/
-
-	/*
-	@BeforeEach
-	void init(){
-		when(config.getConnectionTimeout()).thenReturn(30000);
-		when(config.getMaxBytesInMemory()).thenReturn(30000000);
-	}
-	 */
-
-
 	@AfterAll
 	static void tearDown() throws IOException {
 		mockWebServer.shutdown();
@@ -80,59 +57,61 @@ class HttpProxyTest {
 	@Test
 	@DisplayName("GET request test")
 	@SneakyThrows(IOException.class)
-	void getRequestDataURLTest(){
+	void requestResourcesTest(){
 		MockResponse mockResponse = new MockResponse()
 				.addHeader("Content-Type", "application/json")
-				.setBody(readResourceAsString(RESOURCES_JSON_PATH));
+				.setBody(new ResourceHelper(RESOURCE_JSON_PATH).readResourceAsString());
 		mockWebServer.enqueue(mockResponse);
 
-		//TODO: remove hardcoded paths once we know where + how request resources to ITA-WIKI
 		String baseUrl = String.format("http://localhost:%s", mockWebServer.getPort());
-		String resourcePath = "/api/v1/resources";
-		String type = "BLOG";
-		String topic = "Listas";
-		String resourceParams = "?resourceType="+type+"&topic="+topic;
-		String url = Strings.concat(baseUrl,resourcePath,resourceParams);
+		String resourcePath = env.getProperty("url.ita_wiki.resources_paths.resources.get_resource");
+		String idResourceExpected = "id_resource_as_string";
+		String pathVariable = "/"+idResourceExpected;
+		String url = baseUrl+resourcePath+pathVariable;
+		//System.out.println("--->"+url);
 
-		Mono<WikiResourcesDto> response = httpProxy.getRequestData(url, WikiResourcesDto.class);
+		Mono<WikiResourceDto> response = httpProxy.getRequestData(url, WikiResourceDto.class);
 		StepVerifier
 				.create(response)
-				.assertNext(resourcesDto -> {
-					assertEquals(2, resourcesDto.getResources().size());
-					for(WikiResourceDto resource : resourcesDto.getResources()){
-						assertResource(resource, type, topic);
-					}
-				})
+				.assertNext(resource -> assertResource(resource, idResourceExpected))
 				.verifyComplete();
 	}
 
-	private void assertResource(WikiResourceDto resource, String type, String topic){
-		assertThat(resource.getId(), is(not(emptyString())));
+	private void assertResource(WikiResourceDto resource, String idResource){
+		assertThat(resource.getId(), equalTo(idResource));
 		assertThat(resource.getTitle(),is(not(emptyString())));
 		assertThat(resource.getSlug(),is(not(emptyString())));
 		assertThat(resource.getDescription(),is(not(emptyString())));
 		assertThat(resource.getUrl(),is(not(emptyString())));
-		assertThat(resource.getResourceType(),equalTo(type));
+		assertThat(resource.getResourceType(),is(not(emptyString())));
 		assertThat(resource.getCreatedAt(),is(not(emptyString())));
-		assertThat(resource.getTopics(), hasItem(hasProperty("name",equalTo(topic))));
+		assertThat(resource.getTopics(), everyItem(is(notNullValue())));
 		assertThat(resource.getUser().getName(),is(not(emptyString())));
 	}
 
+	/*
+	Idem as opendata.
+	Except expected response body it's not a concrete dto, due we are
+	expecting an error.
+	 */
 	@Test
 	@DisplayName("Timeout verification")
 	void timeoutTest() {
+		int fakeConnectionTimeout = Integer.parseInt(env.getProperty("url.failed_connection_timeout"));
+		assertEquals(1, fakeConnectionTimeout);
 		HttpClient briefHttpClient = HttpClient.create()
-				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1); // Absurd 1 ms connection timeout
+				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, fakeConnectionTimeout);
 		WebClient briefWebClient = httpProxy.getClient().mutate()
 				.clientConnector(new ReactorClientHttpConnector(briefHttpClient))
 				.build();
-		String randomUri = "https://github.com/";
+		//System.out.println("---->"+env.getProperty("url.ds_test"));
 		Mono<Object> responsePublisher = briefWebClient.get()
-				.uri(randomUri)
+				.uri(env.getProperty("url.ds_test"))
 				.exchangeToMono(response ->
 						response.statusCode().equals(HttpStatus.OK) ?
-								response.bodyToMono(Object.class) :
+								response.bodyToMono(Object.class) : //doesn't matter, expecting NO OK response
 								response.createException().flatMap(Mono::error));
+		//instead assertException + block Webclient's response:
 		StepVerifier.create(responsePublisher)
 				.expectError(WebClientException.class)
 				.verify();
@@ -142,31 +121,21 @@ class HttpProxyTest {
 	@DisplayName("Requesting an invalid url test")
 	void providedUrlNotValidTest() {
 		String wrongUrl = String.format("httKKp://localhost:%s", mockWebServer.getPort());
+		String expectedErrorMsg = httpProxy.MALFORMED_URL_MSG +wrongUrl;
 		Mono<Object> responsePublisher = httpProxy.getRequestData(wrongUrl, Object.class);
 		StepVerifier.create(responsePublisher)
-						.expectErrorMessage("Proxy: provided url is not valid: "+wrongUrl)
+						.expectErrorMessage(expectedErrorMsg)
 						.verify();
 	}
 
 	@Test
 	@DisplayName("Target client is not available (500) test")
 	void clientIsDownTest(){
-		mockWebServer.enqueue(new MockResponse().setResponseCode(500));
+		mockWebServer.enqueue(new MockResponse().setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value())); //500
 		String url = String.format("http://localhost:%s", mockWebServer.getPort());
-		Mono<WikiResourcesDto> responsePublisher = httpProxy.getRequestData(url, WikiResourcesDto.class);
+		Mono<WikiResourceDto> responsePublisher = httpProxy.getRequestData(url, WikiResourceDto.class);
 		StepVerifier.create(responsePublisher)
 						.expectError(WebClientException.class)
 				        .verify();
-	}
-
-
-
-	//TODO: replace method. Use new ResourceHelper().readResourceAsString(path) instead
-	// + remove @SneakyThrows in invoker
-	public static String readResourceAsString (String resourcePath)  throws IOException{
-		Resource resource = new ClassPathResource(resourcePath);
-		File file = resource.getFile();
-		return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-
 	}
 }

@@ -4,15 +4,6 @@ spring:
   jmx:
     enabled: true
 
-
-springdoc:
-  swagger-ui:
-    path: "/swagger-ui-custom.html"
-    operationsSorted: method
-  api-docs:
-    enable: true
-    path: "/api-docs"
-
 server:
   port: 8762
 
@@ -24,29 +15,20 @@ management:
   security:
     enabled: false
 
-
-
-
 logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
     "[com.itachallenge]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
 
-#dummies
-dummy:
-  filters-info:
-    path: "json/filters-info-dummy.json"
-  sort-info:
-    path: "json/sort-info-dummy.json"
-
 url:
   connection_timeout: 30000
+  failed_connection_timeout: 1
   maxBytesInMemory: 30000000
   ita_wiki:
     server: https://dev.api.itadirectory.eurecatacademy.org/api/v1
@@ -59,5 +41,4 @@ url:
         get_resource: /resources #+/{id}
       #vote
       #media
-
-
+  ds_test: https://swapi.py4e.com/api/vehicles/

@@ -10,9 +10,14 @@ import lombok.Setter;
 public class WikiTopicDto {
 
     private String id;
+
     private String name;
+
     private String slug;
+
     private String categoryId;
+
     private String createdAt;
+
     private String updatedAt;
 }

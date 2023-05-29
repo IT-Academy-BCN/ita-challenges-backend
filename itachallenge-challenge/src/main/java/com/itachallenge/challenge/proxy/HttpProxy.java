@@ -28,9 +28,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class HttpProxy {
 
+    private static final Logger log = LoggerFactory.getLogger(HttpProxy.class);
     private final PropertiesConfig config;
     private final WebClient client;
-    private static final Logger log = LoggerFactory.getLogger(HttpProxy.class);
+
+    protected final String MALFORMED_URL_MSG = "Proxy: provided url is not valid: ";
 
     @Autowired
     public HttpProxy(PropertiesConfig config) {
@@ -63,24 +65,6 @@ public class HttpProxy {
                 .registerWithDefaultConfig(new Jackson2JsonDecoder(mapper, MediaType.TEXT_PLAIN));
     }
 
-    //TODO: adapt method once we know which endpoint we're going to use + how use our Tag
-    /*
-        base url: https://dev.api.itadirectory.eurecatacademy.org
-        endpoint: /api/v1/resources
-        params: ?resourceType=BLOG&topic=Listas
-        Response:
-        {
-            "resources": [
-                {
-                    resource 1 data
-                },
-                {
-                    resource 2 data
-                },
-                etc...
-            ]
-        }
-    */
     public <T> Mono<T> getRequestData(String url, Class<T> clazz) {
         UrlValidator validator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS); //for testing with MockWebServer
         if (validator.isValid(url)) {
@@ -91,11 +75,11 @@ public class HttpProxy {
                     .retrieve()
                     .bodyToMono(clazz);
         } else {
-            return Mono.error(new MalformedURLException("Proxy: provided url is not valid: "+url));
+            return Mono.error(new MalformedURLException(MALFORMED_URL_MSG +url));
         }
     }
 
-    public WebClient getClient() {
+    protected WebClient getClient() {
         return client;
     }
 }

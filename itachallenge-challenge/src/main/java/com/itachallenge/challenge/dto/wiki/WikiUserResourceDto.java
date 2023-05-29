@@ -10,5 +10,6 @@ import lombok.Setter;
 public class WikiUserResourceDto {
 
     private String name;
+
     private String email;
 }

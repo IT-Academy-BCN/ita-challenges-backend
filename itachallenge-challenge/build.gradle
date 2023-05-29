@@ -46,8 +46,6 @@ dependencies {
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
-    //for suite tests
-    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-engine', version: '1.8.1'
 
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
@@ -60,6 +58,11 @@ dependencies {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+    //https://stackoverflow.com/questions/54205486/how-to-avoid-sharing-is-only-supported-for-boot-loader-classes-because-bootstra
+    //https://docs.oracle.com/en/java/javase/17/vm/class-data-sharing.html#GUID-882DC523-706D-403E-8A06-FBBB0E1B2128
+    //https://docs.gradle.org/current/userguide/build_environment.html
+    //https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
+    jvmArgs "-Xshare:off"
 }
 
 jacocoTestReport {
