@@ -39,5 +39,4 @@ public class ResourceHelper {
         String resourceIdentifier = Objects.requireNonNullElseGet(resourcePath, () -> resource.getDescription());
         return "Exception when " + action + " " + resourceIdentifier + " resource: \n";
     }
-
 }
