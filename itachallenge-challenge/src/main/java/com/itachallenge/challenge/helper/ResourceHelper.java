@@ -26,6 +26,8 @@ public class ResourceHelper {
 
     //https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
     public String readResourceAsString ()  throws IOException{
+        this.resourcePath = resourcePath;
+        resource = new ClassPathResource(resourcePath);
         try {
             File file = resource.getFile();
             return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -39,5 +41,4 @@ public class ResourceHelper {
         String resourceIdentifier = Objects.requireNonNullElseGet(resourcePath, () -> resource.getDescription());
         return "Exception when " + action + " " + resourceIdentifier + " resource: \n";
     }
-
 }
