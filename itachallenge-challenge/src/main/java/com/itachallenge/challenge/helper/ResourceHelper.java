@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /*
 Clase puede ser de mucha utilidad para mejorar la eficiencia
-en crear tests.
+en crear tests (ej: load json for expected data)
  */
 public class ResourceHelper {
 
@@ -25,7 +25,7 @@ public class ResourceHelper {
     }
 
     //https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
-    public String readResourceAsString (String resourcePath)  throws IOException{
+    public String readResourceAsString ()  throws IOException{
         try {
             File file = resource.getFile();
             return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
@@ -39,5 +39,4 @@ public class ResourceHelper {
         String resourceIdentifier = Objects.requireNonNullElseGet(resourcePath, () -> resource.getDescription());
         return "Exception when " + action + " " + resourceIdentifier + " resource: \n";
     }
-
 }
