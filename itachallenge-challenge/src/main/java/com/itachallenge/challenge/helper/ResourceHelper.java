@@ -11,7 +11,7 @@ import java.util.Objects;
 
 /*
 Clase puede ser de mucha utilidad para mejorar la eficiencia
-en crear tests.
+en crear tests (ej: load json for expected data)
  */
 public class ResourceHelper {
 
