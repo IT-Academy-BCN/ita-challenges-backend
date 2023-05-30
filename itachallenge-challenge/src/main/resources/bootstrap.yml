@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: itachallenge-challenge
+  cloud:
+    consul:
+      enabled: true
+      host: 172.24.2.0 #IP del agente consul
+      port: 8500       #puerto HTTP del agente
+      config:
+        enabled: true
+      discovery:
+        instanceId: id:${spring.application.name}:${random.value}
+        serviceName: ${spring.application.name}
+        enabled: true
+        register: true
+        register-health-check: true
+        deregister: true
+        port: 8762 #puerto del servicio
+        prefer-ip-address: true
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 15s
