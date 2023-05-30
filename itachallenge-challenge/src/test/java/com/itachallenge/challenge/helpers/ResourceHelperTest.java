@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.helper;
+package com.itachallenge.challenge.helpers;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
