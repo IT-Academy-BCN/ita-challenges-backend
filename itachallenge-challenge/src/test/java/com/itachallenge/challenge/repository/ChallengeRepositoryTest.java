@@ -14,6 +14,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -107,6 +108,22 @@ public class ChallengeRepositoryTest {
         Mono<Challenge> secondChallenge = challengeRepository.findByUuid(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_2),
+                () -> fail("Challenge not found: " + uuid_2));
+    }
+
+    @DisplayName("Delete by UUID Test")
+    @Test
+    void deleteByUuidTest() {
+
+
+        Mono<Challenge> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        firstChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals(challengeRepository.deleteByUuid(uuid_1), null),
+                () -> fail("Challenge not found: " + uuid_1));
+
+        Mono<Challenge> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        secondChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals(challengeRepository.deleteByUuid(uuid_2), null),
                 () -> fail("Challenge not found: " + uuid_2));
     }
 

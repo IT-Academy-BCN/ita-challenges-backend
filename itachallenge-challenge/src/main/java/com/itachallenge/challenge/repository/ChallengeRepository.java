@@ -13,7 +13,9 @@ public interface ChallengeRepository extends ReactiveMongoRepository<Challenge,U
 
     Mono<Boolean> existsByUuid(UUID uuid);
 
-    Mono<Challenge> findByUuid(UUID id);
+    Mono<Challenge> findByUuid(UUID uuid);
+
+    Mono<Void> deleteByUuid(UUID uuid);
 
     Mono<Challenge> findByLevel(String level);
 
