@@ -3,6 +3,10 @@ spring:
     name: itachallenge-challenge
   jmx:
     enabled: true
+  data:
+    mongodb:
+      database: testdb
+
 
 
 springdoc:
