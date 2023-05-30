@@ -1,13 +1,26 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.1.0.3113"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
 }
 
+apply plugin: 'org.sonarqube'
+
 jar {
     manifest {
         attributes(
-                'Main-Class': 'com.itachallenge.challenge'
+                'Main-Class': 'com.itachallenge.challenge.App'
         )
     }
 }
@@ -40,7 +53,6 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-
 
 }
 
