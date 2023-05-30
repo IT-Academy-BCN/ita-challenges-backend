@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
@@ -14,5 +15,6 @@ public class Detail {
 
     private List<Example> examples;
 
+    @Field(name="note")
     private String note;
 }

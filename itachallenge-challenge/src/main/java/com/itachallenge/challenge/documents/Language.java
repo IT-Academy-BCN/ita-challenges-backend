@@ -2,6 +2,7 @@ package com.itachallenge.challenge.documents;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Set;
@@ -15,10 +16,13 @@ import java.util.UUID;
 public class Language {
 
     @MongoId
-    private int id_language;
+    @Field(name="id_languages")
+    private int idLanguage;
 
-    private String language_name;
+    @Field(name="language_name")
+    private String languageName;
 
-    private Set<UUID> id_challenges;
+    @Field(name="id_challenges")
+    private Set<UUID> idChallenges;
 
 }

@@ -2,6 +2,7 @@ package com.itachallenge.challenge.documents;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
@@ -14,9 +15,12 @@ import java.util.UUID;
 public class Solution {
 
     @MongoId
-    private UUID id_solution;
+    @Field(name="id_solution")
+    private UUID idSolution;
 
-    private String solution_text;
+    @Field(name="solution_text")
+    private String solutionText;
 
-    private int id_language;
+    @Field(name="id_language")
+    private int idLanguage;
 }
