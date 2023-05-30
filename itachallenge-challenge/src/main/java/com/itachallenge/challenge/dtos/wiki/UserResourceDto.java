@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.dto.wiki;
+package com.itachallenge.challenge.dtos.wiki;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WikiUserResourceDto {
+public class UserResourceDto {
 
     private String name;
 

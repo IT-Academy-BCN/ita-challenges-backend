@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.proxy;
 
-import com.itachallenge.challenge.dto.wiki.WikiResourceDto;
-import com.itachallenge.challenge.helper.ResourceHelper;
+import com.itachallenge.challenge.dtos.wiki.ResourceDto;
+import com.itachallenge.challenge.helpers.ResourceHelper;
 import io.netty.channel.ChannelOption;
 import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockResponse;
@@ -70,14 +70,14 @@ class HttpProxyTest {
 		String url = baseUrl+resourcePath+pathVariable;
 		//System.out.println("--->"+url);
 
-		Mono<WikiResourceDto> response = httpProxy.getRequestData(url, WikiResourceDto.class);
+		Mono<ResourceDto> response = httpProxy.getRequestData(url, ResourceDto.class);
 		StepVerifier
 				.create(response)
 				.assertNext(resource -> assertResource(resource, idResourceExpected))
 				.verifyComplete();
 	}
 
-	private void assertResource(WikiResourceDto resource, String idResource){
+	private void assertResource(ResourceDto resource, String idResource){
 		assertThat(resource.getId(), equalTo(idResource));
 		assertThat(resource.getTitle(),is(not(emptyString())));
 		assertThat(resource.getSlug(),is(not(emptyString())));
@@ -133,7 +133,7 @@ class HttpProxyTest {
 	void clientIsDownTest(){
 		mockWebServer.enqueue(new MockResponse().setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value())); //500
 		String url = String.format("http://localhost:%s", mockWebServer.getPort());
-		Mono<WikiResourceDto> responsePublisher = httpProxy.getRequestData(url, WikiResourceDto.class);
+		Mono<ResourceDto> responsePublisher = httpProxy.getRequestData(url, ResourceDto.class);
 		StepVerifier.create(responsePublisher)
 						.expectError(WebClientException.class)
 				        .verify();

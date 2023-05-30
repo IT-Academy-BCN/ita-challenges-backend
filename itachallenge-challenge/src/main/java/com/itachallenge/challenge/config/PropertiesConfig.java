@@ -1,13 +1,10 @@
 package com.itachallenge.challenge.config;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@Getter
-@Setter
+@Component //There's none bean declaration -> it's not a @Configuration
+//Setters NOT needed. Values injected anyway (tested + ok)
 public class PropertiesConfig {
 
     @Value("${url.connection_timeout}")
@@ -15,4 +12,12 @@ public class PropertiesConfig {
 
     @Value("${url.maxBytesInMemory}")
     private Integer maxBytesInMemory;
+
+    public Integer getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public Integer getMaxBytesInMemory() {
+        return maxBytesInMemory;
+    }
 }

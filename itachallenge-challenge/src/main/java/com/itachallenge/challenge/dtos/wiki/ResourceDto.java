@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.dto.wiki;
+package com.itachallenge.challenge.dtos.wiki;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class WikiResourceDto {
+public class ResourceDto {
 
     private String id;
 
@@ -27,7 +27,7 @@ public class WikiResourceDto {
 
     private String updatedAt;
 
-    private WikiUserResourceDto user;
+    private UserResourceDto user;
 
-    private List<WikiTopicDto> topics;
+    private List<TopicDto> topics;
 }
