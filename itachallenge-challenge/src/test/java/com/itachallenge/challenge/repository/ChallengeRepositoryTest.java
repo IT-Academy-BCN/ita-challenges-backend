@@ -1,8 +1,9 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.documents.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.LocalDate;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
@@ -26,8 +29,6 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public class ChallengeRepositoryTest {
 
-    @Autowired
-    private ChallengeRepository challengeRepository;
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -41,66 +42,117 @@ public class ChallengeRepositoryTest {
         registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
     }
 
+    @Autowired
+    private ChallengeRepository challengeRepository;
+
+    UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
+    UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
 
     @BeforeEach
-    public void setUp(){
-      assertNotNull(challengeRepository);
-/*        challengeRepository.deleteAll().block();
-        Challenge challenge1 = new Challenge("23", "Loops");
-        Challenge challenge2 = new Challenge("24", "If-Else");
-        challengeRepository.saveAll(Flux.just(challenge1, challenge2)).blockLast();*/
+    public void setUp() {
+
+        challengeRepository.deleteAll().block();
+
+        Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
+        Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
+
+        Example example = new Example(uuid_1, "Example Text 1");
+        Example example2 = new Example(uuid_2, "Example Text 2");
+        List<Example> exampleList = new ArrayList<Example>(Arrays.asList(example2, example));
+
+        Language language = new Language(1, "Java", UUIDSet);
+        Language language2 = new Language(2, "Python", UUIDSet);
+        Set<Language> languageSet = new HashSet<>(Arrays.asList(language2, language));
+
+        Solution solution = new Solution(uuid_1, "Solution Text 1", 1);
+        Solution solution2 = new Solution(uuid_2, "Solution Text 2", 2);
+        List<Solution> solutionList = new ArrayList<>(Arrays.asList(solution, solution2));
+
+        Detail detail = new Detail("Description", exampleList, "Detail note");
+
+        Challenge challenge = new Challenge
+                (uuid_1, "Level 1", "Loops", languageSet, LocalDate.now(), detail, solutionList, UUIDSet, UUIDSet2);
+        Challenge challenge2 = new Challenge
+                (uuid_2, "Level 2", "If", languageSet, LocalDate.now(), detail, solutionList, UUIDSet, UUIDSet2);
+
+        challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
 
+    @DisplayName("Repository not null Test")
     @Test
     void testDB() {
-/*        Challenge challenge1 = new Challenge();
-        System.out.println("=========");
-        System.out.println(challenge1);*/
+
+        assertNotNull(challengeRepository);
+
     }
 
-    /*@BeforeEach
-    public void setUp(){
-        challengeRepository.deleteAll().block();
-        Challenge challenge1 = new Challenge("23", "Loops");
-        Challenge challenge2 = new Challenge("24", "If-Else");
-        challengeRepository.saveAll(Flux.just(challenge1, challenge2)).blockLast();
-    }
-
+    @DisplayName("Exists by UUID Test")
     @Test
-    void findByNameTest(){
-
-        Mono<Challenge> firstChallenge = challengeRepository.findByName("Loops");
-        firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getName(), "Loops"),
-                () -> fail("Challenge with name Loops  not found."));
-
-        Mono<Challenge> secondChallenge = challengeRepository.findByName("If-Else");
-        secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getName(), "If-Else"),
-                () -> fail("Challenge with name If-Else not found." ));
+    void existsByUuidTest() {
+        Boolean exists = challengeRepository.existsByUuid(uuid_1).block();
+        assertEquals(exists, true);
     }
 
-
+    @DisplayName("Find by UUID Test")
     @Test
-    void findByUuidTest(){
+    void findByUuidTest() {
 
-        Mono<Challenge> firstChallenge = challengeRepository.findById("23");
+        Mono<Challenge> firstChallenge = challengeRepository.findByUuid(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getChallengeId(), uuid_1),
+                u -> assertEquals(u.getUuid(), uuid_1),
                 () -> fail("Challenge not found: " + uuid_1));
 
         Mono<Challenge> secondChallenge = challengeRepository.findByUuid(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getChallengeId(), uuid_2),
+                u -> assertEquals(u.getUuid(), uuid_2),
                 () -> fail("Challenge not found: " + uuid_2));
     }
 
+    @DisplayName("Find by Level Test")
     @Test
-    void existsByUuidTest(){
-        Challenge exists = challengeRepository.existsByUuid(uuid_1).block();
-        assertEquals(exists, true);
+    void findByLevelTest() {
+
+        Mono<Challenge> firstChallenge = challengeRepository.findByLevel("Level 1");
+        firstChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getLevel(), "Level 1"),
+                () -> fail("Challenge not found: " + uuid_1));
+
+        Mono<Challenge> secondChallenge = challengeRepository.findByLevel("Level 2");
+        secondChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getLevel(), "Level 2"),
+                () -> fail("Challenge not found: " + uuid_2));
+    }
+
+    @DisplayName("Find by Title Test")
+    @Test
+    void findByChallengeTitleTest() {
+
+        Mono<Challenge> firstChallenge = challengeRepository.findByTitle("Loops");
+        firstChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getTitle(), "Loops"),
+                () -> fail("Challenge with name Loops  not found."));
+
+        Mono<Challenge> secondChallenge = challengeRepository.findByTitle("If");
+        secondChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getTitle(), "If"),
+                () -> fail("Challenge with name If not found."));
+    }
+
+    /*@DisplayName("Find by Resource Test")
+    @Test
+    void findByResourceTest() {
+
+        Mono<Challenge> firstChallenge = challengeRepository.findByResources(uuid_1);
+        firstChallenge.blockOptional().ifPresentOrElse(
+                u -> assertTrue(u.getResources().stream().anyMatch(uuid -> uuid.equals(uuid_1))),
+                () -> fail("Challenge with resource " + uuid_1 + "  not found."));
+
+        Mono<Challenge> secondChallenge = challengeRepository.findByResources(uuid_2);
+        secondChallenge.blockOptional().ifPresentOrElse(
+                u -> assertTrue(u.getResources().stream().anyMatch(uuid -> uuid.equals(uuid_2))),
+                () -> fail("Challenge with resource " +  uuid_2 + "not found."));
     }*/
 
 

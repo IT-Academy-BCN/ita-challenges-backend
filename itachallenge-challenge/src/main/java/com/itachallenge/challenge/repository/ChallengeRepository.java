@@ -6,14 +6,24 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-//@Repository
-public interface ChallengeRepository extends ReactiveMongoRepository<Challenge,String> {
+import java.util.UUID;
 
-    @Override
-    Mono<Challenge> findById(String id);
+//@Repository
+public interface ChallengeRepository extends ReactiveMongoRepository<Challenge,UUID> {
+
+    Mono<Boolean> existsByUuid(UUID uuid);
+
+    Mono<Challenge> findByUuid(UUID id);
+
+    Mono<Challenge> findByLevel(String level);
+
+    Mono<Challenge> findByTitle(String title);
+
+    Mono<Challenge> findByResources(UUID uuid);
 
     @Override
     Mono<Challenge> save (Challenge challenge);
+
 
 
 }

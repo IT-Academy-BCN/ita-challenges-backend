@@ -26,6 +26,7 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
+    /*
     @PostMapping(value="/create")
     public Challenge createChallenge() {
 
@@ -35,7 +36,7 @@ public class ChallengeController {
         return challengeRepository.save(challenge).block();
     }
 
-/*    @GetMapping(value="/name")
+    @GetMapping(value="/name")
     public Mono<Challenge> getChallengeByName(@RequestParam(value="name") String name){
 
         return challengeRepository.findByName(name);
