@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.helper.ResourceHelper;
-import com.itachallenge.challenge.service.ChallengeService;
+import com.itachallenge.challenge.helpers.ResourceHelper;
+import com.itachallenge.challenge.services.ChallengeService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,7 @@ public class ChallengeControllerTest {
         String expected =  new ResourceHelper(filterJsonPath).readResourceAsString();
         when(challengeService.getFiltersInfo()).thenReturn(Mono.just(expected));
 
-        String uri = ChallengeController.CHALLENGE+ChallengeController.FILTERS;
+        String uri = ChallengeController.MICRO_CHALLENGE +ChallengeController.FILTERS;
         webTestClient.get()
                 .uri(uri)
                 .accept(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class ChallengeControllerTest {
         String expected =  new ResourceHelper(sortJsonPath).readResourceAsString();
         when(challengeService.getSortInfo()).thenReturn(Mono.just(expected));
 
-        String uri = ChallengeController.CHALLENGE+ChallengeController.SORT;
+        String uri = ChallengeController.MICRO_CHALLENGE +ChallengeController.SORT_OPTIONS;
         webTestClient.get()
                 .uri(uri)
                 .accept(MediaType.APPLICATION_JSON)

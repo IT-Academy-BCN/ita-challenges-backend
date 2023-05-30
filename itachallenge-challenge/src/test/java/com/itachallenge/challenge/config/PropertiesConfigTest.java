@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.config;
 
-import com.itachallenge.challenge.helper.ResourceHelper;
+import com.itachallenge.challenge.helpers.ResourceHelper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

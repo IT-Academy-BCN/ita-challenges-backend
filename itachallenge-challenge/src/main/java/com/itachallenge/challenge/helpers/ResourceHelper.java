@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.helper;
+package com.itachallenge.challenge.helpers;
 
 import jakarta.validation.constraints.NotNull;
 import org.apache.commons.io.FileUtils;

@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.service;
+package com.itachallenge.challenge.services;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
 import lombok.RequiredArgsConstructor;

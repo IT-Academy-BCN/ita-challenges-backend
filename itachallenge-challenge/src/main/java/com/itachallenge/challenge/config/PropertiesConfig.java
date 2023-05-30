@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.config;
 
-import com.itachallenge.challenge.helper.ResourceHelper;
+import com.itachallenge.challenge.helpers.ResourceHelper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
