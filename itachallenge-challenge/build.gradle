@@ -2,7 +2,9 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
+    id 'org.sonarqube' version '4.0.0.2929'
 }
+
 
 jar {
     manifest {
@@ -64,7 +66,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
 
-
 }
 
 test {
@@ -94,7 +95,7 @@ jacocoTestCoverageVerification {
     }
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
