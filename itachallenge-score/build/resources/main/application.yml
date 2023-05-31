@@ -1,13 +1,9 @@
 spring:
   application:
-    name: itachallenge-user
+    name: itachallenge-score
   jmx:
     enabled: true
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: itac-users
+
 
 springdoc:
   swagger-ui:
@@ -28,6 +24,9 @@ management:
   security:
     enabled: false
 
+
+
+
 logging:
   level:
     root: INFO
@@ -37,5 +36,5 @@ logging:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-user.log
+#    name: itachallenge-score.log
 
