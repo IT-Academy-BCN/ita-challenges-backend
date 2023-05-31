@@ -1,16 +1,8 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-score
   jmx:
     enabled: true
-  data:
-    mongodb:
-      host: localhost
-      port: 27017
-      database: ChallengeProject
-  http:
-    converters:
-      preferred-json-mapper: jackson
 
 
 springdoc:
@@ -44,5 +36,5 @@ logging:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-challenge.log
+#    name: itachallenge-score.log
 
