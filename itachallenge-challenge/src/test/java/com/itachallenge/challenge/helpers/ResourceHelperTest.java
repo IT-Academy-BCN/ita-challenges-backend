@@ -1,36 +1,52 @@
 package com.itachallenge.challenge.helpers;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class ResourceHelperTest {
+
+    private String expected;
+
+    @BeforeEach
+    void setup(){
+        expected = "{\r\n" +
+                "  \"filterName\": \"RandomName\"\r\n" +
+                "}";
+    }
 
     @Test
     @DisplayName("Read a resource as String test")
     void readResourceAsStringTest (){
-
-        String expected = "{\r\n" +
-                "  \"filterName\": \"RandomName\",\r\n" +
-                "  \"options\": [\r\n" +
-                "    \"Option1\",\r\n" +
-                "    \"Option2\",\r\n" +
-                "    \"Option3\"\r\n" +
-                "  ],\r\n" +
-                "  \"uniqueOption\": true,\r\n" +
-                "  \"visibility\": [\r\n" +
-                "    \"ROLE_X\",\r\n" +
-                "    \"ROLE_Y\"\r\n" +
-                "  ]\r\n" +
-                "}";
-
         String jsonPath = "json/RandomJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
         String result  = null;
         try {
             result = resourceHelper.readResourceAsString();
+            //System.out.println(result);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Assertions.assertEquals(expected,result);
+    }
+
+    @Test
+    @DisplayName("Logic inside resource helper test")
+    void resourceHelperLogiTest(){
+        String resourcePath = "json/RandomJson.json";
+        Resource resource = new ClassPathResource(resourcePath);
+        String result = null;
+        try {
+            File file = resource.getFile();
+            result = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
