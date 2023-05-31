@@ -1,21 +1,10 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:4.1.0.3113"
-    }
-}
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
+    id 'org.sonarqube' version '4.0.0.2929'
 }
 
-apply plugin: 'org.sonarqube'
 
 jar {
     manifest {
@@ -64,7 +53,7 @@ test {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.required = false
+        xml.required = true
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
@@ -83,11 +72,8 @@ jacocoTestCoverageVerification {
     }
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
-        //property "sonar.jacoco.reportPaths", "${project.buildDir}/jacocoXml/test/jacocoTestReport.xml"
-        //property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacocoXml/test/jacocoTestReport.xml"
-        //property "sonar.jacoco.JUnitXmlReport", "${project.buildDir}/jacocoXml/test/jacocoTestReport.xml"
     }
 }
