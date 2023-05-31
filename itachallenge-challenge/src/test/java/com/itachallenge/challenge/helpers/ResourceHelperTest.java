@@ -42,27 +42,11 @@ public class ResourceHelperTest {
         String result  = null;
         try {
             result = resourceHelper.readResourceAsString();
-            System.out.println(result);
+            //System.out.println(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         Assertions.assertEquals(expected,result);
-        //Assertions.assertEquals(expected(),result);
-    }
-
-
-    String expected (){
-        String resourcePath = "json/RandomJson.json";
-        Resource resource = new ClassPathResource(resourcePath);
-        String result = null;
-        try {
-            File file = resource.getFile();
-            result = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-            return result;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        //Assertions.assertEquals(expected,result);
     }
 
     @Test
