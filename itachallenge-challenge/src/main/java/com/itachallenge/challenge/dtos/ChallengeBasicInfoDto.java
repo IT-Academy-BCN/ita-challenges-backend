@@ -1,7 +1,9 @@
 package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.itachallenge.challenge.dtos.team.ChallangeBasicInfoDtoI;
+import com.itachallenge.challenge.helpers.PercentageSerializer;
 import lombok.Builder;
 import lombok.Getter;
 

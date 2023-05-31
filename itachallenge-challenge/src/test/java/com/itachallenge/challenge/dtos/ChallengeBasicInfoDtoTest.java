@@ -18,7 +18,7 @@ import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootApplication
-public class ChallangeBasicInfoDtoTest {
+public class ChallengeBasicInfoDtoTest {
 
     @Autowired
     ObjectMapper mapper;
