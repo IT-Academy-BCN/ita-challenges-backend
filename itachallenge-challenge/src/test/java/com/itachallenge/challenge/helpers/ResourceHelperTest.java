@@ -26,6 +26,11 @@ public class ResourceHelperTest {
     @Test
     @DisplayName("Read a resource as String test")
     void readResourceAsStringTest (){
+
+        String expected = "{\r\n" +
+                "  \"filterName\": \"RandomName\"\r\n" +
+                "}";
+
         String jsonPath = "json/RandomJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
         String result  = null;
