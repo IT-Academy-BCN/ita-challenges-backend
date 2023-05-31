@@ -26,7 +26,6 @@ public class ChallengeServiceImp implements ChallengeService {
         Mono<Challenge> challenge = challengeRepository.findById(id);
         //control
         log.info("Object challenge in getChallengeId(): " + challenge.blockOptional().isPresent());
-
         // Comprueba si existe el desafío
         return challenge.map(challengeMapper::mapToChallengeDto).switchIfEmpty(Mono.error(new IllegalArgumentException("ID challenge: " + id + " does not exist in the database.")));
     }
@@ -40,13 +39,5 @@ public class ChallengeServiceImp implements ChallengeService {
             return false;
         }
     }
-/*
-    //prueba para generar objetos challenge con uuid aleatorios
-    @Override
-    public Challenge createChallenge() {
-        Challenge challenge = new Challenge();
 
-        return challengeRepository.save(challenge).block();
-    }
-*/
 }

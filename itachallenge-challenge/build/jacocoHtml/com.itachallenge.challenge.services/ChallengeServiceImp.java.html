@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChallengeServiceImp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">itachallenge-challenge</a> &gt; <a href="index.source.html" class="el_package">com.itachallenge.challenge.services</a> &gt; <span class="el_source">ChallengeServiceImp.java</span></div><h1>ChallengeServiceImp.java</h1><pre class="source lang-java linenums">package com.itachallenge.challenge.services;
 
-import com.itachallenge.challenge.document.Challenge;
-import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.dtos.ChallengeDto;
+
+import com.itachallenge.challenge.helpers.ChallengeMapper;
+import com.itachallenge.challenge.repositories.ChallengeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,37 +14,30 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Service
-<span class="fc" id="L14">public class ChallengeServiceImp implements ChallengeService {</span>
-<span class="fc" id="L15">    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);</span>
+<span class="fc" id="L17">public class ChallengeServiceImp implements ChallengeService {</span>
+<span class="fc" id="L18">    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);</span>
     @Autowired
     private ChallengeRepository challengeRepository;
+    @Autowired
+    private ChallengeMapper challengeMapper;
 
     @Override
-    public Mono&lt;Challenge&gt; getChallengeId(UUID id) {
-<span class="nc" id="L21">        Mono&lt;Challenge&gt; challenge = challengeRepository.findById(id);</span>
+    public Mono&lt;ChallengeDto&gt; getChallengeId(UUID id) {
+<span class="fc" id="L26">        Mono&lt;Challenge&gt; challenge = challengeRepository.findById(id);</span>
         //control
-<span class="nc" id="L23">        log.info(&quot;Object challenge in getChallengeId(): &quot; + challenge.blockOptional().isPresent());</span>
-
+<span class="fc" id="L28">        log.info(&quot;Object challenge in getChallengeId(): &quot; + challenge.blockOptional().isPresent());</span>
         // Comprueba si existe el desafÃ­o
-<span class="nc" id="L26">        return challenge.switchIfEmpty(Mono.error(new IllegalArgumentException(&quot;ID challenge: &quot; + id + &quot; does not exist in the database.&quot;)));</span>
+<span class="fc" id="L30">        return challenge.map(challengeMapper::mapToChallengeDto).switchIfEmpty(Mono.error(new IllegalArgumentException(&quot;ID challenge: &quot; + id + &quot; does not exist in the database.&quot;)));</span>
     }
 
     @Override
     public boolean isValidUUID(String id) {
         try {
-<span class="nc" id="L32">            UUID.fromString(id);</span>
-<span class="nc" id="L33">            return true;</span>
-<span class="nc" id="L34">        } catch (IllegalArgumentException e) {</span>
-<span class="nc" id="L35">            return false;</span>
+<span class="fc" id="L36">            UUID.fromString(id);</span>
+<span class="fc" id="L37">            return true;</span>
+<span class="fc" id="L38">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L39">            return false;</span>
         }
-    }
-
-    //prueba para generar objetos challenge con uuid aleatorios
-    @Override
-    public Challenge createChallenge() {
-<span class="nc" id="L42">        Challenge challenge = new Challenge();</span>
-
-<span class="nc" id="L44">        return challengeRepository.save(challenge).block();</span>
     }
 
 }

@@ -35,7 +35,7 @@ public class ChallengeController {
     public ResponseEntity<Mono<ChallengeDto>> getOneChallenge(@PathVariable("id") String id) {
 
         try {
-            boolean validUUID = challengeService.isValidUUID(id.toString());
+            boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
                 errorMessage = new ErrorResponseMessage(HttpStatus.NOT_FOUND.value(), "Invalid ID format.");
@@ -64,12 +64,5 @@ public class ChallengeController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-/*
-    //prueba para crear challenge en bd
-    @PostMapping(path = "/add")
-    public ResponseEntity<Challenge> createChallenge() {
-        Challenge challenge = challengeService.createChallenge();
-        return new ResponseEntity<>(challenge, HttpStatus.CREATED);
-    }
-*/
+
 }

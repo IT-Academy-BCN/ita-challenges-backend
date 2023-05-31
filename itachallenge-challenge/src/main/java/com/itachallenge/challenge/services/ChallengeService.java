@@ -11,5 +11,4 @@ public interface ChallengeService {
 
     public boolean isValidUUID(String id); //Validates the challenge ID by comparing it with an ID of type UUID.
 
-    //public Challenge createChallenge();
 }

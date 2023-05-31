@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.helpers.ChallengeMapper;
 import com.itachallenge.challenge.repositories.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
@@ -28,8 +30,6 @@ public class ChallengeServiceImpTest {
     //variables
     private final static UUID VALID_ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
     private final static String INVALID_ID = "123456789";
-    private final String CONTROLLER_BASE_URL = "/itachallenge/api/v1/challenge";
-    final String URI_TEST = "/test";
 
     @Autowired
     private WebTestClient webTestClient;
@@ -37,6 +37,8 @@ public class ChallengeServiceImpTest {
     private ChallengeServiceImp challengeService;
     @MockBean
     private ChallengeRepository challengeRepository;
+    @MockBean
+    private ChallengeMapper challengeMapper;
 
     @BeforeEach
     void setUp() {
@@ -49,46 +51,48 @@ public class ChallengeServiceImpTest {
     }
 
     @Test
-    public void testGetChallengeIdValid() {
-        Challenge challenge = new Challenge();
-        when(challengeRepository.findById(VALID_ID)).thenReturn(Mono.just(challenge));
+    public void testGetChallengeId_Valid() {
+        Challenge createChallenge = new Challenge();
+        ChallengeDto createChallengeDto = new ChallengeDto();
+
+        when(challengeRepository.findById(VALID_ID)).thenReturn(Mono.just(createChallenge));
+        when(challengeMapper.mapToChallengeDto(createChallenge)).thenReturn(createChallengeDto);
 
         Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
+        ChallengeDto challengeDto = result.block();
 
-        assertNotNull(result.block());
-        assertEquals(challenge, result.block());
+        assertNotNull(challengeDto);
+        assertEquals(challengeDto, challengeDto);
 
-        verifyRepository();
+        verify(challengeRepository, times(1)).findById(VALID_ID);
+        verify(challengeMapper, times(1)).mapToChallengeDto(createChallenge);
+        verifyNoMoreInteractions(challengeRepository);
     }
 
     @Test
-    public void testGetChallengeIdEmpty() {
+    public void testGetChallengeId_Empty() {
         when(challengeRepository.findById(VALID_ID)).thenReturn(Mono.empty());
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            challengeService.getChallengeId(VALID_ID).block();
-        });
+        StepVerifier.create(challengeService.getChallengeId(VALID_ID))
+                .expectError(IllegalArgumentException.class)
+                .verify();
 
-        verifyRepository();
+        verify(challengeRepository, times(1)).findById(VALID_ID);
+        verifyNoMoreInteractions(challengeRepository);
     }
 
     @Test
-    public void testIsValidUUIDValid() {
+    public void testIsValidUUID_Ok() {
         boolean result = challengeService.isValidUUID(VALID_ID.toString());
 
         assertTrue(result);
     }
 
     @Test
-    public void testIsValidUUIDd_ValidUUID() {
+    public void testIsValidUUID_NotValid() {
         boolean result = challengeService.isValidUUID(INVALID_ID);
 
         assertFalse(result);
-    }
-
-    public void verifyRepository(){
-        verify(challengeRepository, times(1)).findById(VALID_ID);
-        verifyNoMoreInteractions(challengeRepository);
     }
 
 }

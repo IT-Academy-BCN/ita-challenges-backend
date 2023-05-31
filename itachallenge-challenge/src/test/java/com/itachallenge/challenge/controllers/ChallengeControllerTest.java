@@ -98,7 +98,7 @@ public class ChallengeControllerTest {
         assertEquals(MESSAGE_INVALID_ID, exception.getReason());
 
         verify(challengeService, times(1)).isValidUUID(INVALID_ID);
-        //when id is invalid the method is not called
+        //cuando el id es invalido no se llama al método getChallengeId
         verify(challengeService, times(0)).getChallengeId(UUID.fromString(VALID_ID));
     }
 
