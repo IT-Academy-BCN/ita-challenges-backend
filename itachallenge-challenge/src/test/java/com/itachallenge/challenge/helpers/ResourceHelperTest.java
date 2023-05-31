@@ -28,7 +28,7 @@ public class ResourceHelperTest {
                 }""";
 
          */
-        expected = "{\"filterName\": \"RandomName\"}";
+        expected = "{\"name\": \"RandomName\", \"num\": [1,2,3], \"happy\": true}";
 
 
     }
