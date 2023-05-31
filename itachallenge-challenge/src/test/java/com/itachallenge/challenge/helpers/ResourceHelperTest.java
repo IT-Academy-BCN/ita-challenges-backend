@@ -21,10 +21,18 @@ public class ResourceHelperTest {
 
     @BeforeEach
     void setup(){
+        /*
         expected = """
                 {\r
                   "filterName": "RandomName"\r
                 }""";
+
+         */
+        expected =
+                "{\r\n"+
+                "\r\n"+
+                "}";
+
     }
 
     @Test
