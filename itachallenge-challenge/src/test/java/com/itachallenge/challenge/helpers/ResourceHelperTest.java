@@ -18,9 +18,10 @@ public class ResourceHelperTest {
 
     @BeforeEach
     void setup(){
-        expected = "{\r\n" +
-                "  \"filterName\": \"RandomName\"\r\n" +
-                "}";
+        expected = """
+                {\r
+                  "filterName": "RandomName"\r
+                }""";
     }
 
     @Test
