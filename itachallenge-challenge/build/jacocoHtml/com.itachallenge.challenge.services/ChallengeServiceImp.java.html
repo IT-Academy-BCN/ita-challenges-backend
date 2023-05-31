@@ -33,10 +33,10 @@ import java.util.UUID;
     @Override
     public boolean isValidUUID(String id) {
         try {
-<span class="fc" id="L36">            UUID.fromString(id);</span>
-<span class="fc" id="L37">            return true;</span>
-<span class="fc" id="L38">        } catch (IllegalArgumentException e) {</span>
-<span class="fc" id="L39">            return false;</span>
+<span class="nc" id="L36">            UUID.fromString(id);</span>
+<span class="nc" id="L37">            return true;</span>
+<span class="nc" id="L38">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L39">            return false;</span>
         }
     }
 

@@ -67,7 +67,6 @@ public class ChallengeControllerTest {
                 .expectBody(String.class)
                 .value(s -> s.toString(), equalTo("Hello from ITA Challenge!!!"));
 
-        assertEquals(1, 1);
     }
 
 

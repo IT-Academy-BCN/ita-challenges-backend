@@ -46,11 +46,6 @@ public class ChallengeServiceImpTest {
     }
 
     @Test
-    public void test() {
-        assertEquals(1, 1);
-    }
-
-    @Test
     public void testGetChallengeId_Valid() {
         Challenge createChallenge = new Challenge();
         ChallengeDto createChallengeDto = new ChallengeDto();
@@ -62,7 +57,7 @@ public class ChallengeServiceImpTest {
         ChallengeDto challengeDto = result.block();
 
         assertNotNull(challengeDto);
-        assertEquals(challengeDto, challengeDto);
+        assertEquals(createChallenge.getChallengeId(), challengeDto.getChallengeId());
 
         verify(challengeRepository, times(1)).findById(VALID_ID);
         verify(challengeMapper, times(1)).mapToChallengeDto(createChallenge);
