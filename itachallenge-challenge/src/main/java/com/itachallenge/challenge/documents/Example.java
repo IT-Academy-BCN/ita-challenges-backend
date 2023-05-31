@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
@@ -12,8 +13,10 @@ import java.util.UUID;
 public class Example {
 
     @MongoId
-    private UUID id_example;
+    @Field(name="id_example")
+    private UUID idExample;
 
-    private String example_text;
+    @Field(name="example_text")
+    private String exampleText;
 
 }

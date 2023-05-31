@@ -19,13 +19,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Challenge {
 
-    //1. añadir fields a todas las variables con guion bajo; variable con camelCase
     @MongoId
     @Field(name="id_challenge")
     private UUID uuid;
 
+    @Field(name="level")
     private String level;   //valor seteado fom properties
 
+    @Field(name="challenge_title")
     private String title;
 
     @DBRef
@@ -37,14 +38,17 @@ public class Challenge {
 
     //Next fields not priority for the moment
 
+    @Field(name="detail")
     private Detail detail;
 
     @DBRef
+    @Field(name="solutions")
     private List<Solution> solutions;
 
     @Field(name="related_challenges")
     private Set<UUID> relatedChallenges;
 
+    @Field(name="resources")
     private Set<UUID> resources;
 
 }

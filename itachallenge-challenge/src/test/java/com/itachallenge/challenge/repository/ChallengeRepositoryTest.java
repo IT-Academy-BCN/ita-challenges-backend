@@ -17,6 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -89,6 +90,17 @@ public class ChallengeRepositoryTest {
 
     }
 
+    @DisplayName("Find All Test")
+    @Test
+    void findAllTest() {
+
+        Flux<Challenge> challenges = challengeRepository.findAll();
+
+        StepVerifier.create(challenges)
+                .expectNextCount(2) 
+                .verifyComplete();
+    }
+
     @DisplayName("Exists by UUID Test")
     @Test
     void existsByUuidTest() {
@@ -115,16 +127,27 @@ public class ChallengeRepositoryTest {
     @Test
     void deleteByUuidTest() {
 
-
         Mono<Challenge> firstChallenge = challengeRepository.findByUuid(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(challengeRepository.deleteByUuid(uuid_1), null),
-                () -> fail("Challenge not found: " + uuid_1));
+                u -> {
+                    Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_1);
+                    StepVerifier.create(deletion)
+                            .expectComplete()
+                            .verify();
+                },
+                () -> fail("Challenge to delete not found: " + uuid_1)
+        );
 
         Mono<Challenge> secondChallenge = challengeRepository.findByUuid(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(challengeRepository.deleteByUuid(uuid_2), null),
-                () -> fail("Challenge not found: " + uuid_2));
+                u -> {
+                    Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_2);
+                    StepVerifier.create(deletion)
+                            .expectComplete()
+                            .verify();
+                },
+                () -> fail("Challenge to delete not found: " + uuid_2)
+        );
     }
 
     @DisplayName("Find by Level Test")

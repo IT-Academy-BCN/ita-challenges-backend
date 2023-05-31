@@ -11,8 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 public class Detail {
 
+    @Field(name="description")
     private String description;
 
+    @Field(name="examples")
     private List<Example> examples;
 
     @Field(name="note")
