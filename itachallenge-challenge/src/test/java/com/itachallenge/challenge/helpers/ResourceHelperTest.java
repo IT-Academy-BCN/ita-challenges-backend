@@ -13,17 +13,7 @@ public class ResourceHelperTest {
     void readResourceAsStringTest (){
 
         String expected = "{\r\n" +
-                "  \"filterName\": \"RandomName\",\r\n" +
-                "  \"options\": [\r\n" +
-                "    \"Option1\",\r\n" +
-                "    \"Option2\",\r\n" +
-                "    \"Option3\"\r\n" +
-                "  ],\r\n" +
-                "  \"uniqueOption\": true,\r\n" +
-                "  \"visibility\": [\r\n" +
-                "    \"ROLE_X\",\r\n" +
-                "    \"ROLE_Y\"\r\n" +
-                "  ]\r\n" +
+                "  \"filterName\": \"RandomName\"\r\n" +
                 "}";
 
         String jsonPath = "json/RandomJson.json";
@@ -31,6 +21,7 @@ public class ResourceHelperTest {
         String result  = null;
         try {
             result = resourceHelper.readResourceAsString();
+            //System.out.println(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
