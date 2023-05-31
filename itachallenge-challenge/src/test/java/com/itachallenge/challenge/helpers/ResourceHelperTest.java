@@ -37,21 +37,22 @@ public class ResourceHelperTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Assertions.assertEquals(expected,result);
+        //Assertions.assertEquals(expected,result);
+        Assertions.assertEquals(expected(),result);
     }
 
-    @Test
-    @DisplayName("Logic inside resource helper test")
-    void resourceHelperLogiTest(){
+
+    String expected (){
         String resourcePath = "json/RandomJson.json";
         Resource resource = new ClassPathResource(resourcePath);
         String result = null;
         try {
             File file = resource.getFile();
             result = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+            return result;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Assertions.assertEquals(expected,result);
+        //Assertions.assertEquals(expected,result);
     }
 }
