@@ -2,12 +2,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
+    id 'org.sonarqube' version '4.0.0.2929'
 }
+
 
 jar {
     manifest {
         attributes(
-                'Main-Class': 'com.itachallenge.challenge'
+                'Main-Class': 'com.itachallenge.challenge.App'
         )
     }
 }
@@ -41,7 +43,6 @@ dependencies {
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
 
-
 }
 
 test {
@@ -71,7 +72,7 @@ jacocoTestCoverageVerification {
     }
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
