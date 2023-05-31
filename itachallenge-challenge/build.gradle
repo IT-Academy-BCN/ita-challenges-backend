@@ -64,7 +64,7 @@ test {
 jacocoTestReport {
     dependsOn test
     reports {
-        xml.required = true
+        xml.required = false
         csv.required = false
         html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
@@ -86,5 +86,8 @@ jacocoTestCoverageVerification {
 sonarqube {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+        //property "sonar.jacoco.reportPaths", "${project.buildDir}/jacocoXml/test/jacocoTestReport.xml"
+        //property "sonar.coverage.jacoco.xmlReportPaths", "${project.buildDir}/jacocoXml/test/jacocoTestReport.xml"
+        //property "sonar.jacoco.JUnitXmlReport", "${project.buildDir}/jacocoXml/test/jacocoTestReport.xml"
     }
 }
