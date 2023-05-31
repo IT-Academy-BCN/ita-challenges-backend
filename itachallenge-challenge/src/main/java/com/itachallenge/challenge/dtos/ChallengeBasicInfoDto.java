@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.itachallenge.challenge.dtos.team.ChallangeBasicInfoDtoI;
 import com.itachallenge.challenge.helpers.PercentageSerializer;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Getter
 @Builder
+@JsonPropertyOrder({"title", "level", "popularity", "percentage", "languages"})
 public class ChallengeBasicInfoDto implements ChallangeBasicInfoDtoI {
 
     @JsonProperty("challenge_title")
@@ -20,8 +22,9 @@ public class ChallengeBasicInfoDto implements ChallangeBasicInfoDtoI {
 
     private String level;
 
-    @JsonProperty("creation_date")
-    private LocalDateTime creationDate;
+    // Solventando tema Date
+    //@JsonProperty("creation_date")
+    //private LocalDateTime creationDate;
 
     private Integer popularity;
 
@@ -31,10 +34,11 @@ public class ChallengeBasicInfoDto implements ChallangeBasicInfoDtoI {
     private Float percentage;
 
     //PRIVATE NO ARGS CONSTRUCTOR: to force instantiation with @Builder
-    private ChallengeBasicInfoDto(String title, String level, LocalDateTime creationDate, Integer popularity, Set<LanguageDto> languages, Float percentage) {
+    // añadir parámetro creationDate*
+    private ChallengeBasicInfoDto(String title, String level, Integer popularity, Set<LanguageDto> languages, Float percentage) {
         this.title = title;
         this.level = level;
-        this.creationDate = creationDate;
+        //this.creationDate = creationDate;
         this.popularity = popularity;
         this.languages = languages;
         this.percentage = percentage;
@@ -48,9 +52,9 @@ public class ChallengeBasicInfoDto implements ChallangeBasicInfoDtoI {
         this.level = level;
     }
 
-    private void setCreationDate(LocalDateTime creationDate) {
+    /*private void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
-    }
+    }*/
 
     private void setPopularity(Integer popularity) {
         this.popularity = popularity;

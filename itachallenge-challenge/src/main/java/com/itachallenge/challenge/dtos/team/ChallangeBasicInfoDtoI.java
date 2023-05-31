@@ -27,6 +27,6 @@ public interface ChallangeBasicInfoDtoI {
     Integer getPopularity();
 
     //TODO: modificar la clase devuelta
-    LocalDateTime getCreationDate();
+    //LocalDateTime getCreationDate();
 
 }

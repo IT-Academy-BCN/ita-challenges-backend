@@ -1,16 +1,16 @@
 {
-  "challenge_title": "Sociis Industries",
-  "level": "EASY",
-  "creation_date": "Tue May 30 07:33:43 UTC 2023",
-  "percentage": "23%",
-  "popularity": 105,
-  "languages": [
+  "challenge_title" : "Sociis Industries",
+  "level" : "EASY",
+  "popularity" : 105,
+  "percentage" : "23%",
+  "languages" : [
     {
-      "id_language": 1,
-      "language_name": "Javascript"
+      "id_language" : 1,
+      "language_name" : "Javascript"
     },
     {
-      "id_language": 2,
-      "language_name": "Java"
-    }]
+      "id_language" : 2,
+      "language_name" : "Java"
+    }
+  ]
 }

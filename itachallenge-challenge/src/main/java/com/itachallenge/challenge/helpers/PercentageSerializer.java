@@ -19,7 +19,7 @@ public class PercentageSerializer extends JsonSerializer<Float> {
 
     @Override
     public void serialize(Float value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        int percentage = new BigDecimal(value*100).setScale(0, RoundingMode.HALF_UP).intValue();
+        int percentage = new BigDecimal(value).setScale(0, RoundingMode.HALF_UP).intValue();
         gen.writeString(String.format("%s%%",percentage));
     }
 
