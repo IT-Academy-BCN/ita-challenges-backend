@@ -12,6 +12,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class ResourceHelperTest {
 
     private String expected;
@@ -47,6 +50,7 @@ public class ResourceHelperTest {
         Resource resource = new ClassPathResource(resourcePath);
         String result = null;
         try {
+
             File file = resource.getFile();
             result = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
             return result;
@@ -54,5 +58,17 @@ public class ResourceHelperTest {
             throw new RuntimeException(e);
         }
         //Assertions.assertEquals(expected,result);
+    }
+
+    @Test
+    void failedReadResourceTest () {
+        String invalidPath = "jsonx908erfd/Randosadn90dsmJson.json";
+        ResourceHelper resourceHelper = new ResourceHelper(invalidPath);
+
+        Exception exception = assertThrows(IOException.class, () ->
+                resourceHelper.readResourceAsString());
+
+        String prefixMsg = "Exception when " + "loading/reading" + " " + invalidPath + " resource: \n";
+        assertTrue(exception.getMessage().startsWith(prefixMsg));
     }
 }
