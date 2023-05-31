@@ -29,9 +29,7 @@ public class ResourceHelperTest {
 
          */
         expected =
-                "{\r\n"+
-                "\r\n"+
-                "}";
+                "{}";
 
     }
 
