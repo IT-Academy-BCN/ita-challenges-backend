@@ -2,14 +2,12 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
-    id 'org.sonarqube' version '4.0.0.2929'
 }
-
 
 jar {
     manifest {
         attributes(
-                'Main-Class': 'com.itachallenge.challenge.App'
+                'Main-Class': 'com.itachallenge.challenge'
         )
     }
 }
@@ -26,7 +24,6 @@ repositories {
 }
 
 dependencies {
-
     implementation group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: '3.0.6'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-commons', version: '4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
@@ -42,8 +39,8 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-
 }
+
 
 test {
     useJUnitPlatform()
@@ -72,7 +69,7 @@ jacocoTestCoverageVerification {
     }
 }
 
-sonar {
+sonarqube {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }

@@ -1,11 +1,9 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-user
   jmx:
     enabled: true
-  data:
-    mongodb:
-      uri: mongodb://adminChallenge:01TZFSLwZ0@localhost:27017/challenges
+
 
 springdoc:
   swagger-ui:
@@ -38,5 +36,5 @@ logging:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-challenge.log
+#    name: itachallenge-user.log
 
