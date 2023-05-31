@@ -28,8 +28,8 @@ public class ResourceHelperTest {
                 }""";
 
          */
-        expected =
-                "{}";
+        expected = "{\"filterName\": \"RandomName\"}";
+
 
     }
 
