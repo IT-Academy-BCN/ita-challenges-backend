@@ -61,13 +61,45 @@ public class ResourceHelperTest {
         assertThat(result).usingRecursiveComparison().isEqualTo(expected).withStrictTypeChecking();
     }
 
-    @NoArgsConstructor
-    @Getter
-    @Setter
     static class RandomDto {
         private String filterName;
         private String[] options;
         private boolean uniqueOption;
         private String[] visibility;
+
+        public RandomDto() {
+        }
+
+        public String getFilterName() {
+            return filterName;
+        }
+
+        public void setFilterName(String filterName) {
+            this.filterName = filterName;
+        }
+
+        public String[] getOptions() {
+            return options;
+        }
+
+        public void setOptions(String[] options) {
+            this.options = options;
+        }
+
+        public boolean isUniqueOption() {
+            return uniqueOption;
+        }
+
+        public void setUniqueOption(boolean uniqueOption) {
+            this.uniqueOption = uniqueOption;
+        }
+
+        public String[] getVisibility() {
+            return visibility;
+        }
+
+        public void setVisibility(String[] visibility) {
+            this.visibility = visibility;
+        }
     }
 }
