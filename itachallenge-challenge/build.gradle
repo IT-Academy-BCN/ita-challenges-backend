@@ -42,6 +42,16 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
+    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
+    testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    //for suite tests
+    testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-engine', version: '1.8.1'
+
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
 
 }
 
