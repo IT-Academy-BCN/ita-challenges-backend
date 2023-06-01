@@ -28,7 +28,6 @@ logging:
 
 url:
   connection_timeout: 30000
-  failed_connection_timeout: 1
   maxBytesInMemory: 30000000
   ita_wiki:
     server: https://dev.api.itadirectory.eurecatacademy.org/api/v1

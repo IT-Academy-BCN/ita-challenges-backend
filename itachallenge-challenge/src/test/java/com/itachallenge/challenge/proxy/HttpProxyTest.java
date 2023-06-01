@@ -97,10 +97,10 @@ class HttpProxyTest {
 	@Test
 	@DisplayName("Timeout verification")
 	void timeoutTest() {
-		int fakeConnectionTimeout = Integer.parseInt(env.getProperty("url.failed_connection_timeout"));
+		//int fakeConnectionTimeout = Integer.parseInt(env.getProperty("url.failed_connection_timeout"));
 		//assertEquals(1, fakeConnectionTimeout);
 		HttpClient briefHttpClient = HttpClient.create()
-				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, fakeConnectionTimeout);
+				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1);
 		WebClient briefWebClient = httpProxy.getClient().mutate()
 				.clientConnector(new ReactorClientHttpConnector(briefHttpClient))
 				.build();
