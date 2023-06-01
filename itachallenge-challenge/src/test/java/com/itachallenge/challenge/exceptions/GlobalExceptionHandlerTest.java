@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = GlobalExceptionHandlerTest.class)
-public class GlobalExceptionHandlerTest {
+class GlobalExceptionHandlerTest {
     //variables
     private final String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    public void testHandleResponseStatusException() {
+    void testHandleResponseStatusException() {
 
         when(responseStatusException.getStatus()).thenReturn(BAD_REQUEST);
         when(responseStatusException.getReason()).thenReturn(REQUEST);

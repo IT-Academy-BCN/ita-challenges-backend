@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeMapper.class)
-public class ChallengeMapperTest {
+class ChallengeMapperTest {
     //variables
     private final static UUID ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
 
@@ -30,7 +30,7 @@ public class ChallengeMapperTest {
     }
 
     @Test
-    public void testMapToChallengeDto() {
+    void testMapToChallengeDto() {
         Challenge challenge = new Challenge();
         challenge.setUuid(ID);
         

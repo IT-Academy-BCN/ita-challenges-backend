@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeServiceImp.class)
-public class ChallengeServiceImpTest {
+class ChallengeServiceImpTest {
     //variables
     private final static UUID VALID_ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
     private final static String INVALID_ID = "123456789";
@@ -46,7 +46,7 @@ public class ChallengeServiceImpTest {
     }
 
     @Test
-    public void testGetChallengeId_Valid() {
+    void testGetChallengeId_Valid() {
         Challenge createChallenge = new Challenge();
         ChallengeDto createChallengeDto = new ChallengeDto();
 
@@ -65,7 +65,7 @@ public class ChallengeServiceImpTest {
     }
 
     @Test
-    public void testGetChallengeId_Empty() {
+    void testGetChallengeId_Empty() {
         when(challengeRepository.findById(VALID_ID)).thenReturn(Mono.empty());
 
         StepVerifier.create(challengeService.getChallengeId(VALID_ID))
@@ -77,14 +77,14 @@ public class ChallengeServiceImpTest {
     }
 
     @Test
-    public void testIsValidUUID_Ok() {
+    void testIsValidUUID_Ok() {
         boolean result = challengeService.isValidUUID(VALID_ID.toString());
 
         assertTrue(result);
     }
 
     @Test
-    public void testIsValidUUID_NotValid() {
+    void testIsValidUUID_NotValid() {
         boolean result = challengeService.isValidUUID(INVALID_ID);
 
         assertFalse(result);

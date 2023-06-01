@@ -19,7 +19,6 @@ import java.util.UUID;
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
-    private ErrorResponseMessage errorMessage;
 
     @Autowired
     private ChallengeService challengeService;
@@ -38,8 +37,8 @@ public class ChallengeController {
             boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
-                errorMessage = new ErrorResponseMessage(HttpStatus.NOT_FOUND.value(), "Invalid ID format.");
-                log.error(errorMessage + " ID: " + id + ", incorrect.");
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.NOT_FOUND.value(), "Invalid ID format.");
+                log.error("{} ID: {}, incorrect.", errorMessage, id);
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage.getMessage());
             }
 
@@ -47,11 +46,11 @@ public class ChallengeController {
                     .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                     .onErrorResume(error -> {
                         if (error instanceof IllegalArgumentException) {
-                            String errorMessage = "ERROR: " + error.getMessage();
-                            log.error("An IllegalArgumentException was thrown with Bad Request response: " + error.getMessage());
-                            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage));
+                            String errorMessageIlArgEx = "ERROR: " + error.getMessage();
+                            log.error("An IllegalArgumentException was thrown with Bad Request response: {}", error.getMessage());
+                            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessageIlArgEx));
                         } else {
-                            log.error("An IllegalArgumentException was thrown with Internal Server Error response: " + error.getMessage());
+                            log.error("An IllegalArgumentException was thrown with Internal Server Error response: {}", error.getMessage());
                             return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
                         }
                     });
@@ -60,9 +59,10 @@ public class ChallengeController {
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
-            log.error("An Exception was thrown with Internal Server Error response: " + e.getMessage());
+            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
 }

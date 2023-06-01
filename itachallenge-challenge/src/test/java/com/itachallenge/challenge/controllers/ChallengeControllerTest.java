@@ -33,7 +33,7 @@ import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeController.class)
-public class ChallengeControllerTest {
+class ChallengeControllerTest {
     //variables
     private final static String VALID_ID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
     private final static String INVALID_ID = "123456789";
@@ -52,12 +52,12 @@ public class ChallengeControllerTest {
     private ChallengeController challengeController;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void test() {
+    void test() {
 
         webTestClient.get()
                 .uri(CONTROLLER_BASE_URL + URI_TEST)
@@ -70,7 +70,7 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void testGetOneChallengeValidUUID() {
+    void testGetOneChallengeValidUUID() {
         ChallengeDto challenge = new ChallengeDto();
 
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
@@ -85,7 +85,7 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void testGetOneChallengeNotValidUUID() {
+    void testGetOneChallengeNotValidUUID() {
         when(challengeService.isValidUUID(INVALID_ID)).thenReturn(false);
 
         ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
@@ -101,7 +101,7 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void testGetOneChallengeEmpty(){
+    void testGetOneChallengeEmpty(){
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         when(challengeService.getChallengeId(UUID.fromString(VALID_ID))).thenReturn(Mono.empty());
 
@@ -115,7 +115,7 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void testGetOneChallengeIllegalArgumentException() {
+    void testGetOneChallengeIllegalArgumentException() {
         IllegalArgumentException exception = new IllegalArgumentException(MESSAGE_ILLEGAL_ARGUMENT_EXCEPTION);
 
         Mockito.when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
@@ -135,7 +135,7 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void testGetOneChallengeException(){
+    void testGetOneChallengeException(){
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         when(challengeService.getChallengeId(any(UUID.class))).thenThrow(new RuntimeException(MESSAGE_INTERNAL_SERVER_ERROR));
 
@@ -146,7 +146,7 @@ public class ChallengeControllerTest {
         verifyService();
     }
 
-    public void verifyService(){
+    private void verifyService(){
         verify(challengeService, times(1)).isValidUUID(VALID_ID);
         verify(challengeService, times(1)).getChallengeId(UUID.fromString(VALID_ID));
     }
