@@ -19,7 +19,7 @@ public class ResourceHelperTest {
         String result  = null;
         try {
             result = resourceHelper.readResourceAsString();
-            //System.out.println(result);
+            // System.out.println(result);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
