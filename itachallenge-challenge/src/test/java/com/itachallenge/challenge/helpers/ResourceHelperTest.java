@@ -45,10 +45,9 @@ public class ResourceHelperTest {
     @DisplayName("Map a resource to an object test")
     void mapResourceToObjectTest(){
         RandomDto expected = new RandomDto();
-        expected.setFilterName("RandomName");
-        expected.setOptions(new String[]{"Option1","Option2","Option3"});
-        expected.setUniqueOption(true);
-        expected.setVisibility(new String[]{"ROLE_X","ROLE_Y"});
+        expected.setName("RandomName");
+        expected.setNums(new int[]{1,2,3});
+        expected.setHappy(true);
 
         String jsonPath = "json/RandomJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
@@ -62,44 +61,35 @@ public class ResourceHelperTest {
     }
 
     static class RandomDto {
-        private String filterName;
-        private String[] options;
-        private boolean uniqueOption;
-        private String[] visibility;
+        private String name;
+        private int[] nums;
+        private boolean happy;
 
         public RandomDto() {
         }
 
-        public String getFilterName() {
-            return filterName;
+        public String getName() {
+            return name;
         }
 
-        public void setFilterName(String filterName) {
-            this.filterName = filterName;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public String[] getOptions() {
-            return options;
+        public int[] getNums() {
+            return nums;
         }
 
-        public void setOptions(String[] options) {
-            this.options = options;
+        public void setNums(int[] nums) {
+            this.nums = nums;
         }
 
-        public boolean isUniqueOption() {
-            return uniqueOption;
+        public boolean isHappy() {
+            return happy;
         }
 
-        public void setUniqueOption(boolean uniqueOption) {
-            this.uniqueOption = uniqueOption;
-        }
-
-        public String[] getVisibility() {
-            return visibility;
-        }
-
-        public void setVisibility(String[] visibility) {
-            this.visibility = visibility;
+        public void setHappy(boolean happy) {
+            this.happy = happy;
         }
     }
 }
