@@ -1,42 +1,19 @@
 package com.itachallenge.challenge.helpers;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ResourceHelperTest {
 
-    private String expected;
-
-    @BeforeEach
-    void setup(){
-        /*
-        expected = """
-                {\r
-                  "filterName": "RandomName"\r
-                }""";
-
-         */
-        expected = "{\"name\": \"RandomName\", \"num\": [1,2,3], \"happy\": true}";
-
-
-    }
-
     @Test
     @DisplayName("Read a resource as String test")
     void readResourceAsStringTest (){
-
         String jsonPath = "json/RandomJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
         String result  = null;
@@ -46,6 +23,7 @@ public class ResourceHelperTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        String expected = "{\"name\": \"RandomName\", \"num\": [1,2,3], \"happy\": true}";
         Assertions.assertEquals(expected,result);
     }
 
