@@ -4,24 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="625c2bc5-5943-49c7-bf5c-dbcb20eb8a88" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/itachallenge-score/src/main/java/com/itachallenge/score/entity/Score.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/itachallenge-score/src/main/java/com/itachallenge/score/repository/ScoreRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.0/checksums/checksums.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/3/b/3b921caad7044ed1c7c6a6a13e5e31e70d324345" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/6/9644470157302cb98d76e2a957e587dd19af3fcc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/9/a/9ae703e4af8e22af5f62a66b1f329b029e0b07f2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/issuestore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/3/b/3b921caad7044ed1c7c6a6a13e5e31e70d324345" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/8/e/8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/6/9644470157302cb98d76e2a957e587dd19af3fcc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/9/a/9ae703e4af8e22af5f62a66b1f329b029e0b07f2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sonarlint/securityhotspotstore/index.pb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/itachallenge-score/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/itachallenge-score/build.gradle" afterDir="false" />
-    </list>
+    <list default="true" id="625c2bc5-5943-49c7-bf5c-dbcb20eb8a88" name="Changes" comment="&quot;creacion repo y entidad de prueba&quot;" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,6 +42,7 @@
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SONARLINT_PRECOMMIT_ANALYSIS": "true",
     "last_opened_file_path": "C:/Users/carla/git/Sprint5/S05T02Security"
   }
 }]]></component>
@@ -71,6 +55,14 @@
       <option name="presentableId" value="Default" />
       <updated>1685095301268</updated>
     </task>
+    <task id="LOCAL-00001" summary="&quot;creacion repo y entidad de prueba&quot;">
+      <created>1685612442924</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1685612442924</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -86,5 +78,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="&quot;creacion repo y entidad de prueba&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&quot;creacion repo y entidad de prueba&quot;" />
   </component>
 </project>
