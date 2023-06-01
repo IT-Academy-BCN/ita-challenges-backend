@@ -69,7 +69,6 @@ public class ChallengeControllerTest {
 
     }
 
-
     @Test
     public void testGetOneChallengeValidUUID() {
         ChallengeDto challenge = new ChallengeDto();

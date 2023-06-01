@@ -9,10 +9,7 @@ public class ChallengeMapper {
 
     public ChallengeDto mapToChallengeDto(Challenge challenge) {
         return ChallengeDto.builder()
-                .challengeId(challenge.getChallengeId())
-                .title(challenge.getTitle())
-                .creationDate(challenge.getCreationDate())
-                .related(challenge.getRelated())
+                .uuid(challenge.getUuid())
                 .build();
     }
 }

@@ -57,7 +57,7 @@ public class ChallengeServiceImpTest {
         ChallengeDto challengeDto = result.block();
 
         assertNotNull(challengeDto);
-        assertEquals(createChallenge.getChallengeId(), challengeDto.getChallengeId());
+        assertEquals(createChallenge.getUuid(), challengeDto.getUuid());
 
         verify(challengeRepository, times(1)).findById(VALID_ID);
         verify(challengeMapper, times(1)).mapToChallengeDto(createChallenge);
