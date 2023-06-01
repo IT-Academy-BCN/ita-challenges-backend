@@ -1,0 +1,41 @@
+{
+  "filtersInfo": [
+    {
+      "filterName": "Lenguaje",
+      "options": [
+        "Javascript",
+        "Java",
+        "PHP",
+        "Python"
+      ],
+      "uniqueOption": false,
+      "visibility": [
+        "ROLE_GUEST"
+      ]
+    },
+    {
+      "filterName": "Dificultad",
+      "options": [
+        "Fácil",
+        "Media",
+        "Difícil"
+      ],
+      "uniqueOption": false,
+      "visibility": [
+        "ROLE_GUEST"
+      ]
+    },
+    {
+      "filterName": "Progreso",
+      "options": [
+        "No empezados",
+        "Falta completar",
+        "Completados"
+      ],
+      "uniqueOption": false,
+      "visibility": [
+        "ROLE_USER"
+      ]
+    }
+  ]
+}

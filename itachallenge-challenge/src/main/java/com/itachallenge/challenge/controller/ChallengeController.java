@@ -19,21 +19,12 @@ public class ChallengeController {
 
     public static final String MICRO_CHALLENGE = "/itachallenge/api/v1/challenge";
 
-    public static final String TEST = "/test";
-
     public static final String FILTERS = "/filters";
 
     public static final String SORT_OPTIONS = "/sortOptions";
 
 
     private final ChallengeService challengeService;
-
-    @Operation(summary = "Testing the App")
-    @GetMapping(value = TEST)
-    public String test() {
-        log.info("** Saludos desde el logger **");
-        return "Hello from ITA Challenge!!!";
-    }
 
     @Operation(summary = "Filters available for challenges")
     @GetMapping(value = FILTERS)
