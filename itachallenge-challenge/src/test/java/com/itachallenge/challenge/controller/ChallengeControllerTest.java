@@ -8,6 +8,6 @@ public class ChallengeControllerTest {
 
     @Test
     public void test() {
-        assertEquals(1, 1);
+        assertEquals("Hello from ITA Challenge!!!", new ChallengeController().test());
     }
 }
