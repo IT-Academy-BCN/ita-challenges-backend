@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: itachallenge-challenge
+  jmx:
+    enabled: true
+
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui-custom.html"
+    operationsSorted: method
+  api-docs:
+    enable: true
+    path: "/api-docs"
+
+server:
+  port: 8762
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  security:
+    enabled: false
+
+
+
+
+logging:
+  level:
+    root: INFO
+    "[org.springframework]": ERROR
+    "[com.businessassistantbcn]": INFO
+  pattern:
+  # console: Spring's default
+    file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
+#  file:
+#    name: itachallenge-challenge.log
+
