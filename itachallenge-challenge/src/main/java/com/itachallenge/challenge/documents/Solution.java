@@ -16,7 +16,7 @@ public class Solution {
 
     @MongoId
     @Field(name="id_solution")
-    private UUID idSolution;
+    private UUID uuid;
 
     @Field(name="solution_text")
     private String solutionText;

@@ -24,7 +24,9 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.AssertionErrors.fail;
+import static reactor.core.publisher.Mono.when;
 
 @DataMongoTest
 @Testcontainers
@@ -78,6 +80,7 @@ public class ChallengeRepositoryTest {
         Challenge challenge2 = new Challenge
                 (uuid_2, "Level 2", "If", languageSet, LocalDate.now(), detail, solutionList, UUIDSet, UUIDSet2);
 
+
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
@@ -97,7 +100,7 @@ public class ChallengeRepositoryTest {
         Flux<Challenge> challenges = challengeRepository.findAll();
 
         StepVerifier.create(challenges)
-                .expectNextCount(2) 
+                .expectNextCount(2)
                 .verifyComplete();
     }
 
@@ -180,19 +183,17 @@ public class ChallengeRepositoryTest {
                 () -> fail("Challenge with name If not found."));
     }
 
-    /*@DisplayName("Find by Resource Test")
+    /*@DisplayName("Find by Language Id Test")
     @Test
-    void findByResourceTest() {
+    void findChallengeByLanguageIdTest(){
 
-        Mono<Challenge> firstChallenge = challengeRepository.findByResources(uuid_1);
-        firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertTrue(u.getResources().stream().anyMatch(uuid -> uuid.equals(uuid_1))),
-                () -> fail("Challenge with resource " + uuid_1 + "  not found."));
+        int idLanguage = 2;
 
-        Mono<Challenge> secondChallenge = challengeRepository.findByResources(uuid_2);
-        secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertTrue(u.getResources().stream().anyMatch(uuid -> uuid.equals(uuid_2))),
-                () -> fail("Challenge with resource " +  uuid_2 + "not found."));
+        StepVerifier.create(challengeRepository.findByLanguages(idLanguage))
+                .expectNextCount(1)
+                .verifyComplete();
+
+        verify(challengeRepository).findByLanguages(idLanguage);
     }*/
 
 
