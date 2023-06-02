@@ -1,8 +1,8 @@
 package com.itachallenge.challenge.exceptions;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ErrorResponseMessage {
     private int statusCode;
     private String message;
