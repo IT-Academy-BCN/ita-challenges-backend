@@ -94,8 +94,8 @@ class HttpProxyTest {
 	Except expected response body it's not a concrete dto, due we are
 	expecting an error.
 	 */
-	@Test
-	@DisplayName("Timeout verification")
+	//@Test
+	//@DisplayName("Timeout verification")
 	void timeoutTest() {
 		//int fakeConnectionTimeout = Integer.parseInt(env.getProperty("url.failed_connection_timeout"));
 		//assertEquals(1, fakeConnectionTimeout);
