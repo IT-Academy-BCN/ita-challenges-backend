@@ -16,6 +16,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.test.StepVerifier;
@@ -87,6 +88,24 @@ class HttpProxyTest {
 		assertThat(resource.getCreatedAt(),is(not(emptyString())));
 		assertThat(resource.getTopics(), everyItem(is(notNullValue())));
 		assertThat(resource.getUser().getName(),is(not(emptyString())));
+	}
+
+	@DisplayName("Timeout verification old")
+	@Test
+	public void timeoutTestOld() {
+		HttpClient client1 = HttpClient.create()
+				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1); // Absurd 1 ms connection timeout
+		WebClient briefClient = httpProxy.getClient().mutate()
+				.clientConnector(new ReactorClientHttpConnector(client1))
+				.build();
+		Assertions.assertThrows(WebClientRequestException.class, () ->
+				briefClient.get()
+						.uri(env.getProperty("ds_test"))
+						.exchangeToMono(response ->
+								response.statusCode().equals(HttpStatus.OK) ?
+										response.bodyToMono(Object.class) :
+										response.createException().flatMap(Mono::error))
+						.block());
 	}
 
 	/*
