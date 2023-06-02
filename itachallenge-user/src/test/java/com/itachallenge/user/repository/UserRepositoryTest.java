@@ -142,7 +142,7 @@ class UserRepositoryTest {
                 .surname("Martínez")
                 .nickname("carlitos")
                 .email("test3@example.com")
-                .password("testpassword3").build(); 
+                .password("testpassword3").build();
 
         Mono<User> savedResult = userRepository.save(user3);
 
