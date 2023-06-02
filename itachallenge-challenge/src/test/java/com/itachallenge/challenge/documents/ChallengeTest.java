@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = Challenge.class)
-class challengeTest {
+class ChallengeTest {
     private final static UUID ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
 
     @BeforeEach
