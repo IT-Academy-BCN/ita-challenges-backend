@@ -95,9 +95,8 @@ class HttpProxyTest {
 	public void timeoutTestOldFixed() {
 		int absurdTimeout = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
 		//System.out.println(absurdValue); // = 1
-		HttpClient absurdHttpClient = httpProxy.initHttpClient(absurdTimeout);
 		WebClient absurdWebClient = httpProxy.getClient().mutate()
-				.clientConnector(new ReactorClientHttpConnector(absurdHttpClient))
+				.clientConnector(httpProxy.initReactorHttpClient(absurdTimeout))
 				.build();
 		String url = env.getProperty("url.ds_test");
 		System.out.println(url);
