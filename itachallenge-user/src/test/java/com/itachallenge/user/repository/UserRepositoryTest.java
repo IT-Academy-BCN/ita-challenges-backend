@@ -1,22 +1,43 @@
 package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.User;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.reactivestreams.Publisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
-import reactor.test.StepVerifier;
+import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 import java.util.UUID;
-import java.util.function.Predicate;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @DataMongoTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@TestPropertySource(locations = "classpath:application-test.yml")
+@Testcontainers
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@PropertySource("classpath:persistence-test.properties")
 public class UserRepositoryTest {
+
+    @Container
+    static MongoDBContainer container = new MongoDBContainer("mongo")
+            .withStartupTimeout(Duration.ofSeconds(60));
+
+    @DynamicPropertySource
+    static void initMongoProperties(DynamicPropertyRegistry registry) {
+        System.out.println("container url: {}" + container.getReplicaSetUrl("itac-users"));
+        System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
+
+        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("itac-users"));
+    }
 
     @Autowired
     private IUserRepository userRepository;
@@ -25,10 +46,12 @@ public class UserRepositoryTest {
     private UUID uuid, uuid2;
     private String email, email2;
 
-    @BeforeAll
+    @BeforeEach
     public void setup() {
-        uuid = UUID.randomUUID();
-        uuid2 = UUID.randomUUID();
+        String uuidString = "4020e1e1-e6b2-4c20-817b-70193b518b3f";
+        uuid = UUID.fromString(uuidString);
+        String uuidString2 = "5020e1e1-e6b2-4c20-817b-70193b518b3f";
+        uuid2 = UUID.fromString(uuidString2);
         email = "test@example.com";
         email2 = "test2@example.com";
 
@@ -47,32 +70,54 @@ public class UserRepositoryTest {
                 .nickname("joaneta")
                 .email(email2)
                 .password("testpassword2").build();
+
+        userRepository.deleteAll().block();
+        userRepository.saveAll(Flux.just(user, user2)).blockLast();
     }
     @Test
     public void testFindByUuid() {
 
-        Publisher<User> setup = this.userRepository.deleteAll()
-                .thenMany(this.userRepository.saveAll(Flux.just(user, user2)))
-                .thenMany(this.userRepository.findByUuid(uuid2));
+        Mono<User> userFound = userRepository.findByUuid(uuid);
+        userFound.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getUuid(), uuid),
+                () -> fail("User with ID " + uuid + " not found"));
 
-        Predicate<User> userPredicate = user -> uuid2.equals(user2.getUuid());
-
-        StepVerifier.create(setup)
-                .expectNextMatches(userPredicate)
-                .verifyComplete();
+        Mono<User> user2Found = userRepository.findByUuid(uuid2);
+        user2Found.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getUuid(), uuid2),
+                () -> fail("User with ID " + uuid2 + " not found"));
     }
+
     @Test
     public void testFindByEmail() {
 
-        Publisher<User> setup = this.userRepository.deleteAll()
-                .thenMany(this.userRepository.saveAll(Flux.just(user, user2)))
-                .thenMany(this.userRepository.findByEmail(email));
+        Mono<User> userFound = userRepository.findByEmail(email);
+        userFound.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getEmail(), email),
+                () -> fail("User with email " + email + " not found"));
 
-        Predicate<User> userPredicate = user -> email.equals(user.getEmail());
+        Mono<User> user2Found = userRepository.findByEmail(email2);
+        user2Found.blockOptional().ifPresentOrElse(
+                u -> assertEquals(u.getEmail(), email2),
+                () -> fail("User with email " + email2 + " not found"));
+    }
 
-        StepVerifier.create(setup)
-                .expectNextMatches(userPredicate)
-                .verifyComplete();
+    @Test
+    public void testExistsByUuid() {
+        Boolean exists = userRepository.existsByUuid(uuid).block();
+        assertEquals(exists, true);
+
+        Boolean exists2 = userRepository.existsByUuid(uuid2).block();
+        assertEquals(exists2, true);
+    }
+
+    @Test
+    public void testExistsByEmail() {
+        Boolean exists = userRepository.existsByEmail(email).block();
+        assertEquals(exists, true);
+
+        Boolean exists2 = userRepository.existsByEmail(email2).block();
+        assertEquals(exists2, true);
     }
 
 }

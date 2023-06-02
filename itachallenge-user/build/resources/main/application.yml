@@ -3,7 +3,9 @@ spring:
     name: itachallenge-user
   jmx:
     enabled: true
-
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/itac-users
 
 springdoc:
   swagger-ui:
@@ -31,7 +33,7 @@ logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
-    "[com.businessassistantbcn]": INFO
+    "[com.itachallenges]": INFO
   pattern:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"

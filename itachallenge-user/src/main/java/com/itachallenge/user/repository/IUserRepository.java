@@ -12,5 +12,7 @@ public interface IUserRepository extends ReactiveMongoRepository<User, UUID> {
 
     Mono<User> findByUuid(UUID uuid);
     Mono<User> findByEmail(String email);
+    Mono<Boolean> existsByUuid(UUID uuid);
+    Mono<Boolean> existsByEmail(String email);
 
 }
