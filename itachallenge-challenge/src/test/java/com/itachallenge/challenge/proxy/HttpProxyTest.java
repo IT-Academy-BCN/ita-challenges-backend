@@ -92,6 +92,27 @@ class HttpProxyTest {
 
 	@Test
 	@DisplayName("Timeout verification old")
+	public void timeoutTestOldFixed() {
+		int absurdTimeout = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
+		//System.out.println(absurdValue); // = 1
+		HttpClient absurdClient = httpProxy.initHttpClient(absurdTimeout);
+		WebClient briefClient = httpProxy.getClient().mutate()
+				.clientConnector(new ReactorClientHttpConnector(absurdClient))
+				.build();
+		String url = env.getProperty("url.ds_test");
+		System.out.println(url);
+		Assertions.assertThrows(WebClientRequestException.class, () ->
+				briefClient.get()
+						.uri(url)
+						.exchangeToMono(response ->
+								response.statusCode().equals(HttpStatus.OK) ?
+										response.bodyToMono(Object.class) :
+										response.createException().flatMap(Mono::error))
+						.block());
+	}
+
+	//@Test
+	//@DisplayName("Timeout verification old")
 	public void timeoutTestOld() {
 		int absurdValue = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
 		//System.out.println(absurdValue); // = 1

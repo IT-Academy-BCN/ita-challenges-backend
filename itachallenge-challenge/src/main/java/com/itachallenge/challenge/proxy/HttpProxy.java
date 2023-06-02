@@ -38,15 +38,14 @@ public class HttpProxy {
     public HttpProxy(PropertiesConfig config) {
         this.config = config;
         client = WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(initHttpClient()))
+                .clientConnector(new ReactorClientHttpConnector(initHttpClient(config.getConnectionTimeout())))
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(this::initAcceptedCodecs)
                         .build())
                 .build();
     }
 
-    private HttpClient initHttpClient(){
-        Integer connectionTimeout = config.getConnectionTimeout();
+    HttpClient initHttpClient(Integer connectionTimeout){
         return HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectionTimeout)
                 .responseTimeout(Duration.ofMillis(connectionTimeout))
