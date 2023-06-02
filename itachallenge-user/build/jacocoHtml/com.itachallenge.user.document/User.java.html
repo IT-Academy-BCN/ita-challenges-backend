@@ -12,34 +12,34 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.util.List;
 import java.util.UUID;
 
-<span class="nc bnc" id="L15" title="All 62 branches missed.">@Data</span>
+<span class="pc bnc" id="L15" title="All 62 branches missed.">@Data</span>
 <span class="fc" id="L16">@AllArgsConstructor</span>
-<span class="nc" id="L17">@NoArgsConstructor</span>
+<span class="fc" id="L17">@NoArgsConstructor</span>
 <span class="pc" id="L18">@Builder</span>
 @Document(collection = &quot;users&quot;)
 public class User {
 
     @MongoId
     @Field(name = &quot;uuid&quot;)
-<span class="nc" id="L24">    private UUID uuid;</span>
+<span class="fc" id="L24">    private UUID uuid;</span>
     @Field(name = &quot;name&quot;)
-<span class="nc" id="L26">    private String name;</span>
+<span class="fc" id="L26">    private String name;</span>
 
     @Field(name = &quot;surname&quot;)
-<span class="nc" id="L29">    private String surname;</span>
+<span class="fc" id="L29">    private String surname;</span>
 
     @Field(name = &quot;nickname&quot;)
-<span class="nc" id="L32">    private String nickname;</span>
+<span class="fc" id="L32">    private String nickname;</span>
 
     @Email
     @Field(name = &quot;email&quot;)
-<span class="nc" id="L36">    private String email;</span>
+<span class="fc" id="L36">    private String email;</span>
 
     @Field(name = &quot;password&quot;)
-<span class="nc" id="L39">    private String password;</span>
+<span class="fc" id="L39">    private String password;</span>
 
     @Field(name = &quot;role&quot;)
-<span class="nc" id="L42">    private List&lt;Role&gt; roles;</span>
+<span class="fc" id="L42">    private List&lt;Role&gt; roles;</span>
 
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
