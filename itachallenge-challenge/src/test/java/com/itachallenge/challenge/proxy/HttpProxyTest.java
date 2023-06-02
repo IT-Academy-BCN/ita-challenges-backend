@@ -93,8 +93,10 @@ class HttpProxyTest {
 	@Test
 	@DisplayName("Timeout verification old")
 	public void timeoutTestOld() {
+		int absurdValue = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
+		//System.out.println(absurdValue); // = 1
 		HttpClient briefHttpClient = HttpClient.create()
-				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1); // Absurd 1 ms connection timeout
+				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, absurdValue);
 		WebClient briefClient = httpProxy.getClient().mutate()
 				.clientConnector(new ReactorClientHttpConnector(briefHttpClient))
 				.build();
