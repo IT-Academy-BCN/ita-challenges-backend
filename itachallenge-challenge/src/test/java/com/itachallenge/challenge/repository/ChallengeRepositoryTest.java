@@ -1,20 +1,17 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.documents.*;
-import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -24,14 +21,12 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.util.AssertionErrors.fail;
-import static reactor.core.publisher.Mono.when;
 
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class ChallengeRepositoryTest {
+class ChallengeRepositoryTest {
 
 
     @Container
@@ -108,7 +103,7 @@ public class ChallengeRepositoryTest {
     @Test
     void existsByUuidTest() {
         Boolean exists = challengeRepository.existsByUuid(uuid_1).block();
-        assertEquals(exists, true);
+        assertEquals(true, exists);
     }
 
     @DisplayName("Find by UUID Test")
@@ -182,19 +177,6 @@ public class ChallengeRepositoryTest {
                 u -> assertEquals(u.getTitle(), "If"),
                 () -> fail("Challenge with name If not found."));
     }
-
-    /*@DisplayName("Find by Language Id Test")
-    @Test
-    void findChallengeByLanguageIdTest(){
-
-        int idLanguage = 2;
-
-        StepVerifier.create(challengeRepository.findByLanguages(idLanguage))
-                .expectNextCount(1)
-                .verifyComplete();
-
-        verify(challengeRepository).findByLanguages(idLanguage);
-    }*/
 
 
 }

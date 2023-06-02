@@ -6,8 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class Detail {
 

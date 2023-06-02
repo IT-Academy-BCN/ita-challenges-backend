@@ -10,8 +10,6 @@ import java.util.UUID;
 
 @Document(collection="languages")
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class Language {
 

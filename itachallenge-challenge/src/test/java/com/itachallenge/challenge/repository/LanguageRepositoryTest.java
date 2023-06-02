@@ -26,7 +26,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class LanguageRepositoryTest {
+class LanguageRepositoryTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -41,7 +41,7 @@ public class LanguageRepositoryTest {
     }
 
     @Autowired
-    LanguageRepository languageRepository;
+    private LanguageRepository languageRepository;
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");

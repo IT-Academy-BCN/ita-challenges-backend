@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.documents.Solution;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +26,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class SolutionRepositoryTest {
+class SolutionRepositoryTest {
 
 
     @Container
@@ -83,7 +82,7 @@ public class SolutionRepositoryTest {
     @Test
     void existsByUuidTest() {
         Boolean exists = solutionRepository.existsByUuid(uuid_1).block();
-        assertEquals(exists, true);
+        assertEquals(true, exists);
     }
 
     @DisplayName("Find by UUID Test")
