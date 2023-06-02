@@ -41,7 +41,4 @@ public class User {
     @Field(name = "role")
     private List<Role> roles;
 
-    //@Field(name = "challenges")
-    //private List<Challenge> challenges; //Falta importar ruta micro-challenge
-
 }
