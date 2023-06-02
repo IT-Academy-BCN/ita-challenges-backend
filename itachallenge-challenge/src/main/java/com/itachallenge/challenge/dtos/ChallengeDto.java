@@ -8,6 +8,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class ChallengeDto {
 
     @JsonProperty("id_challenge")
