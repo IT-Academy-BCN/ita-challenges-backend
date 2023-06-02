@@ -95,20 +95,33 @@ class HttpProxyTest {
 	public void timeoutTestOldFixed() {
 		int absurdTimeout = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
 		//System.out.println(absurdValue); // = 1
-		HttpClient absurdClient = httpProxy.initHttpClient(absurdTimeout);
-		WebClient briefClient = httpProxy.getClient().mutate()
-				.clientConnector(new ReactorClientHttpConnector(absurdClient))
+		HttpClient absurdHttpClient = httpProxy.initHttpClient(absurdTimeout);
+		WebClient absurdWebClient = httpProxy.getClient().mutate()
+				.clientConnector(new ReactorClientHttpConnector(absurdHttpClient))
 				.build();
 		String url = env.getProperty("url.ds_test");
 		System.out.println(url);
+		/*
 		Assertions.assertThrows(WebClientRequestException.class, () ->
-				briefClient.get()
+				absurdWebClient.get()
 						.uri(url)
 						.exchangeToMono(response ->
 								response.statusCode().equals(HttpStatus.OK) ?
 										response.bodyToMono(Object.class) :
 										response.createException().flatMap(Mono::error))
 						.block());
+
+		 */
+		Mono<Object> responsePublisher = absurdWebClient.get()
+				.uri(url)
+				.exchangeToMono(response ->
+						response.statusCode().equals(HttpStatus.OK) ?
+								response.bodyToMono(Object.class) : //doesn't matter, expecting NO OK response
+								response.createException().flatMap(Mono::error));
+		//instead assertException + block Webclient's response:
+		StepVerifier.create(responsePublisher)
+				.expectError(WebClientException.class)
+				.verify();
 	}
 
 	//@Test
