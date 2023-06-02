@@ -2,12 +2,13 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
+    id 'org.sonarqube' version '4.0.0.2929'
 }
 
 jar {
     manifest {
         attributes(
-                'Main-Class': 'com.itachallenge.challenge'
+                'Main-Class': 'com.itachallenge.challenge.App'
         )
     }
 }
@@ -33,8 +34,6 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
-
-
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -82,7 +81,7 @@ jacocoTestCoverageVerification {
     }
 }
 
-sonarqube {
+sonar {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
