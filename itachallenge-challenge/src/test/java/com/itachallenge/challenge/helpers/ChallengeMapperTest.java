@@ -12,8 +12,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.UUID;
 
+import static com.mongodb.assertions.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeMapper.class)
@@ -33,15 +34,26 @@ class ChallengeMapperTest {
     void testMapToChallengeDto() {
         Challenge challenge = new Challenge();
         challenge.setUuid(ID);
-        
-        ChallengeDto ChallengeExpectedDto = ChallengeDto.builder()
+
+        ChallengeDto challengeExpectedDto = ChallengeDto.builder()
                 .uuid(challenge.getUuid())
                 .build();
 
-        when(challengeMapper.mapToChallengeDto(challenge)).thenReturn(ChallengeExpectedDto);
+        when(challengeMapper.mapToChallengeDto(challenge)).thenReturn(challengeExpectedDto);
 
         ChallengeDto challengeDto = challengeMapper.mapToChallengeDto(challenge);
-        assertEquals(ChallengeExpectedDto, challengeDto);
+        assertEquals(challengeExpectedDto, challengeDto);
+        assertNotNull(challengeExpectedDto);
+
+        verify(challengeMapper, times(1)).mapToChallengeDto(challenge);
+        verifyNoMoreInteractions(challengeMapper);
+    }
+
+    @Test
+    void testMapToChallengeDto_Null() {
+        ChallengeDto challengeDto = challengeMapper.mapToChallengeDto(null);
+
+        assertEquals(null, challengeDto);
     }
 
 }
