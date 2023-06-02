@@ -90,17 +90,17 @@ class HttpProxyTest {
 		assertThat(resource.getUser().getName(),is(not(emptyString())));
 	}
 
-	@DisplayName("Timeout verification old")
 	@Test
+	@DisplayName("Timeout verification old")
 	public void timeoutTestOld() {
-		HttpClient client1 = HttpClient.create()
+		HttpClient briefHttpClient = HttpClient.create()
 				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1); // Absurd 1 ms connection timeout
 		WebClient briefClient = httpProxy.getClient().mutate()
-				.clientConnector(new ReactorClientHttpConnector(client1))
+				.clientConnector(new ReactorClientHttpConnector(briefHttpClient))
 				.build();
 		Assertions.assertThrows(WebClientRequestException.class, () ->
 				briefClient.get()
-						.uri(env.getProperty("ds_test"))
+						.uri(env.getProperty("url.ds_test"))
 						.exchangeToMono(response ->
 								response.statusCode().equals(HttpStatus.OK) ?
 										response.bodyToMono(Object.class) :
