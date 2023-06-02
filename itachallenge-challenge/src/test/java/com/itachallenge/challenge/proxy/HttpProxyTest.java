@@ -98,9 +98,11 @@ class HttpProxyTest {
 		WebClient briefClient = httpProxy.getClient().mutate()
 				.clientConnector(new ReactorClientHttpConnector(briefHttpClient))
 				.build();
+		String url = env.getProperty("ds_test");
+		System.out.println(url);
 		Assertions.assertThrows(WebClientRequestException.class, () ->
 				briefClient.get()
-						.uri(env.getProperty("url.ds_test"))
+						.uri(url)
 						.exchangeToMono(response ->
 								response.statusCode().equals(HttpStatus.OK) ?
 										response.bodyToMono(Object.class) :
