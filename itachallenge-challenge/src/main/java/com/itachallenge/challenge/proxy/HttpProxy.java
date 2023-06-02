@@ -38,22 +38,27 @@ public class HttpProxy {
     public HttpProxy(PropertiesConfig config) {
         this.config = config;
         client = WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(initHttpClient()))
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(this::initAcceptedCodecs)
-                        .build())
+                .clientConnector(initReactorHttpClient(config.getConnectionTimeout()))
+                .exchangeStrategies(initExchangeStrategies())
                 .build();
     }
 
-    private HttpClient initHttpClient(){
-        Integer connectionTimeout = config.getConnectionTimeout();
-        return HttpClient.create()
+    //protected because it's used in test (timeout verification test)
+    protected ReactorClientHttpConnector initReactorHttpClient(Integer connectionTimeout){
+        HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectionTimeout)
                 .responseTimeout(Duration.ofMillis(connectionTimeout))
                 .compress(true)
                 .doOnConnected(conn -> conn
                         .addHandlerLast(new ReadTimeoutHandler(connectionTimeout, TimeUnit.MILLISECONDS))
                         .addHandlerLast(new WriteTimeoutHandler(connectionTimeout, TimeUnit.MILLISECONDS)));
+        return new ReactorClientHttpConnector(httpClient);
+    }
+
+    private ExchangeStrategies initExchangeStrategies(){
+        return ExchangeStrategies.builder()
+                .codecs(this::initAcceptedCodecs)
+                .build();
     }
 
     private void initAcceptedCodecs(ClientCodecConfigurer clientCodecConfigurer) {
@@ -79,6 +84,7 @@ public class HttpProxy {
         }
     }
 
+    //protected because it's used in test (timeout verification test)
     protected WebClient getClient() {
         return client;
     }

@@ -16,6 +16,7 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 import reactor.test.StepVerifier;
@@ -89,29 +90,22 @@ class HttpProxyTest {
 		assertThat(resource.getUser().getName(),is(not(emptyString())));
 	}
 
-	/*
-	Idem as opendata.
-	Except expected response body it's not a concrete dto, due we are
-	expecting an error.
-	 */
 	@Test
 	@DisplayName("Timeout verification")
-	void timeoutTest() {
-		//int fakeConnectionTimeout = Integer.parseInt(env.getProperty("url.failed_connection_timeout"));
-		//assertEquals(1, fakeConnectionTimeout);
-		HttpClient briefHttpClient = HttpClient.create()
-				.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 1);
-		WebClient briefWebClient = httpProxy.getClient().mutate()
-				.clientConnector(new ReactorClientHttpConnector(briefHttpClient))
+	public void timeoutTest() {
+		int absurdTimeout = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
+		//System.out.println(absurdValue); // = 1
+		WebClient absurdWebClient = httpProxy.getClient().mutate()
+				.clientConnector(httpProxy.initReactorHttpClient(absurdTimeout))
 				.build();
-		//System.out.println("---->"+env.getProperty("url.ds_test"));
-		Mono<Object> responsePublisher = briefWebClient.get()
-				.uri(env.getProperty("url.ds_test"))
+		String url = env.getProperty("url.ds_test"); //the same as opendata
+		//System.out.println(url);
+		Mono<Object> responsePublisher = absurdWebClient.get()
+				.uri(url)
 				.exchangeToMono(response ->
 						response.statusCode().equals(HttpStatus.OK) ?
 								response.bodyToMono(Object.class) : //doesn't matter, expecting NO OK response
 								response.createException().flatMap(Mono::error));
-		//instead assertException + block Webclient's response:
 		StepVerifier.create(responsePublisher)
 				.expectError(WebClientException.class)
 				.verify();
@@ -124,8 +118,8 @@ class HttpProxyTest {
 		String expectedErrorMsg = httpProxy.MALFORMED_URL_MSG +wrongUrl;
 		Mono<Object> responsePublisher = httpProxy.getRequestData(wrongUrl, Object.class);
 		StepVerifier.create(responsePublisher)
-						.expectErrorMessage(expectedErrorMsg)
-						.verify();
+				.expectErrorMessage(expectedErrorMsg)
+				.verify();
 	}
 
 	@Test
@@ -135,7 +129,7 @@ class HttpProxyTest {
 		String url = String.format("http://localhost:%s", mockWebServer.getPort());
 		Mono<ResourceDto> responsePublisher = httpProxy.getRequestData(url, ResourceDto.class);
 		StepVerifier.create(responsePublisher)
-						.expectError(WebClientException.class)
-				        .verify();
+				.expectError(WebClientException.class)
+				.verify();
 	}
 }
