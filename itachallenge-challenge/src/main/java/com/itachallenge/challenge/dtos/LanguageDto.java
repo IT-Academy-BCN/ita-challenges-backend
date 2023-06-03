@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LanguageDto{
 
-    @JsonProperty("id_language")
+    @JsonProperty(value = "id_language", index = 0)
     private int languageId;
 
-    @JsonProperty("language_name")
+    @JsonProperty(value = "language_name", index = 1)
     private String languageName;
 
     public LanguageDto(int languageId, String languageName) {
