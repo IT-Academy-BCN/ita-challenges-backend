@@ -1,70 +1,47 @@
 package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.itachallenge.challenge.dtos.team.ChallangeBasicInfoDtoI;
-import com.itachallenge.challenge.helpers.PercentageSerializer;
 import lombok.Builder;
-import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
-@Getter
 @Builder
-@JsonPropertyOrder({"title", "level", "popularity", "percentage", "languages"})
-public class ChallengeBasicInfoDto implements ChallangeBasicInfoDtoI {
+public class ChallengeBasicInfoDto{
 
-    @JsonProperty("challenge_title")
+    @JsonProperty(value = "challenge_title", index = 0)
     private String title;
 
+    @JsonProperty(index = 1)
     private String level;
 
-    // Solventando tema Date
-    //@JsonProperty("creation_date")
-    //private LocalDateTime creationDate;
+    // TODO: Solventando tema Date
+    //@JsonProperty("creation_date", index = 2)
+    //private Date creationDate;
 
+    @JsonProperty(index = 3)
     private Integer popularity;
 
-    private Set<LanguageDto> languages;
-
-    @JsonSerialize(using = PercentageSerializer.class)
+    @JsonProperty(index = 4)
     private Float percentage;
 
-    //PRIVATE NO ARGS CONSTRUCTOR: to force instantiation with @Builder
-    // añadir parámetro creationDate*
-    private ChallengeBasicInfoDto(String title, String level, Integer popularity, Set<LanguageDto> languages, Float percentage) {
+    @JsonProperty(index = 5)
+    private Set<LanguageDto> languages;
+
+    //PRIVATE ALL ARGS CONSTRUCTOR: to force instantiation with @Builder
+    // TODO: añadir parámetro creationDate*
+    private ChallengeBasicInfoDto(String title, String level, Integer popularity, Float percentage, Set<LanguageDto> languages) {
         this.title = title;
         this.level = level;
         //this.creationDate = creationDate;
         this.popularity = popularity;
-        this.languages = languages;
         this.percentage = percentage;
-    }
-
-    private void setTitle(String title) {
-        this.title = title;
-    }
-
-    private void setLevel(String level) {
-        this.level = level;
-    }
-
-    /*private void setCreationDate(LocalDateTime creationDate) {
-        this.creationDate = creationDate;
-    }*/
-
-    private void setPopularity(Integer popularity) {
-        this.popularity = popularity;
-    }
-
-    private void setLanguages(Set<LanguageDto> languages) {
         this.languages = languages;
     }
 
-    private void setPercentage(Float percentage) {
-        this.percentage = percentage;
+    private ChallengeBasicInfoDto() {
+        /*
+        private no args because:
+        required for deserialization. but not needed/used in our logic (at least till now)
+         */
     }
 }

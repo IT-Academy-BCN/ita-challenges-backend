@@ -2,15 +2,15 @@
   "challenge_title" : "Sociis Industries",
   "level" : "EASY",
   "popularity" : 105,
-  "percentage" : "23%",
+  "percentage" : 23.58,
   "languages" : [
-    {
-      "id_language" : 1,
-      "language_name" : "Javascript"
-    },
     {
       "id_language" : 2,
       "language_name" : "Java"
+    },
+    {
+      "id_language" : 1,
+      "language_name" : "Javascript"
     }
   ]
 }
