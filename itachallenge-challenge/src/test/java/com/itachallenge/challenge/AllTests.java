@@ -14,6 +14,7 @@ import org.junit.platform.suite.api.Suite;
         LanguageDtoTest.class,
         ChallengeBasicInfoDtoTest.class,
         ChallengeDtoTest.class,
+        ResourceHelperTest.class,
         ChallengeControllerTest.class,
 })
 public class AllTests {
