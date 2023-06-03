@@ -3,12 +3,11 @@ package com.itachallenge.challenge.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.itachallenge.challenge.dtos.team.ChallengeDtoTeam;
 
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ChallengeDto implements ChallengeDtoTeam {
+public class ChallengeDto{
 
     //TODO relatedChallenges  !!!!
 
