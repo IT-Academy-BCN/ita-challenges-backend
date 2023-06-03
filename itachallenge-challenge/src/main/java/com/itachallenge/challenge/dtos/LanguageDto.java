@@ -1,9 +1,7 @@
 package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class LanguageDto{
 
     @JsonProperty("id_language")
@@ -12,11 +10,16 @@ public class LanguageDto{
     @JsonProperty("language_name")
     private String languageName;
 
-    public int getLanguageId() {
-        return languageId;
+    public LanguageDto(int languageId, String languageName) {
+        this.languageId = languageId;
+        this.languageName = languageName;
     }
 
-    public String getLanguageName() {
-        return languageName;
+    private LanguageDto() {
+        /*
+        private no args because:
+        required for deserialization. but not needed/used in our logic (at least till now)
+         */
     }
+
 }
