@@ -41,7 +41,9 @@ public class ChallengeDtoTest {
         Set<LanguageDto> languages = LanguageDtoTest.buildSetLanguages(firstLanguage,secondLanguage);
         ChallengeBasicInfoDto challengeBasicInfoDto = ChallengeBasicInfoDtoTest.buildChallengeBasicInfoDto
                 ("Sociis Industries", "EASY", 105, 23.58f,languages);
-        challengeDto = buildChallengeDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"), challengeBasicInfoDto);
+        challengeDto = ChallengeDto.builder(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"))
+                .basicInfo(challengeBasicInfoDto)
+                .build();
     }
 
     @Test
@@ -71,11 +73,5 @@ public class ChallengeDtoTest {
         //System.out.println(dtoResult);
         ChallengeDto dtoExpected = challengeDto;
         assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
-    }
-
-    static ChallengeDto buildChallengeDto(UUID challengeUuid, ChallengeBasicInfoDto basicInfoDto){
-        return ChallengeDto.builder(challengeUuid)
-                .basicInfo(basicInfoDto)
-                .build();
     }
 }

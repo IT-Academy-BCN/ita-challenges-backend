@@ -22,7 +22,7 @@ public class ChallengeDto{
     }
 
     /*
-    TODO: ADD more fields "on demand"
+    TODO: ADD more fields "on demand" (when needed)
      */
 
     private ChallengeDto() {
