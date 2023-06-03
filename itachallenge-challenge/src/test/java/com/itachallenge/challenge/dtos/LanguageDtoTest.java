@@ -36,7 +36,7 @@ public class LanguageDtoTest {
     }
 
     @Test
-    @DisplayName("OK Serialization LanguageDto test")
+    @DisplayName("Serialization LanguageDto test")
     @SneakyThrows({JsonProcessingException.class, IOException.class})
     void rightSerializationTest(){
         LanguageDto dtoSerializable = languageDto;
@@ -47,7 +47,7 @@ public class LanguageDtoTest {
     }
 
     @Test
-    @DisplayName("OK Deserialization LanguageDto test")
+    @DisplayName("Deserialization LanguageDto test")
     @SneakyThrows(IOException.class)
     void rightDeserializationTest(){
         String jsonDeserializable = new ResourceHelper(languageJsonPath).readResourceAsString();

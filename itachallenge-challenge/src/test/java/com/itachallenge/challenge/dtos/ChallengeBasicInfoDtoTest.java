@@ -42,25 +42,25 @@ public class ChallengeBasicInfoDtoTest {
     }
 
     @Test
-    @DisplayName("OK Serialization ChallengeBasicInfoDto test")
+    @DisplayName("Serialization ChallengeBasicInfoDto test")
     @SneakyThrows({JsonProcessingException.class, IOException.class})
     void rightSerializationTest(){
         ChallengeBasicInfoDto dtoSerializable = challengeBasicInfoDto;
-        System.out.println(dtoSerializable);
+        //System.out.println(dtoSerializable);
         String jsonResult = mapper
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(dtoSerializable);
-        System.out.println(jsonResult);
+        //System.out.println(jsonResult);
         String jsonExpectedV1 = new ResourceHelper(basicInfoChallengeV1JsonPath).readResourceAsString();
         String jsonExpectedV2 = new ResourceHelper(basicInfoChallengeV2JsonPath).readResourceAsString();
-        System.out.println(jsonExpectedV1);
-        System.out.println(jsonExpectedV2);
+        //System.out.println(jsonExpectedV1);
+        //System.out.println(jsonExpectedV2);
         //order of languages in challenge's basic info doesn't matter
         Assertions.assertTrue(jsonResult.equals(jsonExpectedV1) || jsonResult.equals(jsonExpectedV2));
     }
 
     @Test
-    @DisplayName("OK Deserialization ChallengeBasicInfoDto test")
+    @DisplayName("Deserialization ChallengeBasicInfoDto test")
     @SneakyThrows(IOException.class)
     void rightDeserializationTest(){
         String jsonDeserializable = new ResourceHelper(basicInfoChallengeV1JsonPath).readResourceAsString();
