@@ -3,14 +3,11 @@ package com.itachallenge.challenge.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.itachallenge.challenge.dtos.team.ChallengeDtoTeam;
 
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class ChallengeDto implements ChallengeDtoTeam {
-
-    //TODO relatedChallenges  !!!!
+public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
     private UUID challengeId;
@@ -23,6 +20,10 @@ public class ChallengeDto implements ChallengeDtoTeam {
     private ChallengeDto(UUID challengeId) {
         this.challengeId = challengeId;
     }
+
+    /*
+    TODO: ADD more fields "on demand"
+     */
 
     private ChallengeDto() {
         /*
