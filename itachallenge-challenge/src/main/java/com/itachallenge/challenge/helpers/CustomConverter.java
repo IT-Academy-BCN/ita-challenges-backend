@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.stream.Collectors;
 
 @Component
-class CustomConverter implements StarterConverter,
+public class CustomConverter implements StarterConverter,
         ChallengeDocConverter, LanguageDocConverter {
 
     private ChallengeDummy challengeDoc;
