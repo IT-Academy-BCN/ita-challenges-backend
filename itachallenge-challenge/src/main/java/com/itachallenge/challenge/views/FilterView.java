@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 public interface FilterView {
-
+    /*
     String getTitle();
 
     List<String> getOptions();
@@ -12,4 +12,5 @@ public interface FilterView {
     boolean isMultipleOption();
 
     Set<String> getVisibilities();
+     */
 }

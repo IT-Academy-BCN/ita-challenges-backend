@@ -11,7 +11,7 @@ import java.util.Set;
 @Service
 public class ListChallengesService {
 
-    private final Set<FilterView> filters;
+    private Set<FilterView> filters;
 
     @Autowired
     public ListChallengesService(ListChallengesConfig listChallengesConfig) {
@@ -20,5 +20,9 @@ public class ListChallengesService {
 
     public Mono<Set<FilterView>> getFilters(){
         return Mono.just(filters);
+    }
+
+    public Set<FilterView> demo(){
+        return filters;
     }
 }

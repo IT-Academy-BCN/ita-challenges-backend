@@ -5,6 +5,9 @@ import com.itachallenge.challenge.views.FilterView;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -16,9 +19,7 @@ import java.util.Set;
 class ListChallengesConfigForDtos implements ListChallengesConfig {
 
     private FilterView technology;
-
     private FilterView difficulty;
-
     private FilterView progress;
 
     private ListChallengesConfigForDtos() {

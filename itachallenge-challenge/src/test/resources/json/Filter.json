@@ -1,0 +1,12 @@
+{
+  "title" : "Filter name",
+  "options" : [
+    "option 1",
+    "option 2",
+    "option 3"
+  ],
+  "multipleOption" : true,
+  "visibilities" : [
+    "ROLE_RANDOM"
+  ]
+}

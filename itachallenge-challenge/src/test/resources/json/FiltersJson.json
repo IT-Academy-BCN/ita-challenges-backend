@@ -1,0 +1,39 @@
+[
+  {
+    "title": "Lenguaje",
+    "options": [
+      "Javascript",
+      "Java",
+      "PHP",
+      "Python"
+    ],
+    "multipleOption": true,
+    "visibilities": [
+      "ROLE_GUEST"
+    ]
+  },
+  {
+    "title": "Dificultad",
+    "options": [
+      "Fácil",
+      "Media",
+      "Difícil"
+    ],
+    "multipleOption": true,
+    "visibilities": [
+      "ROLE_GUEST"
+    ]
+  },
+  {
+    "title": "Progreso",
+    "options": [
+      "No empezados",
+      "Falta completar",
+      "Completados"
+    ],
+    "multipleOption": true,
+    "visibilities": [
+      "ROLE_USER"
+    ]
+  }
+]
