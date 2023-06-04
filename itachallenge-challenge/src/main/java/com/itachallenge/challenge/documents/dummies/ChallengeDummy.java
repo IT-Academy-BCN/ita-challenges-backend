@@ -8,9 +8,6 @@ import java.util.UUID;
 public class ChallengeDummy{
 
     //TODO: UPDATE IFNO (public all args constructor)
-    public ChallengeDummy(UUID uuid, String level, String title, Set<LanguageDummy> languages, LocalDate creationDate) {
-
-    }
 
     public UUID getUuid() { //TODO: UPDATE IFNO
         return null;

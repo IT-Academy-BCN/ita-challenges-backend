@@ -7,8 +7,6 @@ import java.util.UUID;
 public class LanguageDummy{
 
     //TODO: UPDATE IFNO all args constructor
-    public LanguageDummy(int idLanguage, String languageName, Set<UUID> idChallenges) {
-    }
 
     public int getIdLanguage() { //TODO: UPDATE IFNO
         return 0;
