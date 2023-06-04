@@ -3,6 +3,7 @@ package com.itachallenge.challenge.dto;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class GenericResultDto<T> {
     private int limit;
     private int count;
 
-
+    //private Flux<T> results;
     private List<T> results;
     public GenericResultDto() {}
 
@@ -26,4 +27,3 @@ public class GenericResultDto<T> {
         this.results = results;
     }
 }
-
