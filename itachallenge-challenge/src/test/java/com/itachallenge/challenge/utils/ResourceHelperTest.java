@@ -22,7 +22,7 @@ class ResourceHelperTest {
     void readResourceAsStringTest (){
         String jsonPath = "json/RandomJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(jsonPath);
-        String result  = null;
+        String result;
         try {
             result = resourceHelper.readResourceAsString();
             // System.out.println(result);
@@ -39,8 +39,7 @@ class ResourceHelperTest {
         String invalidPath = "jsonx908erfd/Randosadn90dsmJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(invalidPath);
 
-        Exception exception = assertThrows(IOException.class, () ->
-                resourceHelper.readResourceAsString());
+        Exception exception = assertThrows(IOException.class, resourceHelper::readResourceAsString);
 
         String prefixMsg = "Exception when " + "loading/reading" + " " + invalidPath + " resource: \n";
         assertTrue(exception.getMessage().startsWith(prefixMsg));

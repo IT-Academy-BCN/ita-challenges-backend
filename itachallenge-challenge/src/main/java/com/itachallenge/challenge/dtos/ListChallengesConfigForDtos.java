@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -17,31 +16,29 @@ import java.util.Set;
 @Component
 @ConfigurationProperties("challenge-section")
 class ListChallengesConfigForDtos implements ListChallengesConfig {
-
-    private FilterView technology;
-    private FilterView difficulty;
-    private FilterView progress;
+    private Map<String, FilterView> filters;
 
     private ListChallengesConfigForDtos() {
         //to avoid new instantiations of this class
+        filters = new HashMap<>();
     }
 
     //setters for configuration properties binding
     // private/protected setters -> not work
-    void setTechnology(FilterDto technology) {
-        this.technology = technology;
+    void setTechnologyFilter(FilterDto technologyFilter) {
+        filters.put(TECHNOLOGY_FILTER, technologyFilter);
     }
 
-    void setDifficulty(FilterDto difficulty) {
-        this.difficulty = difficulty;
+    void setDifficultyFilter(FilterDto difficultyFilter) {
+        filters.put(DIFFICULTY_FILTER, difficultyFilter);
     }
 
-    void setProgress(FilterDto progress) {
-        this.progress = progress;
+    void setProgressFilter(FilterDto progressFilter) {
+        filters.put(PROGRESS_FILTER, progressFilter);
     }
 
     @Override
     public Set<FilterView> getFilters() {
-        return Set.of(technology,difficulty,progress);
+        return Set.copyOf(filters.values());
     }
 }

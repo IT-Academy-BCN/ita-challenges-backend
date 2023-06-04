@@ -3,7 +3,6 @@ package com.itachallenge.challenge.rest;
 import com.itachallenge.challenge.dtos.FilterDto;
 import com.itachallenge.challenge.logic.ListChallengesService;
 import com.itachallenge.challenge.utils.ResourceHelper;
-import com.itachallenge.challenge.views.FilterView;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;

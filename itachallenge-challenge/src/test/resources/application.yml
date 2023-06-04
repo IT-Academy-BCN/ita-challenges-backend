@@ -39,17 +39,17 @@ logging:
 #    name: itachallenge-challenge.log
 
 challenge-section:
-  technology:
+  technologyFilter:
     title: "Lenguaje"
     options: [Javascript,Java,PHP,Python]
     multipleOption: true
     visibilities: [ROLE_GUEST]
-  difficulty:
+  difficultyFilter:
     title: "Dificultad"
     options: ["Fácil","Media","Difícil"]
     multipleOption: true
     visibilities: [ROLE_GUEST]
-  progress:
+  progressFilter:
     title: "Progreso"
     options: ["No empezados","Falta completar","Completados"]
     multipleOption: true

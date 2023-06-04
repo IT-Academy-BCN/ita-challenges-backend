@@ -28,7 +28,7 @@ class ChallengeController {
         this.listChallengesService = listChallengesService;
     }
 
-    //TODO: documentation + tests involved R1
+    //TODO: documentation
     @GetMapping(CHALLENGES_FILTERS)
     public Mono<Set<FilterView>> readFilters(){
         return listChallengesService.getFilters();

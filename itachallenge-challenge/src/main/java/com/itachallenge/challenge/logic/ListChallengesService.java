@@ -21,8 +21,4 @@ public class ListChallengesService {
     public Mono<Set<FilterView>> getFilters(){
         return Mono.just(filters);
     }
-
-    public Set<FilterView> demo(){
-        return filters;
-    }
 }
