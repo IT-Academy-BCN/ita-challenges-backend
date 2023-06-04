@@ -42,7 +42,7 @@ class CustomConverter implements StarterConverter,
                 .level(challengeDoc.getLevel())
                 .title(challengeDoc.getTitle())
                 .languages(challengeDoc.getLanguages().stream()
-                        .map(languageDoc -> this.from(languageDoc).toLanguageDto())
+                        .map(language -> this.from(language).toLanguageDto())
                         .collect(Collectors.toSet()))
                 .percentage(percentage)
                 .popularity(popularity)

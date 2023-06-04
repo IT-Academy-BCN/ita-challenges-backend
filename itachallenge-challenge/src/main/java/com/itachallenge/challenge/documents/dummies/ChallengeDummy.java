@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.documents.dummies;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
