@@ -47,7 +47,7 @@ public class CustomConverterTest {
         UUID challengeId = UUID.randomUUID();
         String title = "title challenge";
         String level = "some level";
-        LocalDateTime creationDate = LocalDateTime.of(2023, 6, 5, 12, 30, 0); //TODO: fix type and value
+        LocalDateTime creationDate = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         int[] idsLanguages = new int[]{1,2};
         String[] languagesNames = new String[]{"name1","name2"};
 
@@ -65,7 +65,7 @@ public class CustomConverterTest {
                 .basicInfo(ChallengeBasicInfoDto.builder()
                         .title(title)
                         .level(level)
-                        .creationDate("lun jun 05 12:30:00 2023") //TODO
+                        .creationDate("lun jun 05 12:30:00 2023")
                         .percentage(percentage)
                         .popularity(popularity)
                         .languages(Set.of(

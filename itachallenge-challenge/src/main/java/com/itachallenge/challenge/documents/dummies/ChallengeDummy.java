@@ -8,9 +8,7 @@ import java.util.UUID;
 //@Document(collection="challenges")
 public class ChallengeDummy{
 
-    //TODO: can't use All Args Constructor because creationDate needs to initialize
-    // LocalDateTime.now();
-    // inside its constructor.
+    //TODO: include inside constructor LocalDateTime.now();
 
     public UUID getUuid() { //TODO: UPDATE IFNO
         return null;
