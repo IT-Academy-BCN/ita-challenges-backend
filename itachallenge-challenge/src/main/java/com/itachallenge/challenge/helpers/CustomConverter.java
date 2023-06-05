@@ -7,6 +7,9 @@ import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
@@ -47,8 +50,16 @@ public class CustomConverter implements StarterConverter,
                 .percentage(percentage)
                 .popularity(popularity)
                 //TODO: add creation date
-                //.creationDate(challengeDoc.getCreationDate())
+                .creationDate(getFormattedCreationDateTime(challengeDoc.getCreationDate()))
                 .build();
+    }
+
+    //metodo para formatear creationDate del document al formato requerido en el .json
+    private String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.forLanguageTag("es-ES"));
+        return creationDateDocument.format(formatter);
+
     }
 
     private LanguageDto fromLanguageToLanguageDto(){

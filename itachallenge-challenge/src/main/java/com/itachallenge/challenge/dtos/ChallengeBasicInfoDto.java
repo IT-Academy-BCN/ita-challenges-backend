@@ -1,11 +1,14 @@
 package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 import java.util.Set;
 
 @Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class ChallengeBasicInfoDto{
 
     @JsonProperty(value = "challenge_title", index = 0)
@@ -15,8 +18,8 @@ public class ChallengeBasicInfoDto{
     private String level;
 
     // TODO: Solventando tema Date
-    //@JsonProperty("creation_date", index = 2)
-    //private Date creationDate;
+    @JsonProperty(value = "creation_date", index = 2)
+    private String creationDate;
 
     @JsonProperty(index = 3)
     private Integer popularity;
@@ -29,14 +32,14 @@ public class ChallengeBasicInfoDto{
 
     //PRIVATE ALL ARGS CONSTRUCTOR: to force instantiation with @Builder
     // TODO: añadir parámetro creationDate*
-    private ChallengeBasicInfoDto(String title, String level, Integer popularity, Float percentage, Set<LanguageDto> languages) {
+    /*private ChallengeBasicInfoDto(String title, String level, LocalDateTime creationDate, Integer popularity, Float percentage, Set<LanguageDto> languages) {
         this.title = title;
         this.level = level;
-        //this.creationDate = creationDate;
+        this.creationDate = getFormattedCreationDateTime(creationDate);
         this.popularity = popularity;
         this.percentage = percentage;
         this.languages = languages;
-    }
+    }*/
 
     private ChallengeBasicInfoDto() {
         /*

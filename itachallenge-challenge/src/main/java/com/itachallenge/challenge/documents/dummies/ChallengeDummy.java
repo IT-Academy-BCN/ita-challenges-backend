@@ -1,13 +1,16 @@
 package com.itachallenge.challenge.documents.dummies;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
 //@Document(collection="challenges")
 public class ChallengeDummy{
 
-    //TODO: UPDATE IFNO (public all args constructor)
+    //TODO: can't use All Args Constructor because creationDate needs to initialize
+    // LocalDateTime.now();
+    // inside its constructor.
 
     public UUID getUuid() { //TODO: UPDATE IFNO
         return null;
@@ -25,7 +28,7 @@ public class ChallengeDummy{
         return null;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return null;
     }
 }

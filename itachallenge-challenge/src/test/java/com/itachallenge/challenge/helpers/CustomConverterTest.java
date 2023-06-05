@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public class CustomConverterTest {
         UUID challengeId = UUID.randomUUID();
         String title = "title challenge";
         String level = "some level";
-        LocalDate creationDate = null; //TODO: fix type and value
+        LocalDateTime creationDate = LocalDateTime.of(2023, 6, 5, 12, 30, 0); //TODO: fix type and value
         int[] idsLanguages = new int[]{1,2};
         String[] languagesNames = new String[]{"name1","name2"};
 
@@ -64,7 +65,7 @@ public class CustomConverterTest {
                 .basicInfo(ChallengeBasicInfoDto.builder()
                         .title(title)
                         .level(level)
-                        //.creationDate() //TODO
+                        .creationDate("lun jun 05 12:30:00 2023") //TODO
                         .percentage(percentage)
                         .popularity(popularity)
                         .languages(Set.of(
@@ -82,7 +83,7 @@ public class CustomConverterTest {
     }
 
     private ChallengeDummy getChallengeMockedForBasicInfoDto(UUID challengeId, String title, String level,
-                                                             Set<LanguageDummy> languages, LocalDate creationDate){
+                                                             Set<LanguageDummy> languages, LocalDateTime creationDate){
         ChallengeDummy challengeMocked = Mockito.mock(ChallengeDummy.class);
         when(challengeMocked.getUuid()).thenReturn(challengeId);
         when(challengeMocked.getTitle()).thenReturn(title);
