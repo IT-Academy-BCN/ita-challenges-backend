@@ -1,0 +1,4069 @@
+{
+  "count": 50,
+  "offset": 0,
+  "limit": -1,
+  "results": [
+    {
+      "id_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+      "challenge_title": "Sociis Industries",
+      "level": "EASY",
+      "creation_date": "Mar 25, 2023",
+      "popularity": 105,
+      "details":{
+        "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
+        "examples": [
+          {
+            "id_example": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "6c02025e-b06f-420a-bafb-28c737b18473",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "70e9755e-9e83-41d3-853a-665f1f2a2f5c",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          },
+          {
+            "id_example": "bb7897b8-517d-4843-8c17-e347aba086ca",
+            "example_text": "Aenean quis maximus purus. Quisque sit amet"
+          }
+        ],
+        "notes": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "b0f0b102-c9d7-4b1b-9a6d-c63c9f33c8f6",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "d82385c6-7735-432f-ae9f-e182d0ed3040",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "2e3fd4f6-1fd7-4979-97ec-0354ca4acbcc",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "e7b6b5a0-5b0a-4b0e-8b0a-9b0a0b0a0b0a",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "51a0ec36-c500-4615-8910-460c1bed1495",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "959e09ae-9d65-45e2-9f95-f13b5e188492",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "40728c9c-a557-4d12-bf8f-3747d0924197",
+        "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0",
+        "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+      ]
+    },
+    {
+      "id_challenge": "c0c7510b-f867-4375-b46f-0c164f30429f",
+      "challenge_title": "Interdum Enim Corp.",
+      "level": "MEDIUM",
+      "creation_date": "Feb 19, 2023",
+      "popularity": 101,
+      "details":{
+        "description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+        "examples": [
+          {
+            "id_example": "159baf65-f55c-4186-a6bd-a5ecbd466e57",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "27c865be-29f6-4892-b33d-87168da23644",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "e86e109d-e750-45a7-acce-22011b961332",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "urna. Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "79d88516-69d2-472a-937a-4b83de00544c",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "6009505a-2828-413e-9e7a-abeba24fb84c",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "479ed792-8b7c-48d6-ada9-80e7b25a6668",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "5119fadd-62ef-41c7-ac13-819dc6c8b302",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "48f1d32d-8ecb-49f3-987b-865224305a0a",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "462d7617-477d-497f-8bd2-2fa5d897f20f",
+        "4345bf25-9dbe-429f-80e5-42e68b2f8a85",
+        "1f87630e-8c61-464e-8385-391f90d0b1d1"
+      ]
+    },
+    {
+      "id_challenge": "5c1a97e5-1cca-4144-9981-2de1fb73b178",
+      "challenge_title": "Blandit Viverra Incorporated",
+      "level": "HARD",
+      "creation_date": "Dec 30, 2023",
+      "popularity": 95,
+      "details":{
+        "description": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt,",
+        "examples": [
+          {
+            "id_example": "a64caeb4-7f4b-45f9-856f-a033175e995a",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "5074d073-390d-4eb3-8308-09212e0ba853",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "fc77311b-a479-46dd-bc62-372c5e09fad8",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales. Mauris blandit"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "333e972c-0eba-49a4-ba5c-1e7b7a48b8b9",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "70401aaa-2867-4fd9-9944-6ad240c4fa3f",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "aff1563c-2a39-4001-bee4-713a93f05976",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "6b4b881d-f1ea-4d75-b1cd-085d73160271",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f12a89c3-e8d7-4128-aece-b7a3ce7fabc4",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "306753bf-300f-4082-8391-b6b91a12ff24",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
+        "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
+        "d0a82421-de75-46a5-903e-69e4addf7e75"
+      ]
+    },
+    {
+      "id_challenge": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0",
+      "challenge_title": "Elit Pharetra Ut Industries",
+      "level": "EASY",
+      "creation_date": "Sep 12, 2022",
+      "popularity": 21,
+      "details":{
+        "description": "rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut srsus luctus, ipsum leo elementum sem, vitae aliquam eros",
+        "examples": [
+          {
+            "id_example": "4621a3cb-c208-4203-be4f-7169f1a312fa",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "f97e8455-ffcc-48f0-86e3-ede39822ea8b",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "94d7f23b-f217-4e30-9837-708e650d2ed9",
+            "example_text": "Aenean quis maximus purus. Quisque sit amet"
+          }
+        ],
+        "notes": "cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida."
+      },
+      "languages": [
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+
+      "solutions": [
+        {
+          "id_solution": "e7b5febe-5bd0-4d0b-ae27-8e9399da6f31",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "6e7e61fb-d4f4-4dbd-aa10-fb6cd9e69b9e",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "15626e02-995d-4f08-adb1-d44aa9bd9b73",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "a05afdbf-7c42-463b-a5df-3e7882fd1a83",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "4c063284-d3fa-4eb9-8191-a1fc7e1a85ae",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "95fd36b0-38f8-4965-b342-ffd637a85ac4",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
+        "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
+        "d0a82421-de75-46a5-903e-69e4addf7e75"
+      ]
+    },
+    {
+      "id_challenge": "d2ce221e-cb49-42d6-b43b-b66eba4ca52d",
+      "challenge_title": "Vitae Orci Phasellus Inc.",
+      "level": "EASY",
+      "creation_date": "Sep 30, 2022",
+      "popularity": 32,
+      "details":{
+        "description": "Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget mollis lectus pede",
+        "examples": [
+          {
+            "id_example": "a20413c4-d8b1-4fc3-98d1-fa7b23f90cbe",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "0676702b-2ec1-4609-b2b5-a280c74a1e4a",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "7b620247-7145-42b4-ad2e-910ce86b44b7",
+            "example_text": "Aenean quis maximus purus. Quisque sit amet"
+          }
+        ],
+        "notes": "Aliquam adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "e594d944-0d7c-40f6-b056-b0747ac9018f",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "945dbc72-eb69-4e5f-85fa-8557bc8a3dd0",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "9751bc8a-7125-4878-b5f8-a798beb293c6",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "8cb4359f-5654-4999-8676-b031489468e0",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f36f1919-8663-408e-92f4-0eae821f7396",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "8a0dbe49-485e-4c8e-b0e6-4b6664087e56",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86",
+        "9818b618-b740-479d-8aac-962cd3e77cdd",
+        "468c70e7-57ea-4fba-b57d-73034ad5aa5f"
+      ]
+    },
+    {
+      "id_challenge": "cf38ddd2-776d-4bad-a182-39840114dfc5",
+      "challenge_title": "Malesuada Vel Corporation",
+      "level": "HARD",
+      "creation_date": "Oct 1, 2023",
+      "popularity": 11,
+      "details":{
+        "description": "ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu",
+        "examples": [
+          {
+            "id_example": "fd549bbc-d9ae-494f-99f5-d04ee57c50ce",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "60518894-4432-4e0f-a529-a0664b24c32d",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "157726f3-8776-42b8-b93a-b9b94761c7c7",
+            "example_text": "Aenean quis maximus purus. Quisque sit amet"
+          }
+        ],
+        "notes": "sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing lobortis risus."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "178dae06-4052-4501-b1fe-d78cf411fc38",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "83eb3680-dd78-478d-923d-e6f8fb1d8cf0",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "539d2a9a-c431-4d0d-abba-26ff229b787b",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "8c29406a-bf67-495e-9c1d-5c1f2d2a4b6d",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "d9fab439-658e-452b-ac9a-6101d91f306b",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "e9b67a3a-b99b-46de-b7d8-99b581842214",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86",
+        "9818b618-b740-479d-8aac-962cd3e77cdd",
+        "6f189158-881c-4165-ad08-1c306c7752db"
+      ]
+    },
+    {
+      "id_challenge": "5f71e51d-1e3e-44a2-bc97-158021f1a344",
+      "challenge_title": "Sem Consequat Nec Incorporated",
+      "level": "HARD",
+      "creation_date": "Mar 21, 2024",
+      "popularity": 74,
+      "details":{
+        "description": "dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque",
+        "examples": [
+          {
+            "id_example": "fc29b83a-caff-44d6-99d7-ac2702134be0",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "3c5d0217-affd-4d18-be85-e33acf1ee2f3",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "01c302eb-0dab-40a6-8821-44088360e819",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "39e124dc-0a11-4795-8418-216d6d557871",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "c753c701-5568-4d60-aeb6-1725f75496dd",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "4c7b020d-7e6d-47b7-8247-2ff6b885dc92",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "b21c2215-f0bd-4841-a96b-1917e0bea9cb",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "adebf139-86e6-46ec-b0fc-7159bbd04082",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "367c1ca6-426a-4bb7-af5e-6fb33dc1c325",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "d43506aa-266b-4ea4-af29-e3b75e3879d6",
+        "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e",
+        "92fc9c85-206a-473c-a79a-a37e54939125"
+      ]
+    },
+    {
+      "id_challenge": "124684b8-3272-4f29-9b82-8f8f1e0db6fc",
+      "challenge_title": "Tincidunt LLP",
+      "level": "EASY",
+      "creation_date": "Jul 11, 2022",
+      "popularity": 89,
+      "details":{
+        "description": "nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla dignissim. Maecenas ornare egestas ligula. Nullam feugiat",
+        "level": "HARD",
+        "examples": [
+          {
+            "id_example": "b3887d1b-d627-45b4-bdeb-7d375ce3d7df",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "2d6bf0cd-025d-4486-87f1-bcfdfb033e5d",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "afcc750f-e613-4ee1-b8ca-2803acde3e2c",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu, euismod ac, fermentum vel, mauris. Integer sem"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "222996aa-490a-4e96-bf51-08daf7cc45eb",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "27fbf8c4-8582-4ee1-8cd6-24f8dec1e2b5",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "19463822-3e4a-4bb0-bd28-9dcfd8251d48",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "bafd0646-2996-4c7f-8853-32b4ec11424c",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "25926ef8-a3f3-4a5f-a615-669bf660cf80",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "040f0bff-075d-4f18-8190-74ba9ace8987",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "d43506aa-266b-4ea4-af29-e3b75e3879d6",
+        "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e",
+        "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4"
+      ]
+    },
+    {
+      "id_challenge": "a3960f5e-e820-4f8e-9cfd-6e952ae236d7",
+      "challenge_title": "Vitae Dolor Donec Inc.",
+      "level": "EASY",
+      "creation_date": "Oct 4, 2023",
+      "popularity": 65,
+      "details":{
+        "description": "aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie",
+        "examples": [
+          {
+            "id_example": "dfe7508e-853d-4866-9899-54f127ef5a21",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "59d652ab-88be-4775-b4d3-a7efc52ebfcb",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "3629d7bd-db05-4d54-8409-172c76d14806",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "non, luctus sit amet, faucibus ut, nulla. Cras eu tellus eu augue porttitor interdum. Sed auctor odio a purus. Duis elementum, dui quis accumsan convallis, ante lectus convallis"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "afd6cdf3-486e-43d4-ade7-4d416ae85b85",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "3126893f-64ad-49d7-b9ae-238427f723f8",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "40257ac5-20cd-42a5-ab20-7deae4572dd5",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "ad9ed18d-c8c2-424a-b577-de01b2fec83b",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "132fb5d9-b50b-4e8d-a52c-d10a68b1323c",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "38c4e3d3-af9f-4c97-8a39-6f6aa16dacf2",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "6646a97f-17a7-49d6-b325-6db9e84a456f",
+        "72bc6c83-e9b1-4f25-9000-58af4d49ab9c",
+        "41a5f6f7-b294-4ec8-ab66-3e629faee136"
+      ]
+    },
+    {
+      "id_challenge": "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a",
+      "challenge_title": "Interdum Libero Dui Corporation",
+      "level": "MEDIUM",
+      "creation_date": "Mar 10, 2023",
+      "popularity": 16,
+      "details":{
+        "description": "neque. In ornare sagittis felis. Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac",
+        "examples": [
+          {
+            "id_example": "038f500a-20f8-4ade-8047-77480ddf2c2f",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "3eb54b16-f6d7-4830-b8b9-27b6aa86d3f8",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "e4ccc807-9268-43ef-a187-ad39351486e1",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "luctus felis purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim, gravida sit amet, dapibus id, blandit"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "b597def5-5057-465d-823a-80b773a855a5",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "4f02c9c0-debc-4a7d-8ce3-23f061ecb6e8",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "a3664f21-cf4c-4148-8e44-aec6826d07bb",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "db5b4b32-365c-4a4a-97c2-95e340983b4e",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "db79a34a-1a4b-4862-a584-b8bdb32d3bed",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "bf135c15-8fcd-44b7-8198-f0bf5868954f",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "6646a97f-17a7-49d6-b325-6db9e84a456f",
+        "72bc6c83-e9b1-4f25-9000-58af4d49ab9c",
+        "41a5f6f7-b294-4ec8-ab66-3e629faee136"
+      ]
+    },
+    {
+      "id_challenge": "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
+      "challenge_title": "Risus Varius Orci PC",
+      "level": "MEDIUM",
+      "creation_date": "Nov 18, 2023",
+      "popularity": 62,
+      "details":{
+        "description": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a,",
+        "examples": [
+          {
+            "id_example": "d29308fd-d809-4fb5-b591-a38f5cc1e2dc",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "264e4740-fdf2-464f-bb07-f9c25dc16975",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "947ece17-21e2-4f5e-ac5a-eb1354968da6",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "ee9ed173-0413-4240-be8e-c36f08f27cee",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "cb3db303-56f7-43b3-8011-dfbbd2d33a96",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "06aa3318-fef4-4c02-aa07-8886d146b615",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "1ee9f9c8-e84f-429c-8c7e-d014712a51d5",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "9191a419-8238-4c78-9dea-710a0f62851b",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "9cbf6938-668a-4d7c-9f1c-e67ebff65582",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "4345bf25-9dbe-429f-80e5-42e68b2f8a85",
+        "1f87630e-8c61-464e-8385-391f90d0b1d1",
+        "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af"
+      ]
+    },
+    {
+      "id_challenge": "c1bcc067-f787-4a6f-867a-834193de6032",
+      "challenge_title": "Libero Dui Consulting",
+      "level": "EASY",
+      "creation_date": "Mar 16, 2024",
+      "popularity": 54,
+      "details":{
+        "description": "augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras dolor",
+        "examples": [
+          {
+            "id_example": "41c62664-fbda-4028-a23c-5bce7ca17771",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "f2029f7c-4d53-4208-92d9-4089ba69bdca",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "a71a4b85-f9b8-492a-9c31-1ec97902cf59",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+
+        "notes": "hendrerit a, arcu. Sed et libero. Proin mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "4222cf05-87c9-4d6a-8794-916dd988ae2c",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "4710f0ae-a59f-4777-b1d5-e719d687dcc3",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "9ad398ee-b94a-4772-813b-223d41169f1d",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "51fd9cdf-f157-477c-b699-9c7140e55b1c",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "48f1d32d-8ecb-49f3-987b-865224305a0a",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "a1e9aafc-5c64-4e69-8075-ad107432c30d",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "4345bf25-9dbe-429f-80e5-42e68b2f8a85",
+        "1f87630e-8c61-464e-8385-391f90d0b1d1",
+        "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af"
+      ]
+    },
+    {
+      "id_challenge": "7c55adc0-f985-4829-a2a6-e7571d1be7de",
+      "challenge_title": "Metus Corporation",
+      "level": "MEDIUM",
+      "creation_date": "Mar 11, 2024",
+      "popularity": 35,
+      "details":{
+        "description": "cursus purus. Nullam scelerisque neque sed sem egestas blandit. Nam nulla magna, malesuada vel, convallis in, cursus et, eros. Proin",
+        "examples": [
+          {
+            "id_example": "4b868617-928f-4e4e-b7a4-e8a3a9650a9f",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "834ccf9c-8085-4170-930e-d3247189de9c",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "a112a533-21cb-4bf1-a91d-8907a46d068e",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed, facilisis vitae, orci. Phasellus dapibus quam quis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "42005289-691f-4b51-b844-c19ec994ab36",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "613833fb-7baa-417f-8971-2a99b62cbd80",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "219595a3-611c-4426-b1bf-0b8724d6e16d",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "ae2d2752-2914-4c07-b025-deec3bcf6798",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "8c86d14d-1bbf-4b2c-96d4-5b291785250b",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "987bb40d-d20e-492b-acdb-cc2b5912cb8a",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
+        "d0a82421-de75-46a5-903e-69e4addf7e75",
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86"
+      ]
+    },
+    {
+      "id_challenge": "6c340690-692c-43f7-a39b-3926eabc0e91",
+      "challenge_title": "Primis In PC",
+      "level": "HARD",
+      "creation_date": "Dec 18, 2023",
+      "popularity": 69,
+      "details":{
+        "description": "nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget, volutpat ornare, facilisis",
+        "examples": [
+          {
+            "id_example": "cb5858a9-2ea6-4690-a685-3efd24f33793",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "60bf2b56-28e2-4758-870f-b141c356ad1c",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "f5116cf7-4079-4de6-bbe4-65da7c1bb2ee",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+
+
+        "notes": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "a157343c-a919-4783-8be4-fd2c274f4319",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "8187573f-b148-4225-abd2-e82ab4125ce5",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "7bf8358e-1fbe-411f-a816-8af3decfdb86",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "5119fadd-62ef-41c7-ac13-819dc6c8b302",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "b0a6d0a1-294c-4704-b23c-8b2d0e9f487b",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
+        "d0a82421-de75-46a5-903e-69e4addf7e75",
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86"
+      ]
+    },
+    {
+      "id_challenge": "866853b8-ae7d-4daf-8c82-5e6f653e0fc1",
+      "challenge_title": "Ipsum Ac Industries",
+      "level": "EASY",
+      "creation_date": "Jan 9, 2024",
+      "popularity": 88,
+      "details":{
+        "description": "dignissim. Maecenas ornare egestas ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla",
+        "examples": [
+          {
+            "id_example": "710f7ed0-50d9-4ef6-9171-d0787a1b3501",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "f19d6748-cc08-4546-8988-64b8872a7869",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "a7c2b63d-a8af-4942-b11b-7b8f62a14883",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "65b12e7c-3720-41f9-80f7-2f4fa4044d87",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "5d38be70-f5bb-46ad-9f90-ad8c31222433",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "f7ed64e3-09fe-4537-a196-1e9358826eab",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "5119fadd-62ef-41c7-ac13-819dc6c8b302",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "86bc93ab-b148-432b-865f-88823af351a4",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "9818b618-b740-479d-8aac-962cd3e77cdd",
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86",
+        "468c70e7-57ea-4fba-b57d-73034ad5aa5f"
+      ]
+    },
+    {
+      "id_challenge": "18c323ce-025c-4f21-8152-8e46bc94c690",
+      "challenge_title": "Massa Lobortis PC",
+      "level": "HARD",
+      "creation_date": "Apr 7, 2023",
+      "popularity": 43,
+      "details":{
+        "description": "condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Donec tincidunt. Donec",
+        "examples": [
+          {
+            "id_example": "6eb97544-79bd-4322-98f7-728e5188fe8f",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "490bdec1-5af2-49b3-878d-4e1eb0d6218c",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "00c56154-8e06-45b7-8590-8edcd98bc61e",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim. Etiam imperdiet dictum magna. Ut tincidunt orci quis lectus. Nullam suscipit, est ac facilisis facilisis, magna tellus faucibus"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "21fd6572-cf3f-4a6c-a29b-a188daf12898",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "41c05b55-b97f-4e25-82d8-9e7040e4d8c0",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "6684275d-6e06-4a1d-a623-9c336a5c15db",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "5119fadd-62ef-41c7-ac13-819dc6c8b302",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f172359a-8de1-46aa-89bc-d5b8ca3a99e5",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+        "c0c7510b-f867-4375-b46f-0c164f30429f",
+        "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+      ]
+    },
+    {
+      "id_challenge": "4ca047df-326e-4e56-affa-5541f63ab0af",
+      "challenge_title": "Non Associates",
+      "level": "HARD",
+      "creation_date": "Oct 26, 2023",
+      "popularity": 33,
+      "details":{
+        "description": "quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla",
+        "examples": [
+          {
+            "id_example": "8c6e4653-4ce4-41d3-bfe6-b1ba60a921c8",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "dba38f2d-6f73-4e09-b35f-06f058a4ad85",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "dc227893-5815-47ec-b9fe-374ee75f5382",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "pretium aliquet, metus urna convallis erat, eget tincidunt dui augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "bab0aa3f-39aa-49eb-8b00-d7517b2e2260",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "d32f3106-ee80-42eb-a2ed-b63c79ebeea5",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "a12271f8-d978-4d81-84d3-f50cbc627bf1",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "6b4b881d-f1ea-4d75-b1cd-085d73160271",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "a86fce44-377a-476a-b7ca-b2c76ada3930",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+        "c0c7510b-f867-4375-b46f-0c164f30429f",
+        "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+      ]
+    },
+    {
+      "id_challenge": "462d7617-477d-497f-8bd2-2fa5d897f20f",
+      "challenge_title": "Magna Nam Ligula LLP",
+      "level": "EASY",
+      "creation_date": "Jan 11, 2024",
+      "popularity": 235,
+      "details":{
+        "description": "purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim,",
+        "examples": [
+          {
+            "id_example": "747bd89a-e57f-4b6f-96f7-e78eb9bfc249",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "dbbcb6ce-dace-4cb0-8491-39fd787ec0e8",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "acfadc57-3b86-48f8-bb88-29b1314ec478",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "Duis volutpat nunc sit amet metus. Aliquam erat volutpat. Nulla facilisis. Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "dc0bdd95-9e09-48de-b2f0-965c10ad46bc",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "5d62d1dd-08a9-49af-8b0a-d8ff57f0357d",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "43b8eea6-0527-409b-ba5c-3e14b905b25e",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "6b4b881d-f1ea-4d75-b1cd-085d73160271",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "a2feb2b5-8fb6-4ad4-851f-3bbbb5d6b6c6",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0",
+        "d2ce221e-cb49-42d6-b43b-b66eba4ca52d",
+        "cf38ddd2-776d-4bad-a182-39840114dfc5"
+      ]
+    },
+    {
+      "id_challenge": "4345bf25-9dbe-429f-80e5-42e68b2f8a85",
+      "challenge_title": "Sapien Incorporated",
+      "level": "HARD",
+      "creation_date": "Dec 18, 2022",
+      "popularity": 99,
+      "details":{
+        "description": "Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae,",
+        "examples": [
+          {
+            "id_example": "96d741cf-56c4-457d-b879-fbd927b675f9",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "0c5a9cd8-d614-4528-a7bb-b4508fa24112",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "5e24470f-71ae-42b6-aaf3-4abe8fc0bfe1",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "Pellentesque tincidunt tempus risus. Donec egestas. Duis ac arcu. Nunc mauris. Morbi non sapien molestie orci tincidunt adipiscing. Mauris molestie pharetra nibh. Aliquam ornare, libero at auctor ullamcorper,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "3185e1d0-24d0-426f-8084-2efa35bf581a",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "8ad9ca5a-a8ca-411b-a34a-13aa85a45385",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "8fb17a39-0da6-4980-ab7a-5183a7dbeb3c",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "6b4b881d-f1ea-4d75-b1cd-085d73160271",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "2738e0c9-6a84-43f8-88dc-132a4571026e",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "d90f620c-5c79-4483-a55a-42b8e6bed7ed",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0",
+        "d2ce221e-cb49-42d6-b43b-b66eba4ca52d",
+        "cf38ddd2-776d-4bad-a182-39840114dfc5"
+      ]
+    },
+    {
+      "id_challenge": "1f87630e-8c61-464e-8385-391f90d0b1d1",
+      "challenge_title": "Pede Cum Associates",
+      "level": "EASY",
+      "creation_date": "Sep 6, 2023",
+      "popularity": 121,
+      "details":{
+        "description": "nec mauris blandit mattis. Cras eget nisi dictum augue malesuada malesuada. Integer id magna et ipsum cursus vestibulum. Mauris magna.",
+        "examples": [
+          {
+            "id_example": "9528b61f-dc38-46c2-b538-59adda7e738e",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "07b128e4-ce1d-4575-ad9f-21e689076baf",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "46cd09d0-33ec-4d4e-a701-5c563ce5b891",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+
+        "notes": "ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "888b4a69-bd1c-4ae0-8303-1ee617c85fba",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "dfc321e7-15df-40c1-9c56-32dc4984d57c",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "1e2c829b-dc54-4dda-8516-c3bf69b04f1b",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "3485ce95-a4a5-40ee-8ea2-2c645a01e65d",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "306753bf-300f-4082-8391-b6b91a12ff24",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "5f71e51d-1e3e-44a2-bc97-158021f1a344",
+        "124684b8-3272-4f29-9b82-8f8f1e0db6fc",
+        "a3960f5e-e820-4f8e-9cfd-6e952ae236d7"
+      ]
+    },
+    {
+      "id_challenge": "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
+      "challenge_title": "Pellentesque Ultricies Dignissim Limited",
+      "level": "MEDIUM",
+      "creation_date": "Feb 7, 2024",
+      "popularity": 121,
+      "details":{
+        "description": "magna sed dui. Fusce aliquam, enim nec tempus scelerisque, lorem ipsum sodales purus, in molestie tortor nibh sit amet orci.",
+        "examples": [
+          {
+            "id_example": "3f0690ed-d186-478f-8e8c-1d179e8ee405",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "bdcf2be1-02b8-466b-bef1-e8fcad2aa6e7",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "c01a0126-a9ab-468d-ac92-b2f1acca5206",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "eu neque pellentesque massa lobortis ultrices. Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "5cd781b8-de00-4daf-99c0-9a47b128747e",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "f728c517-e8a8-41f4-b547-0ae698ecfab7",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "e33d5807-ef94-4621-8dce-0723eb455694",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "3485ce95-a4a5-40ee-8ea2-2c645a01e65d",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "b3527c40-437e-41e6-bb89-6a88a55ecb7d",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "5f71e51d-1e3e-44a2-bc97-158021f1a344",
+        "124684b8-3272-4f29-9b82-8f8f1e0db6fc",
+        "a3960f5e-e820-4f8e-9cfd-6e952ae236d7"
+      ]
+    },
+    {
+      "id_challenge": "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
+      "challenge_title": "Neque Nullam Corporation",
+      "level": "MEDIUM",
+      "creation_date": "Sep 19, 2022",
+      "popularity": 12,
+      "details":{
+        "description": "auctor ullamcorper, nisl arcu iaculis enim, sit amet ornare lectus justo eu arcu. Morbi sit amet massa. Quisque porttitor eros",
+        "examples": [
+          {
+            "id_example": "dd9a834b-db4e-41c9-a3e6-7dc519cca63c",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "3dcd379e-bb50-43c2-bbc4-b2252d3abd31",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "fa10db16-e972-4732-bb3a-382d155c12b6",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+
+
+        "notes": "In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non dui nec urna suscipit"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "e64e9887-5c3c-4ee4-9983-7e1a4fb5dc4b",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "1a9b349e-c79c-466f-b125-037e8023dbd0",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "973530b6-9296-4101-9c73-2cdb944e631d",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "3485ce95-a4a5-40ee-8ea2-2c645a01e65d",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "b3527c40-437e-41e6-bb89-6a88a55ecb7d",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a",
+        "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
+        "c1bcc067-f787-4a6f-867a-834193de6032"
+      ]
+    },
+    {
+      "id_challenge": "d0a82421-de75-46a5-903e-69e4addf7e75",
+      "challenge_title": "Mi Aliquam Corporation",
+      "level": "HARD",
+      "creation_date": "Nov 22, 2022",
+      "popularity": 10,
+      "details":{
+        "description": "ligula consectetuer rhoncus. Nullam velit dui, semper et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim lacus. Aliquam rutrum lorem",
+        "examples": [
+          {
+            "id_example": "9d159d3c-1558-4b62-a85c-b626ae94b6cb",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "31e26169-63c8-40f1-b361-0602f0c50feb",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "f734b1ac-fcdf-4be0-a1b5-01dd95732ceb",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "ridiculus mus. Proin vel nisl. Quisque fringilla euismod enim. Etiam gravida molestie arcu. Sed eu nibh vulputate mauris sagittis placerat. Cras dictum ultricies ligula. Nullam enim. Sed nulla"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "3485ce95-a4a5-40ee-8ea2-2c645a01e65d",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "8401ea5c-3857-473a-b516-1aeb6292c87f",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "479ed792-8b7c-48d6-ada9-80e7b25a6668",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "6b4b881d-f1ea-4d75-b1cd-085d73160271",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "b3527c40-437e-41e6-bb89-6a88a55ecb7d",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "3611308c-ad74-4ab9-a546-3959327eb97e",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a",
+        "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
+        "c1bcc067-f787-4a6f-867a-834193de6032"
+      ]
+    },
+    {
+      "id_challenge": "cebd2d65-8562-4691-a066-f1d1b3d7be86",
+      "challenge_title": "Eu Turpis Ltd",
+      "level": "HARD",
+      "creation_date": "Nov 10, 2023",
+      "popularity": 1,
+      "details":{
+        "description": "quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in",
+        "examples": [
+          {
+            "id_example": "c24adba2-0733-4156-80f1-e9e34227fbdc",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "81072d6a-6169-4e87-85d3-ca6fc4a5decc",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "fff8844b-48a0-42c8-9538-0200f4c57d0a",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a, dui. Cras pellentesque. Sed dictum. Proin eget odio."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "211e1a20-ad30-4d34-ba6f-daf0b0979729",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "27de428a-c11e-42ad-bd1e-c03696085f3d",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "3a4f27d9-cb8f-4ede-a3c9-a5edf0205966",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "648c2bc3-4909-4320-b8d9-e2cbe4cf3521",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "38b031da-6aa8-4bf2-8998-96fae87a2dfc",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "bfb56b48-2054-4a33-89ae-61fee114999c",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "7c55adc0-f985-4829-a2a6-e7571d1be7de",
+        "6c340690-692c-43f7-a39b-3926eabc0e91",
+        "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"
+      ]
+    },
+    {
+      "id_challenge": "9818b618-b740-479d-8aac-962cd3e77cdd",
+      "challenge_title": "Et Arcu Ltd",
+      "level": "HARD",
+      "creation_date": "Sep 13, 2023",
+      "popularity": 111,
+      "details":{
+        "description": "Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci.",
+        "examples": [
+          {
+            "id_example": "d97af0d5-7a5a-4c54-981a-03e05fbf785a",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "8d879ff7-1e0c-49c4-a383-d51f9dd6f9b4",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "ea0e6ddc-5151-4e12-ab6a-bb3c11561111",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem. Pellentesque ut"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "1935c013-2ff0-491f-85ca-d36afa7abad4",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "2fee50b6-5732-4203-a60d-e06e0774b7ae",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "299f865f-8529-46ea-80bd-1a3b3cb16d0a",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "64edaf10-a102-4bd2-988f-74a2080c0a91",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "38b031da-6aa8-4bf2-8998-96fae87a2dfc",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "bfb56b48-2054-4a33-89ae-61fee114999c",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "866853b8-ae7d-4daf-8c82-5e6f653e0fc1",
+        "18c323ce-025c-4f21-8152-8e46bc94c690",
+        "4ca047df-326e-4e56-affa-5541f63ab0af"
+      ]
+    },
+    {
+      "id_challenge": "468c70e7-57ea-4fba-b57d-73034ad5aa5f",
+      "challenge_title": "Felis Eget Corporation",
+      "level": "MEDIUM",
+      "creation_date": "Nov 19, 2023",
+      "popularity": 63,
+      "details":{
+        "description": "neque. Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum.",
+        "examples": [
+          {
+            "id_example": "b33f8630-62e0-4219-a640-99829b211a19",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "5074d073-390d-4eb3-8308-09212e0ba853",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "249ab2b2-7f1b-458b-a949-c15ee78913ba",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "e43f307a-f1b9-451f-be2a-59bb75be26fe",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "19536d5f-270d-4c30-a422-0390d584723f",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "73f61ec6-e602-48b7-bc0c-bc0634ec107c",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "198a3c33-749d-475a-bea7-d6c8cf722dd5",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "38b031da-6aa8-4bf2-8998-96fae87a2dfc",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "bfb56b48-2054-4a33-89ae-61fee114999c",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "7c55adc0-f985-4829-a2a6-e7571d1be7de",
+        "6c340690-692c-43f7-a39b-3926eabc0e91",
+        "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"
+      ]
+    },
+    {
+      "id_challenge": "6f189158-881c-4165-ad08-1c306c7752db",
+      "challenge_title": "Metus Associates",
+      "level": "EASY",
+      "creation_date": "Jan 31, 2023",
+      "popularity": 87,
+      "details":{
+        "description": "dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut, pellentesque eget,",
+        "examples": [
+          {
+            "id_example": "3ef30e7e-bbbe-43fe-bc14-091cda895021",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "a3a4b812-a442-4c03-8708-5af43050bf15",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "7fcd8ae7-0c39-4b82-8694-a965fec141d5",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non, vestibulum nec, euismod in, dolor. Fusce feugiat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam auctor,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "a3bca618-66d0-421a-a3af-655732fd3e27",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "0dec9825-2ca7-47bf-832a-6ac226fbb60b",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "e8907ee9-540b-4c32-9f96-02a020422a5a",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "bfb7f372-ae63-448c-980c-431cd842a4c5",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f94771e6-512a-4164-84bb-ca57b39a25ec",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "c4eee6bd-7790-4801-a63a-f521107e1b06",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "866853b8-ae7d-4daf-8c82-5e6f653e0fc1",
+        "18c323ce-025c-4f21-8152-8e46bc94c690",
+        "4ca047df-326e-4e56-affa-5541f63ab0af"
+      ]
+    },
+    {
+      "id_challenge": "d43506aa-266b-4ea4-af29-e3b75e3879d6",
+      "challenge_title": "Arcu Aliquam Institute",
+      "level": "EASY",
+      "creation_date": "Jan 1, 2023",
+      "popularity": 87,
+      "details":{
+        "description": "rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim.",
+        "examples": [
+          {
+            "id_example": "2e971f48-a68e-46d7-8d55-b1d11861de15",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "d93019c9-0fef-4215-99e7-58458ae40552",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "21fe258d-c92b-40a7-9fea-14d7cf888290",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet ante. Vivamus non lorem vitae odio sagittis semper. Nam tempor diam"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "2206f206-c52d-4e7c-ba10-a70ef4e00873",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "7b00c195-bc36-4beb-8c96-9ec4c68b32c8",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "9b9066b5-5c19-41c6-ace2-013843215100",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "a49b1486-1ede-4ba8-943f-d8c288109f4f",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f94771e6-512a-4164-84bb-ca57b39a25ec",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "c4eee6bd-7790-4801-a63a-f521107e1b06",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "4ca047df-326e-4e56-affa-5541f63ab0af",
+        "462d7617-477d-497f-8bd2-2fa5d897f20f",
+        "4345bf25-9dbe-429f-80e5-42e68b2f8a85"
+      ]
+    },
+    {
+      "id_challenge": "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e",
+      "challenge_title": "Egestas Duis Institute",
+      "level": "HARD",
+      "creation_date": "Feb 10, 2023",
+      "popularity": 22,
+      "details":{
+        "description": "semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus.",
+        "examples": [
+          {
+            "id_example": "1ed4a2b4-7864-468d-9bbf-f09e2d182267",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "4d1f9d36-3423-4e6a-aee2-64c6fe48ba61",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "fce2cbac-49ae-4749-a357-147eaf3d6c82",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper pretium neque. Morbi quis urna. Nunc quis arcu vel"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "c99fc083-9c16-41df-ae4c-37c5fd2c7437",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "44648f67-376c-4691-8195-bc39c0888e78",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "faa31cbe-a6f0-42fe-8fac-e56c70ba9286",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "01e9ef3a-baa8-467d-a7fb-fd02dc508a96",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f94771e6-512a-4164-84bb-ca57b39a25ec",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "c4eee6bd-7790-4801-a63a-f521107e1b06",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "4ca047df-326e-4e56-affa-5541f63ab0af",
+        "462d7617-477d-497f-8bd2-2fa5d897f20f",
+        "4345bf25-9dbe-429f-80e5-42e68b2f8a85"
+      ]
+    },
+    {
+      "id_challenge": "92fc9c85-206a-473c-a79a-a37e54939125",
+      "challenge_title": "Proin Inc.",
+      "level": "EASY",
+      "creation_date": "Aug 4, 2022",
+      "popularity": 33,
+      "details":{
+        "description": "massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus. Nunc ac sem ut dolor dapibus gravida. Aliquam tincidunt,",
+        "examples": [
+          {
+            "id_example": "b10ecee5-6bb2-46ea-af41-a5be87a965bf",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "9cc3fe67-1027-42c2-9775-1d69ea3cf409",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "9f6cde37-b11a-48a2-bedc-e8f7261ccb54",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "commodo hendrerit. Donec porttitor tellus non magna. Nam ligula elit, pretium et, rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "a4ee6252-2f2b-428d-ad4f-60555977f0fe",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "a53e80e1-ce5c-414a-82c0-87d1fff1ddc8",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "985be2e3-1864-429a-ad33-1c1e4a72c358",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "2006a0c5-ca09-4773-93a2-ddc0acfed046",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "dae97f2f-2c63-437d-bd3a-30273588cca4",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "153b5104-cfcb-4635-9f9c-c864531fee56",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "1f87630e-8c61-464e-8385-391f90d0b1d1",
+        "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
+        "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f"
+      ]
+    },
+    {
+      "id_challenge": "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4",
+      "challenge_title": "Tincidunt Nibh Phasellus Company",
+      "level": "EASY",
+      "creation_date": "Feb 18, 2024",
+      "popularity": 22,
+      "details":{
+        "description": "Nunc mauris elit, dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue",
+        "examples": [
+          {
+            "id_example": "7b91b664-f811-4d06-9ab7-4b9d9bb302b0",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "dc4863ce-3997-4778-9d10-1468d6a4504f",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "cd75648f-0869-4ca3-a64c-3673f3eea255",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "Nunc laoreet lectus quis massa. Mauris vestibulum, neque sed dictum eleifend, nunc risus varius orci, in consequat enim diam vel arcu. Curabitur ut odio vel est tempor bibendum."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "08446a03-db1c-416e-9e4c-2d8231a292cd",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "9ad360e7-9fb6-4d9b-996c-f4921169d508",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "05a98164-0104-4de9-8a46-7aae40f47386",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "d1c6887b-0cc8-4c5a-a3e1-6209474d5aa4",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "dae97f2f-2c63-437d-bd3a-30273588cca4",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "153b5104-cfcb-4635-9f9c-c864531fee56",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "1f87630e-8c61-464e-8385-391f90d0b1d1",
+        "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
+        "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f"
+      ]
+    },
+    {
+      "id_challenge": "6646a97f-17a7-49d6-b325-6db9e84a456f",
+      "challenge_title": "Class Foundation",
+      "level": "HARD",
+      "creation_date": "Mar 21, 2024",
+      "popularity": 102,
+      "details":{
+        "description": "sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed,",
+        "examples": [
+          {
+            "id_example": "15414230-3779-4a34-a6e0-5d9c37a5c9d6",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "80ba2dca-1c95-40f4-95c7-b2cb60f2252b",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "5e833576-c624-42a7-b89c-42a106d3fbf5",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "id nunc interdum feugiat. Sed nec metus facilisis lorem tristique aliquet. Phasellus fermentum convallis ligula. Donec luctus aliquet odio. Etiam ligula tortor, dictum eu, placerat eget, venenatis a,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "9ff2f285-da39-4257-9a60-36f24b889963",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "2b3d22a9-5e9a-4ada-9bf0-45906b5e8761",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "90958038-b709-462c-abe0-a4ac64749141",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "4ecb3392-b2be-4f62-b70e-1b30b5ed0d59",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "dae97f2f-2c63-437d-bd3a-30273588cca4",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "153b5104-cfcb-4635-9f9c-c864531fee56",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "d0a82421-de75-46a5-903e-69e4addf7e75",
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86",
+        "9818b618-b740-479d-8aac-962cd3e77cdd"
+      ]
+    },
+    {
+      "id_challenge": "72bc6c83-e9b1-4f25-9000-58af4d49ab9c",
+      "challenge_title": "Dolor Quisque Incorporated",
+      "level": "EASY",
+      "creation_date": "Jul 6, 2022",
+      "popularity": 36,
+      "details":{
+        "description": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel",
+        "examples": [
+          {
+            "id_example": "fb18b114-b49a-4c23-95aa-09a47a790c8b",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "69402ad3-f78d-4bec-9b8e-6229c8914cfa",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "eb51a021-cd1d-4495-bedb-f55ba687e54f",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "fef9df10-93ef-46ce-b0b7-b01c453e4b4b",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "cafe932e-a21f-4d50-98ea-046fbd7ee8e8",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "db860621-620a-4c3a-a8b6-4208dec2c570",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "ceb42452-425f-4c70-9074-db2289dcb2f2",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "42bc975a-dc40-4bcd-b630-7c1a037e2c5a",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "6e1e648d-77a3-47d9-a8b5-fd43ea7f2c09",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "d0a82421-de75-46a5-903e-69e4addf7e75",
+        "cebd2d65-8562-4691-a066-f1d1b3d7be86",
+        "9818b618-b740-479d-8aac-962cd3e77cdd"
+      ]
+    },
+    {
+      "id_challenge": "41a5f6f7-b294-4ec8-ab66-3e629faee136",
+      "challenge_title": "Ornare Associates",
+      "level": "EASY",
+      "creation_date": "May 15, 2023",
+      "popularity": 56,
+      "details":{
+        "description": "elit, a feugiat tellus lorem eu metus. In lorem. Donec elementum, lorem ut aliquam iaculis, lacus pede sagittis augue, eu",
+        "examples": [
+          {
+            "id_example": "00bf5cb7-b2c8-40ba-8c63-eae3f5fcff65",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "77f3b6e8-27ae-42b6-b9d0-e16d62a98cba",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "3e99a927-23f5-4e21-a6f4-43abe4b93009",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus. Aenean sed pede nec ante blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem,"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "6a94d334-2d86-4d63-b2f2-d6ad6dadfcce",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "b6579eef-5353-4cf2-8723-f941a6dad8e3",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "c308ae4c-a3c5-4a63-ae0f-7b74ca878d8a",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "7db44384-66d3-4e36-9d56-9d05f367bd62",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "42bc975a-dc40-4bcd-b630-7c1a037e2c5a",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "6e1e648d-77a3-47d9-a8b5-fd43ea7f2c09",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "468c70e7-57ea-4fba-b57d-73034ad5aa5f",
+        "6f189158-881c-4165-ad08-1c306c7752db",
+        "d43506aa-266b-4ea4-af29-e3b75e3879d6"
+      ]
+    },
+    {
+      "id_challenge": "67e62585-93e7-485e-8d78-0cd1e9331886",
+      "challenge_title": "Orci Lobortis Augue Corporation",
+      "level": "MEDIUM",
+      "creation_date": "Aug 11, 2022",
+      "popularity": 68,
+      "details":{
+        "description": "dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus",
+        "examples": [
+          {
+            "id_example": "59810da7-6b43-403b-bc35-0fcfc5da6041",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "bf7356bd-92ee-4c62-9c26-1c740ad11b24",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "4b5f1413-551b-4647-84ba-98d332c0212b",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "Nam tempor diam dictum sapien. Aenean massa. Integer vitae nibh. Donec est mauris, rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "b8c7ee7b-383a-47fa-842c-77de17e4f147",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "3cf86318-9a8d-4706-95db-e0ff7a89780c",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "9c1fb9c8-ef3b-4399-831e-db6512088a42",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "e76acbe4-4117-4bfa-a4d6-f4652c4ed99f",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "42bc975a-dc40-4bcd-b630-7c1a037e2c5a",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "6e1e648d-77a3-47d9-a8b5-fd43ea7f2c09",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "468c70e7-57ea-4fba-b57d-73034ad5aa5f",
+        "6f189158-881c-4165-ad08-1c306c7752db",
+        "d43506aa-266b-4ea4-af29-e3b75e3879d6"
+      ]
+    },
+    {
+      "id_challenge": "577f459b-a1f9-4905-a689-a060677d393d",
+      "challenge_title": "Arcu Industries",
+      "level": "MEDIUM",
+      "creation_date": "Aug 6, 2022",
+      "popularity": 88,
+      "details":{
+        "description": "adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada",
+        "examples": [
+          {
+            "id_example": "b5f1d7bb-ecbb-4bb3-960e-101bce7a6bbd",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "9a4401f1-d497-47fc-a392-3a2727b6e516",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "43cd13ba-1091-405c-b654-73be266f99df",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "molestie sodales. Mauris blandit enim consequat purus. Maecenas libero est, congue a, aliquet vel, vulputate eu, odio. Phasellus at augue id ante dictum cursus. Nunc mauris elit, dictum"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "0f9beb11-ad19-4032-ba12-9c3a7ccfe240",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "b1e272d6-cd83-4449-9882-51f6653f588f",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "9aa074f8-aab7-442f-be91-a437680865ed",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "e15132c2-d7f8-45af-95e5-1b1540bf130e",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "bb7d6927-93b1-442e-8d20-1b055885bee6",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "cad8cece-bf81-4d05-b4ca-93744e4163c2",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e",
+        "92fc9c85-206a-473c-a79a-a37e54939125",
+        "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4"
+      ]
+    },
+    {
+      "id_challenge": "ea9a9b70-273c-4322-acc4-ac4950558a4a",
+      "challenge_title": "Lectus Pede Industries",
+      "level": "HARD",
+      "creation_date": "Sep 9, 2022",
+      "popularity": 156,
+      "details":{
+        "description": "nulla ante, iaculis nec, eleifend non, dapibus rutrum, justo. Praesent luctus. Curabitur egestas nunc sed libero. Proin sed turpis nec",
+        "examples": [
+          {
+            "id_example": "bb7d6927-93b1-442e-8d20-1b055885bee6",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "cad8cece-bf81-4d05-b4ca-93744e4163c2",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "ea09ff8d-bd9a-4b79-98b6-165bc0566703",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "mattis. Integer eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "d12d5a45-4068-47c8-af70-7e01f7f73a4d",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "dca6a400-b220-4a50-b3a4-757e7883b915",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "ee37e63b-f028-4cb6-aef8-8ef7228f6cb2",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "9d3194c7-d7e7-4b86-92e6-b6eea1f54ad4",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "71daef7c-12f8-452f-a5f5-3c1072ef4bdc",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "e0f7b97d-adc2-486e-a4bc-12c067523504",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e",
+        "92fc9c85-206a-473c-a79a-a37e54939125",
+        "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4"
+      ]
+    },
+    {
+      "id_challenge": "cb6bcc1c-f8da-43b8-bc29-a6e19da89b81",
+      "challenge_title": "Imperdiet Nec Leo LLP",
+      "level": "EASY",
+      "creation_date": "Apr 18, 2023",
+      "popularity": 85,
+      "details":{
+        "description": "sollicitudin commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam",
+        "examples": [
+          {
+            "id_example": "312c4cba-5fe8-4d19-8827-83f77507f70c",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "989962e6-fe55-4255-a81d-76b80dbabf43",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "345ae236-c53b-42bd-beab-875b36714140",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "adipiscing ligula. Aenean gravida nunc sed pede. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Proin vel arcu eu odio tristique pharetra. Quisque ac"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "60d441d1-d4bf-479c-8156-d915f1cfe61c",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "b8874d6e-fad0-4e34-b0de-79c682b02495",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "c6f56934-2790-4afa-abf0-e275ad8595eb",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "71daef7c-12f8-452f-a5f5-3c1072ef4bdc",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "e0f7b97d-adc2-486e-a4bc-12c067523504",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "844546bc-2d38-4736-a69e-2df14299efde",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "eb7a15e4-499e-481d-a909-6acc642b0c09",
+        "40728c9c-a557-4d12-bf8f-3747d0924197",
+        "c6656d38-f592-4be2-b256-7c4015333445"
+      ]
+    },
+    {
+      "id_challenge": "015a06a4-833c-4cb4-80db-85391c11904f",
+      "challenge_title": "Phasellus In Felis Consulting",
+      "level": "HARD",
+      "creation_date": "Oct 29, 2022",
+      "popularity": 84,
+      "details":{
+        "description": "nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper pretium neque. Morbi quis urna. Nunc quis arcu vel",
+        "examples": [
+          {
+            "id_example": "d7ac362b-bd36-4a13-b787-6f2d3511ab7c",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "85262e60-9b93-48f6-bf26-830702663d1a",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "818204a8-7dcc-4884-a7ed-f48076a0bc71",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "tortor. Integer aliquam adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa"
+      },
+      "languages": [
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "0dfbc822-40f2-439e-94ab-b5803e176f65",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "d27a0d4b-de18-4cbf-9860-3c45ed856228",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "69bdddb9-f238-41ba-bc09-8b31a97a7349",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "e0f7b97d-adc2-486e-a4bc-12c067523504",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "844546bc-2d38-4736-a69e-2df14299efde",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "1c5f5dd7-daac-4ffa-b0ac-e85bc0b39dbb",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "eb7a15e4-499e-481d-a909-6acc642b0c09",
+        "40728c9c-a557-4d12-bf8f-3747d0924197",
+        "c6656d38-f592-4be2-b256-7c4015333445"
+      ]
+    },
+    {
+      "id_challenge": "d083ea97-b25a-4a96-b347-d5ca5752296c",
+      "challenge_title": "Interdum Enim Non Ltd",
+      "level": "MEDIUM",
+      "creation_date": "Sep 11, 2023",
+      "popularity": 63,
+      "details":{
+        "description": "neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin orci sem eget massa. Suspendisse eleifend. Cras sed leo. Cras",
+        "examples": [
+          {
+            "id_example": "f4e63981-e348-4a1f-b865-ab9c03c67a7f",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "2a9eaf15-2cd0-4835-87ac-eda3885e8ef8",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "898eeb35-2c44-4d8d-b4f7-4c39e8de02de",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "molestie tellus. Aenean egestas hendrerit neque. In ornare sagittis felis. Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac tellus. Suspendisse sed"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "8c110182-5b7d-4b44-86f3-012af0539009",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "e0d7bd3e-7d41-4857-b1c3-3426622d6e00",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "02f4dece-d9f8-4140-8271-73216ec63afd",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "844546bc-2d38-4736-a69e-2df14299efde",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "1c5f5dd7-daac-4ffa-b0ac-e85bc0b39dbb",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "dd6016d1-d401-4bc2-a9c5-34e2336d71dc",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+        "c0c7510b-f867-4375-b46f-0c164f30429f",
+        "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+      ]
+    },
+    {
+      "id_challenge": "d4a7b5d1-6eef-4f96-889a-4f0b22f9b70a",
+      "challenge_title": "Pede Praesent LLP",
+      "level": "HARD",
+      "creation_date": "Sep 19, 2022",
+      "popularity": 658,
+      "details":{
+        "description": "eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus. Aenean sed pede nec ante blandit viverra. Donec tempus,",
+        "examples": [
+          {
+            "id_example": "60d38cee-73cd-4183-81d8-a4241f92730f",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "be3cab39-128d-429b-b23f-03e737f4de1e",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "92493bf4-6cd2-43b4-9db5-f878fa101ba2",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "augue malesuada malesuada. Integer id magna et ipsum cursus vestibulum. Mauris magna. Duis dignissim tempor arcu. Vestibulum ut eros non enim commodo hendrerit. Donec porttitor tellus non magna."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "d0f71090-26ae-41a2-ab88-4c6007bf4bd9",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "df78c8a2-2659-4d1c-802c-3a82d610b7ab",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "e3cdc685-63ca-4127-9316-58dc87d97f8c",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "eab54696-0135-4a5e-b76c-cd1eeff4c61f",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "44d859f7-0ec6-41d0-a750-dd178a395a01",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "89dfc05a-8281-4f34-9685-9ede74cb7255",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+        "c0c7510b-f867-4375-b46f-0c164f30429f",
+        "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+      ]
+    },
+    {
+      "id_challenge": "a28cdce4-594d-41fb-ad26-c7f2e0a7f40b",
+      "challenge_title": "Maecenas Iaculis Company",
+      "level": "HARD",
+      "creation_date": "Dec 6, 2023",
+      "popularity": 62,
+      "details":{
+        "description": "blandit. Nam nulla magna, malesuada vel, convallis in, cursus et, eros. Proin ultrices. Duis volutpat nunc sit amet metus. Aliquam",
+        "examples": [
+          {
+            "id_example": "1eccd701-16f0-4f3c-a80f-473f872458d2",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "1b91652b-aa29-408a-a0a0-b51bb64145ef",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "7aca6ef5-d8c6-44f6-a18b-6fdc7df8fd24",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "eget ipsum. Suspendisse sagittis. Nullam vitae diam. Proin dolor. Nulla semper tellus id nunc interdum feugiat. Sed nec metus facilisis lorem tristique aliquet. Phasellus fermentum convallis ligula. Donec"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "6ea3487f-7980-4046-8859-a29d4d149798",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "bb653d21-8dcb-4bae-8318-bea9fa150379",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "f8a3dc3a-870c-4b79-ac9f-167cf4142c88",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "928be437-1401-480c-a97c-d1d4359c975f",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "44d859f7-0ec6-41d0-a750-dd178a395a01",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "89dfc05a-8281-4f34-9685-9ede74cb7255",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "d2ce221e-cb49-42d6-b43b-b66eba4ca52d",
+        "cf38ddd2-776d-4bad-a182-39840114dfc5",
+        "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+      ]
+    },
+    {
+      "id_challenge": "53ce794f-0c9c-46f5-a097-07f7ac747bbf",
+      "challenge_title": "Mollis Vitae Posuere Ltd",
+      "level": "MEDIUM",
+      "creation_date": "Nov 9, 2022",
+      "popularity": 32,
+      "details":{
+        "description": "in lobortis tellus justo sit amet nulla. Donec non justo. Proin non massa non ante bibendum ullamcorper. Duis cursus, diam",
+        "examples": [
+          {
+            "id_example": "4c1f7fce-35fc-4bc0-a346-54923823cc93",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "5bffcae9-57c1-42c8-8a73-ec7c80548481",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "238133ea-3623-48eb-b3a5-910fb7e4649e",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis dolor. Quisque tincidunt pede ac"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "4f8af21a-25f2-40ab-b73b-9358640f95e0",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "bfdc6aa9-87a2-47e6-af2e-926221d33331",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "a4705d09-49eb-4792-a270-c27cc83ae07a",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "cd44e577-c6ad-445a-becf-b87288ab6e37",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "44d859f7-0ec6-41d0-a750-dd178a395a01",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "89dfc05a-8281-4f34-9685-9ede74cb7255",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "d2ce221e-cb49-42d6-b43b-b66eba4ca52d",
+        "cf38ddd2-776d-4bad-a182-39840114dfc5",
+        "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+      ]
+    },
+    {
+      "id_challenge": "2a3e0fab-a98f-4260-8bb7-14abb6c29c4c",
+      "challenge_title": "Cras Dictum Associates",
+      "level": "MEDIUM",
+      "creation_date": "Aug 30, 2022",
+      "popularity": 24,
+      "details":{
+        "description": "Morbi non sapien molestie orci tincidunt adipiscing. Mauris molestie pharetra nibh. Aliquam ornare, libero at auctor ullamcorper, nisl arcu iaculis",
+        "examples": [
+          {
+            "id_example": "e2cb4228-840a-485e-a426-740a39fc1423",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "36bc5c4a-e2a3-4fec-8aba-c87a899901ae",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "8fc3b15d-9346-452a-b133-68813ed7c49f",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur sed tortor. Integer aliquam adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida"
+      },
+      "languages": [
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "ae33282d-5bf7-47d5-89d6-338367ff5c83",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "e9b66e0d-93f4-4b91-b55c-e59cd5f5b13e",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "19c9be28-0f69-47c8-a6fc-a3631cfd2974",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "459d1f17-255c-4c82-a4a9-e525c9073516",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f888bd67-0a84-496f-b070-b791712260ba",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f9061f69-7da3-4408-b1f3-ab9193c3698a",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "124684b8-3272-4f29-9b82-8f8f1e0db6fc",
+        "a3960f5e-e820-4f8e-9cfd-6e952ae236d7",
+        "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a"
+      ]
+    },
+    {
+      "id_challenge": "d1f3d30b-4399-42bc-86bc-d9c1f80cb4fb",
+      "challenge_title": "Consectetuer Euismod Est LLP",
+      "level": "MEDIUM",
+      "creation_date": "Oct 10, 2022",
+      "popularity": 96,
+      "details":{
+        "description": "feugiat nec, diam. Duis mi enim, condimentum eget, volutpat ornare, facilisis eget, ipsum. Donec sollicitudin adipiscing ligula. Aenean gravida nunc",
+        "examples": [
+          {
+            "id_example": "cb63b465-98ee-4693-b380-58587a8e9887",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "73190d4a-d15e-4c44-8758-65169ec629b4",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "dddab015-c84e-44be-93a8-bb6be9a84e3d",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "nunc ac mattis ornare, lectus ante dictum mi, ac mattis velit justo nec ante. Maecenas mi felis, adipiscing fringilla, porttitor vulputate, posuere vulputate, lacus. Cras interdum. Nunc sollicitudin"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "50d96321-b94d-4526-991e-f6a4dc93316b",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "f8ba05ed-4c05-4ed6-a173-ef9cf1b407d6",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "b748a180-e20a-4a99-95eb-ccdcbd363312",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "088010be-3738-4767-91e3-e43b901d35a9",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f888bd67-0a84-496f-b070-b791712260ba",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f9061f69-7da3-4408-b1f3-ab9193c3698a",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "124684b8-3272-4f29-9b82-8f8f1e0db6fc",
+        "a3960f5e-e820-4f8e-9cfd-6e952ae236d7",
+        "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a"
+      ]
+    },
+    {
+      "id_challenge": "01aefad8-c642-43f0-aabd-012cb2585064",
+      "challenge_title": "Nec Imperdiet Company",
+      "level": "MEDIUM",
+      "creation_date": "Feb 23, 2023",
+      "popularity": 32,
+      "details":{
+        "description": "Integer in magna. Phasellus dolor elit, pellentesque a, facilisis non, bibendum sed, est. Nunc laoreet lectus quis massa. Mauris vestibulum,",
+        "examples": [
+          {
+            "id_example": "c2227044-8a0c-4a0e-b6a5-b3702f434355",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "f5cd4db6-a5fc-42c0-944e-e63b324aa377",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "72fe28df-8d16-4e51-b379-1865d499cc6d",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "cursus. Integer mollis. Integer tincidunt aliquam arcu. Aliquam ultrices iaculis odio. Nam interdum enim non nisi. Aenean eget metus. In nec orci. Donec nibh. Quisque nonummy ipsum non"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "7363d3c7-8db7-411b-9e88-ed78b1f7e1a3",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "00342fba-ac6f-4b39-980b-913fd3f0a038",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "70e0d758-5ee4-4789-a8f6-2abecd3a59ae",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "da467fa7-0b70-4e83-8a90-2deb7b6a6193",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f888bd67-0a84-496f-b070-b791712260ba",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "f9061f69-7da3-4408-b1f3-ab9193c3698a",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
+        "c1bcc067-f787-4a6f-867a-834193de6032",
+        "7c55adc0-f985-4829-a2a6-e7571d1be7de"
+      ]
+    },
+    {
+      "id_challenge": "08569851-f0c7-4c7b-bc7f-b676f5d3283c",
+      "challenge_title": "Placerat LLC",
+      "level": "HARD",
+      "creation_date": "Nov 26, 2023",
+      "popularity": 94,
+      "details":{
+        "description": "Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim. Etiam imperdiet dictum magna. Ut",
+        "examples": [
+          {
+            "id_example": "bbef1a3d-9893-4b85-8391-3287e9f7a827",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "e0084882-24e0-4ac3-83c0-9f56a1863f1a",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "ffff2007-04da-421c-8cd0-5d4142307e0c",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "aliquam, enim nec tempus scelerisque, lorem ipsum sodales purus, in molestie tortor nibh sit amet orci. Ut sagittis lobortis mauris. Suspendisse aliquet molestie tellus. Aenean egestas hendrerit neque."
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "c6a836eb-466a-4c7b-adc0-34895676840f",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "8410c05a-a4c2-4250-8509-845bb41b0b60",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "bec6a9a8-6129-4506-a1d5-da94df027626",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "6d8181e7-862e-4ab0-955e-afee76ba1bb0",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "461f76d4-f60e-4050-95f0-58d3d745265c",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "333da626-7bb1-4892-8bc1-d2a97ae6b5a1",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "7fc6a737-dc36-4e1b-87f3-120d81c548aa",
+        "c1bcc067-f787-4a6f-867a-834193de6032",
+        "7c55adc0-f985-4829-a2a6-e7571d1be7de"
+      ]
+    },
+    {
+      "id_challenge": "c6656d38-f592-4be2-b256-7c4015333445",
+      "challenge_title": "Maecenas Mi Felis Company",
+      "level": "HARD",
+      "creation_date": "Aug 22, 2023",
+      "popularity": 62,
+      "details":{
+        "description": "Quisque porttitor eros nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget,",
+        "examples": [
+          {
+            "id_example": "8688c414-55dc-4735-b3ca-bac01a4ba4a7",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "602512ce-0707-4416-80f7-ff244af97b6a",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "e7921856-a58c-4a65-a5b5-c99a5af8c37d",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin orci sem eget massa. Suspendisse eleifend. Cras sed leo. Cras"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "31e0bde6-790a-4ae2-9a4b-5878a34f144e",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "71fe6e92-0ecc-446b-8907-a0c3f24733c6",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "4619a308-bdf9-4ad1-ad0e-a04e48020b2a",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "2f163227-92f8-4e9e-a4a0-d2cf7304a487",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "461f76d4-f60e-4050-95f0-58d3d745265c",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "333da626-7bb1-4892-8bc1-d2a97ae6b5a1",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "7c55adc0-f985-4829-a2a6-e7571d1be7de",
+        "6c340690-692c-43f7-a39b-3926eabc0e91",
+        "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"
+      ]
+    },
+    {
+      "id_challenge": "40728c9c-a557-4d12-bf8f-3747d0924197",
+      "challenge_title": "Sodales PC",
+      "level": "MEDIUM",
+      "creation_date": "Oct 9, 2023",
+      "popularity": 19,
+      "details":{
+        "description": "Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac tellus. Suspendisse sed dolor. Fusce",
+        "examples": [
+          {
+            "id_example": "d3584b2a-a94b-4855-aad5-34dc9652d43b",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "a7ee4511-5aea-4fea-905a-dc1ce8ca428d",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "906015cd-bd49-41b2-adf9-07e18c0d3bbf",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel sapien imperdiet ornare. In faucibus. Morbi vehicula. Pellentesque"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "8aaf12f6-4d72-4c3b-8fa7-c0db28ceb7f9",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "8e8033af-9e63-4ab9-af4e-304139c514df",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "0c06a84b-1302-4733-9c54-db3df06c8a99",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "974519e6-4253-437f-8f67-811efe2ca5d7",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "461f76d4-f60e-4050-95f0-58d3d745265c",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "333da626-7bb1-4892-8bc1-d2a97ae6b5a1",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "866853b8-ae7d-4daf-8c82-5e6f653e0fc1",
+        "18c323ce-025c-4f21-8152-8e46bc94c690",
+        "4ca047df-326e-4e56-affa-5541f63ab0af"
+      ]
+    },
+    {
+      "id_challenge": "eb7a15e4-499e-481d-a909-6acc642b0c09",
+      "challenge_title": "Mauris Eu Corp.",
+      "level": "MEDIUM",
+      "creation_date": "Jan 17, 2024",
+      "popularity": 36,
+      "details":{
+        "description": "auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat.",
+        "examples": [
+          {
+            "id_example": "5c6017d6-1485-4951-9f97-07e01c3c503b",
+            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          },
+          {
+            "id_example": "8bacf5b1-da8b-4326-9cc0-27f62435faf6",
+            "example_text": " Aliquam nec nisi maximus, venenatis"
+          },
+          {
+            "id_example": "6241968d-e6de-4019-8379-34c79a70d6a3",
+            "example_text": "Mauris feugiat massa et suscipit malesuada."
+          }
+        ],
+        "notes": "metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus"
+      },
+      "languages": [
+        {
+          "id_language": "1",
+          "language_name": "Javascript"
+        },
+        {
+          "id_language": "2",
+          "language_name": "Java"
+        },
+        {
+          "id_language": "3",
+          "language_name": "PHP"
+        },
+        {
+          "id_language": "4",
+          "language_name": "Python"
+        }
+      ],
+      "solutions": [
+        {
+          "id_solution": "440d5643-564e-44e5-b04d-58bb51c46329",
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "id_solution": "920972d9-5cf7-4109-8f76-400a5316aec3",
+          "solution_text": "s a sodales nulla. Aliquam rutrum bibendum pulvinar. "
+        },
+        {
+          "id_solution": "baaadf38-306f-4ba5-96b6-90f00d4b08c1",
+          "solution_text": "nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin"
+        }
+      ],
+      "resources": [
+        {
+          "id_resource": "ad9c3d94-3f76-4211-9aff-4e3e60936e26",
+          "resource_description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+          "author":"Ona Costa",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "19c93e7c-07a1-404d-809e-4515d304a483",
+          "resource_description": "Pellentesque a aliquet diam. Aliquam efficitur pharetra",
+          "author":"John Doe",
+          "generation_date":"Mar 25, 2023"
+        },
+        {
+          "id_resource": "9a8e646d-12ee-4c0c-a3c9-5e4395ac3f4a",
+          "resource_description": "Vivamus bibendum eros porttitor orci varius ultricies",
+          "author":"Emeka Okafor",
+          "generation_date":"Mar 25, 2023"
+        }
+      ],
+      "related": [
+        "6c340690-692c-43f7-a39b-3926eabc0e91",
+        "18c323ce-025c-4f21-8152-8e46bc94c690",
+        "462d7617-477d-497f-8bd2-2fa5d897f20f"
+      ]
+    }
+  ]
+}
+
+
