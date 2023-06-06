@@ -49,11 +49,11 @@ public class ExamplePaginationAuxiliarService {
         }
     }
 
-    private Flux<Object> doLimit(Flux<Object> fluxOffseted){
+    private Flux<Object> doLimit(Flux<Object> fluxOffsetted){
         if(limit >= 0) {
-            return fluxOffseted.take(limit);
+            return fluxOffsetted.take(limit);
         }else {
-            return fluxOffseted;
+            return fluxOffsetted;
         }
     }
 
