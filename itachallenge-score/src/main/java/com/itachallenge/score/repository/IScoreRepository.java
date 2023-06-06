@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public interface IScoreRepository extends ReactiveMongoRepository<Score, UUID> {
     Mono<Score> findByScoreID(UUID scoreID);
-    Flux<Score> findAllByUserID(UUID userID);
     Mono<Boolean> existsByScoreID(UUID scoreID);
     Mono<Boolean> existsByUserID(UUID userID);
     @Override
