@@ -17,6 +17,12 @@ public class ChallengeBasicInfoDto{
     @JsonProperty(index = 1)
     private String level;
 
+    /**
+     * Este atributo es String solamente en el DTO.
+     * En el document, creationDate es de tipo LocalDateTime.
+     * En la clase converter, hay un método privado que convierte y formatea los datos de LocalDateTime
+     * al formato requerido en el .json
+     */
     @JsonProperty(value = "creation_date", index = 2)
     private String creationDate;
 
