@@ -8,5 +8,5 @@
 * Christian Gálvez - https://github.com/ChrisGalHur
 * Anna Santasusana - https://github.com/AnnaSantasusana
 * Anna Fedoraeva - https://github.com/AnnaFedoraeva
-
+* Pedro Tejero - https://github.com/Pedro-Tejero-Diez
 
