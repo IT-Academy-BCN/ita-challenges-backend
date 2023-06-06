@@ -1,7 +1,6 @@
-package com.itachallenge.score.entity;
+package com.itachallenge.score.document;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
