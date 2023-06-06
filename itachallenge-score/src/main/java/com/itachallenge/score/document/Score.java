@@ -8,10 +8,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.util.UUID;
 
 
-
+//faltan anotaciones Setter y ToString para cumplir el coverage de sonar
 @Getter
-@Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
