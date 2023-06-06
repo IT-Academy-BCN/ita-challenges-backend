@@ -12,10 +12,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import static org.mockito.Mockito.when;
 
 
@@ -31,22 +29,16 @@ class ChallengeControllerTest {
 
 
 
-    @Test
-    void test() {
-        assertEquals(1, 1);
-    }
-
-
     @DisplayName("Get All Challenges Controller Test")
     @Test
     void getAllChallengesControllerTest() throws IOException {
 
-        String jsonFile = "C:\\Users\\Alfonso\\ita-challenges-backend\\itachallenge-challenge\\src\\test\\resources\\data-challenge.json";
+        String jsonFile = "json/data-challenge.json";
         String uri = "http://localhost:8762/itachallenge/api/v1/challenge/getAllChallenges";
 
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(jsonFile);
+        String expected = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
-        byte[] jsonData = Files.readAllBytes(Paths.get(jsonFile));
-        String expected = new String(jsonData, "UTF-8");
         when(challengeService.getAllChallenges()).thenReturn(Mono.just(expected));
 
         webTestClient.get().uri(uri)

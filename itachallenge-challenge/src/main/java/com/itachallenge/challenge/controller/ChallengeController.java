@@ -25,11 +25,6 @@ public class ChallengeController {
     @Autowired
     ChallengeService challengeService;
 
-    @GetMapping(value = "/test")
-    public String test() {
-        log.info("** Saludos desde el logger **");
-        return "Hello from ITA Challenge!!!";
-    }
 
     @GetMapping(value = CHALLENGES, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<String> getAllChallenges() throws IOException {

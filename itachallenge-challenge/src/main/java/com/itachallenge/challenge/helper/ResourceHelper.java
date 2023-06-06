@@ -1,44 +1,36 @@
 package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.exceptions.ResourceException;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.core.io.Resource;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class ResourceHelper {
 
-    public byte[] readResourceAsByteArray (String resourcePath) {
-        try {
-            File file = new ClassPathResource(resourcePath).getFile();
-            return FileUtils.readFileToByteArray(file);
-        } catch (IOException e) {
-            throw new ResourceException(e.getMessage());
-        }
+    private Resource resource;
+    private String resourcePath;
+
+    public ResourceHelper(@NotNull String resourcePath) {
+        this.resourcePath = resourcePath;
+        resource = new ClassPathResource(resourcePath);
     }
 
-
-    public String readResourceAsString (String resourcePath) {
+    public String readResourceAsString ()  throws IOException{
         try {
-            File file = new ClassPathResource(resourcePath).getFile();
+            File file = resource.getFile();
             return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new ResourceException(e.getMessage());
+        } catch (IOException ex) {
+            String msg =getResourceErrorMessage("loading/reading").concat(ex.getMessage());
+            throw new IOException(msg);
         }
     }
 
-    public String readResourceAsStringV2(String resourcePath){
-        try {
-            InputStream inputStream = new ClassPathResource(resourcePath).getInputStream();
-            Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            String resourceString = FileCopyUtils.copyToString(reader);
-            //.copyToString closes the reader
-            inputStream.close();
-            return resourceString;
-        } catch (IOException e) {
-            throw new ResourceException(e.getMessage());
-        }
+    private String getResourceErrorMessage(String action){
+        String resourceIdentifier = Objects.requireNonNullElseGet(resourcePath, () -> resource.getDescription());
+        return "Exception when " + action + " " + resourceIdentifier + " resource: \n";
     }
 }
