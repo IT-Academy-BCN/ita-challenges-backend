@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.documents.dummies;
 
 import com.itachallenge.challenge.documents.team.LanguageTeam;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Set;
 import java.util.UUID;
