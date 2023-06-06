@@ -60,7 +60,6 @@ public class ExamplePaginationAuxiliarService {
     /*
     también se podria tener un método que generara directamente la PageDto
      */
-
     public Mono<PageDto> createPage(Flux<Object> fluxSorted){
         return doPagination(fluxSorted) //Flux<Object> con solo los elementos a mostrat
                 .collectList() //Mono<List<Object>>
