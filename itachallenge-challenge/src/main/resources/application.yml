@@ -5,6 +5,7 @@ spring:
     enabled: true
   data:
     mongodb:
+<<<<<<< HEAD
       host: localhost
       port: 27017
       database: ChallengeProject
@@ -12,6 +13,9 @@ spring:
     converters:
       preferred-json-mapper: jackson
 
+=======
+      uri: mongodb://adminChallenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+>>>>>>> develop
 
 springdoc:
   swagger-ui:
