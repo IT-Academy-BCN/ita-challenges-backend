@@ -17,7 +17,6 @@ public class ChallengeBasicInfoDto{
     @JsonProperty(index = 1)
     private String level;
 
-    // TODO: Solventando tema Date
     @JsonProperty(value = "creation_date", index = 2)
     private String creationDate;
 
@@ -29,17 +28,6 @@ public class ChallengeBasicInfoDto{
 
     @JsonProperty(index = 5)
     private Set<LanguageDto> languages;
-
-    //PRIVATE ALL ARGS CONSTRUCTOR: to force instantiation with @Builder
-    // TODO: añadir parámetro creationDate*
-    /*private ChallengeBasicInfoDto(String title, String level, LocalDateTime creationDate, Integer popularity, Float percentage, Set<LanguageDto> languages) {
-        this.title = title;
-        this.level = level;
-        this.creationDate = getFormattedCreationDateTime(creationDate);
-        this.popularity = popularity;
-        this.percentage = percentage;
-        this.languages = languages;
-    }*/
 
     private ChallengeBasicInfoDto() {
         /*

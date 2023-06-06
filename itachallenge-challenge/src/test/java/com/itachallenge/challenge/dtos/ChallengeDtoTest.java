@@ -40,7 +40,7 @@ public class ChallengeDtoTest {
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(2, "Java");
         Set<LanguageDto> languages = LanguageDtoTest.buildSetLanguages(firstLanguage,secondLanguage);
         ChallengeBasicInfoDto challengeBasicInfoDto = ChallengeBasicInfoDtoTest.buildChallengeBasicInfoDto
-                ("Sociis Industries", "EASY", 105, 23.58f,languages);
+                ("Sociis Industries", "EASY", "lun jun 05 12:30:00 2023", 105, 23.58f,languages);
         challengeDto = ChallengeDto.builder(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"))
                 .basicInfo(challengeBasicInfoDto)
                 .build();

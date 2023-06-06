@@ -38,7 +38,7 @@ public class ChallengeBasicInfoDtoTest {
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(2, "Java");
         Set<LanguageDto> languages = LanguageDtoTest.buildSetLanguages(firstLanguage,secondLanguage);
         challengeBasicInfoDto = buildChallengeBasicInfoDto
-                ("Sociis Industries", "EASY", 105, 23.58f,languages);
+                ("Sociis Industries", "EASY", "lun jun 05 12:30:00 2023", 105, 23.58f,languages);
     }
 
     @Test
@@ -71,36 +71,15 @@ public class ChallengeBasicInfoDtoTest {
     }
 
     static ChallengeBasicInfoDto buildChallengeBasicInfoDto
-            (String title, String level, Integer popularity, Float percentage, Set<LanguageDto> languages){
+            (String title, String level, String creationDate, Integer popularity, Float percentage, Set<LanguageDto> languages){
         return ChallengeBasicInfoDto.builder()
                 .title(title)
                 .level(level)
+                .creationDate(creationDate)
                 .popularity(popularity)
                 .percentage(percentage)
                 .languages(languages)
                 .build();
     }
-
-    /* Solventar tema Date del json salida
-    @Test
-    @SneakyThrows({JsonProcessingException.class, IOException.class})
-    void assertCorrectSerialization(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss 'UTC' yyyy");
-
-        ChallengeBasicInfoDto origin = ChallengeBasicInfoDto.builder()
-                .title("Sociis Industries")
-                .level("EASY")
-                .creationDate(LocalDateTime.parse("Tue May 30 07:33:43 UTC 2023", formatter))
-                .popularity(105)
-                .languages(Set.of(new LanguageDto(1, "Javascript"), new LanguageDto(2, "Java")))
-                .percentage(23f).build();
-
-        String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(origin);
-        String jsonExpected = new ResourceHelper("json/BasicInfoChallangeV1.json").readResourceAsString();
-        Assertions.assertEquals(jsonExpected, jsonResult);
-
-    }*/
-
-
 
 }

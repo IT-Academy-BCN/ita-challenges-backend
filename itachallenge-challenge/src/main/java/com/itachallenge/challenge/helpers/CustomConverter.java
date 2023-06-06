@@ -49,7 +49,6 @@ public class CustomConverter implements StarterConverter,
                         .collect(Collectors.toSet()))
                 .percentage(percentage)
                 .popularity(popularity)
-                //TODO: add creation date
                 .creationDate(getFormattedCreationDateTime(challengeDoc.getCreationDate()))
                 .build();
     }
