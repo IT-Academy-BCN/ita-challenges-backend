@@ -1,21 +1,24 @@
 package com.itachallenge.score.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
 
 
-@Data
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@Builder
 @Document(collection="scores")
 public class Score {
 
-    @Id
+    @MongoId
     UUID scoreID;
     UUID userID;
     UUID challengeID;
