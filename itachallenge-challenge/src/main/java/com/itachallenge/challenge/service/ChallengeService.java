@@ -1,13 +1,18 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChallengeService {
-    private final ChallengeRepository challengeRepository;
+    @Autowired
+    private ChallengeRepository challengeRepository;
     public boolean removeResource(String idResource) {
         //TODO when resource service can be accessible add a if(resourceService.existsByID()) and return true or false depending on it
         challengeRepository.removeResourceFromAllChallenges(idResource);
