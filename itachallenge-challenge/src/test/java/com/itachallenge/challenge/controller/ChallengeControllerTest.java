@@ -1,7 +1,9 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.service.ChallengeService;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
