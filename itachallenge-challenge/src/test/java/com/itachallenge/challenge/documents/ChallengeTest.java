@@ -2,7 +2,7 @@ package com.itachallenge.challenge.documents;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,7 +43,7 @@ public class ChallengeTest {
 
     @Test
     void getCreationDate() {
-        LocalDate creationDate = LocalDate.now();
+        LocalDateTime creationDate = LocalDateTime.now();
         Challenge challenge = new Challenge(null, null, null, null, creationDate, null, null, null, null);
         assertEquals(creationDate, challenge.getCreationDate());
     }

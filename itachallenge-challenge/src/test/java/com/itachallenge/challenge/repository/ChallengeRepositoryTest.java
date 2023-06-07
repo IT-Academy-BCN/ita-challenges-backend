@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -71,9 +71,9 @@ class ChallengeRepositoryTest {
         Detail detail = new Detail("Description", exampleList, "Detail note");
 
         Challenge challenge = new Challenge
-                (uuid_1, "Level 1", "Loops", languageSet, LocalDate.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, "Level 1", "Loops", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
         Challenge challenge2 = new Challenge
-                (uuid_2, "Level 2", "If", languageSet, LocalDate.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, "Level 2", "If", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
 
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();

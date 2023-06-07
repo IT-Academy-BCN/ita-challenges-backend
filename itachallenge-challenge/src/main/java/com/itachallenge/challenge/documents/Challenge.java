@@ -7,13 +7,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 @Document(collection="challenges")
 @Getter
-@AllArgsConstructor
 public class Challenge {
 
     @MongoId
@@ -31,7 +31,7 @@ public class Challenge {
     private Set<Language> languages;
 
     @Field(name="creation_date")
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     //Next fields not priority for the moment
 
@@ -48,4 +48,17 @@ public class Challenge {
     @Field(name="resources")
     private Set<UUID> resources;
 
+    public Challenge(UUID uuid, String level, String title, Set<Language> languages,
+                     LocalDateTime creationDate, Detail detail, List<Solution> solutions,
+                     Set<UUID> relatedChallenges, Set<UUID> resources) {
+        this.uuid = uuid;
+        this.level = level;
+        this.title = title;
+        this.languages = languages;
+        this.creationDate = LocalDateTime.now();
+        this.detail = detail;
+        this.solutions = solutions;
+        this.relatedChallenges = relatedChallenges;
+        this.resources = resources;
+    }
 }
