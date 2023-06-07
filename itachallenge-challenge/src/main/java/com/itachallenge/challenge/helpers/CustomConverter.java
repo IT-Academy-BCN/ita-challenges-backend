@@ -8,6 +8,8 @@ import com.itachallenge.challenge.dtos.LanguageDto;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -56,8 +58,11 @@ public class CustomConverter implements StarterConverter,
     //metodo para formatear creationDate del document al formato requerido en el .json
     private String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.forLanguageTag("es-ES"));
-        return creationDateDocument.format(formatter);
+        ZoneId zoneId = ZoneId.of("Europe/Paris");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(creationDateDocument, zoneId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        return zonedDateTime.format(formatter);
 
     }
 

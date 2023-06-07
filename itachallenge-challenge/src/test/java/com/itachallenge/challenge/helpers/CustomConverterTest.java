@@ -5,6 +5,7 @@ import com.itachallenge.challenge.documents.dummies.LanguageDummy;
 import com.itachallenge.challenge.dtos.ChallengeBasicInfoDto;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ public class CustomConverterTest {
                 .basicInfo(ChallengeBasicInfoDto.builder()
                         .title(title)
                         .level(level)
-                        .creationDate("lun jun 05 12:30:00 2023")
+                        .creationDate("2023-06-05T12:30:00+02:00")
                         .percentage(percentage)
                         .popularity(popularity)
                         .languages(Set.of(
@@ -119,10 +120,6 @@ public class CustomConverterTest {
     @Test
     @DisplayName("Conversion from challenge document to challenge dto with only basic info test")
     void fromChallengeToChallengeDtoWithOnlyBasicInfoTest(){
-         /*
-        TODO:
-         A) poner el creation date cuando sepamos tipo + formato
-         */
         ChallengeDummy challengeMocked = challengeMockedWithOnlyBasicInfo;
         ChallengeDto resultDto = converter.from(challengeMocked)
                 .toChallengeDtoWithOnlyBasicInfo(percentage, popularity);
