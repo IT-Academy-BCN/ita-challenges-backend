@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
- class ResourceHelperTest {
+public class ResourceHelperTest {
 
     @Test
     @DisplayName("Read a resource as String test")

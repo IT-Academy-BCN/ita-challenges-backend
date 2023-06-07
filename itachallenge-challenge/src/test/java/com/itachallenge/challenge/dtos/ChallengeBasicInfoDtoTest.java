@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootApplication
-class ChallengeBasicInfoDtoTest {
+public class ChallengeBasicInfoDtoTest {
 
     @Autowired
     private ObjectMapper mapper;

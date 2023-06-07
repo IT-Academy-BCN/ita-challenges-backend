@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootApplication
-class LanguageDtoTest {
+public class LanguageDtoTest {
 
     @Autowired
     private ObjectMapper mapper;
