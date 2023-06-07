@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ChallengeControllerTest {
 
     @Test
-    public void test() {
+     void test() {
         assertEquals("Hello from ITA Challenge!!!", new ChallengeController().test());
     }
 }

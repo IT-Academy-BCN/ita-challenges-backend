@@ -22,13 +22,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootApplication
-public class ChallengeBasicInfoDtoTest {
+class ChallengeBasicInfoDtoTest {
 
     @Autowired
     private ObjectMapper mapper;
 
-    private final String basicInfoChallengeV1JsonPath = "json/BasicInfoChallangeV1.json";
-    private final String basicInfoChallengeV2JsonPath = "json/BasicInfoChallangeV2.json";
+    private final String basicInfoChallengeV1JsonPath = "json/BasicInfoChallengeV1.json";
+    private final String basicInfoChallengeV2JsonPath = "json/BasicInfoChallengeV2.json";
 
     private ChallengeBasicInfoDto challengeBasicInfoDto;
 
@@ -46,16 +46,11 @@ public class ChallengeBasicInfoDtoTest {
     @SneakyThrows({JsonProcessingException.class, IOException.class})
     void rightSerializationTest(){
         ChallengeBasicInfoDto dtoSerializable = challengeBasicInfoDto;
-        //System.out.println(dtoSerializable);
         String jsonResult = mapper
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(dtoSerializable);
-        //System.out.println(jsonResult);
         String jsonExpectedV1 = new ResourceHelper(basicInfoChallengeV1JsonPath).readResourceAsString();
         String jsonExpectedV2 = new ResourceHelper(basicInfoChallengeV2JsonPath).readResourceAsString();
-        //System.out.println(jsonExpectedV1);
-        //System.out.println(jsonExpectedV2);
-        //order of languages in challenge's basic info doesn't matter
         Assertions.assertTrue(jsonResult.equals(jsonExpectedV1) || jsonResult.equals(jsonExpectedV2));
     }
 
@@ -65,7 +60,6 @@ public class ChallengeBasicInfoDtoTest {
     void rightDeserializationTest(){
         String jsonDeserializable = new ResourceHelper(basicInfoChallengeV1JsonPath).readResourceAsString();
         ChallengeBasicInfoDto dtoResult = mapper.readValue(jsonDeserializable, ChallengeBasicInfoDto.class);
-        //System.out.println(dtoResult);
         ChallengeBasicInfoDto dtoExpected = challengeBasicInfoDto;
         assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
     }

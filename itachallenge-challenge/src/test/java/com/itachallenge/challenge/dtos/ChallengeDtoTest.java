@@ -34,13 +34,20 @@ public class ChallengeDtoTest {
 
     private ChallengeDto challengeDto;
 
+
+    /**
+     * Para el test, es necesario pasar como parámetro a creationDate el
+     * String equivalente al tipo de formato que devuelve LocalDateTime,
+     * ya que en el test lo mapea de nuevo y no coincide formato.
+     * Fijarse en archivo BasicInfoChallengeV1.json, ahí tenemos el expected format.
+     */
     @BeforeEach
     void setUp(){
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(1, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(2, "Java");
         Set<LanguageDto> languages = LanguageDtoTest.buildSetLanguages(firstLanguage,secondLanguage);
         ChallengeBasicInfoDto challengeBasicInfoDto = ChallengeBasicInfoDtoTest.buildChallengeBasicInfoDto
-                ("Sociis Industries", "EASY", "lun jun 05 12:30:00 2023", 105, 23.58f,languages);
+                ("Sociis Industries", "EASY", "2023-06-05T12:30:00", 105, 23.58f,languages);
         challengeDto = ChallengeDto.builder(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"))
                 .basicInfo(challengeBasicInfoDto)
                 .build();
@@ -51,16 +58,11 @@ public class ChallengeDtoTest {
     @SneakyThrows({JsonProcessingException.class, IOException.class})
     void rightSerializationTest(){
         ChallengeDto dtoSerializable = challengeDto;
-        //System.out.println(dtoSerializable);
         String jsonResult = mapper
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(dtoSerializable);
-        //System.out.println(jsonResult);
         String jsonExpectedV1 = new ResourceHelper(challengeJsonPathV1).readResourceAsString();
         String jsonExpectedV2 = new ResourceHelper(challengeJsonPathV2).readResourceAsString();
-        //System.out.println(jsonExpectedV1);
-        //System.out.println(jsonExpectedV2);
-        //order of languages in challenge's basic info doesn't matter
         Assertions.assertTrue(jsonResult.equals(jsonExpectedV1) || jsonResult.equals(jsonExpectedV2));
     }
 
@@ -70,7 +72,6 @@ public class ChallengeDtoTest {
     void rightDeserializationTest(){
         String jsonDeserializable = new ResourceHelper(challengeJsonPathV1).readResourceAsString();
         ChallengeDto dtoResult = mapper.readValue(jsonDeserializable, ChallengeDto.class);
-        //System.out.println(dtoResult);
         ChallengeDto dtoExpected = challengeDto;
         assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
     }
