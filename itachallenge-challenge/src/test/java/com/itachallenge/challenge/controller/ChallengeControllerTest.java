@@ -24,7 +24,7 @@ public class ChallengeControllerTest {
     private ChallengeService challengeService;
 
     @Test
-    public void testDeleteByResourceID_WithExistingResource_ShouldReturnNoContent() {
+    void testDeleteByResourceID_WithExistingResource_ShouldReturnNoContent() {
         String resourceId = "123";
 
         when(challengeService.removeResource(resourceId)).thenReturn(true);
@@ -39,7 +39,7 @@ public class ChallengeControllerTest {
     }
 
     @Test
-    public void testDeleteByResourceID_WithNonExistingResource_ShouldReturnNotFound() {
+    void testDeleteByResourceID_WithNonExistingResource_ShouldReturnNotFound() {
         String resourceId = "123";
 
         when(challengeService.removeResource(resourceId)).thenReturn(false);

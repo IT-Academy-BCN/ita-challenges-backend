@@ -3,7 +3,6 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

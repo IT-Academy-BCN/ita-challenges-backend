@@ -3,7 +3,6 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.service.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,6 @@ public class ChallengeController {
     @Autowired
     private ChallengeService challengeService;
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
-
-    public ChallengeController() {
-    }
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
