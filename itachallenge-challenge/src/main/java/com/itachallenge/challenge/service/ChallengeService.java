@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.repository.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -8,19 +9,14 @@ import org.springframework.stereotype.Service;
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     public boolean removeResource(String idResource) {
-        if(challengeRepository.existsByResourcesId(idResource)){
-            challengeRepository.removeResourceFromAllChallenges();
-            return true;
-        }else {
-            return false;
-        }
+        //TODO when resource service can be accessible add a if(resourceService.existsByID()) and return true or false depending on it
+        challengeRepository.removeResourceFromAllChallenges(idResource);
 
         /*
         @Query("{$pull: {resources: {id: ?0}}}")
         void removeResourceFromAllChallenges(String resourceId);
-
-        boolean existsByResourcesId(String resourceId);
          */
 
+        return false;
     }
 }
