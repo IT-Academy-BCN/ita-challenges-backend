@@ -1,87 +1,87 @@
 [
-{
-    "_id" : {
-      "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+    {
+        "_id" : {
+          "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+        },
+        "challenge_title": "Sociis Industries",
+        "level": "EASY",
+        "creation_date": "2018-09-09 11:43:54+0200",
+        "detail": {
+          "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
+          "examples": [
+            {
+                "_id": {
+                    "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+                },
+                "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+            },
+            {
+                "_id": {
+                    "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+                },
+                "example_text": " Aliquam nec nisi maximus, venenatis"
+            },
+            {
+                "_id": {
+                    "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+                },
+                "example_text": "Mauris feugiat massa et suscipit malesuada."
+            },
+            {
+                "_id": {
+                    "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+                  },
+                "example_text": "Aenean quis maximus purus. Quisque sit amet"
+            }
+          ],
+          "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
+        },
+        "languages": [
+          "1",
+          "2",
+          "3"
+        ],
+        "solutions": [
+            {
+                "_id": {
+                  "$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"
+                }
+            },
+            {
+                "_id": {
+                  "$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
+                }
+            },
+            {
+                "_id": {
+                  "$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
+                }
+            }
+        ],
+        "tags": [
+          "d21d587c-1390-4597-befc-d7103ab66523",
+          "1a2731ec-b583-46ae-9fff-2914b9c3b9ba",
+          "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
+        ],
+        "related": [
+          {
+            "_id": {
+              "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"
+            }
+          },
+          {
+            "_id": {
+              "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"
+            }
+          },
+          {
+            "_id": {
+              "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+            }
+          }
+        ]
     },
-    "challenge_title": "Sociis Industries",
-    "level": "EASY",
-    "creation_date": "2018-09-09 11:43:54+0200",
-    "detail": {
-      "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
-      "examples": [
-        {
-            "_id": {
-                "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-            },
-            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
-        },
-        {
-            "_id": {
-                "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-            },
-            "example_text": " Aliquam nec nisi maximus, venenatis"
-        },
-        {
-            "_id": {
-                "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-            },
-            "example_text": "Mauris feugiat massa et suscipit malesuada."
-        },
-        {
-            "_id": {
-                "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-              },
-            "example_text": "Aenean quis maximus purus. Quisque sit amet"
-        }
-      ],
-      "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
-    },
-    "languages": [
-      "1",
-      "2",
-      "3"
-    ],
-    "solutions": [
-        {
-            "_id": {
-              "$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"
-            }
-        },
-        {
-            "_id": {
-              "$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
-            }
-        },
-        {
-            "_id": {
-              "$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
-            }
-        }
-    ],
-    "tags": [
-      "d21d587c-1390-4597-befc-d7103ab66523",
-      "1a2731ec-b583-46ae-9fff-2914b9c3b9ba",
-      "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
-    ],
-    "related": [
-      {
-        "_id": {
-          "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"
-        }
-      },
-      {
-        "_id": {
-          "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"
-        }
-      },
-      {
-        "_id": {
-          "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"
-        }
-      }
-    ]
-  },
-{
+    {
         "_id" : {
             "$uuid" : "c0c7510b-f867-4375-b46f-0c164f30429f"
         },
@@ -2899,5 +2899,4 @@
             }
         ]
     }
-
 ]
