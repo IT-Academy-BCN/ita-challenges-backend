@@ -40,3 +40,17 @@ logging:
 #  file:
 #    name: itachallenge-challenge.log
 
+url:
+  connection_timeout: 30000
+  maxBytesInMemory: 30000000
+  ita_wiki:
+    server: https://dev.api.itadirectory.eurecatacademy.org/api/v1
+    resources_paths:
+      #auth:
+      #categories:
+      #topics:
+      #favorites:
+      resources:
+        get_resource: /resources #+/{id}
+      #vote
+      #media
