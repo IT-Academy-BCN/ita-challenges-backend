@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootApplication
+@SpringBootTest
 class LanguageDtoTest {
 
     @Autowired
@@ -41,8 +41,7 @@ class LanguageDtoTest {
     void rightSerializationTest(){
         LanguageDto dtoSerializable = languageDto;
         String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dtoSerializable);
-
-        String jsonExpected = new ResourceHelper(languageJsonPath).readResourceAsString();
+        String jsonExpected = new ResourceHelper(languageJsonPath).readResourceAsString().get();
         assertEquals(jsonExpected,jsonResult);
     }
 
@@ -50,9 +49,8 @@ class LanguageDtoTest {
     @DisplayName("Deserialization LanguageDto test")
     @SneakyThrows(IOException.class)
     void rightDeserializationTest(){
-        String jsonDeserializable = new ResourceHelper(languageJsonPath).readResourceAsString();
+        String jsonDeserializable = new ResourceHelper(languageJsonPath).readResourceAsString().get();
         LanguageDto dtoResult = mapper.readValue(jsonDeserializable, LanguageDto.class);
-        //System.out.println(dtoResult);
         LanguageDto dtoExpected = languageDto;
         assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
     }
