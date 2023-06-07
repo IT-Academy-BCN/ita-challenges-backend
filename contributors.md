@@ -8,5 +8,6 @@
 * Christian Gálvez - https://github.com/ChrisGalHur
 * Anna Santasusana - https://github.com/AnnaSantasusana
 * Anna Fedoraeva - https://github.com/AnnaFedoraeva
+* Carlos Gimeno - https://github.com/CG-23
 
 
