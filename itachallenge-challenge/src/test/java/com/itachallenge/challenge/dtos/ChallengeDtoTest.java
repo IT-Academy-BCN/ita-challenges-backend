@@ -47,7 +47,7 @@ class ChallengeDtoTest {
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(2, "Java");
         Set<LanguageDto> languages = LanguageDtoTest.buildSetLanguages(firstLanguage,secondLanguage);
         ChallengeBasicInfoDto challengeBasicInfoDto = ChallengeBasicInfoDtoTest.buildChallengeBasicInfoDto
-                ("Sociis Industries", "EASY", "2023-06-05T12:30:00", 105, 23.58f,languages);
+                ("Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00", 105, 23.58f,languages);
         challengeDto = ChallengeDto.builder(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"))
                 .basicInfo(challengeBasicInfoDto)
                 .build();
@@ -55,7 +55,7 @@ class ChallengeDtoTest {
 
     @Test
     @DisplayName("Serialization ChallengeDto test")
-    @SneakyThrows({JsonProcessingException.class, IOException.class})
+    @SneakyThrows({JsonProcessingException.class})
     void rightSerializationTest(){
         ChallengeDto dtoSerializable = challengeDto;
         String jsonResult = mapper
@@ -63,6 +63,7 @@ class ChallengeDtoTest {
                 .writeValueAsString(dtoSerializable);
         String jsonExpectedV1 = new ResourceHelper(challengeJsonPathV1).readResourceAsString().get();
         String jsonExpectedV2 = new ResourceHelper(challengeJsonPathV2).readResourceAsString().get();
+        //Assertions.assertEquals(jsonExpectedV2, jsonResult);
         Assertions.assertTrue(jsonResult.equals(jsonExpectedV1) || jsonResult.equals(jsonExpectedV2));
     }
 

@@ -37,7 +37,7 @@ class LanguageDtoTest {
 
     @Test
     @DisplayName("Serialization LanguageDto test")
-    @SneakyThrows({JsonProcessingException.class, IOException.class})
+    @SneakyThrows({JsonProcessingException.class})
     void rightSerializationTest(){
         LanguageDto dtoSerializable = languageDto;
         String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dtoSerializable);
