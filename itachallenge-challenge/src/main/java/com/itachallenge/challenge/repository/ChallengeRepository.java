@@ -18,8 +18,6 @@ public interface ChallengeRepository extends ReactiveMongoRepository<Challenge,U
 
     Mono<Challenge> findByTitle(String title);
 
-    Flux<UUID> findRelatedById(UUID uuid);
-
     @Override
     Mono<Challenge> save (Challenge challenge);
 
