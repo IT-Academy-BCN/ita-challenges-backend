@@ -2,6 +2,7 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.documents.Challenge;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
@@ -16,6 +17,8 @@ public interface ChallengeRepository extends ReactiveMongoRepository<Challenge,U
     Mono<Challenge> findByLevel(String level);
 
     Mono<Challenge> findByTitle(String title);
+
+    Flux<UUID> findRelatedById(UUID uuid);
 
     @Override
     Mono<Challenge> save (Challenge challenge);
