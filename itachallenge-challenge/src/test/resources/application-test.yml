@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: itachallenge-challenge
+  jmx:
+    enabled: true
+  data:
+    mongodb:
+      # security disabled
+      uri: mongodb://localhost:27017/challenges
