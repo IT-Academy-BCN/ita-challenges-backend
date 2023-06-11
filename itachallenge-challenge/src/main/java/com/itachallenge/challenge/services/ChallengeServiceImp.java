@@ -19,16 +19,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(challengeDto).switchIfEmpty(Mono.error(new IllegalArgumentException("ID challenge: " + id + " does not exist in the database.")));
     }
-/*
-    @Override
-    public Mono<ChallengeDto> getChallengeId(UUID id) {
-        challengeDto.setId_challenge(id);
-
-        // Aquí se debe retornar un Mono<ChallengeDto>
-        return Mono.just(challengeDto);
-    }
-*/
-
 
     @Override
     public boolean isValidUUID(String id) {
