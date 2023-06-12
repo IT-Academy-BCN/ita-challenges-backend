@@ -13,6 +13,7 @@ import java.util.Set;
 @Document(collection="challenges")
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Challenge {
 
