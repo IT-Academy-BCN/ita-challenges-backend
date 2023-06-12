@@ -38,11 +38,13 @@ class LanguageRepositoryCLocalTest {
     @Test
     @DisplayName("Save one language document test")
     void saveOneTest(){
+        Long previousCount = languageRepo.count().block();
+
         Integer id = getInexistentId();
         LanguageDocC languageDoc = new LanguageDocC(id, "someName");
 
         LanguageDocC languagePersisted = languageRepo.save(languageDoc).block();
-        assertEquals(1,languageRepo.count().block());
+        assertEquals(previousCount+1,languageRepo.count().block());
         assertThat(languagePersisted).isEqualTo(languageDoc);
 
         languageRepo.deleteById(id).block();
