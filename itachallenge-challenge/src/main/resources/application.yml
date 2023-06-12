@@ -5,7 +5,8 @@ spring:
     enabled: true
   data:
     mongodb:
-      uri: mongodb://adminChallenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+      database: challenges
+
 
 springdoc:
   swagger-ui:
