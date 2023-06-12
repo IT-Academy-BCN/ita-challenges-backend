@@ -48,14 +48,6 @@ class LanguageRepositoryCLocalTest {
         languageRepo.deleteById(id).block();
     }
 
-    private Integer getInexistentId(){
-        Integer id = languageId;
-        while (languageRepo.existsById(id).block()){
-            id += 1;
-        }
-        return id;
-    }
-
     @Test
     @DisplayName("Try to duplicate ID test")
     void exceptionWhenDuplicatedIdTest(){
@@ -98,5 +90,13 @@ class LanguageRepositoryCLocalTest {
 
         languageRepo.deleteById(languageId).block();
         assertEquals(previousCount, languageRepo.count().block());
+    }
+
+    private Integer getInexistentId(){
+        Integer id = languageId;
+        while (languageRepo.existsById(id).block()){
+            id += 1;
+        }
+        return id;
     }
 }
