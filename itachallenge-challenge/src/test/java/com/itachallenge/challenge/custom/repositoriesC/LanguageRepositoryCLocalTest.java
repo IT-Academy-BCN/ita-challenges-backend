@@ -26,19 +26,11 @@ class LanguageRepositoryCLocalTest {
     @Autowired
     private Environment environment;
 
-    private final Integer languageId = 1;
+    private final Integer languageId = 1000;
 
-    private final LanguageDocC languageDoc = new LanguageDocC(languageId, "name1");
-
-
-    @AfterEach
-    void initLocalDB(){
-        languageRepo.deleteAll().block();
-    }
 
     @Test
     void demoInit(){
-        Assertions.assertNotNull(languageRepo);
         Assertions.assertNotNull(environment);
         System.out.println(environment.getProperty("spring.data.mongodb.uri"));
     }
@@ -46,56 +38,65 @@ class LanguageRepositoryCLocalTest {
     @Test
     @DisplayName("Save one language document test")
     void saveOneTest(){
-        asserLocalDBCollectionIsEmpty(languageRepo);
+        Integer id = getInexistentId();
+        LanguageDocC languageDoc = new LanguageDocC(id, "someName");
+
         LanguageDocC languagePersisted = languageRepo.save(languageDoc).block();
         assertEquals(1,languageRepo.count().block());
-        assertThat(languagePersisted).isEqualTo(languagePersisted);
+        assertThat(languagePersisted).isEqualTo(languageDoc);
+
+        languageRepo.deleteById(id).block();
     }
 
     @Test
     @DisplayName("Try to duplicate ID test")
     void exceptionWhenDuplicatedIdTest(){
-        asserLocalDBCollectionIsEmpty(languageRepo);
+        Integer id = getInexistentId();
+        LanguageDocC languageDoc = new LanguageDocC(id, "someName");
+        LanguageDocC otherLanguageWithSameId = new LanguageDocC(id, "otherName");
+
         languageRepo.save(languageDoc).block();
-        LanguageDocC otherLanguageWithSameId = new LanguageDocC(languageId, "otherName");
         assertThrows(DuplicateKeyException.class,()-> languageRepo.insert(otherLanguageWithSameId).block());
+
+        languageRepo.deleteById(id).block();
     }
 
     @Test
     @DisplayName("Find by ID test")
     void findByIdTest(){
-        asserLocalDBCollectionIsEmpty(languageRepo);
-        assertFalse(languageRepo.existsById(languageId).block());
+        Integer id = getInexistentId();
+        LanguageDocC languageDoc = new LanguageDocC(id, "someName");
+
         languageRepo.save(languageDoc).block();
+
         assertTrue(languageRepo.existsById(languageId).block());
+
         LanguageDocC langaugeFound = languageRepo.findById(languageId).block();
         assertThat(languageDoc).usingRecursiveComparison().isEqualTo(langaugeFound);
+
+        languageRepo.deleteById(id).block();
     }
 
     @Test
     @DisplayName("Delete by Id test")
     void deleteByIdTest(){
-        asserLocalDBCollectionIsEmpty(languageRepo);
+        Integer id = getInexistentId();
+        LanguageDocC languageDoc = new LanguageDocC(id, "someName");
+
+        Long previousCount = languageRepo.count().block();
         languageRepo.save(languageDoc).block();
         assertTrue(languageRepo.existsById(languageId).block());
+        assertEquals(previousCount+1, languageRepo.count().block());
+
         languageRepo.deleteById(languageId).block();
-        assertEquals(0, languageRepo.count().block());
+        assertEquals(previousCount, languageRepo.count().block());
     }
 
-    @Test
-    @DisplayName("Delete all test")
-    void deleteAllTest(){
-        asserLocalDBCollectionIsEmpty(languageRepo);
-        languageRepo.save(languageDoc).block();
-        languageRepo.save(new LanguageDocC(languageId +1, "otherName")).block();
-        assertEquals(2, languageRepo.count().block());
-        languageRepo.deleteAll().block();
-        assertEquals(0, languageRepo.count().block());
-    }
-
-    static void asserLocalDBCollectionIsEmpty(ReactiveMongoRepository<?,?> repository){
-        Long count = repository.count().block();
-        //System.out.println(count);
-        assertEquals(0,count);
+    private Integer getInexistentId(){
+        Integer id = languageId;
+        while (languageRepo.existsById(id).block()){
+            id += 1;
+        }
+        return id;
     }
 }
