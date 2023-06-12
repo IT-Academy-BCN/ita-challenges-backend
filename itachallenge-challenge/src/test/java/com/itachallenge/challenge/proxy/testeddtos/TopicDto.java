@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.dtos.itawiki;
+package com.itachallenge.challenge.proxy.testeddtos;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

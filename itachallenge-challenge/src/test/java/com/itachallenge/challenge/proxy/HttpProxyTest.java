@@ -1,19 +1,25 @@
 package com.itachallenge.challenge.proxy;
 
-import com.itachallenge.challenge.dtos.itawiki.ResourceDto;
-import lombok.SneakyThrows;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.helpers.ResourceHelper;
+import com.itachallenge.challenge.proxy.testeddtos.ResourceDto;
+import com.itachallenge.challenge.proxy.testeddtos.TopicDto;
+import com.itachallenge.challenge.proxy.testeddtos.UserResourceDto;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -21,12 +27,10 @@ import org.springframework.web.reactive.function.client.WebClientException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.stream.Stream;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @ExtendWith(SpringExtension.class)
@@ -41,7 +45,11 @@ public class HttpProxyTest {
 
     private static MockWebServer mockWebServer;
 
-    private final String RESOURCE_JSON_PATH = "json/OneResource.json";
+    private static final String RESOURCE_JSON_PATH = "json/resource.json";
+
+    private static final String TOPIC_JSON_PATH = "json/topic.json";
+
+    private static final String USER_RESOURCE_PATH = "json/user-resource.json";
 
 
     @BeforeAll
@@ -56,43 +64,33 @@ public class HttpProxyTest {
         mockWebServer.shutdown();
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("GET request test")
-    void requestResourcesTest(){
+    @MethodSource("getRequestValues")
+    <T> void getRequestDataTest(String dummyJsonPath, Class<T> expectedType){
+        String expectedBody = readResourceAsString(dummyJsonPath);
+        T expectedObject = readResourceAsObject(dummyJsonPath, expectedType);
+
         MockResponse mockResponse = new MockResponse()
                 .addHeader("Content-Type", "application/json")
-                .setBody(this.readResourceAsString(RESOURCE_JSON_PATH));
+                .setBody(expectedBody);
         mockWebServer.enqueue(mockResponse);
 
-        String idResourceExpected = "id_resource_as_string";
-        String url = initUrlGetResource(idResourceExpected);
+        String url = String.format("http://localhost:%s", mockWebServer.getPort());
+        Mono<T> response = httpProxy.getRequestData(url,expectedType);
 
-        Mono<ResourceDto> response = httpProxy.getRequestData(url, ResourceDto.class);
-        StepVerifier
-                .create(response)
-                .assertNext(resource -> assertResource(resource, idResourceExpected))
+        StepVerifier.create(response)
+                .assertNext(resource ->
+                        assertThat(resource).usingRecursiveComparison().isEqualTo(expectedObject))
                 .verifyComplete();
     }
 
-    private String initUrlGetResource(String idResource){
-        String baseUrl = String.format("http://localhost:%s", mockWebServer.getPort());
-        String resourceEndpoint = env.getProperty("url.ita_wiki.resources_paths.resources.get_resource");
-        String pathVariable = "/"+idResource;
-        String url = baseUrl+resourceEndpoint+pathVariable;
-        //System.out.println("--->"+url);
-        return url;
-    }
-
-    private void assertResource(ResourceDto resource, String idResource){
-        assertThat(resource.getId(), equalTo(idResource));
-        assertThat(resource.getTitle(),is(not(emptyString())));
-        assertThat(resource.getSlug(),is(not(emptyString())));
-        assertThat(resource.getDescription(),is(not(emptyString())));
-        assertThat(resource.getUrl(),is(not(emptyString())));
-        assertThat(resource.getResourceType(),is(not(emptyString())));
-        assertThat(resource.getCreatedAt(),is(not(emptyString())));
-        assertThat(resource.getTopics(), everyItem(is(notNullValue())));
-        assertThat(resource.getUser().getName(),is(not(emptyString())));
+    private static Stream<Arguments> getRequestValues(){
+        return Stream.of(
+                Arguments.of(RESOURCE_JSON_PATH, ResourceDto.class),
+                Arguments.of(TOPIC_JSON_PATH, TopicDto.class),
+                Arguments.of(USER_RESOURCE_PATH, UserResourceDto.class)
+        );
     }
 
     @Test
@@ -103,6 +101,7 @@ public class HttpProxyTest {
         WebClient absurdWebClient = httpProxy.getClient().mutate()
                 .clientConnector(httpProxy.initReactorHttpClient(absurdTimeout))
                 .build();
+
         String url = env.getProperty("url.ds_test"); //the same as opendata
         //System.out.println(url);
         Mono<Object> responsePublisher = absurdWebClient.get()
@@ -111,6 +110,7 @@ public class HttpProxyTest {
                         response.statusCode().equals(HttpStatus.OK) ?
                                 response.bodyToMono(Object.class) : //doesn't matter, expecting NO OK response
                                 response.createException().flatMap(Mono::error));
+
         StepVerifier.create(responsePublisher)
                 .expectError(WebClientException.class)
                 .verify();
@@ -121,7 +121,9 @@ public class HttpProxyTest {
     void providedUrlNotValidTest() {
         String wrongUrl = String.format("httKKp://localhost:%s", mockWebServer.getPort());
         String expectedErrorMsg = httpProxy.MALFORMED_URL_MSG +wrongUrl;
+
         Mono<Object> responsePublisher = httpProxy.getRequestData(wrongUrl, Object.class);
+
         StepVerifier.create(responsePublisher)
                 .expectErrorMessage(expectedErrorMsg)
                 .verify();
@@ -130,39 +132,29 @@ public class HttpProxyTest {
     @Test
     @DisplayName("Target client is not available (500) test")
     void clientIsDownTest(){
-        mockWebServer.enqueue(new MockResponse().setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value())); //500
+        mockWebServer.enqueue(
+                new MockResponse().setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value())); //500
+
         String url = String.format("http://localhost:%s", mockWebServer.getPort());
         Mono<ResourceDto> responsePublisher = httpProxy.getRequestData(url, ResourceDto.class);
+
         StepVerifier.create(responsePublisher)
                 .expectError(WebClientException.class)
                 .verify();
     }
 
     public static String readResourceAsString(String resourcePath){
+        return new ResourceHelper(resourcePath).readResourceAsString().orElse(null);
+    }
+
+    public static <T> T readResourceAsObject(String resourcePath, Class<T> targetClass){
+        String resourceAsString = readResourceAsString(resourcePath);
         try {
-            File file = new ClassPathResource(resourcePath).getFile();
-            return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        } catch (IOException ex) {
-            return ""; //if no file in path or IOException when read -> Empty String
+            ObjectMapper mapper = new ObjectMapper()
+                    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            return mapper.readValue(resourceAsString, targetClass);
+        }catch (JsonProcessingException ex){
+            return null;
         }
-
-        /*
-        Code in ResourceHelper:
-
-        Resource resource = new ClassPathResource(this.resourcePath);
-
-        public Optional<String> readResourceAsString (){
-            Optional<String> result = null;
-            try {
-                result = Optional.of(FileUtils.readFileToString(resource.getFile(), StandardCharsets.UTF_8));
-            } catch (IOException ex) {
-                log.error(getResourceErrorMessage("loading/reading").concat(ex.getMessage()));
-            }
-            return result;
-        }
-
-        //IF OIException -> return result <-> return null <-> Optional<String> result = null;
-        //ELSE (No IOException) -> return result <-> return Optional.of(file read as String) <-> never null or empty
-         */
     }
 }
