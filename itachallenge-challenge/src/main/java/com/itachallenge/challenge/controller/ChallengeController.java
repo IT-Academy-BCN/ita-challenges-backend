@@ -17,6 +17,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -41,10 +43,11 @@ public class ChallengeController {
  /*   @Operation(summary = "Returns all the challenges related to the chosen challenge according to its id")
     @GetMapping(value = "/{id}/related")
     Flux<ChallengeDto> findAllRelatedsByUuid(@PathVariable String id){
-        System.out.println("Numero de obj " + challengeService.getAllRelatedsByUuid(UUID.fromString(id)).count().block());
         return challengeService.getAllRelatedsByUuid(UUID.fromString(id));
-    }*/
+    }
+*/
 
+    //RETORNA EN UN MONO TODOS LOS RELACIONADOS PAGINADOS
     @Operation(summary = "Returns all the challenges related to the chosen challenge according to its id")
     @GetMapping(value = "/{id}/related")
     Mono<GenericResultDto<ChallengeDto>> findAllRelatedsByUuid(
@@ -76,4 +79,10 @@ public class ChallengeController {
         }
         return Integer.parseInt(limit);
     }
+
+    @GetMapping(value = "/{id}")
+    public Mono<ChallengeDto> challenge(@PathVariable String id){
+        return challengeService.unMono(UUID.fromString(id));
+    }
+
 }
