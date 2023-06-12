@@ -36,6 +36,10 @@ public class ChallengeController {
 
     @DeleteMapping("/resources/{idResource}")
     public ResponseEntity<?> removeResourcesById(@PathVariable String idResource){
+        //Using regex to check if it is a UUID, if not throws a 400 Bad Request
+        if(!idResource.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")){
+            return ResponseEntity.badRequest().build();
+        }
         if(challengeService.removeResourcesById(idResource)){
             return ResponseEntity.noContent().build();
         }else {

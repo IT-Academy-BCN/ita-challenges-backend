@@ -40,7 +40,7 @@ public class Challenge {
     private List<String> solutions;
 
     @Field(name="related")
-    private Set<String> relatedChallenges;
+    private Set<String> related;
 
     @Field(name="resources")
     private Set<String> resources;
