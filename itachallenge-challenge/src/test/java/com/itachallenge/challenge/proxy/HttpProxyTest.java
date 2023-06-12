@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.helpers.ResourceHelper;
-import com.itachallenge.challenge.proxy.testeddtos.ResourceDto;
-import com.itachallenge.challenge.proxy.testeddtos.TopicDto;
-import com.itachallenge.challenge.proxy.testeddtos.UserResourceDto;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterAll;
@@ -28,6 +28,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -156,5 +157,59 @@ public class HttpProxyTest {
         }catch (JsonProcessingException ex){
             return null;
         }
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class ResourceDto {
+
+        private String id;
+
+        private String title;
+
+        private String slug;
+
+        private String description;
+
+        private String url;
+
+        private String resourceType;
+
+        private String createdAt;
+
+        private String updatedAt;
+
+        private UserResourceDto user;
+
+        private List<TopicDto> topics;
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class TopicDto {
+
+        private String id;
+
+        private String name;
+
+        private String slug;
+
+        private String categoryId;
+
+        private String createdAt;
+
+        private String updatedAt;
+    }
+
+    @NoArgsConstructor
+    @Getter
+    @Setter
+    public static class UserResourceDto {
+
+        private String name;
+
+        private String email;
     }
 }
