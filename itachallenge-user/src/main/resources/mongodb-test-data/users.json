@@ -1,0 +1,32 @@
+[
+  {
+    "_id" : {
+      "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+    },
+    "name": "Michael",
+    "surname": "Scofield",
+    "nickname": "SoonFree",
+    "email": "rescueLinc@gmail.com",
+    "password": "Inmate1Not2Forever3",
+    "roles": [
+      "USER"
+    ],
+    "challenges": [
+      {
+        "_id": {
+          "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+        }
+      },
+      {
+        "_id": {
+          "$uuid": "c0c7510b-f867-4375-b46f-0c164f30429f"
+        }
+      },
+      {
+        "_id": {
+          "$uuid": "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+        }
+      }
+    ]
+  }
+]
