@@ -21,14 +21,14 @@ public class ChallengeService {
     public boolean removeResourcesById(String idResource){
         Flux<Challenge> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);
 
-        return Boolean.TRUE.equals(challengeFlux.flatMap(challenge -> {
+        return challengeFlux.flatMap(challenge -> {
                     challenge.setResources(challenge.getResources().stream()
                             .filter(s -> !s.equals(idResource))
                             .collect(Collectors.toSet()));
-
                     return challengeRepository.save(challenge);
                 })
                 .hasElements()
-                .block());
+                .blockOptional()
+                .orElse(false);
     }
 }

@@ -13,6 +13,7 @@ import java.util.Set;
 @Document(collection="challenges")
 @Data
 @AllArgsConstructor
+@Builder
 public class Challenge {
 
     @MongoId

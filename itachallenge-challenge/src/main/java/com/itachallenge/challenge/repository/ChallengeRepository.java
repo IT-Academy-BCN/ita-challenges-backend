@@ -10,8 +10,5 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, String> {
 
-    @Query(value = "{ 'resources' : ?0 }", delete = true)
-    Mono<Void> removeResourceFromChallenges(String resourceId);
-
     Flux<Challenge> findAllByResourcesContaining(String idResource);
 }
