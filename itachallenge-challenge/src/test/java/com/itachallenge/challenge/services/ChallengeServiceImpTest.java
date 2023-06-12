@@ -27,7 +27,7 @@ class ChallengeServiceImpTest {
     private final static String INVALID_ID = "123456789";
 
     @InjectMocks
-    private ChallengeServiceImp challengeService;
+    private IChallengeService challengeService;
     @MockBean
     private ChallengeDto challengeDto;
 
