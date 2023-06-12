@@ -48,6 +48,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    testImplementation 'org.testcontainers:testcontainers:1.17.3'
     //for suite tests
     testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-engine', version: '1.8.1'
 
