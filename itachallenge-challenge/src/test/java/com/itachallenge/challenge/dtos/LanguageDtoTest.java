@@ -13,9 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +38,7 @@ class LanguageDtoTest {
     void rightSerializationTest(){
         LanguageDto dtoSerializable = languageDto;
         String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dtoSerializable);
-        String jsonExpected = new ResourceHelper(languageJsonPath).readResourceAsString().get();
+        String jsonExpected = new ResourceHelper(languageJsonPath).readResourceAsString().orElse(null);
         assertEquals(jsonExpected,jsonResult);
     }
 
@@ -49,7 +46,7 @@ class LanguageDtoTest {
     @DisplayName("Deserialization LanguageDto test")
     @SneakyThrows(IOException.class)
     void rightDeserializationTest(){
-        String jsonDeserializable = new ResourceHelper(languageJsonPath).readResourceAsString().get();
+        String jsonDeserializable = new ResourceHelper(languageJsonPath).readResourceAsString().orElse(null);
         LanguageDto dtoResult = mapper.readValue(jsonDeserializable, LanguageDto.class);
         LanguageDto dtoExpected = languageDto;
         assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
@@ -57,11 +54,5 @@ class LanguageDtoTest {
 
     static LanguageDto buildLanguageDto(int languageId, String languageName){
         return new LanguageDto(languageId,languageName);
-    }
-
-    static Set<LanguageDto> buildSetLanguages(LanguageDto... languagesDtos){
-        Set<LanguageDto> languages = new HashSet<>();
-        Collections.addAll(languages, languagesDtos);
-        return languages;
     }
 }

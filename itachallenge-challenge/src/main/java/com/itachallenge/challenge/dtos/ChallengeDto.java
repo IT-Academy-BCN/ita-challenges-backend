@@ -2,54 +2,47 @@ package com.itachallenge.challenge.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import lombok.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@Builder
+@Getter
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
     private UUID challengeId;
 
-    @JsonProperty(index = 1)
-    @JsonUnwrapped
-    private ChallengeBasicInfoDto basicInfo;
+    @JsonProperty(value = "challenge_title", index = 1)
+    private String title;
 
-    //private constructor: to force instantiation with custom builder
-    private ChallengeDto(UUID challengeId) {
-        this.challengeId = challengeId;
-    }
+    @JsonProperty(index = 2)
+    private String level;
+
+    /**
+     * Este atributo es String solamente en el DTO.
+     * En el document, creationDate es de tipo LocalDateTime.
+     * En la clase converter, hay un método privado que convierte y formatea
+     * los datos de LocalDateTime a String
+     * al formato requerido en el .json
+     */
+    @JsonProperty(value = "creation_date", index = 3)
+    private String creationDate;
+
+    @JsonProperty(index = 4)
+    private Integer popularity;
+
+    @JsonProperty(index = 5)
+    private Float percentage;
+
+    @JsonProperty(index = 6)
+    private Set<LanguageDto> languages;
 
     /*
     TODO: ADD more fields "on demand" (when needed)
      */
-
-    private ChallengeDto() {
-        /*
-        private no args because:
-        required for deserialization. but not needed/used in our logic (at least till now)
-         */
-    }
-
-    public static ChallengeDtoBuilder builder(UUID challengeId){
-        return new ChallengeDtoBuilder(challengeId);
-    }
-
-    public static class ChallengeDtoBuilder{
-        private ChallengeDto challenge;
-
-        public ChallengeDtoBuilder(UUID id) {
-            challenge = new ChallengeDto(id);
-        }
-
-        public ChallengeDtoBuilder basicInfo(ChallengeBasicInfoDto basicInfo){
-            challenge.basicInfo=basicInfo;
-            return this;
-        }
-
-        public ChallengeDto build(){
-            return challenge;
-        }
-    }
 }
