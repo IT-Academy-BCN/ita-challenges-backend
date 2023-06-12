@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-
 import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.service.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,25 +26,25 @@ public class ChallengeController {
     }
 
     @GetMapping("/findall")
-    public Flux<Challenge> getall(){return challengeService.getAll();}
+    public Flux<Challenge> getall() {
+        return challengeService.getAll();
+    }
 
-    @GetMapping ("/resources/{idResources}")
-    public Flux<Challenge> getChallengesByResources(@PathVariable String idResources){
+    @GetMapping("/resources/{idResources}")
+    public Flux<Challenge> getChallengesByResources(@PathVariable String idResources) {
         return challengeService.getByResource(idResources);
     }
 
     @DeleteMapping("/resources/{idResource}")
-    public ResponseEntity<?> removeResourcesById(@PathVariable String idResource){
-        //Using regex to check if it is a UUID, if not throws a 400 Bad Request
-        if(!idResource.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")){
+    public ResponseEntity<?> removeResourcesById(@PathVariable String idResource) {
+        // Using regex to check if it is a UUID, if not throws a 400 Bad Request
+        if (!idResource.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
             return ResponseEntity.badRequest().build();
         }
-        if(challengeService.removeResourcesById(idResource)){
+        if (challengeService.removeResourcesById(idResource)) {
             return ResponseEntity.noContent().build();
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }
