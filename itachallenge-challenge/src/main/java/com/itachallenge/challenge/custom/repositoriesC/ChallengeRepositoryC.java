@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository //not needed, but clarifies... TODO: remove annotation
-public interface ChallengRepositoryC extends ReactiveMongoRepository<ChallengeDocC, UUID> {
+public interface ChallengeRepositoryC extends ReactiveMongoRepository<ChallengeDocC, UUID> {
 }
