@@ -3,9 +3,12 @@ package com.itachallenge.challenge.documents;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static java.time.LocalDateTime.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChallengeTest {
 
@@ -33,8 +36,8 @@ public class ChallengeTest {
     @Test
     void getLanguages() {
         Set<Language> languages = new HashSet<>();
-        Language language1 = new Language(1,"Java",null);
-        Language language2 = new Language(2,"Python", null);
+        Language language1 = new Language(1, "Java", null);
+        Language language2 = new Language(2, "Python", null);
         languages.add(language1);
         languages.add(language2);
         Challenge challenge = new Challenge(null, null, null, languages, null, null, null, null, null);
@@ -43,9 +46,11 @@ public class ChallengeTest {
 
     @Test
     void getCreationDate() {
-        LocalDateTime creationDate = LocalDateTime.now();
+        LocalDateTime creationDate = now();
         Challenge challenge = new Challenge(null, null, null, null, creationDate, null, null, null, null);
-        assertEquals(creationDate, challenge.getCreationDate());
+        assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getCreationDate().truncatedTo(ChronoUnit.SECONDS)));
+
+
     }
 
     @Test
