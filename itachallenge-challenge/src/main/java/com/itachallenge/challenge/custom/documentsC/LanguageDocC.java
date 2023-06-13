@@ -1,10 +1,14 @@
 package com.itachallenge.challenge.custom.documentsC;
 
+import lombok.Getter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document(collection = "languages")
+@Getter
+@ToString
 public class LanguageDocC {
 
     //TODO: ¿¿¿ eliminar el _class del BSON ???
