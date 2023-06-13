@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.custom.repositoriesC;
 
-import com.itachallenge.challenge.custom.documentsC.ChallengeDocC;
+import com.itachallenge.challenge.custom.documentsC.ChallengeDocWithDBRefC;
 import com.itachallenge.challenge.custom.documentsC.LanguageDocC;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 //@PropertySource("classpath:persistence-test.properties")
 @ActiveProfiles("test")
-public class ChallengeRepositoryCLocalTest {
+public class ChallengeWithDBRefRepositoryCLocalTest {
 
     @Autowired
-    private ChallengeRepositoryC challengeRepo;
+    private ChallengeWithDBRefRepositoryC challengeRepo;
 
     @Autowired
     private LanguageRepositoryC languageRepo; //required for testing when DBRef is implied (mongo not allows cascade)
@@ -61,14 +61,14 @@ public class ChallengeRepositoryCLocalTest {
 
         Set<LanguageDocC> languages = Set.of(languageDoc1, languageDoc2);
         UUID id = getInexistentChallengeId();
-        ChallengeDocC challengeDoc = new ChallengeDocC(id, "some title", "some level",
+        ChallengeDocWithDBRefC challengeDoc = new ChallengeDocWithDBRefC(id, "some title", "some level",
                 languages, LocalDateTime.now());
 
         Long previousCount = challengeRepo.count().block();
 
         languageRepo.saveAll(languages).blockLast();
 
-        ChallengeDocC challengePersisted = challengeRepo.save(challengeDoc).block();
+        ChallengeDocWithDBRefC challengePersisted = challengeRepo.save(challengeDoc).block();
         assertEquals(previousCount+1, challengeRepo.count().block());
         assertThat(challengePersisted).isEqualTo(challengeDoc);
 
@@ -85,12 +85,12 @@ public class ChallengeRepositoryCLocalTest {
 
         Set<LanguageDocC> languages = Set.of(languageDoc1, languageDoc2);
         UUID id = getInexistentChallengeId();
-        ChallengeDocC challengeDoc = new ChallengeDocC(id, "some title", "some level",
+        ChallengeDocWithDBRefC challengeDoc = new ChallengeDocWithDBRefC(id, "some title", "some level",
                 languages, LocalDateTime.now());
 
         challengeRepo.save(challengeDoc).block();
 
-        Mono<ChallengeDocC> challengeDocFound = challengeRepo.findById(id);
+        Mono<ChallengeDocWithDBRefC> challengeDocFound = challengeRepo.findById(id);
         StepVerifier.create(challengeDocFound)
                 .assertNext(challenge -> assertTrue(challenge.getLanguages().isEmpty()))
                 .verifyComplete();
@@ -102,9 +102,9 @@ public class ChallengeRepositoryCLocalTest {
     @DisplayName("Try to duplicate ID test")
     void exceptionWhenDuplicatedIdTest(){
         UUID id = getInexistentChallengeId();
-        ChallengeDocC challengeDoc = new ChallengeDocC(id, "some title", "some level",
+        ChallengeDocWithDBRefC challengeDoc = new ChallengeDocWithDBRefC(id, "some title", "some level",
                 null, LocalDateTime.now());
-        ChallengeDocC challengeDocSameId = new ChallengeDocC(id, "some title2", "some level2",
+        ChallengeDocWithDBRefC challengeDocSameId = new ChallengeDocWithDBRefC(id, "some title2", "some level2",
                 null, LocalDateTime.now());
 
         challengeRepo.save(challengeDoc).block();
@@ -120,7 +120,7 @@ public class ChallengeRepositoryCLocalTest {
         LanguageDocC languageDoc = new LanguageDocC(languageId, "someName");
 
         UUID challengeId = getInexistentChallengeId();
-        ChallengeDocC challengeDoc = new ChallengeDocC(challengeId, "some title", "some level",
+        ChallengeDocWithDBRefC challengeDoc = new ChallengeDocWithDBRefC(challengeId, "some title", "some level",
                 Set.of(languageDoc), null);
 
         languageRepo.save(languageDoc).block();
@@ -128,7 +128,7 @@ public class ChallengeRepositoryCLocalTest {
 
         assertTrue(challengeRepo.existsById(challengeId).block());
 
-        Mono<ChallengeDocC> challengeFoundPublisher = challengeRepo.findById(challengeId);
+        Mono<ChallengeDocWithDBRefC> challengeFoundPublisher = challengeRepo.findById(challengeId);
 
         StepVerifier.create(challengeFoundPublisher)
                 .assertNext(challengeFound ->
@@ -143,7 +143,7 @@ public class ChallengeRepositoryCLocalTest {
     @DisplayName("Delete by Id test")
     void deleteByIdTest(){
         UUID id = getInexistentChallengeId();
-        ChallengeDocC challengeDoc = new ChallengeDocC(challengeId, "some title", "some level",
+        ChallengeDocWithDBRefC challengeDoc = new ChallengeDocWithDBRefC(challengeId, "some title", "some level",
                 null, null);
 
         Long previousCount = challengeRepo.count().block();
