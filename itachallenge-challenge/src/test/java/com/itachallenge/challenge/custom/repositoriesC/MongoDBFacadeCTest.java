@@ -8,7 +8,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -36,7 +35,7 @@ public class MongoDBFacadeCTest {
 
     //for init DB. TODO: remove + replace logic once local DB is populated with script
     @Autowired
-    private ChallengRepositoryC challengeRepo;
+    private ChallengeRepositoryC challengeRepo;
 
     @Autowired
     private LanguageRepositoryC languageRepo;
@@ -80,10 +79,24 @@ public class MongoDBFacadeCTest {
         StepVerifier.create(challengePublisher)
                 .assertNext(challengeFound -> {
                     assertThat(challengeFound).usingRecursiveComparison().isEqualTo(challengeDoc);
-                    System.out.println(challengeFound);
+                    //System.out.println(challengeFound);
                 })
                 .verifyComplete();
     }
+
+    @Test
+    @DisplayName("Find all challenges test")
+    void findAllChallengesTest(){
+        Flux<ChallengeDocC> challengesPublisher = mongoDB.findAllChallenges();
+
+        StepVerifier.create(challengesPublisher)
+                .assertNext(challenge -> {
+                    assertThat(challenge).usingRecursiveComparison().isEqualTo(challengeDoc);
+                    //System.out.println(challenge);
+                })
+                .verifyComplete();
+    }
+
 
     @Test
     @DisplayName("Find all languages by ids test")
