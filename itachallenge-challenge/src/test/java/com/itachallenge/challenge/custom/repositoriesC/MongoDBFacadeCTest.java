@@ -65,7 +65,6 @@ public class MongoDBFacadeCTest {
     }
 
     @AfterEach
-    //@Test
     void restore(){
         languageRepo.deleteAllById(languagesIds).block();
         challengeRepo.deleteById(challengeId).block();
