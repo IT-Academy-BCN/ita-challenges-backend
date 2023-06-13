@@ -41,7 +41,7 @@ dependencies {
     //https://github.com/spring-projects/spring-data-mongodb/issues/2468
     //https://github.com/spring-projects/spring-data-mongodb/issues/2496
     //https://github.com/spring-projects/spring-data-mongodb/issues/2468
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
+    //implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
 
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
