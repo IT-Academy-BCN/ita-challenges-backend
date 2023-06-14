@@ -6,6 +6,7 @@ spring:
   data:
     mongodb:
       database: challenges
+      uuid-representation: standard
 
 
 springdoc:

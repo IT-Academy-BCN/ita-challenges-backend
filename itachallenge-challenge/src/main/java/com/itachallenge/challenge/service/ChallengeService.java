@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
-    public Flux<Challenge> getAll(){return challengeRepository.findAll();}
+    public Flux<Challenge> getAll(){
+        return challengeRepository.findAll();}
 
     public Flux<Challenge> getByResource(String idResource){return challengeRepository.findAllByResourcesContaining(idResource);}
 

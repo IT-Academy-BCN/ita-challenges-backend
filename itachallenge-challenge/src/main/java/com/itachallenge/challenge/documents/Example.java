@@ -6,13 +6,13 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
 
-@Data
-@Builder
+@Getter
 @AllArgsConstructor
 public class Example {
 
+    @MongoId
     @Field(name="id_example")
-    private String idExample;
+    private UUID idExample;
 
     @Field(name="example_text")
     private String exampleText;
