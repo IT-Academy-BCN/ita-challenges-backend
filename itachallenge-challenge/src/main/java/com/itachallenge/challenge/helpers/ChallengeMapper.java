@@ -8,18 +8,17 @@ import org.springframework.stereotype.Component;
 public class ChallengeMapper {
 
     public ChallengeDto mapToChallengeDto(Challenge challenge) {
-
         return ChallengeDto.builder()
                 .uuid(challenge.getUuid())
                 .title(challenge.getTitle())
-                .related(challenge.getRelatedChallenges())
+                .relatedChallenges(challenge.getRelatedChallenges())
                 .build();
     }
     public Challenge mapToChallenge(ChallengeDto challengeDto) {
         return Challenge.builder()
                 .uuid(challengeDto.getUuid())
                 .title(challengeDto.getTitle())
-                .relatedChallenges(challengeDto.getRelated())
+                .relatedChallenges(challengeDto.getRelatedChallenges())
                 .build();
     }
 }

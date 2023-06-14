@@ -19,11 +19,20 @@ import java.util.UUID;
 public class Challenge {
 
     @Id
-    private UUID uuid;
+    private String id;
+
+    @Field(name="id_challenge")
+    private String uuid;
+
+    @Field(name="level")
+    private String level;   //valor seteado fom properties
 
     @Field(name="challenge_title")
     private String title;
 
+    @Field(name="languages")
+    private Set<String> languages;
+
     @Field(name="related")
-    private Set<UUID> relatedChallenges;
+    private Set<String> relatedChallenges;
 }

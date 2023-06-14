@@ -8,14 +8,17 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Repository
-public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, UUID> {
+public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, String> {
 
-    Mono<Challenge> findFirstByUuid(UUID uuid);
-    Mono<Challenge> findByUuid(UUID uuid);
-    Mono<Challenge> findByTitle(UUID title);
+    Mono<Boolean> existsByUuid(String uuid);
 
-    /*@Query(value = "db.challenges.find({ 'languages.idLanguage' : ?0 })")
-    Flux<Challenge> findByLanguages(int idLanguage);*/
+    Mono<Challenge> findByUuid(String uuid);
+
+    Mono<Void> deleteByUuid(String uuid);
+
+    Mono<Challenge> findByLevel(String level);
+
+    Mono<Challenge> findByTitle(String title);
 
     @Override
     Mono<Challenge> save (Challenge challenge);

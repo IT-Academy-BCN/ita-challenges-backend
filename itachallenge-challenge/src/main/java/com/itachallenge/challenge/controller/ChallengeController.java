@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
@@ -55,7 +56,7 @@ public class ChallengeController {
             @RequestParam(required = false) String offset,
             @RequestParam(required = false) String limit){
 
-        return challengeService.getRelateds(UUID.fromString(id), this.getValidOffset(offset), this.getValidLimit(limit));
+        return challengeService.getRelateds(id, this.getValidOffset(offset), this.getValidLimit(limit));
     }
 
     private int getValidOffset(String offset) {
@@ -80,9 +81,16 @@ public class ChallengeController {
         return Integer.parseInt(limit);
     }
 
-    @GetMapping(value = "/{id}")
-    public Mono<ChallengeDto> challenge(@PathVariable String id){
-        return challengeService.unMono(UUID.fromString(id));
+    @PostMapping
+    public Mono<ResponseEntity> saveChallenge(@RequestBody ChallengeDto challengeDto){
+        return challengeService.save(challengeDto)
+                .map(movie -> new ResponseEntity(movie, HttpStatus.CREATED))
+                .defaultIfEmpty(new ResponseEntity<>(challengeDto,HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping
+    public Flux<ChallengeDto> allChallenges(){
+        return challengeService.getAll();
     }
 
 }

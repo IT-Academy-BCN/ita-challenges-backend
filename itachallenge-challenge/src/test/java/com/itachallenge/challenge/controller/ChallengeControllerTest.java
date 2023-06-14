@@ -48,45 +48,45 @@ public class ChallengeControllerTest {
         listOfChallenges = new ArrayList<>();
 
         //Set of Relateds for Challenge1
-        Set<UUID> relateds1 = new HashSet<>();
-        UUID id11 = UUID.fromString("7c55adc0-f985-4829-a2a6-e7571d1be7de");
-        UUID id12 = UUID.fromString("9818b618-b740-479d-8aac-962cd3e77cdd");
+        Set<String> relateds1 = new HashSet<>();
+        String id11 = "7c55adc0-f985-4829-a2a6-e7571d1be7de";
+        String id12 = "9818b618-b740-479d-8aac-962cd3e77cdd";
         relateds1.add(id11);
         relateds1.add(id12);
 
         //Set of Relateds for Challenge2
-        Set<UUID> relateds2 = new HashSet<>();
-        UUID id21 = UUID.fromString("468c70e7-57ea-4fba-b57d-73034ad5aa5f");
-        UUID id22 = UUID.fromString("9818b618-b740-479d-8aac-962cd3e77cdd");
+        Set<String> relateds2 = new HashSet<>();
+        String id21 = "468c70e7-57ea-4fba-b57d-73034ad5aa5f";
+        String id22 = "9818b618-b740-479d-8aac-962cd3e77cdd";
         relateds2.add(id21);
         relateds2.add(id22);
 
         //Set of Relateds for Challenge3
-        Set<UUID> relateds3 = new HashSet<>();
-        UUID id31 = UUID.fromString("468c70e7-57ea-4fba-b57d-73034ad5aa5f");
-        UUID id32 = UUID.fromString("7c55adc0-f985-4829-a2a6-e7571d1be7de");
+        Set<String> relateds3 = new HashSet<>();
+        String id31 = "468c70e7-57ea-4fba-b57d-73034ad5aa5f";
+        String id32 = "7c55adc0-f985-4829-a2a6-e7571d1be7de";
         relateds3.add(id31);
         relateds3.add(id32);
 
         //Challenge 1
-        UUID challengeUuid1 = UUID.fromString("468c70e7-57ea-4fba-b57d-73034ad5aa5f");
+        String challengeUuid1 = "468c70e7-57ea-4fba-b57d-73034ad5aa5f";
         challenge1 = ChallengeDto.builder()
                 .uuid(challengeUuid1)
-                .related(relateds1)
+                .relatedChallenges(relateds1)
                 .build();
 
         //Challenge2
-        UUID challengeUuid2 = UUID.fromString("7c55adc0-f985-4829-a2a6-e7571d1be7de");
+        String challengeUuid2 = "7c55adc0-f985-4829-a2a6-e7571d1be7de";
         challenge2 = ChallengeDto.builder()
                 .uuid(challengeUuid2)
-                .related(relateds2)
+                .relatedChallenges(relateds2)
                 .build();
 
         //Challenge3
-        UUID challengeUuid3 = UUID.fromString("9818b618-b740-479d-8aac-962cd3e77cdd");
+        String challengeUuid3 = "9818b618-b740-479d-8aac-962cd3e77cdd";
         challenge3 = ChallengeDto.builder()
                 .uuid(challengeUuid3)
-                .related(relateds3)
+                .relatedChallenges(relateds3)
                 .build();
 
         listOfChallenges.add(challenge1);
