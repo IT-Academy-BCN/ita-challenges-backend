@@ -16,6 +16,12 @@ import java.util.stream.Collectors;
 public class CustomConverter implements StarterConverter,
         ChallengeDocConverter, LanguageDocConverter {
 
+    /**
+     * TODO: once Challenge and Language enter develop, replace ChallengeI and LanguageI
+     *       either delete interfaces or implement them to the documents
+     *       -> WOULD BE BETTER if we implement interfaces, therefor we won't need
+     *       to change anything
+     */
     private ChallengeI challengeIDoc;
 
     private LanguageI languageIDoc;
