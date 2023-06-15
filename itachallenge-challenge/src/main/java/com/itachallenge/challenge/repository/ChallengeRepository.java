@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Repository
-public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, String> {
+import java.util.UUID;
 
-    Flux<Challenge> findAllByResourcesContaining(String idResource);
+@Repository
+public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, UUID> {
+
+    Flux<Challenge> findAllByResourcesContaining(UUID idResource);
 }

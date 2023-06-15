@@ -1,6 +1,9 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.*;
+import org.bson.codecs.pojo.annotations.BsonId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
@@ -8,24 +11,24 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
-
+import java.util.UUID;
 
 @Document(collection="challenges")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@AllArgsConstructor
 public class Challenge {
 
-    @MongoId
-    @Field(name="id_challenge")
-    private String uuid;
+    @Id
+    @Field("_id")
+    private UUID uuid;
 
     @Field(name="level")
     private String level;   //valor seteado fom properties
 
     @Field(name="challenge_title")
     private String title;
+
 
     @Field(name="languages")
     private Set<String> languages;
@@ -38,16 +41,14 @@ public class Challenge {
     @Field(name="detail")
     private Detail detail;
 
-    @Field(name="solutions")
-    private List<String> solutions;
 
-    @Field(name="related")
-    private Set<String> related;
+    @Field(name="solutions")
+    private List<UUID> solutions;
+
+    @Field(name="related_challenges")
+    private Set<UUID> relatedChallenges;
 
     @Field(name="resources")
-    private Set<String> resources;
-
-    @Field(name = "tags")
-    private Set<String> tags;
+    private Set<UUID> resources;
 
 }

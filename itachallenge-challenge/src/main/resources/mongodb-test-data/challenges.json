@@ -59,7 +59,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
           "d21d587c-1390-4597-befc-d7103ab66523",
           "1a2731ec-b583-46ae-9fff-2914b9c3b9ba",
           "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
@@ -141,7 +141,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "ebb361e8-6a5b-4938-9664-c1ab95b42dd8",
             "86be997f-b2b5-46f4-ab76-2191ee4c5e8a",
             "b1864684-1be1-41ee-9001-d304c2ea21ef"
@@ -213,7 +213,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "7c403373-767e-4685-ab7e-ae7c1d76a32c",
             "1e1c5698-3683-41db-a9ce-34a5c53ea2b5",
             "2c3292ea-d533-49ea-8632-6c6b77b3ac3e"
@@ -295,7 +295,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "475a7c74-adc7-45f3-8308-1297bc2fbe1b",
             "63d82fc5-8074-47a6-b02c-c1b839381b96",
             "70355902-4443-493c-ab58-c41dc3b3b16c"
@@ -365,7 +365,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "9a8aaca6-7b9f-486c-82a0-99c056392370",
             "c1297447-b05f-4ff5-ac99-d6f66917f56b",
             "42036e82-abba-4a0c-88d1-bb95768b31fd"
@@ -447,7 +447,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "dec03f23-b034-4b2d-80e9-e504767f0519",
             "60798985-957f-49c9-908d-1c9f97ffd36b",
             "53db22d4-a075-4f4f-a39c-01a976893678"
@@ -518,7 +518,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "391008e1-b588-4948-b7c3-7dad552afdd6",
             "5ac98844-27ce-4b95-944b-75f2e79b4a68",
             "4aac1cb2-e053-4a63-ba54-a4cdb4a250c7"
@@ -594,7 +594,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "f148088f-fd38-43fb-9a17-f88d29254990",
             "dbfe6207-983c-488b-8f22-1e6fb853d410",
             "ba99c9d4-2c56-4a85-94c2-98fbd4f6dc5e"
@@ -658,7 +658,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "9a27552f-d16b-40b4-92e6-5caeca6863b4",
             "319d6183-4b09-4e83-a66b-70ea7069ab53",
             "7146f0fa-3b6f-4c06-b10b-6191b6c1b61c"
@@ -734,7 +734,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "41d2c58a-82c2-4eeb-bc9b-f33ee82e9822",
             "cea85dc5-4122-461b-a85b-eac6c78c0b18",
             "d2c0b6c4-3a44-46b4-a909-b5bbc0c29697"
@@ -810,7 +810,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "261537c7-0484-46ad-bb0f-0371533b2633",
             "5d73a05c-19b4-4146-8b9d-9bc7ffcd06fd",
             "6b02c25d-78c5-4c14-9699-fe72a64243e4"
@@ -892,7 +892,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "5415ccac-74c6-4aa6-924a-b9b508258349",
             "aec7c042-d68f-4066-b152-3d549598e676",
             "6aa6081c-a1d1-47d7-9468-68e991947669"
@@ -962,7 +962,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "ccb184fb-afdd-44bd-a18e-5e1857dd75dc",
             "b0f97694-a737-4f1c-81cd-547edc46c5e0",
             "f6b970a7-1b76-454b-a09c-bf7c565d63bc"
@@ -1032,7 +1032,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "50d5add0-d162-4286-8cde-db1ddeeec57c",
             "fd1983b2-0412-4f47-b695-f60edcd71ec8",
             "663ebeb9-a8fb-4501-9278-328e37a761b3"
@@ -1114,7 +1114,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "3679d444-44c4-4689-b96f-ac0b527d64d5",
             "4cdf4896-3c75-4890-9780-5a4da28e33cc",
             "9fcf4bad-bed8-4c3f-a285-720f6bd66060"
@@ -1196,7 +1196,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "352e53c8-68b0-47b8-a13e-adadcedfe075",
             "ab4be8cb-719b-434a-a0c4-6d316529327c",
             "cac37b6b-7d1f-4b97-aba2-a31c72ff9065"
@@ -1272,7 +1272,7 @@
                 }
             } 
         ],
-        "tags": [
+        "resources": [
             "4dbe2ba8-7fb7-42db-88bb-b423b708153d",
             "d0727bdf-e7e1-496d-b779-67d1150ce0f8",
             "be6e2b73-2fcb-41cc-abd5-d20f860ac932"
@@ -1348,7 +1348,7 @@
                 }
             } 
         ],
-        "tags": [
+        "resources": [
             "5954166f-241a-41e2-984f-312c58d678da",
             "b5d4d89f-195b-42b2-84ad-5e8ba333a867",
             "67ebbdfe-9715-44c5-a76f-f263b0ee752d"
@@ -1424,7 +1424,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "520cb399-956d-4cdd-bdb4-9f6a346681c4",
             "90465ac9-1eba-4b7a-a572-555b09cafce6",
             "09a0b719-4fb0-4aae-9d17-add1e8a2c1f8"
@@ -1494,7 +1494,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "2c850692-e6b9-4eab-9412-520b15b7550a",
             "abb421ad-1862-4761-82fa-773645dd0735",
             "9b02fd18-6109-4482-8613-db882bf2fbfd"
@@ -1570,7 +1570,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "3a79e25f-96a4-4f99-88a8-7429886d422b",
             "204ba47f-2625-4bce-8ce7-e5f5d6d686fa",
             "1e462182-c457-4f7d-b533-04c7799257af"
@@ -1646,7 +1646,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "8dbb46ad-0ee5-413e-aad6-98aa91c215a6",
             "5bde9cec-2bc8-4fbb-945c-bc97b2eaaea1",
             "a99f3aee-7da8-484f-8dee-a48b4f23c176"
@@ -1722,7 +1722,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "d31dcbc2-9bf7-4a70-a9d2-a37fd7f15e9d",
             "2a53b73e-9e71-4ba1-af37-734852e6e09d",
             "7fe2c153-2443-421b-ae3b-90a491ebed15"
@@ -1787,7 +1787,7 @@
             }
             
         ],
-        "tags": [
+        "resources": [
             "467a7d2e-09ef-49d1-8fc7-2997e6541c05",
             "12f3842e-d16b-4c47-831f-720c240f0b32",
             "03051a83-bc52-462a-9588-6be470af09d4"
@@ -1851,7 +1851,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "e3456a31-eaa5-4ac4-90ab-c9e97665ecd6",
             "694a3ff2-1998-446d-83f5-4ed920259094",
             "27569a49-9595-435c-8d02-eed64fba60c3"
@@ -1915,7 +1915,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "bc346042-fe80-42d9-bff9-dcc241e41577",
             "fef5c09e-8b40-46e2-97f3-2b5cddb7b1a9",
             "38c98f40-52aa-4883-9a6a-3ec942fc9695"
@@ -1985,7 +1985,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "bf9d326a-2fe5-452d-b74f-58d357255e95",
             "dcb7f202-ff74-48d6-bb86-ce55d575c1b1",
             "102fd6e2-93ce-440d-b60f-d445c44c3f63"
@@ -2055,7 +2055,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "8075abaf-dd96-4a4c-a841-1983fbbd8edc",
             "940c99b6-a529-4c4c-93a7-2c3a13216913",
             "07b03100-3002-40a5-a167-792abc191127"
@@ -2125,7 +2125,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "8b7cc80c-9929-4e1c-82ed-0a3a22e46a77",
             "37c6ebbb-f7d3-4044-86da-d547436e33ef",
             "e4bf7d49-0cd6-44fd-a482-bdd7f54a6cde"
@@ -2195,7 +2195,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "3647ba30-f8db-4d1f-ac2e-e3b9433a2e3c",
             "50d22b78-8102-45a3-92be-e8449d87cb01",
             "0adee36a-7e08-4294-aea1-c40519e0f2dd"
@@ -2265,7 +2265,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "f25de265-75c4-4f7b-bdd1-1d37864dd5a9",
             "8e47f817-ea10-4a91-b373-d0cd8c38551c",
             "949e6392-af70-4ced-8ac4-d567ff606818"
@@ -2335,7 +2335,7 @@
                 }
             }  
         ],
-        "tags": [
+        "resources": [
             "c8fa2f4d-5850-4de9-bc3f-35a000507ad3",
             "4d83c65c-8ec5-43c8-bc46-03fb88bb4702",
             "97399a1f-ec16-42f7-9ebd-94a4569605d1"
@@ -2405,7 +2405,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "def18498-1ab2-4778-a8e1-23566b087f85",
             "8697a7eb-55ae-4c75-ad73-50e4856cb210",
             "1fac1d08-e583-4581-96cd-400e0c4abdcd"
@@ -2469,7 +2469,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "ee0462a0-6f38-42fa-a596-6fb61b28540d",
             "2c79a5e3-f004-4f0b-a277-d41da2b1299c",
             "610a03aa-d515-4bde-b00a-bec8b248f66e"
@@ -2533,7 +2533,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "9ad43e4e-ce13-4184-90b4-28384c7ede3d",
             "163c35f4-cd3c-49f7-866e-8ccd3ad0b044",
             "199a52e9-a570-44f9-884b-5d2ff6c027b1"
@@ -2597,7 +2597,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "18a262b5-3ce7-4028-89d0-0dbec8c09ab5",
             "edddc01d-a0d8-42ad-a9e5-235c484b71d8",
             "471edd5e-ce62-4f9a-bf7f-ae2f58813616"
@@ -2667,7 +2667,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "92685e02-0b45-4e14-bbc4-c4697ac0b6c8",
             "e406b198-8e3e-4b1d-b9f0-dc4c5caa56c3",
             "2cc7382e-3073-415e-87c6-98d25a7f8ae8"
@@ -2737,7 +2737,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "9d7e906d-4484-4514-871c-ec29688b296c",
             "0554b557-b59a-4914-aac1-fe6123775d9c",
             "1590f717-8808-404f-867a-4f231337cd3d"
@@ -2807,7 +2807,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "81c61359-2d5f-4f9c-88ce-442c1647d367",
             "3a6bd2ee-39aa-4ac1-8293-8fbd75c9b2f9",
             "1b1aaae8-2cc0-4c77-b1fe-69a5b4cd3a6c"
@@ -2877,7 +2877,7 @@
                 }
             }
         ],
-        "tags": [
+        "resources": [
             "5f055847-2f6c-4257-ad4f-6a842e7f24f7",
             "67555daa-5d08-484d-b685-5bdb1393eceb",
             "e67e4d81-733d-4fc3-89b3-7aff892b6731"

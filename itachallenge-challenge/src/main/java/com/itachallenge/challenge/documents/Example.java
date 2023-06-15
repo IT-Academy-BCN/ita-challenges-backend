@@ -11,8 +11,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Example {
 
+    @MongoId
     @Field(name="id_example")
-    private String idExample;
+    private UUID idExample;
 
     @Field(name="example_text")
     private String exampleText;
