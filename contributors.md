@@ -7,5 +7,7 @@
 * Josep Salgado https://github.com/josepSSBCN
 * Christian Gálvez - https://github.com/ChrisGalHur
 * Anna Santasusana - https://github.com/AnnaSantasusana
-
-
+* Anna Fedoraeva - https://github.com/AnnaFedoraeva
+* Pedro Tejero - https://github.com/Pedro-Tejero-Diez
+* Albert Martin - https://github.com/albertmart000
+* Carlos Gimeno - https://github.com/CG-23
