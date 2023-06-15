@@ -7,9 +7,8 @@ import lombok.Setter;
 
 
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class BadUUIDException extends Exception {
-    String message;
+    final String message;
 }

@@ -9,7 +9,7 @@ import java.util.*;
 public class ChallengeTest {
 
     @Test
-    public void testChallengeClass() {
+    void testChallengeClass() {
         // Init data
         Example example = Example.builder()
                 .idExample(UUID.fromString("d07008df-39ef-4c96-83aa-0ce0e25ed4c4"))
@@ -54,7 +54,7 @@ public class ChallengeTest {
     }
 
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         UUID uuid = UUID.randomUUID();
         String level = "Intermediate";
         String title = "Coding Challenge";

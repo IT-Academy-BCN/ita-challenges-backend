@@ -53,9 +53,9 @@ class ChallengeServiceTest {
 
 
         when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.just(challenge1));
-        when(challengeRepository.save(eq(challenge1)))
+        when(challengeRepository.save(challenge1))
                 .thenReturn(Mono.just(challenge1));
-        when(challengeRepository.save(eq(challenge2)))
+        when(challengeRepository.save(challenge2))
                 .thenReturn(Mono.just(challenge2));
 
         // Act
@@ -91,9 +91,9 @@ class ChallengeServiceTest {
                 .build();
 
         when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.empty());
-        when(challengeRepository.save(eq(challenge1)))
+        when(challengeRepository.save(challenge1))
                 .thenReturn(Mono.just(challenge1));
-        when(challengeRepository.save(eq(challenge2)))
+        when(challengeRepository.save(challenge2))
                 .thenReturn(Mono.just(challenge2));
 
         // Act

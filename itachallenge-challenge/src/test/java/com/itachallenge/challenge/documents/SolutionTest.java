@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class SolutionTest {
 
     @Test
-    public void testSolutionClass() {
+    void testSolutionClass() {
         // Crear una instancia de Solution
         UUID uuid = UUID.randomUUID();
         String solutionText = "public class Solution { }";
@@ -35,7 +35,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void testGetUuid() {
+    void testGetUuid() {
         // Arrange
         UUID uuid = UUID.randomUUID();
         Solution solution = new Solution();
@@ -49,7 +49,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void testSetUuid() {
+    void testSetUuid() {
         // Arrange
         UUID uuid = UUID.randomUUID();
         Solution solution = new Solution();
@@ -62,7 +62,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void testGetSolutionText() {
+    void testGetSolutionText() {
         // Arrange
         String solutionText = "Test Solution Text";
         Solution solution = new Solution();
@@ -76,7 +76,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void testSetSolutionText() {
+    void testSetSolutionText() {
         // Arrange
         String solutionText = "Test Solution Text";
         Solution solution = new Solution();
@@ -89,7 +89,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void testGetIdLanguage() {
+    void testGetIdLanguage() {
         // Arrange
         int idLanguage = 1;
         Solution solution = new Solution();
@@ -103,7 +103,7 @@ public class SolutionTest {
     }
 
     @Test
-    public void testSetIdLanguage() {
+    void testSetIdLanguage() {
         // Arrange
         int idLanguage = 1;
         Solution solution = new Solution();

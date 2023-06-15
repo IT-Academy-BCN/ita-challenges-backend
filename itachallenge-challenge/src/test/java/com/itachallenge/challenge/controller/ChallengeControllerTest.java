@@ -1,9 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-<<<<<<< HEAD
-import com.itachallenge.challenge.exception.BadUUIDException;
-=======
->>>>>>> feature#55
 import com.itachallenge.challenge.service.ChallengeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
