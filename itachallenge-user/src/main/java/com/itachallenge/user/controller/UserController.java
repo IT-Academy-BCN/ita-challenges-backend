@@ -30,24 +30,24 @@ public class UserController {
         return "Hello from ITA User!!!";
     }
 
-    @Operation(summary = "Get Basic Info of Challenge")
-    @GetMapping(value = "/statistics")
-    public ResponseEntity<?> GetBasicInfoChallenge(@RequestParam("challenge")){
-        //region VARIABLES
-
-
-        //endregion VARIABLES
-
-
-        //region ACTIONS
-
-
-        //endregion ACTIONS
-
-
-        // OUT
-
-    }
+//    @Operation(summary = "Get Basic Info of Challenge")
+//    @GetMapping(value = "/statistics")
+//    public ResponseEntity<?> GetBasicInfoChallenge(@RequestParam("challenge")){
+//        //region VARIABLES
+//
+//
+//        //endregion VARIABLES
+//
+//
+//        //region ACTIONS
+//
+//
+//        //endregion ACTIONS
+//
+//
+//        // OUT
+//
+//    }
     //endregion ENDPOINTS
 
 
