@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Document(collection="challengebinary")
+@Document(collection="challenges")
 @Data
 @Builder
 @AllArgsConstructor

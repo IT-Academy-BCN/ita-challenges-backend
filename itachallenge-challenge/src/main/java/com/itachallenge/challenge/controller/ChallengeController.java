@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.service.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -31,20 +35,29 @@ public class ChallengeController {
     }
 
     @GetMapping("/resources/{idResources}")
-    public Flux<Challenge> getChallengesByResources(@PathVariable String idResources) {
-        return challengeService.getByResource(idResources);
+    public Flux<Challenge> getChallengesByResources(@PathVariable String idResources) throws BadUUIDException {
+        UUID uuid = getUUID(idResources);
+        return challengeService.getByResource(uuid);
     }
 
     @DeleteMapping("/resources/{idResource}")
-    public ResponseEntity<?> removeResourcesById(@PathVariable String idResource) {
-        // Using regex to check if it is a UUID, if not throws a 400 Bad Request
-        if (!idResource.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
-            return ResponseEntity.badRequest().build();
-        }
-        if (challengeService.removeResourcesById(idResource)) {
+    public ResponseEntity<?> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuid = getUUID(idResource);
+        UUID uuidResource = UUID.fromString(idResource);
+        if (challengeService.removeResourcesById(uuidResource)) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
+        }
+    }
+
+    private UUID getUUID(String uuidString) throws BadUUIDException {
+        UUID uuid = null;
+        if (!uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            uuid = UUID.fromString(uuidString);
+            return uuid;
+        } else {
+            throw new BadUUIDException();
         }
     }
 }

@@ -12,5 +12,5 @@ import java.util.UUID;
 @Repository
 public interface ChallengeRepository extends ReactiveMongoRepository<Challenge, UUID> {
 
-    Flux<Challenge> findAllByResourcesContaining(String idResource);
+    Flux<Challenge> findAllByResourcesContaining(UUID idResource);
 }
