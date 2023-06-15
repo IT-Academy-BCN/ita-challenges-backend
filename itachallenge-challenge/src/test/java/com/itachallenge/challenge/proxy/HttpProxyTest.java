@@ -88,9 +88,9 @@ public class HttpProxyTest {
 
     private static Stream<Arguments> getRequestValues(){
         return Stream.of(
-                Arguments.of(RESOURCE_JSON_PATH, ResourceDto.class),
-                Arguments.of(TOPIC_JSON_PATH, TopicDto.class),
-                Arguments.of(USER_RESOURCE_PATH, UserResourceDto.class)
+                Arguments.of(RESOURCE_JSON_PATH, ResourceTestDto.class),
+                Arguments.of(TOPIC_JSON_PATH, TopicTestDto.class),
+                Arguments.of(USER_RESOURCE_PATH, UserResourceTestDto.class)
         );
     }
 
@@ -137,7 +137,7 @@ public class HttpProxyTest {
                 new MockResponse().setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value())); //500
 
         String url = String.format("http://localhost:%s", mockWebServer.getPort());
-        Mono<ResourceDto> responsePublisher = httpProxy.getRequestData(url, ResourceDto.class);
+        Mono<ResourceTestDto> responsePublisher = httpProxy.getRequestData(url, ResourceTestDto.class);
 
         StepVerifier.create(responsePublisher)
                 .expectError(WebClientException.class)
@@ -159,57 +159,40 @@ public class HttpProxyTest {
         }
     }
 
+    //inner classes only for testing purposes
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class ResourceDto {
-
+    static class ResourceTestDto {
         private String id;
-
         private String title;
-
         private String slug;
-
         private String description;
-
         private String url;
-
         private String resourceType;
-
         private String createdAt;
-
         private String updatedAt;
-
-        private UserResourceDto user;
-
-        private List<TopicDto> topics;
+        private UserResourceTestDto user;
+        private List<TopicTestDto> topics;
     }
 
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class TopicDto {
-
+    static class TopicTestDto {
         private String id;
-
         private String name;
-
         private String slug;
-
         private String categoryId;
-
         private String createdAt;
-
         private String updatedAt;
     }
 
     @NoArgsConstructor
     @Getter
     @Setter
-    public static class UserResourceDto {
-
+    static class UserResourceTestDto {
         private String name;
-
         private String email;
     }
 }
