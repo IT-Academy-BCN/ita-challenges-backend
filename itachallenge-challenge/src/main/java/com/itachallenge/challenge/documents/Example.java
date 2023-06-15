@@ -1,8 +1,8 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
 
@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Example {
 
-    @MongoId
+    @Id
     @Field(name="id_example")
     private UUID idExample;
 

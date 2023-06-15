@@ -35,11 +35,10 @@ public class ChallengeTest {
 
     @Test
     void getLanguages() {
-        Set<Language> languages = new HashSet<>();
-        Language language1 = new Language(1, "Java", null);
-        Language language2 = new Language(2, "Python", null);
-        languages.add(language1);
-        languages.add(language2);
+        Set<String> languages = new HashSet<>();
+
+        languages.add("Java");
+        languages.add("Python");
         Challenge challenge = new Challenge(null, null, null, languages, null, null, null, null, null);
         assertEquals(languages, challenge.getLanguages());
     }

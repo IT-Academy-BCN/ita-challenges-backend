@@ -1,10 +1,9 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.UUID;
 @Getter
 public class Challenge {
 
-    @MongoId
+    @Id
     @Field(name="id_challenge")
     private UUID uuid;
 
@@ -25,9 +24,9 @@ public class Challenge {
     @Field(name="challenge_title")
     private String title;
 
-    @DBRef
+
     @Field(name="languages")
-    private Set<Language> languages;
+    private Set<String> languages;
 
     @Field(name="creation_date")
     private LocalDateTime creationDate;
@@ -37,7 +36,7 @@ public class Challenge {
     @Field(name="detail")
     private Detail detail;
 
-    @DBRef
+
     @Field(name="solutions")
     private List<Solution> solutions;
 
@@ -47,7 +46,7 @@ public class Challenge {
     @Field(name="resources")
     private Set<UUID> resources;
 
-    public Challenge(UUID uuid, String level, String title, Set<Language> languages,
+    public Challenge(UUID uuid, String level, String title, Set<String> languages,
                      LocalDateTime creationDate, Detail detail, List<Solution> solutions,
                      Set<UUID> relatedChallenges, Set<UUID> resources) {
         this.uuid = uuid;

@@ -60,9 +60,8 @@ class ChallengeRepositoryTest {
         Example example2 = new Example(uuid_2, "Example Text 2");
         List<Example> exampleList = new ArrayList<Example>(Arrays.asList(example2, example));
 
-        Language language = new Language(1, "Java", UUIDSet);
-        Language language2 = new Language(2, "Python", UUIDSet);
-        Set<Language> languageSet = new HashSet<>(Arrays.asList(language2, language));
+
+        Set<String> languageSet = new HashSet<>(Arrays.asList("Java", "Python"));
 
         Solution solution = new Solution(uuid_1, "Solution Text 1", 1);
         Solution solution2 = new Solution(uuid_2, "Solution Text 2", 2);
