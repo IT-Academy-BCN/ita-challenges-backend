@@ -3,7 +3,7 @@ package com.itachallenge.challenge.documents;
 import java.util.Set;
 import java.util.UUID;
 
-public interface Language {
+public interface LanguageI {
 
     int getIdLanguage();
 

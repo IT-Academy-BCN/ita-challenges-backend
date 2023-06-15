@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-public interface Challenge {
+public interface ChallengeI {
 
     UUID getUuid();
 
@@ -12,7 +12,7 @@ public interface Challenge {
 
     String getTitle();
 
-    Set<Language> getLanguages();
+    Set<LanguageI> getLanguages();
 
     LocalDateTime getCreationDate();
 

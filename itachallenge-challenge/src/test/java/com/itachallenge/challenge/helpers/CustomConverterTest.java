@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.helpers;
 
-import com.itachallenge.challenge.documents.Challenge;
-import com.itachallenge.challenge.documents.Language;
+import com.itachallenge.challenge.documents.ChallengeI;
+import com.itachallenge.challenge.documents.LanguageI;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,9 +28,9 @@ public class CustomConverterTest {
     @Autowired
     private StarterConverter converter;
 
-    private Language languageMocked1;
+    private LanguageI languageIMocked1;
 
-    private Challenge challengeMocked;
+    private ChallengeI challengeIMocked;
 
     private Float percentage;
 
@@ -49,11 +49,11 @@ public class CustomConverterTest {
         int[] idsLanguages = new int[]{1,2};
         String[] languagesNames = new String[]{"name1","name2"};
 
-        languageMocked1 = getLanguageMocked(idsLanguages[0], languagesNames[0]);
-        Language languageMocked2 = getLanguageMocked(idsLanguages[1], languagesNames[1]);
+        languageIMocked1 = getLanguageMocked(idsLanguages[0], languagesNames[0]);
+        LanguageI languageIMocked2 = getLanguageMocked(idsLanguages[1], languagesNames[1]);
 
-        challengeMocked = getChallengeMockedForBasicInfoDto(challengeRandomId, title, level,
-                Set.of(languageMocked1,languageMocked2),creationDate);
+        challengeIMocked = getChallengeMockedForBasicInfoDto(challengeRandomId, title, level,
+                Set.of(languageIMocked1, languageIMocked2),creationDate);
 
         percentage = 0.6432f;
         popularity = 25;
@@ -72,43 +72,43 @@ public class CustomConverterTest {
                 .build();
     }
 
-    private Language getLanguageMocked(int idLanguage, String languageName){
-        Language languageMocked = Mockito.mock(Language.class);
-        when(languageMocked.getIdLanguage()).thenReturn(idLanguage);
-        when(languageMocked.getLanguageName()).thenReturn(languageName);
-        return languageMocked;
+    private LanguageI getLanguageMocked(int idLanguage, String languageName){
+        LanguageI languageIMocked = Mockito.mock(LanguageI.class);
+        when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
+        when(languageIMocked.getLanguageName()).thenReturn(languageName);
+        return languageIMocked;
     }
 
-    private Challenge getChallengeMockedForBasicInfoDto(UUID challengeId, String title, String level,
-                                                             Set<Language> languages, LocalDateTime creationDate){
-        Challenge challengeMocked = Mockito.mock(Challenge.class);
-        when(challengeMocked.getUuid()).thenReturn(challengeId);
-        when(challengeMocked.getTitle()).thenReturn(title);
-        when(challengeMocked.getLevel()).thenReturn(level);
-        when(challengeMocked.getLanguages()).thenReturn(languages);
-        when(challengeMocked.getCreationDate()).thenReturn(creationDate);
-        return challengeMocked;
+    private ChallengeI getChallengeMockedForBasicInfoDto(UUID challengeId, String title, String level,
+                                                         Set<LanguageI> languageIS, LocalDateTime creationDate){
+        ChallengeI challengeIMocked = Mockito.mock(ChallengeI.class);
+        when(challengeIMocked.getUuid()).thenReturn(challengeId);
+        when(challengeIMocked.getTitle()).thenReturn(title);
+        when(challengeIMocked.getLevel()).thenReturn(level);
+        when(challengeIMocked.getLanguages()).thenReturn(languageIS);
+        when(challengeIMocked.getCreationDate()).thenReturn(creationDate);
+        return challengeIMocked;
     }
 
     @Test
     @DisplayName("Give access to available methods when selecting challenge document conversion test")
     void fromChallengeDocumentTest(){
-        Challenge anyChallenge = Mockito.mock(Challenge.class);
-        assertInstanceOf(ChallengeDocConverter.class, converter.from(anyChallenge));
+        ChallengeI anyChallengeI = Mockito.mock(ChallengeI.class);
+        assertInstanceOf(ChallengeDocConverter.class, converter.from(anyChallengeI));
     }
 
     @Test
     @DisplayName("Give access to available methods when selecting language document conversion test")
     void fromLanguageDocumentTest(){
-        Language anyLanguage = Mockito.mock(Language.class);
-        assertInstanceOf(LanguageDocConverter.class, converter.from(anyLanguage));
+        LanguageI anyLanguageI = Mockito.mock(LanguageI.class);
+        assertInstanceOf(LanguageDocConverter.class, converter.from(anyLanguageI));
     }
 
     @Test
     @DisplayName("Conversion from language document to language dto test")
     void fromLanguageToLanguageDtoTest(){
-        Language languageMocked = languageMocked1;
-        LanguageDto resultDto = converter.from(languageMocked).toLanguageDto();
+        LanguageI languageIMocked = languageIMocked1;
+        LanguageDto resultDto = converter.from(languageIMocked).toLanguageDto();
         LanguageDto expectedDto = languageDto1;
         assertThat(expectedDto).usingRecursiveComparison().isEqualTo(resultDto);
     }
@@ -116,8 +116,8 @@ public class CustomConverterTest {
     @Test
     @DisplayName("Conversion from challenge document to challenge dto")
     void fromChallengeToChallengeDto(){
-        Challenge challengeMocked = this.challengeMocked;
-        ChallengeDto resultDto = converter.from(challengeMocked)
+        ChallengeI challengeIMocked = this.challengeIMocked;
+        ChallengeDto resultDto = converter.from(challengeIMocked)
                 .toChallengeDto(percentage, popularity);
         ChallengeDto expectedDto = challengeDto;
         assertThat(expectedDto).usingRecursiveComparison().isEqualTo(resultDto);

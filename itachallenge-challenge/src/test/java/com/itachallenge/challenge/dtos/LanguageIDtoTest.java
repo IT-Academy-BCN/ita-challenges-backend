@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class LanguageDtoTest {
+class LanguageIDtoTest {
 
     @Autowired
     private ObjectMapper mapper;
@@ -29,7 +29,7 @@ class LanguageDtoTest {
     private LanguageDto languageDto;
     @BeforeEach
     void setUp(){
-        languageDto = LanguageDtoTest.buildLanguageDto(1, "Javascript");
+        languageDto = LanguageIDtoTest.buildLanguageDto(1, "Javascript");
     }
 
     @Test

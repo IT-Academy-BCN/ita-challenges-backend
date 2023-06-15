@@ -7,7 +7,7 @@
 
 ### Módulos del proyecto
 
-- [itachallenge-challenge](itachallenge-challenge/README.md).
+- [itachallenge-challengeI](itachallenge-challengeI/README.md).
 - [itachallenge-score](itachallenge-score/README.md). 
 - [itachallenge-user](itachallenge-user/README.md).
 - [Consul](consul/README.md). Gestión de contenedores.

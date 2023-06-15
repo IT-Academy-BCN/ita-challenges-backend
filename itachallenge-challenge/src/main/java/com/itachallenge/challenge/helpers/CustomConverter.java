@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.helpers;
 
-import com.itachallenge.challenge.documents.Challenge;
-import com.itachallenge.challenge.documents.Language;
+import com.itachallenge.challenge.documents.ChallengeI;
+import com.itachallenge.challenge.documents.LanguageI;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
 import org.springframework.stereotype.Component;
@@ -10,41 +10,37 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class CustomConverter implements StarterConverter,
         ChallengeDocConverter, LanguageDocConverter {
 
-    private Challenge challengeDoc;
+    private ChallengeI challengeIDoc;
 
-    private Language languageDoc;
+    private LanguageI languageIDoc;
 
-    //private ChallengeDummy challengeDoc;
-    //private LanguageDummy languageDoc;
-
-    public ChallengeDocConverter from(Challenge challenge) {
-        this.challengeDoc = challenge;
+    public ChallengeDocConverter from(ChallengeI challengeI) {
+        this.challengeIDoc = challengeI;
         return this;
     }
 
-    public LanguageDocConverter from(Language language) {
-        this.languageDoc = language;
+    public LanguageDocConverter from(LanguageI languageI) {
+        this.languageIDoc = languageI;
         return this;
     }
 
     public ChallengeDto toChallengeDto(Float percentage, Integer popularity) {
         return ChallengeDto.builder()
-                .challengeId(challengeDoc.getUuid())
-                .level(challengeDoc.getLevel())
-                .title(challengeDoc.getTitle())
-                .languages(challengeDoc.getLanguages().stream()
-                        .map(language -> this.from(language).toLanguageDto())
+                .challengeId(challengeIDoc.getUuid())
+                .level(challengeIDoc.getLevel())
+                .title(challengeIDoc.getTitle())
+                .languages(challengeIDoc.getLanguages().stream()
+                        .map(languageI -> this.from(languageI).toLanguageDto())
                         .collect(Collectors.toSet()))
                 .percentage(percentage)
                 .popularity(popularity)
-                .creationDate(getFormattedCreationDateTime(challengeDoc.getCreationDate()))
+                .creationDate(getFormattedCreationDateTime(challengeIDoc.getCreationDate()))
                 .build();
     }
 
@@ -64,6 +60,6 @@ public class CustomConverter implements StarterConverter,
     }
 
     private LanguageDto fromLanguageToLanguageDto(){
-        return new LanguageDto(languageDoc.getIdLanguage(), languageDoc.getLanguageName());
+        return new LanguageDto(languageIDoc.getIdLanguage(), languageIDoc.getLanguageName());
     }
 }

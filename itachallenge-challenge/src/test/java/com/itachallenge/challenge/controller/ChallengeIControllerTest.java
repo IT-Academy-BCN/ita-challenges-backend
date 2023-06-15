@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.equalTo;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ChallengeControllerTest {
+public class ChallengeIControllerTest {
     //region ATTRIBUTES
     @Autowired
     private WebTestClient webTestClient;
