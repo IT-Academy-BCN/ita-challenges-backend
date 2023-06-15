@@ -16,11 +16,6 @@ import java.util.stream.Collectors;
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
 
-    public Flux<Challenge> getAll(){
-        return challengeRepository.findAll();}
-
-    public Flux<Challenge> getByResource(UUID idResource){return challengeRepository.findAllByResourcesContaining(idResource);}
-
     public boolean removeResourcesById(UUID idResource){
         Flux<Challenge> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);
 

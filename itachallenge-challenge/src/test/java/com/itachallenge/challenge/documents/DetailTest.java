@@ -3,6 +3,7 @@ package com.itachallenge.challenge.documents;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,44 @@ public class DetailTest {
         Assertions.assertEquals(description, detail.getDescription());
         Assertions.assertEquals(examples, detail.getExamples());
         Assertions.assertEquals(note, detail.getNote());
+    }
+
+    @Test
+    public void testDetailDataMethods() {
+        // Init data
+        Detail detail = Detail.builder()
+                .description("Descripción del detalle")
+                .examples(new ArrayList<>())
+                .note("Nota del detalle")
+                .build();
+
+        // toString()
+        String expectedToString = "Detail(description=Descripción del detalle, examples=[], note=Nota del detalle)";
+        Assertions.assertEquals(expectedToString, detail.toString());
+
+        // getter y setter
+        String newDescription = "Nueva descripción";
+        detail.setDescription(newDescription);
+        Assertions.assertEquals(newDescription, detail.getDescription());
+
+        List<Example> newExamples = new ArrayList<>();
+        detail.setExamples(newExamples);
+        Assertions.assertEquals(newExamples, detail.getExamples());
+
+        String newNote = "Nueva nota";
+        detail.setNote(newNote);
+        Assertions.assertEquals(newNote, detail.getNote());
+
+        // equals()
+        Detail equalDetail = Detail.builder()
+                .description(newDescription)
+                .examples(newExamples)
+                .note(newNote)
+                .build();
+        Assertions.assertEquals(detail, equalDetail);
+
+        // hashCode()
+        Assertions.assertEquals(detail.hashCode(), equalDetail.hashCode());
     }
 
 }

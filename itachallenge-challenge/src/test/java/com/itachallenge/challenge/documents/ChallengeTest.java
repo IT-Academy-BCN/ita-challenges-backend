@@ -53,4 +53,66 @@ public class ChallengeTest {
         Assertions.assertEquals(resources, challenge.getResources());
     }
 
+    @Test
+    public void testGettersAndSetters() {
+        UUID uuid = UUID.randomUUID();
+        String level = "Intermediate";
+        String title = "Coding Challenge";
+        Set<String> languages = new HashSet<>(Arrays.asList("Java", "Python"));
+        LocalDate creationDate = LocalDate.now();
+
+        Challenge challenge = new Challenge();
+        challenge.setUuid(uuid);
+        challenge.setLevel(level);
+        challenge.setTitle(title);
+        challenge.setLanguages(languages);
+        challenge.setCreationDate(creationDate);
+
+        Assertions.assertEquals(uuid, challenge.getUuid());
+        Assertions.assertEquals(level, challenge.getLevel());
+        Assertions.assertEquals(title, challenge.getTitle());
+        Assertions.assertEquals(languages, challenge.getLanguages());
+        Assertions.assertEquals(creationDate, challenge.getCreationDate());
+    }
+
+    @Test
+    public void testEqualsAndHashCode() {
+        UUID uuid1 = UUID.randomUUID();
+        UUID uuid2 = UUID.randomUUID();
+
+        Challenge challenge1 = new Challenge();
+        challenge1.setUuid(uuid1);
+
+        Challenge challenge2 = new Challenge();
+        challenge2.setUuid(uuid1);
+
+        Challenge challenge3 = new Challenge();
+        challenge3.setUuid(uuid2);
+
+        Assertions.assertEquals(challenge1, challenge2);
+        Assertions.assertNotEquals(challenge1, challenge3);
+        Assertions.assertEquals(challenge1.hashCode(), challenge2.hashCode());
+        Assertions.assertNotEquals(challenge1.hashCode(), challenge3.hashCode());
+    }
+
+    @Test
+    public void testToString() {
+        UUID uuid = UUID.randomUUID();
+        String level = "Intermediate";
+        String title = "Coding Challenge";
+        Set<String> languages = Set.of("Java", "Python");
+        LocalDate creationDate = LocalDate.now();
+
+        Challenge challenge = new Challenge();
+        challenge.setUuid(uuid);
+        challenge.setLevel(level);
+        challenge.setTitle(title);
+        challenge.setLanguages(languages);
+        challenge.setCreationDate(creationDate);
+
+        String expectedToString = "Challenge(uuid=" + uuid + ", level=" + level + ", title=" + title +
+                ", languages=" + languages + ", creationDate=" + creationDate + ", detail=null, solutions=null, relatedChallenges=null, resources=null"+")";
+        Assertions.assertEquals(expectedToString, challenge.toString());
+    }
+
 }
