@@ -34,10 +34,9 @@ public class ChallengeController {
         return challengeService.getAll();
     }
 
-    @GetMapping("/resources/{idResources}")
-    public Flux<Challenge> getChallengesByResources(@PathVariable String idResources) throws BadUUIDException {
-        UUID uuid = getUUID(idResources);
-        return challengeService.getByResource(uuid);
+    @GetMapping("/resources")
+    public Mono<String> dadaw(){
+        return Mono.just("Es un endpoint diferente");
     }
 
     @DeleteMapping("/resources/{idResource}")
@@ -53,7 +52,7 @@ public class ChallengeController {
 
     private UUID getUUID(String uuidString) throws BadUUIDException {
         UUID uuid = null;
-        if (!uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+        if (uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
             uuid = UUID.fromString(uuidString);
             return uuid;
         } else {
