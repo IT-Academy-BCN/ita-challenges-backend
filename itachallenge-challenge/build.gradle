@@ -33,6 +33,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation 'commons-io:commons-io:2.11.0'
+    //apache commons validation
+    implementation 'commons-validator:commons-validator:1.7'
 
     // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
@@ -47,6 +49,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     //for suite tests
     testImplementation group: 'org.junit.platform', name: 'junit-platform-suite-engine', version: '1.8.1'
 
