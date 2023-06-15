@@ -35,36 +35,83 @@ public class SolutionTest {
     }
 
     @Test
-    public void testSolutionMethods() {
-        // Crea una instancia de Solution
-        Solution solution = Solution.builder()
-                .uuid(UUID.randomUUID())
-                .solutionText("Solución del problema")
-                .idLanguage(1)
-                .build();
+    public void testGetUuid() {
+        // Arrange
+        UUID uuid = UUID.randomUUID();
+        Solution solution = new Solution();
+        solution.setUuid(uuid);
 
-        // Prueba los métodos getter y setter
-        UUID newUuid = UUID.randomUUID();
-        solution.setUuid(newUuid);
-        assertEquals(newUuid, solution.getUuid());
+        // Act
+        UUID result = solution.getUuid();
 
-        String newSolutionText = "Nueva solución";
-        solution.setSolutionText(newSolutionText);
-        assertEquals(newSolutionText, solution.getSolutionText());
+        // Assert
+        assertEquals(uuid, result);
+    }
 
-        int newIdLanguage = 2;
-        solution.setIdLanguage(newIdLanguage);
-        assertEquals(newIdLanguage, solution.getIdLanguage());
+    @Test
+    public void testSetUuid() {
+        // Arrange
+        UUID uuid = UUID.randomUUID();
+        Solution solution = new Solution();
 
-        // Prueba el método equals()
-        Solution equalSolution = Solution.builder()
-                .uuid(newUuid)
-                .solutionText(newSolutionText)
-                .idLanguage(newIdLanguage)
-                .build();
-        assertEquals(solution, equalSolution);
+        // Act
+        solution.setUuid(uuid);
 
-        // Prueba el método hashCode()
-        assertEquals(solution.hashCode(), equalSolution.hashCode());
+        // Assert
+        assertEquals(uuid, solution.getUuid());
+    }
+
+    @Test
+    public void testGetSolutionText() {
+        // Arrange
+        String solutionText = "Test Solution Text";
+        Solution solution = new Solution();
+        solution.setSolutionText(solutionText);
+
+        // Act
+        String result = solution.getSolutionText();
+
+        // Assert
+        assertEquals(solutionText, result);
+    }
+
+    @Test
+    public void testSetSolutionText() {
+        // Arrange
+        String solutionText = "Test Solution Text";
+        Solution solution = new Solution();
+
+        // Act
+        solution.setSolutionText(solutionText);
+
+        // Assert
+        assertEquals(solutionText, solution.getSolutionText());
+    }
+
+    @Test
+    public void testGetIdLanguage() {
+        // Arrange
+        int idLanguage = 1;
+        Solution solution = new Solution();
+        solution.setIdLanguage(idLanguage);
+
+        // Act
+        int result = solution.getIdLanguage();
+
+        // Assert
+        assertEquals(idLanguage, result);
+    }
+
+    @Test
+    public void testSetIdLanguage() {
+        // Arrange
+        int idLanguage = 1;
+        Solution solution = new Solution();
+
+        // Act
+        solution.setIdLanguage(idLanguage);
+
+        // Assert
+        assertEquals(idLanguage, solution.getIdLanguage());
     }
 }

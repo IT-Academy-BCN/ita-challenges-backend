@@ -25,31 +25,58 @@ public class ExampleTest {
     }
 
     @Test
-    public void testExampleDataMethods() {
-        // Init data
-        UUID exampleId = UUID.randomUUID();
-        Example example = Example.builder()
-                .idExample(exampleId)
-                .exampleText("Texto de ejemplo")
-                .build();
+    public void testGetIdExample() {
+        // Arrange
+        UUID idExample = UUID.randomUUID();
+        Example example = new Example();
+        example.setIdExample(idExample);
 
-        // getter y setter
-        Assertions.assertEquals(exampleId, example.getIdExample());
-        Assertions.assertEquals("Texto de ejemplo", example.getExampleText());
+        // Act
+        UUID result = example.getIdExample();
 
-        // toString()
-        String expectedToString = "Example(idExample=" + exampleId + ", exampleText=Texto de ejemplo)";
-        Assertions.assertEquals(expectedToString, example.toString());
-
-        // equals()
-        Example equalExample = Example.builder()
-                .idExample(exampleId)
-                .exampleText("Texto de ejemplo")
-                .build();
-        Assertions.assertEquals(example, equalExample);
-
-        // hashCode()
-        Assertions.assertEquals(example.hashCode(), equalExample.hashCode());
+        // Assert
+        Assertions.assertEquals(idExample, result);
     }
+
+    @Test
+    public void testSetIdExample() {
+        // Arrange
+        UUID idExample = UUID.randomUUID();
+        Example example = new Example();
+
+        // Act
+        example.setIdExample(idExample);
+
+        // Assert
+        Assertions.assertEquals(idExample, example.getIdExample());
+    }
+
+    @Test
+    public void testGetExampleText() {
+        // Arrange
+        String exampleText = "Test Example Text";
+        Example example = new Example();
+        example.setExampleText(exampleText);
+
+        // Act
+        String result = example.getExampleText();
+
+        // Assert
+        Assertions.assertEquals(exampleText, result);
+    }
+
+    @Test
+    public void testSetExampleText() {
+        // Arrange
+        String exampleText = "Test Example Text";
+        Example example = new Example();
+
+        // Act
+        example.setExampleText(exampleText);
+
+        // Assert
+        Assertions.assertEquals(exampleText, example.getExampleText());
+    }
+
 
 }

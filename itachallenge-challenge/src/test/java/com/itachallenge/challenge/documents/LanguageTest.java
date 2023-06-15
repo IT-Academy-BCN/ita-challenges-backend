@@ -38,36 +38,93 @@ public class LanguageTest {
     }
 
     @Test
-    public void testLanguageMethods() {
-        // Crea una instancia de Language
-        Language language = Language.builder()
-                .idLanguage(1)
-                .languageName("Java")
-                .idChallenges(new HashSet<>())
-                .build();
+    public void testGetIdLanguage() {
+        // Arrange
+        int idLanguage = 1;
+        Language language = new Language();
+        language.setIdLanguage(idLanguage);
 
-        // Prueba los métodos getter y setter
-        int newIdLanguage = 2;
-        language.setIdLanguage(newIdLanguage);
-        assertEquals(newIdLanguage, language.getIdLanguage());
+        // Act
+        int result = language.getIdLanguage();
 
-        String newLanguageName = "Python";
-        language.setLanguageName(newLanguageName);
-        assertEquals(newLanguageName, language.getLanguageName());
+        // Assert
+        assertEquals(idLanguage, result);
+    }
 
-        Set<UUID> newIdChallenges = new HashSet<>();
-        language.setIdChallenges(newIdChallenges);
-        assertEquals(newIdChallenges, language.getIdChallenges());
+    @Test
+    public void testSetIdLanguage() {
+        // Arrange
+        int idLanguage = 1;
+        Language language = new Language();
 
-        // Prueba el método equals()
-        Language equalLanguage = Language.builder()
-                .idLanguage(newIdLanguage)
-                .languageName(newLanguageName)
-                .idChallenges(newIdChallenges)
-                .build();
-        assertEquals(language, equalLanguage);
+        // Act
+        language.setIdLanguage(idLanguage);
 
-        // Prueba el método hashCode()
-        assertEquals(language.hashCode(), equalLanguage.hashCode());
+        // Assert
+        assertEquals(idLanguage, language.getIdLanguage());
+    }
+
+    @Test
+    public void testGetLanguageName() {
+        // Arrange
+        String languageName = "Test Language";
+        Language language = new Language();
+        language.setLanguageName(languageName);
+
+        // Act
+        String result = language.getLanguageName();
+
+        // Assert
+        assertEquals(languageName, result);
+    }
+
+    @Test
+    public void testSetLanguageName() {
+        // Arrange
+        String languageName = "Test Language";
+        Language language = new Language();
+
+        // Act
+        language.setLanguageName(languageName);
+
+        // Assert
+        assertEquals(languageName, language.getLanguageName());
+    }
+
+    @Test
+    public void testGetIdChallenges() {
+        // Arrange
+        Set<UUID> idChallenges = new HashSet<>();
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+        idChallenges.add(challengeId1);
+        idChallenges.add(challengeId2);
+
+        Language language = new Language();
+        language.setIdChallenges(idChallenges);
+
+        // Act
+        Set<UUID> result = language.getIdChallenges();
+
+        // Assert
+        assertEquals(idChallenges, result);
+    }
+
+    @Test
+    public void testSetIdChallenges() {
+        // Arrange
+        Set<UUID> idChallenges = new HashSet<>();
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+        idChallenges.add(challengeId1);
+        idChallenges.add(challengeId2);
+
+        Language language = new Language();
+
+        // Act
+        language.setIdChallenges(idChallenges);
+
+        // Assert
+        assertEquals(idChallenges, language.getIdChallenges());
     }
 }

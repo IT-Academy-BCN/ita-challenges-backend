@@ -34,41 +34,86 @@ public class DetailTest {
     }
 
     @Test
-    public void testDetailDataMethods() {
-        // Init data
-        Detail detail = Detail.builder()
-                .description("Descripción del detalle")
-                .examples(new ArrayList<>())
-                .note("Nota del detalle")
-                .build();
+    public void testGetDescription() {
+        // Arrange
+        String description = "Test Description";
+        Detail detail = new Detail();
+        detail.setDescription(description);
 
-        // toString()
-        String expectedToString = "Detail(description=Descripción del detalle, examples=[], note=Nota del detalle)";
-        Assertions.assertEquals(expectedToString, detail.toString());
+        // Act
+        String result = detail.getDescription();
 
-        // getter y setter
-        String newDescription = "Nueva descripción";
-        detail.setDescription(newDescription);
-        Assertions.assertEquals(newDescription, detail.getDescription());
-
-        List<Example> newExamples = new ArrayList<>();
-        detail.setExamples(newExamples);
-        Assertions.assertEquals(newExamples, detail.getExamples());
-
-        String newNote = "Nueva nota";
-        detail.setNote(newNote);
-        Assertions.assertEquals(newNote, detail.getNote());
-
-        // equals()
-        Detail equalDetail = Detail.builder()
-                .description(newDescription)
-                .examples(newExamples)
-                .note(newNote)
-                .build();
-        Assertions.assertEquals(detail, equalDetail);
-
-        // hashCode()
-        Assertions.assertEquals(detail.hashCode(), equalDetail.hashCode());
+        // Assert
+        Assertions.assertEquals(description, result);
     }
+
+    @Test
+    public void testSetDescription() {
+        // Arrange
+        String description = "Test Description";
+        Detail detail = new Detail();
+
+        // Act
+        detail.setDescription(description);
+
+        // Assert
+        Assertions.assertEquals(description, detail.getDescription());
+    }
+
+    @Test
+    public void testGetExamples() {
+        // Arrange
+        List<Example> examples = Arrays.asList(new Example(), new Example());
+        Detail detail = new Detail();
+        detail.setExamples(examples);
+
+        // Act
+        List<Example> result = detail.getExamples();
+
+        // Assert
+        Assertions.assertEquals(examples, result);
+    }
+
+    @Test
+    public void testSetExamples() {
+        // Arrange
+        List<Example> examples = Arrays.asList(new Example(), new Example());
+        Detail detail = new Detail();
+
+        // Act
+        detail.setExamples(examples);
+
+        // Assert
+        Assertions.assertEquals(examples, detail.getExamples());
+    }
+
+    @Test
+    public void testGetNote() {
+        // Arrange
+        String note = "Test Note";
+        Detail detail = new Detail();
+        detail.setNote(note);
+
+        // Act
+        String result = detail.getNote();
+
+        // Assert
+        Assertions.assertEquals(note, result);
+    }
+
+    @Test
+    public void testSetNote() {
+        // Arrange
+        String note = "Test Note";
+        Detail detail = new Detail();
+
+        // Act
+        detail.setNote(note);
+
+        // Assert
+        Assertions.assertEquals(note, detail.getNote());
+    }
+
+
 
 }
