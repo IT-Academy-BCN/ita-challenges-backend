@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class BadUUIDExceptionTest {
 
     @Test
-    public void testBadUUIDExceptionClass() {
+    void testBadUUIDExceptionClass() {
         String message = "Invalid UUID";
         BadUUIDException exception = new BadUUIDException(message);
 

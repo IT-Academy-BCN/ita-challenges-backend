@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExceptionHandlingTest {
 
     @Test
-    public void testHandleBadUUID() {
+    void testHandleBadUUID() {
         ExceptionHandling exceptionHandling = new ExceptionHandling();
         ResponseEntity<ExceptionHandling.ErrorMessage> responseEntity = exceptionHandling.handleBadUUID();
 
@@ -17,7 +17,7 @@ public class ExceptionHandlingTest {
     }
 
     @Test
-    public void testErrorMessage() {
+    void testErrorMessage() {
         String expectedMsg = "The provided UUID is not valid";
 
         ExceptionHandling.ErrorMessage errorMessage = new ExceptionHandling.ErrorMessage(expectedMsg);
