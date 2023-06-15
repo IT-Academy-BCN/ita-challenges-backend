@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.helpers;
 
+import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.documents.ChallengeDummy;
+import com.itachallenge.challenge.documents.Language;
 import com.itachallenge.challenge.documents.LanguageDummy;
 import com.itachallenge.challenge.dtos.ChallengeBasicInfoDto;
 import com.itachallenge.challenge.dtos.ChallengeDto;
@@ -11,28 +13,38 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
 public class CustomConverter implements StarterConverter,
         ChallengeDocConverter, LanguageDocConverter {
 
-    private ChallengeDummy challengeDoc;
+    private Challenge challengeDoc;
 
-    private LanguageDummy languageDoc;
+    private Language languageDoc;
 
-    public ChallengeDocConverter from(ChallengeDummy challenge) {
+    //private ChallengeDummy challengeDoc;
+    //private LanguageDummy languageDoc;
+
+    public ChallengeDocConverter from(Challenge challenge) {
         this.challengeDoc = challenge;
         return this;
     }
 
-    public LanguageDocConverter from(LanguageDummy language) {
+    public LanguageDocConverter from(Language language) {
         this.languageDoc = language;
         return this;
     }
 
+    public ChallengeDto toChallengeDto(UUID challengeID, Float percentage, Integer popularity) {
+        return ChallengeDto.builder()
+                .challengeId(challengeID)
+                .
+    }
+
     public ChallengeDto toChallengeDtoWithOnlyBasicInfo(Float percentage, Integer popularity) {
-        return ChallengeDto.builder(challengeDoc.getUuid())
+        return ChallengeDto.builder()
                 .basicInfo(fromChallengeToChallengeBasicDto(percentage,popularity))
                 .build();
     }
@@ -41,8 +53,9 @@ public class CustomConverter implements StarterConverter,
         return fromLanguageToLanguageDto();
     }
 
-    private ChallengeBasicInfoDto fromChallengeToChallengeBasicDto(Float percentage, Integer popularity) {
-        return ChallengeBasicInfoDto.builder()
+    private ChallengeDto fromChallengeToChallengeBasicDto(Float percentage, Integer popularity) {
+        return ChallengeDto.builder()
+                .challengeId(null) //TODO mirar si passem null o no el buildejem
                 .level(challengeDoc.getLevel())
                 .title(challengeDoc.getTitle())
                 .languages(challengeDoc.getLanguages().stream()

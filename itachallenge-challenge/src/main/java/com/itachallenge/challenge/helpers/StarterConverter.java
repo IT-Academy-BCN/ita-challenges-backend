@@ -1,11 +1,13 @@
 package com.itachallenge.challenge.helpers;
 
+import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.documents.ChallengeDummy;
+import com.itachallenge.challenge.documents.Language;
 import com.itachallenge.challenge.documents.LanguageDummy;
 
 public interface StarterConverter {
 
-    ChallengeDocConverter from(ChallengeDummy challenge);
+    ChallengeDocConverter from(Challenge challenge);
 
-    LanguageDocConverter from (LanguageDummy language);
+    LanguageDocConverter from (Language language);
 }

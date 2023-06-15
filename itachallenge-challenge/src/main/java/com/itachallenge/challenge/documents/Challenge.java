@@ -12,7 +12,7 @@ public interface Challenge {
 
     String getTitle();
 
-    Set<LanguageDummy> getLanguages();
+    Set<Language> getLanguages();
 
     LocalDateTime getCreationDate();
 
