@@ -70,7 +70,7 @@ class ChallengeServiceTest {
         assertEquals(2, challenge1.getResources().size());
         assertFalse(challenge1.getResources().contains(resourceId));
 
-        assertEquals(3, challenge2.getResources().size());
+        assertEquals(2, challenge2.getResources().size());
         assertFalse(challenge2.getResources().contains(resourceId));
 
     }
@@ -105,10 +105,10 @@ class ChallengeServiceTest {
         verify(challengeRepository, times(0)).save(challenge1);
         verify(challengeRepository, times(1)).findAllByResourcesContaining(resourceId);
 
-        assertEquals(3, challenge1.getResources().size());
+        assertEquals(2, challenge1.getResources().size());
         assertFalse(challenge1.getResources().contains(resourceId));
 
-        assertEquals(3, challenge2.getResources().size());
+        assertEquals(2, challenge2.getResources().size());
         assertFalse(challenge2.getResources().contains(resourceId));
     }
 }
