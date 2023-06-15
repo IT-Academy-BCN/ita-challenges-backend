@@ -1,12 +1,9 @@
 package com.itachallenge.challenge.documents;
 
 import lombok.*;
-import org.bson.codecs.pojo.annotations.BsonId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,9 +11,11 @@ import java.util.Set;
 import java.util.UUID;
 
 @Document(collection="challenges")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Challenge {
 
     @Id

@@ -53,4 +53,26 @@ public class ChallengeTest {
         Assertions.assertEquals(resources, challenge.getResources());
     }
 
+    @Test
+    public void testGettersAndSetters() {
+        UUID uuid = UUID.randomUUID();
+        String level = "Intermediate";
+        String title = "Coding Challenge";
+        Set<String> languages = new HashSet<>(Arrays.asList("Java", "Python"));
+        LocalDate creationDate = LocalDate.now();
+
+        Challenge challenge = new Challenge();
+        challenge.setUuid(uuid);
+        challenge.setLevel(level);
+        challenge.setTitle(title);
+        challenge.setLanguages(languages);
+        challenge.setCreationDate(creationDate);
+
+        Assertions.assertEquals(uuid, challenge.getUuid());
+        Assertions.assertEquals(level, challenge.getLevel());
+        Assertions.assertEquals(title, challenge.getTitle());
+        Assertions.assertEquals(languages, challenge.getLanguages());
+        Assertions.assertEquals(creationDate, challenge.getCreationDate());
+    }
+
 }

@@ -5,9 +5,7 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -15,11 +13,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChallengeService {
     private final ChallengeRepository challengeRepository;
-
-    public Flux<Challenge> getAll(){
-        return challengeRepository.findAll();}
-
-    public Flux<Challenge> getByResource(UUID idResource){return challengeRepository.findAllByResourcesContaining(idResource);}
 
     public boolean removeResourcesById(UUID idResource){
         Flux<Challenge> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);

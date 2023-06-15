@@ -1,6 +1,9 @@
 package com.itachallenge.challenge.controller;
 
+<<<<<<< HEAD
 import com.itachallenge.challenge.exception.BadUUIDException;
+=======
+>>>>>>> feature#55
 import com.itachallenge.challenge.service.ChallengeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +20,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
+
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 
 
 @ExtendWith(SpringExtension.class)

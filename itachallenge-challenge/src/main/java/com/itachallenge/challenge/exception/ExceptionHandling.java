@@ -16,6 +16,7 @@ public class ExceptionHandling {
 
     @Data
     @AllArgsConstructor
+    static
     class ErrorMessage{
         String msg;
     }

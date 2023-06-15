@@ -3,6 +3,7 @@ package com.itachallenge.challenge.documents;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -31,5 +32,88 @@ public class DetailTest {
         Assertions.assertEquals(examples, detail.getExamples());
         Assertions.assertEquals(note, detail.getNote());
     }
+
+    @Test
+    public void testGetDescription() {
+        // Arrange
+        String description = "Test Description";
+        Detail detail = new Detail();
+        detail.setDescription(description);
+
+        // Act
+        String result = detail.getDescription();
+
+        // Assert
+        Assertions.assertEquals(description, result);
+    }
+
+    @Test
+    public void testSetDescription() {
+        // Arrange
+        String description = "Test Description";
+        Detail detail = new Detail();
+
+        // Act
+        detail.setDescription(description);
+
+        // Assert
+        Assertions.assertEquals(description, detail.getDescription());
+    }
+
+    @Test
+    public void testGetExamples() {
+        // Arrange
+        List<Example> examples = Arrays.asList(new Example(), new Example());
+        Detail detail = new Detail();
+        detail.setExamples(examples);
+
+        // Act
+        List<Example> result = detail.getExamples();
+
+        // Assert
+        Assertions.assertEquals(examples, result);
+    }
+
+    @Test
+    public void testSetExamples() {
+        // Arrange
+        List<Example> examples = Arrays.asList(new Example(), new Example());
+        Detail detail = new Detail();
+
+        // Act
+        detail.setExamples(examples);
+
+        // Assert
+        Assertions.assertEquals(examples, detail.getExamples());
+    }
+
+    @Test
+    public void testGetNote() {
+        // Arrange
+        String note = "Test Note";
+        Detail detail = new Detail();
+        detail.setNote(note);
+
+        // Act
+        String result = detail.getNote();
+
+        // Assert
+        Assertions.assertEquals(note, result);
+    }
+
+    @Test
+    public void testSetNote() {
+        // Arrange
+        String note = "Test Note";
+        Detail detail = new Detail();
+
+        // Act
+        detail.setNote(note);
+
+        // Assert
+        Assertions.assertEquals(note, detail.getNote());
+    }
+
+
 
 }

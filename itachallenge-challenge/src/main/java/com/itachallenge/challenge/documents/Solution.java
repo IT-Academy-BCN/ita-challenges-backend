@@ -8,9 +8,11 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.util.UUID;
 
 @Document(collection="solutions")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Solution {
 
     @MongoId

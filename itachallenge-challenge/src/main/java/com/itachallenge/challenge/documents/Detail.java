@@ -5,9 +5,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Detail {
 
     @Field(name="description")

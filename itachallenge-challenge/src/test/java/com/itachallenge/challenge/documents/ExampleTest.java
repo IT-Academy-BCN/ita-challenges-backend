@@ -24,4 +24,59 @@ public class ExampleTest {
         Assertions.assertEquals(exampleText, example.getExampleText());
     }
 
+    @Test
+    public void testGetIdExample() {
+        // Arrange
+        UUID idExample = UUID.randomUUID();
+        Example example = new Example();
+        example.setIdExample(idExample);
+
+        // Act
+        UUID result = example.getIdExample();
+
+        // Assert
+        Assertions.assertEquals(idExample, result);
+    }
+
+    @Test
+    public void testSetIdExample() {
+        // Arrange
+        UUID idExample = UUID.randomUUID();
+        Example example = new Example();
+
+        // Act
+        example.setIdExample(idExample);
+
+        // Assert
+        Assertions.assertEquals(idExample, example.getIdExample());
+    }
+
+    @Test
+    public void testGetExampleText() {
+        // Arrange
+        String exampleText = "Test Example Text";
+        Example example = new Example();
+        example.setExampleText(exampleText);
+
+        // Act
+        String result = example.getExampleText();
+
+        // Assert
+        Assertions.assertEquals(exampleText, result);
+    }
+
+    @Test
+    public void testSetExampleText() {
+        // Arrange
+        String exampleText = "Test Example Text";
+        Example example = new Example();
+
+        // Act
+        example.setExampleText(exampleText);
+
+        // Assert
+        Assertions.assertEquals(exampleText, example.getExampleText());
+    }
+
+
 }
