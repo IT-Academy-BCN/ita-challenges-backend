@@ -1,11 +1,10 @@
 package com.itachallenge.challenge.helpers;
 
-import com.itachallenge.challenge.documents.dummies.ChallengeDummy;
-import com.itachallenge.challenge.documents.dummies.LanguageDummy;
+import com.itachallenge.challenge.documents.ChallengeDummy;
+import com.itachallenge.challenge.documents.LanguageDummy;
 import com.itachallenge.challenge.dtos.ChallengeBasicInfoDto;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;

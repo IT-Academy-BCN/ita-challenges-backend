@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.helpers;
 
-import com.itachallenge.challenge.documents.dummies.ChallengeDummy;
-import com.itachallenge.challenge.documents.dummies.LanguageDummy;
+import com.itachallenge.challenge.documents.ChallengeDummy;
+import com.itachallenge.challenge.documents.LanguageDummy;
 import com.itachallenge.challenge.dtos.ChallengeBasicInfoDto;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Component
