@@ -6,6 +6,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://adminChallenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+      uuid-representation: standard
 
 springdoc:
   swagger-ui:

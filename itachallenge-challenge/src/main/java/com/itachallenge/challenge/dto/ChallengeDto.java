@@ -19,5 +19,5 @@ public class ChallengeDto {
     @JsonProperty("challenge_title")
     private String title;
 
-    private Set<UUID> related;
+    private Set<ReadUuidDto> related;
 }

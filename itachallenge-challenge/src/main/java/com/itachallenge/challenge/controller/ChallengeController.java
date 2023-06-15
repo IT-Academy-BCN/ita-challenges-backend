@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.ReadUuidDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -81,8 +82,18 @@ public class ChallengeController {
     }
 
     @GetMapping(value = "/{id}")
-    public Mono<ChallengeDto> challenge(@PathVariable String id){
-        return challengeService.unMono(UUID.fromString(id));
+    public Mono<ChallengeDto> OneChallenge(@PathVariable String id){
+        return challengeService.getOneChallenge(UUID.fromString(id));
     }
 
+    @GetMapping
+    public Flux<ChallengeDto> allChallenges(){
+        return challengeService.getAll();
+    }
+
+    //RETORNA LOS OBJETOS UUID DE UN CHALLENGE A PARTIR DE ESE CHALLENGE (DESPUÉS ELIMINAR)
+    @GetMapping(value = "/prueba/{id}")
+    public Flux<ReadUuidDto> manyRelated(@PathVariable String id){
+        return challengeService.arraysUuids(UUID.fromString(id));
+    }
 }
