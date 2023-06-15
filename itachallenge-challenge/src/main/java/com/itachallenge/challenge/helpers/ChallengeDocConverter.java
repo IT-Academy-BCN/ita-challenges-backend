@@ -4,5 +4,5 @@ import com.itachallenge.challenge.dtos.ChallengeDto;
 
 public interface ChallengeDocConverter {
 
-    ChallengeDto toChallengeDtoWithOnlyBasicInfo(Float percentage, Integer popularity);
+    ChallengeDto toChallengeDto(Float percentage, Integer popularity);
 }

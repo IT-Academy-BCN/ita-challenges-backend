@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.helpers;
 
 import com.itachallenge.challenge.documents.Challenge;
-import com.itachallenge.challenge.documents.ChallengeDummy;
 import com.itachallenge.challenge.documents.Language;
-import com.itachallenge.challenge.documents.LanguageDummy;
-import com.itachallenge.challenge.dtos.ChallengeBasicInfoDto;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
 import org.springframework.stereotype.Component;
@@ -37,25 +34,9 @@ public class CustomConverter implements StarterConverter,
         return this;
     }
 
-    public ChallengeDto toChallengeDto(UUID challengeID, Float percentage, Integer popularity) {
+    public ChallengeDto toChallengeDto(Float percentage, Integer popularity) {
         return ChallengeDto.builder()
-                .challengeId(challengeID)
-                .
-    }
-
-    public ChallengeDto toChallengeDtoWithOnlyBasicInfo(Float percentage, Integer popularity) {
-        return ChallengeDto.builder()
-                .basicInfo(fromChallengeToChallengeBasicDto(percentage,popularity))
-                .build();
-    }
-
-    public LanguageDto toLanguageDto() {
-        return fromLanguageToLanguageDto();
-    }
-
-    private ChallengeDto fromChallengeToChallengeBasicDto(Float percentage, Integer popularity) {
-        return ChallengeDto.builder()
-                .challengeId(null) //TODO mirar si passem null o no el buildejem
+                .challengeId(challengeDoc.getUuid())
                 .level(challengeDoc.getLevel())
                 .title(challengeDoc.getTitle())
                 .languages(challengeDoc.getLanguages().stream()
@@ -65,6 +46,10 @@ public class CustomConverter implements StarterConverter,
                 .popularity(popularity)
                 .creationDate(getFormattedCreationDateTime(challengeDoc.getCreationDate()))
                 .build();
+    }
+
+    public LanguageDto toLanguageDto() {
+        return fromLanguageToLanguageDto();
     }
 
     //metodo para formatear creationDate del document al formato requerido en el .json

@@ -1,8 +1,7 @@
 package com.itachallenge.challenge.helpers;
 
-import com.itachallenge.challenge.documents.ChallengeDummy;
-import com.itachallenge.challenge.documents.LanguageDummy;
-import com.itachallenge.challenge.dtos.ChallengeBasicInfoDto;
+import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.documents.Language;
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.LanguageDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,9 +28,9 @@ public class CustomConverterTest {
     @Autowired
     private StarterConverter converter;
 
-    private LanguageDummy languageMocked1;
+    private Language languageMocked1;
 
-    private ChallengeDummy challengeMockedWithOnlyBasicInfo;
+    private Challenge challengeMocked;
 
     private Float percentage;
 
@@ -39,11 +38,11 @@ public class CustomConverterTest {
 
     private LanguageDto languageDto1;
 
-    private ChallengeDto challengeDtoWithOnlyBasicInfo;
+    private ChallengeDto challengeDto;
 
     @BeforeEach
     void setUp(){
-        UUID challengeId = UUID.randomUUID();
+        UUID challengeRandomId = UUID.randomUUID();
         String title = "title challenge";
         String level = "some level";
         LocalDateTime creationDate = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
@@ -51,39 +50,38 @@ public class CustomConverterTest {
         String[] languagesNames = new String[]{"name1","name2"};
 
         languageMocked1 = getLanguageMocked(idsLanguages[0], languagesNames[0]);
-        LanguageDummy languageMocked2 = getLanguageMocked(idsLanguages[1], languagesNames[1]);
+        Language languageMocked2 = getLanguageMocked(idsLanguages[1], languagesNames[1]);
 
-        challengeMockedWithOnlyBasicInfo = getChallengeMockedForBasicInfoDto(challengeId, title, level,
+        challengeMocked = getChallengeMockedForBasicInfoDto(challengeRandomId, title, level,
                 Set.of(languageMocked1,languageMocked2),creationDate);
 
         percentage = 0.6432f;
         popularity = 25;
 
         languageDto1 = new LanguageDto(idsLanguages[0], languagesNames[0]);
-        challengeDtoWithOnlyBasicInfo = ChallengeDto.builder(challengeId)
-                .basicInfo(ChallengeBasicInfoDto.builder()
-                        .title(title)
-                        .level(level)
-                        .creationDate("2023-06-05T12:30:00+02:00")
-                        .percentage(percentage)
-                        .popularity(popularity)
-                        .languages(Set.of(
-                                new LanguageDto(idsLanguages[0], languagesNames[0]),
-                                new LanguageDto(idsLanguages[1], languagesNames[1])))
-                        .build())
+        challengeDto = ChallengeDto.builder()
+                .challengeId(challengeRandomId)
+                .title(title)
+                .level(level)
+                .creationDate("2023-06-05T12:30:00+02:00")
+                .percentage(percentage)
+                .popularity(popularity)
+                .languages(Set.of(
+                        new LanguageDto(idsLanguages[0], languagesNames[0]),
+                        new LanguageDto(idsLanguages[1], languagesNames[1])))
                 .build();
     }
 
-    private LanguageDummy getLanguageMocked(int idLanguage, String languageName){
-        LanguageDummy languageMocked = Mockito.mock(LanguageDummy.class);
+    private Language getLanguageMocked(int idLanguage, String languageName){
+        Language languageMocked = Mockito.mock(Language.class);
         when(languageMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageMocked.getLanguageName()).thenReturn(languageName);
         return languageMocked;
     }
 
-    private ChallengeDummy getChallengeMockedForBasicInfoDto(UUID challengeId, String title, String level,
-                                                             Set<LanguageDummy> languages, LocalDateTime creationDate){
-        ChallengeDummy challengeMocked = Mockito.mock(ChallengeDummy.class);
+    private Challenge getChallengeMockedForBasicInfoDto(UUID challengeId, String title, String level,
+                                                             Set<Language> languages, LocalDateTime creationDate){
+        Challenge challengeMocked = Mockito.mock(Challenge.class);
         when(challengeMocked.getUuid()).thenReturn(challengeId);
         when(challengeMocked.getTitle()).thenReturn(title);
         when(challengeMocked.getLevel()).thenReturn(level);
@@ -95,33 +93,33 @@ public class CustomConverterTest {
     @Test
     @DisplayName("Give access to available methods when selecting challenge document conversion test")
     void fromChallengeDocumentTest(){
-        ChallengeDummy anyChallenge = Mockito.mock(ChallengeDummy.class);
+        Challenge anyChallenge = Mockito.mock(Challenge.class);
         assertInstanceOf(ChallengeDocConverter.class, converter.from(anyChallenge));
     }
 
     @Test
     @DisplayName("Give access to available methods when selecting language document conversion test")
     void fromLanguageDocumentTest(){
-        LanguageDummy anyLanguage = Mockito.mock(LanguageDummy.class);
+        Language anyLanguage = Mockito.mock(Language.class);
         assertInstanceOf(LanguageDocConverter.class, converter.from(anyLanguage));
     }
 
     @Test
     @DisplayName("Conversion from language document to language dto test")
     void fromLanguageToLanguageDtoTest(){
-        LanguageDummy languageMocked = languageMocked1;
+        Language languageMocked = languageMocked1;
         LanguageDto resultDto = converter.from(languageMocked).toLanguageDto();
         LanguageDto expectedDto = languageDto1;
         assertThat(expectedDto).usingRecursiveComparison().isEqualTo(resultDto);
     }
 
     @Test
-    @DisplayName("Conversion from challenge document to challenge dto with only basic info test")
-    void fromChallengeToChallengeDtoWithOnlyBasicInfoTest(){
-        ChallengeDummy challengeMocked = challengeMockedWithOnlyBasicInfo;
+    @DisplayName("Conversion from challenge document to challenge dto")
+    void fromChallengeToChallengeDto(){
+        Challenge challengeMocked = this.challengeMocked;
         ChallengeDto resultDto = converter.from(challengeMocked)
-                .toChallengeDtoWithOnlyBasicInfo(percentage, popularity);
-        ChallengeDto expectedDto = challengeDtoWithOnlyBasicInfo;
+                .toChallengeDto(percentage, popularity);
+        ChallengeDto expectedDto = challengeDto;
         assertThat(expectedDto).usingRecursiveComparison().isEqualTo(resultDto);
     }
 }
