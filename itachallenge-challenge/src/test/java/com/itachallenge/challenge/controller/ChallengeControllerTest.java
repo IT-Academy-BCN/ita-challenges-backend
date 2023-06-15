@@ -1,9 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-<<<<<<< HEAD
-import com.itachallenge.challenge.exception.BadUUIDException;
-=======
->>>>>>> feature#55
 import com.itachallenge.challenge.service.ChallengeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,22 +10,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.reactive.server.StatusAssertions;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
-
-import static org.mockito.Mockito.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
 
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ChallengeControllerTest {
+class ChallengeControllerTest {
     //region ATTRIBUTES
     @Autowired
     private WebTestClient webTestClient;

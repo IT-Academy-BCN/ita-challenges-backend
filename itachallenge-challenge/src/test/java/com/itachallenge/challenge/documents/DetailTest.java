@@ -3,15 +3,14 @@ package com.itachallenge.challenge.documents;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-public class DetailTest {
+class DetailTest {
 
     @Test
-    public void testDetailClass() {
+    void testDetailClass() {
         // Init data
         String description = "Challenge description";
         List<Example> examples = Arrays.asList(
@@ -34,7 +33,7 @@ public class DetailTest {
     }
 
     @Test
-    public void testGetDescription() {
+    void testGetDescription() {
         // Arrange
         String description = "Test Description";
         Detail detail = new Detail();
@@ -48,7 +47,7 @@ public class DetailTest {
     }
 
     @Test
-    public void testSetDescription() {
+    void testSetDescription() {
         // Arrange
         String description = "Test Description";
         Detail detail = new Detail();
@@ -61,7 +60,7 @@ public class DetailTest {
     }
 
     @Test
-    public void testGetExamples() {
+    void testGetExamples() {
         // Arrange
         List<Example> examples = Arrays.asList(new Example(), new Example());
         Detail detail = new Detail();
@@ -75,7 +74,7 @@ public class DetailTest {
     }
 
     @Test
-    public void testSetExamples() {
+    void testSetExamples() {
         // Arrange
         List<Example> examples = Arrays.asList(new Example(), new Example());
         Detail detail = new Detail();
@@ -88,7 +87,7 @@ public class DetailTest {
     }
 
     @Test
-    public void testGetNote() {
+    void testGetNote() {
         // Arrange
         String note = "Test Note";
         Detail detail = new Detail();
@@ -102,7 +101,7 @@ public class DetailTest {
     }
 
     @Test
-    public void testSetNote() {
+    void testSetNote() {
         // Arrange
         String note = "Test Note";
         Detail detail = new Detail();

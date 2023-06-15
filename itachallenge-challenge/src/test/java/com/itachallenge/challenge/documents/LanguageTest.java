@@ -1,15 +1,17 @@
 package com.itachallenge.challenge.documents;
 
 import org.junit.jupiter.api.Test;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
 
-public class LanguageTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+class LanguageTest {
 
     @Test
-    public void testLanguageClass() {
+    void testLanguageClass() {
         int idLanguage = 1;
         String languageName = "Java";
         Set<UUID> idChallenges = new HashSet<>();
@@ -38,7 +40,7 @@ public class LanguageTest {
     }
 
     @Test
-    public void testGetIdLanguage() {
+    void testGetIdLanguage() {
         // Arrange
         int idLanguage = 1;
         Language language = new Language();
@@ -52,7 +54,7 @@ public class LanguageTest {
     }
 
     @Test
-    public void testSetIdLanguage() {
+    void testSetIdLanguage() {
         // Arrange
         int idLanguage = 1;
         Language language = new Language();
@@ -65,7 +67,7 @@ public class LanguageTest {
     }
 
     @Test
-    public void testGetLanguageName() {
+    void testGetLanguageName() {
         // Arrange
         String languageName = "Test Language";
         Language language = new Language();
@@ -79,7 +81,7 @@ public class LanguageTest {
     }
 
     @Test
-    public void testSetLanguageName() {
+    void testSetLanguageName() {
         // Arrange
         String languageName = "Test Language";
         Language language = new Language();
@@ -92,7 +94,7 @@ public class LanguageTest {
     }
 
     @Test
-    public void testGetIdChallenges() {
+    void testGetIdChallenges() {
         // Arrange
         Set<UUID> idChallenges = new HashSet<>();
         UUID challengeId1 = UUID.randomUUID();
@@ -111,7 +113,7 @@ public class LanguageTest {
     }
 
     @Test
-    public void testSetIdChallenges() {
+    void testSetIdChallenges() {
         // Arrange
         Set<UUID> idChallenges = new HashSet<>();
         UUID challengeId1 = UUID.randomUUID();

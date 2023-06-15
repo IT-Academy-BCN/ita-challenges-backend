@@ -1,8 +1,6 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.documents.Challenge;
-import com.itachallenge.challenge.documents.Detail;
-import com.itachallenge.challenge.documents.Example;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,9 +51,9 @@ class ChallengeServiceTest {
 
 
         when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.just(challenge1));
-        when(challengeRepository.save(eq(challenge1)))
+        when(challengeRepository.save(challenge1))
                 .thenReturn(Mono.just(challenge1));
-        when(challengeRepository.save(eq(challenge2)))
+        when(challengeRepository.save(challenge2))
                 .thenReturn(Mono.just(challenge2));
 
         // Act
@@ -91,9 +89,9 @@ class ChallengeServiceTest {
                 .build();
 
         when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.empty());
-        when(challengeRepository.save(eq(challenge1)))
+        when(challengeRepository.save(challenge1))
                 .thenReturn(Mono.just(challenge1));
-        when(challengeRepository.save(eq(challenge2)))
+        when(challengeRepository.save(challenge2))
                 .thenReturn(Mono.just(challenge2));
 
         // Act

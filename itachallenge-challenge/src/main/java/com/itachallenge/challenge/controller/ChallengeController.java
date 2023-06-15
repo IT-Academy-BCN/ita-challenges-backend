@@ -27,9 +27,8 @@ public class ChallengeController {
     }
 
     @DeleteMapping("/resources/{idResource}")
-    public ResponseEntity<?> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
-        UUID uuid = getUUID(idResource);
-        UUID uuidResource = UUID.fromString(idResource);
+    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuidResource = getUUID(idResource);
         if (challengeService.removeResourcesById(uuidResource)) {
             return ResponseEntity.noContent().build();
         } else {
@@ -38,12 +37,10 @@ public class ChallengeController {
     }
 
     private UUID getUUID(String uuidString) throws BadUUIDException {
-        UUID uuid = null;
         if (uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
-            uuid = UUID.fromString(uuidString);
-            return uuid;
+            return UUID.fromString(uuidString);
         } else {
-            throw new BadUUIDException();
+            throw new BadUUIDException("Invalid UUID");
         }
     }
 }
