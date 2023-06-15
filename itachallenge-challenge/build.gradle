@@ -61,11 +61,6 @@ dependencies {
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-    //https://stackoverflow.com/questions/54205486/how-to-avoid-sharing-is-only-supported-for-boot-loader-classes-because-bootstra
-    //https://docs.oracle.com/en/java/javase/17/vm/class-data-sharing.html#GUID-882DC523-706D-403E-8A06-FBBB0E1B2128
-    //https://docs.gradle.org/current/userguide/build_environment.html
-    //https://docs.gradle.org/current/userguide/build_environment.html#sec:gradle_configuration_properties
-    jvmArgs "-Xshare:off"
 }
 
 jacocoTestReport {

@@ -6,34 +6,35 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.helpers.ResourceHelper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootApplication
-public class ChallengeDtoTest {
+@SpringBootTest
+class ChallengeDtoTest {
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
-    private final String challengeJsonPathV1 = "json/ChallengeV1.json";
+    private final String challengeJsonPath = "json/ChallengeSerialized.json";
 
-    private final String challengeJsonPathV2 = "json/ChallengeV2.json";
+    private ChallengeDto challengeDtoToSerialize;
 
-    private ChallengeDto challengeDto;
-
+    private ChallengeDto challengeDtoFromDeserialization;
 
     /**
      * Para el test, es necesario pasar como parámetro a creationDate el
@@ -45,34 +46,59 @@ public class ChallengeDtoTest {
     void setUp(){
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(1, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(2, "Java");
-        Set<LanguageDto> languages = LanguageDtoTest.buildSetLanguages(firstLanguage,secondLanguage);
-        ChallengeBasicInfoDto challengeBasicInfoDto = ChallengeBasicInfoDtoTest.buildChallengeBasicInfoDto
-                ("Sociis Industries", "EASY", "2023-06-05T12:30:00", 105, 23.58f,languages);
-        challengeDto = ChallengeDto.builder(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"))
-                .basicInfo(challengeBasicInfoDto)
-                .build();
+
+        challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",
+                105, 23.58f,buildLanguagesSorted(firstLanguage, secondLanguage));
+
+        challengeDtoFromDeserialization = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",
+                105, 23.58f,buildLanguages(firstLanguage, secondLanguage));
     }
 
     @Test
     @DisplayName("Serialization ChallengeDto test")
-    @SneakyThrows({JsonProcessingException.class, IOException.class})
+    @SneakyThrows({JsonProcessingException.class})
     void rightSerializationTest(){
-        ChallengeDto dtoSerializable = challengeDto;
         String jsonResult = mapper
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
-                .writeValueAsString(dtoSerializable);
-        String jsonExpectedV1 = new ResourceHelper(challengeJsonPathV1).readResourceAsString();
-        String jsonExpectedV2 = new ResourceHelper(challengeJsonPathV2).readResourceAsString();
-        Assertions.assertTrue(jsonResult.equals(jsonExpectedV1) || jsonResult.equals(jsonExpectedV2));
+                .writeValueAsString(challengeDtoToSerialize);
+        String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
+        //Assertions.assertEquals(jsonExpectedV2, jsonResult);
+        assertEquals(jsonExpected, jsonResult);
     }
 
     @Test
     @DisplayName("Deserialization ChallengeDto test")
     @SneakyThrows(IOException.class)
     void rightDeserializationTest(){
-        String jsonDeserializable = new ResourceHelper(challengeJsonPathV1).readResourceAsString();
-        ChallengeDto dtoResult = mapper.readValue(jsonDeserializable, ChallengeDto.class);
-        ChallengeDto dtoExpected = challengeDto;
-        assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
+        String challengeJsonSource = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
+        ChallengeDto dtoResult = mapper.readValue(challengeJsonSource, ChallengeDto.class);
+        assertThat(dtoResult).usingRecursiveComparison().isEqualTo(challengeDtoFromDeserialization);
+    }
+
+    static Set<LanguageDto> buildLanguagesSorted(LanguageDto firstLanguage, LanguageDto secondLanguage){
+        LinkedHashSet<LanguageDto> languages = new LinkedHashSet<>();
+        languages.add(firstLanguage);
+        languages.add(secondLanguage);
+        return languages;
+    }
+
+    static Set<LanguageDto> buildLanguages(LanguageDto firstLanguage, LanguageDto secondLanguage){
+        return Set.copyOf(List.of(firstLanguage,secondLanguage));
+    }
+
+    static ChallengeDto buildChallengeWithBasicInfoDto
+            (UUID id, String title, String level, String creationDate,
+             Integer popularity, Float percentage, Set<LanguageDto> languages){
+        return ChallengeDto.builder()
+                .challengeId(id)
+                .title(title)
+                .level(level)
+                .creationDate(creationDate)
+                .popularity(popularity)
+                .percentage(percentage)
+                .languages(languages)
+                .build();
     }
 }
