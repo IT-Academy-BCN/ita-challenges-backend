@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class DetailTest {
 
@@ -13,8 +14,8 @@ public class DetailTest {
         // Init data
         String description = "Challenge description";
         List<Example> examples = Arrays.asList(
-                new Example("Example 1", "Input 1"),
-                new Example("Example 2", "Input 2")
+                new Example(UUID.fromString("0172b4b5-6a4f-4239-b5da-1638e7fb81f3"), "Input 1"),
+                new Example(UUID.fromString("46177adc-8d9f-4975-9661-d8b80ebd29f8"), "Input 2")
         );
         String note = "Additional note";
 

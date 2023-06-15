@@ -34,7 +34,7 @@ public class Challenge {
     private Set<String> languages;
 
     @Field(name="creation_date")
-    private String creationDate;
+    private LocalDate creationDate;
 
     //Next fields not priority for the moment
 

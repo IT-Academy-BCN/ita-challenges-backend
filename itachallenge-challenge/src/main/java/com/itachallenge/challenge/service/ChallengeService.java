@@ -35,16 +35,4 @@ public class ChallengeService {
                 .orElse(false);
     }
 
-    public Mono<Challenge> sansa() {
-        Challenge challenge = Challenge.builder()
-                .title("title")
-                .relatedChallenges(Set.of(UUID.randomUUID()))
-                .level("level")
-                .creationDate("asda")
-                .languages(Set.of("asda"))
-                .uuid(UUID.randomUUID()).build();
-
-
-        return challengeRepository.save(challenge);
-    }
 }

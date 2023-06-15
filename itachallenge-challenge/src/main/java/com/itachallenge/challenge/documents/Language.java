@@ -9,7 +9,8 @@ import java.util.Set;
 import java.util.UUID;
 
 @Document(collection="languages")
-@Getter
+@Data
+@Builder
 @AllArgsConstructor
 public class Language {
 

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ExceptionHandling {
 
-    @ExceptionHandler()
+    @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<ErrorMessage> handleBadUUID(){
         return ResponseEntity.badRequest().body(new ErrorMessage("The provided UUID is not valid"));
     }

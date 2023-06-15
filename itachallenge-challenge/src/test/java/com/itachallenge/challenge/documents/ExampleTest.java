@@ -3,12 +3,14 @@ package com.itachallenge.challenge.documents;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 public class ExampleTest {
 
     @Test
     public void testExampleClass() {
         // Arrange
-        String idExample = "123456";
+        UUID idExample = UUID.fromString("d4656966-5277-48ce-9d13-4b41ef901722");
         String exampleText = "Example text";
 
         // Act
