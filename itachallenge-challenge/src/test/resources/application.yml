@@ -3,19 +3,6 @@ spring:
     name: itachallenge-challenge
   jmx:
     enabled: true
-  data:
-    mongodb:
-      database: challenges
-      uuid-representation: standard
-
-
-springdoc:
-  swagger-ui:
-    path: "/swagger-ui-custom.html"
-    operationsSorted: method
-  api-docs:
-    enable: true
-    path: "/api-docs"
 
 server:
   port: 8762
@@ -28,20 +15,19 @@ management:
   security:
     enabled: false
 
-
-
-
 logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
-    "[com.businessassistantbcn]": INFO
+    "[com.itachallenge]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
 
 url:
   connection_timeout: 30000
+  fake_connection_timeout: 1
   maxBytesInMemory: 30000000
+  ds_test: https://swapi.py4e.com/api/vehicles/
