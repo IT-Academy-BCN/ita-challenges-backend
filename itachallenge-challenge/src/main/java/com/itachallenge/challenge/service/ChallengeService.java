@@ -5,9 +5,7 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

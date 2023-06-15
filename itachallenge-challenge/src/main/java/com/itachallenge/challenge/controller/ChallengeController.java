@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.service.ChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
