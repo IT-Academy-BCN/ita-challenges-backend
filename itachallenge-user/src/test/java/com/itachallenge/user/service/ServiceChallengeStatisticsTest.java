@@ -32,8 +32,5 @@ class ServiceChallengeStatisticsTest {
 
         //endregion TESTS
 
-
-        // OUT
-
     }
 }

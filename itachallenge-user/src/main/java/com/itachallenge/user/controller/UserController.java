@@ -5,7 +5,6 @@ import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +28,6 @@ public class UserController {
     //endregion ATTRIBUTES
 
 
-    //region CONSTRUCTOR
-
-    //endregion CONSTRUCTOR
-
-
     //region ENDPOINTS
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
@@ -42,14 +36,13 @@ public class UserController {
         return "Hello from ITA User!!!";
     }
 
-    @ApiResponses({
-            @ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "414", description = "URI too long")
-    })
+
+    @ApiResponse(responseCode = "404", description = "Not Found")
+    @ApiResponse(responseCode = "414", description = "URI too long")
     @Operation(summary = "Get Basic Info of Challenge")
     @GetMapping(value = "/statistics")
-    public Mono<List<ChallengeStatisticsDto>> GetBasicInfoChallenge(@RequestParam("challenge") List<UUID> challengeIds,
-                                                                    HttpServletRequest request) {
+    public Mono<List<ChallengeStatisticsDto>> GetChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds,
+                                                                     HttpServletRequest request) {
         //region VARIABLES
         Mono<List<ChallengeStatisticsDto>> elements = null;
         //endregion VARIABLES
