@@ -52,7 +52,7 @@ public class ChallengeServiceTest {
         //listOfChallenges = new ArrayList<>();
 
         //Set of Relateds for Challenge1
-        Set<UUID> relateds1 = new HashSet<>();
+/*        Set<UUID> relateds1 = new HashSet<>();
         UUID id11 = UUID.fromString("7c55adc0-f985-4829-a2a6-e7571d1be7de");
         UUID id12 = UUID.fromString("9818b618-b740-479d-8aac-962cd3e77cdd");
         relateds1.add(id11);
@@ -95,7 +95,7 @@ public class ChallengeServiceTest {
                 .title("Challenge 3")
                 .related(relateds3)
                 .build();
-
+*/
         //Challenge4
        /* UUID challengeUuid4 = UUID.fromString("2a8e07dd-b7ea-4507-92a0-5f413d0367f1");
         challenge4 = Challenge.builder()

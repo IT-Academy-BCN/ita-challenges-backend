@@ -6,21 +6,29 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.ReadUuidDto;
 import com.itachallenge.challenge.helpers.ChallengeMapper;
+import com.itachallenge.challenge.helpers.ResourceHelper;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.bson.Document;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+///import org.apache.commons.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -36,20 +44,9 @@ public class ChallengeService{
 
     @Autowired
     private ChallengeMapper challengeMapper;
+
     private static final Logger log = LoggerFactory.getLogger(ChallengeService.class);
 
-
-    //RETORNA EN UN FLUX TODOS LOS RELACIONADOS SIN PAGINAR
-/*    public Flux<ChallengeDto> getAllRelatedsByUuid(UUID id) {
-
-        return challengeRepository.findById(id)
-                .map(challenge -> challenge.getRelatedChallenges())
-                .flatMapMany(Flux::fromIterable)
-                .flatMap(idRelated -> challengeRepository.findById(idRelated))
-                .map(challengeMapper::mapToChallengeDto)
-                .switchIfEmpty(Flux.empty());
-    }
-*/
     //RETORNA EN UN MONO TODOS LOS RELACIONADOS PAGINADOS
     public Mono<GenericResultDto<ChallengeDto>> getRelateds(UUID id, int offset, int limit){
 
@@ -95,5 +92,15 @@ public class ChallengeService{
                 .map(challengeMapper::read);
 
         return uuidRelateds;
+    }
+
+    public Mono<GenericResultDto<ChallengeDto>> getRelatedsDummy() throws JSONException {
+
+        ResourceHelper resourceHelper = new ResourceHelper("mongodb-test-data/challengesDummy.json");
+        Optional<String> result = resourceHelper.readResourceAsString();
+
+        System.out.println(result);
+
+        return null;
     }
 }

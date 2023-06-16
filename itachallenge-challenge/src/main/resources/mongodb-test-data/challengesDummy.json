@@ -1,0 +1,29 @@
+[
+  {
+    "uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+    "challenge_title": "Sociis Industries",
+    "related": [
+      "40728c9c-a557-4d12-bf8f-3747d0924197",
+      "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0",
+      "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+    ]
+  },
+  {
+    "uuid" : "c0c7510b-f867-4375-b46f-0c164f30429f",
+    "challenge_title": "Dis Parturient Associates",
+    "related": [
+      "462d7617-477d-497f-8bd2-2fa5d897f20f",
+      "4345bf25-9dbe-429f-80e5-42e68b2f8a85",
+      "1f87630e-8c61-464e-8385-391f90d0b1d1"
+    ]
+  },
+  {
+    "uuid" : "5c1a97e5-1cca-4144-9981-2de1fb73b178",
+    "challenge_title": "Nam Nulla Magna Company",
+    "related": [
+      "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af",
+      "6c5021d5-fa3e-4da7-8c90-48e9c8d0209f",
+      "d0a82421-de75-46a5-903e-69e4addf7e75"
+    ]
+  }
+]
