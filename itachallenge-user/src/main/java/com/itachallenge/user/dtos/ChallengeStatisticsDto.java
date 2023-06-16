@@ -7,7 +7,6 @@ import lombok.*;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-////*@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
