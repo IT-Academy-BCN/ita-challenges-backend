@@ -1,15 +1,18 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
+@Service
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     //region ATTRIBUTES
-
+    Random randrom = new Random();
 
     //endregion ATTRIBUTES
 
@@ -20,7 +23,6 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
 
     //region METHODS
-
     @Override
     public Mono<List<ChallengeStatisticsDto>> GetChallengeStatistics(List<UUID> challengeIds) {
         //region VARIABLES
@@ -32,16 +34,16 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
         //region ACTIONS
         try{
             for (UUID id : challengeIds) {
-                //todo: missing check if UUID is correctly constructed.
+                //TODO: missing check if UUID is correctly constructed.
 
-                //todo: missing call repository for get challenge statistics.
+                //TODO: missing call repository for get statistics of challenge.
 
-                //todo: below code delete when uppers todo are implemented.
-                challengesList.add(new ChallengeStatisticsDto(id,(int)(Math.random()*1000), (float)(Math.random()*100)));
+                //TODO: delete below code when uppers todo are implemented.
+                challengesList.add(new ChallengeStatisticsDto(id, randrom.nextInt(1000), randrom.nextFloat (100)));
 
             }
         }catch(Exception ex){
-            //todo: missing error control
+            //TODO: missing error control
         }
 
         //endregion ACTIONS

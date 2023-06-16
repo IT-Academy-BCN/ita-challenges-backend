@@ -11,12 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,8 +42,10 @@ public class UserController {
         return "Hello from ITA User!!!";
     }
 
-    @ApiResponses({@ApiResponse(responseCode = "404", description = "Not Found"),
-            @ApiResponse(responseCode = "414", description = "URI too long")})
+    @ApiResponses({
+            @ApiResponse(responseCode = "404", description = "Not Found"),
+            @ApiResponse(responseCode = "414", description = "URI too long")
+    })
     @Operation(summary = "Get Basic Info of Challenge")
     @GetMapping(value = "/statistics")
     public Mono<List<ChallengeStatisticsDto>> GetBasicInfoChallenge(@RequestParam("challenge") List<UUID> challengeIds,
@@ -68,22 +68,13 @@ public class UserController {
         // OUT
         return elements;
     }
-////* delte
-//        return challengeIds.size() + "\r\n" + /*"Challenge lengt: " + challengeIds.length() + "//// Value: " + challengeIds.toString()+*/
-//                "\r\n Request URL length: " + request.toString().length() + "//// Value: " + request.toString() +
-//                "\r\n Request URL length: " + request.getRequestURL().length() + "//// Value: " + request.getRequestURL() +
-//                "\r\n Request URI length: " + request.getRequestURI().length() + "//// Value: " + request.getRequestURI() +
-//                "\r\n Request URI length: " + request.getContextPath().length() + "//// Value: " + request.getContextPath() +
-//                "\r\n Request URI length: " + request.getServletPath().length() + "//// Value: " + request.getServletPath() +
-//                "\r\n Request URI length: " + request.getQueryString().length() + "//// Value: " + request.getQueryString();
-    ////}
 
     //endregion ENDPOINTS
 
 
     //region METHODS: Private
     private void ValidateURLLength(HttpServletRequest requestIn) {
-        if (PropertiesConfig.urlMaxLength < requestIn.getRequestURL().length() + requestIn.getQueryString().length()) {
+        if (PropertiesConfig.URLMAXLENGTH < requestIn.getRequestURL().length() + requestIn.getQueryString().length()) {
             throw new ResponseStatusException(HttpStatus.URI_TOO_LONG);
         }
     }
