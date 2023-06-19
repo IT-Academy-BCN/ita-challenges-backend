@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import com.itachallenge.challenge.services.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,36 +30,27 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/getOne/{id}")
-    public ResponseEntity<Mono<ChallengeDto>> getOneChallenge(@PathVariable("id") String id) {
-
+    public Mono<? extends ResponseEntity<?>> getOneChallenge(@PathVariable("id") String id) {
         try {
             boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.NOT_FOUND.value(), "Invalid ID format.");
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
                 log.error("{} ID: {}, incorrect.", errorMessage, id);
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage.getMessage());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
             }
 
-            Mono<ChallengeDto> challenge = challengeService.getChallengeId(UUID.fromString(id))
-                    .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
-                    .onErrorResume(error -> {
-                        if (error instanceof IllegalArgumentException) {
-                            String errorMessageIlArgEx = "ERROR: " + error.getMessage();
-                            log.error("An IllegalArgumentException was thrown with Bad Request response: {}", error.getMessage());
-                            return Mono.error(new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessageIlArgEx));
-                        } else {
-                            log.error("An IllegalArgumentException was thrown with Internal Server Error response: {}", error.getMessage());
-                            return Mono.error(new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
-                        }
-                    });
+            Mono<?> challengeMono = challengeService.getChallengeId(UUID.fromString(id));
 
-            return ResponseEntity.ok(challenge);
+            return challengeMono
+                    .map(challenge -> ResponseEntity.ok().body(challenge))
+                    .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
 

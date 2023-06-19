@@ -4,8 +4,7 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Component
 @Getter
 @Setter
