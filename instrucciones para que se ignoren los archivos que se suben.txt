@@ -1,0 +1,6 @@
+hacer esto en tu repositorio una vez y con el .gitignore_global que nos paso Jonatan
+
+(lo mejor es que te hagas un clone entero de nuevo y hagas esta instrucción y una vez hecho ya te vale para más veces)
+
+
+git config - -global core.excludesfile ~/.gitignore_global
