@@ -1,9 +1,10 @@
 package com.itachallenge.challenge.documents;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ExampleTest {
 
@@ -20,8 +21,8 @@ class ExampleTest {
                 .build();
 
         // Assert
-        Assertions.assertEquals(idExample, example.getIdExample());
-        Assertions.assertEquals(exampleText, example.getExampleText());
+        assertEquals(idExample, example.getIdExample());
+        assertEquals(exampleText, example.getExampleText());
     }
 
     @Test
@@ -35,7 +36,7 @@ class ExampleTest {
         UUID result = example.getIdExample();
 
         // Assert
-        Assertions.assertEquals(idExample, result);
+        assertEquals(idExample, result);
     }
 
     @Test
@@ -48,7 +49,7 @@ class ExampleTest {
         example.setIdExample(idExample);
 
         // Assert
-        Assertions.assertEquals(idExample, example.getIdExample());
+        assertEquals(idExample, example.getIdExample());
     }
 
     @Test
@@ -62,7 +63,7 @@ class ExampleTest {
         String result = example.getExampleText();
 
         // Assert
-        Assertions.assertEquals(exampleText, result);
+        assertEquals(exampleText, result);
     }
 
     @Test
@@ -75,8 +76,20 @@ class ExampleTest {
         example.setExampleText(exampleText);
 
         // Assert
-        Assertions.assertEquals(exampleText, example.getExampleText());
+        assertEquals(exampleText, example.getExampleText());
     }
 
+    @Test
+    void getIdExample() {
+    UUID idExample = UUID.randomUUID();
+    Example example = new Example(idExample, null);
+    assertEquals(idExample, example.getIdExample());
+    }
 
+    @Test
+    void getExampleText() {
+        String exampleText = "Example Text";
+        Example example = new Example(null, exampleText);
+        assertEquals(exampleText, example.getExampleText());
+    }
 }

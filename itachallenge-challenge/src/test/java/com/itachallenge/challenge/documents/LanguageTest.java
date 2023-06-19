@@ -94,6 +94,20 @@ class LanguageTest {
     }
 
     @Test
+    void getIdLanguage() {
+        int idLanguage = 1;
+        Language language = new Language(idLanguage, null, null);
+        assertEquals(idLanguage, language.getIdLanguage());
+    }
+
+    @Test
+    void getLanguageName() {
+        String languageName = "Java";
+        Language language = new Language(0, languageName, null);
+        assertEquals(languageName, language.getLanguageName());
+    }
+
+    @Test
     void testGetIdChallenges() {
         // Arrange
         Set<UUID> idChallenges = new HashSet<>();

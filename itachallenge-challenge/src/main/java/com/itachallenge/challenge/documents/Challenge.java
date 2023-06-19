@@ -30,7 +30,7 @@ public class Challenge {
 
 
     @Field(name="languages")
-    private Set<String> languages;
+    private Set<UUID> languages;
 
     @Field(name="creation_date")
     private LocalDate creationDate;
@@ -49,5 +49,4 @@ public class Challenge {
 
     @Field(name="resources")
     private Set<UUID> resources;
-
 }

@@ -1,10 +1,13 @@
 package com.itachallenge.challenge.documents;
 
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class ChallengeTest {
 
@@ -23,7 +26,7 @@ class ChallengeTest {
         UUID uuid = UUID.randomUUID();
         String level = "Intermediate";
         String title = "Java Challenge";
-        Set<String> languages = Set.of("4");
+        Set<UUID> languages = Set.of(UUID.randomUUID());
         LocalDate creationDate = LocalDate.now();
 
         List<UUID> solutions = List.of(UUID.randomUUID());
@@ -43,14 +46,14 @@ class ChallengeTest {
                 .build();
 
         // Assert
-        Assertions.assertEquals(uuid, challenge.getUuid());
-        Assertions.assertEquals(level, challenge.getLevel());
-        Assertions.assertEquals(title, challenge.getTitle());
-        Assertions.assertEquals(languages, challenge.getLanguages());
-        Assertions.assertEquals(creationDate, challenge.getCreationDate());
-        Assertions.assertEquals(detail, challenge.getDetail());
-        Assertions.assertEquals(solutions, challenge.getSolutions());
-        Assertions.assertEquals(resources, challenge.getResources());
+        assertEquals(uuid, challenge.getUuid());
+        assertEquals(level, challenge.getLevel());
+        assertEquals(title, challenge.getTitle());
+        assertEquals(languages, challenge.getLanguages());
+        assertEquals(creationDate, challenge.getCreationDate());
+        assertEquals(detail, challenge.getDetail());
+        assertEquals(solutions, challenge.getSolutions());
+        assertEquals(resources, challenge.getResources());
     }
 
     @Test
@@ -58,7 +61,7 @@ class ChallengeTest {
         UUID uuid = UUID.randomUUID();
         String level = "Intermediate";
         String title = "Coding Challenge";
-        Set<String> languages = new HashSet<>(Arrays.asList("Java", "Python"));
+        Set<UUID> languages = Set.of(UUID.randomUUID());
         LocalDate creationDate = LocalDate.now();
 
         Challenge challenge = new Challenge();
@@ -68,11 +71,75 @@ class ChallengeTest {
         challenge.setLanguages(languages);
         challenge.setCreationDate(creationDate);
 
-        Assertions.assertEquals(uuid, challenge.getUuid());
-        Assertions.assertEquals(level, challenge.getLevel());
-        Assertions.assertEquals(title, challenge.getTitle());
-        Assertions.assertEquals(languages, challenge.getLanguages());
-        Assertions.assertEquals(creationDate, challenge.getCreationDate());
+        assertEquals(uuid, challenge.getUuid());
+        assertEquals(level, challenge.getLevel());
+        assertEquals(title, challenge.getTitle());
+        assertEquals(languages, challenge.getLanguages());
+        assertEquals(creationDate, challenge.getCreationDate());
     }
 
+    @Test
+    void getUuid() {
+        UUID uuid = UUID.randomUUID();
+        Challenge challenge = new Challenge(uuid, null, null, null, null, null, null, null, null);
+        assertEquals(uuid, challenge.getUuid());
+    }
+
+    @Test
+    void getLevel() {
+        String level = "Intermediate";
+        Challenge challenge = new Challenge(null, level, null, null, null, null, null, null, null);
+        assertEquals(level, challenge.getLevel());
+    }
+
+    @Test
+    void getTitle() {
+        String title = "Test Challenge";
+        Challenge challenge = new Challenge(null, null, title, null, null, null, null, null, null);
+        assertEquals(title, challenge.getTitle());
+    }
+
+    @Test
+    void getLanguages() {
+        Set<UUID> languages = Set.of(UUID.randomUUID());
+
+        Challenge challenge = new Challenge(null, null, null, languages, null, null, null, null, null);
+        assertEquals(languages, challenge.getLanguages());
+    }
+
+    @Test
+    void getDetail() {
+        Detail detail = new Detail(null, null, null);
+        Challenge challenge = new Challenge(null, null, null, null, null, detail, null, null, null);
+        assertEquals(detail, challenge.getDetail());
+    }
+
+    @Test
+    void getSolutions() {
+        List<UUID> solutions = List.of(UUID.randomUUID());
+        Challenge challenge = new Challenge(null, null, null, null, null, null, solutions, null, null);
+        assertEquals(solutions, challenge.getSolutions());
+    }
+
+    @Test
+    void getRelatedChallenges() {
+        Set<UUID> relatedChallenges = new HashSet<>();
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+        relatedChallenges.add(challengeId1);
+        relatedChallenges.add(challengeId2);
+        Challenge challenge = new Challenge(null, null, null, null, null, null, null, relatedChallenges, null);
+        assertEquals(relatedChallenges, challenge.getRelatedChallenges());
+    }
+
+    @Test
+    void getResources() {
+        Set<UUID> resources = new HashSet<>();
+        UUID resourceId1 = UUID.randomUUID();
+        UUID resourceId2 = UUID.randomUUID();
+        resources.add(resourceId1);
+        resources.add(resourceId2);
+        Challenge challenge = new Challenge(null, null, null, null, null, null, null, null, resources);
+        assertEquals(resources, challenge.getResources());
+    }
 }

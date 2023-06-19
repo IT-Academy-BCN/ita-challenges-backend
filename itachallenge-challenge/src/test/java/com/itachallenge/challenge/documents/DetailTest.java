@@ -1,11 +1,13 @@
 package com.itachallenge.challenge.documents;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DetailTest {
 
@@ -27,9 +29,9 @@ class DetailTest {
                 .build();
 
         // Assert
-        Assertions.assertEquals(description, detail.getDescription());
-        Assertions.assertEquals(examples, detail.getExamples());
-        Assertions.assertEquals(note, detail.getNote());
+        assertEquals(description, detail.getDescription());
+        assertEquals(examples, detail.getExamples());
+        assertEquals(note, detail.getNote());
     }
 
     @Test
@@ -43,7 +45,7 @@ class DetailTest {
         String result = detail.getDescription();
 
         // Assert
-        Assertions.assertEquals(description, result);
+        assertEquals(description, result);
     }
 
     @Test
@@ -56,7 +58,7 @@ class DetailTest {
         detail.setDescription(description);
 
         // Assert
-        Assertions.assertEquals(description, detail.getDescription());
+        assertEquals(description, detail.getDescription());
     }
 
     @Test
@@ -70,7 +72,7 @@ class DetailTest {
         List<Example> result = detail.getExamples();
 
         // Assert
-        Assertions.assertEquals(examples, result);
+        assertEquals(examples, result);
     }
 
     @Test
@@ -83,7 +85,7 @@ class DetailTest {
         detail.setExamples(examples);
 
         // Assert
-        Assertions.assertEquals(examples, detail.getExamples());
+        assertEquals(examples, detail.getExamples());
     }
 
     @Test
@@ -97,7 +99,7 @@ class DetailTest {
         String result = detail.getNote();
 
         // Assert
-        Assertions.assertEquals(note, result);
+        assertEquals(note, result);
     }
 
     @Test
@@ -110,9 +112,32 @@ class DetailTest {
         detail.setNote(note);
 
         // Assert
-        Assertions.assertEquals(note, detail.getNote());
+        assertEquals(note, detail.getNote());
     }
 
+    UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
+    UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
+    @Test
+    void getDescription() {
+        String description = "Test Description";
+        Detail detail = new Detail(description, null, null);
+        assertEquals(description, detail.getDescription());
+    }
 
+    @Test
+    void getExamples() {
+        List<Example> examples = new ArrayList<>();
+        examples.add(new Example(uuid_1,"Example 1"));
+        examples.add(new Example(uuid_2,"Example 2"));
+        Detail detail = new Detail(null, examples, null);
+        assertEquals(examples, detail.getExamples());
+    }
+
+    @Test
+    void getNote() {
+        String note = "Test Note";
+        Detail detail = new Detail(null, null, note);
+        assertEquals(note, detail.getNote());
+    }
 }
