@@ -1,0 +1,1 @@
+challenges-def is the correct format to avoid Spring parsing errors
