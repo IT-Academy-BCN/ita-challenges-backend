@@ -15,8 +15,8 @@ import static org.hamcrest.Matchers.equalTo;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ChallengeIControllerTest {
-    //region ATTRIBUTES
+public class ChallengeControllerTest {
+
     @Autowired
     private WebTestClient webTestClient;
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
@@ -34,4 +34,3 @@ public class ChallengeIControllerTest {
                 .value(s -> s, equalTo("Hello from ITA Challenge!!!"));
     }
 }
-
