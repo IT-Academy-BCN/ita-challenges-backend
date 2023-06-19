@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita-challenges-backend.itachallenge-challenge.main.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita-challenges-backend.itachallenge-challenge.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita-challenges-backend.itachallenge-challenge.test.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-challenge/ita-challenges-backend.itachallenge-challenge.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-score/ita-challenges-backend.itachallenge-score.main.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-score/ita-challenges-backend.itachallenge-score.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/itachallenge-user/ita-challenges-backend.itachallenge-user.main.iml" filepath="$PROJECT_DIR$/.idea/modules/itachallenge-user/ita-challenges-backend.itachallenge-user.main.iml" />
+    </modules>
+  </component>
+</project>
