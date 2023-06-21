@@ -11,6 +11,7 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
+@Setter
 @Getter
 public class ChallengeDto{
 
@@ -41,6 +42,10 @@ public class ChallengeDto{
 
     @JsonProperty(index = 6)
     private Set<LanguageDto> languages;
+
+    @JsonProperty(index = 6)
+    private Set<RelatedDto> related;
+
 
     /*
     TODO: ADD more fields "on demand" (when needed)

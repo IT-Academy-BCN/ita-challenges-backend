@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.services;
 
+
 import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.dtos.RelatedDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
@@ -23,8 +24,8 @@ public class ChallengeServiceImp implements IChallengeService {
     //VARIABLES
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
-    @Autowired
-    private ChallengeDto challengeDto;
+   /* @Autowired
+    private ChallengeDto challengeDto;*/
 
     @Override
     public Mono<?> getChallengeId(UUID id) {
