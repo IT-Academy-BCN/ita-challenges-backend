@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.dtos.RelatedDto;
 import com.itachallenge.challenge.services.IChallengeService;
 
 import org.junit.jupiter.api.Assertions;
@@ -26,17 +27,10 @@ import reactor.test.StepVerifier;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.MatcherAssert.assertThat;
 
-
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -157,5 +151,33 @@ class ChallengeControllerTest {
         verify(challengeService, times(1)).isValidUUID(VALID_ID);
         verify(challengeService, times(1)).getChallengeId(UUID.fromString(VALID_ID));
     }
+    
 
+    @Test
+    @DisplayName("Test EndPoint: related")
+    void testRelatedChallenge() {
+    	
+    	ChallengeDto challenge = new ChallengeDto();
+        Set<RelatedDto> related = new HashSet<>();
+        related.add(new RelatedDto("40728c9c-a557-4d12-bf8f-3747d0924197", "related1"));
+        related.add(new RelatedDto("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0","related2"));
+        challenge.setRelated(related);
+        
+        doReturn(related).when(challengeService).getRelatedChallenge(UUID.fromString(VALID_ID));
+
+    	Mono<ResponseEntity<Set<RelatedDto>>> relatedChallenge = challengeController.relatedChallenge(VALID_ID);
+
+        StepVerifier.create(relatedChallenge)
+                .expectNextMatches(response -> {
+                    assertEquals(OK, response.getStatusCode());
+                    assertNotNull(response.getBody());
+                    assertTrue(response.getBody() instanceof Set<?>);
+                    assertEquals(related, response.getBody());
+                    return true;
+                })
+                .verifyComplete();
+
+        //verifyService();
+    }
 }
+

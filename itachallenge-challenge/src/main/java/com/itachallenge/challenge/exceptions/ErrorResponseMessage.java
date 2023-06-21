@@ -16,4 +16,11 @@ public class ErrorResponseMessage {
         this.statusCode = statusCode;
     }
 
+	public String getMessage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
 }

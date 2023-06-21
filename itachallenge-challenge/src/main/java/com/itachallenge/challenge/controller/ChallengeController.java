@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.dtos.RelatedDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import com.itachallenge.challenge.services.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,20 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
-<<<<<<< HEAD
-import com.itachallenge.challenge.services.ChallengeServiceImpl;
-
-=======
-import java.util.UUID;
->>>>>>> b5a952c0bde8600f3707ef95e3437ae52f75c110
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
-    
-    @Autowired
-    ChallengeServiceImpl challengeservice;
 
     @Autowired
     private IChallengeService challengeService;
@@ -66,5 +58,34 @@ public class ChallengeController {
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
+    
+    @GetMapping(path = "/getOne/{id}/related")
+    public Mono<ResponseEntity<Set<RelatedDto>>> relatedChallenge(@PathVariable("id") String id) {
+        try {
+        	//As it will come from a known challenge id or it will not come, no need to check if UUID exits
+            /*boolean validUUID = challengeService.isValidUUID(id);
 
+            if (!validUUID) {
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
+                log.error("{} ID: {}, incorrect.", errorMessage, id);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
+            }*/
+        	
+        	Set<RelatedDto> related = challengeService.getRelatedChallenge(UUID.fromString(id));
+
+        	return Mono.just(ResponseEntity.ok(related));
+
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        /*} catch (Exception e) {
+            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }*/
+    }
+
+    }
 }
+
+
+

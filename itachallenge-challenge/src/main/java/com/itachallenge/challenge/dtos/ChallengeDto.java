@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter //añadido para el método getChallengeId mientras no hay repositorio.
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
@@ -44,8 +43,22 @@ public class ChallengeDto{
 
     @JsonProperty(index = 6)
     private Set<LanguageDto> languages;
+    
+    @JsonProperty(index = 7)
+    private Set<RelatedDto> related;
+
+	public Set<RelatedDto> getRelated() {
+		return related;
+	}
+
+	public void setRelated(Set<RelatedDto> related) {
+		this.related = related;
+	}
+
+	
 
     /*
     TODO: ADD more fields "on demand" (when needed)
      */
+    
 }

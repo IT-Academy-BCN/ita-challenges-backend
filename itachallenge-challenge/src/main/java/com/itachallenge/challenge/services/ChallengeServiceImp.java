@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.services;
 
 import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.dtos.RelatedDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -45,5 +47,12 @@ public class ChallengeServiceImp implements IChallengeService {
     public boolean isValidUUID(String id) {
         return !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
     }
+
+	@Override
+	public Set<RelatedDto> getRelatedChallenge(UUID challenge_id) {
+		ChallengeDto challenge = (ChallengeDto) getChallengeId(challenge_id).block();
+		Set<RelatedDto> related = challenge.getRelated();
+		return related;
+	}
 
 }
