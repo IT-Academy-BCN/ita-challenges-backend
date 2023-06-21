@@ -3,10 +3,12 @@ package com.itachallenge.challenge.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -41,8 +43,22 @@ public class ChallengeDto{
 
     @JsonProperty(index = 6)
     private Set<LanguageDto> languages;
+    
+    @JsonProperty(index = 7)
+    private Set<RelatedDto> related;
+
+	public Set<RelatedDto> getRelated() {
+		return related;
+	}
+
+	public void setRelated(Set<RelatedDto> related) {
+		this.related = related;
+	}
+
+	
 
     /*
     TODO: ADD more fields "on demand" (when needed)
      */
+    
 }
