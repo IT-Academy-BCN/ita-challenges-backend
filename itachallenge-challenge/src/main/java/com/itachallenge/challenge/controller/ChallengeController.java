@@ -1,5 +1,8 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
+import com.itachallenge.challenge.services.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 
 import java.util.Set;
@@ -11,18 +14,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Mono;
 
+<<<<<<< HEAD
 import com.itachallenge.challenge.services.ChallengeServiceImpl;
 
+=======
+import java.util.UUID;
+>>>>>>> b5a952c0bde8600f3707ef95e3437ae52f75c110
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
-
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
     
     @Autowired
     ChallengeServiceImpl challengeservice;
+
+    @Autowired
+    private IChallengeService challengeService;
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
@@ -31,18 +42,29 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
-    @GetMapping ("/{challenge_id}/related")
-    public ResponseEntity<Set<UUID>> ChallengeRelated (@PathVariable(value = "challenge_id") UUID challenge_id) {
-    	
-    	try {
-    	Set<UUID> relatedchallenge = challengeservice.getRelatedChallenge(challenge_id);
-    	
-    	return ResponseEntity.ok(relatedchallenge);
-    	
-    	   } catch (Exception e) {
-               log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-           }
+    @GetMapping(path = "/getOne/{id}")
+    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("id") String id) {
+        try {
+            boolean validUUID = challengeService.isValidUUID(id);
+
+            if (!validUUID) {
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
+                log.error("{} ID: {}, incorrect.", errorMessage, id);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
+            }
+
+            Mono<?> challengeMono = challengeService.getChallengeId(UUID.fromString(id))
+                    .map(challenge -> ResponseEntity.ok().body(challenge))
+                    .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+
+            return (Mono<ResponseEntity<ChallengeDto>>) challengeMono;
+
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        }
     }
-    
+
 }
