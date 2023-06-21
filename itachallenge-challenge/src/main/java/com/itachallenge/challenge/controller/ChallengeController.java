@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.dtos.ChallengeDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import com.itachallenge.challenge.services.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +31,7 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/getOne/{id}")
-    public Mono<? extends ResponseEntity<?>> getOneChallenge(@PathVariable("id") String id) {
+    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("id") String id) {
         try {
             boolean validUUID = challengeService.isValidUUID(id);
 
@@ -40,11 +41,11 @@ public class ChallengeController {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
             }
 
-            Mono<?> challengeMono = challengeService.getChallengeId(UUID.fromString(id));
-
-            return challengeMono
+            Mono<?> challengeMono = challengeService.getChallengeId(UUID.fromString(id))
                     .map(challenge -> ResponseEntity.ok().body(challenge))
                     .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+
+            return (Mono<ResponseEntity<ChallengeDto>>) challengeMono;
 
         } catch (ResponseStatusException e) {
             throw e;

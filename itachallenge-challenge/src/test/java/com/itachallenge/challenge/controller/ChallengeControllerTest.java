@@ -33,12 +33,17 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class ChallengeControllerTest {
+class ChallengeControllerTest {
     //VARIABLES
     private final static String VALID_ID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
     private final static String INVALID_ID = "123456789";
     private final static String MESSAGE_INVALID_ID = "Invalid ID format. Please indicate the correct format.";
     private final static String MESSAGE_INTERNAL_SERVER_ERROR = "INTERNAL SERVER ERROR " + HttpStatus.INTERNAL_SERVER_ERROR.value();
+    //VARIABLES HTTPSTATUS
+    private final static HttpStatus OK = HttpStatus.OK;
+    private final static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
+    private final static HttpStatus NOT_FOUND = HttpStatus.NOT_FOUND;
+    private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
 
     @Autowired
@@ -73,19 +78,17 @@ public class ChallengeControllerTest {
         doReturn(true).when(challengeService).isValidUUID(VALID_ID);
         doReturn(Mono.just(challenge)).when(challengeService).getChallengeId(UUID.fromString(VALID_ID));
 
-        Mono<? extends ResponseEntity<?>> responseMono = challengeController.getOneChallenge(VALID_ID);
-        ResponseEntity<?> response = responseMono.block();
+        Mono<ResponseEntity<ChallengeDto>> responseMono = challengeController.getOneChallenge(VALID_ID);
 
-        assertNotNull(response); //verifica que el objeto no es nulo.
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody()); //verifica que el cuerpo de la respuesta no sea nulo.
-        
-        Object responseBody = response.getBody();
-        assertTrue(responseBody instanceof ChallengeDto); //instanciamos el objeto de ChallengeDto
-
-        ChallengeDto challengeBody = (ChallengeDto) responseBody;
-        assertEquals(challenge, challengeBody);
-        assertEquals(challenge, response.getBody());
+        StepVerifier.create(responseMono)
+                .expectNextMatches(response -> {
+                    assertEquals(OK, response.getStatusCode());
+                    assertNotNull(response.getBody());
+                    assertTrue(response.getBody() instanceof ChallengeDto);
+                    assertEquals(challenge, response.getBody());
+                    return true;
+                })
+                .verifyComplete();
 
         verifyService();
     }
@@ -98,8 +101,13 @@ public class ChallengeControllerTest {
             challengeController.getOneChallenge(INVALID_ID);
         });
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), exception.getStatusCode().value());
-        assertEquals(MESSAGE_INVALID_ID, exception.getReason());
+        StepVerifier.create(Mono.just(exception))
+                        .expectNextMatches(resp -> {
+                            assertEquals(BAD_REQUEST.value(), exception.getStatusCode().value());
+                            assertEquals(MESSAGE_INVALID_ID, exception.getReason());
+                            return true;
+                        })
+                                .verifyComplete();
 
         verify(challengeService, times(1)).isValidUUID(INVALID_ID);
         //cuando el id es invalido no se llama al método getChallengeId
@@ -111,24 +119,24 @@ public class ChallengeControllerTest {
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
         when(challengeService.getChallengeId(UUID.fromString(VALID_ID))).thenReturn(Mono.empty());
 
-        Mono<? extends ResponseEntity<?>> responseMono = challengeController.getOneChallenge(VALID_ID);
+        Mono<ResponseEntity<ChallengeDto>> responseMono = challengeController.getOneChallenge(VALID_ID);
 
         StepVerifier.create(responseMono)
-                .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.NOT_FOUND))
+                .expectNextMatches(respNotFound -> respNotFound.getStatusCode().equals(NOT_FOUND))
                 .verifyComplete();
 
         verifyService();
     }
-
+    
     @Test
     void testGetOneChallenge_Exception(){
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
-        when(challengeService.getChallengeId(any(UUID.class))).thenThrow(new RuntimeException(MESSAGE_INTERNAL_SERVER_ERROR));
+        when(challengeService.getChallengeId(UUID.fromString(VALID_ID))).thenThrow(new RuntimeException(MESSAGE_INTERNAL_SERVER_ERROR));
 
-        Mono<? extends ResponseEntity<?>> responseMono = challengeController.getOneChallenge(VALID_ID);
+        Mono<ResponseEntity<ChallengeDto>> responseMono = challengeController.getOneChallenge(VALID_ID);
 
         StepVerifier.create(responseMono)
-                .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.INTERNAL_SERVER_ERROR))
+                .expectNextMatches(responseInternal -> responseInternal.getStatusCode().equals(INTERNAL_SERVER_ERROR))
                 .verifyComplete();
 
         verifyService();

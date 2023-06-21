@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = GlobalExceptionHandlerTest.class)
 class GlobalExceptionHandlerTest {
-    //variables
+    //VARIABLES
     private final String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
 
@@ -48,8 +50,13 @@ class GlobalExceptionHandlerTest {
 
         ResponseEntity<ErrorResponseMessage> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
 
-        assertEquals(BAD_REQUEST, response.getStatusCode());
-        assertEquals(expectedErrorMessage, response.getBody());
+        StepVerifier.create(Mono.just(response))
+                .expectNextMatches(resp -> {
+                    assertEquals(BAD_REQUEST, response.getStatusCode());
+                    assertEquals(expectedErrorMessage, response.getBody());
+                    return true;
+                })
+                .verifyComplete();
     }
 
 }

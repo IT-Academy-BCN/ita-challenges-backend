@@ -14,9 +14,10 @@ import java.util.regex.Pattern;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
-    /**
-     * El método getChallengeId(UUID id) tiene código comentado para cuando la capa repositorio esté operativa, solo se deverán de descomentar.
+    /*
+     TODO El método getChallengeId(UUID id) tiene código comentado para cuando la capa repositorio esté operativa, solo se deverán de descomentar.
      */
+
     //VARIABLES
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
@@ -28,7 +29,7 @@ public class ChallengeServiceImp implements IChallengeService {
         challengeDto.setChallengeId(id); //ELIMINAR CON REPOSITORIO
 
         Mono<ChallengeDto> challenge = Mono.just(challengeDto); //ELIMINAR CON REPOSITORIO
-        //Mono<Challenge> challenge = challengeRepository.findById(id);
+        //Mono<Challenge> challenge = challengeRepository.findByUuid(id);
 
         ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), "Challenge not found.");
 

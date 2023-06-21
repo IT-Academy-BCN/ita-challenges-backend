@@ -3,10 +3,12 @@ package com.itachallenge.challenge.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
