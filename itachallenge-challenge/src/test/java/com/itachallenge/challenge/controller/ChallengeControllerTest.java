@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 public class ChallengeControllerTest {
-    //region ATTRIBUTES
+
     @Autowired
     private WebTestClient webTestClient;
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
