@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -17,12 +18,18 @@ class ServiceChallengeStatisticsTest {
     @Test
     void getChallengeStatistics() {
         //region VARIABLES
-        List<UUID> challengeIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        List<UUID> challengeIds;
         List<ChallengeStatisticsDto> challengeList;
         Mono<List<ChallengeStatisticsDto>> result;
         ServiceChallengeStatistics serviceChallengeStatistics = new ServiceChallengeStatistics();
 
         //endregion VARIABLES
+
+
+        //region TEST INITIALIZATION
+        challengeIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+
+        //endregion TEST INITIALIZATION
 
 
         //region TESTS
