@@ -24,8 +24,8 @@ management:
   security:
     enabled: false
 
-
-
+url:
+  max_length: 2048
 
 logging:
   level:
