@@ -28,7 +28,7 @@ management:
       exposure:
         include: "*"
   security:
-    enabled: false
+    enabled: true
 
 
 

@@ -31,5 +31,4 @@ public class ChallengeController {
     public Flux<ChallengeDto> getChallenges() {
         return service.getChallenges();
     }
-
 }
