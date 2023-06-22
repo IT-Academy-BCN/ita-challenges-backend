@@ -14,7 +14,7 @@ import java.io.IOException;
 @Order(1)
 public class MaxLengthURIFilter implements Filter {
     //region VARIABLES
-    @Autowired
+    @Autowired()
     PropertiesConfig prpsConfig;
 
     //endregion VARIABLES
@@ -35,16 +35,15 @@ public class MaxLengthURIFilter implements Filter {
         //region ACTIONS
         // Calculate the max lengt, URL base (p.ex. "/itachallenge/api/v1/user/statistics")
         // and query (challenge=UUID_1&challenge=UUID_2&...)
-        totalURLLength = requestHttp.getRequestURL().length() + requestHttp.getQueryString().length();
+        totalURLLength = requestHttp.getRequestURL().length() + ((requestHttp.getQueryString()==null)?
+                0:requestHttp.getQueryString().length());
         if (prpsConfig.getUrlMaxLength() < totalURLLength) {
             // Too long
             responseHttp.setStatus(HttpServletResponse.SC_REQUEST_URI_TOO_LONG);
-        }
-        else {
+        } else {
             // Is good, continuous with the normal flux of the request
             chain.doFilter(request, response);
         }
-
         //endregion ACTIONS
 
     }
