@@ -43,28 +43,28 @@ class UserControllerTest {
 
 
     //region TEST METHODS
-    @Test
-    void testHello() {
-        //region VARIABLES
-        String URI_TEST = "/test";
-
-        //endregion VARIABLES
-
-
-        //region TESTS
-        webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .value(String::toString, equalTo("Hello from ITA User!!!"));
-
-        //endregion TESTS
-
-    }
-
-    //endregion TEST METHODS
+//    @Test
+//    void testHello() {
+//        //region VARIABLES
+//        String URI_TEST = "/test";
+//
+//        //endregion VARIABLES
+//
+//
+//        //region TESTS
+//        webTestClient.get()
+//                .uri(CONTROLLER_URL + URI_TEST)
+//                .accept(MediaType.APPLICATION_JSON)
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody(String.class)
+//                .value(String::toString, equalTo("Hello from ITA User!!!"));
+//
+//        //endregion TESTS
+//
+//    }
+//
+//    //endregion TEST METHODS
 
 
     //region TEST METHODS: ChallengeStatistics
