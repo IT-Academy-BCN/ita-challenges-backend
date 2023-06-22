@@ -8,8 +8,6 @@ public class RelatedDto {
     @JsonProperty(value = "id_related", index = 0)
     private String relatedId;
 
-    /*@JsonProperty(value = "related_name", index = 1)
-    private String relatedName;*/
 
 	public RelatedDto(String relatedId) {
 

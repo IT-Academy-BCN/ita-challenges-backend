@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -17,7 +16,7 @@ public class ChallengeController {
 	ChallengeServiceImp challengeService;
 
 	@GetMapping(path = "/getOne/{id}/related")
-	public Set<RelatedDto> relatedChallenge(@PathVariable("id") String id) {
+	public Set<RelatedDto> relatedChallenge(@PathVariable("id") String id) throws Exception {
 		try {
 
 			// Service proveera el set de related correspondiente a la id del challenge en
@@ -27,7 +26,7 @@ public class ChallengeController {
 			return related;
 
 		} catch (Exception e) {
-			throw e;
+			throw new Exception("An error occurred while accesing database");
 
 		}
 

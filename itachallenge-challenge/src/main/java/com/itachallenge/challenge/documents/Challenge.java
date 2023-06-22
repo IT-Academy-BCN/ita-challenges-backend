@@ -40,23 +40,16 @@ public class Challenge {
     @Field(name="solutions")
     private List<Solution> solutions;
 
-    @Field(name="related_challenges")
-    private Set<UUID> relatedChallenges;
-
-    @Field(name="resources")
-    private Set<UUID> resources;
 
     public Challenge(UUID uuid, String level, String title, Set<String> languages,
-                     LocalDateTime creationDate, Detail detail, List<Solution> solutions,
-                     Set<UUID> relatedChallenges, Set<UUID> resources) {
+                     LocalDateTime creationDate, Detail detail, List<Solution> solutions
+                   ) {
         this.uuid = uuid;
         this.level = level;
         this.title = title;
         this.languages = languages;
-        this.creationDate = LocalDateTime.now();
         this.detail = detail;
         this.solutions = solutions;
-        this.relatedChallenges = relatedChallenges;
-        this.resources = resources;
+
     }
 }

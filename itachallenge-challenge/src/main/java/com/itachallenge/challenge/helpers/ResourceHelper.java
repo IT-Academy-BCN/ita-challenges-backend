@@ -16,7 +16,7 @@ import java.util.Optional;
 Clase puede ser de mucha utilidad para mejorar la eficiencia
 en crear tests (ej: load json for expected data)
  */
-public class ResourceHelper {
+class ResourceHelper {
 
     private Resource resource;
     private String resourcePath;
@@ -31,7 +31,7 @@ public class ResourceHelper {
     //https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
     public Optional<String> readResourceAsString (){
 
-        Optional<String> result = null;
+        Optional<String> result= Optional.empty();
         try {
             result = Optional.of(FileUtils.readFileToString(resource.getFile(), StandardCharsets.UTF_8));
         } catch (IOException ex) {
