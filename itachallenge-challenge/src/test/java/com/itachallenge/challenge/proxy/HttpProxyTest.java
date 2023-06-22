@@ -3,7 +3,7 @@ package com.itachallenge.challenge.proxy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.challenge.helper.ResourceHelper;
+import com.itachallenge.challenge.helpers.ResourceHelper;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
