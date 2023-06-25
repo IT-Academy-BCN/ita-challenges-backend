@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,18 +8,13 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.itachallenge.challenge.dto.RelatedDto;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.equalTo;
 
-import reactor.core.publisher.Mono;
-
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @ExtendWith(SpringExtension.class)
@@ -35,6 +28,19 @@ class ChallengeControllerTest {
 	
 	@Autowired
 	private WebTestClient webTestClient;
+	
+    @Test
+    @DisplayName("Test EndPoint: test")
+    void TestEndPoint_test(){
+        final String URI_TEST = "/test";
+        webTestClient.get()
+                .uri(CHALLENGE_BASE_URL + URI_TEST)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .value(s -> s, equalTo("Hello from ITA Challenge!!!"));
+    }
 
 
 	@Test
