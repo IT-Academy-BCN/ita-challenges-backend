@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import com.itachallenge.challenge.services.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;

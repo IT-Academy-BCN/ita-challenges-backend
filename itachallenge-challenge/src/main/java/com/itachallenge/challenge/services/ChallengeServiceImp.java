@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.services;
 
-import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

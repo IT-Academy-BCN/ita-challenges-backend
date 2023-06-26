@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.services;
 
-import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.dto.ChallengeDto;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
