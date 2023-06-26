@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.documents;
+package com.itachallenge.challenge.document;
 
 import org.junit.jupiter.api.Test;
 

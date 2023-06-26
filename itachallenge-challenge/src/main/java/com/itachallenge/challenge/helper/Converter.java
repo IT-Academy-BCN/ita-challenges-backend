@@ -1,9 +1,9 @@
-package com.itachallenge.challenge.helpers;
+package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.documents.Challenge;
-import com.itachallenge.challenge.documents.Language;
-import com.itachallenge.challenge.dtos.ChallengeDto;
-import com.itachallenge.challenge.dtos.LanguageDto;
+import com.itachallenge.challenge.document.Challenge;
+import com.itachallenge.challenge.document.Language;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
