@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.helpers;
+package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.documents.Challenge;
 import com.itachallenge.challenge.dtos.ChallengeDto;

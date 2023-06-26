@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.helpers;
 
+import com.itachallenge.challenge.helper.ResourceHelper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
