@@ -6,9 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-////*@ContextConfiguration
 @SpringBootTest
-////@ExtendWith(SpringExtension.class)
 class PropertiesConfigTest {
     @Autowired(required = true)
     PropertiesConfig prpsConfig;
@@ -25,7 +23,6 @@ class PropertiesConfigTest {
         assertEquals(value, prpsConfig.getUrlMaxLength());
 
         //endregion TEST
-
 
     }
 }
