@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -53,7 +52,7 @@ public class ConverterTest {
 
         challengeMocked1 = getChallengeMocked(challengeRandomId, title, level,
                 Set.of(languageMocked1, languageMocked2),creationDate);
-        challengeMocked2 = getChallengeMocked(challengeRandomId, title, level,
+        challengeMocked2 = getChallengeMocked(challengeRandomId, "another language", "other level",
                 Set.of(languageMocked1, languageMocked2), creationDate);
 
     }
@@ -81,6 +80,7 @@ public class ConverterTest {
     void fromLanguageDocumentTest() {
         Language languageMock1 = languageMocked1;
         Language languageMock2 = languageMocked2;
+
         Flux<LanguageDto> resultDto = converter.fromLanguageToLanguageDto(Flux.just(languageMock1, languageMock2));
 
         StepVerifier.create(resultDto)
@@ -102,7 +102,6 @@ public class ConverterTest {
         Challenge challengeMock1 = challengeMocked1;
         Challenge challengeMock2 = challengeMocked2;
 
-        Flux<Challenge> challengeFlux = Flux.just(challengeMock1, challengeMock2);
         Flux<ChallengeDto> resultDto = converter.fromChallengeToChallengeDto(Flux.just(challengeMock1, challengeMock2));
 
         StepVerifier.create(resultDto)
