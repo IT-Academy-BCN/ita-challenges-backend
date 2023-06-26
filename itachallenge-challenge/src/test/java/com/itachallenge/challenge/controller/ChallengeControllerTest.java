@@ -46,10 +46,9 @@ class ChallengeControllerTest {
 	@Test
 	@DisplayName("Test EndPoint: Set related")
 	void testRelatedChallenge_VALID_SET() {
-		final String URI_RELATED = "/getOne/{id}/related";
+		final String URI_RELATED = "/{id}/related";
 		RelatedDto rel2 = new RelatedDto("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
-
-
+		
 		webTestClient.get().uri(CHALLENGE_BASE_URL + URI_RELATED, VALID_ID)
 		.accept(MediaType.ALL)
 		.exchange()
@@ -59,11 +58,10 @@ class ChallengeControllerTest {
 	
 	}
 
-
 	@Test
 	@DisplayName("Test EndPoint: not UUID")
 	void testRelatedChallenge_NOT_VALID_UUID() {
-		final String URI_RELATED = "/getOne/{id}/related";
+		final String URI_RELATED = "/{id}/related";
 
 		webTestClient.get().uri(CHALLENGE_BASE_URL + URI_RELATED, NO_VALID_ID)
 		.accept(MediaType.ALL)

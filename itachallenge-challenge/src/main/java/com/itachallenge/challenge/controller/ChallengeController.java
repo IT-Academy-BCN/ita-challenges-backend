@@ -30,7 +30,7 @@ public class ChallengeController {
        		 return "Hello from ITA Challenge!!!";
     }
 
-	@GetMapping(path = "/getOne/{id}/related")
+	@GetMapping(path = "/{id}/related")
 	public Mono<ResponseEntity<Set<RelatedDto>>> relatedChallenge(@PathVariable("id") String id) {
 	    return challengeService.getRelatedChallenge(UUID.fromString(id))
 	            .map(ResponseEntity::ok)
