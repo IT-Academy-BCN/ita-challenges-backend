@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.document.Challenge;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

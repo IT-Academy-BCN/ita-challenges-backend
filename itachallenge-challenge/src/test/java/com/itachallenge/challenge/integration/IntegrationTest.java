@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.integration;
 
-import com.itachallenge.challenge.documents.*;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
