@@ -13,5 +13,6 @@
 * Carlos Gimeno - https://github.com/CG-23
 * Pablo Martin - https://github.com/PabloMartinFluvia/
 * Anderson Zolis - https://github.com/anderson92zolis
+* Dario Rucker - https://github.com/darucker
 
 
