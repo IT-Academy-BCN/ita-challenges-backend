@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.documents.Challenge;
-import com.itachallenge.challenge.dtos.ChallengeDto;
+import com.itachallenge.challenge.document.Challenge;
+import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.helper.ModelMapperConverters;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
