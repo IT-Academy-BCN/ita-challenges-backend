@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.documents.Challenge;
+import com.itachallenge.challenge.document.Challenge;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
