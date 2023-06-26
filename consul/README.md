@@ -43,6 +43,7 @@ docker exec -it [containerID] mongosh --username admin_itachallenge --password [
 consul agent -bootstrap-expect=1 -config-file=consul/server1_standalone.json -bind 127.0.0.1 -client 127.0.0.1
 ```
 
+- bootstrap-expect=1: número de nodos que se esperan en el cluster
 
 
 #### Arranque de Consul Docker

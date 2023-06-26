@@ -4,8 +4,10 @@ spring:
   cloud:
     consul:
       enabled: true
-      host: 172.24.2.0 #IP del agente consul
-      port: 8500       #puerto HTTP del agente
+      #host: 172.24.2.0 #IP del agente consul (Docker)
+      host: 127.0.0.1 #IP del agente consul (local)
+      #port: 8500       #puerto HTTP del agente (Docker)
+      port: 8500       #puerto HTTP del agente (local)
       config:
         enabled: true
       discovery:
