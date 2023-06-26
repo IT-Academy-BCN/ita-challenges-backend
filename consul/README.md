@@ -10,7 +10,7 @@
 
 La configuración para la inicialización de la base de datos Mongo está incluida en docker-compose.yml
 
-##### Comandos Docker 
+##### Utilidades Docker 
 
 - Arranque instancia MongoDB (desde directorio raíz, versión en docker-compose.yml):
 ```
@@ -35,8 +35,17 @@ docker exec -it [containerID] mongosh --username admin_itachallenge --password [
 
 ## Consul
 
+#### Arranque de Consul localhost (desarrollo)
 
-#### Arranque de Consul
+- Instalar previamente Consul en la máquina y establecer PATH de contexto
+
+```
+consul agent -bootstrap-expect=1 -config-file=consul/server1_standalone.json -bind 127.0.0.1 -client 127.0.0.1
+```
+
+
+
+#### Arranque de Consul Docker
 
 - Arrancar Docker en la máquina (UNIX based)
 ```
@@ -49,10 +58,24 @@ docker pull consul
 
 - Arrancar cluster consul (desde directorio raíz)
 ```
-docker compose -f consul/docker-compose.yml up --remove-orphans consul-server1 consul-server2 consul-server3
+docker compose -f consul/docker-compose.yml up -d --remove-orphans consul-server1 consul-server2 consul-server3
 ```
 
 - http://localhost:8500 debe mostrar consola de Administración Consul 
+
+
+#### Utilidades Consul
+ 
+- **Registrar servicios externos**. Para registrar las DB, pueden utilizarse los files register-[db].json y deregister-[db].json
+```
+curl --request PUT --data @consul/register-mysql.json localhost:8500/v1/catalog/register
+```
+- **Desregistrar servicios externos**. Para registrar las DB, pueden utilizarse los files register-[db].json y deregister-[db].json
+```
+curl --request PUT --data @consul/deregister-mysql.json localhost:8500/v1/catalog/deregister
+//otra posibilidad
+curl --request PUT localhost:8500/v1/agent/service/deregister/{service_Id}
+```
 
 ![Administracion Consul](../img/assets.jpg)
 
