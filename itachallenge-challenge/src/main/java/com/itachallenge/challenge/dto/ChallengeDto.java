@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.dtos;
+package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

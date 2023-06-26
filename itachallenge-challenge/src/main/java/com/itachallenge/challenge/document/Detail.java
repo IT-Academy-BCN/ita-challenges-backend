@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.documents;
+package com.itachallenge.challenge.document;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
