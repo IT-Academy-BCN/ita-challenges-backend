@@ -12,7 +12,7 @@ IF NOT ERRORLEVEL 1 (
 )
 
 echo "Inserting duplicate object..."
-mongosh user --eval "db.user_challenge.insertOne({ '_id': { '$UUID': '3a9bda26-10f2-11ee-be56-0242ac120002' }, user_id: '2dcacb291-b4aa-4029-8e9b-284c8ca80296', challenge_id: 'dcacb291-b4aa-4029-8e9b-284c8ca80296' })"
+mongosh user --eval "db.user_challenge.insertOne({'_id': '3a9bda26-10f2-11ee-be56-0242ac120002', user_id: '2dcacb291-b4aa-4029-8e9b-284c8ca80296', challenge_id: 'dcacb291-b4aa-4029-8e9b-284c8ca80296' })"
 
 IF ERRORLEVEL 1 (
   echo "Duplicate object not inserted. Unique index is working."
