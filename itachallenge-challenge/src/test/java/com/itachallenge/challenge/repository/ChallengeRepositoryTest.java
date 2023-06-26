@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 @DataMongoTest
@@ -60,8 +62,11 @@ class ChallengeRepositoryTest {
         Example example2 = new Example(uuid_2, "Example Text 2");
         List<Example> exampleList = new ArrayList<Example>(Arrays.asList(example2, example));
 
-
-        Set<String> languageSet = new HashSet<>(Arrays.asList("Java", "Python"));
+        int[] idsLanguages = new int[]{1, 2};
+        String[] languageNames = new String[]{"name1", "name2"};
+        Language language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
+        Language language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
+        Set<Language> languageSet = Set.of(language1, language2);
 
         Solution solution = new Solution(uuid_1, "Solution Text 1", 1);
         Solution solution2 = new Solution(uuid_2, "Solution Text 2", 2);
@@ -76,6 +81,13 @@ class ChallengeRepositoryTest {
 
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
+    }
+
+    private Language getLanguageMocked(int idLanguage, String languageName){
+        Language languageIMocked = Mockito.mock(Language.class);
+        when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
+        when(languageIMocked.getLanguageName()).thenReturn(languageName);
+        return languageIMocked;
     }
 
 

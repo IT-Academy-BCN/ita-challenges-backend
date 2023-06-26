@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.document;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -35,10 +36,10 @@ public class ChallengeTest {
 
     @Test
     void getLanguages() {
-        Set<String> languages = new HashSet<>();
+        UUID uuid = UUID.randomUUID();
+        Set<UUID> uuidSet = Set.of(uuid);
+        Set<Language> languages = Set.of(new Language(1, "Java", uuidSet), new Language(2, "Python", uuidSet));
 
-        languages.add("Java");
-        languages.add("Python");
         Challenge challenge = new Challenge(null, null, null, languages, null, null, null, null, null);
         assertEquals(languages, challenge.getLanguages());
     }

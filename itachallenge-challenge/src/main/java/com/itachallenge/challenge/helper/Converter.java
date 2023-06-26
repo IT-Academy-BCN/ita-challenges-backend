@@ -41,7 +41,7 @@ public class Converter {
     }
 
     //metodo para formatear creationDate del document al formato requerido en el .json
-    private String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
+    public String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
 
         ZoneId zoneId = ZoneId.of("Europe/Paris");
         ZonedDateTime zonedDateTime = ZonedDateTime.of(creationDateDocument, zoneId);
