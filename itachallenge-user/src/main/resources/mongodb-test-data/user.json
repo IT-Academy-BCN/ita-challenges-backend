@@ -1,0 +1,15 @@
+[
+  {
+    "_id" : {
+      "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+    },
+    "name": "Michael",
+    "surname": "Scofield",
+    "nickname": "SoonFree",
+    "email": "rescueLinc@gmail.com",
+    "password": "Inmate1Not2Forever3",
+    "roles": [
+      "USER"
+    ]
+  }
+]
