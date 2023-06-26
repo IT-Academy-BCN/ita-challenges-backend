@@ -30,8 +30,8 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
-    @GetMapping(path = "/getOne/{id}")
-    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("id") String id) {
+    @GetMapping(path = "/challenges/{challengeId}")
+    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
         try {
             boolean validUUID = challengeService.isValidUUID(id);
 
