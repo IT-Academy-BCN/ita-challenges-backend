@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.documents.Challenge;
+
+import com.itachallenge.challenge.document.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import reactor.core.publisher.Flux;
