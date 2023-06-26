@@ -26,7 +26,7 @@ public class Challenge {
 
 
     @Field(name="languages")
-    private Set<String> languages;
+    private Set<Language> languages;
 
     @Field(name="creation_date")
     private LocalDateTime creationDate;
@@ -46,7 +46,7 @@ public class Challenge {
     @Field(name="resources")
     private Set<UUID> resources;
 
-    public Challenge(UUID uuid, String level, String title, Set<String> languages,
+    public Challenge(UUID uuid, String level, String title, Set<Language> languages,
                      LocalDateTime creationDate, Detail detail, List<Solution> solutions,
                      Set<UUID> relatedChallenges, Set<UUID> resources) {
         this.uuid = uuid;
