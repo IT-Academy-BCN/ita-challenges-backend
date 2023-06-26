@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.dtos;
+package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
