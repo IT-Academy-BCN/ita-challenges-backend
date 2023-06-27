@@ -16,23 +16,23 @@ public class DetailTest {
     @Test
     void getDescription() {
         String description = "Test Description";
-        Detail detail = new Detail(description, null, null);
+        DetailDocument detail = new DetailDocument(description, null, null);
         assertEquals(description, detail.getDescription());
     }
 
     @Test
     void getExamples() {
-        List<Example> examples = new ArrayList<>();
-        examples.add(new Example(uuid_1,"Example 1"));
-        examples.add(new Example(uuid_2,"Example 2"));
-        Detail detail = new Detail(null, examples, null);
+        List<ExampleDocument> examples = new ArrayList<>();
+        examples.add(new ExampleDocument(uuid_1,"Example 1"));
+        examples.add(new ExampleDocument(uuid_2,"Example 2"));
+        DetailDocument detail = new DetailDocument(null, examples, null);
         assertEquals(examples, detail.getExamples());
     }
 
     @Test
     void getNote() {
         String note = "Test Note";
-        Detail detail = new Detail(null, null, note);
+        DetailDocument detail = new DetailDocument(null, null, note);
         assertEquals(note, detail.getNote());
     }
 }

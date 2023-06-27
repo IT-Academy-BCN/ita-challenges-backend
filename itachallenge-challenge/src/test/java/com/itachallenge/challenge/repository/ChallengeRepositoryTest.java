@@ -58,33 +58,33 @@ class ChallengeRepositoryTest {
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
 
-        Example example = new Example(uuid_1, "Example Text 1");
-        Example example2 = new Example(uuid_2, "Example Text 2");
-        List<Example> exampleList = new ArrayList<Example>(Arrays.asList(example2, example));
+        ExampleDocument example = new ExampleDocument(uuid_1, "Example Text 1");
+        ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
+        List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
 
         int[] idsLanguages = new int[]{1, 2};
         String[] languageNames = new String[]{"name1", "name2"};
-        Language language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
-        Language language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
-        Set<Language> languageSet = Set.of(language1, language2);
+        LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
+        LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
+        Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
-        Solution solution = new Solution(uuid_1, "Solution Text 1", 1);
-        Solution solution2 = new Solution(uuid_2, "Solution Text 2", 2);
-        List<Solution> solutionList = new ArrayList<>(Arrays.asList(solution, solution2));
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", 1);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", 2);
+        List<SolutionDocument> solutionList = new ArrayList<>(Arrays.asList(solution, solution2));
 
-        Detail detail = new Detail("Description", exampleList, "Detail note");
+        DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 
-        Challenge challenge = new Challenge
+        ChallengeDocument challenge = new ChallengeDocument
                 (uuid_1, "Level 1", "Loops", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
-        Challenge challenge2 = new Challenge
+        ChallengeDocument challenge2 = new ChallengeDocument
                 (uuid_2, "Level 2", "If", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
 
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
-    private Language getLanguageMocked(int idLanguage, String languageName){
-        Language languageIMocked = Mockito.mock(Language.class);
+    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+        LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
         return languageIMocked;
@@ -103,7 +103,7 @@ class ChallengeRepositoryTest {
     @Test
     void findAllTest() {
 
-        Flux<Challenge> challenges = challengeRepository.findAll();
+        Flux<ChallengeDocument> challenges = challengeRepository.findAll();
 
         StepVerifier.create(challenges)
                 .expectNextCount(2)
@@ -121,12 +121,12 @@ class ChallengeRepositoryTest {
     @Test
     void findByUuidTest() {
 
-        Mono<Challenge> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_1),
                 () -> fail("Challenge not found: " + uuid_1));
 
-        Mono<Challenge> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_2),
                 () -> fail("Challenge not found: " + uuid_2));
@@ -136,7 +136,7 @@ class ChallengeRepositoryTest {
     @Test
     void deleteByUuidTest() {
 
-        Mono<Challenge> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> {
                     Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_1);
@@ -147,7 +147,7 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge to delete not found: " + uuid_1)
         );
 
-        Mono<Challenge> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> {
                     Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_2);
@@ -163,12 +163,12 @@ class ChallengeRepositoryTest {
     @Test
     void findByLevelTest() {
 
-        Mono<Challenge> firstChallenge = challengeRepository.findByLevel("Level 1");
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByLevel("Level 1");
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getLevel(), "Level 1"),
                 () -> fail("Challenge not found: " + uuid_1));
 
-        Mono<Challenge> secondChallenge = challengeRepository.findByLevel("Level 2");
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByLevel("Level 2");
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getLevel(), "Level 2"),
                 () -> fail("Challenge not found: " + uuid_2));
@@ -178,12 +178,12 @@ class ChallengeRepositoryTest {
     @Test
     void findByChallengeTitleTest() {
 
-        Mono<Challenge> firstChallenge = challengeRepository.findByTitle("Loops");
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle("Loops");
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getTitle(), "Loops"),
                 () -> fail("Challenge with name Loops  not found."));
 
-        Mono<Challenge> secondChallenge = challengeRepository.findByTitle("If");
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle("If");
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getTitle(), "If"),
                 () -> fail("Challenge with name If not found."));

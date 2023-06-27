@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.document.Challenge;
-import com.itachallenge.challenge.document.Language;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import org.springframework.stereotype.Component;
@@ -16,15 +16,15 @@ import java.util.stream.Collectors;
 @Component
 public class Converter {
 
-    public Flux<ChallengeDto> fromChallengeToChallengeDto(Flux<Challenge> challengeFlux) {
+    public Flux<ChallengeDto> fromChallengeToChallengeDto(Flux<ChallengeDocument> challengeFlux) {
         return challengeFlux.map(this::toChallengeDto);
     }
 
-    public Flux<LanguageDto> fromLanguageToLanguageDto(Flux<Language> languageFlux) {
+    public Flux<LanguageDto> fromLanguageToLanguageDto(Flux<LanguageDocument> languageFlux) {
         return languageFlux.map(this::toLanguageDto);
     }
 
-    private ChallengeDto toChallengeDto(Challenge challenge) {
+    private ChallengeDto toChallengeDto(ChallengeDocument challenge) {
         return ChallengeDto.builder()
                 .challengeId(challenge.getUuid())
                 .level(challenge.getLevel())
@@ -36,7 +36,7 @@ public class Converter {
                 .build();
     }
 
-    private LanguageDto toLanguageDto(Language language) {
+    private LanguageDto toLanguageDto(LanguageDocument language) {
         return new LanguageDto(language.getIdLanguage(), language.getLanguageName());
     }
 

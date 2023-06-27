@@ -11,7 +11,7 @@ import java.util.UUID;
 @Document(collection="languages")
 @Getter
 @AllArgsConstructor
-public class Language {
+public class LanguageDocument {
 
     @Id
     @Field(name="id_languages")

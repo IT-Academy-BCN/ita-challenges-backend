@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
-public class Example {
+public class ExampleDocument {
 
     @Id
     @Field(name="id_example")
