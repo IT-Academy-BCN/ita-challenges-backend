@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.services.IChallengeService;
+import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

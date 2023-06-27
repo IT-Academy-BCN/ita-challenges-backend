@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.exceptions;
+package com.itachallenge.challenge.exception;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
