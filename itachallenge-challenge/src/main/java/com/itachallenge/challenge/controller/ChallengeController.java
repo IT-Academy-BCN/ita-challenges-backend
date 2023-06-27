@@ -42,19 +42,14 @@ public class ChallengeController {
                 .findAny()
                 .map( s -> s.getUri());
 
-        log.info("****** URI: {}", uri.map(Object::toString).orElse("No URI"));
+        log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
 
         Optional<String> services = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
                 .map( s -> s.toString());
 
-        if (services.isPresent()) {
-            log.info("****** Services: " + services.get());
-        } else {
-            log.info("****** Services: No Services");
-        }
-
+        log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
         return "Hello from ITA Challenge!!!";
     }
 
