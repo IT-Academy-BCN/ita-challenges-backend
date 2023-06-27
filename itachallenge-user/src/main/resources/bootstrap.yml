@@ -3,9 +3,11 @@ spring:
     name: itachallenge-user
   cloud:
     consul:
-      enabled: true
-      host: 172.24.2.0 #IP del agente consul
-      port: 8500       #puerto HTTP del agente
+      enabled: true #habilitar / deshabilitar el uso de consul
+      #host: 172.24.2.0 #IP del agente consul (Docker)
+      host: 127.0.0.1 #IP del agente consul (local)
+      #port: 8500       #puerto HTTP del agente (Docker)
+      port: 8500       #puerto HTTP del agente (local)
       config:
         enabled: true
       discovery:
@@ -15,7 +17,7 @@ spring:
         register: true
         register-health-check: true
         deregister: true
-        port: 8762 #puerto del servicio
+        port: 8764 #puerto del servicio
         prefer-ip-address: true
         healthCheckPath: /actuator/health
-        healthCheckInterval: 15s
+        healthCheckInterval: 10s

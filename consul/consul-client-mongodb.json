@@ -1,0 +1,6 @@
+{
+  "node_name": "consul-client-mongodb",
+  "data_dir": "/consul/data",
+  "retry_join": ["consul-server1", "consul-server2", "consul-server3"],
+  "encrypt": "Jii9j8lygVqBw94r7qBsnk+6r7qBTEjMjHpzxwpwnOQ="
+}
