@@ -1,53 +1,35 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
-<<<<<<< HEAD
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.services.IChallengeService;
-=======
 import com.itachallenge.challenge.service.IChallengeService;
-
 import org.junit.jupiter.api.Assertions;
->>>>>>> faa6b865630adce6a47333b3e952261a233e6e39
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-<<<<<<< HEAD
-import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
-=======
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
->>>>>>> faa6b865630adce6a47333b3e952261a233e6e39
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-<<<<<<< HEAD
-import reactor.core.publisher.Flux;
-
-import java.util.List;
-import java.util.Set;
-=======
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
->>>>>>> faa6b865630adce6a47333b3e952261a233e6e39
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.when;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -55,19 +37,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 class ChallengeControllerTest {
-<<<<<<< HEAD
-
-    @Autowired
-    private WebTestClient webTestClient;
-
-    @Mock
-    private IChallengeService challengeService;
-
-    @InjectMocks
-    private ChallengeController challengeController;
-
-    private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
-=======
     //VARIABLES
     private final static String VALID_ID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
     private final static String INVALID_ID = "123456789";
@@ -79,7 +48,8 @@ class ChallengeControllerTest {
     private final static HttpStatus NOT_FOUND = HttpStatus.NOT_FOUND;
     private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
-
+    private ChallengeDto challenge1;
+    private ChallengeDto challenge2;
     @Autowired
     private WebTestClient webTestClient;
     @MockBean
@@ -88,16 +58,9 @@ class ChallengeControllerTest {
     private ChallengeController challengeController;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
->>>>>>> faa6b865630adce6a47333b3e952261a233e6e39
-
-    private ChallengeDto challenge1;
-    private ChallengeDto challenge2;
-
-    @BeforeEach
     public void setup() {
+        MockitoAnnotations.openMocks(this);
+
         Set<LanguageDto> languagesDto = Set.of(new LanguageDto(1, "Javascript"), new LanguageDto(2, "java"));
         String uuidString = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
         UUID uuid = UUID.fromString(uuidString);
@@ -135,27 +98,6 @@ class ChallengeControllerTest {
                 .expectBody(String.class)
                 .value(s -> s, equalTo("Hello from ITA Challenge!!!"));
     }
-<<<<<<< HEAD
-
-    @Test
-    @DisplayName("Test EndPoint: getChallenges")
-    void testGetChallenges() {
-        final String URI_GET_CHALLENGES = "/challenges";
-        List<ChallengeDto> challenges = List.of(challenge1, challenge2);
-
-        when(challengeService.getChallenges()).thenReturn(Flux.fromIterable(challenges));
-        webTestClient.method(HttpMethod.GET)
-                .uri(CHALLENGE_BASE_URL + URI_GET_CHALLENGES)
-                .accept(MediaType.APPLICATION_JSON)
-                .body(Flux.fromIterable(challenges), ChallengeDto.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .equals(Flux.fromIterable(challenges));
-    }
-}
-=======
->>>>>>> faa6b865630adce6a47333b3e952261a233e6e39
 
     @Test
     void testGetOneChallenge_ValidUUID() {
@@ -226,6 +168,23 @@ class ChallengeControllerTest {
                 .verifyComplete();
 
         verifyService();
+    }
+
+    @Test
+    @DisplayName("Test EndPoint: getChallenges")
+    void testGetChallenges() {
+        final String URI_GET_CHALLENGES = "/challenges";
+        List<ChallengeDto> challenges = List.of(challenge1, challenge2);
+
+        when(challengeService.getChallenges()).thenReturn(Flux.fromIterable(challenges));
+        webTestClient.method(HttpMethod.GET)
+                .uri(CHALLENGE_BASE_URL + URI_GET_CHALLENGES)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Flux.fromIterable(challenges), ChallengeDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .equals(Flux.fromIterable(challenges));
     }
 
     private void verifyService(){

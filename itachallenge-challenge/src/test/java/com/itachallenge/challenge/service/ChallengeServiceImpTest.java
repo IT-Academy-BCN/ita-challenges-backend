@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,9 +33,9 @@ class ChallengeServiceImpTest {
     private final static UUID VALID_ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
     private final static String INVALID_ID = "123456789";
 
-    @Mock
+    @MockBean
     private ChallengeRepository challengeRepository;
-    @Mock
+    @MockBean
     private Converter modelMapper;
     @InjectMocks
     private ChallengeServiceImp challengeService;
