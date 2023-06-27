@@ -54,9 +54,9 @@ class LanguageRepositoryTest {
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
 
-        Language language = new Language(1, "Java", UUIDSet);
-        Language language2 = new Language(2, "Python", UUIDSet2);
-        Set<Language> languageSet = new HashSet<>(Arrays.asList(language2, language));
+        LanguageDocument language = new LanguageDocument(1, "Java", UUIDSet);
+        LanguageDocument language2 = new LanguageDocument(2, "Python", UUIDSet2);
+        Set<LanguageDocument> languageSet = new HashSet<>(Arrays.asList(language2, language));
 
         languageRepository.saveAll(Flux.just(language, language2)).blockLast();
     }
@@ -73,7 +73,7 @@ class LanguageRepositoryTest {
     @Test
     void findAllTest() {
 
-        Flux<Language> languages = languageRepository.findAll();
+        Flux<LanguageDocument> languages = languageRepository.findAll();
 
         StepVerifier.create(languages)
                 .expectNextCount(2)
@@ -91,12 +91,12 @@ class LanguageRepositoryTest {
     @Test
     void findByIdTest() {
 
-        Mono<Language> firstLanguage = languageRepository.findByIdLanguage(1);
+        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(1);
         firstLanguage.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getIdLanguage(), 1),
                 () -> fail("Language with id " + 1 + " not found"));
 
-        Mono<Language> secondLanguage = languageRepository.findByIdLanguage(2);
+        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(2);
         secondLanguage.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getIdLanguage(), 2),
                 () -> fail("Language with id " + 2 + " not found"));
@@ -106,7 +106,7 @@ class LanguageRepositoryTest {
     @Test
     void deleteByIdTest() {
 
-        Mono<Language> firstLanguage = languageRepository.findByIdLanguage(1);
+        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(1);
         firstLanguage.blockOptional().ifPresentOrElse(
                 u -> {
                     Mono<Void> deletion = languageRepository.deleteByIdLanguage(1);
@@ -117,7 +117,7 @@ class LanguageRepositoryTest {
                 () -> fail("Language with id " + 1 + " not found")
         );
 
-        Mono<Language> secondLanguage = languageRepository.findByIdLanguage(2);
+        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(2);
         secondLanguage.blockOptional().ifPresentOrElse(
                 u -> {
                     Mono<Void> deletion = languageRepository.deleteByIdLanguage(2);

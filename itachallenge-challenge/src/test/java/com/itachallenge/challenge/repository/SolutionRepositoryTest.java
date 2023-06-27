@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.document.Solution;
+import com.itachallenge.challenge.document.SolutionDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,8 +52,8 @@ class SolutionRepositoryTest {
 
         solutionRepository.deleteAll().block();
 
-        Solution solution = new Solution(uuid_1, "Solution Text 1", 1);
-        Solution solution2 = new Solution(uuid_2, "Solution Text 2", 2);
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", 1);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", 2);
 
         solutionRepository.saveAll(Flux.just(solution, solution2)).blockLast();
 
@@ -71,7 +71,7 @@ class SolutionRepositoryTest {
     @Test
     void findAllTest() {
 
-        Flux<Solution> solutions = solutionRepository.findAll();
+        Flux<SolutionDocument> solutions = solutionRepository.findAll();
 
         StepVerifier.create(solutions)
                 .expectNextCount(2)
@@ -89,12 +89,12 @@ class SolutionRepositoryTest {
     @Test
     void findByUuidTest() {
 
-        Mono<Solution> firstSolution = solutionRepository.findByUuid(uuid_1);
+        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuid(uuid_1);
         firstSolution.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_1),
                 () -> fail("Solution not found: " + uuid_1));
 
-        Mono<Solution> secondSolution = solutionRepository.findByUuid(uuid_2);
+        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuid(uuid_2);
         secondSolution.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_2),
                 () -> fail("Solution not found: " + uuid_2));
@@ -104,7 +104,7 @@ class SolutionRepositoryTest {
     @Test
     void deleteByUuidTest() {
 
-        Mono<Solution> firstSolution = solutionRepository.findByUuid(uuid_1);
+        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuid(uuid_1);
         firstSolution.blockOptional().ifPresentOrElse(
                 u -> {
                     Mono<Void> deletion = solutionRepository.deleteByUuid(uuid_1);
@@ -115,7 +115,7 @@ class SolutionRepositoryTest {
                 () -> fail("Solution to delete not found: " + uuid_1)
         );
 
-        Mono<Solution> secondSolution = solutionRepository.findByUuid(uuid_2);
+        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuid(uuid_2);
         secondSolution.blockOptional().ifPresentOrElse(
                 u -> {
                     Mono<Void> deletion = solutionRepository.deleteByUuid(uuid_2);

@@ -35,9 +35,11 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
     implementation 'javax.validation:validation-api:2.0.1.Final'
-
-    // Swagger
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -45,7 +47,6 @@ dependencies {
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.3.1'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.24.2'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '3.0.6'
     testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.13'
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'

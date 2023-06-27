@@ -14,7 +14,7 @@ springdoc:
     path: "/api-docs"
 
 server:
-  port: 8762
+  port: 8764
 
 management:
   endpoints:

@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   consul-server1:
-    image: consul:1.12.3
+    image: consul:1.15.2
     container_name: consul-server1
     restart: always
     volumes:
@@ -17,7 +17,7 @@ services:
     command: 'agent -bootstrap-expect=3'
 
   consul-server2:
-    image: consul:1.12.3
+    image: consul:1.15.2
     container_name: consul-server2
     restart: always
     volumes:
@@ -28,7 +28,7 @@ services:
     command: "agent -bootstrap-expect=3"
 
   consul-server3:
-    image: consul:1.12.3
+    image: consul:1.15.2
     container_name: consul-server3
     restart: always
     volumes:

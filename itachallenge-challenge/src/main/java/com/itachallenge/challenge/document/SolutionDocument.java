@@ -10,7 +10,7 @@ import java.util.UUID;
 @Document(collection="solutions")
 @Getter
 @AllArgsConstructor
-public class Solution {
+public class SolutionDocument {
 
     @Id
     @Field(name="id_solution")
