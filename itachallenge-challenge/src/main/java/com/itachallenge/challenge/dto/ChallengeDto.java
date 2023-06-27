@@ -3,15 +3,18 @@ package com.itachallenge.challenge.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.UUID;
 
+@Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter //añadido para el método getChallengeId mientras no hay repositorio.
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
