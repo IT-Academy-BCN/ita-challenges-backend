@@ -1,39 +1,4 @@
-## Trabajo con contenedores & Consul
-
-### Inicialización de contenedores
-
-#### Creación de imágenes de cada microservicio
-```
-./build_Docker.sh
-```
-#### MongoDB
-
-La configuración para la inicialización de la base de datos Mongo está incluida en docker-compose.yml
-
-##### Utilidades Docker 
-
-- Arranque instancia MongoDB (desde directorio raíz, versión en docker-compose.yml):
-```
-docker compose up -d itachallenge-mongodb
-```
-
-- Entrar en contenedor accediendo a consola bash (para conectar por consola Mongo shell, p.ej.):
-```
-docker exec -it [containerID] bash
-```
-
-- Verificación de inicialización Mongo (desde dentro del contenedor): ejecutar desde cmd
-```
-mongosh --username [user] --password [pwd]  --authenticationDatabase [dbUsers] [dbUsers] --eval "db.adminCommand({ listDatabases: 1 })"
-```
-
-- Verificación de inicialización Mongo (desde fuera del contenedor):
-
-```
-docker exec -it [containerID] mongosh --username admin_itachallenge --password [password]  --authenticationDatabase [dbUsers] [dbUsers] --eval "db.adminCommand({ listDatabases: 1 })"
-```
-
-## Consul
+## Desarrollo con Consul
 
 #### Arranque de Consul localhost (desarrollo)
 
@@ -45,6 +10,14 @@ consul agent -bootstrap-expect=1 -config-file=consul/server1_standalone.json -bi
 
 - bootstrap-expect=1: número de nodos que se esperan en el cluster
 
+- Verificar que todos los microservicios que se desean registrar tienen configuración en bootstrap.yml:
+
+````  
+spring:
+  cloud:
+   consul:
+     enabled: true
+````
 
 #### Arranque de Consul Docker
 
@@ -79,6 +52,42 @@ curl --request PUT localhost:8500/v1/agent/service/deregister/{service_Id}
 ```
 
 ![Administracion Consul](../img/assets.jpg)
+
+
+## Trabajo con Consul & Docker
+
+### Inicialización de contenedores
+
+#### Creación de imágenes de cada microservicio
+```
+./build_Docker.sh
+```
+#### MongoDB
+
+La configuración para la inicialización de la base de datos Mongo está incluida en docker-compose.yml (sobreescribe application.yml)
+
+##### Utilidades Docker
+
+- Arranque instancia MongoDB (desde directorio raíz, versión en docker-compose.yml):
+```
+docker compose up -d itachallenge-mongodb
+```
+
+- Entrar en contenedor accediendo a consola bash (para conectar por consola Mongo shell, p.ej.):
+```
+docker exec -it [containerID] bash
+```
+
+- Verificación de inicialización Mongo (desde dentro del contenedor): ejecutar desde cmd
+```
+mongosh --username [user] --password [pwd]  --authenticationDatabase [dbUsers] [dbUsers] --eval "db.adminCommand({ listDatabases: 1 })"
+```
+
+- Verificación de inicialización Mongo (desde fuera del contenedor):
+
+```
+docker exec -it [containerID] mongosh --username admin_itachallenge --password [password]  --authenticationDatabase [dbUsers] [dbUsers] --eval "db.adminCommand({ listDatabases: 1 })"
+```
 
 
 

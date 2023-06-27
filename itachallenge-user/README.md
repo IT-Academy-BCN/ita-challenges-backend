@@ -1,5 +1,5 @@
 
-## ITA Challenge
+## ITA Score
 
 * Para habilitar / deshabilitar el registro Consul, modificar el valor de la propiedad `spring.cloud.consul.enabled` en el fichero `application.yml` (true/false)
 

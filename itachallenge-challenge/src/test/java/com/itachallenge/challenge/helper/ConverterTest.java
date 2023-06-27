@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.document.Challenge;
-import com.itachallenge.challenge.document.Language;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,6 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,13 +29,13 @@ public class ConverterTest {
     @Autowired
     private Converter converter;
 
-    private Language languageMocked1;
+    private LanguageDocument languageMocked1;
 
-    private Language languageMocked2;
+    private LanguageDocument languageMocked2;
 
-    private Challenge challengeMocked1;
+    private ChallengeDocument challengeMocked1;
 
-    private Challenge challengeMocked2;
+    private ChallengeDocument challengeMocked2;
 
     @BeforeEach
     void setUp() {
@@ -57,16 +56,16 @@ public class ConverterTest {
 
     }
 
-    private Language getLanguageMocked(int idLanguage, String languageName){
-        Language languageIMocked = Mockito.mock(Language.class);
+    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+        LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
         return languageIMocked;
     }
 
-    private Challenge getChallengeMocked(UUID challengeId, String title, String level,
-                                                        Set<Language> languageIS, LocalDateTime creationDate){
-        Challenge challengeIMocked = Mockito.mock(Challenge.class);
+    private ChallengeDocument getChallengeMocked(UUID challengeId, String title, String level,
+                                                 Set<LanguageDocument> languageIS, LocalDateTime creationDate){
+        ChallengeDocument challengeIMocked = Mockito.mock(ChallengeDocument.class);
         when(challengeIMocked.getUuid()).thenReturn(challengeId);
         when(challengeIMocked.getTitle()).thenReturn(title);
         when(challengeIMocked.getLevel()).thenReturn(level);
@@ -78,8 +77,8 @@ public class ConverterTest {
     @Test
     @DisplayName("Conversion from language document to language dto test")
     void fromLanguageDocumentTest() {
-        Language languageMock1 = languageMocked1;
-        Language languageMock2 = languageMocked2;
+        LanguageDocument languageMock1 = languageMocked1;
+        LanguageDocument languageMock2 = languageMocked2;
 
         Flux<LanguageDto> resultDto = converter.fromLanguageToLanguageDto(Flux.just(languageMock1, languageMock2));
 
@@ -91,7 +90,7 @@ public class ConverterTest {
     }
 
     //método que retorna true si campos language son iguales con languageDto
-    private boolean validateLanguageDto(LanguageDto languageDto, Language language) {
+    private boolean validateLanguageDto(LanguageDto languageDto, LanguageDocument language) {
         return languageDto.getLanguageId() == language.getIdLanguage() &&
                 languageDto.getLanguageName().equalsIgnoreCase(language.getLanguageName());
     }
@@ -99,8 +98,8 @@ public class ConverterTest {
     @Test
     @DisplayName("Test conversion from a flux of 1-n challenge documents returning a flux of challenge dto test")
     void fromChallengeDocumentTest() {
-        Challenge challengeMock1 = challengeMocked1;
-        Challenge challengeMock2 = challengeMocked2;
+        ChallengeDocument challengeMock1 = challengeMocked1;
+        ChallengeDocument challengeMock2 = challengeMocked2;
 
         Flux<ChallengeDto> resultDto = converter.fromChallengeToChallengeDto(Flux.just(challengeMock1, challengeMock2));
 
@@ -111,7 +110,7 @@ public class ConverterTest {
                 .verify();
     }
 
-    private boolean validateChallengeDto(ChallengeDto challengeDto, Challenge challenge) {
+    private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challenge) {
 
         return challengeDto.getChallengeId() == challenge.getUuid() &&
                 challengeDto.getTitle().equalsIgnoreCase(challenge.getTitle()) &&
@@ -121,7 +120,7 @@ public class ConverterTest {
 
     }
 
-    private boolean validateLanguageSet(Set<LanguageDto> languageDtoSet, Set<Language> languageSet) {
+    private boolean validateLanguageSet(Set<LanguageDto> languageDtoSet, Set<LanguageDocument> languageSet) {
         boolean validate;
 
         if (languageDtoSet.size() == languageSet.size()) {
@@ -129,7 +128,7 @@ public class ConverterTest {
                     .map(LanguageDto::getLanguageId)
                     .collect(Collectors.toSet())
                     .equals(languageSet.stream()
-                            .map(Language::getIdLanguage)
+                            .map(LanguageDocument::getIdLanguage)
                             .collect(Collectors.toSet()));
         } else {
             validate = false;

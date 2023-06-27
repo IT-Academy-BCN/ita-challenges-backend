@@ -57,11 +57,9 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
-
-    //WARNING: Comentar las siguientes líneas para trabajar sin Consul, así como la anotación @EnableDiscoveryClient de App.java
-/*    implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'*/
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
 
 
 }
