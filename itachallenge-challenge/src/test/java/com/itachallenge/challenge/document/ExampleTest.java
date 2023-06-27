@@ -10,15 +10,15 @@ public class ExampleTest {
 
     @Test
     void getIdExample() {
-    UUID idExample = UUID.randomUUID();
-    Example example = new Example(idExample, null);
-    assertEquals(idExample, example.getIdExample());
-}
+        UUID idExample = UUID.randomUUID();
+        ExampleDocument example = new ExampleDocument(idExample, null);
+        assertEquals(idExample, example.getIdExample());
+    }
 
     @Test
     void getExampleText() {
         String exampleText = "Example Text";
-        Example example = new Example(null, exampleText);
+        ExampleDocument example = new ExampleDocument(null, exampleText);
         assertEquals(exampleText, example.getExampleText());
     }
 }

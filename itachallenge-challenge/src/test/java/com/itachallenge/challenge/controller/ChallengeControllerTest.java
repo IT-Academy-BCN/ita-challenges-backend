@@ -2,7 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.service.ChallengeService;
+import com.itachallenge.challenge.services.IChallengeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class ChallengeControllerTest {
     private WebTestClient webTestClient;
 
     @Mock
-    private ChallengeService challengeService;
+    private IChallengeService challengeService;
 
     @InjectMocks
     private ChallengeController challengeController;

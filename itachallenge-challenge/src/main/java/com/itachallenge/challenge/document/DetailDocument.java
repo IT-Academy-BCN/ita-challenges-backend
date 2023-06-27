@@ -7,13 +7,13 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class Detail {
+public class DetailDocument {
 
     @Field(name="description")
     private String description;
 
     @Field(name="examples")
-    private List<Example> examples;
+    private List<ExampleDocument> examples;
 
     @Field(name="note")
     private String note;
