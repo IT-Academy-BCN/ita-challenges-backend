@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Document(collection="challenges")
 @Getter
-public class Challenge {
+public class ChallengeDocument {
 
     @Id
     @Field(name="id_challenge")
@@ -26,7 +26,7 @@ public class Challenge {
 
 
     @Field(name="languages")
-    private Set<String> languages;
+    private Set<LanguageDocument> languages;
 
     @Field(name="creation_date")
     private LocalDateTime creationDate;
@@ -34,11 +34,11 @@ public class Challenge {
     //Next fields not priority for the moment
 
     @Field(name="detail")
-    private Detail detail;
+    private DetailDocument detail;
 
 
     @Field(name="solutions")
-    private List<Solution> solutions;
+    private List<SolutionDocument> solutions;
 
     @Field(name="related_challenges")
     private Set<UUID> relatedChallenges;
@@ -46,9 +46,9 @@ public class Challenge {
     @Field(name="resources")
     private Set<UUID> resources;
 
-    public Challenge(UUID uuid, String level, String title, Set<String> languages,
-                     LocalDateTime creationDate, Detail detail, List<Solution> solutions,
-                     Set<UUID> relatedChallenges, Set<UUID> resources) {
+    public ChallengeDocument(UUID uuid, String level, String title, Set<LanguageDocument> languages,
+                             LocalDateTime creationDate, DetailDocument detail, List<SolutionDocument> solutions,
+                             Set<UUID> relatedChallenges, Set<UUID> resources) {
         this.uuid = uuid;
         this.level = level;
         this.title = title;

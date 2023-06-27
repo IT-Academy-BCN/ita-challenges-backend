@@ -13,14 +13,14 @@ public class LanguageTest {
     @Test
     void getIdLanguage() {
         int idLanguage = 1;
-        Language language = new Language(idLanguage, null, null);
+        LanguageDocument language = new LanguageDocument(idLanguage, null, null);
         assertEquals(idLanguage, language.getIdLanguage());
     }
 
     @Test
     void getLanguageName() {
         String languageName = "Java";
-        Language language = new Language(0, languageName, null);
+        LanguageDocument language = new LanguageDocument(0, languageName, null);
         assertEquals(languageName, language.getLanguageName());
     }
 
@@ -31,7 +31,7 @@ public class LanguageTest {
         UUID challengeId2 = UUID.randomUUID();
         idChallenges.add(challengeId1);
         idChallenges.add(challengeId2);
-        Language language = new Language(0, null, idChallenges);
+        LanguageDocument language = new LanguageDocument(0, null, idChallenges);
         assertEquals(idChallenges, language.getIdChallenges());
     }
 }
