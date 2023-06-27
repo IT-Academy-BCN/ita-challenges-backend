@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.exceptions;
+package com.itachallenge.challenge.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

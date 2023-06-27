@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.services;
+package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import reactor.core.publisher.Flux;
@@ -7,8 +7,8 @@ import java.util.UUID;
 
 public interface IChallengeService {
 
-    Mono<?> getChallengeId(UUID id);
-    boolean isValidUUID(String id);
+    public Mono<?> getChallengeId(UUID id);
+    public boolean isValidUUID(String id);
     Flux<ChallengeDto> getChallenges ();
 
 }
