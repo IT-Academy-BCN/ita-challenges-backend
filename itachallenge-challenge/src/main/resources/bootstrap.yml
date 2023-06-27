@@ -20,4 +20,4 @@ spring:
         port: 8762 #puerto del servicio
         prefer-ip-address: true
         healthCheckPath: /actuator/health
-        healthCheckInterval: 15s
+        healthCheckInterval: 10s
