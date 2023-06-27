@@ -107,7 +107,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    public void testGetChallenges() {
+    void testGetChallenges() {
 
         Flux<ChallengeDocument> mockChallenges = Flux.just(challenge1, challenge2);
         when(challengeRepository.findAll()).thenReturn(mockChallenges);

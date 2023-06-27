@@ -57,7 +57,6 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<ChallengeDto> getChallenges () {
         Flux<ChallengeDocument> challengesList = challengeRepository.findAll();
-        Flux<ChallengeDto> challengesDtoList = challengeMapper.fromChallengeToChallengeDto(challengesList);
-        return challengesDtoList;
+        return challengeMapper.fromChallengeToChallengeDto(challengesList);
     }
 }
