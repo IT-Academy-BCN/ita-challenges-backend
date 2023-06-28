@@ -19,7 +19,7 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
     //region METHODS
     @Override
-    public Mono<List<ChallengeStatisticsDto>> GetChallengeStatistics(List<UUID> challengeIds) {
+    public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
         //region VARIABLES
         List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
 

@@ -39,7 +39,7 @@ public class UserController {
     @ApiResponse(responseCode = "414", description = "URI too long")
     @Operation(summary = "Get Basic Info of Challenge")
     @GetMapping(value = "/statistics")
-    public Mono<List<ChallengeStatisticsDto>> GetChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds) {
+    public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds) {
         //region VARIABLES
         Mono<List<ChallengeStatisticsDto>> elements = null;
 
@@ -50,7 +50,7 @@ public class UserController {
         // INITIAL CHECKS
         if (!challengeIds.isEmpty()) {
             // CALL SERVICE METHOD
-            elements = serviceChallengeStatistics.GetChallengeStatistics(challengeIds);
+            elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
         }
 
         //endregion ACTIONS

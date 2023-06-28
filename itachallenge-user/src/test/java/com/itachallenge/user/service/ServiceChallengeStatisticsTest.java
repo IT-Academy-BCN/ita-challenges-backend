@@ -1,9 +1,7 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
-import com.itachallenge.user.service.ServiceChallengeStatistics;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -33,7 +31,7 @@ class ServiceChallengeStatisticsTest {
 
 
         //region TESTS
-        result = serviceChallengeStatistics.GetChallengeStatistics(challengeIds);
+        result = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
         challengeList = result.block();
 
         assertNotNull(challengeList);
