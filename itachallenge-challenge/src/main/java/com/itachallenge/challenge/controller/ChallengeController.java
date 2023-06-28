@@ -12,18 +12,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
-
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
+    //VARIABLES
+    private final static HttpStatus OK = HttpStatus.OK;
+    private final static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
+    private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -53,27 +56,26 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/challenges/{challengeId}")
-    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
+    public Mono<ResponseEntity<Flux<ChallengeDto>>> getOneChallenge(@PathVariable("challengeId") String id) {
         try {
             boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
                 log.error("{} ID: {}, incorrect.", errorMessage, id);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
+                throw new ResponseStatusException(BAD_REQUEST, errorMessage.getMessage());
             }
 
-            Mono<?> challengeMono = challengeService.getChallengeId(UUID.fromString(id))
+            ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), "Challenge not found");
+            log.info("Challenge not found. ID: {}", id);
+            return challengeService.getChallengeId(UUID.fromString(id))
                     .map(challenge -> ResponseEntity.ok().body(challenge))
-                    .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-
-            return (Mono<ResponseEntity<ChallengeDto>>) challengeMono;
-
+                    .switchIfEmpty(Mono.error(new ResponseStatusException(OK, errorMessage.getMessage())));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+            return Mono.just(ResponseEntity.status(INTERNAL_SERVER_ERROR).build());
         }
     }
 
