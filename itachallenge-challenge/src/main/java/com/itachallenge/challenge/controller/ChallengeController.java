@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +18,8 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.Set;
+
 
 
 @RestController
@@ -76,5 +79,11 @@ public class ChallengeController {
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
+	@GetMapping(path = "/{challengeId}/related")
+	public Mono<ResponseEntity<Set<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id) {
+	    return challengeService.getRelatedChallenge(UUID.fromString(id))
+	            .map(ResponseEntity::ok)
+	            .onErrorResume(e -> Mono.error(new Exception("An error occurred while accessing the database")));
+	}
 
 }
