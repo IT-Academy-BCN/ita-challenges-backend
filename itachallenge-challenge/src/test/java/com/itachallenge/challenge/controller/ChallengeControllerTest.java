@@ -26,7 +26,6 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -74,7 +73,7 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void testGetOneChallenge_ValidUUID() {
+    void testGetOneChallenge_ValidUUID() { //noOk
         ChallengeDto challenge = new ChallengeDto();
 
         doReturn(true).when(challengeService).isValidUUID(VALID_ID);
@@ -84,15 +83,13 @@ class ChallengeControllerTest {
 
         StepVerifier.create(responseMono)
                 .expectNextMatches(responseEntity -> {
-                    // Aquí puedes realizar las comprobaciones adicionales en la ResponseEntity, si es necesario
-                    // Por ejemplo, puedes verificar el código de estado, los encabezados, el cuerpo, etc.
                     return responseEntity.getStatusCode() == HttpStatus.OK;
                 })
                 .verifyComplete();
     }
 
     @Test
-    public void testGetOneChallenge_ValidUUID_Version2() {
+    public void testGetOneChallenge_ValidUUID_Version2() { //noOK
 
         ChallengeDto challenge = new ChallengeDto();
 
