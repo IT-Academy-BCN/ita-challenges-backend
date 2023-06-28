@@ -1,7 +1,6 @@
 package com.itachallenge.user.filters;
 
 import com.itachallenge.user.config.PropertiesConfig;
-import com.itachallenge.user.filters.MaxLengthURIFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +10,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
@@ -20,10 +22,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@PropertySource("classpath:application-test.yml")
 class MaxLengthURIFilterTest {
     //region VARIABLES
     @InjectMocks
     private MaxLengthURIFilter mMaxLengthURIFilter;
+    @Autowired()
+    PropertiesConfig prpsConfig;
+
     @Mock
     private PropertiesConfig propertiesConfig;
     @Mock
@@ -40,6 +47,7 @@ class MaxLengthURIFilterTest {
     @Test
     void doFilter_ToLong_Test() throws IOException, ServletException {
         //region VARIABLES
+        int maxLength;
         String urlEndpoint="/itachallenge/api/v1/user/statistics";
         String uriQuery;
 
@@ -47,10 +55,13 @@ class MaxLengthURIFilterTest {
 
 
         //region TEST INITIALIZATION
+        // Get URI maxLength
+        maxLength = prpsConfig.getUrlMaxLength();
+
         // Create query
         uriQuery = queryCreation(100);
         // Config mokito behavior
-        when(propertiesConfig.getUrlMaxLength()).thenReturn(2048);
+        when(propertiesConfig.getUrlMaxLength()).thenReturn(maxLength);
         when(request.getRequestURL()).thenReturn(new StringBuffer(urlEndpoint));
         when(request.getQueryString()).thenReturn(uriQuery);
 
@@ -70,6 +81,7 @@ class MaxLengthURIFilterTest {
     @Test
     void doFilter_OK_Test() throws IOException, ServletException {
         //region VARIABLES
+        int maxLength;
         String urlEndpoint="/itachallenge/api/v1/user/statistics";
         String uriQuery;
 
@@ -77,10 +89,13 @@ class MaxLengthURIFilterTest {
 
 
         //region INITIALIZATION
+        // Get URI maxLength
+        maxLength = prpsConfig.getUrlMaxLength();
+
         // Create query
         uriQuery = queryCreation(10);
         // Config behavior
-        when(propertiesConfig.getUrlMaxLength()).thenReturn(2048);
+        when(propertiesConfig.getUrlMaxLength()).thenReturn(maxLength);
         when(request.getRequestURL()).thenReturn(new StringBuffer(urlEndpoint));
         when(request.getQueryString()).thenReturn(uriQuery);
 
