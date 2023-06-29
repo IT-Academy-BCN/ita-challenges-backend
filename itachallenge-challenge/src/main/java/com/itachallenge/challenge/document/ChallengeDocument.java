@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Document(collection="challenges")
 @Getter
-@NoArgsConstructor //añadido para testear
+@NoArgsConstructor
 public class ChallengeDocument {
 
     @Id

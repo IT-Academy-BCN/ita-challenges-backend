@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -23,14 +22,13 @@ import java.util.UUID;
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
-    //VARIABLES
+    //VARIABLES HTTPSTATUS
     private final static HttpStatus OK = HttpStatus.OK;
     private final static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
     private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
     @Autowired
     private DiscoveryClient discoveryClient;
-
     @Autowired
     private IChallengeService challengeService;
 
@@ -56,7 +54,7 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/challenges/{challengeId}")
-    public Mono<ResponseEntity<Flux<ChallengeDto>>> getOneChallenge(@PathVariable("challengeId") String id) {
+    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
         try {
             boolean validUUID = challengeService.isValidUUID(id);
 
@@ -78,5 +76,5 @@ public class ChallengeController {
             return Mono.just(ResponseEntity.status(INTERNAL_SERVER_ERROR).build());
         }
     }
-
+    
 }

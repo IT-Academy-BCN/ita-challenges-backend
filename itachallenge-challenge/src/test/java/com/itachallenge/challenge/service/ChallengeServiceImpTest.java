@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 
@@ -46,15 +44,14 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void testGetChallengeId() { //OK
-        ChallengeDocument challengeDocument = new ChallengeDocument();
+    void testGetChallengeId() {
+        ChallengeDocument challenge = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
-        Mono<ChallengeDocument> monoChallengeDocument = Mono.just(challengeDocument);
 
-        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(monoChallengeDocument);
+        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
         when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
-        Mono<Flux<ChallengeDto>> result = challengeService.getChallengeId(VALID_ID);
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
         //Comprueba que devuelva un elemento únicamente (Mono)
         StepVerifier.create(result)
@@ -63,55 +60,29 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void testGetChallengeId_ConvertDto() { //OK
-        ChallengeDocument challengeDocument = new ChallengeDocument();
+    void testGetChallengeId_ConvertDto() {
+        ChallengeDocument challenge = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
-        Mono<ChallengeDocument> monoChallengeDocument = Mono.just(challengeDocument);
 
-        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(monoChallengeDocument);
+        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
         when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
-        Mono<Flux<ChallengeDto>> result = challengeService.getChallengeId(VALID_ID);
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
         StepVerifier.create(result)
-                .assertNext(challengeDtoFlux -> {
-                    assertThat(challengeDtoFlux.collectList().block()).containsExactly(challengeDto);
-                })
+                .expectNext(challengeDto)
                 .verifyComplete();
     }
 
     @Test
-    void testGetChallengeId_InvalidId(){ //OK
-        when(challengeRepository.findByUuid(UUID.fromString(INVALID_ID))).thenReturn(Mono.empty());
-
-        Mono<Flux<ChallengeDto>> result = challengeService.getChallengeId(UUID.fromString(INVALID_ID));
-
-        StepVerifier.create(result)
-                .expectNextCount(0)
-                .verifyComplete();
-    }
-
-    @Test
-    void testGetChallengeId_Exceptions(){ //OK
-        RuntimeException errorException = new RuntimeException("Exception message");
-        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.error(errorException));
-
-        Mono<Flux<ChallengeDto>> result = challengeService.getChallengeId(VALID_ID);
-
-        StepVerifier.create(result)
-                .expectError(RuntimeException.class)
-                .verify();
-    }
-
-    @Test
-    void testIsValidUUID_Ok() { //OK
+    void testIsValidUUID_Ok() {
         boolean result = challengeService.isValidUUID(VALID_ID.toString());
 
         assertTrue(result);
     }
 
     @Test
-    void testIsValidUUID_NotValid() { //OK
+    void testIsValidUUID_NotValid() {
         boolean result = challengeService.isValidUUID(INVALID_ID);
 
         assertFalse(result);

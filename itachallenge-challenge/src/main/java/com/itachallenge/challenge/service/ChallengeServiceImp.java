@@ -23,9 +23,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private Converter converter;
 
     @Override
-    public Mono<Flux<ChallengeDto>> getChallengeId(UUID id) {
-        return challengeRepository.findByUuid(id)
-                .map(challengeDocument -> converter.fromChallengeToChallengeDto(Flux.just(challengeDocument)));
+    public Mono<ChallengeDto> getChallengeId(UUID id) {
+        return Mono.from(converter.fromChallengeToChallengeDto(Flux.from(challengeRepository.findByUuid(id))));
     }
 
     @Override //Comprueba si la UUID es valida.

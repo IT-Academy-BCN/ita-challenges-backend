@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
-@Repository //añadido para testear
+@Repository
 public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDocument,UUID> {
 
     Mono<Boolean> existsByUuid(UUID uuid);
@@ -21,7 +21,5 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
-
-
 
 }
