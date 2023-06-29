@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,5 +77,25 @@ public class ChallengeController {
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
+
+    @DeleteMapping("/resources/{idResource}")
+    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuidResource = getUUID(idResource);
+        if (challengeService.removeResourcesById(uuidResource)) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private UUID getUUID(String uuidString) throws BadUUIDException {
+        if (uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            return UUID.fromString(uuidString);
+        } else {
+            throw new BadUUIDException("Invalid UUID");
+        }
+    }
+
+
 
 }

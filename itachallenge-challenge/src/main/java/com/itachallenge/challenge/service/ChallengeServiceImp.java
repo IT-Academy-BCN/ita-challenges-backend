@@ -1,16 +1,20 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
+import com.itachallenge.challenge.repository.ChallengeRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -23,6 +27,9 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeDto challengeDto;
+
+    @Autowired
+    private ChallengeRepository challengeRepository;
 
     @Override
     public Mono<?> getChallengeId(UUID id) {
@@ -44,6 +51,21 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override //Comprueba si la UUID es valida.
     public boolean isValidUUID(String id) {
         return !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
+    }
+
+
+    public boolean removeResourcesById(UUID idResource){
+        Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);
+
+        return challengeFlux.flatMap(challenge -> {
+                    challenge.setResources(challenge.getResources().stream()
+                            .filter(s -> !s.equals(idResource))
+                            .collect(Collectors.toSet()));
+                    return challengeRepository.save(challenge);
+                })
+                .hasElements()
+                .blockOptional()
+                .orElse(false);
     }
 
 }

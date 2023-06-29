@@ -12,6 +12,8 @@ import java.util.UUID;
 
 @Document(collection="challenges")
 @Getter
+@Setter
+@Builder
 public class ChallengeDocument {
 
     @Id
