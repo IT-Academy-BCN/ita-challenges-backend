@@ -72,7 +72,7 @@ public class ChallengeTest {
 
     @Test
     void getRelatedChallenges() {
-        Set<UUID> relatedChallenges = new HashSet<>();
+        List<UUID> relatedChallenges = new ArrayList<>();
         UUID challengeId1 = UUID.randomUUID();
         UUID challengeId2 = UUID.randomUUID();
         relatedChallenges.add(challengeId1);

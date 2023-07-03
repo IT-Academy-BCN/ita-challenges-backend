@@ -23,6 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -146,5 +148,22 @@ class ChallengeControllerTest {
         verify(challengeService, times(1)).isValidUUID(VALID_ID);
         verify(challengeService, times(1)).getChallengeId(UUID.fromString(VALID_ID));
     }
-
+    @Test
+    @DisplayName("Test EndPoint: related")
+    void ChallengeRelatedTest (){
+        
+    	List<UUID> challengerelated= new ArrayList<UUID>();
+		challengerelated.add(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"));
+		challengerelated.add(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"));
+		challengerelated.add(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"));
+	
+        webTestClient.get()
+                .uri(CHALLENGE_BASE_URL + "/{id_challenge}/related", "b16297ef-1cc7-4ec0-9f8e-0a61c6077e0b")
+                .accept(MediaType.ALL)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(List.class)
+                .value(s -> equalTo(challengerelated));
+                
+    }
 }

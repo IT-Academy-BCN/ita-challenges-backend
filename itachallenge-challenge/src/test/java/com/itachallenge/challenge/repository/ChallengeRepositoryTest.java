@@ -75,9 +75,9 @@ class ChallengeRepositoryTest {
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Level 1", "Loops", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, "Level 1", "Loops", languageSet, LocalDateTime.now(), detail, solutionList, (List<UUID>) UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "Level 2", "If", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, "Level 2", "If", languageSet, LocalDateTime.now(), detail, solutionList, (List<UUID>) UUIDSet, UUIDSet2);
 
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
