@@ -41,8 +41,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
     implementation 'org.springframework:spring-context:5.3.13'
-    //model mapper converter TREURE SI NO ÉS AQUEST
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.1'
+    // mapStruct converter TREURE SI NO ÉS AQUEST
+    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
