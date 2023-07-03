@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.jupiter.api.Assertions;
@@ -150,20 +151,46 @@ class ChallengeControllerTest {
     }
     @Test
     @DisplayName("Test EndPoint: related")
-    void ChallengeRelatedTest (){
+    void ChallengeRelatedTest_VALID_ID (){
+    	
+        RelatedDto rel1 = RelatedDto.builder()
+				.relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+				.titleRelatedId("titulo 1")
+				.build();
+		RelatedDto rel2 = RelatedDto.builder()
+				.relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+				.titleRelatedId("titulo 2")
+				.build();
+		RelatedDto rel3 = RelatedDto.builder()
+				.relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+				.titleRelatedId("titulo 3")
+				.build();
+		
+
+		List<RelatedDto> related = new ArrayList<>();
+
+		related.add(rel1);
+		related.add(rel2);
+		related.add(rel3);
+		
         
-    	List<UUID> challengerelated= new ArrayList<UUID>();
-		challengerelated.add(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"));
-		challengerelated.add(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"));
-		challengerelated.add(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"));
-	
-        webTestClient.get()
-                .uri(CHALLENGE_BASE_URL + "/{id_challenge}/related", "b16297ef-1cc7-4ec0-9f8e-0a61c6077e0b")
-                .accept(MediaType.ALL)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(List.class)
-                .value(s -> equalTo(challengerelated));
-                
+
+      doReturn(true).when(challengeService).isValidUUID(VALID_ID);
+      doReturn(Mono.just(related)).when(challengeService).getRelatedChallengePaginated(VALID_ID, 0, 5);
+
+        Mono<ResponseEntity<List<RelatedDto>>> responseRelated = challengeController.relatedChallenge("dcacb291-b4aa-4029-8e9b-284c8ca80296", 0, 5);
+    	
+
+        StepVerifier.create(responseRelated)
+                .expectNextMatches(response -> {
+                    assertEquals(OK, response.getStatusCode());
+                    assertNotNull(response.getBody());
+                    assertTrue(response.getBody() instanceof List<RelatedDto>);
+                    assertEquals(related, response.getBody());
+                    return true;
+                })
+                .verifyComplete();
+
     }
+              
 }

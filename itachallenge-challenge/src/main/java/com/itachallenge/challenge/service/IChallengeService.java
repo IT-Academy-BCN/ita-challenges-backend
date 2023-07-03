@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import com.itachallenge.challenge.dto.RelatedDto;
+
 public interface IChallengeService {
 
     public Mono<?> getChallengeId(UUID id);
     public boolean isValidUUID(String id);
-    public Mono<List<UUID>> getRelatedChallengePaginated(String id, int page, int size);
+    public Mono<List<RelatedDto>> getRelatedChallengePaginated(String id, int page, int size);
 
 }

@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,24 +55,24 @@ public class ChallengeServiceImp implements IChallengeService {
 		return !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 	}
 
-	public Mono<List<UUID>> getRelatedChallengePaginated(String id, int page, int size) {
+	public Mono<List<RelatedDto>> getRelatedChallengePaginated(String id, int page, int size) {
 
-		Mono<List<UUID>> allRelatedChallenges = getRelatedChallenge(id);
+		Mono<List<RelatedDto>> allRelatedChallenges = getRelatedChallenge(id);
 
 		int startIndex = page * size;
-		Flux<UUID> subListChallenges = allRelatedChallenges.flatMapMany(Flux::fromIterable).skip(startIndex).take(size);
+		Flux<RelatedDto> subListChallenges = allRelatedChallenges.flatMapMany(Flux::fromIterable).skip(startIndex).take(size);
 
 		// Collect the subList challenges into a list
 		return subListChallenges.collectList();
 	}
 
-	public Mono<List<UUID>> getRelatedChallenge(String challengeId) {
+	public Mono<List<RelatedDto>> getRelatedChallenge(String challengeId) {
 
-		Mono<List<UUID>> related = null;
+		Mono<List<RelatedDto>> related = null;
 
 		try {
 
-			related = Mono.just(dataFeed(challengeId).getRelatedChallenges());
+			related = Mono.just(dataFeed(challengeId));
 
 		} catch (Exception e) {
 
@@ -80,23 +81,30 @@ public class ChallengeServiceImp implements IChallengeService {
 	}
 
 //para pruebas antes de que funcione repositorio
-	public ChallengeDocument dataFeed(String id) {
+	public List<RelatedDto> dataFeed(String id) {
 
-		UUID rel1 = UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197");
-		UUID rel2 = UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
-		UUID rel3 = UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344");
+		RelatedDto rel1 = RelatedDto.builder()
+				.relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+				.titleRelatedId("titulo 1")
+				.build();
+		RelatedDto rel2 = RelatedDto.builder()
+				.relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+				.titleRelatedId("titulo 2")
+				.build();
+		RelatedDto rel3 = RelatedDto.builder()
+				.relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+				.titleRelatedId("titulo 3")
+				.build();
+		
 
-		List<UUID> related = new ArrayList<>();
+		List<RelatedDto> related = new ArrayList<>();
 
 		related.add(rel1);
 		related.add(rel2);
 		related.add(rel3);
 
-		ChallengeDocument challengeDoc = ChallengeDocument.builder().uuid(UUID.fromString(id)).level("2")
-				.title("the one").languages(null).creationDate(null).relatedChallenges(related).solutions(null)
-				.detail(null).resources(null).build();
 
-		return challengeDoc;
+		return related;
 
 	}
 

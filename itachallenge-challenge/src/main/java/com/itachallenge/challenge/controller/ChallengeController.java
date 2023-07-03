@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,7 +76,7 @@ public class ChallengeController {
 	}
 
 	@GetMapping(path = "/{challengeId}/related")
-	public Mono<ResponseEntity<List<UUID>>> relatedChallenge(@PathVariable("challengeId") String id,
+	public Mono<ResponseEntity<List<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id,
 			@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "size", defaultValue = "5") int size) {
 
