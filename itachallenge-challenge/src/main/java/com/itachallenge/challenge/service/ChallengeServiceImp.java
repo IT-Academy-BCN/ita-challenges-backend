@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
@@ -60,7 +59,8 @@ public class ChallengeServiceImp implements IChallengeService {
 		Mono<List<RelatedDto>> allRelatedChallenges = getRelatedChallenge(id);
 
 		int startIndex = page * size;
-		Flux<RelatedDto> subListChallenges = allRelatedChallenges.flatMapMany(Flux::fromIterable).skip(startIndex).take(size);
+		Flux<RelatedDto> subListChallenges = allRelatedChallenges.flatMapMany(Flux::fromIterable).skip(startIndex)
+				.take(size);
 
 		// Collect the subList challenges into a list
 		return subListChallenges.collectList();
@@ -71,7 +71,10 @@ public class ChallengeServiceImp implements IChallengeService {
 		Mono<List<RelatedDto>> related = null;
 
 		try {
-
+			/*cuando funcione respository este metodo obtendrá el challengeDocument asociado a la id
+			y de él extraerá una lista de UUID. El converter RelatedDto buscará en el repo 
+			para cada UUID de la lista, el challengeDocument y extraerá el Título para generar el RelatedDto
+			correspondiente. Después devolverá la lista de RelatedDto*/
 			related = Mono.just(dataFeed(challengeId));
 
 		} catch (Exception e) {
@@ -80,29 +83,21 @@ public class ChallengeServiceImp implements IChallengeService {
 		return related;
 	}
 
-//para pruebas antes de que funcione repositorio
+//para pruebas antes de que funcione repositorio para obtener un challenge a partir de su UUID
 	public List<RelatedDto> dataFeed(String id) {
 
-		RelatedDto rel1 = RelatedDto.builder()
-				.relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
-				.titleRelatedId("titulo 1")
-				.build();
-		RelatedDto rel2 = RelatedDto.builder()
-				.relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
-				.titleRelatedId("titulo 2")
-				.build();
-		RelatedDto rel3 = RelatedDto.builder()
-				.relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
-				.titleRelatedId("titulo 3")
-				.build();
-		
+		RelatedDto rel1 = RelatedDto.builder().relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+				.titleRelatedId("titulo 1").build();
+		RelatedDto rel2 = RelatedDto.builder().relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+				.titleRelatedId("titulo 2").build();
+		RelatedDto rel3 = RelatedDto.builder().relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+				.titleRelatedId("titulo 3").build();
 
 		List<RelatedDto> related = new ArrayList<>();
 
 		related.add(rel1);
 		related.add(rel2);
 		related.add(rel3);
-
 
 		return related;
 

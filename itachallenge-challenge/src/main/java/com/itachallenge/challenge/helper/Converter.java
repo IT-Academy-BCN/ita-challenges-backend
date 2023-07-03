@@ -53,7 +53,8 @@ public class Converter {
 
     }
 
-   /* private RelatedDto toRelatedDto(ChallengeDocument challenge) {
+   private RelatedDto toRelatedDto(ChallengeDocument challenge) {
+	   
         return new RelatedDto(challenge.getUuid(), challenge.getTitle());
-    }*/
+    }
 }
