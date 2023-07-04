@@ -42,9 +42,9 @@ class ChallengeServiceImpTest {
     @Test
     void getChallengeId() {
         ChallengeDto expectedDto = new ChallengeDto();
-        expectedDto.setChallengeId(VALID_ID);
+        expectedDto.setUuid(VALID_ID);
 
-        when(challengeDto.getChallengeId()).thenReturn(VALID_ID);
+        when(challengeDto.getUuid()).thenReturn(VALID_ID);
 
         Mono<?> result = challengeService.getChallengeId(VALID_ID);
 
@@ -52,14 +52,14 @@ class ChallengeServiceImpTest {
                 .expectNextMatches(response -> response instanceof ResponseEntity &&
                         ((ResponseEntity<?>) response).getStatusCode() == HttpStatus.OK &&
                         ((ResponseEntity<?>) response).getBody() instanceof ChallengeDto &&
-                        ((ChallengeDto) ((ResponseEntity<?>) response).getBody()).getChallengeId().equals(VALID_ID))
+                        ((ChallengeDto) ((ResponseEntity<?>) response).getBody()).getUuid().equals(VALID_ID))
                 .verifyComplete();
     }
 
     @Test
     void getChallengeId_Empty() {
 
-        when(challengeDto.getChallengeId()).thenReturn(null);
+        when(challengeDto.getUuid()).thenReturn(null);
 
         Mono<?> result = challengeService.getChallengeId(VALID_ID);
 

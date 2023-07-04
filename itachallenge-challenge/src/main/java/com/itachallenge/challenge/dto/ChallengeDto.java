@@ -18,7 +18,7 @@ import java.util.UUID;
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
-    private UUID challengeId;
+    private UUID uuid;
 
     @JsonProperty(value = "challenge_title", index = 1)
     private String title;

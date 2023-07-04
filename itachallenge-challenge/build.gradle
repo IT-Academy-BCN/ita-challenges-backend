@@ -31,6 +31,8 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    //per al mapstruct
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
@@ -43,6 +45,7 @@ dependencies {
     implementation 'org.springframework:spring-context:5.3.13'
     // mapStruct converter TREURE SI NO ÉS AQUEST
     implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
+    implementation group: 'org.mapstruct', name: 'mapstruct-processor', version: '1.5.5.Final'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'

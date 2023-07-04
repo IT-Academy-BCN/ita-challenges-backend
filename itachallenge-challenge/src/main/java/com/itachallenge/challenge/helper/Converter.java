@@ -26,7 +26,7 @@ public class Converter {
 
     private ChallengeDto toChallengeDto(ChallengeDocument challenge) {
         return ChallengeDto.builder()
-                .challengeId(challenge.getUuid())
+                .uuid(challenge.getUuid())
                 .level(challenge.getLevel())
                 .title(challenge.getTitle())
                 .languages(challenge.getLanguages().stream()

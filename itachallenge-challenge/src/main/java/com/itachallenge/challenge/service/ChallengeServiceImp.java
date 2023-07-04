@@ -26,7 +26,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<?> getChallengeId(UUID id) {
-        challengeDto.setChallengeId(id); //ELIMINAR CON REPOSITORIO
+        challengeDto.setUuid(id); //ELIMINAR CON REPOSITORIO
 
         Mono<ChallengeDto> challenge = Mono.just(challengeDto); //ELIMINAR CON REPOSITORIO
         //Mono<Challenge> challenge = challengeRepository.findByUuid(id);

@@ -9,7 +9,7 @@ import lombok.Getter;
 public class LanguageDto{
 
     @JsonProperty(value = "id_language", index = 0)
-    private int languageId;
+    private int idLanguage;
 
     @JsonProperty(value = "language_name", index = 1)
     private String languageName;
