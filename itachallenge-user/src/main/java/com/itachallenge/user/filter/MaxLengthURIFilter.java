@@ -1,4 +1,4 @@
-package com.itachallenge.user.filters;
+package com.itachallenge.user.filter;
 
 import com.itachallenge.user.config.PropertiesConfig;
 import jakarta.servlet.*;
