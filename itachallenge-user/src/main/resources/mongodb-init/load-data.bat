@@ -1,6 +1,7 @@
 @echo off
 echo Beginning of insertion
 
+redis-cli < user.txt
 mongoimport --db=user --collection=user_challenge --jsonArray --file=user_challenge.json
 
 
