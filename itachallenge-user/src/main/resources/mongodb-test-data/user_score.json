@@ -1,14 +1,4 @@
 [
-  /*
-  user-score:
-  user_id
-  challenge_id
-  bookmarked
-  status --> 1 started 2 medium 3 ended
-  score
-  */
-
-  //Darth Bader lenguage 1
   {
     "_id" : {
       "$uuid" : "a75fa943-6bc9-4e62-b1db-d43d15b149c7"
@@ -130,7 +120,6 @@
     "status": 2,
     "score": 70
   },
-  //Darth Bader lenguage 4
   {
     "_id" : {
       "$uuid" : "53242ff7-9e8a-4b94-aa3b-d9289a02dbad"
@@ -175,7 +164,6 @@
   "status": 2,
   "score": 90
   },
-  //Indiana Jones lenguage 2
   {
     "_id" : {
       "$uuid" : "9a2d29f7-53f8-45dd-a4f6-29bbf76fd6d1"
@@ -275,7 +263,6 @@
   "status": 2,
   "score": 60
   },
-  //Indiana Jones lenguage 3
   {
   "_id" : {
     "$uuid" : "4f93e3dc-06e5-4b11-9f9b-94f3f5c5e129"
@@ -353,7 +340,6 @@
   "status": 1,
   "score": 0
   },
-  //Bruce Wane lenguage 3
   {
   "_id" : {
     "$uuid" : "c52153d4-ae39-4b34-a1c3-8d1d0c9e9c3f"
@@ -420,7 +406,6 @@
     "status": 1,
     "score": 0
   },
-  //Frodo Bolson lenguage 2
   {
     "_id" : {
       "$uuid" : "4f8c6d92-8e6e-4c9a-93a1-7b0aef3e8692"
@@ -498,7 +483,6 @@
     "status": 2,
     "score": 40
   },
-  //Frodo Bolson lenguage 4
   {
     "_id" : {
       "$uuid" : "e97d4a6c-1aeb-48e4-b2e2-ae5c5d4bb07e"
@@ -521,7 +505,6 @@
     "status": 2,
     "score": 65
   },
-  //Sauron lenguage 2
   {
     "_id" : {
       "$uuid" : "83ad996c-1925-4c46-988a-d7020d8b2d7f"
@@ -577,7 +560,6 @@
     "status": 3,
     "score": 100
   },
-  //Sauron lenguage 1
   {
     "_id" : {
       "$uuid" : "83ad996c-1925-4c46-988a-d7020d8b2d7f"
@@ -611,7 +593,6 @@
     "status": 2,
     "score": 10
   },
-  //Sauron lenguage 4
   {
     "_id" : {
       "$uuid" : "83ad996c-1925-4c46-988a-d7020d8b2d7f"
@@ -623,7 +604,6 @@
     "status": 1,
     "score": 40
   },
-  //Sauron lenguage 2
   {
     "_id" : {
       "$uuid" : "83ad996c-1925-4c46-988a-d7020d8b2d7f"
