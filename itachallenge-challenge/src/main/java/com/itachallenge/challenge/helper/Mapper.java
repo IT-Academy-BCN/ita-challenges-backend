@@ -5,14 +5,22 @@ import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 
+@Component
 @org.mapstruct.Mapper
 public interface Mapper {
 
-    ChallengeDto toDtoFromDoc(ChallengeDocument challengeFlux);
+    //@Autowired
+    LocalDateTimeConverter converter = new LocalDateTimeConverter();
+
+
+
+    ChallengeDto toDtoFromDoc(org.springframework.data.mongodb.core.mapping.Document challengeFlux);
 
     LanguageDto toLanguageDtoFromLanguageDocument(LanguageDocument languageFlux);
 
@@ -25,12 +33,10 @@ public interface Mapper {
     }
 
     default String mapCreationDateToString(LocalDateTime localDateTime) {
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
         return converter.getFormattedCreationDateTime(localDateTime);
     }
 
     default LocalDateTime mapStringToCreationDate(String dateString) {
-        LocalDateTimeConverter converter = new LocalDateTimeConverter();
         return converter.getFormattedStringToCreationDate(dateString);
     }
 
