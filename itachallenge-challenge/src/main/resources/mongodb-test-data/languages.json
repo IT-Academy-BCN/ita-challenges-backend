@@ -2,7 +2,7 @@
   {
     "id_language": "1",
     "language_name": "Javascript",
-    "id_challenges": [
+    "challenges": [
       {
         "_id": {
           "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
@@ -128,7 +128,7 @@
   {
     "id_language": "2",
     "language_name": "Java",
-    "id_challenges": [
+    "challenges": [
       {
         "_id": {
           "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
@@ -289,7 +289,7 @@
   {
     "id_language": "3",
     "language_name": "PHP",
-    "id_challenges": [
+    "challenges": [
       {
         "_id": {
           "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
@@ -390,7 +390,7 @@
   {
     "id_language": "4",
     "language_name": "Python",
-    "id_challenges": [
+    "challenges": [
       {
         "_id": {
           "$uuid": "c0c7510b-f867-4375-b46f-0c164f30429f"
