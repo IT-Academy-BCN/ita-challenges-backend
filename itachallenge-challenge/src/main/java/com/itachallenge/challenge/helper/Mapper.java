@@ -24,13 +24,11 @@ public interface Mapper {
         return languageFlux.map(this::toLanguageDtoFromLanguageDocument);
     }
 
-    @Named("mapCreationDateToString")
     default String mapCreationDateToString(LocalDateTime localDateTime) {
         LocalDateTimeConverter converter = new LocalDateTimeConverter();
         return converter.getFormattedCreationDateTime(localDateTime);
     }
 
-    @Named("mapStringToCreationDate")
     default LocalDateTime mapStringToCreationDate(String dateString) {
         LocalDateTimeConverter converter = new LocalDateTimeConverter();
         return converter.getFormattedStringToCreationDate(dateString);
