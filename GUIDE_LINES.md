@@ -2,37 +2,60 @@
 
 ## Table of Contents
 
-1. [**Introduction**](#1-introduction)
+1. [**PROJECT'S LINKS**](#1-project's-links)
 
-   1.1 [Terminology notes](#11-terminology-notes)
+   1.1 [Temp](#11-temp)
 
-   1.2 [Guide notes](#12-guide-notes)
+2. [**WORK PROCEDURES**](#2-work-procedures)
+
+   2.1 [Temp](#21-temp)
+
+3. [**URL NORMALIZATION**](#3-url-normalization)
+
+   3.1 [Temp](#31-temp)
+
+4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)
+
+   4.1 [Temp](#41-temp)
+   
+5. [**LIBRARIES USED**](#5-libraries-used)
+
+   5.1 [Temp](#51-temp)
+
+6. [**REQUIRED PROGRAMS**](#6-required-programs)
+
+   6.1 [Temp](#61-temp)
+
+7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)
+
+   7.1 [Temp](#71-temp)
 
 
-2. [**Source file basics**](#2-source-file-basics)
 
-   2.1 [File name](#21-file-name)
+# 1. PROJECT'S LINKS
 
-   2.2 [2.2 File encoding: UTF-8](#22-file-encoding--uft-8)
+## 1.1 Temp
 
-   2.3 [Special characters](#23-special-characters)
+# 2. WORK PROCEDURES
 
-## 1. Introduction
+## 2.1 Temp
 
-Este es el primer capítulo de la guía de estilo de Google para Java. Proporciona una introducción general y una visión general de los principios clave que se deben seguir al escribir código Java siguiendo esta guía.
+# 3. URL NORMALIZATION
 
-### 1.1 Terminology notes
+## 3.1 Temp
 
-En esta sección se presentan las notas terminológicas relevantes que se utilizarán a lo largo de la guía de estilo. Proporciona definiciones y explicaciones de términos específicos relacionados con la programación en Java.
+# 4. DEFINITIONS OF METHOD, CLASS, ETC...
 
-### 1.2 Guide notes
+## 4.1 Temp
 
-Las notas de la guía son comentarios y explicaciones adicionales que se incluyen en este capítulo para proporcionar orientación adicional y aclaraciones sobre las recomendaciones y convenciones presentadas en la guía de estilo de Google para Java.
+# 5. LIBRARIES USED
 
-## 2. Source file basics
+## 5.1 Temp
 
-### 2.1 File name
+# 6. REQUIRED PROGRAMS
 
-### 2.2 File encoding: UFT-8
+## 6.1 Temp
 
-### 2.3 Special characters
+# 7 RECOMMENDED PROGRAMS
+
+## 7.1 Temp
