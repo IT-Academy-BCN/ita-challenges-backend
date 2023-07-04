@@ -1,7 +1,7 @@
-package com.itachallenge.challenge.services;
+package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
+import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,8 +1,8 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.exceptions.ErrorResponseMessage;
-import com.itachallenge.challenge.services.IChallengeService;
+import com.itachallenge.challenge.exception.ErrorResponseMessage;
+import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

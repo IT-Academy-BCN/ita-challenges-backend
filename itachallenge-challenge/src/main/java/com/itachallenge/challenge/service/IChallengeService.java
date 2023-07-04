@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.services;
+package com.itachallenge.challenge.service;
 
 import reactor.core.publisher.Mono;
 import java.util.UUID;

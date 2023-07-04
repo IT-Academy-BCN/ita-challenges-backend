@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.services;
+package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 
