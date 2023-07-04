@@ -1,7 +1,6 @@
 @echo off
 echo Beginning of insertion
 
-mongoimport --db=user --collection=users --jsonArray --file=user.json
 mongoimport --db=user --collection=user_challenge --jsonArray --file=user_challenge.json
 
 
