@@ -1,6 +1,8 @@
 [
   {
-    "id_language": "1",
+    "_id" : {
+      "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    },
     "language_name": "Javascript",
     "id_challenges": [
       {
@@ -126,7 +128,9 @@
     ]
   },
   {
-    "id_language": "2",
+    "_id" : {
+      "$uuid" : "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    },
     "language_name": "Java",
     "id_challenges": [
       {
@@ -286,8 +290,11 @@
       }
     ]
   },
+
   {
-    "id_language": "3",
+    "_id" : {
+      "$uuid" : "1e047ea2-b787-49e7-acea-d79e92be3909"
+    },
     "language_name": "PHP",
     "id_challenges": [
       {
@@ -388,7 +395,9 @@
     ]
   },
   {
-    "id_language": "4",
+    "_id" : {
+      "$uuid" : "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+    },
     "language_name": "Python",
     "id_challenges": [
       {

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 import java.net.URI;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class ChallengeController {
     public String test() {
         log.info("** Saludos desde el logger **");
 
- Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
+        Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
                 .map( s -> s.getUri());
@@ -77,4 +78,9 @@ public class ChallengeController {
         }
     }
 
+    @Operation(summary = "Get challenges")
+    @GetMapping(value = "/challenges")
+    public Flux<ChallengeDto> getChallenges() {
+        return challengeService.getChallenges();
+    }
 }

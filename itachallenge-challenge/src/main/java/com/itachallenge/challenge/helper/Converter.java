@@ -24,7 +24,7 @@ public class Converter {
         return languageFlux.map(this::toLanguageDto);
     }
 
-    private ChallengeDto toChallengeDto(ChallengeDocument challenge) {
+    public ChallengeDto toChallengeDto(ChallengeDocument challenge) {
         return ChallengeDto.builder()
                 .challengeId(challenge.getUuid())
                 .level(challenge.getLevel())

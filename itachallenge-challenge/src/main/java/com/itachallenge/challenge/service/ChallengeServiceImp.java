@@ -1,12 +1,16 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
+import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.repository.ChallengeRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -23,6 +27,10 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeDto challengeDto;
+    @Autowired
+    private ChallengeRepository challengeRepository;
+    @Autowired
+    private Converter challengeMapper;
 
     @Override
     public Mono<?> getChallengeId(UUID id) {
@@ -46,4 +54,9 @@ public class ChallengeServiceImp implements IChallengeService {
         return !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
     }
 
+    @Override
+    public Flux<ChallengeDto> getChallenges () {
+        Flux<ChallengeDocument> challengesList = challengeRepository.findAll();
+        return challengeMapper.fromChallengeToChallengeDto(challengesList);
+    }
 }

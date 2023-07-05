@@ -1,8 +1,8 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,19 +14,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -45,7 +48,8 @@ class ChallengeControllerTest {
     private final static HttpStatus NOT_FOUND = HttpStatus.NOT_FOUND;
     private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
-
+    private ChallengeDto challenge1;
+    private ChallengeDto challenge2;
     @Autowired
     private WebTestClient webTestClient;
     @MockBean
@@ -54,8 +58,32 @@ class ChallengeControllerTest {
     private ChallengeController challengeController;
 
     @BeforeEach
-    void setUp() {
+    public void setup() {
         MockitoAnnotations.openMocks(this);
+
+        Set<LanguageDto> languagesDto = Set.of(new LanguageDto(1, "Javascript"), new LanguageDto(2, "java"));
+        String uuidString = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+        UUID uuid = UUID.fromString(uuidString);
+        String uuidString2 = "dcacb291-b4aa-4029-8e9b-284c8ca80297";
+        UUID uuid2 = UUID.fromString(uuidString2);
+
+        challenge1 = ChallengeDto.builder()
+                .challengeId(uuid)
+                .title("Sociis Industries")
+                .level("EASY")
+                .creationDate("2023-06-05T12:30:00+02:00")
+                .popularity(105)
+                .percentage(23.58f)
+                .languages(languagesDto).build();
+
+        challenge2 = ChallengeDto.builder()
+                .challengeId(uuid2)
+                .title("Sociis Industries 2")
+                .level("EASY")
+                .creationDate("2023-06-05T12:35:00+02:00")
+                .popularity(89)
+                .percentage(21.35f)
+                .languages(languagesDto).build();
     }
 
     @Test
@@ -140,6 +168,23 @@ class ChallengeControllerTest {
                 .verifyComplete();
 
         verifyService();
+    }
+
+    @Test
+    @DisplayName("Test EndPoint: getChallenges")
+    void testGetChallenges() {
+        final String URI_GET_CHALLENGES = "/challenges";
+        List<ChallengeDto> challenges = List.of(challenge1, challenge2);
+
+        when(challengeService.getChallenges()).thenReturn(Flux.fromIterable(challenges));
+        webTestClient.method(HttpMethod.GET)
+                .uri(CHALLENGE_BASE_URL + URI_GET_CHALLENGES)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Flux.fromIterable(challenges), ChallengeDto.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .equals(Flux.fromIterable(challenges));
     }
 
     private void verifyService(){
