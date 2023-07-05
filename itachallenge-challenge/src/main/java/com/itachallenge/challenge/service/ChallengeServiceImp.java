@@ -2,14 +2,10 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -33,7 +29,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<ChallengeDto> getChallengeId(UUID id) {
-        return Mono.from(converter.fromChallengeToChallengeDto(Flux.from(challengeRepository.findByUuid(id))));
+        return Mono.from(converter.fromChallengeToChallengeDto(Flux.from(challengeRepository.findByIdChallenge(id))));
     }
 
     @Override //Comprueba si la UUID es valida.

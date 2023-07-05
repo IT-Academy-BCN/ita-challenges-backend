@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ChallengeTest {
 
     @Test
-
     void getUuid() {
         UUID idChallenge = UUID.randomUUID();
         ChallengeDocument challenge = new ChallengeDocument(idChallenge, null, null, null, null, null, null, null, null);

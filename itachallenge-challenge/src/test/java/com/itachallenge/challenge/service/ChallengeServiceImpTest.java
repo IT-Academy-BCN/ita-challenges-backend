@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -65,7 +66,7 @@ class ChallengeServiceImpTest {
         ChallengeDocument challenge = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
 
-        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.findByIdChallenge(VALID_ID)).thenReturn(Mono.just(challenge));
         when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
         Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
@@ -81,7 +82,7 @@ class ChallengeServiceImpTest {
         ChallengeDocument challenge = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
 
-        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.findByIdChallenge(VALID_ID)).thenReturn(Mono.just(challenge));
         when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
         Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);

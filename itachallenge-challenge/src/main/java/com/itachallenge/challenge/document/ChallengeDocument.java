@@ -13,7 +13,6 @@ import java.util.UUID;
 @Document(collection="challenges")
 @NoArgsConstructor
 @Getter
-@NoArgsConstructor
 public class ChallengeDocument {
 
     @Id
