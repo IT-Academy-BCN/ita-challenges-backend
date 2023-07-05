@@ -4,13 +4,17 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import org.mapstruct.Named;
+import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 
+@Component
 @org.mapstruct.Mapper
 public interface Mapper {
+
+    //Mapper INSTANCE = Mappers.getMapper(Mapper.class);
 
     ChallengeDto toDtoFromDoc(ChallengeDocument challengeFlux);
 

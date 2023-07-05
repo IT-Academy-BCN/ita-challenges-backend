@@ -28,6 +28,7 @@ public class MapperTest {
     private ChallengeDocument challengeDoc2;
 
     private LanguageDocument languageDocument;
+
     private LanguageDocument languageDocument2;
 
     @BeforeEach
