@@ -12,7 +12,7 @@
 
 3. [**URL NORMALIZATION**](#3-url-normalization)
 
-   3.1 [Convenciones](#31-convenciones)
+   3.1 [Convencions](#31-convencions)
 
 4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)
 
@@ -24,7 +24,7 @@
 
 6. [**REQUIRED PROGRAMS**](#6-required-programs)
 
-   6.1 [Temp](#61-temp)
+   6.1 [Requierd programs](#61-required-programs)
 
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)
 
@@ -44,7 +44,7 @@
 
 En este proyecto, es importante seguir ciertas convenciones al establecer la estructura y nomenclatura de las URL's utilizadas en el backend.
 
-## 3.1 Convenciones
+## 3.1 Convencions
 
 A continuación, se presentan las convenciones que deben seguirse al normalizar las URL's:
 
@@ -87,7 +87,21 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 # 6. REQUIRED PROGRAMS
 
-## 6.1 Temp
+Los siguientes programas son requeridos para poder trabajar en el proyecto:
+
+## 6.1 Required programs
+
+- **MongoDB**: MongoDB es una base de datos NoSQL ampliamente utilizada en el desarrollo de aplicaciones. Se utiliza para almacenar y recuperar datos de forma eficiente. Puedes descargar [MongoCompass](https://www.mongodb.com/try/download/compass) desde la web oficial.
+
+- **Postman**: Postman es una herramienta que te permitirá probar y documentar las API de forma sencilla. Es especialmente útil para enviar solicitudes HTTP y verificar las respuestas. Puedes descargar [Postman](https://www.postman.com/downloads/) desde la web oficial.
+
+- **Consul**: Consul es una herramienta de descubrimiento y configuración de servicios. Se utiliza para gestionar la comunicación entre diferentes componentes de la aplicación. Puedes descargar [Consul](https://developer.hashicorp.com/consul/downloads) desde la web oficial.
+
+- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) desde la web oficial.
+
+- **Git**: Git es un sistema de control de versiones distribuido ampliamente utilizado en el desarrollo de software. Te permitirá colaborar con otros desarrolladores y mantener un historial de cambios en el código fuente. Puedes descargar [Git](https://git-scm.com/downloads) desde la web oficial.
+
+Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
 
 # 7 RECOMMENDED PROGRAMS
 
