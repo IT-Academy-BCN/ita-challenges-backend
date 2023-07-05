@@ -4,7 +4,6 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -37,9 +34,7 @@ class ChallengeServiceImpTest {
     @MockBean
     private ChallengeRepository challengeRepository;
     @MockBean
-    private LanguageRepository languageRepository;
-    @MockBean
-    private Converter modelMapper;
+    private Converter converter;
     @InjectMocks
     private ChallengeServiceImp challengeService;
     @MockBean
@@ -66,32 +61,33 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void getChallengeId() {
-        ChallengeDto expectedDto = new ChallengeDto();
-        expectedDto.setChallengeId(VALID_ID);
+    void testGetChallengeId() {
+        ChallengeDocument challenge = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
 
-        when(challengeDto.getChallengeId()).thenReturn(VALID_ID);
+        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
+        when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
-        Mono<?> result = challengeService.getChallengeId(VALID_ID);
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
+        //Comprueba que devuelva un elemento únicamente (Mono)
         StepVerifier.create(result)
-                .expectNextMatches(response -> response instanceof ResponseEntity &&
-                        ((ResponseEntity<?>) response).getStatusCode() == HttpStatus.OK &&
-                        ((ResponseEntity<?>) response).getBody() instanceof ChallengeDto &&
-                        ((ChallengeDto) ((ResponseEntity<?>) response).getBody()).getChallengeId().equals(VALID_ID))
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
     @Test
-    void getChallengeId_Empty() {
+    void testGetChallengeId_ConvertDto() {
+        ChallengeDocument challenge = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
 
-        when(challengeDto.getChallengeId()).thenReturn(null);
+        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
+        when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
-        Mono<?> result = challengeService.getChallengeId(VALID_ID);
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
         StepVerifier.create(result)
-                .expectNextMatches(response -> response instanceof ResponseEntity &&
-                        ((ResponseEntity<?>) response).getStatusCode() == HttpStatus.OK)
+                .expectNext(challengeDto)
                 .verifyComplete();
     }
 
@@ -116,11 +112,11 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findAll()).thenReturn(mockChallenges);
 
         Flux<ChallengeDto> expectedDtoList = Flux.just(challengeDto1, challengeDto2);
-        when(modelMapper.fromChallengeToChallengeDto(mockChallenges)).thenReturn(expectedDtoList);
+        when(converter.fromChallengeToChallengeDto(mockChallenges)).thenReturn(expectedDtoList);
 
         Flux<ChallengeDto> result = challengeService.getChallenges();
         verify(challengeRepository).findAll();
-        verify(modelMapper).fromChallengeToChallengeDto(mockChallenges);
+        verify(converter).fromChallengeToChallengeDto(mockChallenges);
 
         StepVerifier.create(result)
                 .expectNextCount(2)

@@ -157,5 +157,4 @@ class UserRepositoryTest {
             return true;
         }).verifyComplete();
     }
-
 }

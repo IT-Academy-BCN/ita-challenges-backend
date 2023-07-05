@@ -1,9 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -21,10 +19,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
-    /*
-     TODO El método getChallengeId(UUID id) tiene código comentado para cuando la capa repositorio esté operativa, solo se deverán de descomentar.
-     */
-
+  
     //VARIABLES
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
@@ -33,25 +28,12 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private LanguageRepository languageRepository;
-    @Autowired
-    private Converter challengeMapper;
+    private Converter converter;
+
 
     @Override
-    public Mono<?> getChallengeId(UUID id) {
-        challengeDto.setChallengeId(id); //ELIMINAR CON REPOSITORIO
-
-        Mono<ChallengeDto> challenge = Mono.just(challengeDto); //ELIMINAR CON REPOSITORIO
-        //Mono<Challenge> challenge = challengeRepository.findByUuid(id);
-
-        ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), "Challenge not found.");
-
-        return challenge
-                //.map(challengeMapper::mapToChallengeDto)
-                .map(dto -> ResponseEntity.ok().body((Object) dto))
-                .switchIfEmpty(Mono.just(ResponseEntity.ok().body(errorMessage))); //ELIMINAR CON REPOSITORIO
-                //.switchIfEmpty(Mono.defer(() -> Mono.just(ResponseEntity.ok().body(errorMessage))))
-                //.map(ResponseEntity::getBody);
+    public Mono<ChallengeDto> getChallengeId(UUID id) {
+        return Mono.from(converter.fromChallengeToChallengeDto(Flux.from(challengeRepository.findByUuid(id))));
     }
 
     @Override //Comprueba si la UUID es valida.
@@ -62,7 +44,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<ChallengeDto> getChallenges () {
         Flux<ChallengeDocument> challengesList = challengeRepository.findAll();
-        return challengeMapper.fromChallengeToChallengeDto(challengesList);
+        return converter.fromChallengeToChallengeDto(challengesList);
     }
 
 
