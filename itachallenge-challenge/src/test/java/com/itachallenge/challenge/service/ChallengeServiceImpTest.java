@@ -4,6 +4,7 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,8 @@ class ChallengeServiceImpTest {
 
     @MockBean
     private ChallengeRepository challengeRepository;
+    @MockBean
+    private LanguageRepository languageRepository;
     @MockBean
     private Converter modelMapper;
     @InjectMocks

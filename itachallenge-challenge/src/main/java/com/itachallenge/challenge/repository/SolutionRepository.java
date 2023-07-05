@@ -8,9 +8,9 @@ import java.util.UUID;
 
 public interface SolutionRepository extends ReactiveMongoRepository<SolutionDocument, UUID> {
 
-    Mono<Boolean> existsByUuid(UUID uuid);
+    Mono<Boolean> existsByIdSolution(UUID idSolution);
 
-    Mono<SolutionDocument> findByUuid(UUID uuid);
+    Mono<SolutionDocument> findByIdSolution(UUID idSolution);
 
-    Mono<Void> deleteByUuid(UUID uuid);
+    Mono<Void> deleteByIdSolution(UUID idSolution);
 }

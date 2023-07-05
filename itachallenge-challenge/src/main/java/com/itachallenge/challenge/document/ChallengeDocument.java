@@ -11,19 +11,19 @@ import java.util.Set;
 import java.util.UUID;
 
 @Document(collection="challenges")
+@NoArgsConstructor
 @Getter
 public class ChallengeDocument {
 
     @Id
-    @Field(name="id_challenge")
-    private UUID uuid;
+    @Field(name="_id")
+    private UUID idChallenge;
 
     @Field(name="level")
     private String level;   //valor seteado fom properties
 
     @Field(name="challenge_title")
     private String title;
-
 
     @Field(name="languages")
     private Set<LanguageDocument> languages;
@@ -46,10 +46,10 @@ public class ChallengeDocument {
     @Field(name="resources")
     private Set<UUID> resources;
 
-    public ChallengeDocument(UUID uuid, String level, String title, Set<LanguageDocument> languages,
+    public ChallengeDocument(UUID idChallenge, String level, String title, Set<LanguageDocument> languages,
                              LocalDateTime creationDate, DetailDocument detail, List<SolutionDocument> solutions,
                              Set<UUID> relatedChallenges, Set<UUID> resources) {
-        this.uuid = uuid;
+        this.idChallenge = idChallenge;
         this.level = level;
         this.title = title;
         this.languages = languages;

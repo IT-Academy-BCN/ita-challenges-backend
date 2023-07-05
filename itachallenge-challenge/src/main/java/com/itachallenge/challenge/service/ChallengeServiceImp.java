@@ -1,10 +1,13 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +32,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private ChallengeDto challengeDto;
     @Autowired
     private ChallengeRepository challengeRepository;
+    @Autowired
+    private LanguageRepository languageRepository;
     @Autowired
     private Converter challengeMapper;
 
@@ -59,4 +64,8 @@ public class ChallengeServiceImp implements IChallengeService {
         Flux<ChallengeDocument> challengesList = challengeRepository.findAll();
         return challengeMapper.fromChallengeToChallengeDto(challengesList);
     }
+
+
+
+
 }

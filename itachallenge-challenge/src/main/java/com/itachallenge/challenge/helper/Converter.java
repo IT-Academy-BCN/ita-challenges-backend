@@ -7,9 +7,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
@@ -26,7 +24,7 @@ public class Converter {
 
     public ChallengeDto toChallengeDto(ChallengeDocument challenge) {
         return ChallengeDto.builder()
-                .challengeId(challenge.getUuid())
+                .challengeId(challenge.getIdChallenge())
                 .level(challenge.getLevel())
                 .title(challenge.getTitle())
                 .languages(challenge.getLanguages().stream()
@@ -46,7 +44,8 @@ public class Converter {
         ZoneId zoneId = ZoneId.of("Europe/Paris");
         ZonedDateTime zonedDateTime = ZonedDateTime.of(creationDateDocument, zoneId);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ssZZZZZ");
+
         return zonedDateTime.format(formatter);
 
     }

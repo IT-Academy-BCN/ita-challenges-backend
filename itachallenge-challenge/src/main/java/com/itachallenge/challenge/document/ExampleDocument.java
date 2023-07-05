@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ExampleDocument {
 
     @Id
-    @Field(name="id_example")
+    @Field(name="_id")
     private UUID idExample;
 
     @Field(name="example_text")

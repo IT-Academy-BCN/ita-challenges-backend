@@ -7,11 +7,11 @@ import java.util.UUID;
 
 public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDocument,UUID> {
 
-    Mono<Boolean> existsByUuid(UUID uuid);
+    Mono<Boolean> existsByIdChallenge(UUID idChallenge);
 
-    Mono<ChallengeDocument> findByUuid(UUID uuid);
+    Mono<ChallengeDocument> findByIdChallenge(UUID idChallenge);
 
-    Mono<Void> deleteByUuid(UUID uuid);
+    Mono<Void> deleteByIdChallenge(UUID idChallenge);
 
     Mono<ChallengeDocument> findByLevel(String level);
 

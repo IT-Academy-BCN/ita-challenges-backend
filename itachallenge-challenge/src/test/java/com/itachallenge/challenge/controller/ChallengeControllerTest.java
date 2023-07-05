@@ -61,7 +61,9 @@ class ChallengeControllerTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        Set<LanguageDto> languagesDto = Set.of(new LanguageDto(1, "Javascript"), new LanguageDto(2, "java"));
+        UUID idLanguage = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80272");
+        UUID idLanguage2 = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80297");
+        Set<LanguageDto> languagesDto = Set.of(new LanguageDto(idLanguage, "Javascript"), new LanguageDto(idLanguage2, "java"));
         String uuidString = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
         UUID uuid = UUID.fromString(uuidString);
         String uuidString2 = "dcacb291-b4aa-4029-8e9b-284c8ca80297";

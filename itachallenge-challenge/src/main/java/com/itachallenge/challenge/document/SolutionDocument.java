@@ -13,12 +13,12 @@ import java.util.UUID;
 public class SolutionDocument {
 
     @Id
-    @Field(name="id_solution")
-    private UUID uuid;
+    @Field(name="_id")
+    private UUID idSolution;
 
     @Field(name="solution_text")
     private String solutionText;
 
     @Field(name="id_language")
-    private int idLanguage;
+    private UUID idLanguage;
 }

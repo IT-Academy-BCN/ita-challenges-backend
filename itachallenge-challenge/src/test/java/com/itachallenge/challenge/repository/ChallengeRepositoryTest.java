@@ -62,14 +62,16 @@ class ChallengeRepositoryTest {
         ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
 
-        int[] idsLanguages = new int[]{1, 2};
+        UUID idLanguage = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
+        UUID idLanguage2 = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80297");
+        UUID[] idsLanguages = new UUID[]{idLanguage, idLanguage2};
         String[] languageNames = new String[]{"name1", "name2"};
         LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
-        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", 1);
-        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", 2);
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", idLanguage);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", idLanguage2);
         List<SolutionDocument> solutionList = new ArrayList<>(Arrays.asList(solution, solution2));
 
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
@@ -83,7 +85,7 @@ class ChallengeRepositoryTest {
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
@@ -113,7 +115,7 @@ class ChallengeRepositoryTest {
     @DisplayName("Exists by UUID Test")
     @Test
     void existsByUuidTest() {
-        Boolean exists = challengeRepository.existsByUuid(uuid_1).block();
+        Boolean exists = challengeRepository.existsByIdChallenge(uuid_1).block();
         assertEquals(true, exists);
     }
 
@@ -121,14 +123,14 @@ class ChallengeRepositoryTest {
     @Test
     void findByUuidTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByIdChallenge(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getUuid(), uuid_1),
+                u -> assertEquals(u.getIdChallenge(), uuid_1),
                 () -> fail("Challenge not found: " + uuid_1));
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByIdChallenge(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getUuid(), uuid_2),
+                u -> assertEquals(u.getIdChallenge(), uuid_2),
                 () -> fail("Challenge not found: " + uuid_2));
     }
 
@@ -136,10 +138,10 @@ class ChallengeRepositoryTest {
     @Test
     void deleteByUuidTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByIdChallenge(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_1);
+                    Mono<Void> deletion = challengeRepository.deleteByIdChallenge(uuid_1);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
@@ -147,10 +149,10 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge to delete not found: " + uuid_1)
         );
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByIdChallenge(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_2);
+                    Mono<Void> deletion = challengeRepository.deleteByIdChallenge(uuid_2);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
