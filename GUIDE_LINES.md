@@ -4,7 +4,7 @@
 
 1. [**PROJECT'S LINKS**](#1-project's-links)
 
-   1.1 [Temp](#11-temp)
+   1.1 [Scrum metodology](#11-Scrum-metodology)
 
 2. [**WORK PROCEDURES**](#2-work-procedures)
 
@@ -34,7 +34,9 @@
 
 # 1. PROJECT'S LINKS
 
-## 1.1 Temp
+## 1.1 Scrum metodology
+
+![plot](./img/VER5-scrum-framework_2020.jpg)
 
 # 2. WORK PROCEDURES
 
