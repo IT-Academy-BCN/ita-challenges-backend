@@ -24,6 +24,4 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
 
-
-
 }

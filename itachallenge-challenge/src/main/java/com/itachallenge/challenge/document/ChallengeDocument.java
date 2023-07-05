@@ -14,6 +14,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 public class ChallengeDocument {
 
     @Id
