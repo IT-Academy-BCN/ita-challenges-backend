@@ -54,13 +54,13 @@ A continuación, se presentan las convenciones que deben seguirse al normalizar 
 
 - **Separadores**: Se ha establecido el uso de guiones ("-") como separador para las palabras en las URL's. Por ejemplo, "/bcn-zones"
 
-- **Consistencia en mayúsculas y minúsculas**: Se debe decidir si las URL's deben seguir una convención de mayúsculas o minúsculas. Por ejemplo, "/challenges" en minúsculas o "/Challenges" en mayúsculas.
+- **Consistencia en minúsculas**: Las URL's deben seguir una convención de minúsculas. Por ejemplo, "/challenges" en minúsculas en lugar de "/Challenges" o "/CHALLENGES".
 
 - **Evitar caracteres especiales**: Se deben evitar los caracteres especiales en las URL's y, en su lugar, utilizar caracteres alfanuméricos.
 
-- **Orden jerárquico**: Si hay una jerarquía en los recursos, se debe reflejar en la estructura de las URL's. Por ejemplo, "/challenges/550e8400-e29b-41d4-a716-446655440000/update" para obtener los desafios del usuario con ID 550e8400-e29b-41d4-a716-446655440000.
+- **Orden jerárquico**: Si hay una jerarquía en los recursos, se debe reflejar en la estructura de las URL's. Por ejemplo, "/challenges/{challengeId}/update" para obtener los desafios del usuario.
 
-- **Versionado**: Si se requiere versionar la API, se debe considerar incluir la versión en la URL. Por ejemplo, "/v1/challenges" para la versión 1 de la API de challenges.
+- **Versionado**: Si se requiere versionar la API, se debe considerar incluir la versión en la URL. Por ejemplo, "/itachallenge/api/v1/challenge" para la versión 1 de la API de challenges.
 
 - **Evitar verbos en URL's**: En general, se recomienda evitar incluir verbos en las URL's y utilizar los métodos HTTP adecuados para realizar acciones en los recursos.
 
@@ -74,8 +74,8 @@ A continuación, se presentan las convenciones que deben seguirse al normalizar 
 Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's según las convenciones establecidas:
 
 - `/challenges` - Obtener una lista de todos los challenges.
-- `/challenges/550e8400-e29b-41d4-a716-446655440000` - Obtener los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
-- `/challenges/550e8400-e29b-41d4-a716-446655440000/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
+- `/challenges/{challengeId}` - Obtener los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
+- `/challenges/{challengeId}/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
 
 # 4. DEFINITIONS OF METHOD, CLASS, ETC...
 
