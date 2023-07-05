@@ -35,26 +35,21 @@
           "id_challenges": []
         },
         {
-          "id_languages": 5,
+          "id_languages": 1,
           "language_name": "Ruby",
           "id_challenges": ["d2b8804a-91de-49a9-9a63-84e8221d11e1", "4a36dbd5-8be9-475d-8e5e-6f80828e3d2c", "bde9c2cd-5a0e-4eb9-8232-6523e4ac99a6", "b389fbb7-128e-4fbb-ae1e-69270edca437"]
         }
                 
       ],
       "solutions": [
-        "c8a5440d-6466-463a-bccc-7fefbe9396e4",
-        "0864463e-eb7c-4bb3-b8bc-766d71ab38b5",
-        "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
+        {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
+        {"$uuid": "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"},
+        {"$uuid": "998bc504-265d-40a4-b579-62feacc3c8cd"}
       ],
       "resources": [
-        "0d1dcee8-6ee8-402f-815a-7d717be06aed",
-        "960fb136-3bec-4f3d-a326-ccda2b92bbee",
-        "4dc55815-ef11-4824-8b85-e57d4dd8659d"
-      ],
-      "tags": [
-        "d21d587c-1390-4597-befc-d7103ab66523",
-        "1a2731ec-b583-46ae-9fff-2914b9c3b9ba",
-        "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
+        {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+        {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+        {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
       ],
       "related": [
         {
@@ -108,23 +103,16 @@
           "language_name": "C#",
           "id_challenges": []
         }
-        
-
       ],
       "solutions": [
-          "f864d739-8e5b-4be1-ba61-c214b917bdc0",
-          "69f4f942-bb1e-4d91-8e16-543e866d43ff",
-          "2fe06e87-3e0b-4864-b4a7-89c23b00a16f"
+        {"$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+        {"$uuid": "7e181ec8-3f9a-4e43-a75c-8319e245ccee"},
+        {"$uuid": "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
       ],
       "resources": [
-          "93d0b6f0-6b81-4e81-968b-9ff9a3b4ab3e",
-          "e3dc9480-54ce-436f-96be-84b87796cc42",
-          "7e2cb4b3-8266-44ff-bc4d-2eeedcb2f7b2"
-      ],
-      "tags": [
-          "a0818b72-0660-448d-9930-d9386ce83a6d",
-          "67dce5ff-712a-4011-92b9-4e4ed97e5804",
-          "d4df0f7c-4e17-44af-8a47-2d2e75bc847a"
+        {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
+        {"$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"},
+        {"$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"}
       ],
       "related": [
           {
@@ -182,19 +170,14 @@
                 
       ],
       "solutions": [
-          "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5",
-          "9afabfaa-071c-4b29-94f1-4a536e2c4dd5",
-          "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
+        {"$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"},
+        {"$uuid": "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
+        {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
       ],
       "resources": [
-          "24fcf839-63c2-4ccf-b549-5bc2027798d5",
-          "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e",
-          "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"
-      ],
-      "tags": [
-          "f43e0f3c-2e83-439e-8f29-b28f96ff890f",
-          "dfb4f77a-eb5b-4fd5-93f9-3a813b0b7f6c",
-          "7e90f96d-d9c0-4427-9c3b-820e7db42a15"
+          {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
+          {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+          {"$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"}
       ],
       "related": [
           {
@@ -251,19 +234,14 @@
         
       ],
       "solutions": [
-          "c8a5440d-6466-463a-bccc-7fefbe9396e4",
-          "0864463e-eb7c-4bb3-b8bc-766d71ab38b5",
-          "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
+          {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
+          {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
+          {"$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
       ],
       "resources": [
-          "0d1dcee8-6ee8-402f-815a-7d717be06aed",
-          "960fb136-3bec-4f3d-a326-ccda2b92bbee",
-          "4dc55815-ef11-4824-8b85-e57d4dd8659d"
-      ],
-      "tags": [
-          "d21d587c-1390-4597-befc-d7103ab66523",
-          "1a2731ec-b583-46ae-9fff-2914b9c3b9ba",
-          "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
+          {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
+          {"$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"},
+          {"$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"}
       ],
       "related": [
           {
