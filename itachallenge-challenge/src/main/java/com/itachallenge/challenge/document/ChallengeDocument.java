@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +16,11 @@ import java.util.UUID;
 @Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ChallengeDocument {
 
     @Id
-    @Field(name="id_challenge")
+    @Field("_id")
     private UUID uuid;
 
     @Field(name="level")
@@ -41,25 +43,12 @@ public class ChallengeDocument {
 
 
     @Field(name="solutions")
-    private List<SolutionDocument> solutions;
+    private List<UUID> solutions;
 
-    @Field(name="related_challenges")
+    @Field(name="related")
     private Set<UUID> relatedChallenges;
 
     @Field(name="resources")
     private Set<UUID> resources;
 
-    public ChallengeDocument(UUID uuid, String level, String title, Set<LanguageDocument> languages,
-                             LocalDateTime creationDate, DetailDocument detail, List<SolutionDocument> solutions,
-                             Set<UUID> relatedChallenges, Set<UUID> resources) {
-        this.uuid = uuid;
-        this.level = level;
-        this.title = title;
-        this.languages = languages;
-        this.creationDate = LocalDateTime.now();
-        this.detail = detail;
-        this.solutions = solutions;
-        this.relatedChallenges = relatedChallenges;
-        this.resources = resources;
-    }
 }
