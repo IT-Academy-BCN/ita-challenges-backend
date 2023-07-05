@@ -98,12 +98,12 @@ class LanguageRepositoryTest {
         UUID idLanguage2 = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80297");
         Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(idLanguage);
         firstLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), 1),
+                u -> assertEquals(u.getIdLanguage(), idLanguage),
                 () -> fail("Language with id " + idLanguage + " not found"));
 
         Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(idLanguage2);
         secondLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), 2),
+                u -> assertEquals(u.getIdLanguage(), idLanguage2),
                 () -> fail("Language with id " + idLanguage2 + " not found"));
     }
 
