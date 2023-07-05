@@ -71,4 +71,22 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 
 ## Como trabajar con una tarjeta
+### Como asignarse una tarjeta
+1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
+2. Haz clic en la tarjeta para abrirla y ver más detalles.
+3. En la parte de la derecha, en el campo "Assigness", si aprientas "Add assigness" se abre un desplegable con todos los participantes del proyecto y ya te puedes seleccionar a ti para asignártela.
+4. Una vez que te has asignado la tarjeta, tu perfil de usuario se mostrará como el responsable de la tarjeta.
+
+### Sistema de columnas para organizar y visualizar el progreso de las tarjetas
+1. Te puedes asignar cualquier targeta que esté en la columna "Todo" siempre y cuando esté libre.
+2. Cuando empieces a trabajar con la targeta, la deberás mover a la columna "Doing".
+3. Cuando la tarea de la targeta haya sido completada y hayas hecho la PR a la rama "develop", puedes mover la targeta a la columna "Testing" para indicar que ya está lista para ser probada.
+3. En la parte de la derecha, en el campo "Assigness", si aprientas "Add assigness" se abre un desplegable con todos los participantes del proyecto y ya te puedes seleccionar a ti para asignártela.
+4. Una vez que te has asignado la tarjeta, tu perfil de usuario se mostrará como el responsable de la tarjeta.
+
+### Sistema de columnas para organizar y visualizar el progreso de las tarjetas
+1. Te puedes asignar cualquier targeta que esté en la columna "Todo" siempre y cuando esté libre.
+2. Cuando empieces a trabajar con la targeta, la deberás mover a la columna "Doing".
+3. Cuando la tarea de la targeta haya sido completada y hayas hecho la PR a la rama "develop", puedes mover la targeta a la columna "Testing" para indicar que ya está lista para ser probada.
+4. Finalmente, cuando tu PR haya sido aceptada y, por lo tanto, la tarjeta haya sido aprobada en las pruebas, esta se pasará a la columna "Done". Esto indica que la tarjeta se ha completado con éxito.
 
