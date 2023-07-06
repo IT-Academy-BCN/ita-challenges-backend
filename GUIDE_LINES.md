@@ -4,11 +4,14 @@
 
 1. [**PROJECT'S LINKS**](#1-project's-links)
 
-   1.1 [Scrum metodology](#11-Scrum-metodology)
+   1.1 [Temp](#11-temp)  
 
 2. [**WORK PROCEDURES**](#2-work-procedures)
 
-   2.1 [Temp](#21-temp)
+   2.1 [Welcome Procedure](#21-Welcome-Procedure)\
+   2.2 [Daily Procedure](#22-Daily-Procedure)\
+   2.3 [Work with cards Procedure](#23-Work-with-cards-Procedure)\
+   2.4 [Work with cards Procedure](#24-Make a PR)
 
 3. [**URL NORMALIZATION**](#3-url-normalization)
 
@@ -34,13 +37,21 @@
 
 # 1. PROJECT'S LINKS
 
-## 1.1 Scrum metodology
-
-![plot](./img/VER5-scrum-framework_2020.jpg)
+## 1.1 Temp
 
 # 2. WORK PROCEDURES
 
-## 2.1 Temp
+## 2.1 Welcome Procedure
+
+## 2.2 Daily Procedure
+
+## 2.3 Work with cards Procedure
+
+## 2.4 Make a PR
+
+## 2.5 Scrum metodology
+
+![plot](./img/VER5-scrum-framework_2020.jpg)
 
 # 3. URL NORMALIZATION
 
