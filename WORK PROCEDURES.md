@@ -136,3 +136,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 5. SonarCloud también va a analizar tu código. Te proporcionará información sobre los bugs, vulnerabilities, security hotspots y code smell. El converage debe ser igual o superior al 80.0%.
 6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
 7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
+
+
+### Metodología Scrum
+https://scrumguides.org/
