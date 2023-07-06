@@ -14,7 +14,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Getter
-@Setter //añadido para el método getChallengeId mientras no hay repositorio.
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
