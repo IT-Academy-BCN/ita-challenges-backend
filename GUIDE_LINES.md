@@ -8,10 +8,11 @@
 
 2. [**WORK PROCEDURES**](#2-work-procedures)
 
-   2.1 [Welcome Procedure](#21-welcome-procedure)\
+   2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
    2.2 [Daily Procedure](#22-daily-procedure)\
    2.3 [Work with cards Procedure](#23-work-with-cards-procedure)\
-   2.4 [Work with cards Procedure](#24-make-a-pr)
+   2.4 [Points to consider when doing a PR](#24-points-to-consider-when-doing-a-pr)\
+   2.5 [Scrum metodology](#25-scrum-metodology)
 
 3. [**URL NORMALIZATION**](#3-url-normalization)
 
@@ -52,9 +53,7 @@
 
 # 2. WORK PROCEDURES
 
-## 2.1 Welcome Procedure
-## Lo primero que se debe hacer al entrar a proyecto
-
+## 2.1 First things to do in the project
 ### 1. Añadir tu nombre y GitHub al archivo contributors.md
 
 1. Clona el repositorio ita-challenges-backend de GitHub en tu sistema local:
@@ -150,7 +149,6 @@
 IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
 
 ## 2.3 Work with cards Procedure
-## Como trabajar con una tarjeta
 ### Como asignarse una tarjeta
 1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
 2. Haz clic en la tarjeta para abrirla y ver más detalles.
@@ -179,7 +177,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature#123" hacia la rama "develop".
 
-## 2.4 Make a PR
+## 2.4 Points to consider when doing a PR
 1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
    - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
    - La rama comparada es la rama que contiene tus cambios.
