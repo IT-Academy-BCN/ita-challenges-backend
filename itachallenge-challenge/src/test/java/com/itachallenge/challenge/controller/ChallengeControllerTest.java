@@ -192,7 +192,7 @@ class ChallengeControllerTest {
                 .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
                 .exchange()
                 .expectStatus()
-                .isNoContent();
+                .isOk();
 
         verify(challengeService,times(1)).removeResourcesByUuid(uuid);
     }
