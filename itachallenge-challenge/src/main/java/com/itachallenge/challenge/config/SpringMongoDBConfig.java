@@ -1,5 +1,11 @@
 package com.itachallenge.challenge.config;
 
+
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
+import org.bson.UuidRepresentation;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +29,15 @@ public class SpringMongoDBConfig {
         mappingConverter.setTypeMapper(new DefaultMongoTypeMapper(null));
         return mappingConverter;
     }
+
+    @Bean
+    public MongoClient mongoUUIDConfig() throws Exception {
+        ConnectionString connectionString = new ConnectionString("mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges");
+        MongoClientSettings mongoClientSettings = MongoClientSettings.builder()
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .applyConnectionString(connectionString).build();
+        return MongoClients.create(mongoClientSettings);
+    }
+
 
 }
