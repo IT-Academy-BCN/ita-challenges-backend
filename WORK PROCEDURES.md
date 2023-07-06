@@ -112,12 +112,27 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ### Ya tengo una targeta asignada. ¿Ahora que hago?
 1. Abre tu terminal o línea de comandos y navega hasta el directorio de tu proyecto. Asegúrate de estar en la rama "develop".
+
+
 2. Crea una nueva rama utilizando el formato "feature#numeroDeLaTarjeta". Se refiere al número de la tarjeta del Spring Backlog. Por ejemplo:
 
          git checkout -b feature#123
-3. Ahora puedes comenzar a realizar los cambios en tu rama. 
+3. Ahora puedes comenzar a realizar los cambios en tu rama.
+
+
 4. Una vez hayas realizado las modificaciones necesarias haz un push de tu rama al repositorio remoto. Si estuviésemos en la feature#123 deberíamos hacer:
 
          git push origin feature#123
 
 5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature#123" hacia la rama "develop".
+
+## Cosas a tener en cuenta al hacer una Pull Request
+1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
+   - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
+   - La rama comparada es la rama que contiene tus cambios.
+2. Proporciona una descripción de los cambios que has realizado. Sé claro y conciso.
+3. Cuando hayas terminado de completar la información de la pull request, haz clic en el botón verde "Create pull request" para crearla.
+4. A continuación verás como se hace un análisis del build. Si el análisis pasa con éxito, se mostrará un tick verde en el resultado. Por el contrario, si detecta problemas en el código, se mostrará una aspa roja. En este caso, aprieta en "Details" y observa donde se encuentra el problema.
+5. SonarCloud también va a analizar tu código. Te proporcionará información sobre los bugs, vulnerabilities, security hotspots y code smell. El converage debe ser igual o superior al 80.0%.
+6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
+7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
