@@ -36,7 +36,7 @@ public class ConverterAbstract <F, T> {
     }
 
     //TODO: implement reactive Flux
-    public T convertToDoc(F object) throws ConverterException {
+    public T convert(F object) throws ConverterException {
         T instance = getInstance(classToType);
 
         for (Field item : fieldsOfF) {
@@ -46,7 +46,7 @@ public class ConverterAbstract <F, T> {
         return instance;
     }
 
-    public F convertToDto(T object) throws ConverterException {
+    /*public F convertToDto(T object) throws ConverterException {
         F instance = getInstance(classFromType);
 
         for (Field item : fieldsOfT) {
@@ -54,7 +54,7 @@ public class ConverterAbstract <F, T> {
         }
 
         return instance;
-    }
+    }*/
 
     private Object getValue(Object object, Field field, List<Method> methods) throws ConverterException {
         Optional<Method> optionalMethod;

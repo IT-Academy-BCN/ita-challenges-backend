@@ -8,29 +8,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class SampleDocConverter extends ConverterAbstract<ChallengeDto, ChallengeDocument> {
 
-    private ConverterAbstract<ChallengeDto, ChallengeDocument> nestedConverter = new ConverterAbstract<>(ChallengeDto.class,
-            ChallengeDocument.class);
-
     public SampleDocConverter() {
         super(ChallengeDto.class, ChallengeDocument.class);
     }
 
     @Override
-    public ChallengeDocument convertToDoc(ChallengeDto object) throws ConverterException {
-        ChallengeDocument instance = super.convertToDoc(object);
-        /*if (object.nested != null) {
-            instance.setNested(nestedConverter.convert(object.nested));
-        }*/
-
-        return instance;
+    public ChallengeDocument convert(ChallengeDto object) throws ConverterException {
+        ConverterAbstract<ChallengeDto, ChallengeDocument> output = new ConverterAbstract<>(ChallengeDto.class, ChallengeDocument.class);
+        return output.convert(object);
     }
 
-    @Override
+    /*@Override
     public ChallengeDto convertToDto(ChallengeDocument object) throws ConverterException {
-        ChallengeDto instance = super.convertToDto(object);
-        /*if (object.getNested() != null) {
-            instance.nested = nestedConverter.convertBack(object.getNested());
-        }*/
-        return instance;
-    }
+        ConverterAbstract<ChallengeDocument, ChallengeDto> output = new ConverterAbstract<>(ChallengeDocument.class, ChallengeDto.class);
+        return output.convertToDto(object);
+    }*/
 }
