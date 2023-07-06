@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -11,6 +12,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -30,6 +32,21 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override //Comprueba si la UUID es valida.
     public boolean isValidUUID(String id) {
         return !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
+    }
+
+
+    public boolean removeResourcesByUuid(UUID idResource){
+        Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);
+
+        return challengeFlux.flatMap(challenge -> {
+                    challenge.setResources(challenge.getResources().stream()
+                            .filter(s -> !s.equals(idResource))
+                            .collect(Collectors.toSet()));
+                    return challengeRepository.save(challenge);
+                })
+                .hasElements()
+                .blockOptional()
+                .orElse(false);
     }
 
 }

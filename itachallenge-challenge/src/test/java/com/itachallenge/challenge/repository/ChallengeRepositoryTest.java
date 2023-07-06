@@ -68,9 +68,7 @@ class ChallengeRepositoryTest {
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
-        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", 1);
-        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", 2);
-        List<SolutionDocument> solutionList = new ArrayList<>(Arrays.asList(solution, solution2));
+        List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 

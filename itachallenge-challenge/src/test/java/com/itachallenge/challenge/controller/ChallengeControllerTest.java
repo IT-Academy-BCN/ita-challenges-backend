@@ -147,4 +147,54 @@ class ChallengeControllerTest {
         verify(challengeService, times(1)).getChallengeId(UUID.fromString(VALID_ID));
     }
 
+    @Test
+    void TestDeleteResources_BadRequest(){
+        final String URI_TEST = "/resources/{idResource}";
+        String uuidString = "not a uuid";
+
+        webTestClient.delete()
+                .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
+                .exchange()
+                .expectStatus().isBadRequest();
+        verify(challengeService,times(0)).removeResourcesByUuid(any());
+    }
+
+    @Test
+    void TestDeleteResources_NotFOund(){
+        final String URI_TEST = "/resources/{idResource}";
+        String uuidString = "db30c7d7-59b1-4338-abfc-348bd5528f3b";
+        UUID uuid = UUID.fromString(uuidString);
+
+        //when
+
+        when(challengeService.removeResourcesByUuid(uuid)).thenReturn(false);
+
+        webTestClient.delete()
+                .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        verify(challengeService,times(1)).removeResourcesByUuid(uuid);
+    }
+
+    @Test
+    void TestDeleteResources_OK(){
+        final String URI_TEST = "/resources/{idResource}";
+        String uuidString = "db30c7d7-59b1-4338-abfc-348bd5528f3b";
+        UUID uuid = UUID.fromString(uuidString);
+
+        //when
+
+        when(challengeService.removeResourcesByUuid(uuid)).thenReturn(true);
+
+        webTestClient.delete()
+                .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        verify(challengeService,times(1)).removeResourcesByUuid(uuid);
+    }
+
 }
