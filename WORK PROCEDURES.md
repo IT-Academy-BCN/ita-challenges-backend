@@ -2,7 +2,35 @@
 
 ## Lo primero que se debe hacer al entrar a proyecto
 
-### 1. Hacer un pull de la rama "develop" del proyecto
+### 1. Añadir tu nombre y GitHub al archivo contributors.md
+
+1. Clona el repositorio ita-challenges-backend de GitHub en tu sistema local:
+
+         git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
+2. Cambie al directorio del repositorio clonado:
+
+         cd ita-challenges-backend
+3. Asegúrese de estar en la rama "develop". Puede verificar las ramas diponibles y su rama actual ejecutando el siguiente comando:
+
+         git branch
+4. Si no está en la rama "develop", cambie a ella ejecutando el siguiente comando:
+
+         git checkout develop
+5. Cree una nueva rama con su nombre para realizar sus cambios:
+
+         git checkout -b nombre-de-su-rama
+   Remplace "nombre-de-su-rama" con un nombre descriptivo que indique los cambios que planea realizar.
+
+
+6. Abra el archivo contributors.md y agregue su nombre y su GitHub.
+
+
+7. Después de hacer un git add y un git commit, realize el siguiente git push:
+
+         git push origin nombre-de-su-rama
+8. Abra el repositorio en GitHub y debería ver un mensaje que le permite crear un "pull request" desde su rama recién creada a la rama "develop". Haga clic en el enlace para crear el pull request. 
+
+
 ### 2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
 
 1. Asegúrate de tener las MongoDB Tools instaladas. Si aún no las tienes, ve al apartado de “Programas necesarios” y sigue las instrucciones proporcionadas para descargarlas en tu sistema operativo.
