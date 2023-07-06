@@ -8,7 +8,9 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -40,9 +42,9 @@ class ChallengeServiceImpTest {
 
     @MockBean
     private ChallengeDto challengeDto;
-    @MockBean
-    private ChallengeRepository challengerepository;
 
+    @MockBean
+    ChallengeRepository challengerepository;
 
     @BeforeEach
     void setUp() {
@@ -93,7 +95,7 @@ class ChallengeServiceImpTest {
         assertFalse(result);
     }
     @Test
-    void  TestGetRelatedChallengePaginated(String id, int page, int size) {
+    void  TestGetRelatedChallengePaginated() {
 
 		RelatedDto rel1 = RelatedDto.builder().relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
 				.titleRelatedId("titulo 1").build();
@@ -108,10 +110,14 @@ class ChallengeServiceImpTest {
 		related.add(rel2);
 		related.add(rel3);
 		
+		Mono<List<RelatedDto>> monoRelated = Mono.just(related);
+		
+	    String identificacion = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+		ChallengeServiceImp service = Mockito.mock(ChallengeServiceImp.class);
 	    
-        doReturn(related).when(challengerepository).findByUuid(UUID.fromString(id));
+        when(service.getRelatedChallenge(identificacion)).thenReturn(monoRelated);
 
-		Mono<List<RelatedDto>> serviceResponse = challengeService.getRelatedChallengePaginated("dcacb291-b4aa-4029-8e9b-284c8ca80296",1,10);
+		Mono<List<RelatedDto>> serviceResponse = service.getRelatedChallengePaginated(identificacion,0,10);
   
 
         StepVerifier.create(serviceResponse)
