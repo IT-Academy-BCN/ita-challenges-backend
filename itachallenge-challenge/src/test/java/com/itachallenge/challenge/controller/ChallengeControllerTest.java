@@ -45,7 +45,6 @@ class ChallengeControllerTest {
     //VARIABLES HTTPSTATUS
     private final static HttpStatus OK = HttpStatus.OK;
     private final static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
-    private final static HttpStatus NOT_FOUND = HttpStatus.NOT_FOUND;
     private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
     private ChallengeDto challenge1;
@@ -61,7 +60,9 @@ class ChallengeControllerTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
 
-        Set<LanguageDto> languagesDto = Set.of(new LanguageDto(1, "Javascript"), new LanguageDto(2, "java"));
+        UUID idLanguage = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80272");
+        UUID idLanguage2 = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80297");
+        Set<LanguageDto> languagesDto = Set.of(new LanguageDto(idLanguage, "Javascript"), new LanguageDto(idLanguage2, "java"));
         String uuidString = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
         UUID uuid = UUID.fromString(uuidString);
         String uuidString2 = "dcacb291-b4aa-4029-8e9b-284c8ca80297";
@@ -150,8 +151,9 @@ class ChallengeControllerTest {
         Mono<ResponseEntity<ChallengeDto>> responseMono = challengeController.getOneChallenge(VALID_ID);
 
         StepVerifier.create(responseMono)
-                .expectNextMatches(respNotFound -> respNotFound.getStatusCode().equals(NOT_FOUND))
-                .verifyComplete();
+                .expectErrorMatches(respThrow -> respThrow instanceof ResponseStatusException
+                        && ((ResponseStatusException) respThrow).getStatusCode() == HttpStatus.OK)
+                .verify();
 
         verifyService();
     }

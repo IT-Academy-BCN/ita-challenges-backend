@@ -50,10 +50,13 @@ class SolutionRepositoryTest {
     @BeforeEach
     void setUp(){
 
+        UUID idLanguage = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
+        UUID idLanguage2 = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80297");
+
         solutionRepository.deleteAll().block();
 
-        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", 1);
-        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", 2);
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", idLanguage);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", idLanguage2);
 
         solutionRepository.saveAll(Flux.just(solution, solution2)).blockLast();
 
@@ -81,7 +84,7 @@ class SolutionRepositoryTest {
     @DisplayName("Exists by UUID Test")
     @Test
     void existsByUuidTest() {
-        Boolean exists = solutionRepository.existsByUuid(uuid_1).block();
+        Boolean exists = solutionRepository.existsByIdSolution(uuid_1).block();
         assertEquals(true, exists);
     }
 
@@ -89,14 +92,14 @@ class SolutionRepositoryTest {
     @Test
     void findByUuidTest() {
 
-        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuid(uuid_1);
+        Mono<SolutionDocument> firstSolution = solutionRepository.findByIdSolution(uuid_1);
         firstSolution.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getUuid(), uuid_1),
+                u -> assertEquals(u.getIdSolution(), uuid_1),
                 () -> fail("Solution not found: " + uuid_1));
 
-        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuid(uuid_2);
+        Mono<SolutionDocument> secondSolution = solutionRepository.findByIdSolution(uuid_2);
         secondSolution.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getUuid(), uuid_2),
+                u -> assertEquals(u.getIdSolution(), uuid_2),
                 () -> fail("Solution not found: " + uuid_2));
     }
 
@@ -104,10 +107,10 @@ class SolutionRepositoryTest {
     @Test
     void deleteByUuidTest() {
 
-        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuid(uuid_1);
+        Mono<SolutionDocument> firstSolution = solutionRepository.findByIdSolution(uuid_1);
         firstSolution.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = solutionRepository.deleteByUuid(uuid_1);
+                    Mono<Void> deletion = solutionRepository.deleteByIdSolution(uuid_1);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
@@ -115,10 +118,10 @@ class SolutionRepositoryTest {
                 () -> fail("Solution to delete not found: " + uuid_1)
         );
 
-        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuid(uuid_2);
+        Mono<SolutionDocument> secondSolution = solutionRepository.findByIdSolution(uuid_2);
         secondSolution.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = solutionRepository.deleteByUuid(uuid_2);
+                    Mono<Void> deletion = solutionRepository.deleteByIdSolution(uuid_2);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();

@@ -2,16 +2,18 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 import java.util.UUID;
 
+@Repository
 public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDocument,UUID> {
 
-    Mono<Boolean> existsByUuid(UUID uuid);
+    Mono<Boolean> existsByIdChallenge(UUID idChallenge);
 
-    Mono<ChallengeDocument> findByUuid(UUID uuid);
+    Mono<ChallengeDocument> findByIdChallenge(UUID idChallenge);
 
-    Mono<Void> deleteByUuid(UUID uuid);
+    Mono<Void> deleteByIdChallenge(UUID idChallenge);
 
     Mono<ChallengeDocument> findByLevel(String level);
 
@@ -19,7 +21,5 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
-
-
 
 }

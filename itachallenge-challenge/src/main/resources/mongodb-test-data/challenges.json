@@ -6,7 +6,7 @@
         },
         "challenge_title": "Sociis Industries",
         "level": "EASY",
-        "creation_date": "2018-09-09 11:43:54+0200",
+        "creation_date": "2018-09-09T14:30:00", 
         "detail": {
           "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
           "examples": [
@@ -38,9 +38,21 @@
           "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
         },
         "languages": [
-          "1",
-          "2",
-          "3"
+            {
+                "_id": {
+                    "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -59,10 +71,22 @@
                 }
             }
         ],
-        "tags": [
-          "d21d587c-1390-4597-befc-d7103ab66523",
-          "1a2731ec-b583-46ae-9fff-2914b9c3b9ba",
-          "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
+        "resources": [
+          {
+            "_id": {
+              "$uuid": "d21d587c-1390-4597-befc-d7103ab66523"
+            }
+          },
+          {
+            "_id": {
+              "$uuid": "1a2731ec-b583-46ae-9fff-2914b9c3b9ba"
+            }
+          },
+          {
+            "_id": {
+              "$uuid": "fd0c8ac2-c7fa-4b25-bb03-3d3371493fea"
+            }
+          }
         ],
         "related": [
           {
@@ -88,7 +112,7 @@
         },
         "challenge_title": "Dis Parturient Associates",
         "level": "MEDIUM",
-        "creation_date": "2022-10-27",
+        "creation_date": "2022-10-27T14:30:00",
         "detail": {
             "description": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
             "examples": [
@@ -114,10 +138,26 @@
             "note": "urna. Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna."
         },
         "languages": [
-            "1",
-            "2",
-            "3",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -141,10 +181,22 @@
                 }
             }
         ],
-        "tags": [
-            "ebb361e8-6a5b-4938-9664-c1ab95b42dd8",
-            "86be997f-b2b5-46f4-ab76-2191ee4c5e8a",
-            "b1864684-1be1-41ee-9001-d304c2ea21ef"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"ebb361e8-6a5b-4938-9664-c1ab95b42dd8"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"86be997f-b2b5-46f4-ab76-2191ee4c5e8a"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"b1864684-1be1-41ee-9001-d304c2ea21ef"
+            }
+          }
         ],
         "related": [
             {
@@ -171,7 +223,7 @@
         },
         "challenge_title": "Nam Nulla Magna Company",
         "level": "HARD",
-        "creation_date": "2023-02-8",
+        "creation_date": "2023-02-08T14:30:00",
         "detail": {
             "description": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt,",
             "examples": [
@@ -198,8 +250,16 @@
             "note": "ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales. Mauris blandit"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -213,10 +273,22 @@
                 }
             }
         ],
-        "tags": [
-            "7c403373-767e-4685-ab7e-ae7c1d76a32c",
-            "1e1c5698-3683-41db-a9ce-34a5c53ea2b5",
-            "2c3292ea-d533-49ea-8632-6c6b77b3ac3e"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "7c403373-767e-4685-ab7e-ae7c1d76a32c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "1e1c5698-3683-41db-a9ce-34a5c53ea2b5"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "2c3292ea-d533-49ea-8632-6c6b77b3ac3e"
+            }
+          }
         ],
         "related": [
             {
@@ -242,7 +314,7 @@
         },
         "challenge_title": "Vitae Orci Phasellus Inc.",
         "level": "EASY",
-        "creation_date": "2023-06-20",
+        "creation_date": "2023-06-20T14:30:00",
         "detail": {
             "description": "Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget mollis lectus pede",
             "examples": [
@@ -268,10 +340,26 @@
             "note": "Aliquam adipiscing lobortis risus. In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non"
         },
         "languages": [
-            "1",
-            "2",
-            "3",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -295,10 +383,22 @@
                 }
             }
         ],
-        "tags": [
-            "475a7c74-adc7-45f3-8308-1297bc2fbe1b",
-            "63d82fc5-8074-47a6-b02c-c1b839381b96",
-            "70355902-4443-493c-ab58-c41dc3b3b16c"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"475a7c74-adc7-45f3-8308-1297bc2fbe1b"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"63d82fc5-8074-47a6-b02c-c1b839381b96"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"70355902-4443-493c-ab58-c41dc3b3b16c"
+            }
+          }
         ],
         "related": [
             {
@@ -324,7 +424,7 @@
         },
         "challenge_title": "Malesuada Vel Corporation",
         "level": "HARD",
-        "creation_date": "2023-09-18",
+        "creation_date": "2023-09-18T14:30:00",
         "detail": {
             "description": "ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu",
             "examples": [
@@ -350,8 +450,16 @@
             "note": "sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing lobortis risus."
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -365,10 +473,22 @@
                 }
             }
         ],
-        "tags": [
-            "9a8aaca6-7b9f-486c-82a0-99c056392370",
-            "c1297447-b05f-4ff5-ac99-d6f66917f56b",
-            "42036e82-abba-4a0c-88d1-bb95768b31fd"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "9a8aaca6-7b9f-486c-82a0-99c056392370"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"c1297447-b05f-4ff5-ac99-d6f66917f56b"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "42036e82-abba-4a0c-88d1-bb95768b31fd"
+            }
+          }
         ],
         "related": [
             {
@@ -394,7 +514,7 @@
         },
         "challenge_title": "Sem Consequat Nec Incorporated",
         "level": "HARD",
-        "creation_date": "2022-09-3",
+        "creation_date": "2022-09-03T14:30:00",
         "detail": {
             "description": "dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque",
             "examples": [
@@ -420,10 +540,26 @@
             "note": "Curae Phasellus ornare. Fusce mollis. Duis sit amet diam eu dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut,"
         },
         "languages": [
-            "1",
-            "2",
-            "3",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -447,10 +583,22 @@
                 }
             }
         ],
-        "tags": [
-            "dec03f23-b034-4b2d-80e9-e504767f0519",
-            "60798985-957f-49c9-908d-1c9f97ffd36b",
-            "53db22d4-a075-4f4f-a39c-01a976893678"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "60798985-957f-49c9-908d-1c9f97ffd36b"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "53db22d4-a075-4f4f-a39c-01a976893678"
+            }
+          }
         ],
         "related": [
             {
@@ -476,7 +624,7 @@
         },
         "challenge_title": "Tincidunt LLP",
         "level": "EASY",
-        "creation_date": "2024-01-6",
+        "creation_date": "2024-01-06T14:30:00",
         "detail": {
             "description": "nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla dignissim. Maecenas ornare egestas ligula. Nullam feugiat",
             "level": "HARD",
@@ -503,8 +651,17 @@
             "note": "ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu, euismod ac, fermentum vel, mauris. Integer sem"
         },
         "languages": [
-            "2",
-            "3"
+
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -518,10 +675,22 @@
                 }
             }
         ],
-        "tags": [
-            "391008e1-b588-4948-b7c3-7dad552afdd6",
-            "5ac98844-27ce-4b95-944b-75f2e79b4a68",
-            "4aac1cb2-e053-4a63-ba54-a4cdb4a250c7"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "391008e1-b588-4948-b7c3-7dad552afdd6"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "5ac98844-27ce-4b95-944b-75f2e79b4a68"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "4aac1cb2-e053-4a63-ba54-a4cdb4a250c7"
+            }
+          }
         ],
         "related": [
             {
@@ -547,7 +716,7 @@
         },
         "challenge_title": "Vitae Dolor Donec Inc.",
         "level": "EASY",
-        "creation_date": "2022-11-9",
+        "creation_date": "2022-11-09T14:30:00",
         "detail": {
             "description": "aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida. Praesent eu nulla at sem molestie",
             "examples": [
@@ -573,9 +742,21 @@
             "note": "non, luctus sit amet, faucibus ut, nulla. Cras eu tellus eu augue porttitor interdum. Sed auctor odio a purus. Duis elementum, dui quis accumsan convallis, ante lectus convallis"
         },
         "languages": [
-            "1",
-            "2",
-            "3"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -594,10 +775,22 @@
                 }
             }
         ],
-        "tags": [
-            "f148088f-fd38-43fb-9a17-f88d29254990",
-            "dbfe6207-983c-488b-8f22-1e6fb853d410",
-            "ba99c9d4-2c56-4a85-94c2-98fbd4f6dc5e"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "f148088f-fd38-43fb-9a17-f88d29254990"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "dbfe6207-983c-488b-8f22-1e6fb853d410"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "ba99c9d4-2c56-4a85-94c2-98fbd4f6dc5e"
+            }
+          }
         ],
         "related": [
             {
@@ -623,7 +816,7 @@
         },
         "challenge_title": "Interdum Libero Dui Corporation",
         "level": "MEDIUM",
-        "creation_date": "2023-11-27",
+        "creation_date": "2023-11-27T14:30:00",
         "detail": {
             "description": "neque. In ornare sagittis felis. Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac",
             "examples": [
@@ -649,7 +842,11 @@
             "note": "luctus felis purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim, gravida sit amet, dapibus id, blandit"
         },
         "languages": [
-            "4"
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -658,10 +855,22 @@
                 }
             }
         ],
-        "tags": [
-            "9a27552f-d16b-40b4-92e6-5caeca6863b4",
-            "319d6183-4b09-4e83-a66b-70ea7069ab53",
-            "7146f0fa-3b6f-4c06-b10b-6191b6c1b61c"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "9a27552f-d16b-40b4-92e6-5caeca6863b4"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "319d6183-4b09-4e83-a66b-70ea7069ab53"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "7146f0fa-3b6f-4c06-b10b-6191b6c1b61c"
+            }
+          }
         ],
         "related": [
             {
@@ -687,7 +896,7 @@
         },
         "challenge_title": "Risus Varius Orci PC",
         "level": "MEDIUM",
-        "creation_date": "2023-09-12",
+        "creation_date": "2023-09-12T14:30:00",
         "detail": {
             "description": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a,",
             "examples": [
@@ -713,9 +922,21 @@
             "note": "laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare"
         },
         "languages": [
-            "1",
-            "2",
-            "3"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -734,10 +955,22 @@
                 }
             }
         ],
-        "tags": [
-            "41d2c58a-82c2-4eeb-bc9b-f33ee82e9822",
-            "cea85dc5-4122-461b-a85b-eac6c78c0b18",
-            "d2c0b6c4-3a44-46b4-a909-b5bbc0c29697"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "41d2c58a-82c2-4eeb-bc9b-f33ee82e9822"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "cea85dc5-4122-461b-a85b-eac6c78c0b18"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "d2c0b6c4-3a44-46b4-a909-b5bbc0c29697"
+            }
+          }
         ],
         "related": [
             {
@@ -763,7 +996,7 @@
         },
         "challenge_title": "Elit Pharetra Ut Industries",
         "level": "EASY",
-        "creation_date": "2022-12-24",
+        "creation_date": "2022-12-24T14:30:00",
         "detail": {
             "description": "rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut srsus luctus, ipsum leo elementum sem, vitae aliquam eros",
             "examples": [
@@ -789,9 +1022,21 @@
             "note": "cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo elementum sem, vitae aliquam eros turpis non enim. Mauris quis turpis vitae purus gravida sagittis. Duis gravida."
         },
         "languages": [
-            "2",
-            "3",
-            "4"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -810,10 +1055,22 @@
                 }
             }
         ],
-        "tags": [
-            "261537c7-0484-46ad-bb0f-0371533b2633",
-            "5d73a05c-19b4-4146-8b9d-9bc7ffcd06fd",
-            "6b02c25d-78c5-4c14-9699-fe72a64243e4"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "261537c7-0484-46ad-bb0f-0371533b2633"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "5d73a05c-19b4-4146-8b9d-9bc7ffcd06fd"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "6b02c25d-78c5-4c14-9699-fe72a64243e4"
+            }
+          }
         ],
         "related": [
             {
@@ -839,7 +1096,7 @@
         },
         "challenge_title": "Libero Dui Consulting",
         "level": "EASY",
-        "creation_date": "2022-05-27",
+        "creation_date": "2022-05-27T14:30:00",
         "detail": {
             "description": "augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras dolor",
             "examples": [
@@ -865,10 +1122,26 @@
             "note": "hendrerit a, arcu. Sed et libero. Proin mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non,"
         },
         "languages": [
-            "1",
-            "2",
-            "3",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -892,10 +1165,22 @@
                 }
             }
         ],
-        "tags": [
-            "5415ccac-74c6-4aa6-924a-b9b508258349",
-            "aec7c042-d68f-4066-b152-3d549598e676",
-            "6aa6081c-a1d1-47d7-9468-68e991947669"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "5415ccac-74c6-4aa6-924a-b9b508258349"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "aec7c042-d68f-4066-b152-3d549598e676"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "6aa6081c-a1d1-47d7-9468-68e991947669"
+            }
+          }
         ],
         "related": [
             {
@@ -921,7 +1206,7 @@
         },
         "challenge_title": "Metus Corporation",
         "level": "MEDIUM",
-        "creation_date": "2023-05-1",
+        "creation_date": "2023-05-01T14:30:00",
         "detail": {
             "description": "cursus purus. Nullam scelerisque neque sed sem egestas blandit. Nam nulla magna, malesuada vel, convallis in, cursus et, eros. Proin",
             "examples": [
@@ -947,8 +1232,16 @@
             "note": "lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed, facilisis vitae, orci. Phasellus dapibus quam quis diam. Pellentesque habitant morbi tristique senectus et netus et malesuada"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -962,10 +1255,22 @@
                 }
             }
         ],
-        "tags": [
-            "ccb184fb-afdd-44bd-a18e-5e1857dd75dc",
-            "b0f97694-a737-4f1c-81cd-547edc46c5e0",
-            "f6b970a7-1b76-454b-a09c-bf7c565d63bc"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "ccb184fb-afdd-44bd-a18e-5e1857dd75dc"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "b0f97694-a737-4f1c-81cd-547edc46c5e0"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "f6b970a7-1b76-454b-a09c-bf7c565d63bc"
+            }
+          }
         ],
         "related": [
             {
@@ -991,7 +1296,7 @@
         },
         "challenge_title": "Primis In PC",
         "level": "HARD",
-        "creation_date": "2024-02-24",
+        "creation_date": "2024-02-24T14:30:00",
         "detail": {
             "description": "nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget, volutpat ornare, facilisis",
             "examples": [
@@ -1017,8 +1322,16 @@
             "note": "Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus,"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1032,10 +1345,22 @@
                 }
             }
         ],
-        "tags": [
-            "50d5add0-d162-4286-8cde-db1ddeeec57c",
-            "fd1983b2-0412-4f47-b695-f60edcd71ec8",
-            "663ebeb9-a8fb-4501-9278-328e37a761b3"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "50d5add0-d162-4286-8cde-db1ddeeec57c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "fd1983b2-0412-4f47-b695-f60edcd71ec8"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "663ebeb9-a8fb-4501-9278-328e37a761b3"
+            }
+          }
         ],
         "related": [
             {
@@ -1061,7 +1386,7 @@
         },
         "challenge_title": "Ipsum Ac Industries",
         "level": "EASY",
-        "creation_date": "2024-02-10",
+        "creation_date": "2024-02-10T14:30:00",
         "detail": {
             "description": "dignissim. Maecenas ornare egestas ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla",
             "examples": [
@@ -1087,10 +1412,26 @@
             "note": "Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus"
         },
         "languages": [
-            "1",
-            "2",
-            "3",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1114,10 +1455,22 @@
                 }
             }
         ],
-        "tags": [
-            "3679d444-44c4-4689-b96f-ac0b527d64d5",
-            "4cdf4896-3c75-4890-9780-5a4da28e33cc",
-            "9fcf4bad-bed8-4c3f-a285-720f6bd66060"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"3679d444-44c4-4689-b96f-ac0b527d64d5"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"4cdf4896-3c75-4890-9780-5a4da28e33cc"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"9fcf4bad-bed8-4c3f-a285-720f6bd66060"
+            }
+          }
         ],
         "related": [
             {
@@ -1143,7 +1496,7 @@
         },
         "challenge_title": "Massa Lobortis PC",
         "level": "HARD",
-        "creation_date": "2023-04-28",
+        "creation_date": "2023-04-28T14:30:00",
         "detail": {
             "description": "condimentum. Donec at arcu. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae Donec tincidunt. Donec",
             "examples": [
@@ -1169,10 +1522,26 @@
             "note": "hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim. Etiam imperdiet dictum magna. Ut tincidunt orci quis lectus. Nullam suscipit, est ac facilisis facilisis, magna tellus faucibus"
         },
         "languages": [
-            "1",
-            "2",
-            "3",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1196,10 +1565,22 @@
                 }
             }
         ],
-        "tags": [
-            "352e53c8-68b0-47b8-a13e-adadcedfe075",
-            "ab4be8cb-719b-434a-a0c4-6d316529327c",
-            "cac37b6b-7d1f-4b97-aba2-a31c72ff9065"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"352e53c8-68b0-47b8-a13e-adadcedfe075"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"ab4be8cb-719b-434a-a0c4-6d316529327c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"cac37b6b-7d1f-4b97-aba2-a31c72ff9065"
+            }
+          }
         ],
         "related": [
             {
@@ -1225,7 +1606,7 @@
         },
         "challenge_title": "Non Associates",
         "level": "HARD",
-        "creation_date": "2023-05-20",
+        "creation_date": "2023-05-20T14:30:00",
         "detail": {
             "description": "quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat. Nulla",
             "examples": [
@@ -1251,9 +1632,21 @@
             "note": "pretium aliquet, metus urna convallis erat, eget tincidunt dui augue eu tellus. Phasellus elit pede, malesuada vel, venenatis vel, faucibus id, libero. Donec consectetuer mauris id sapien. Cras"
         },
         "languages": [
-            "1",
-            "2",
-            "3"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1272,10 +1665,22 @@
                 }
             } 
         ],
-        "tags": [
-            "4dbe2ba8-7fb7-42db-88bb-b423b708153d",
-            "d0727bdf-e7e1-496d-b779-67d1150ce0f8",
-            "be6e2b73-2fcb-41cc-abd5-d20f860ac932"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"4dbe2ba8-7fb7-42db-88bb-b423b708153d"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"d0727bdf-e7e1-496d-b779-67d1150ce0f8"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"be6e2b73-2fcb-41cc-abd5-d20f860ac932"
+            }
+          }
         ],
         "related": [
             {
@@ -1301,7 +1706,7 @@
         },
         "challenge_title": "Magna Nam Ligula LLP",
         "level": "EASY",
-        "creation_date": "2023-08-15",
+        "creation_date": "2023-08-15T14:30:00",
         "detail": {
             "description": "purus ac tellus. Suspendisse sed dolor. Fusce mi lorem, vehicula et, rutrum eu, ultrices sit amet, risus. Donec nibh enim,",
             "examples": [
@@ -1327,9 +1732,21 @@
             "note": "Duis volutpat nunc sit amet metus. Aliquam erat volutpat. Nulla facilisis. Suspendisse commodo tincidunt nibh. Phasellus nulla. Integer vulputate, risus a ultricies adipiscing, enim mi tempor lorem, eget"
         },
         "languages": [
-            "1",
-            "2",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1348,10 +1765,22 @@
                 }
             } 
         ],
-        "tags": [
-            "5954166f-241a-41e2-984f-312c58d678da",
-            "b5d4d89f-195b-42b2-84ad-5e8ba333a867",
-            "67ebbdfe-9715-44c5-a76f-f263b0ee752d"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"5954166f-241a-41e2-984f-312c58d678da"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"b5d4d89f-195b-42b2-84ad-5e8ba333a867"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"67ebbdfe-9715-44c5-a76f-f263b0ee752d"
+            }
+          }
         ],
         "related": [
             {
@@ -1377,7 +1806,7 @@
         },
         "challenge_title": "Sapien Incorporated",
         "level": "HARD",
-        "creation_date": "2023-08-19",
+        "creation_date": "2023-08-19T14:30:00",
         "detail": {
             "description": "Nullam lobortis quam a felis ullamcorper viverra. Maecenas iaculis aliquet diam. Sed diam lorem, auctor quis, tristique ac, eleifend vitae,",
             "examples": [
@@ -1403,9 +1832,21 @@
             "note": "Pellentesque tincidunt tempus risus. Donec egestas. Duis ac arcu. Nunc mauris. Morbi non sapien molestie orci tincidunt adipiscing. Mauris molestie pharetra nibh. Aliquam ornare, libero at auctor ullamcorper,"
         },
         "languages": [
-            "1",
-            "2",
-            "4"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1424,10 +1865,22 @@
                 }
             }
         ],
-        "tags": [
-            "520cb399-956d-4cdd-bdb4-9f6a346681c4",
-            "90465ac9-1eba-4b7a-a572-555b09cafce6",
-            "09a0b719-4fb0-4aae-9d17-add1e8a2c1f8"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"520cb399-956d-4cdd-bdb4-9f6a346681c4"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"90465ac9-1eba-4b7a-a572-555b09cafce6"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"09a0b719-4fb0-4aae-9d17-add1e8a2c1f8"
+            }
+          }
         ],
         "related": [
             {
@@ -1453,7 +1906,7 @@
         },
         "challenge_title": "Pede Cum Associates",
         "level": "EASY",
-        "creation_date": "2023-04-23",
+        "creation_date": "2023-04-23T14:30:00",
         "detail": {
             "description": "nec mauris blandit mattis. Cras eget nisi dictum augue malesuada malesuada. Integer id magna et ipsum cursus vestibulum. Mauris magna.",
             "examples": [
@@ -1479,8 +1932,16 @@
             "note": "ligula. Nullam feugiat placerat velit. Quisque varius. Nam porttitor scelerisque neque. Nullam nisl. Maecenas malesuada fringilla est. Mauris eu turpis. Nulla aliquet. Proin velit. Sed malesuada augue ut"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1494,10 +1955,22 @@
                 }
             }
         ],
-        "tags": [
-            "2c850692-e6b9-4eab-9412-520b15b7550a",
-            "abb421ad-1862-4761-82fa-773645dd0735",
-            "9b02fd18-6109-4482-8613-db882bf2fbfd"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"2c850692-e6b9-4eab-9412-520b15b7550a"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"abb421ad-1862-4761-82fa-773645dd0735"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"9b02fd18-6109-4482-8613-db882bf2fbfd"
+            }
+          }
         ],
         "related": [
             {
@@ -1523,7 +1996,7 @@
         },
         "challenge_title": "Pellentesque Ultricies Dignissim Limited",
         "level": "MEDIUM",
-        "creation_date": "2023-10-29",
+        "creation_date": "2023-10-29T14:30:00",
         "detail": {
             "description": "magna sed dui. Fusce aliquam, enim nec tempus scelerisque, lorem ipsum sodales purus, in molestie tortor nibh sit amet orci.",
             "examples": [
@@ -1549,9 +2022,21 @@
             "note": "eu neque pellentesque massa lobortis ultrices. Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper"
         },
         "languages": [
-            "1",
-            "2",
-            "3"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1570,10 +2055,22 @@
                 }
             }
         ],
-        "tags": [
-            "3a79e25f-96a4-4f99-88a8-7429886d422b",
-            "204ba47f-2625-4bce-8ce7-e5f5d6d686fa",
-            "1e462182-c457-4f7d-b533-04c7799257af"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"3a79e25f-96a4-4f99-88a8-7429886d422b"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"204ba47f-2625-4bce-8ce7-e5f5d6d686fa"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"1e462182-c457-4f7d-b533-04c7799257af"
+            }
+          }
         ],
         "related": [
             {
@@ -1599,7 +2096,7 @@
         },
         "challenge_title": "Neque Nullam Corporation",
         "level": "MEDIUM",
-        "creation_date": "2023-06-12",
+        "creation_date": "2023-06-12T14:30:00",
         "detail": {
             "description": "auctor ullamcorper, nisl arcu iaculis enim, sit amet ornare lectus justo eu arcu. Morbi sit amet massa. Quisque porttitor eros",
             "examples": [
@@ -1625,9 +2122,21 @@
             "note": "In mi pede, nonummy ut, molestie in, tempus eu, ligula. Aenean euismod mauris eu elit. Nulla facilisi. Sed neque. Sed eget lacus. Mauris non dui nec urna suscipit"
         },
         "languages": [
-            "1",
-            "2",
-            "3"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1646,10 +2155,22 @@
                 }
             }
         ],
-        "tags": [
-            "8dbb46ad-0ee5-413e-aad6-98aa91c215a6",
-            "5bde9cec-2bc8-4fbb-945c-bc97b2eaaea1",
-            "a99f3aee-7da8-484f-8dee-a48b4f23c176"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"8dbb46ad-0ee5-413e-aad6-98aa91c215a6"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"5bde9cec-2bc8-4fbb-945c-bc97b2eaaea1"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"a99f3aee-7da8-484f-8dee-a48b4f23c176"
+            }
+          }
         ],
         "related": [
             {
@@ -1675,7 +2196,7 @@
         },
         "challenge_title": "Mi Aliquam Corporation",
         "level": "HARD",
-        "creation_date": "2024-05-2",
+        "creation_date": "2024-05-02T14:30:00",
         "detail": {
             "description": "ligula consectetuer rhoncus. Nullam velit dui, semper et, lacinia vitae, sodales at, velit. Pellentesque ultricies dignissim lacus. Aliquam rutrum lorem",
             "examples": [
@@ -1701,9 +2222,21 @@
             "note": "ridiculus mus. Proin vel nisl. Quisque fringilla euismod enim. Etiam gravida molestie arcu. Sed eu nibh vulputate mauris sagittis placerat. Cras dictum ultricies ligula. Nullam enim. Sed nulla"
         },
         "languages": [
-            "1",
-            "2",
-            "3"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1722,10 +2255,22 @@
                 }
             }
         ],
-        "tags": [
-            "d31dcbc2-9bf7-4a70-a9d2-a37fd7f15e9d",
-            "2a53b73e-9e71-4ba1-af37-734852e6e09d",
-            "7fe2c153-2443-421b-ae3b-90a491ebed15"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"d31dcbc2-9bf7-4a70-a9d2-a37fd7f15e9d"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"2a53b73e-9e71-4ba1-af37-734852e6e09d"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"7fe2c153-2443-421b-ae3b-90a491ebed15"
+            }
+          }
         ],
         "related": [
             {
@@ -1751,7 +2296,7 @@
         },
         "challenge_title": "Eu Turpis Ltd",
         "level": "HARD",
-        "creation_date": "2023-11-28",
+        "creation_date": "2023-11-28T14:30:00",
         "detail": {
             "description": "quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum. Donec at arcu. Vestibulum ante ipsum primis in",
             "examples": [
@@ -1777,7 +2322,11 @@
             "note": "sit amet risus. Donec egestas. Aliquam nec enim. Nunc ut erat. Sed nunc est, mollis non, cursus non, egestas a, dui. Cras pellentesque. Sed dictum. Proin eget odio."
         },
         "languages": [
-            "4"
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1787,10 +2336,22 @@
             }
             
         ],
-        "tags": [
-            "467a7d2e-09ef-49d1-8fc7-2997e6541c05",
-            "12f3842e-d16b-4c47-831f-720c240f0b32",
-            "03051a83-bc52-462a-9588-6be470af09d4"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"467a7d2e-09ef-49d1-8fc7-2997e6541c05"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"12f3842e-d16b-4c47-831f-720c240f0b32"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":"03051a83-bc52-462a-9588-6be470af09d4"
+            }
+          }
         ],
         "related": [
             {
@@ -1816,7 +2377,7 @@
         },
         "challenge_title": "Et Arcu Ltd",
         "level": "HARD",
-        "creation_date": "2022-12-2",
+        "creation_date": "2022-12-02T14:30:00",
         "detail": {
             "description": "Vivamus rhoncus. Donec est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci.",
             "examples": [
@@ -1842,7 +2403,11 @@
             "note": "eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem. Pellentesque ut"
         },
         "languages": [
-            "4"
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1851,10 +2416,22 @@
                 }
             }
         ],
-        "tags": [
-            "e3456a31-eaa5-4ac4-90ab-c9e97665ecd6",
-            "694a3ff2-1998-446d-83f5-4ed920259094",
-            "27569a49-9595-435c-8d02-eed64fba60c3"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "e3456a31-eaa5-4ac4-90ab-c9e97665ecd6"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "694a3ff2-1998-446d-83f5-4ed920259094"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "27569a49-9595-435c-8d02-eed64fba60c3"
+            }
+          }
         ],
         "related": [
             {
@@ -1880,7 +2457,7 @@
         },
         "challenge_title": "Felis Eget Corporation",
         "level": "MEDIUM",
-        "creation_date": "2024-04-27",
+        "creation_date": "2024-04-27T14:30:00",
         "detail": {
             "description": "neque. Morbi quis urna. Nunc quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt congue turpis. In condimentum.",
             "examples": [
@@ -1906,7 +2483,11 @@
             "note": "vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis, pede. Suspendisse dui. Fusce diam nunc, ullamcorper eu,"
         },
         "languages": [
-            "4"
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1915,10 +2496,22 @@
                 }
             }
         ],
-        "tags": [
-            "bc346042-fe80-42d9-bff9-dcc241e41577",
-            "fef5c09e-8b40-46e2-97f3-2b5cddb7b1a9",
-            "38c98f40-52aa-4883-9a6a-3ec942fc9695"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":"bc346042-fe80-42d9-bff9-dcc241e41577"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "fef5c09e-8b40-46e2-97f3-2b5cddb7b1a9"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "38c98f40-52aa-4883-9a6a-3ec942fc9695"
+            }
+          }
         ],
         "related": [
             {
@@ -1944,7 +2537,7 @@
         },
         "challenge_title": "Metus Associates",
         "level": "EASY",
-        "creation_date": "2023-07-23",
+        "creation_date": "2023-07-23T14:30:00",
         "detail": {
             "description": "dolor egestas rhoncus. Proin nisl sem, consequat nec, mollis vitae, posuere at, velit. Cras lorem lorem, luctus ut, pellentesque eget,",
             "examples": [
@@ -1970,8 +2563,16 @@
             "note": "vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet non, vestibulum nec, euismod in, dolor. Fusce feugiat. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam auctor,"
         },
         "languages": [
-            "3",
-            "2"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -1985,10 +2586,22 @@
                 }
             }
         ],
-        "tags": [
-            "bf9d326a-2fe5-452d-b74f-58d357255e95",
-            "dcb7f202-ff74-48d6-bb86-ce55d575c1b1",
-            "102fd6e2-93ce-440d-b60f-d445c44c3f63"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "bf9d326a-2fe5-452d-b74f-58d357255e95"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "dcb7f202-ff74-48d6-bb86-ce55d575c1b1"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "102fd6e2-93ce-440d-b60f-d445c44c3f63"
+            }
+          }
         ],
         "related": [
             {
@@ -2014,7 +2627,7 @@
         },
         "challenge_title": "Arcu Aliquam Institute",
         "level": "EASY",
-        "creation_date": "2023-08-18",
+        "creation_date": "2023-08-18T14:30:00",
         "detail": {
             "description": "rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent interdum ligula eu enim.",
             "examples": [
@@ -2040,8 +2653,16 @@
             "note": "ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec feugiat metus sit amet ante. Vivamus non lorem vitae odio sagittis semper. Nam tempor diam"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2055,10 +2676,22 @@
                 }
             }
         ],
-        "tags": [
-            "8075abaf-dd96-4a4c-a841-1983fbbd8edc",
-            "940c99b6-a529-4c4c-93a7-2c3a13216913",
-            "07b03100-3002-40a5-a167-792abc191127"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "8075abaf-dd96-4a4c-a841-1983fbbd8edc"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "940c99b6-a529-4c4c-93a7-2c3a13216913"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "07b03100-3002-40a5-a167-792abc191127"
+            }
+          }
         ],
         "related": [
             {
@@ -2084,7 +2717,7 @@
         },
         "challenge_title": "Egestas Duis Institute",
         "level": "HARD",
-        "creation_date": "2023-08-25",
+        "creation_date": "2023-08-25T14:30:00",
         "detail": {
             "description": "semper erat, in consectetuer ipsum nunc id enim. Curabitur massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus.",
             "examples": [
@@ -2110,8 +2743,16 @@
             "note": "est. Nunc ullamcorper, velit in aliquet lobortis, nisi nibh lacinia orci, consectetuer euismod est arcu ac orci. Ut semper pretium neque. Morbi quis urna. Nunc quis arcu vel"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2125,10 +2766,22 @@
                 }
             }
         ],
-        "tags": [
-            "8b7cc80c-9929-4e1c-82ed-0a3a22e46a77",
-            "37c6ebbb-f7d3-4044-86da-d547436e33ef",
-            "e4bf7d49-0cd6-44fd-a482-bdd7f54a6cde"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "8b7cc80c-9929-4e1c-82ed-0a3a22e46a77"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "37c6ebbb-f7d3-4044-86da-d547436e33ef"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "e4bf7d49-0cd6-44fd-a482-bdd7f54a6cde"
+            }
+          }
         ],
         "related": [
             {
@@ -2154,7 +2807,7 @@
         },
         "challenge_title": "Proin Inc.",
         "level": "EASY",
-        "creation_date": "2023-10-27",
+        "creation_date": "2023-10-27T14:30:00",
         "detail": {
             "description": "massa. Vestibulum accumsan neque et nunc. Quisque ornare tortor at risus. Nunc ac sem ut dolor dapibus gravida. Aliquam tincidunt,",
             "examples": [
@@ -2180,8 +2833,16 @@
             "note": "commodo hendrerit. Donec porttitor tellus non magna. Nam ligula elit, pretium et, rutrum non, hendrerit id, ante. Nunc mauris sapien, cursus in, hendrerit consectetuer, cursus et, magna. Praesent"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2195,10 +2856,22 @@
                 }
             }
         ],
-        "tags": [
-            "3647ba30-f8db-4d1f-ac2e-e3b9433a2e3c",
-            "50d22b78-8102-45a3-92be-e8449d87cb01",
-            "0adee36a-7e08-4294-aea1-c40519e0f2dd"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "3647ba30-f8db-4d1f-ac2e-e3b9433a2e3c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "50d22b78-8102-45a3-92be-e8449d87cb01"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "0adee36a-7e08-4294-aea1-c40519e0f2dd"
+            }
+          }
         ],
         "related": [
             {
@@ -2224,7 +2897,7 @@
         },
         "challenge_title": "Tincidunt Nibh Phasellus Company",
         "level": "EASY",
-        "creation_date": "2022-10-31",
+        "creation_date": "2022-10-31T14:30:00",
         "detail": {
             "description": "Nunc mauris elit, dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue",
             "examples": [
@@ -2250,8 +2923,16 @@
             "note": "Nunc laoreet lectus quis massa. Mauris vestibulum, neque sed dictum eleifend, nunc risus varius orci, in consequat enim diam vel arcu. Curabitur ut odio vel est tempor bibendum."
         },
         "languages": [
-            "2",
-            "3"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2265,10 +2946,22 @@
                 }
             }
         ],
-        "tags": [
-            "f25de265-75c4-4f7b-bdd1-1d37864dd5a9",
-            "8e47f817-ea10-4a91-b373-d0cd8c38551c",
-            "949e6392-af70-4ced-8ac4-d567ff606818"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "f25de265-75c4-4f7b-bdd1-1d37864dd5a9"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "8e47f817-ea10-4a91-b373-d0cd8c38551c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "949e6392-af70-4ced-8ac4-d567ff606818"
+            }
+          }
         ],
         "related": [
             {
@@ -2294,7 +2987,7 @@
         },
         "challenge_title": "Class Foundation",
         "level": "HARD",
-        "creation_date": "2022-05-30",
+        "creation_date": "2022-05-30T14:30:00",
         "detail": {
             "description": "sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed,",
             "examples": [
@@ -2320,8 +3013,16 @@
             "note": "id nunc interdum feugiat. Sed nec metus facilisis lorem tristique aliquet. Phasellus fermentum convallis ligula. Donec luctus aliquet odio. Etiam ligula tortor, dictum eu, placerat eget, venenatis a,"
         },
         "languages": [
-            "2",
-            "3"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2335,10 +3036,22 @@
                 }
             }  
         ],
-        "tags": [
-            "c8fa2f4d-5850-4de9-bc3f-35a000507ad3",
-            "4d83c65c-8ec5-43c8-bc46-03fb88bb4702",
-            "97399a1f-ec16-42f7-9ebd-94a4569605d1"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "c8fa2f4d-5850-4de9-bc3f-35a000507ad3"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "4d83c65c-8ec5-43c8-bc46-03fb88bb4702"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "97399a1f-ec16-42f7-9ebd-94a4569605d1"
+            }
+          }
         ],
         "related": [
             {
@@ -2364,7 +3077,7 @@
         },
         "challenge_title": "Dolor Quisque Incorporated",
         "level": "EASY",
-        "creation_date": "2023-01-27",
+        "creation_date": "2023-01-27T14:30:00",
         "detail": {
             "description": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel",
             "examples": [
@@ -2390,8 +3103,16 @@
             "note": "malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus vitae mauris sit amet lorem semper auctor. Mauris vel turpis. Aliquam adipiscing"
         },
         "languages": [
-            "2",
-            "3"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2405,10 +3126,22 @@
                 }
             }
         ],
-        "tags": [
-            "def18498-1ab2-4778-a8e1-23566b087f85",
-            "8697a7eb-55ae-4c75-ad73-50e4856cb210",
-            "1fac1d08-e583-4581-96cd-400e0c4abdcd"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "def18498-1ab2-4778-a8e1-23566b087f85"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "8697a7eb-55ae-4c75-ad73-50e4856cb210"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "1fac1d08-e583-4581-96cd-400e0c4abdcd"
+            }
+          }
         ],
         "related": [
             {
@@ -2434,7 +3167,7 @@
         },
         "challenge_title": "Ornare Associates",
         "level": "EASY",
-        "creation_date": "2023-03-19",
+        "creation_date": "2023-03-19T14:30:00",
         "detail": {
             "description": "elit, a feugiat tellus lorem eu metus. In lorem. Donec elementum, lorem ut aliquam iaculis, lacus pede sagittis augue, eu",
             "examples": [
@@ -2460,7 +3193,11 @@
             "note": "eget magna. Suspendisse tristique neque venenatis lacus. Etiam bibendum fermentum metus. Aenean sed pede nec ante blandit viverra. Donec tempus, lorem fringilla ornare placerat, orci lacus vestibulum lorem,"
         },
         "languages": [
-            "2"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2469,10 +3206,22 @@
                 }
             }
         ],
-        "tags": [
-            "ee0462a0-6f38-42fa-a596-6fb61b28540d",
-            "2c79a5e3-f004-4f0b-a277-d41da2b1299c",
-            "610a03aa-d515-4bde-b00a-bec8b248f66e"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "ee0462a0-6f38-42fa-a596-6fb61b28540d"
+            }
+          },
+          {
+            "_id": {
+          "$uuid": "2c79a5e3-f004-4f0b-a277-d41da2b1299c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "610a03aa-d515-4bde-b00a-bec8b248f66e"
+            }
+          }
         ],
         "related": [
             {
@@ -2498,7 +3247,7 @@
         },
         "challenge_title": "Orci Lobortis Augue Corporation",
         "level": "MEDIUM",
-        "creation_date": "2024-02-15",
+        "creation_date": "2024-02-15T14:30:00",
         "detail": {
             "description": "dictum eu, eleifend nec, malesuada ut, sem. Nulla interdum. Curabitur dictum. Phasellus in felis. Nulla tempor augue ac ipsum. Phasellus",
             "examples": [
@@ -2524,7 +3273,11 @@
             "note": "Nam tempor diam dictum sapien. Aenean massa. Integer vitae nibh. Donec est mauris, rhoncus id, mollis nec, cursus a, enim. Suspendisse aliquet, sem ut cursus luctus, ipsum leo"
         },
         "languages": [
-            "2"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2533,10 +3286,22 @@
                 }
             }
         ],
-        "tags": [
-            "9ad43e4e-ce13-4184-90b4-28384c7ede3d",
-            "163c35f4-cd3c-49f7-866e-8ccd3ad0b044",
-            "199a52e9-a570-44f9-884b-5d2ff6c027b1"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "9ad43e4e-ce13-4184-90b4-28384c7ede3d"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "163c35f4-cd3c-49f7-866e-8ccd3ad0b044"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "199a52e9-a570-44f9-884b-5d2ff6c027b1"
+            }
+          }
         ],
         "related": [
             {
@@ -2562,7 +3327,7 @@
         },
         "challenge_title": "Arcu Industries",
         "level": "MEDIUM",
-        "creation_date": "2022-11-9",
+        "creation_date": "2022-11-09T14:30:00",
         "detail": {
             "description": "adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada",
             "examples": [
@@ -2588,7 +3353,11 @@
             "note": "molestie sodales. Mauris blandit enim consequat purus. Maecenas libero est, congue a, aliquet vel, vulputate eu, odio. Phasellus at augue id ante dictum cursus. Nunc mauris elit, dictum"
         },
         "languages": [
-            "2"
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2597,10 +3366,22 @@
                 }
             }
         ],
-        "tags": [
-            "18a262b5-3ce7-4028-89d0-0dbec8c09ab5",
-            "edddc01d-a0d8-42ad-a9e5-235c484b71d8",
-            "471edd5e-ce62-4f9a-bf7f-ae2f58813616"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "18a262b5-3ce7-4028-89d0-0dbec8c09ab5"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "edddc01d-a0d8-42ad-a9e5-235c484b71d8"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "471edd5e-ce62-4f9a-bf7f-ae2f58813616"
+            }
+          }
         ],
         "related": [
             {
@@ -2626,7 +3407,7 @@
         },
         "challenge_title": "Lectus Pede Industries",
         "level": "HARD",
-        "creation_date": "2024-01-17",
+        "creation_date": "2024-01-17T14:30:00",
         "detail": {
             "description": "nulla ante, iaculis nec, eleifend non, dapibus rutrum, justo. Praesent luctus. Curabitur egestas nunc sed libero. Proin sed turpis nec",
             "examples": [
@@ -2652,8 +3433,16 @@
             "note": "mattis. Integer eu lacus. Quisque imperdiet, erat nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate velit eu sem."
         },
         "languages": [
-            "3",
-            "4"
+            {
+                "_id": {
+                    "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2667,10 +3456,22 @@
                 }
             }
         ],
-        "tags": [
-            "92685e02-0b45-4e14-bbc4-c4697ac0b6c8",
-            "e406b198-8e3e-4b1d-b9f0-dc4c5caa56c3",
-            "2cc7382e-3073-415e-87c6-98d25a7f8ae8"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "92685e02-0b45-4e14-bbc4-c4697ac0b6c8"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "e406b198-8e3e-4b1d-b9f0-dc4c5caa56c3"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "2cc7382e-3073-415e-87c6-98d25a7f8ae8"
+            }
+          }
         ],
         "related": [
             {
@@ -2696,7 +3497,7 @@
         },
         "challenge_title": "Maecenas Mi Felis Company",
         "level": "HARD",
-        "creation_date": "2022-09-26",
+        "creation_date": "2022-09-26T14:30:00",
         "detail": {
             "description": "Quisque porttitor eros nec tellus. Nunc lectus pede, ultrices a, auctor non, feugiat nec, diam. Duis mi enim, condimentum eget,",
             "examples": [
@@ -2722,8 +3523,16 @@
             "note": "velit. Sed malesuada augue ut lacus. Nulla tincidunt, neque vitae semper egestas, urna justo faucibus lectus, a sollicitudin orci sem eget massa. Suspendisse eleifend. Cras sed leo. Cras"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2737,10 +3546,22 @@
                 }
             }
         ],
-        "tags": [
-            "9d7e906d-4484-4514-871c-ec29688b296c",
-            "0554b557-b59a-4914-aac1-fe6123775d9c",
-            "1590f717-8808-404f-867a-4f231337cd3d"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "9d7e906d-4484-4514-871c-ec29688b296c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "0554b557-b59a-4914-aac1-fe6123775d9c"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "1590f717-8808-404f-867a-4f231337cd3d"
+            }
+          }
         ],
         "related": [
             {
@@ -2766,7 +3587,7 @@
         },
         "challenge_title": "Sodales PC",
         "level": "MEDIUM",
-        "creation_date": "2023-09-10",
+        "creation_date": "2023-09-10T14:30:00",
         "detail": {
             "description": "Donec tempor, est ac mattis semper, dui lectus rutrum urna, nec luctus felis purus ac tellus. Suspendisse sed dolor. Fusce",
             "examples": [
@@ -2792,8 +3613,16 @@
             "note": "diam luctus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris ut quam vel sapien imperdiet ornare. In faucibus. Morbi vehicula. Pellentesque"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2807,10 +3636,22 @@
                 }
             }
         ],
-        "tags": [
-            "81c61359-2d5f-4f9c-88ce-442c1647d367",
-            "3a6bd2ee-39aa-4ac1-8293-8fbd75c9b2f9",
-            "1b1aaae8-2cc0-4c77-b1fe-69a5b4cd3a6c"
+        "resources": [
+          {
+            "_id": {
+          "$uuid":  "81c61359-2d5f-4f9c-88ce-442c1647d367"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "3a6bd2ee-39aa-4ac1-8293-8fbd75c9b2f9"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "1b1aaae8-2cc0-4c77-b1fe-69a5b4cd3a6c"
+            }
+          }
         ],
         "related": [
             {
@@ -2836,7 +3677,7 @@
             },
         "challenge_title": "Mauris Eu Corp.",
         "level": "MEDIUM",
-        "creation_date": "2023-02-27",
+        "creation_date": "2023-02-27T14:30:00",
         "detail": {
             "description": "auctor quis, tristique ac, eleifend vitae, erat. Vivamus nisi. Mauris nulla. Integer urna. Vivamus molestie dapibus ligula. Aliquam erat volutpat.",
             "examples": [
@@ -2862,8 +3703,16 @@
             "note": "metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus"
         },
         "languages": [
-            "1",
-            "2"
+            {
+                "_id" : {
+                    "$uuid" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+                }
+            },
+            {
+                "_id": {
+                    "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+                }
+            }
         ],
         "solutions": [
             {
@@ -2877,10 +3726,22 @@
                 }
             }
         ],
-        "tags": [
-            "5f055847-2f6c-4257-ad4f-6a842e7f24f7",
-            "67555daa-5d08-484d-b685-5bdb1393eceb",
-            "e67e4d81-733d-4fc3-89b3-7aff892b6731"
+        "resources": [
+          {
+            "_id": {
+          "$uuid": "5f055847-2f6c-4257-ad4f-6a842e7f24f7"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":  "67555daa-5d08-484d-b685-5bdb1393eceb"
+            }
+          },
+          {
+            "_id": {
+          "$uuid":   "e67e4d81-733d-4fc3-89b3-7aff892b6731"
+            }
+          }
         ],
         "related": [
             {

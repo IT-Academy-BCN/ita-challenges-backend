@@ -52,6 +52,8 @@ dependencies {
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
     testImplementation group: 'org.testcontainers', name: 'mongodb', version: '1.17.6'
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 test {
     useJUnitPlatform()

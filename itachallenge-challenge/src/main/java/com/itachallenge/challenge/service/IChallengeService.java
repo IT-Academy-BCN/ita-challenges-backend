@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface IChallengeService {
 
-    public Mono<?> getChallengeId(UUID id);
+    public Mono<ChallengeDto> getChallengeId(UUID id) ;
     public boolean isValidUUID(String id);
     Flux<ChallengeDto> getChallenges ();
 

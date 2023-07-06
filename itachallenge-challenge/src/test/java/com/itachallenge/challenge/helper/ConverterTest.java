@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ConverterTest {
+class ConverterTest {
 
     @Autowired
     private Converter converter;
@@ -43,7 +43,9 @@ public class ConverterTest {
         String title = "title challenge";
         String level = "some level";
         LocalDateTime creationDate = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
-        int[] idsLanguages = new int[]{1, 2};
+        UUID idLanguage = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
+        UUID idLanguage2 = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80297");
+        UUID[] idsLanguages = new UUID[]{idLanguage, idLanguage2};
         String[] languageNames = new String[]{"name1", "name2"};
 
         languageMocked1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
@@ -56,7 +58,7 @@ public class ConverterTest {
 
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
@@ -66,7 +68,7 @@ public class ConverterTest {
     private ChallengeDocument getChallengeMocked(UUID challengeId, String title, String level,
                                                  Set<LanguageDocument> languageIS, LocalDateTime creationDate){
         ChallengeDocument challengeIMocked = Mockito.mock(ChallengeDocument.class);
-        when(challengeIMocked.getUuid()).thenReturn(challengeId);
+        when(challengeIMocked.getIdChallenge()).thenReturn(challengeId);
         when(challengeIMocked.getTitle()).thenReturn(title);
         when(challengeIMocked.getLevel()).thenReturn(level);
         when(challengeIMocked.getLanguages()).thenReturn(languageIS);
@@ -91,7 +93,7 @@ public class ConverterTest {
 
     //método que retorna true si campos language son iguales con languageDto
     private boolean validateLanguageDto(LanguageDto languageDto, LanguageDocument language) {
-        return languageDto.getLanguageId() == language.getIdLanguage() &&
+        return languageDto.getIdLanguage() == language.getIdLanguage() &&
                 languageDto.getLanguageName().equalsIgnoreCase(language.getLanguageName());
     }
 
@@ -112,7 +114,7 @@ public class ConverterTest {
 
     private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challenge) {
 
-        return challengeDto.getChallengeId() == challenge.getUuid() &&
+        return challengeDto.getChallengeId() == challenge.getIdChallenge() &&
                 challengeDto.getTitle().equalsIgnoreCase(challenge.getTitle()) &&
                 challengeDto.getLevel().equalsIgnoreCase(challenge.getLevel()) &&
                 challengeDto.getCreationDate().equalsIgnoreCase(converter.getFormattedCreationDateTime(challenge.getCreationDate())) &&
@@ -125,7 +127,7 @@ public class ConverterTest {
 
         if (languageDtoSet.size() == languageSet.size()) {
             validate = languageDtoSet.stream()
-                    .map(LanguageDto::getLanguageId)
+                    .map(LanguageDto::getIdLanguage)
                     .collect(Collectors.toSet())
                     .equals(languageSet.stream()
                             .map(LanguageDocument::getIdLanguage)

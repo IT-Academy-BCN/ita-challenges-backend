@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @AllArgsConstructor
 @Getter
 public class LanguageDto{
 
-    @JsonProperty(value = "id_language", index = 0)
-    private int languageId;
+    @JsonProperty(value = "_id", index = 0)
+    private UUID idLanguage;
 
     @JsonProperty(value = "language_name", index = 1)
     private String languageName;
