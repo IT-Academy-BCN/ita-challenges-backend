@@ -45,6 +45,14 @@
 ----------------------------------------------------------------
 
 # 1. PROJECT'S LINKS
+- [GITHUB](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
+   <img src="img/GitHub.jpg" alt="isolated" width="400"/>
+- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
+<img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
+- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
+<img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
+- [figma](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
+<img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
 ## 1.1 Temp
 
