@@ -2,7 +2,7 @@
 
 ## Table of Contents
 
-1. [**PROJECT'S LINKS**](#1-project's-links)
+1. [**PROJECT'S LINKS**](#1-projects-links)
 
    1.1 [Temp](#11-temp)
 
@@ -14,7 +14,7 @@
 
    3.1 [Convencions](#31-convencions)
 
-4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)
+4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method-class-etc)
 
    4.1 [Temp](#41-temp)
 
