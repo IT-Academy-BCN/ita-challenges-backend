@@ -2,9 +2,9 @@
 
 echo "Beginning of insertion"
 
-mongoimport --db=challenges --collection=challenges --jsonArray --file=challenges.json
-mongoimport --db=challenges --collection=languages --jsonArray --file=languages.json
-mongoimport --db=challenges --collection=solutions --jsonArray --file=solutions.json
+mongoimport --db=challenges  --username admin_challenge --password BYBcMJEEWw5egRUo --collection=challenges --jsonArray --file=challenges.json
+mongoimport --db=challenges  --username admin_challenge --password BYBcMJEEWw5egRUo --collection=languages --jsonArray --file=languages.json
+mongoimport --db=challenges  --username admin_challenge --password BYBcMJEEWw5egRUo --collection=solutions --jsonArray --file=solutions.json
 
-echo "Made it"
+echo "Done!"
 exit
