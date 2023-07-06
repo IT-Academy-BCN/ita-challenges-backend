@@ -2,9 +2,7 @@
 
 ## Table of Contents
 
-1. [**PROJECT'S LINKS**](#1-project's-links)
-
-   1.1 [Temp](#11-temp)  
+1. [**PROJECT'S LINKS**](#1-project's-links) 
 
 2. [**WORK PROCEDURES**](#2-work-procedures)
 
@@ -33,15 +31,11 @@
    
 5. [**LIBRARIES USED**](#5-libraries-used)
 
-   5.1 [Temp](#51-temp)
-
 6. [**REQUIRED PROGRAMS**](#6-required-programs)
 
    6.1 [Requierd programs](#61-required-programs)
 
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)
-
-   7.1 [Temp](#71-temp)
 
 ----------------------------------------------------------------
 
@@ -54,8 +48,6 @@
 <img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
 <img src="img/Figma.jpg" alt="Figma image" width="400"/>
-
-## 1.1 Temp
 
 ----------------------------------------------------------------
 
@@ -90,7 +82,8 @@
          git push origin nombre-de-su-rama
 8. Abra el repositorio en GitHub y debería ver un mensaje que le permite crear un "pull request" desde su rama recién creada a la rama "develop". Haga clic en el enlace para crear el pull request.
 
-
+----------------------------------------------------------------
+----------------------------------------------------------------
 ### 2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
 
 1. Asegúrate de tener las MongoDB Tools instaladas. Si aún no las tienes, ve al apartado de “Programas necesarios” y sigue las instrucciones proporcionadas para descargarlas en tu sistema operativo.
@@ -147,7 +140,8 @@
 
 11. Abre MongoDB Compass, haz un "Reload Data" y ya verás la base de datos correctamente importada.
 
-
+----------------------------------------------------------------
+----------------------------------------------------------------
 ## 2.2 Daily Procedure
 1. Conectarse a Teams a las 9:15h
 2. Hacer pull de la rama "develop"
@@ -156,6 +150,8 @@
 
 IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
 
+----------------------------------------------------------------
+----------------------------------------------------------------
 ## 2.3 Work with cards Procedure
 ### Como asignarse una tarjeta
 1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
@@ -185,6 +181,8 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature#123" hacia la rama "develop".
 
+----------------------------------------------------------------
+----------------------------------------------------------------
 ## 2.4 Points to consider when doing a PR
 1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
    - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
@@ -196,10 +194,13 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
 7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
 
+----------------------------------------------------------------
+----------------------------------------------------------------
 ## 2.5 Scrum metodology
 https://scrumguides.org/
 
-![plot](./img/VER5-scrum-framework_2020.jpg)
+
+<img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
 
 ----------------------------------------------------------------
 
