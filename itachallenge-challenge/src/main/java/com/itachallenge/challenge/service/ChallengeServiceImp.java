@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import io.micrometer.common.util.StringUtils;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -48,5 +51,24 @@ public class ChallengeServiceImp implements IChallengeService {
                 .blockOptional()
                 .orElse(false);
     }
+    public Mono<List<RelatedDto>> getRelatedChallenge(String challengeId) {
+    	
+    	return challengeRepository.findByUuid(UUID.fromString(challengeId))
+    		    .flatMap(challenge -> Mono.just(challenge.getRelatedChallenges())
+    		        .flatMapIterable(Function.identity())
+    		        .flatMap(id -> challengeRepository.findByUuid(id))
+    		        .map(Converter::toRelatedDto)
+    		        .collectList()
+    		    );
+		//Mono<List<RelatedDto>> related = null;
+	
+		/*related = Mono.from(challengeRepository.findByUuid(UUID.fromString(challengeId)))
+				.getRelatedChallenges()
+				.stream()
+				.map(id -> Converter.toRelatedDto(Flux.from(challengeRepository.findById(id).block())))
+				.collect(Collectors.toList());
+				return related;*/
+
+	}
 
 }

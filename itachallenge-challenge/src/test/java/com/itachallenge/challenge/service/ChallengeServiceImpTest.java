@@ -2,13 +2,14 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
-
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -19,6 +20,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -165,5 +169,59 @@ class ChallengeServiceImpTest {
         assertEquals(2, challenge2.getResources().size());
         assertFalse(challenge2.getResources().contains(resourceId));
     }
+    @Test
+    void  TestGetRelatedChallenge() {
+    	
+    	//ChallengeServiceImp service = Mockito.mock(ChallengeServiceImp.class);
+    	
+    	ChallengeDocument challenge = new ChallengeDocument();
+    
+    	Set<UUID> relatedChallenges = new LinkedHashSet<UUID>();
+    	
+    	relatedChallenges.add(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"));
+    	relatedChallenges.add(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"));
+    	relatedChallenges.add(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"));
+    	
+    	challenge.setRelatedChallenges(relatedChallenges);
+    	
 
+		RelatedDto rel1 = RelatedDto.builder().relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+				.titleRelatedId("titulo 1").build();
+		RelatedDto rel2 = RelatedDto.builder().relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+				.titleRelatedId("titulo 2").build();
+		RelatedDto rel3 = RelatedDto.builder().relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+				.titleRelatedId("titulo 3").build();*/
+
+		List<RelatedDto> related = new ArrayList<>();
+
+		related.add(rel1);
+		//related.add(rel2);
+		//related.add(rel3);
+		
+		Mono<List<RelatedDto>> monoRelated = Mono.just(related);
+		
+		
+		
+	    String identificacion = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+	    
+	    when(challengeRepository.findByUuid(UUID.fromString(identificacion))).thenReturn(Mono.just(challenge));
+	    when(challenge.getRelatedChallenges()).thenReturn(relatedChallenges);
+	    when(challengeRepository.findByUuid(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))).thenReturn(rel1));
+	    when(challengeRepository.findByUuid(UUID.fromString(identificacion))).thenReturn(Mono.just(challenge));
+	    when(challengeRepository.findByUuid(UUID.fromString(identificacion))).thenReturn(Mono.just(challenge));
+	   
+	    
+	    
+
+		Mono<List<RelatedDto>> serviceResponse = challengeService.getRelatedChallenge(identificacion);
+  
+
+        StepVerifier.create(serviceResponse)
+        .expectNextMatches(response -> {
+            assertTrue(response instanceof Mono<?>);
+            assertEquals(response, monoRelated);
+            return true;
+        })
+        .verifyComplete();
+    }
 }

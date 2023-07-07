@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -91,5 +93,28 @@ public class ChallengeController {
             throw new BadUUIDException("Invalid UUID");
         }
     }
+    @GetMapping(path = "/{challengeId}/related")
+   	public Mono<ResponseEntity<List<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id) throws Exception{
+
+   		try {
+   			boolean validUUID = challengeService.isValidUUID(id);
+
+   			if (!validUUID) {
+   				ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
+   						"Invalid ID format. Please indicate the correct format.");
+   				log.error("{} ID: {}, incorrect.", errorMessage, id);
+   				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
+   			}
+
+   			return challengeService.getRelatedChallenge(id)
+   					.map(list -> ResponseEntity.ok().body(list))
+   					.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+   		} catch (ResponseStatusException e) {
+   			throw e;
+   		} catch (Exception e) {
+   			log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
+   			return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+   		}
+   	}
 
 }

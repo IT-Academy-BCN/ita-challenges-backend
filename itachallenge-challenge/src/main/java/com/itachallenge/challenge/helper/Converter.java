@@ -4,6 +4,8 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
+
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -50,5 +52,8 @@ public class Converter {
         return zonedDateTime.format(formatter);
 
     }
-
+    public static RelatedDto toRelatedDto(ChallengeDocument challenge) {
+ 	   
+        return new RelatedDto(challenge.getUuid(), challenge.getTitle());
+    }
 }
