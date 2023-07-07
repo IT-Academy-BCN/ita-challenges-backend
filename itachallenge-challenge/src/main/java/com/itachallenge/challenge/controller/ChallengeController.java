@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,10 +23,6 @@ import java.util.UUID;
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
-    //VARIABLES HTTPSTATUS
-    private final static HttpStatus OK = HttpStatus.OK;
-    private final static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
-    private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
     @Autowired
     private DiscoveryClient discoveryClient;
@@ -59,22 +56,40 @@ public class ChallengeController {
             boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
                 log.error("{} ID: {}, incorrect.", errorMessage, id);
-                throw new ResponseStatusException(BAD_REQUEST, errorMessage.getMessage());
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
             }
 
             ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), "Challenge not found");
             log.info("Challenge not found. ID: {}", id);
             return challengeService.getChallengeId(UUID.fromString(id))
                     .map(challenge -> ResponseEntity.ok().body(challenge))
-                    .switchIfEmpty(Mono.error(new ResponseStatusException(OK, errorMessage.getMessage())));
+                    .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.OK, errorMessage.getMessage())));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
             log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-            return Mono.just(ResponseEntity.status(INTERNAL_SERVER_ERROR).build());
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
-    
+
+    @DeleteMapping("/resources/{idResource}")
+    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuidResource = getUUID(idResource);
+        if (challengeService.removeResourcesByUuid(uuidResource)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private UUID getUUID(String uuidString) throws BadUUIDException {
+        if (uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            return UUID.fromString(uuidString);
+        } else {
+            throw new BadUUIDException("Invalid UUID");
+        }
+    }
+
 }

@@ -6,7 +6,8 @@ import java.util.UUID;
 
 public interface IChallengeService {
 
-    public Mono<ChallengeDto> getChallengeId(UUID id) ;
-    public boolean isValidUUID(String id);
+    Mono<ChallengeDto> getChallengeId(UUID id);
+    boolean isValidUUID(String id);
+    boolean removeResourcesByUuid(UUID idResource);
 
 }

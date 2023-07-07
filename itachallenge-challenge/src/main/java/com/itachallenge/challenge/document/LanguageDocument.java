@@ -11,6 +11,7 @@ import java.util.UUID;
 @Document(collection="languages")
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class LanguageDocument {
 
     @Id
