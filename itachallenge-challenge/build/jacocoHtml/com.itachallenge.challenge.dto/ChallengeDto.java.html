@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChallengeDto.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">itachallenge-challenge</a> &gt; <a href="index.source.html" class="el_package">com.itachallenge.challenge.dto</a> &gt; <span class="el_source">ChallengeDto.java</span></div><h1>ChallengeDto.java</h1><pre class="source lang-java linenums">package com.itachallenge.challenge.dto;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
+import org.springframework.stereotype.Component;
+
+import java.util.Set;
+import java.util.UUID;
+
+@Component
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+<span class="nc" id="L13">@AllArgsConstructor(access = AccessLevel.PRIVATE)</span>
+<span class="fc" id="L14">@NoArgsConstructor</span>
+<span class="nc" id="L15">@Builder</span>
+@Getter
+<span class="nc" id="L17">@Setter //aÃ±adido para el mÃ©todo getChallengeId mientras no hay repositorio.</span>
+public class ChallengeDto{
+
+    @JsonProperty(value = &quot;id_challenge&quot;, index = 0)
+<span class="nc" id="L21">    private UUID challengeId;</span>
+
+    @JsonProperty(value = &quot;challenge_title&quot;, index = 1)
+<span class="nc" id="L24">    private String title;</span>
+
+    @JsonProperty(index = 2)
+<span class="nc" id="L27">    private String level;</span>
+
+    /**
+     * Este atributo es String solamente en el DTO.
+     * En el document, creationDate es de tipo LocalDateTime.
+     * En la clase converter, hay un mÃ©todo privado que convierte y formatea
+     * los datos de LocalDateTime a String
+     * al formato requerido en el .json
+     */
+    @JsonProperty(value = &quot;creation_date&quot;, index = 3)
+<span class="nc" id="L37">    private String creationDate;</span>
+
+    @JsonProperty(index = 4)
+<span class="nc" id="L40">    private Integer popularity;</span>
+
+    @JsonProperty(index = 5)
+<span class="nc" id="L43">    private Float percentage;</span>
+
+    @JsonProperty(index = 6)
+<span class="nc" id="L46">    private Set&lt;LanguageDto&gt; languages;</span>
+
+    /*
+    TODO: ADD more fields &quot;on demand&quot; (when needed)
+     */
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

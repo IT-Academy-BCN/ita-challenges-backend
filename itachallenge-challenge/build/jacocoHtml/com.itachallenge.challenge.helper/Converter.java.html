@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Converter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">itachallenge-challenge</a> &gt; <a href="index.source.html" class="el_package">com.itachallenge.challenge.helper</a> &gt; <span class="el_source">Converter.java</span></div><h1>Converter.java</h1><pre class="source lang-java linenums">package com.itachallenge.challenge.helper;
+
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.LanguageDto;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
+
+@Component
+<span class="fc" id="L17">public class Converter {</span>
+
+    public Flux&lt;ChallengeDto&gt; fromChallengeToChallengeDto(Flux&lt;ChallengeDocument&gt; challengeFlux) {
+<span class="nc" id="L20">        return challengeFlux.map(this::toChallengeDto);</span>
+    }
+
+    public Flux&lt;LanguageDto&gt; fromLanguageToLanguageDto(Flux&lt;LanguageDocument&gt; languageFlux) {
+<span class="nc" id="L24">        return languageFlux.map(this::toLanguageDto);</span>
+    }
+
+    private ChallengeDto toChallengeDto(ChallengeDocument challenge) {
+<span class="nc" id="L28">        return ChallengeDto.builder()</span>
+<span class="nc" id="L29">                .challengeId(challenge.getUuid())</span>
+<span class="nc" id="L30">                .level(challenge.getLevel())</span>
+<span class="nc" id="L31">                .title(challenge.getTitle())</span>
+<span class="nc" id="L32">                .languages(challenge.getLanguages().stream()</span>
+<span class="nc" id="L33">                        .map(this::toLanguageDto)</span>
+<span class="nc" id="L34">                        .collect(Collectors.toSet()))</span>
+<span class="nc" id="L35">                .creationDate(getFormattedCreationDateTime(challenge.getCreationDate()))</span>
+<span class="nc" id="L36">                .build();</span>
+    }
+
+    private LanguageDto toLanguageDto(LanguageDocument language) {
+<span class="nc" id="L40">        return new LanguageDto(language.getIdLanguage(), language.getLanguageName());</span>
+    }
+
+    //metodo para formatear creationDate del document al formato requerido en el .json
+    public String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
+
+<span class="nc" id="L46">        ZoneId zoneId = ZoneId.of(&quot;Europe/Paris&quot;);</span>
+<span class="nc" id="L47">        ZonedDateTime zonedDateTime = ZonedDateTime.of(creationDateDocument, zoneId);</span>
+
+<span class="nc" id="L49">        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;</span>
+<span class="nc" id="L50">        return zonedDateTime.format(formatter);</span>
+
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

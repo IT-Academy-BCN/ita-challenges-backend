@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ChallengeServiceImp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">itachallenge-challenge</a> &gt; <a href="index.source.html" class="el_package">com.itachallenge.challenge.service</a> &gt; <span class="el_source">ChallengeServiceImp.java</span></div><h1>ChallengeServiceImp.java</h1><pre class="source lang-java linenums">package com.itachallenge.challenge.service;
+
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.exception.ErrorResponseMessage;
+import io.micrometer.common.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+@Service
+<span class="nc" id="L16">public class ChallengeServiceImp implements IChallengeService {</span>
+    /*
+     TODO El mÃ©todo getChallengeId(UUID id) tiene cÃ³digo comentado para cuando la capa repositorio estÃ© operativa, solo se deverÃ¡n de descomentar.
+     */
+
+    //VARIABLES
+<span class="nc" id="L22">    private static final Pattern UUID_FORM = Pattern.compile(&quot;^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$&quot;, Pattern.CASE_INSENSITIVE);</span>
+
+    @Autowired
+    private ChallengeDto challengeDto;
+
+    @Override
+    public Mono&lt;?&gt; getChallengeId(UUID id) {
+<span class="nc" id="L29">        challengeDto.setChallengeId(id); //ELIMINAR CON REPOSITORIO</span>
+
+<span class="nc" id="L31">        Mono&lt;ChallengeDto&gt; challenge = Mono.just(challengeDto); //ELIMINAR CON REPOSITORIO</span>
+        //Mono&lt;Challenge&gt; challenge = challengeRepository.findByUuid(id);
+
+<span class="nc" id="L34">        ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), &quot;Challenge not found.&quot;);</span>
+
+<span class="nc" id="L36">        return challenge</span>
+                //.map(challengeMapper::mapToChallengeDto)
+<span class="nc" id="L38">                .map(dto -&gt; ResponseEntity.ok().body((Object) dto))</span>
+<span class="nc" id="L39">                .switchIfEmpty(Mono.just(ResponseEntity.ok().body(errorMessage))); //ELIMINAR CON REPOSITORIO</span>
+                //.switchIfEmpty(Mono.defer(() -&gt; Mono.just(ResponseEntity.ok().body(errorMessage))))
+                //.map(ResponseEntity::getBody);
+    }
+
+    @Override //Comprueba si la UUID es valida.
+    public boolean isValidUUID(String id) {
+<span class="nc bnc" id="L46" title="All 4 branches missed.">        return !StringUtils.isEmpty(id) &amp;&amp; UUID_FORM.matcher(id).matches();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

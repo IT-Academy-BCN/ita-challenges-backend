@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResourceHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">itachallenge-challenge</a> &gt; <a href="index.source.html" class="el_package">com.itachallenge.challenge.helper</a> &gt; <span class="el_source">ResourceHelper.java</span></div><h1>ResourceHelper.java</h1><pre class="source lang-java linenums">package com.itachallenge.challenge.helper;
+
+import jakarta.validation.constraints.NotNull;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.Optional;
+
+/*
+Clase puede ser de mucha utilidad para mejorar la eficiencia
+en crear tests (ej: load json for expected data)
+ */
+public class ResourceHelper {
+
+    private Resource resource;
+    private String resourcePath;
+<span class="nc" id="L23">    private static final Logger log = LoggerFactory.getLogger(ResourceHelper.class);</span>
+
+    //if path null -&gt; ClassPathResource throws IllegalArgumentException
+<span class="nc" id="L26">    public ResourceHelper(@NotNull String resourcePath) {</span>
+<span class="nc" id="L27">        this.resourcePath = resourcePath;</span>
+<span class="nc" id="L28">        resource = new ClassPathResource(this.resourcePath);</span>
+<span class="nc" id="L29">    }</span>
+
+    //https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html
+    public Optional&lt;String&gt; readResourceAsString (){
+
+<span class="nc" id="L34">        Optional&lt;String&gt; result = null;</span>
+        try {
+<span class="nc" id="L36">            result = Optional.of(FileUtils.readFileToString(resource.getFile(), StandardCharsets.UTF_8));</span>
+<span class="nc" id="L37">        } catch (IOException ex) {</span>
+<span class="nc" id="L38">            log.error(getResourceErrorMessage(&quot;loading/reading&quot;).concat(ex.getMessage()));</span>
+<span class="nc" id="L39">        }</span>
+<span class="nc" id="L40">        return result;</span>
+    }
+
+    private String getResourceErrorMessage(String action){
+<span class="nc" id="L44">        String resourceIdentifier = Objects.requireNonNullElseGet(resourcePath, () -&gt; resource.getDescription());</span>
+<span class="nc" id="L45">        return &quot;Exception when &quot; + action + &quot; &quot; + resourceIdentifier + &quot; resource: \n&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

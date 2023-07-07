@@ -2,4 +2,6 @@ rootProject.name = 'ita-challenges-backend'
 include 'itachallenge-challenge'
 include 'itachallenge-score'
 include 'itachallenge-user'
+include 'itachallenge-challenge:challenge'
+findProject(':itachallenge-challenge:challenge')?.name = 'challenge'
 
