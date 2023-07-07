@@ -9,13 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
+import javax.management.Query;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,23 +34,25 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
     @Autowired
     private IChallengeService challengeService;
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
         log.info("** Saludos desde el logger **");
 
- Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
+        Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map( s -> s.getUri());
+                .map(s -> s.getUri());
 
         log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
 
         Optional<String> services = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(s -> s.toString());
 
         log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
         return "Hello from ITA Challenge!!!";
@@ -91,5 +99,50 @@ public class ChallengeController {
             throw new BadUUIDException("Invalid UUID");
         }
     }
+/*
+    @GetMapping("/..../{name}")
+    List<Employee> findAll(@PathVariable(value = "name") String name) {
+        // sin Query en Repo
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").is(name));
+        return mongoTemplate.find(query, Employee.class);
+        // con Query en Repo
+        return employeeRepository.findByName(name);
+    }
 
+    @GetMapping("/..../{name}/{department}")
+    List<Employee> findAll(@PathVariable(value = "name") String name,
+                           @PathVariable(value = "department") String department) {
+        return employeeRepository.findByNameAndDepartment(name, department);
+    }
+
+    @GetMapping("/..../{minAge}/{maxAge}")
+    List<Employee> findAll(@PathVariable(value = "minAge") int minAge,
+                           @PathVariable(value = "maxAge") int maxAge) {
+        return employeeRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    @GetMapping("/..../{name}")
+    List<Employee> findByNameOrderByDepartment(@PathVariable(value = "name") String name) {
+        // sin Query en Repo
+        Query query = new Query();
+        query.addCriteria(Criteria.where("name").is(name));
+        return mongoTemplate.find(query, Employee.class);
+        // con Query en Repo
+        return employeeRepository.findByNameOrderByDepartment(name);
+    }
+
+    @GetMapping("/..../{age}")
+    List findByAgeMatch(@PathVariable(value = "age") int age) {
+        //Group
+        GroupOperation groupOperation = Aggregation.group("age").count().as(("count"));
+        //MatchOperation
+        MatchOperation matchOperation = Aggregation.match(new Criteria("age").is(age));
+        //SortOperation
+        SortOperation sortOperation = Aggregation.sort(Sort.by(Sort.Direction.DESC, "age"));
+        //Agregation
+        Aggregation aggregation = Aggregation.newAggregation(matchOperation,sortOperation);
+        AggregationResults output = mongoTemplate.aggregate(aggregation, "employee", Employee.class);
+        return output.getMappedResults();
+    }*/
 }
