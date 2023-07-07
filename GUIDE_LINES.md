@@ -2,7 +2,8 @@
 
 ## Table of Contents
 
-1. [**PROJECT'S LINKS**](#1-project's-links) 
+1. [**PROJECT'S LINKS**](#1-projec-s-links)\
+   1.1 [Project's Links](#11-project-links) 
 
 2. [**WORK PROCEDURES**](#2-work-procedures)
 
@@ -30,6 +31,9 @@
    4.7 [Camel case: defined](#47-camel-case:-defined)  
    
 5. [**LIBRARIES USED**](#5-libraries-used)
+   5.1 [Main Plugins](#51-main-plugins) 
+   5.2 [Implementation area](#52-implementation-area)
+   5.3 [Testimplementation area](#53-testimplementation-area)
 
 6. [**REQUIRED PROGRAMS**](#6-required-programs)
 
@@ -42,6 +46,7 @@
 ----------------------------------------------------------------
 
 # 1. PROJECT'S LINKS
+## 1.1 Project links
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
 <img src="img/GitHub.jpg" alt="isolated" width="400"/>
 - Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
@@ -409,7 +414,100 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ----------------------------------------------------------------
 # 5. LIBRARIES USED
 
-## 5.1 Temp
+## 5.1 Main Plugins
+   - 'java'
+     - 'org.springframework.boot' version '3.0.6'
+   - 'jacoco'
+     - 'org.sonarqube' version '4.0.0.2929'
+
+## 5.2 Implementation area
+    
+   - BOOTSTRAP
+     - Version 4.0.2
+     - group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+  
+   - COMMONS IO
+     - Version 2.11.0
+     - 'commons-io:commons-io:2.11.0'
+   - COMMONS LANG
+     - Version 3.12.0
+     - 'org.apache.commons:commons-lang3:3.12.0'
+   - COMMONS VALIDATOR
+     - Version 1.7
+     - 'commons-validator:commons-validator:1.7'
+   - CONSUL CONFIG
+     - Version 4.0.2 
+     - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
+   - CONSUL DISCOVERY
+     - Version 4.0.2
+     - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
+   - PROJECTLOMBOK
+     - Version 1.18.26
+     - 'org.projectlombok:lombok:1.18.26'
+   - SPRING CONTEXT
+     - Version 3
+     - 'org.springframework:spring-context:5.3.13' 
+   - SPRING BOOT AUTOCONFIGURE
+        -  Version 3.0.6
+        - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
+   - SPRING BOOT CLOUD COMMONS
+      - Version 4.0.1
+     - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
+   - SPRING BOOT STARTER ACTUATOR
+     - Version 3.0.6
+     - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6' 
+   - SPRING BOOT STARTER DATA MONGODB
+     - Version 3.0.6
+     - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
+   - SPRING BOOT STARTER DATA MONGODB REACTIVE
+     - Version 3.0.6
+     - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
+   - SPRING BOOT STARTER WEB
+     - Version 3.0.6
+     - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
+   - SPRING BOOT STARTER WEBFLUX
+     - Version 3.0.6
+     - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
+   - SPRINGDOC OPENAPI
+     - Version 2.1.0
+     - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+   - sdf
+
+## 5.3 Testimplementation area
+
+   - ASSERTJ
+     - Version 3.24.2
+     - 'org.assertj:assertj-core:3.24.2'
+   - SPRING
+     - Version 5.3.13
+     - 'org.springframework:spring-test:5.3.13'
+   - HAMCREST
+     - Version 2.2
+     - 'org.hamcrest:hamcrest:2.2'
+   - JUNIT
+     - 'org.junit.jupiter:junit-jupiter'
+   - JUNIT JUPITER
+     - Version 1.17.6 
+     - 'org.testcontainers:junit-jupiter:1.17.6'
+   - JUNIT PLATAFORM SUITE
+     - Version 1.8.1
+     - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
+   - MOCKITO
+     - Version 5.3.1
+     - 'org.mockito:mockito-core:5.3.1'
+   - MOCK WEBSERVER
+     - Version 4.9.3
+     - 'com.squareup.okhttp3:mockwebserver:4.9.3'
+   - MONGODB
+     - Version 1.17.6
+     - 'org.testcontainers:mongodb:1.17.6'
+   - PROJECT REACTOR
+     - Version 3.1.0 Release
+     - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
+   - SPRING BOOT STARTER TEST
+     - Version 3.06
+     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
+   - 
 
 ----------------------------------------------------------------
 
