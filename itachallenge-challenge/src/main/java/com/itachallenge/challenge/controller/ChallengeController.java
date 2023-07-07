@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,16 +21,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
-
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
     @Autowired
     private DiscoveryClient discoveryClient;
-
     @Autowired
     private IChallengeService challengeService;
 
@@ -38,17 +36,17 @@ public class ChallengeController {
     public String test() {
         log.info("** Saludos desde el logger **");
 
- Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
+        Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map( s -> s.getUri());
+                .map(s -> s.getUri());
 
         log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
 
         Optional<String> services = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(s -> s.toString());
 
         log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
         return "Hello from ITA Challenge!!!";
@@ -60,17 +58,17 @@ public class ChallengeController {
             boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
+                        "Invalid ID format. Please indicate the correct format.");
                 log.error("{} ID: {}, incorrect.", errorMessage, id);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
             }
 
-            Mono<?> challengeMono = challengeService.getChallengeId(UUID.fromString(id))
+            ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), "Challenge not found");
+            log.info("Challenge not found. ID: {}", id);
+            return challengeService.getChallengeId(UUID.fromString(id))
                     .map(challenge -> ResponseEntity.ok().body(challenge))
-                    .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-
-            return (Mono<ResponseEntity<ChallengeDto>>) challengeMono;
-
+                    .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.OK, errorMessage.getMessage())));
         } catch (ResponseStatusException e) {
             throw e;
         } catch (Exception e) {
@@ -78,31 +76,69 @@ public class ChallengeController {
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
         }
     }
+
     @GetMapping(path = "/{challengeId}/related")
-	public Mono<ResponseEntity<List<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id,
-			@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "5") int size) throws Exception{
+    public Mono<ResponseEntity<List<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
 
-		try {
-			boolean validUUID = challengeService.isValidUUID(id);
+        try {
+            boolean validUUID = challengeService.isValidUUID(id);
 
-			if (!validUUID) {
-				ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
-						"Invalid ID format. Please indicate the correct format.");
-				log.error("{} ID: {}, incorrect.", errorMessage, id);
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
-			}
+            if (!validUUID) {
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
+                        "Invalid ID format. Please indicate the correct format.");
+                log.error("{} ID: {}, incorrect.", errorMessage, id);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
+            }
 
-			return challengeService.getRelatedChallengePaginated(id, page, size)
-					.map(list -> ResponseEntity.ok().body(list))
-					.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-		} catch (ResponseStatusException e) {
-			throw e;
-		} catch (Exception e) {
-			log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-			return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-		}
-	}
+            return challengeService.getRelatedChallengePaginated(id, page, size)
+                    .map(list -> ResponseEntity.ok().body(list))
+                    .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+        }
+    }
 
+    @DeleteMapping("/resources/{idResource}")
+    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuidResource = getUUID(idResource);
+        if (challengeService.removeResourcesByUuid(uuidResource)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private UUID getUUID(String uuidString) throws BadUUIDException {
+        if (uuidString
+                .matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            return UUID.fromString(uuidString);
+        } else {
+            throw new BadUUIDException("Invalid UUID");
+        }
+    }
+
+    @DeleteMapping("/resources/{idResource}")
+    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuidResource = getUUID(idResource);
+        if (challengeService.removeResourcesByUuid(uuidResource)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private UUID getUUID(String uuidString) throws BadUUIDException {
+        if (uuidString
+                .matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            return UUID.fromString(uuidString);
+        } else {
+            throw new BadUUIDException("Invalid UUID");
+        }
+    }
 
 }

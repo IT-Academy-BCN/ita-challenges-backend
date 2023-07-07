@@ -61,11 +61,8 @@ public class ChallengeTest {
 
     @Test
     void getSolutions() {
-        List<SolutionDocument> solutions = new ArrayList<>();
-        SolutionDocument solution1 = new SolutionDocument(UUID.randomUUID(), "Solution 1", 1);
-        SolutionDocument solution2 = new SolutionDocument(UUID.randomUUID(), "Solution 2", 2);
-        solutions.add(solution1);
-        solutions.add(solution2);
+        List<UUID> solutions = List.of(UUID.randomUUID(),UUID.randomUUID());
+
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, solutions, null, null);
         assertEquals(solutions, challenge.getSolutions());
     }
