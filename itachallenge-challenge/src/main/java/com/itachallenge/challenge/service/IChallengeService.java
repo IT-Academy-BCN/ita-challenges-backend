@@ -15,5 +15,7 @@ public interface IChallengeService {
     boolean isValidUUID(String id);
 
     boolean removeResourcesByUuid(UUID idResource);
+    
+    Mono<List<RelatedDto>> getRelatedChallenge(String id);
 
 }

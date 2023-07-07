@@ -3,20 +3,16 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.RelatedDto;
-import com.itachallenge.challenge.repository.ChallengeRepository;
-
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -24,6 +20,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,184 +32,196 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = ChallengeServiceImp.class)
 class ChallengeServiceImpTest {
-        // VARIABLES
-        private final static UUID VALID_ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
-        private final static String INVALID_ID = "123456789";
+    //VARIABLES
+    private final static UUID VALID_ID = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
+    private final static String INVALID_ID = "123456789";
 
-        @InjectMocks
-        private ChallengeServiceImp challengeService;
+    @InjectMocks
+    private ChallengeServiceImp challengeService;
+    @MockBean
+    private ChallengeRepository challengeRepository;
+    @MockBean
+    private Converter converter;
 
-        @MockBean
-        private ChallengeRepository challengeRepository;
-        @MockBean
-        private Converter converter;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-        @MockBean
-        ChallengeRepository challengerepository;
+    @Test
+    void testGetChallengeId() {
+        ChallengeDocument challenge = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
 
-        @BeforeEach
-        void setUp() {
-                MockitoAnnotations.openMocks(this);
-        }
+        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
+        when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
-        @Test
-        void testGetChallengeId() {
-                ChallengeDocument challenge = new ChallengeDocument();
-                ChallengeDto challengeDto = new ChallengeDto();
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
-                when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
-                when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
+        //Comprueba que devuelva un elemento únicamente (Mono)
+        StepVerifier.create(result)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
 
-                Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
+    @Test
+    void testGetChallengeId_ConvertDto() {
+        ChallengeDocument challenge = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
 
-                // Comprueba que devuelva un elemento únicamente (Mono)
-                StepVerifier.create(result)
-                                .expectNextCount(1)
-                                .verifyComplete();
-        }
+        when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
+        when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
 
-        @Test
-        void testGetChallengeId_ConvertDto() {
-                ChallengeDocument challenge = new ChallengeDocument();
-                ChallengeDto challengeDto = new ChallengeDto();
+        Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
 
-                when(challengeRepository.findByUuid(VALID_ID)).thenReturn(Mono.just(challenge));
-                when(converter.fromChallengeToChallengeDto(any(Flux.class))).thenReturn(Flux.just(challengeDto));
+        StepVerifier.create(result)
+                .expectNext(challengeDto)
+                .verifyComplete();
+    }
 
-                Mono<ChallengeDto> result = challengeService.getChallengeId(VALID_ID);
+    @Test
+    void testIsValidUUID_Ok() {
+        boolean result = challengeService.isValidUUID(VALID_ID.toString());
 
-                StepVerifier.create(result)
-                                .expectNext(challengeDto)
-                                .verifyComplete();
-        }
+        assertTrue(result);
+    }
 
-        @Test
-        void testIsValidUUID_Ok() {
-                boolean result = challengeService.isValidUUID(VALID_ID.toString());
+    @Test
+    void testIsValidUUID_NotValid() {
+        boolean result = challengeService.isValidUUID(INVALID_ID);
 
-                assertTrue(result);
-        }
+        assertFalse(result);
+    }
 
-        @Test
-        void testIsValidUUID_NotValid() {
-                boolean result = challengeService.isValidUUID(INVALID_ID);
+    @Test
+    void removeResourcesById_Successfull() {
+        //Existing ID
+        UUID resourceId = UUID.fromString("69814d46-dd12-4e22-8e1e-2cdaf31dca03");
 
-                assertFalse(result);
-        }
+        // Init Data
+        ChallengeDocument challenge1 = ChallengeDocument.builder()
+                .uuid(resourceId)
+                .resources(Set.of(UUID.fromString("09dd7278-8be5-471a-b706-abda9150094f"), UUID.fromString("3b6ac964-dc93-4c14-a4da-e20a977c4c4a")))
+                .build();
 
-        @Test
-        void TestGetRelatedChallengePaginated() {
+        ChallengeDocument challenge2 = ChallengeDocument.builder()
+                .uuid(UUID.fromString("330a49d1-84cb-4e89-adf3-5e439aeb3c41"))
+                .resources(Set.of(UUID.fromString("3a9a92b9-4e0e-4fda-b4c6-b6d3de0e8e3c"), UUID.fromString("0a67c417-03ab-4ad2-8989-7c764bdf2230")))
+                .build();
 
-                RelatedDto rel1 = RelatedDto.builder()
-                                .relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
-                                .titleRelatedId("titulo 1").build();
-                RelatedDto rel2 = RelatedDto.builder()
-                                .relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
-                                .titleRelatedId("titulo 2").build();
-                RelatedDto rel3 = RelatedDto.builder()
-                                .relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
-                                .titleRelatedId("titulo 3").build();
 
-                List<RelatedDto> related = new ArrayList<>();
+        when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.just(challenge1));
+        when(challengeRepository.save(challenge1))
+                .thenReturn(Mono.just(challenge1));
+        when(challengeRepository.save(challenge2))
+                .thenReturn(Mono.just(challenge2));
 
-                related.add(rel1);
-                related.add(rel2);
-                related.add(rel3);
+        // Act
+        boolean result = challengeService.removeResourcesByUuid(resourceId);
 
-                Mono<List<RelatedDto>> monoRelated = Mono.just(related);
+        // Assert
+        assertTrue(result);
 
-                String identificacion = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-                ChallengeServiceImp service = Mockito.mock(ChallengeServiceImp.class);
+        verify(challengeRepository, times(1)).save(challenge1);
+        verify(challengeRepository, times(1)).findAllByResourcesContaining(resourceId);
 
-                when(service.getRelatedChallenge(identificacion)).thenReturn(monoRelated);
+        assertEquals(2, challenge1.getResources().size());
+        assertFalse(challenge1.getResources().contains(resourceId));
 
-                Mono<List<RelatedDto>> serviceResponse = service.getRelatedChallengePaginated(identificacion, 0, 10);
+        assertEquals(2, challenge2.getResources().size());
+        assertFalse(challenge2.getResources().contains(resourceId));
 
-                StepVerifier.create(serviceResponse)
-                                .expectNextMatches(response -> response instanceof ResponseEntity &&
-                                                ((ResponseEntity<?>) response).getStatusCode() == HttpStatus.OK &&
-                                                ((ResponseEntity<?>) response).getBody().equals(related))
-                                .verifyComplete();
-        }
+    }
 
-        @Test
-        void removeResourcesById_Successfull() {
-                // Existing ID
-                UUID resourceId = UUID.fromString("69814d46-dd12-4e22-8e1e-2cdaf31dca03");
+    @Test
+    void removeResourcesById_NotSuccessfull(){
+        //Non Existing ID
+        UUID resourceId = UUID.randomUUID();
 
-                // Init Data
-                ChallengeDocument challenge1 = ChallengeDocument.builder()
-                                .uuid(resourceId)
-                                .resources(Set.of(UUID.fromString("09dd7278-8be5-471a-b706-abda9150094f"),
-                                                UUID.fromString("3b6ac964-dc93-4c14-a4da-e20a977c4c4a")))
-                                .build();
+        ChallengeDocument challenge1 = ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .resources(Set.of(UUID.fromString("09dd7278-8be5-471a-b706-abda9150094f"), UUID.fromString("3b6ac964-dc93-4c14-a4da-e20a977c4c4a")))
+                .build();
 
-                ChallengeDocument challenge2 = ChallengeDocument.builder()
-                                .uuid(UUID.fromString("330a49d1-84cb-4e89-adf3-5e439aeb3c41"))
-                                .resources(Set.of(UUID.fromString("3a9a92b9-4e0e-4fda-b4c6-b6d3de0e8e3c"),
-                                                UUID.fromString("0a67c417-03ab-4ad2-8989-7c764bdf2230")))
-                                .build();
+        ChallengeDocument challenge2 = ChallengeDocument.builder()
+                .uuid(UUID.fromString("330a49d1-84cb-4e89-adf3-5e439aeb3c41"))
+                .resources(Set.of(UUID.fromString("3a9a92b9-4e0e-4fda-b4c6-b6d3de0e8e3c"), UUID.fromString("0a67c417-03ab-4ad2-8989-7c764bdf2230")))
+                .build();
 
-                when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.just(challenge1));
-                when(challengeRepository.save(challenge1))
-                                .thenReturn(Mono.just(challenge1));
-                when(challengeRepository.save(challenge2))
-                                .thenReturn(Mono.just(challenge2));
+        when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.empty());
+        when(challengeRepository.save(challenge1))
+                .thenReturn(Mono.just(challenge1));
+        when(challengeRepository.save(challenge2))
+                .thenReturn(Mono.just(challenge2));
 
-                // Act
-                boolean result = challengeService.removeResourcesByUuid(resourceId);
+        // Act
+        boolean result = challengeService.removeResourcesByUuid(resourceId);
 
-                // Assert
-                assertTrue(result);
+        // Assert
+        assertFalse(result);
 
-                verify(challengeRepository, times(1)).save(challenge1);
-                verify(challengeRepository, times(1)).findAllByResourcesContaining(resourceId);
+        verify(challengeRepository, times(0)).save(challenge1);
+        verify(challengeRepository, times(1)).findAllByResourcesContaining(resourceId);
 
-                assertEquals(2, challenge1.getResources().size());
-                assertFalse(challenge1.getResources().contains(resourceId));
+        assertEquals(2, challenge1.getResources().size());
+        assertFalse(challenge1.getResources().contains(resourceId));
 
-                assertEquals(2, challenge2.getResources().size());
-                assertFalse(challenge2.getResources().contains(resourceId));
+        assertEquals(2, challenge2.getResources().size());
+        assertFalse(challenge2.getResources().contains(resourceId));
+    }
+    @Test
+    void  TestGetRelatedChallenge() {
+    	
+    	//ChallengeServiceImp service = Mockito.mock(ChallengeServiceImp.class);
+    	
+    	ChallengeDocument challenge = new ChallengeDocument();
+    
+    	Set<UUID> relatedChallenges = new LinkedHashSet<UUID>();
+    	
+    	relatedChallenges.add(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"));
+    	relatedChallenges.add(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"));
+    	relatedChallenges.add(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"));
+    	
+    	challenge.setRelatedChallenges(relatedChallenges);
+    	
 
-        }
+		RelatedDto rel1 = RelatedDto.builder().relatedId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+				.titleRelatedId("titulo 1").build();
+		RelatedDto rel2 = RelatedDto.builder().relatedId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+				.titleRelatedId("titulo 2").build();
+		RelatedDto rel3 = RelatedDto.builder().relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+				.titleRelatedId("titulo 3").build();*/
 
-        @Test
-        void removeResourcesById_NotSuccessfull() {
-                // Non Existing ID
-                UUID resourceId = UUID.randomUUID();
+		List<RelatedDto> related = new ArrayList<>();
 
-                ChallengeDocument challenge1 = ChallengeDocument.builder()
-                                .uuid(UUID.randomUUID())
-                                .resources(Set.of(UUID.fromString("09dd7278-8be5-471a-b706-abda9150094f"),
-                                                UUID.fromString("3b6ac964-dc93-4c14-a4da-e20a977c4c4a")))
-                                .build();
+		related.add(rel1);
+		//related.add(rel2);
+		//related.add(rel3);
+		
+		Mono<List<RelatedDto>> monoRelated = Mono.just(related);
+		
+		
+		
+	    String identificacion = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+	    
+	    when(challengeRepository.findByUuid(UUID.fromString(identificacion))).thenReturn(Mono.just(challenge));
+	    when(challenge.getRelatedChallenges()).thenReturn(relatedChallenges);
+	    when(challengeRepository.findByUuid(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))).thenReturn(rel1));
+	    when(challengeRepository.findByUuid(UUID.fromString(identificacion))).thenReturn(Mono.just(challenge));
+	    when(challengeRepository.findByUuid(UUID.fromString(identificacion))).thenReturn(Mono.just(challenge));
+	   
+	    
+	    
 
-                ChallengeDocument challenge2 = ChallengeDocument.builder()
-                                .uuid(UUID.fromString("330a49d1-84cb-4e89-adf3-5e439aeb3c41"))
-                                .resources(Set.of(UUID.fromString("3a9a92b9-4e0e-4fda-b4c6-b6d3de0e8e3c"),
-                                                UUID.fromString("0a67c417-03ab-4ad2-8989-7c764bdf2230")))
-                                .build();
+		Mono<List<RelatedDto>> serviceResponse = challengeService.getRelatedChallenge(identificacion);
+  
 
-                when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.empty());
-                when(challengeRepository.save(challenge1))
-                                .thenReturn(Mono.just(challenge1));
-                when(challengeRepository.save(challenge2))
-                                .thenReturn(Mono.just(challenge2));
-
-                // Act
-                boolean result = challengeService.removeResourcesByUuid(resourceId);
-
-                // Assert
-                assertFalse(result);
-
-                verify(challengeRepository, times(0)).save(challenge1);
-                verify(challengeRepository, times(1)).findAllByResourcesContaining(resourceId);
-
-                assertEquals(2, challenge1.getResources().size());
-                assertFalse(challenge1.getResources().contains(resourceId));
-
-                assertEquals(2, challenge2.getResources().size());
-                assertFalse(challenge2.getResources().contains(resourceId));
-        }
-
+        StepVerifier.create(serviceResponse)
+        .expectNextMatches(response -> {
+            assertTrue(response instanceof Mono<?>);
+            assertEquals(response, monoRelated);
+            return true;
+        })
+        .verifyComplete();
+    }
 }

@@ -36,17 +36,17 @@ public class ChallengeController {
     public String test() {
         log.info("** Saludos desde el logger **");
 
-        Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
+ Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map(s -> s.getUri());
+                .map( s -> s.getUri());
 
         log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
 
         Optional<String> services = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map(s -> s.toString());
+                .map( s -> s.toString());
 
         log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
         return "Hello from ITA Challenge!!!";
@@ -58,8 +58,7 @@ public class ChallengeController {
             boolean validUUID = challengeService.isValidUUID(id);
 
             if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
-                        "Invalid ID format. Please indicate the correct format.");
+                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
                 log.error("{} ID: {}, incorrect.", errorMessage, id);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
             }
@@ -77,68 +76,45 @@ public class ChallengeController {
         }
     }
 
+    @DeleteMapping("/resources/{idResource}")
+    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
+        UUID uuidResource = getUUID(idResource);
+        if (challengeService.removeResourcesByUuid(uuidResource)) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private UUID getUUID(String uuidString) throws BadUUIDException {
+        if (uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
+            return UUID.fromString(uuidString);
+        } else {
+            throw new BadUUIDException("Invalid UUID");
+        }
+    }
     @GetMapping(path = "/{challengeId}/related")
-    public Mono<ResponseEntity<List<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id,
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "5") int size) throws Exception {
+   	public Mono<ResponseEntity<List<RelatedDto>>> relatedChallenge(@PathVariable("challengeId") String id) throws Exception{
 
-        try {
-            boolean validUUID = challengeService.isValidUUID(id);
+   		try {
+   			boolean validUUID = challengeService.isValidUUID(id);
 
-            if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
-                        "Invalid ID format. Please indicate the correct format.");
-                log.error("{} ID: {}, incorrect.", errorMessage, id);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
-            }
+   			if (!validUUID) {
+   				ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
+   						"Invalid ID format. Please indicate the correct format.");
+   				log.error("{} ID: {}, incorrect.", errorMessage, id);
+   				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
+   			}
 
-            return challengeService.getRelatedChallengePaginated(id, page, size)
-                    .map(list -> ResponseEntity.ok().body(list))
-                    .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-        }
-    }
-
-    @DeleteMapping("/resources/{idResource}")
-    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
-        UUID uuidResource = getUUID(idResource);
-        if (challengeService.removeResourcesByUuid(uuidResource)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    private UUID getUUID(String uuidString) throws BadUUIDException {
-        if (uuidString
-                .matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
-            return UUID.fromString(uuidString);
-        } else {
-            throw new BadUUIDException("Invalid UUID");
-        }
-    }
-
-    @DeleteMapping("/resources/{idResource}")
-    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
-        UUID uuidResource = getUUID(idResource);
-        if (challengeService.removeResourcesByUuid(uuidResource)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    private UUID getUUID(String uuidString) throws BadUUIDException {
-        if (uuidString
-                .matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
-            return UUID.fromString(uuidString);
-        } else {
-            throw new BadUUIDException("Invalid UUID");
-        }
-    }
+   			return challengeService.getRelatedChallenge(id)
+   					.map(list -> ResponseEntity.ok().body(list))
+   					.switchIfEmpty(Mono.just(ResponseEntity.notFound().build()));
+   		} catch (ResponseStatusException e) {
+   			throw e;
+   		} catch (Exception e) {
+   			log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
+   			return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+   		}
+   	}
 
 }

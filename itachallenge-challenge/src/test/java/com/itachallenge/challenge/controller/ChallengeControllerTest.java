@@ -37,13 +37,12 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 class ChallengeControllerTest {
-    // VARIABLES
+    //VARIABLES
     private final static String VALID_ID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
     private final static String INVALID_ID = "123456789";
     private final static String MESSAGE_INVALID_ID = "Invalid ID format. Please indicate the correct format.";
-    private final static String MESSAGE_INTERNAL_SERVER_ERROR = "INTERNAL SERVER ERROR "
-            + HttpStatus.INTERNAL_SERVER_ERROR.value();
-    // VARIABLES HTTPSTATUS
+    private final static String MESSAGE_INTERNAL_SERVER_ERROR = "INTERNAL SERVER ERROR " + HttpStatus.INTERNAL_SERVER_ERROR.value();
+    //VARIABLES HTTPSTATUS
     private final static HttpStatus OK = HttpStatus.OK;
     private final static HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
     private final static HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -63,7 +62,7 @@ class ChallengeControllerTest {
 
     @Test
     @DisplayName("Test EndPoint: test")
-    void TestEndPoint_test() {
+    void TestEndPoint_test(){
         final String URI_TEST = "/test";
         webTestClient.get()
                 .uri(CHALLENGE_BASE_URL + URI_TEST)
@@ -131,7 +130,7 @@ class ChallengeControllerTest {
 
         verifyService();
     }
-
+    
     @Test
     void testGetOneChallenge_Exception(){
         when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
@@ -146,11 +145,61 @@ class ChallengeControllerTest {
         verifyService();
     }
 
-    private void verifyService() {
+    private void verifyService(){
         verify(challengeService, times(1)).isValidUUID(VALID_ID);
         verify(challengeService, times(1)).getChallengeId(UUID.fromString(VALID_ID));
     }
 
+    @Test
+    void TestDeleteResources_BadRequest(){
+        final String URI_TEST = "/resources/{idResource}";
+        String uuidString = "not a uuid";
+
+        webTestClient.delete()
+                .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
+                .exchange()
+                .expectStatus().isBadRequest();
+        verify(challengeService,times(0)).removeResourcesByUuid(any());
+    }
+
+    @Test
+    void TestDeleteResources_NotFOund(){
+        final String URI_TEST = "/resources/{idResource}";
+        String uuidString = "db30c7d7-59b1-4338-abfc-348bd5528f3b";
+        UUID uuid = UUID.fromString(uuidString);
+
+        //when
+
+        when(challengeService.removeResourcesByUuid(uuid)).thenReturn(false);
+
+        webTestClient.delete()
+                .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+
+        verify(challengeService,times(1)).removeResourcesByUuid(uuid);
+    }
+
+    @Test
+    void TestDeleteResources_OK(){
+        final String URI_TEST = "/resources/{idResource}";
+        String uuidString = "db30c7d7-59b1-4338-abfc-348bd5528f3b";
+        UUID uuid = UUID.fromString(uuidString);
+
+        //when
+
+        when(challengeService.removeResourcesByUuid(uuid)).thenReturn(true);
+
+        webTestClient.delete()
+                .uri(CHALLENGE_BASE_URL + URI_TEST,uuidString)
+                .exchange()
+                .expectStatus()
+                .isOk();
+
+        verify(challengeService,times(1)).removeResourcesByUuid(uuid);
+    }
+    
     @Test
     @DisplayName("Test EndPoint: related")
     void ChallengeRelatedTest_VALID_ID () throws Exception{
@@ -167,55 +216,51 @@ class ChallengeControllerTest {
 				.relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
 				.titleRelatedId("titulo 3")
 				.build();
+		
 
-    @Test
-    void TestDeleteResources_BadRequest() {
-        final String URI_TEST = "/resources/{idResource}";
-        String uuidString = "not a uuid";
+		List<RelatedDto> related = new ArrayList<>();
 
-        webTestClient.delete()
-                .uri(CHALLENGE_BASE_URL + URI_TEST, uuidString)
-                .exchange()
-                .expectStatus().isBadRequest();
-        verify(challengeService, times(0)).removeResourcesByUuid(any());
+		related.add(rel1);
+		related.add(rel2);
+		related.add(rel3);
+		
+        
+
+      doReturn(true).when(challengeService).isValidUUID(VALID_ID);
+      doReturn(Mono.just(related)).when(challengeService).getRelatedChallenge(VALID_ID);
+
+        Mono<ResponseEntity<List<RelatedDto>>> responseRelated = challengeController.relatedChallenge(VALID_ID);
+    	
+
+        StepVerifier.create(responseRelated)
+                .expectNextMatches(response -> {
+                    assertEquals(OK, response.getStatusCode());
+                    assertNotNull(response.getBody());
+                    assertTrue(response.getBody() instanceof List<RelatedDto>);
+                    assertEquals(related, response.getBody());
+                    return true;
+                })
+                .verifyComplete();
+
     }
-
     @Test
-    void TestDeleteResources_NotFOund() {
-        final String URI_TEST = "/resources/{idResource}";
-        String uuidString = "db30c7d7-59b1-4338-abfc-348bd5528f3b";
-        UUID uuid = UUID.fromString(uuidString);
+    @DisplayName("Test EndPoint: related_not_valid_id")
+    void ChallengeRelatedTest_INVALID_ID () {
+              
+    	   doReturn(false).when(challengeService).isValidUUID(INVALID_ID);
 
-        // when
+           ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+               challengeController.relatedChallenge(INVALID_ID);
+           });
 
-        when(challengeService.removeResourcesByUuid(uuid)).thenReturn(false);
+           StepVerifier.create(Mono.just(exception))
+                           .expectNextMatches(resp -> {
+                               assertEquals(BAD_REQUEST.value(), exception.getStatusCode().value());
+                               assertEquals(MESSAGE_INVALID_ID, exception.getReason());
+                               return true;
+                           })
+                                   .verifyComplete();
 
-        webTestClient.delete()
-                .uri(CHALLENGE_BASE_URL + URI_TEST, uuidString)
-                .exchange()
-                .expectStatus()
-                .isNotFound();
-
-        verify(challengeService, times(1)).removeResourcesByUuid(uuid);
-    }
-
-    @Test
-    void TestDeleteResources_OK() {
-        final String URI_TEST = "/resources/{idResource}";
-        String uuidString = "db30c7d7-59b1-4338-abfc-348bd5528f3b";
-        UUID uuid = UUID.fromString(uuidString);
-
-        // when
-
-        when(challengeService.removeResourcesByUuid(uuid)).thenReturn(true);
-
-        webTestClient.delete()
-                .uri(CHALLENGE_BASE_URL + URI_TEST, uuidString)
-                .exchange()
-                .expectStatus()
-                .isOk();
-
-        verify(challengeService, times(1)).removeResourcesByUuid(uuid);
-    }
+       }
 
 }
