@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.mongodb.BasicDBObject;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,13 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
     @Autowired
     private IChallengeService challengeService;
-    @Autowired
-    private MongoTemplate mongoTemplate;
+//    @Autowired
+//    private MongoTemplate mongoTemplate;
+
+/*    @PostMapping("/")
+    public ChallengeDto save(@RequestBody ChallengeDto challengeDto) {
+        return challengeService.save(challengeDto);
+    }*/
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")

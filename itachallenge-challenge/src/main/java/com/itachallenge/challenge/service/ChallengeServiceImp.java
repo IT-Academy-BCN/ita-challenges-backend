@@ -14,6 +14,8 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+//import static com.itachallenge.challenge.repository.ChallengeRepository.mongoTemplate;
+
 @Service
 public class ChallengeServiceImp implements IChallengeService {
     //VARIABLES
@@ -35,7 +37,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
 
-    public boolean removeResourcesByUuid(UUID idResource){
+    public boolean removeResourcesByUuid(UUID idResource) {
         Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);
 
         return challengeFlux.flatMap(challenge -> {
@@ -49,4 +51,9 @@ public class ChallengeServiceImp implements IChallengeService {
                 .orElse(false);
     }
 
+/*    public ChallengeDto save(ChallengeDto challengeDto) {
+        //BasicDBObject object = new BasicDBObject();
+        //object.append("key", challengeDto.getChallengeId());
+        return mongoTemplate.save(challengeDto);
+    }*/
 }

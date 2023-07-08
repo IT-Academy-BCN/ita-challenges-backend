@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,12 @@ import java.util.UUID;
 
 @Repository
 public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDocument, UUID> {
+
+/*    @Autowired
+    MongoTemplate mongoTemplate;
+    public Employee save(Employee emp) {
+        return  mongoTemplate.save(emp);
+    }*/
 
     Mono<Boolean> existsByUuid(UUID uuid);
 
