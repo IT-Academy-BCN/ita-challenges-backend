@@ -2,7 +2,7 @@
 
 ### Versiones necesarias
 
-- Gradle 7.4.1
+- Gradle 8.1.1
 - Java 17.0.1
 
 ### Módulos del proyecto
@@ -10,7 +10,7 @@
 - [itachallenge-challenge](itachallenge-challenge/README.md).
 - [itachallenge-score](itachallenge-score/README.md). 
 - [itachallenge-user](itachallenge-user/README.md).
-- [Consul](consul/README.md). Gestión de contenedores.
+- [Consul](consul/README.md). Gestión de microservicios.
 
 <hr/>
 

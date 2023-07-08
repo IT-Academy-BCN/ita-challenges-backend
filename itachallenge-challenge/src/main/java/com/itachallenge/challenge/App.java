@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 @OpenAPIDefinition(info = @Info(title = "Ita Backend Challenges", version = "1.0", description = "Description"))
 public class App {
 

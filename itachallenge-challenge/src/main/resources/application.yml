@@ -1,11 +1,15 @@
 spring:
   application:
     name: itachallenge-challenge
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
   data:
     mongodb:
-      uri: mongodb://adminChallenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+      uuid-representation: standard
 
 springdoc:
   swagger-ui:
@@ -40,3 +44,6 @@ logging:
 #  file:
 #    name: itachallenge-challenge.log
 
+url:
+  connection_timeout: 30000
+  maxBytesInMemory: 30000000
