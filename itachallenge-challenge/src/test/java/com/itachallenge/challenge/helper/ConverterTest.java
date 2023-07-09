@@ -4,6 +4,8 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -135,6 +138,25 @@ public class ConverterTest {
         }
 
         return validate;
+    }
+    
+    @Test
+    public void testToRelatedDto() {
+    	//Variables
+		ChallengeDocument challenge = ChallengeDocument.builder()
+				.uuid(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0")).title("Primer Titulo")
+				.relatedChallenges(Set.of
+						(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"),
+						UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"),
+						UUID.fromString("f71e51d-1e3e-44a2-bc97-158021f1a344")))
+				.build();
+
+        // Tests
+        RelatedDto result = Converter.toRelatedDto(challenge);
+
+        // Asserts
+        assertEquals(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"), result.getRelatedId());
+        assertEquals("Primer Titulo", result.getTitleRelatedId());
     }
 
 }

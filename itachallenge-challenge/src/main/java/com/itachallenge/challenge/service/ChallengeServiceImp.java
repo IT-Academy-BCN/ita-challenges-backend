@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import io.micrometer.common.util.StringUtils;
@@ -48,5 +49,17 @@ public class ChallengeServiceImp implements IChallengeService {
                 .blockOptional()
                 .orElse(false);
     }
+    @Override
+    public Flux<RelatedDto> getRelatedChallenge(String challengeId) {
+    	
+    	return challengeRepository.findByUuid(UUID.fromString(challengeId))
+    	        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
+    	        .flatMap(uuid -> challengeRepository.findByUuid(uuid))
+    	        .map(Converter::toRelatedDto)
+    	        .onErrorResume(throwable ->
+                        Flux.empty());
+
+
+	}
 
 }

@@ -2,7 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
-
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -165,5 +165,29 @@ class ChallengeServiceImpTest {
         assertEquals(2, challenge2.getResources().size());
         assertFalse(challenge2.getResources().contains(resourceId));
     }
+    @Test
+	void TestGetRelatedChallenge() {
+		//variables
+		ChallengeDocument challenge = ChallengeDocument.builder()
+				.uuid(UUID.randomUUID()).title("Primer Titulo")
+				.relatedChallenges(Set.of
+						(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"),
+						UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"),
+						UUID.fromString("f71e51d-1e3e-44a2-bc97-158021f1a344")))
+				.build();
 
+		UUID thisId = challenge.getUuid();
+		
+		//mocks
+		when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(challenge));
+				
+		//Tests
+		Flux<RelatedDto> serviceResponse = challengeService.getRelatedChallenge("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
+
+		StepVerifier.create(serviceResponse)
+		.expectNextMatches(response -> response.getTitleRelatedId().equals("Primer Titulo")
+							&& response.getRelatedId().equals(thisId)
+					         && response instanceof RelatedDto);
+
+	}
 }
