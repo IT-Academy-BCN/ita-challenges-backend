@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -51,23 +49,18 @@ public class ChallengeServiceImp implements IChallengeService {
                 .blockOptional()
                 .orElse(false);
     }
-    public Mono<List<RelatedDto>> getRelatedChallenge(String challengeId) {
+    
+    @Override
+    public Flux<RelatedDto> getRelatedChallenge(String challengeId) {
     	
     	return challengeRepository.findByUuid(UUID.fromString(challengeId))
-    		    .flatMap(challenge -> Mono.just(challenge.getRelatedChallenges())
-    		        .flatMapIterable(Function.identity())
-    		        .flatMap(id -> challengeRepository.findByUuid(id))
-    		        .map(Converter::toRelatedDto)
-    		        .collectList()
-    		    );
-		//Mono<List<RelatedDto>> related = null;
-	
-		/*related = Mono.from(challengeRepository.findByUuid(UUID.fromString(challengeId)))
-				.getRelatedChallenges()
-				.stream()
-				.map(id -> Converter.toRelatedDto(Flux.from(challengeRepository.findById(id).block())))
-				.collect(Collectors.toList());
-				return related;*/
+    	        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
+    	        .flatMap(uuid -> challengeRepository.findByUuid(uuid))
+    	        .map(Converter::toRelatedDto)
+    	        .onErrorResume(throwable -> {
+                       return Flux.empty();
+                });
+
 
 	}
 

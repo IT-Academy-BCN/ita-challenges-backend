@@ -21,11 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.server.ResponseStatusException;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -216,31 +216,23 @@ class ChallengeControllerTest {
 				.relatedId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
 				.titleRelatedId("titulo 3")
 				.build();
-		
+		when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
+        when(challengeService.getRelatedChallenge(VALID_ID)).thenReturn(Flux.just(rel1, rel2, rel3));
 
-		List<RelatedDto> related = new ArrayList<>();
-
-		related.add(rel1);
-		related.add(rel2);
-		related.add(rel3);
-		
-        
-
-      doReturn(true).when(challengeService).isValidUUID(VALID_ID);
-      doReturn(Mono.just(related)).when(challengeService).getRelatedChallenge(VALID_ID);
-
-        Mono<ResponseEntity<List<RelatedDto>>> responseRelated = challengeController.relatedChallenge(VALID_ID);
+      Flux<ResponseEntity<RelatedDto>> responseRelated = challengeController.relatedChallenge(VALID_ID);
     	
+      StepVerifier.create(responseRelated)
+      .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK)
+              && response.getBody() instanceof RelatedDto
+              && ((RelatedDto) response.getBody()).getRelatedId().equals(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197")))
+      .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK)
+              && response.getBody() instanceof RelatedDto
+              && ((RelatedDto) response.getBody()).getRelatedId().equals(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0")))
+      .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK)
+              && response.getBody() instanceof RelatedDto
+              && ((RelatedDto) response.getBody()).getRelatedId().equals(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344")))
+      .verifyComplete();
 
-        StepVerifier.create(responseRelated)
-                .expectNextMatches(response -> {
-                    assertEquals(OK, response.getStatusCode());
-                    assertNotNull(response.getBody());
-                    assertTrue(response.getBody() instanceof List<RelatedDto>);
-                    assertEquals(related, response.getBody());
-                    return true;
-                })
-                .verifyComplete();
 
     }
     @Test
