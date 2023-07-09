@@ -111,9 +111,11 @@ public class ChallengeController {
 					.map(relateddto -> ResponseEntity.ok().body(relateddto))
 					.defaultIfEmpty(ResponseEntity.notFound().build());
 
-		} catch (ResponseStatusException e) {
-			throw e;
-
-		}
+		  } catch (ResponseStatusException e) {
+	            throw e;
+	        } catch (Exception e) {
+	            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
+	            return Flux.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
+	        }
 	}
 }

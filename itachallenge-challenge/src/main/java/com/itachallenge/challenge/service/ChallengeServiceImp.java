@@ -57,9 +57,8 @@ public class ChallengeServiceImp implements IChallengeService {
     	        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
     	        .flatMap(uuid -> challengeRepository.findByUuid(uuid))
     	        .map(Converter::toRelatedDto)
-    	        .onErrorResume(throwable -> {
-                       return Flux.empty();
-                });
+    	        .onErrorResume(throwable ->
+                        Flux.empty());
 
 
 	}
