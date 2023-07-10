@@ -13,3 +13,5 @@ a
 1itachallenge-challenge/challenge/build.gradle.kts,0\a\0afd4b1953db247e88a0d7dabc297cda437c7bdc
 t
 Ditachallenge-challenge/challenge/src/main/java/org/example/Main.java,e\8\e852a5418cdb46864883fa542983bc8efad8c3d9
+x
+Hitachallenge-user/src/main/java/com/itachallenge/user/document/User.java,1\c\1ce792f4bef075295da0f841d2d91cdced1af775
