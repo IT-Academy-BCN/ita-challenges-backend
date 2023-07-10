@@ -5,16 +5,14 @@
 1. [**PROJECT'S LINKS**](#1-projec-s-links)\
    1.1 [Project's Links](#11-project-links) 
 
-2. [**WORK PROCEDURES**](#2-work-procedures)
-
+2. [**WORK PROCEDURES**](#2-work-procedures)\
    2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
    2.2 [Daily Procedure](#22-daily-procedure)\
    2.3 [Work with cards Procedure](#23-work-with-cards-procedure)\
    2.4 [Points to consider when doing a PR](#24-points-to-consider-when-doing-a-pr)\
    2.5 [Scrum metodology](#25-scrum-metodology)
 
-3. [**URL NORMALIZATION**](#3-url-normalization)
-
+3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Convencions](#31-convencions)
 
 4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)\
@@ -30,17 +28,15 @@
    4.6 [Type variable names](#46-type-variable-names)\
    4.7 [Camel case: defined](#47-camel-case:-defined)  
    
-5. [**LIBRARIES USED**](#5-libraries-used)
-   5.1 [Main Plugins](#51-main-plugins) 
-   5.2 [Implementation area](#52-implementation-area)
+5. [**LIBRARIES USED**](#5-libraries-used)\
+   5.1 [Main Plugins](#51-main-plugins)\
+   5.2 [Implementation area](#52-implementation-area)\
    5.3 [Testimplementation area](#53-testimplementation-area)
 
-6. [**REQUIRED PROGRAMS**](#6-required-programs)
-
+6. [**REQUIRED PROGRAMS**](#6-required-programs)\
    6.1 [Requierd programs](#61-required-programs)
 
-7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)
-
+7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
 ----------------------------------------------------------------
