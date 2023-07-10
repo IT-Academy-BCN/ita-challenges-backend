@@ -40,8 +40,8 @@ public class MapperTest {
         int[] idsLanguages = new int[]{1, 2};
         String[] languageNames = new String[]{"name1", "name2"};
 
-        languageDocument = getLanguageMocked(idsLanguages[0], languageNames[0]);
-        languageDocument2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
+        languageDocument = getLanguageMocked(UUID.randomUUID(), languageNames[0]);
+        languageDocument2 = getLanguageMocked(UUID.randomUUID(), languageNames[1]);
 
         challengeDoc1 = getChallengeMocked(challengeRandomId, title, level,
                 Set.of(languageDocument, languageDocument2), creationDate);
@@ -122,7 +122,7 @@ public class MapperTest {
         return challengeIMocked;
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);

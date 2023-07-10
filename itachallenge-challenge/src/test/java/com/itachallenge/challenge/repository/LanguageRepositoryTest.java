@@ -54,8 +54,8 @@ class LanguageRepositoryTest {
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
 
-        LanguageDocument language = new LanguageDocument(1, "Java", UUIDSet);
-        LanguageDocument language2 = new LanguageDocument(2, "Python", UUIDSet2);
+        LanguageDocument language = new LanguageDocument(UUID.randomUUID(), "Java");
+        LanguageDocument language2 = new LanguageDocument(UUID.randomUUID(), "Python");
         Set<LanguageDocument> languageSet = new HashSet<>(Arrays.asList(language2, language));
 
         languageRepository.saveAll(Flux.just(language, language2)).blockLast();

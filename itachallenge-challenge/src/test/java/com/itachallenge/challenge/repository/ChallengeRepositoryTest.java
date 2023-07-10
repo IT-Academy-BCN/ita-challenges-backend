@@ -62,26 +62,25 @@ class ChallengeRepositoryTest {
         ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
 
-        int[] idsLanguages = new int[]{1, 2};
         String[] languageNames = new String[]{"name1", "name2"};
-        LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
-        LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
+        LanguageDocument language1 = getLanguageMocked(UUID.randomUUID(), languageNames[0]);
+        LanguageDocument language2 = getLanguageMocked(UUID.randomUUID(), languageNames[1]);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
-        List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
+        Set<UUID> solutionList = Set.of(UUID.randomUUID(),UUID.randomUUID());
 
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Level 1", "Loops", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, "Level 1", "Loops", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "Level 2", "If", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, "Level 2", "If", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
 
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);

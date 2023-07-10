@@ -2,9 +2,11 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.challenge.document.DetailDocument;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,13 +38,26 @@ public class ChallengeDto{
     private String creationDate;
 
     @JsonProperty(index = 4)
-    private Integer popularity;
+    private DetailDocument detail;
 
     @JsonProperty(index = 5)
-    private Float percentage;
+    private Set<LanguageDto> languages;
 
     @JsonProperty(index = 6)
-    private Set<LanguageDto> languages;
+    private Set<UUID> solutions;
+
+    @JsonProperty(index = 7)
+    private Set<UUID> resources;
+
+    @JsonProperty(value = "related", index = 8)
+    private Set<UUID> relatedChallenges;
+
+    // Info a obtener del micro score
+    @JsonProperty(index = 9)
+    private Integer popularity;
+
+    @JsonProperty(index = 10)
+    private Float percentage;
 
     /*
     TODO: ADD more fields "on demand" (when needed)

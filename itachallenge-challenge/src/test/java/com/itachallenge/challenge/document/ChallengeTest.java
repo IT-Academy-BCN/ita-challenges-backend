@@ -22,14 +22,14 @@ public class ChallengeTest {
     @Test
     void getLevel() {
         String level = "Intermediate";
-        ChallengeDocument challenge = new ChallengeDocument(null, level, null, null, null, null, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, level, null, null, null, null, null, null);
         assertEquals(level, challenge.getLevel());
     }
 
     @Test
     void getTitle() {
         String title = "Test Challenge";
-        ChallengeDocument challenge = new ChallengeDocument(null, null, title, null, null, null, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, title, null, null, null, null, null, null, null);
         assertEquals(title, challenge.getTitle());
     }
 
@@ -37,16 +37,16 @@ public class ChallengeTest {
     void getLanguages() {
         UUID uuid = UUID.randomUUID();
         Set<UUID> uuidSet = Set.of(uuid);
-        Set<LanguageDocument> languages = Set.of(new LanguageDocument(1, "Java", uuidSet), new LanguageDocument(2, "Python", uuidSet));
+        Set<LanguageDocument> languages = Set.of(new LanguageDocument(UUID.randomUUID(), "Java"), new LanguageDocument(UUID.randomUUID(), "Python"));
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, languages, null, null, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, null, null);
         assertEquals(languages, challenge.getLanguages());
     }
 
     @Test
     void getCreationDate() {
         LocalDateTime creationDate = now();
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, creationDate, null, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, creationDate, null, null, null, null, null);
         assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getCreationDate().truncatedTo(ChronoUnit.SECONDS)));
 
 
@@ -55,13 +55,13 @@ public class ChallengeTest {
     @Test
     void getDetail() {
         DetailDocument detail = new DetailDocument(null, null, null);
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, detail, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null, null, null);
         assertEquals(detail, challenge.getDetail());
     }
 
     @Test
     void getSolutions() {
-        List<UUID> solutions = List.of(UUID.randomUUID(),UUID.randomUUID());
+        Set<UUID> solutions = Set.of(UUID.randomUUID(), UUID.randomUUID());
 
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, solutions, null, null);
         assertEquals(solutions, challenge.getSolutions());

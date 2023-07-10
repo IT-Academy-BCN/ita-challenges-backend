@@ -47,8 +47,8 @@ public class ConverterTest {
         int[] idsLanguages = new int[]{1, 2};
         String[] languageNames = new String[]{"name1", "name2"};
 
-        languageMocked1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
-        languageMocked2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
+        languageMocked1 = getLanguageMocked(UUID.randomUUID(), languageNames[0]);
+        languageMocked2 = getLanguageMocked(UUID.randomUUID(), languageNames[1]);
 
         challengeMocked1 = getChallengeMocked(challengeRandomId, title, level,
                 Set.of(languageMocked1, languageMocked2),creationDate);
@@ -57,7 +57,7 @@ public class ConverterTest {
 
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
