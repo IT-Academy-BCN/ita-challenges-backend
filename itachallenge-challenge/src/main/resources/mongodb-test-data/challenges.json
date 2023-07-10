@@ -1,61 +1,102 @@
 [
-    {
-      "_id" : {
-        "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
-      },
-      "challenge_title": "Sociis Industries",
-      "level": "EASY",
-      "creation_date": { "$date": "2018-09-09T11:43:54+0200"},
-      "detail": {
-        "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
-        "examples": [
-          {
-            "_id" : {
-              "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-            },
-            "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
-          },
-          {
-            "_id" : {
-              "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-            },
-            "example_text": " Aliquam nec nisi maximus, venenatis"
-          },
-          {
-
-            "_id" : {
-              "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-            },
-            "example_text": "Mauris feugiat massa et suscipit malesuada."
-          },
-          {
-            "_id" : {
-              "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-            },
-            "example_text": "Aenean quis maximus purus. Quisque sit amet"
-          }
-        ],
-        "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
-      },
-      "languages": [
-        {"$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"}
-      ],
-      "solutions": [
-        {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
-        {"$uuid": "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"},
-        {"$uuid": "998bc504-265d-40a4-b579-62feacc3c8cd"}
-      ],
-      "resources": [
-        {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
-        {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
-        {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
-      ],
-      "related": [
-        {"$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"},
-        {"$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
-        {"$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"}
-      ]
+  {
+    "_id" : {
+      "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
     },
+    "challenge_title": "Sociis Industries",
+    "level": "EASY",
+    "creation_date": { "$date": "2018-09-09T11:43:54+0200"},
+    "detail": {
+      "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
+      "examples": [
+        {
+          "_id" : {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+        },
+        {
+          "_id" : {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": " Aliquam nec nisi maximus, venenatis"
+        },
+        {
+
+          "_id" : {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": "Mauris feugiat massa et suscipit malesuada."
+        },
+        {
+          "_id" : {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": "Aenean quis maximus purus. Quisque sit amet"
+        }
+      ],
+      "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
+    },
+    "languages": [
+      {
+        "_id" : {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
+      }
+    ],
+    "solutions": [
+      {
+        "_id" : {
+          "$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "998bc504-265d-40a4-b579-62feacc3c8cd"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "_id" : {
+          "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
+        }
+      },
+      {
+        "_id" :  {
+          "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
+        }
+      }
+    ],
+    "related": [
+      {
+        "_id": {
+          "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"
+        }
+      },
+      {
+        "_id" :  {
+          "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+        }
+      }
+    ]
+  },
   {
     "_id": {
       "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
@@ -94,23 +135,61 @@
       "note": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur vitae sem elementum, tincidunt quam in, aliquet ipsum."
     },
     "languages": [
-      {"$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
-      {"$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"}
+      {
+        "_id" : {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      },
+      {
+        "_id" : {
+          "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+        },
+        "language_name": "Python"
+      }
     ],
     "solutions": [
-      {"$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
-      {"$uuid": "7e181ec8-3f9a-4e43-a75c-8319e245ccee"},
-      {"$uuid": "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
+      {
+        "_id" : {
+          "$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"
+        }
+      },
+      {"_id" : {
+        "$uuid": "7e181ec8-3f9a-4e43-a75c-8319e245ccee"
+      }
+      },
+      {"_id" : {
+        "$uuid": "a7a789a9-2006-4b59-94bb-3afe0d1c161d"
+      }
+      }
     ],
     "resources": [
-      {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
-      {"$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"},
-      {"$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"}
+      {"_id" : {
+        "$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"
+      }
+      },
+      {"_id" : {
+        "$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"
+      }
+      },
+      {"_id" : {
+        "$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"
+      }
+      }
     ],
     "related": [
-      {"$uuid": "9f85c579-c84f-40c6-a593-81ff3d9e5873"},
-      {"$uuid": "3e93fdd6-5c7a-4b12-9b64-96488ccbe2ae"},
-      {"$uuid": "f02b0577-b059-4f26-a2ad-b09a0a7e9905"}
+      {"_id" : {
+        "$uuid": "9f85c579-c84f-40c6-a593-81ff3d9e5873"
+      }
+      },
+      {"_id" : {
+        "$uuid": "3e93fdd6-5c7a-4b12-9b64-96488ccbe2ae"
+      }
+      },
+      {"_id" : {
+        "$uuid": "f02b0577-b059-4f26-a2ad-b09a0a7e9905"
+      }
+      }
     ]
   },
   {
@@ -151,23 +230,59 @@
       "note": "Nulla finibus ligula in ante molestie, ac lacinia arcu volutpat."
     },
     "languages": [
-      {"$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
-      {"$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"}
+      {"_id" : {
+        "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+      },
+        "language_name": "Java"
+      },
+      {
+        "_id" : {
+          "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
+        },
+        "language_name": "PHP"
+      }
     ],
     "solutions": [
-      {"$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"},
-      {"$uuid": "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"_id" : {
+        "$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"
+      }
+      },
+      {"_id" : {
+        "$uuid": "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"
+      }
+      },
+      {"_id" : {
+        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
+      }
+      }
     ],
     "resources": [
-      {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
-      {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
-      {"$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"}
+      {"_id" : {
+        "$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"
+      }
+      },
+      {"_id" : {
+        "$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
+      }
+      },
+      {"_id" : {
+        "$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"
+      }
+      }
     ],
     "related": [
-      {"$uuid": "6a13e0a4-1a15-4c5c-8c37-8445f1ef8e7c"},
-      {"$uuid": "e4486b46-41c2-4d0f-b4f7-ec01c2e647f1"},
-      {"$uuid": "3f9c7f43-00b5-41a7-bd9e-1b1d8ef648c8"}
+      {"_id" : {
+        "$uuid": "6a13e0a4-1a15-4c5c-8c37-8445f1ef8e7c"
+      }
+      },
+      {"_id" : {
+        "$uuid": "e4486b46-41c2-4d0f-b4f7-ec01c2e647f1"
+      }
+      },
+      {"_id" : {
+        "$uuid": "3f9c7f43-00b5-41a7-bd9e-1b1d8ef648c8"
+      }
+      }
     ]
   },
   {
@@ -176,7 +291,9 @@
     },
     "challenge_title": "Coding Challenge",
     "level": "INTERMEDIATE",
-    "creation_date": { "$date": "2018-09-09T11:43:54+0200" },
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
     "detail": {
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ultricies sapien sed neque condimentum sagittis.",
       "examples": [
@@ -208,23 +325,70 @@
       "note": "Proin id mi consequat, ullamcorper neque in, venenatis ligula."
     },
     "languages": [
-      {"$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
-      {"$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"}
+      {
+        "_id" : {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
+
+      },
+      {
+        "_id" : {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+
+      }
     ],
     "solutions": [
-      {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
-      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
-      {"$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
+      {
+        "_id" : {
+          "$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
+        }
+      }
     ],
     "resources": [
-      {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
-      {"$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"},
-      {"$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"}
+      {"_id" : {
+        "$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"
+      }
+      },
+      {
+        "_id" : {
+          "$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"
+        }
+      }
     ],
     "related": [
-      {"$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"},
-      {"$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
-      {"$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"}
+      {
+        "_id" : {
+          "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"
+        }
+      },
+      {
+        "_id" : {
+          "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"
+        }
+      }
     ]
   }
 ]

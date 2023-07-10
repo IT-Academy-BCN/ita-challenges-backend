@@ -15,5 +15,7 @@
 * Anderson Zolis - https://github.com/anderson92zolis
 * Dario Rucker - https://github.com/darucker
 * Milos Vasovic - https://github.com/vaskebcn
+* Annia Kuzmina - https://github.com/anniakuz
+* Susana Portabella - https://github.com/SPortabella
 
 
