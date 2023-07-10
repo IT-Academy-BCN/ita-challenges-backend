@@ -247,8 +247,6 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 - `/challenges/{challengeId}` - Obtener los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
 - `/challenges/{challengeId}/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
 
-## LINKS
-[Code Conventions for the Java Programming Language](https://www.oracle.com/java/technologies/javase/codeconventions-contents.html)
 
 ----------------------------------------------------------------
 
