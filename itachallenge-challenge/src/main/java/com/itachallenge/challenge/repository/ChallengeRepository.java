@@ -50,4 +50,41 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     List<Employee> findByNameOrderByDepartment(String name);*/
 
-}
+
+    /*PAGINATION:
+    @Override
+    public List<Person> getAllPersonPaginated(int pageNumber, int pageSize) {
+        Query query = new Query();
+        query.skip(pageNumber * pageSize);
+        query.limit(pageSize);
+        return mongoTemplate.find(query, Person.class);
+    }*/
+
+
+/*    // Find list of employees with salary between value1 and value2
+    @Query("{ $and: [ {salary : { $gt :  ?0 }}, { salary : { $lt :  ?1 } } ]}")
+    List<Employee> findEmployeesBetween(Double salary1, Double salary2);*/
+
+/*
+    Mono<NoteList> findAllNotes(String userId);
+
+    Mono<NoteList> findAllNotesAndPaginate(String userId, int page, int limit);
+*/
+
+
+/*    @Override
+    public Mono<NoteList> findAllNotesAndPaginate(String userId, int page, int limit) {
+        // approach 1. data layer pagination
+        // return repository.findByUserId(userId, PageRequest.of(page, limit)).map(list->new NoteList(list, 0));
+
+        // approach 2. service layer pagination
+        return repository.findByUserId(userId).collectList().map(list -> {
+            int total = list.size();
+            int start = (page - 1) * limit;
+            List<Note> notes = list.stream().skip(start).limit(limit).collect(Collectors.toList());
+            NoteList result = new NoteList(notes, total);
+            return result;
+        });*/
+
+
+    }
