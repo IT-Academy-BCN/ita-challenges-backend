@@ -16,6 +16,7 @@ public class UserHashService {
     private final UserRedisRepository userRedisRepository;
 
     public Flux<UserHash> prueba(){
+
         UserHash user = UserHash.builder()
                 .uuid(UUID.randomUUID())
                 .name("John")
@@ -26,8 +27,10 @@ public class UserHashService {
                 .roles(Arrays.asList(Role.ADMIN, Role.USER))
                 .build();
 
+
         userRedisRepository.save(user);
 
-        return Flux.fromIterable(userRedisRepository.findAll().values());
+
+        return userRedisRepository.findAll();
     }
 }

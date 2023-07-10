@@ -1,8 +1,7 @@
 package com.itachallenge.user.hash;
 
 import com.itachallenge.user.document.Role;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
@@ -11,7 +10,10 @@ import java.util.UUID;
 
 @RedisHash
 @Builder
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserHash implements Serializable {
     private UUID uuid;
     private String name;
