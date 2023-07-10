@@ -38,7 +38,10 @@
         "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
       },
       "languages": [
-        {"$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"}
+        {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f",
+          "language_name": "Javascript"
+        }
       ],
       "solutions": [
         {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
@@ -94,8 +97,14 @@
       "note": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur vitae sem elementum, tincidunt quam in, aliquet ipsum."
     },
     "languages": [
-      {"$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
-      {"$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"}
+      {
+        "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+        "language_name": "Java"
+      },
+      {
+        "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef",
+        "language_name": "Python"
+      }
     ],
     "solutions": [
       {"$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
@@ -151,8 +160,14 @@
       "note": "Nulla finibus ligula in ante molestie, ac lacinia arcu volutpat."
     },
     "languages": [
-      {"$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
-      {"$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"}
+      {
+        "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+        "language_name": "Java"
+      },
+      {
+        "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909",
+        "language_name": "PHP"
+      }
     ],
     "solutions": [
       {"$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"},
@@ -208,8 +223,14 @@
       "note": "Proin id mi consequat, ullamcorper neque in, venenatis ligula."
     },
     "languages": [
-      {"$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
-      {"$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"}
+      {
+        "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f",
+        "language_name": "Javascript"
+      },
+      {
+        "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+        "language_name": "Java"
+      }
     ],
     "solutions": [
       {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
