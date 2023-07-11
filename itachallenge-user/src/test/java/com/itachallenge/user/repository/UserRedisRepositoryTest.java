@@ -11,7 +11,9 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +35,6 @@ class UserRedisRepositoryTest {
     private PasswordEncoder passwordEncoder;
 
     private UserHash user1, user2;
-    private UUID uuid1, uuid2;
 
     @DynamicPropertySource
     static void configureProperties(DynamicPropertyRegistry registry) {
@@ -54,7 +55,7 @@ class UserRedisRepositoryTest {
 
     @BeforeEach
     void setUp(){
-        userRedisRepository.deleteAll();
+        userRedisRepository.deleteAll().block();
 
         user1 = UserHash.builder()
                 .uuid(UUID.fromString("5cd86107-ef39-4a24-b6ee-77d5bd176e2d"))
@@ -71,24 +72,97 @@ class UserRedisRepositoryTest {
                 .email("Dani@delaossa.com")
                 .name("Dani")
                 .surname("Delaossa")
+                .nickname("Della")
                 .roles(List.of(Role.ADMIN))
                 .password(passwordEncoder.encode("playaVirginia"))
                 .build();
 
-        this.uuid1 = user1.getUuid();
-        this.uuid2 = user2.getUuid();
-
-        userRedisRepository.save(user1);
-        userRedisRepository.save(user2);
+        userRedisRepository.save(user1).block();
+        userRedisRepository.save(user2).block();
     }
 
     @Test
-    @DisplayName("Delete User")
+    @DisplayName("Should Delete User")
     void shouldDeleteUser(){
+        //when
         userRedisRepository.deleteByUuid(user1.getUuid()).block();
 
+        //should
         userRedisRepository.findByUuid(user1.getUuid()).blockOptional().ifPresent(u -> fail("The user hasn't been deleted"));
-
     }
+
+    @Test
+    @DisplayName("Should Save User")
+    void shouldSaveUser(){
+        UUID uuid = UUID.randomUUID();
+        UserHash userHash = UserHash.builder()
+                .uuid(uuid)
+                .name("Test")
+                .surname("Test2")
+                .roles(List.of(Role.USER))
+                .nickname("TestJR")
+                .email("test@dummy.com")
+                .password(passwordEncoder.encode("dummyPass"))
+                .build();
+
+
+        userRedisRepository.save(userHash).block();
+        Mono<UserHash> found = userRedisRepository.findByUuid(uuid);
+
+        StepVerifier.create(found)
+                .expectNext(userHash)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should Exist")
+    void shouldExist(){
+        Mono<Boolean> exist = userRedisRepository.existsByUuid(user2.getUuid());
+        StepVerifier.create(exist)
+                .expectNext(true)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should Not Exist")
+    void shouldNotExist(){
+        Mono<Boolean> exist = userRedisRepository.existsByUuid(UUID.randomUUID());
+        StepVerifier.create(exist)
+                .expectNext(false)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should find by uuid")
+    void shouldFindByUuid(){
+        Mono<UserHash> found = userRedisRepository.findByUuid(user2.getUuid());
+        StepVerifier.create(found)
+                .expectNext(user2)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should not find by uuid")
+    void shouldNotFindByUuid(){
+        Mono<UserHash> found = userRedisRepository.findByUuid(UUID.randomUUID());
+        StepVerifier.create(found)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("Should delete all")
+    void shouldDeleteAll(){
+        userRedisRepository.deleteAll().block();
+        Flux<UserHash> shouldBeEmpty = userRedisRepository.findAll();
+        StepVerifier.create(shouldBeEmpty)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+
+
+
+
 
 }

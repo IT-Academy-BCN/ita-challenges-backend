@@ -1,16 +1,16 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
-import com.itachallenge.user.hash.UserHash;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
-import com.itachallenge.user.service.UserHashService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -24,8 +24,6 @@ public class UserController {
     @Autowired
     ServiceChallengeStatistics serviceChallengeStatistics;
 
-    @Autowired
-    UserHashService userHashService;
 
     //endregion ATTRIBUTES
 
@@ -61,26 +59,6 @@ public class UserController {
         // OUT
         return elements;
 
-    }
-
-    @PostMapping("/hazRandom")
-    public Mono<UserHash> hazrandom(){
-        return userHashService.hazrandom();
-    }
-
-    @GetMapping("/dameuno/{id}")
-    public Mono<UserHash> dameuno(@PathVariable String id){
-        return userHashService.getone(UUID.fromString(id));
-    }
-
-    @GetMapping("/dametodo")
-    public Flux<UserHash> dametodo(){
-        return userHashService.getall();
-    }
-
-    @DeleteMapping("/borrauno/{id}")
-    public Mono<Void> borraUno(@PathVariable String id){
-        return userHashService.borraUno(UUID.fromString(id));
     }
 
     //endregion ENDPOINTS
