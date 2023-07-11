@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
+import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
     @Autowired
     private IChallengeService challengeService;
+
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
@@ -94,28 +96,18 @@ public class ChallengeController {
             throw new BadUUIDException("Invalid UUID");
         }
     }
+    
 	@GetMapping(path = "/{challengeId}/related")
 	public Flux<ResponseEntity<RelatedDto>> relatedChallenge(@PathVariable("challengeId") String id) throws Exception {
 
-		try {
-			boolean validUUID = challengeService.isValidUUID(id);
+		if (!UuidValidator.isValidUUID(id)) {
+			log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.", id);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Invalid ID format. Please indicate the correct format.");
+		}
+		return challengeService.getRelatedChallenge(id).map(relateddto -> ResponseEntity.ok().body(relateddto))
+				.defaultIfEmpty(ResponseEntity.notFound().build());
 
-			if (!validUUID) {
-				ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(),
-						"Invalid ID format. Please indicate the correct format.");
-				log.error("{} ID: {}, incorrect.", errorMessage, id);
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
-			}
-			return challengeService.getRelatedChallenge(id)
-					.map(relateddto -> ResponseEntity.ok().body(relateddto))
-					.defaultIfEmpty(ResponseEntity.notFound().build());
-
-		  } catch (ResponseStatusException e) {
-	            throw e;
-	        } catch (Exception e) {
-	            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-	            return Flux.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-	        }
 	}
 
 }
