@@ -4,12 +4,12 @@ import com.itachallenge.user.hash.UserHash;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
@@ -24,15 +24,24 @@ public class RedisConfig {
 
 
     @Bean
-    ReactiveRedisOperations<String, UserHash> redisOperations(ReactiveRedisConnectionFactory factory) {
-        Jackson2JsonRedisSerializer<UserHash> serializer = new Jackson2JsonRedisSerializer < > (UserHash.class);
+    public ReactiveRedisOperations<String, UserHash> redisOperations(ReactiveRedisConnectionFactory factory) {
+        Jackson2JsonRedisSerializer<UserHash> serializer = new Jackson2JsonRedisSerializer<>(UserHash.class);
 
-        RedisSerializationContext.RedisSerializationContextBuilder < String, UserHash > builder =
-                RedisSerializationContext.newSerializationContext(new StringRedisSerializer());
+        RedisSerializationContext<String, UserHash> serializationContext = RedisSerializationContext
+                .<String, UserHash>newSerializationContext(new StringRedisSerializer())
+                .key(new StringRedisSerializer())
+                .value(serializer)
+                .hashKey(new Jackson2JsonRedisSerializer<>(Integer.class))
+                .hashValue(new GenericJackson2JsonRedisSerializer())
+                .build();
 
-        RedisSerializationContext<String, UserHash> context = builder.value(serializer).build();
+        return new ReactiveRedisTemplate<>(factory, serializationContext);
+    }
 
-        return new ReactiveRedisTemplate< >(factory, context);
+    @Bean
+    @Primary
+    ReactiveRedisConnectionFactory reactiveRedisConnectionFactory(){
+        return new LettuceConnectionFactory(redisHost,redisPort);
     }
 
 

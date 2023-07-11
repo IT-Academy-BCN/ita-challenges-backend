@@ -63,9 +63,24 @@ public class UserController {
 
     }
 
-    @PostMapping("/sansa")
-    public Flux<UserHash> pruebaBorrar(){
-        return userHashService.prueba();
+    @PostMapping("/hazRandom")
+    public Mono<UserHash> hazrandom(){
+        return userHashService.hazrandom();
+    }
+
+    @GetMapping("/dameuno/{id}")
+    public Mono<UserHash> dameuno(@PathVariable String id){
+        return userHashService.getone(UUID.fromString(id));
+    }
+
+    @GetMapping("/dametodo")
+    public Flux<UserHash> dametodo(){
+        return userHashService.getall();
+    }
+
+    @DeleteMapping("/borrauno/{id}")
+    public Mono<Void> borraUno(@PathVariable String id){
+        return userHashService.borraUno(UUID.fromString(id));
     }
 
     //endregion ENDPOINTS
