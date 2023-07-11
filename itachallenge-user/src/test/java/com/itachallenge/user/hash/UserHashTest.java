@@ -10,12 +10,13 @@ import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
-public class UserHashTest {
+class UserHashTest {
     @Test
-    public void testGetterAndSetterMethods() {
+    void testGetterAndSetterMethods() {
+        UUID originUuid = UUID.randomUUID();
         // Given
         UserHash user = UserHash.builder()
-                .uuid(UUID.randomUUID())
+                .uuid(originUuid)
                 .name("John")
                 .surname("Doe")
                 .nickname("johndoe")
@@ -25,13 +26,13 @@ public class UserHashTest {
                 .build();
 
         // Assert
-        Assertions.assertEquals(user.getUuid(), user.getUuid());
-        Assertions.assertEquals(user.getName(), "John");
-        Assertions.assertEquals(user.getSurname(), "Doe");
-        Assertions.assertEquals(user.getNickname(), "johndoe");
-        Assertions.assertEquals(user.getEmail(), "johndoe@example.com");
-        Assertions.assertEquals(user.getPassword(), "password123");
-        Assertions.assertEquals(user.getRoles(), Arrays.asList(Role.ADMIN, Role.USER));
+        Assertions.assertEquals(originUuid, user.getUuid());
+        Assertions.assertEquals("John", user.getName());
+        Assertions.assertEquals("Doe", user.getSurname());
+        Assertions.assertEquals("johndoe", user.getNickname());
+        Assertions.assertEquals("johndoe@example.com", user.getEmail());
+        Assertions.assertEquals("password123", user.getPassword());
+        Assertions.assertEquals(Arrays.asList(Role.ADMIN, Role.USER), user.getRoles());
 
         // Modify
         UUID newUuid = UUID.randomUUID();
@@ -45,17 +46,17 @@ public class UserHashTest {
         user.setRoles(newRoles);
 
         // Assert
-        Assertions.assertEquals(user.getUuid(), newUuid);
-        Assertions.assertEquals(user.getName(), "Jane");
-        Assertions.assertEquals(user.getSurname(), "Smith");
-        Assertions.assertEquals(user.getNickname(), "janesmith");
-        Assertions.assertEquals(user.getEmail(), "janesmith@example.com");
-        Assertions.assertEquals(user.getPassword(), "newpassword");
-        Assertions.assertEquals(user.getRoles(), newRoles);
+        Assertions.assertEquals(newUuid, user.getUuid());
+        Assertions.assertEquals("Jane", user.getName());
+        Assertions.assertEquals("Smith", user.getSurname());
+        Assertions.assertEquals("janesmith", user.getNickname());
+        Assertions.assertEquals("janesmith@example.com", user.getEmail());
+        Assertions.assertEquals("newpassword", user.getPassword());
+        Assertions.assertEquals(newRoles, user.getRoles());
     }
 
     @Test
-    public void testEqualsAndHashCodeMethods() {
+    void testEqualsAndHashCodeMethods() {
         // Given
         UserHash user1 = UserHash.builder()
                 .uuid(UUID.randomUUID())

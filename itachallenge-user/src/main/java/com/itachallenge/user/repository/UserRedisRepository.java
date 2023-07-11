@@ -34,7 +34,7 @@ public class UserRedisRepository {
 
     //returns the number of items deleted
     public Mono<Void> deleteByUuid(UUID uuid){
-        return hashOperations.remove(KEY, uuid).flatMap((U) -> Mono.empty());
+        return hashOperations.remove(KEY, uuid).flatMap((u) -> Mono.empty());
     }
 
     public Mono<UserHash> findByUuid(UUID uuid){
