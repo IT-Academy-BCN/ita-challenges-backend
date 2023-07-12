@@ -1,11 +1,14 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.RequestParam;
+
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -98,14 +103,26 @@ public class ChallengeController {
     }
     
 	@GetMapping(path = "/{challengeId}/related")
-	public Flux<ResponseEntity<RelatedDto>> relatedChallenge(@PathVariable("challengeId") String id) throws Exception {
+	public Flux<ResponseEntity<GenericResultDto>> relatedChallenge(@RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit, @PathVariable("challengeId") String id) throws Exception {
 
+		GenericResultDto<ChallengeDto> result = new GenericResultDto();
+		
 		if (!UuidValidator.isValidUUID(id)) {
 			log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.", id);
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
 					"Invalid ID format. Please indicate the correct format.");
-		}
-		return challengeService.getRelatedChallenge(id).map(relateddto -> ResponseEntity.ok().body(relateddto))
+		}		
+		
+		ChallengeDto[] challengeList;
+		
+		challengeService.getRelatedChallenge(id)
+		.flatMapIterable(challenge -> challengeList.add(challenge));
+		
+		
+		result.setInfo(offset, limit, challengeList.length, challengeList);
+		
+		return Flux.from(result).map(genericdto -> ResponseEntity.ok().body(genericdto))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 
 	}

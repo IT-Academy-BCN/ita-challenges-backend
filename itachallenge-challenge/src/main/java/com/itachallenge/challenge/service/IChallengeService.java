@@ -12,7 +12,7 @@ public interface IChallengeService {
     Mono<ChallengeDto> getChallengeId(UUID id);
     boolean isValidUUID(String id);
     boolean removeResourcesByUuid(UUID idResource);
-    Flux<RelatedDto> getRelatedChallenge(String challengeId);
+    Flux<ChallengeDto> getRelatedChallenge(String challengeId);
 
 
 }
