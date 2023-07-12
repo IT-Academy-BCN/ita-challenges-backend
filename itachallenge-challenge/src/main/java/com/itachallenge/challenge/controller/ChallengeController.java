@@ -2,12 +2,10 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.challenge.service.RequestParam;
 
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -19,11 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -102,29 +98,28 @@ public class ChallengeController {
         }
     }
     
-	@GetMapping(path = "/{challengeId}/related")
-	public Flux<ResponseEntity<GenericResultDto>> relatedChallenge(@RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit, @PathVariable("challengeId") String id) throws Exception {
+    @GetMapping(path = "/{challengeId}/related")
+    public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @PathVariable("challengeId") String id) {
 
-		GenericResultDto<ChallengeDto> result = new GenericResultDto();
-		
-		if (!UuidValidator.isValidUUID(id)) {
-			log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.", id);
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Invalid ID format. Please indicate the correct format.");
-		}		
-		
-		ChallengeDto[] challengeList;
-		
-		challengeService.getRelatedChallenge(id)
-		.flatMapIterable(challenge -> challengeList.add(challenge));
-		
-		
-		result.setInfo(offset, limit, challengeList.length, challengeList);
-		
-		return Flux.from(result).map(genericdto -> ResponseEntity.ok().body(genericdto))
-				.defaultIfEmpty(ResponseEntity.notFound().build());
+        if (!UuidValidator.isValidUUID(id)) {
+            log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.", id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid ID format. Please indicate the correct format.");
+        }
 
-	}
+        return challengeService.getRelatedChallenge(id)
+                .collectList().map(challengeDtos -> {
+                	GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
+                	result.setLimit(limit);
+                	result.setOffset(offset);
+                	result.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+                	result.setCount(challengeDtos.toArray(new ChallengeDto[0]).length);
+                	return ResponseEntity.ok(result);
+        });
+    }
+
 
 }

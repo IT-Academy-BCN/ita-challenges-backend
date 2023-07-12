@@ -169,25 +169,31 @@ class ChallengeServiceImpTest {
 	void TestGetRelatedChallenge() {
 		//variables
 		ChallengeDocument challenge = ChallengeDocument.builder()
-				.uuid(UUID.randomUUID()).title("Primer Titulo")
+				.uuid(UUID.randomUUID())
+				.title("Primer Titulo")
+				.level("dos")
 				.relatedChallenges(Set.of
 						(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"),
 						UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"),
 						UUID.fromString("f71e51d-1e3e-44a2-bc97-158021f1a344")))
 				.build();
+		
 
 		UUID thisId = challenge.getUuid();
+
 		
 		//mocks
 		when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(challenge));
 				
 		//Tests
-		Flux<RelatedDto> serviceResponse = challengeService.getRelatedChallenge("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
-
+		Flux<ChallengeDto> serviceResponse = challengeService.getRelatedChallenge("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
+		
+		
 		StepVerifier.create(serviceResponse)
-		.expectNextMatches(response -> response.getTitleRelatedId().equals("Primer Titulo")
-							&& response.getRelatedId().equals(thisId)
-					         && response instanceof RelatedDto);
+		.expectNextMatches(response -> response.getChallengeId().equals(thisId)
+							&& response.getTitle().equals("Primer Titulo")
+							&& response.getLevel().equals("dos")
+					         && response instanceof ChallengeDto);
 
 	}
 }
