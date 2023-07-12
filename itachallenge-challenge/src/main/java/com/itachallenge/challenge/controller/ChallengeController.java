@@ -33,7 +33,6 @@ public class ChallengeController {
     @Autowired
     private IChallengeService challengeService;
 
-    @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
         log.info("** Saludos desde el logger **");
@@ -53,8 +52,7 @@ public class ChallengeController {
         log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
         return "Hello from ITA Challenge!!!";
     }
-
-    @Tag(name = "getOneChallenge", description = "Get one challenge by ID")
+    
     @GetMapping(path = "/challenges/{challengeId}")
     @Operation(
             operationId = "Get the information from a chosen challenge.",
@@ -69,7 +67,6 @@ public class ChallengeController {
         return challengeService.getChallengeById(id);
     }
 
-    @Tag(name = "removeOneResource", description = "Remove one resource by ID")
     @DeleteMapping("/resources/{idResource}")
     @Operation(
             operationId = "Get the information from a chosen resource.",
@@ -84,7 +81,6 @@ public class ChallengeController {
         return challengeService.removeResourcesByUuid(idResource);
     }
 
-    @Tag(name = "getAllChallenges", description = "Get all challenges")
     @GetMapping("/challenges")
     @Operation(
             operationId = "Get all the stored challenges into the Database.",
