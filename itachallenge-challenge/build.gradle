@@ -45,6 +45,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
