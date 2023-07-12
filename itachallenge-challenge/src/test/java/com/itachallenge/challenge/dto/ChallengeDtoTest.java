@@ -44,8 +44,10 @@ class ChallengeDtoTest {
      */
     @BeforeEach
     void setUp(){
-        LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(1, "Javascript");
-        LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(2, "Java");
+        UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
+        LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
                 , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",

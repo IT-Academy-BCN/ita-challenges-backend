@@ -20,43 +20,42 @@ public class ChallengeTest {
     }
 
     @Test
-    void getLevel() {
-        String level = "Intermediate";
-        ChallengeDocument challenge = new ChallengeDocument(null, level, null, null, null, null, null, null, null);
-        assertEquals(level, challenge.getLevel());
-    }
-
-    @Test
     void getTitle() {
         String title = "Test Challenge";
-        ChallengeDocument challenge = new ChallengeDocument(null, null, title, null, null, null, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, title, null, null, null, null, null, null, null);
         assertEquals(title, challenge.getTitle());
     }
 
     @Test
-    void getLanguages() {
-        UUID uuid = UUID.randomUUID();
-        Set<UUID> uuidSet = Set.of(uuid);
-        Set<LanguageDocument> languages = Set.of(new LanguageDocument(1, "Java", uuidSet), new LanguageDocument(2, "Python", uuidSet));
-
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, languages, null, null, null, null, null);
-        assertEquals(languages, challenge.getLanguages());
+    void getLevel() {
+        String level = "Intermediate";
+        ChallengeDocument challenge = new ChallengeDocument(null, null, level, null, null, null, null, null, null);
+        assertEquals(level, challenge.getLevel());
     }
 
     @Test
     void getCreationDate() {
         LocalDateTime creationDate = now();
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, creationDate, null, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, creationDate, null, null, null, null, null);
         assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getCreationDate().truncatedTo(ChronoUnit.SECONDS)));
-
-
     }
 
     @Test
     void getDetail() {
         DetailDocument detail = new DetailDocument(null, null, null);
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, detail, null, null, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null, null, null);
         assertEquals(detail, challenge.getDetail());
+    }
+
+    @Test
+    void getLanguages() {
+        UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        Set<UUID> uuidSet = Set.of(uuid);
+        Set<LanguageDocument> languages = Set.of(new LanguageDocument(uuid, "Javascript"), new LanguageDocument(uuid2, "Python"));
+
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, null, null);
+        assertEquals(languages, challenge.getLanguages());
     }
 
     @Test
@@ -65,6 +64,17 @@ public class ChallengeTest {
 
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, solutions, null, null);
         assertEquals(solutions, challenge.getSolutions());
+    }
+
+    @Test
+    void getResources() {
+        Set<UUID> resources = new HashSet<>();
+        UUID resourceId1 = UUID.randomUUID();
+        UUID resourceId2 = UUID.randomUUID();
+        resources.add(resourceId1);
+        resources.add(resourceId2);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, null, resources);
+        assertEquals(resources, challenge.getResources());
     }
 
     @Test
@@ -78,14 +88,4 @@ public class ChallengeTest {
         assertEquals(relatedChallenges, challenge.getRelatedChallenges());
     }
 
-    @Test
-    void getResources() {
-        Set<UUID> resources = new HashSet<>();
-        UUID resourceId1 = UUID.randomUUID();
-        UUID resourceId2 = UUID.randomUUID();
-        resources.add(resourceId1);
-        resources.add(resourceId2);
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, null, resources);
-        assertEquals(resources, challenge.getResources());
-    }
 }

@@ -1,37 +1,23 @@
 package com.itachallenge.challenge.document;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LanguageTest {
+class LanguageTest {
 
     @Test
     void getIdLanguage() {
-        int idLanguage = 1;
-        LanguageDocument language = new LanguageDocument(idLanguage, null, null);
-        assertEquals(idLanguage, language.getIdLanguage());
+        UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        LanguageDocument language = new LanguageDocument(uuid, null);
+        assertEquals(uuid, language.getIdLanguage());
     }
 
     @Test
     void getLanguageName() {
-        String languageName = "Java";
-        LanguageDocument language = new LanguageDocument(0, languageName, null);
+        String languageName = "Javascript";
+        LanguageDocument language = new LanguageDocument(null, languageName);
         assertEquals(languageName, language.getLanguageName());
-    }
-
-    @Test
-    void getIdChallenges() {
-        Set<UUID> idChallenges = new HashSet<>();
-        UUID challengeId1 = UUID.randomUUID();
-        UUID challengeId2 = UUID.randomUUID();
-        idChallenges.add(challengeId1);
-        idChallenges.add(challengeId2);
-        LanguageDocument language = new LanguageDocument(0, null, idChallenges);
-        assertEquals(idChallenges, language.getIdChallenges());
     }
 }
