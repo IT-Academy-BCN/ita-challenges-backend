@@ -1,4 +1,5 @@
 package com.itachallenge.challenge.service;
+
 /*
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
@@ -167,3 +168,4 @@ class ChallengeServiceImpTest {
     }
 
 }*/
+
