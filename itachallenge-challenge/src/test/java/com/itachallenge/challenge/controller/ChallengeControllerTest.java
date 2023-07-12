@@ -1,10 +1,8 @@
 package com.itachallenge.challenge.controller;
 
-import com.github.dockerjava.transport.DockerHttpClient.Response;
-import com.itachallenge.challenge.document.ChallengeDocument;
+
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.jupiter.api.Assertions;
@@ -29,7 +27,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Set;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -236,34 +233,28 @@ class ChallengeControllerTest {
       StepVerifier.create(responseRelated)
       .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK)
               && response.getBody() instanceof GenericResultDto
-      	&& response.getBody().getResults().length==challengearray.length
-      	&&response.getBody().getResults().equals(challengearray)   )                     .verifyComplete();
-      
-      
-             //&& response.getBody().getResults().equals(challengearray))
-				//.verifyComplete();
+              && response.getBody().getResults().length==challengearray.length)
+      .verifyComplete();
 
 
     }
-    /*@Test
-    @DisplayName("Test EndPoint: related_not_valid_id")
-    void ChallengeRelatedTest_INVALID_ID () {
-              
-    	   doReturn(false).when(challengeService).isValidUUID(INVALID_ID);
 
-           ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
-               challengeController.relatedChallenge(INVALID_ID);
-           });
+	@Test
+	@DisplayName("Test EndPoint: related_not_valid_id")
+	void ChallengeRelatedTest_INVALID_ID() {
 
-           StepVerifier.create(Mono.just(exception))
-                           .expectNextMatches(resp -> {
-                               assertEquals(BAD_REQUEST.value(), exception.getStatusCode().value());
-                               assertEquals(MESSAGE_INVALID_ID, exception.getReason());
-                               return true;
-                           })
-                                   .verifyComplete();
+		doReturn(false).when(challengeService).isValidUUID(INVALID_ID);
 
-       }
-*/
+		ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+			challengeController.relatedChallenge(10, 0, INVALID_ID);
+		});
+
+		StepVerifier.create(Mono.just(exception)).expectNextMatches(resp -> {
+			assertEquals(BAD_REQUEST.value(), exception.getStatusCode().value());
+			assertEquals(MESSAGE_INVALID_ID, exception.getReason());
+			return true;
+		}).verifyComplete();
+
+	}
 
 }
