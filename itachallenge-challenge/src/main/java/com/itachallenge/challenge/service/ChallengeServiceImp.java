@@ -2,10 +2,13 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -13,8 +16,6 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-//import static com.itachallenge.challenge.repository.ChallengeRepository.mongoTemplate;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -25,6 +26,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private ChallengeRepository challengeRepository;
     @Autowired
     private Converter converter;
+    @Autowired
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @Override
     public Mono<ChallengeDto> getChallengeId(UUID id) {
@@ -51,9 +54,15 @@ public class ChallengeServiceImp implements IChallengeService {
                 .orElse(false);
     }
 
-/*    public ChallengeDto save(ChallengeDto challengeDto) {
-        //BasicDBObject object = new BasicDBObject();
-        //object.append("key", challengeDto.getChallengeId());
-        return mongoTemplate.save(challengeDto);
-    }*/
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesPaginated(int pageNumber, int pageSize) {
+        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(reactiveMongoTemplate.find(new Query()
+                .skip((pageNumber - 1) * pageSize).limit(pageSize), ChallengeDocument.class));
+
+        return challengeDtoFlux.collectList().map(challenges -> {
+            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
+            return resultDto;
+        });
+    }
+
 }
