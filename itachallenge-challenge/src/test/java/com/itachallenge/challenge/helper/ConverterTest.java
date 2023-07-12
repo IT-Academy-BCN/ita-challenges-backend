@@ -141,7 +141,7 @@ public class ConverterTest {
     }
     
     @Test
-    public void testToRelatedDto() {
+    void testToRelatedDto() {
     	//Variables
 		ChallengeDocument challenge = ChallengeDocument.builder()
 				.uuid(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0")).title("Primer Titulo")

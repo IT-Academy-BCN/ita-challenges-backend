@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.RelatedDto;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
