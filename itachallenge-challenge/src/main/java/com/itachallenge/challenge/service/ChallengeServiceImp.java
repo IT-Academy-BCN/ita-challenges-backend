@@ -55,8 +55,8 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesPaginated(int pageNumber, int pageSize) {
-        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(reactiveMongoTemplate.find(new Query()
-                .skip((pageNumber - 1) * pageSize).limit(pageSize), ChallengeDocument.class));
+        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(reactiveMongoTemplate
+                .find(paginationQuery(pageNumber, pageSize), ChallengeDocument.class));
 
         return challengeDtoFlux.collectList().map(challenges -> {
             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -65,4 +65,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    public Query paginationQuery(int pageNumber, int pageSize) {
+        return new Query().skip((pageNumber - 1) * pageSize).limit(pageSize);
+    }
 }
