@@ -6,6 +6,10 @@ import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,17 +54,47 @@ public class ChallengeController {
         return "Hello from ITA Challenge!!!";
     }
 
+    @Tag(name = "getOneChallenge", description = "Get one challenge by ID")
     @GetMapping(path = "/challenges/{challengeId}")
+    @Operation(
+            operationId = "Get the information from a chosen challenge.",
+            summary = "Get to see the Challenge level, its details and the available languages.",
+            description = "Sending the ID Challenge through the URI to retrieve it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+            }
+    )
     public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
         return challengeService.getChallengeById(id);
     }
 
+    @Tag(name = "removeOneResource", description = "Remove one resource by ID")
     @DeleteMapping("/resources/{idResource}")
+    @Operation(
+            operationId = "Get the information from a chosen resource.",
+            summary = "Get to see the resource and all its related parameters.",
+            description = "Sending the ID Resource through the URI to retrieve it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = { @Content(schema = @Schema()) })
+            }
+    )
     public Mono<GenericResultDto<String>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource);
     }
 
+    @Tag(name = "getAllChallenges", description = "Get all challenges")
     @GetMapping("/challenges")
+    @Operation(
+            operationId = "Get all the stored challenges into the Database.",
+            summary = "Get to see all challenges and their levels, details and their available languages.",
+            description = "Requesting all the challenges through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = { @Content(schema = @Schema()) })
+            }
+    )
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
         return challengeService.getAllChallenges();
     }
