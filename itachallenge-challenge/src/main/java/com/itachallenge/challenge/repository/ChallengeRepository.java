@@ -3,6 +3,7 @@ package com.itachallenge.challenge.repository;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
@@ -13,13 +14,15 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Repository
-public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDocument, UUID> {
+public interface ChallengeRepository extends ReactiveMongoTemplate<ChallengeDocument,UUID>{
 
 /*    @Autowired
     MongoTemplate mongoTemplate;
     public Employee save(Employee emp) {
         return  mongoTemplate.save(emp);
     }*/
+
+//private ReactiveMongoTemplate template;
 
     Mono<Boolean> existsByUuid(UUID uuid);
 
@@ -33,8 +36,17 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
 
-    @Override
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
+
+
+    @Query("{ 'firstname': ?0, 'lastname': ?1}")
+    Flux<ChallengeDocument> findByFirstnameAndLastname(String firstname, String lastname);
+
+//    Flux<YourDocument> yourDocumentFlux = reactiveMongoTemplate.find(new Query().skip((page - 1) * size).limit(size), YourDocument.class);
+//
+//    Flux<SuDocumento> suDocumentoFlux = reactiveMongoTemplate.find(nueva Consulta(), SuDocumento.clase)
+//            .skip((página - 1) * tamaño)
+//            .tomar(tamaño);
 
 /*
     @Query("{'name': ?0}")
@@ -87,4 +99,4 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
         });*/
 
 
-    }
+}
