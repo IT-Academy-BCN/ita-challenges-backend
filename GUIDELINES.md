@@ -75,7 +75,7 @@
 5. Cree una nueva rama con su nombre para realizar sus cambios:
 
          git checkout -b nombre-de-su-rama
-   Remplace "nombre-de-su-rama" con un nombre descriptivo que indique los cambios que planea realizar.
+   RRemplace "nombre-de-su-rama" con un nombre descriptivo que indique los cambios que planea realizar.
 
 
 6. Abra el archivo contributors.md y agregue su nombre y su GitHub.
@@ -155,10 +155,11 @@ Necessary Git configurations to prevent problems
    <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
 2. Paste it in the PC directory (outside of project folder)
 3. In Git Bash...
-4. Run the command: 'git config --global core-excludesfile path/.gitignore'\
+4. Run the command: 'git config --global core.excludesfile C:\\temp\\.gitignore'\
 Where...\
 'Path': is the path of the folder where the ".gitignore" file is located.\
 Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
+ 
 
 ### 2.2.2 Autocrlf
 If you have a problem with a PR that modify a lot of files, >100, you need do next...

@@ -5,16 +5,15 @@
 1. [**PROJECT'S LINKS**](#1-projec-s-links)\
    1.1 [Project's Links](#11-project-links) 
 
-2. [**WORK PROCEDURES**](#2-work-procedures)
-
+2. [**WORK PROCEDURES**](#2-work-procedures)\
    2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
-   2.2 [Daily Procedure](#22-daily-procedure)\
-   2.3 [Work with cards Procedure](#23-work-with-cards-procedure)\
-   2.4 [Points to consider when doing a PR](#24-points-to-consider-when-doing-a-pr)\
-   2.5 [Scrum metodology](#25-scrum-metodology)
+   2.2 [Git configurations](#22-git-configurations)\
+   2.3 [Daily Procedure](#23-daily-procedure)\
+   2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
+   2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
+   2.6 [Scrum metodology](#26-scrum-metodology)
 
-3. [**URL NORMALIZATION**](#3-url-normalization)
-
+3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Convencions](#31-convencions)
 
 4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)\
@@ -30,23 +29,21 @@
    4.6 [Type variable names](#46-type-variable-names)\
    4.7 [Camel case: defined](#47-camel-case:-defined)  
    
-5. [**LIBRARIES USED**](#5-libraries-used)
-   5.1 [Main Plugins](#51-main-plugins) 
-   5.2 [Implementation area](#52-implementation-area)
+5. [**LIBRARIES USED**](#5-libraries-used)\
+   5.1 [Main Plugins](#51-main-plugins)\
+   5.2 [Implementation area](#52-implementation-area)\
    5.3 [Testimplementation area](#53-testimplementation-area)
 
-6. [**REQUIRED PROGRAMS**](#6-required-programs)
-
+6. [**REQUIRED PROGRAMS**](#6-required-programs)\
    6.1 [Requierd programs](#61-required-programs)
 
-7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)
-
+7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
 ----------------------------------------------------------------
 
-# 1. PROJECT'S LINKS
-## 1.1 Project links
+# 1. LINKS DEL PROJECTE
+## 1.1 Links del projecte
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
 <img src="img/GitHub.jpg" alt="isolated" width="400"/>
 - Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
@@ -58,30 +55,30 @@
 
 ----------------------------------------------------------------
 
-# 2. WORK PROCEDURES
+# 2. PROCEDIMENTS DE TREBALL
 
-## 2.1 First things to do in the project
-### 1. Añadir tu nombre y GitHub al archivo contributors.md
+## 2.1 Primers passos per fer en el projecte
+### 1. Afegi nom i GITHUB a l'arxiu contributors.md
 
-1. Clona el repositorio ita-challenges-backend de GitHub en tu sistema local:
+1. Clona el repositori ita-challenges-backend del GitHub en el teu sistema local:
 
          git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
-2. Cambie al directorio del repositorio clonado:
+2. Modifica el directori del repositori clonat:
 
          cd ita-challenges-backend
-3. Asegúrese de estar en la rama "develop". Puede verificar las ramas diponibles y su rama actual ejecutando el siguiente comando:
+3. Assegurar-se d'estar en la branca "develop". Pots verificar les branques disponibles y la branca actual executant la següent comanda:
 
          git branch
-4. Si no está en la rama "develop", cambie a ella ejecutando el siguiente comando:
+4. Si no estàs en la branca "develop", canvia a ella executant la següent comanda:
 
          git checkout develop
-5. Cree una nueva rama con su nombre para realizar sus cambios:
+5. Crea una nova branca amb el seu nom per realitzar els canvis:
 
-         git checkout -b nombre-de-su-rama
-   Remplace "nombre-de-su-rama" con un nombre descriptivo que indique los cambios que planea realizar.
+         git checkout -b nom-de-la-branca
+   Substitueix "nom-de-la-branca" per un nom que descriptiu dels canvis que es planteja fer.
 
 
-6. Abra el archivo contributors.md y agregue su nombre y su GitHub.
+6. Obra l'arxiu contributors.md i afegeix el nom i el teu GitHub.
 
 
 7. Después de hacer un git add y un git commit, realize el siguiente git push:
@@ -149,7 +146,29 @@
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.2 Daily Procedure
+## 2.2 Git configurations
+
+Necessary Git configurations to prevent problems
+
+### 2.2.1 Git ignore
+1. Copy file ".gitignore" from root project\
+   <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
+2. Paste it in the PC directory (outside of project folder)
+3. In Git Bash...
+4. Run the command: 'git config --global core-excludesfile path/.gitignore'\
+Where...\
+'Path': is the path of the folder where the ".gitignore" file is located.\
+Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
+
+### 2.2.2 Autocrlf
+If you have a problem with a PR that modify a lot of files, >100, you need do next...
+1. In Git Bash...
+2. Run the command: 'git config --global core.autocrlf true'
+
+
+----------------------------------------------------------------
+----------------------------------------------------------------
+## 2.3 Daily Procedure
 1. Conectarse a Teams a las 9:15h
 2. Hacer pull de la rama "develop"
 3. Hacer merge de develop con la rama en la que estás trabajando
@@ -159,7 +178,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.3 Work with cards Procedure
+## 2.4 Work with cards Procedure
 ### Como asignarse una tarjeta
 1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
 2. Haz clic en la tarjeta para abrirla y ver más detalles.
@@ -190,7 +209,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.4 Points to consider when doing a PR
+## 2.5 Points to consider when doing a PR
 1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
    - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
    - La rama comparada es la rama que contiene tus cambios.
@@ -203,7 +222,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.5 Scrum metodology
+## 2.6 Scrum metodology
 https://scrumguides.org/
 
 
@@ -247,8 +266,6 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 - `/challenges/{challengeId}` - Obtener los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
 - `/challenges/{challengeId}/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
 
-## LINKS
-[Code Conventions for the Java Programming Language](https://www.oracle.com/java/technologies/javase/codeconventions-contents.html)
 
 ----------------------------------------------------------------
 
@@ -264,7 +281,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
     - exception
     - helper
 
-#### LINKS
+### LINKS
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.1 package names](https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names)
 
