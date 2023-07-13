@@ -1,4 +1,4 @@
-ºpackage com.itachallenge.challenge.controller;
+package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
