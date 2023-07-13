@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.controller;
 
+
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.server.ResponseStatusException;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -196,5 +200,61 @@ class ChallengeControllerTest {
 
         verify(challengeService,times(1)).removeResourcesByUuid(uuid);
     }
+    @Test
+    @DisplayName("Test EndPoint: related")
+    void ChallengeRelatedTest_VALID_ID () throws Exception{
+    	
+    	ChallengeDto challengedto1 = ChallengeDto.builder()
+				.challengeId(UUID.randomUUID())
+				.title("Primer Titulo")
+				.level("dos")
+				.build();
+    	
+    	ChallengeDto challengedto2 = ChallengeDto.builder()
+				.challengeId(UUID.randomUUID())
+				.title("Segundo Titulo")
+				.level("tres")
+				.build();
+    	
+    	ChallengeDto challengedto3 = ChallengeDto.builder()
+				.challengeId(UUID.randomUUID())
+				.title("Tercer Titulo")
+				.level("uno")
+				.build();
+		    	
+    	ChallengeDto[] challengearray = {challengedto1, challengedto2, challengedto3};
+
+		
+		when(challengeService.isValidUUID(VALID_ID)).thenReturn(true);
+        when(challengeService.getRelatedChallenge(VALID_ID)).thenReturn(Flux.just(challengedto1, challengedto2, challengedto3));
+
+      Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> responseRelated = challengeController.relatedChallenge(10, 0, VALID_ID);
+    	
+      StepVerifier.create(responseRelated)
+      .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK)
+              && response.getBody() instanceof GenericResultDto
+              && response.getBody().getResults().length==challengearray.length)
+      .verifyComplete();
+
+
+    }
+
+	@Test
+	@DisplayName("Test EndPoint: related_not_valid_id")
+	void ChallengeRelatedTest_INVALID_ID() {
+
+		doReturn(false).when(challengeService).isValidUUID(INVALID_ID);
+
+		ResponseStatusException exception = Assertions.assertThrows(ResponseStatusException.class, () -> {
+			challengeController.relatedChallenge(10, 0, INVALID_ID);
+		});
+
+		StepVerifier.create(Mono.just(exception)).expectNextMatches(resp -> {
+			assertEquals(BAD_REQUEST.value(), exception.getStatusCode().value());
+			assertEquals(MESSAGE_INVALID_ID, exception.getReason());
+			return true;
+		}).verifyComplete();
+
+	}
 
 }

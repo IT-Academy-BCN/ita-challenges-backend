@@ -48,5 +48,15 @@ public class ChallengeServiceImp implements IChallengeService {
                 .blockOptional()
                 .orElse(false);
     }
+    @Override
+    public Flux<ChallengeDto> getRelatedChallenge(String challengeId) {
+    	
+    	return challengeRepository.findByUuid(UUID.fromString(challengeId))
+    	        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
+    	        .flatMap(uuid -> challengeRepository.findByUuid(uuid))
+    	        .map(converter::toChallengeDto)
+    	        .onErrorResume(throwable ->
+                        Flux.empty());
+	}
 
 }

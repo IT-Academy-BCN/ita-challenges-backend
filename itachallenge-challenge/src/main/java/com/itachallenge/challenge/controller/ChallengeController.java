@@ -1,9 +1,12 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ErrorResponseMessage;
+import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
@@ -28,6 +32,7 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
     @Autowired
     private IChallengeService challengeService;
+
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
@@ -91,5 +96,29 @@ public class ChallengeController {
             throw new BadUUIDException("Invalid UUID");
         }
     }
+    
+    @GetMapping(path = "/{challengeId}/related")
+    public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
+            @RequestParam(value = "offset", defaultValue = "0") int offset,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @PathVariable("challengeId") String id) {
+
+        if (!UuidValidator.isValidUUID(id)) {
+            log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.", id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid ID format. Please indicate the correct format.");
+        }
+
+        return challengeService.getRelatedChallenge(id)
+                .collectList().map(challengeDtos -> {
+                	GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
+                	result.setLimit(limit);
+                	result.setOffset(offset);
+                	result.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+                	result.setCount(challengeDtos.toArray(new ChallengeDto[0]).length);
+                	return ResponseEntity.ok(result);
+        });
+    }
+
 
 }
