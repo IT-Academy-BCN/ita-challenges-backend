@@ -233,9 +233,11 @@ class ChallengeControllerTest {
       StepVerifier.create(responseRelated)
       .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK)
               && response.getBody() instanceof GenericResultDto
-              && response.getBody().getResults().length==challengearray.length)
+              && response.getBody().getResults().length==challengearray.length
+             && !response.getBody().getResults()[0].getTitle().isEmpty()
+             && !response.getBody().getResults()[1].getTitle().isEmpty()
+             && !response.getBody().getResults()[2].getTitle().isEmpty())
       .verifyComplete();
-
 
     }
 
