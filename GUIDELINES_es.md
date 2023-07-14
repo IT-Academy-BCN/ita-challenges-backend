@@ -3,7 +3,7 @@
 ## Table of Contents
 
 1. [**PROJECT'S LINKS**](#1-projec-s-links)\
-   1.1 [Project's Links](#11-project-links) 
+   1.1 [Project's Links](#11-project-links)
 
 2. [**WORK PROCEDURES**](#2-work-procedures)\
    2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
@@ -27,8 +27,8 @@
    4.5 [Local variable names](#45-local-variable-names)\
    4.5.1 [Temporary "throwaway" variables](#451-temporary-"throwaway"-variables)\
    4.6 [Type variable names](#46-type-variable-names)\
-   4.7 [Camel case: defined](#47-camel-case:-defined)  
-   
+   4.7 [Camel case: defined](#47-camel-case:-defined)
+
 5. [**LIBRARIES USED**](#5-libraries-used)\
    5.1 [Main Plugins](#51-main-plugins)\
    5.2 [Implementation area](#52-implementation-area)\
@@ -40,19 +40,18 @@
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
-
 ----------------------------------------------------------------
 
 # 1. PROJECT'S LINKS
 ## 1.1 Project links
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
-<img src="img/GitHub.jpg" alt="isolated" width="400"/>
+  <img src="img/GitHub.jpg" alt="isolated" width="400"/>
 - Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
-<img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
+  <img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
 - Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
-<img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
+  <img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
-<img src="img/Figma.jpg" alt="Figma image" width="400"/>
+  <img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
 ----------------------------------------------------------------
 
@@ -157,9 +156,9 @@ Necessary Git configurations to prevent problems
 2. Paste it in the PC directory (outside of project folder)
 3. In Git Bash...
 4. Run the command: 'git config --global core-excludesfile path/.gitignore'\
-Where...\
-'Path': is the path of the folder where the ".gitignore" file is located.\
-Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
+   Where...\
+   'Path': is the path of the folder where the ".gitignore" file is located.\
+   Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
 
 ### 2.2.2 Autocrlf
 If you have a problem with a PR that modify a lot of files, >100, you need do next...
@@ -212,8 +211,8 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 ----------------------------------------------------------------
 ## 2.5 Points to consider when doing a PR
 1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
-   - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
-   - La rama comparada es la rama que contiene tus cambios.
+    - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
+    - La rama comparada es la rama que contiene tus cambios.
 2. Proporciona una descripción de los cambios que has realizado. Sé claro y conciso.
 3. Cuando hayas terminado de completar la información de la pull request, haz clic en el botón verde "Create pull request" para crearla.
 4. A continuación verás como se hace un análisis del build. Si el análisis pasa con éxito, se mostrará un tick verde en el resultado. Por el contrario, si detecta problemas en el código, se mostrará una aspa roja. En este caso, aprieta en "Details" y observa donde se encuentra el problema.
@@ -433,99 +432,99 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 # 5. LIBRARIES USED
 
 ## 5.1 Main Plugins
-   - 'java'
-     - 'org.springframework.boot' version '3.0.6'
-   - 'jacoco'
-     - 'org.sonarqube' version '4.0.0.2929'
+- 'java'
+    - 'org.springframework.boot' version '3.0.6'
+- 'jacoco'
+    - 'org.sonarqube' version '4.0.0.2929'
 
 ## 5.2 Implementation area
-    
-   - BOOTSTRAP
-     - Version 4.0.2
-     - group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
-  
-   - COMMONS IO
-     - Version 2.11.0
-     - 'commons-io:commons-io:2.11.0'
-   - COMMONS LANG
-     - Version 3.12.0
-     - 'org.apache.commons:commons-lang3:3.12.0'
-   - COMMONS VALIDATOR
-     - Version 1.7
-     - 'commons-validator:commons-validator:1.7'
-   - CONSUL CONFIG
-     - Version 4.0.2 
-     - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
-   - CONSUL DISCOVERY
-     - Version 4.0.2
-     - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
-   - PROJECTLOMBOK
-     - Version 1.18.26
-     - 'org.projectlombok:lombok:1.18.26'
-   - SPRING CONTEXT
-     - Version 3
-     - 'org.springframework:spring-context:5.3.13' 
-   - SPRING BOOT AUTOCONFIGURE
-        -  Version 3.0.6
-        - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
-   - SPRING BOOT CLOUD COMMONS
-      - Version 4.0.1
-     - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
-   - SPRING BOOT STARTER ACTUATOR
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6' 
-   - SPRING BOOT STARTER DATA MONGODB
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
-   - SPRING BOOT STARTER DATA MONGODB REACTIVE
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
-   - SPRING BOOT STARTER WEB
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
-   - SPRING BOOT STARTER WEBFLUX
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
-   - SPRINGDOC OPENAPI
-     - Version 2.1.0
-     - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-   - sdf
+
+- BOOTSTRAP
+    - Version 4.0.2
+    - group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+
+- COMMONS IO
+    - Version 2.11.0
+    - 'commons-io:commons-io:2.11.0'
+- COMMONS LANG
+    - Version 3.12.0
+    - 'org.apache.commons:commons-lang3:3.12.0'
+- COMMONS VALIDATOR
+    - Version 1.7
+    - 'commons-validator:commons-validator:1.7'
+- CONSUL CONFIG
+    - Version 4.0.2
+    - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
+- CONSUL DISCOVERY
+    - Version 4.0.2
+    - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
+- PROJECTLOMBOK
+    - Version 1.18.26
+    - 'org.projectlombok:lombok:1.18.26'
+- SPRING CONTEXT
+    - Version 3
+    - 'org.springframework:spring-context:5.3.13'
+- SPRING BOOT AUTOCONFIGURE
+    -  Version 3.0.6
+    - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
+- SPRING BOOT CLOUD COMMONS
+    - Version 4.0.1
+    - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
+- SPRING BOOT STARTER ACTUATOR
+    - Version 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
+- SPRING BOOT STARTER DATA MONGODB
+    - Version 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
+- SPRING BOOT STARTER DATA MONGODB REACTIVE
+    - Version 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
+- SPRING BOOT STARTER WEB
+    - Version 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
+- SPRING BOOT STARTER WEBFLUX
+    - Version 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
+- SPRINGDOC OPENAPI
+    - Version 2.1.0
+    - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+- sdf
 
 ## 5.3 Testimplementation area
 
-   - ASSERTJ
-     - Version 3.24.2
-     - 'org.assertj:assertj-core:3.24.2'
-   - SPRING
-     - Version 5.3.13
-     - 'org.springframework:spring-test:5.3.13'
-   - HAMCREST
-     - Version 2.2
-     - 'org.hamcrest:hamcrest:2.2'
-   - JUNIT
-     - 'org.junit.jupiter:junit-jupiter'
-   - JUNIT JUPITER
-     - Version 1.17.6 
-     - 'org.testcontainers:junit-jupiter:1.17.6'
-   - JUNIT PLATAFORM SUITE
-     - Version 1.8.1
-     - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
-   - MOCKITO
-     - Version 5.3.1
-     - 'org.mockito:mockito-core:5.3.1'
-   - MOCK WEBSERVER
-     - Version 4.9.3
-     - 'com.squareup.okhttp3:mockwebserver:4.9.3'
-   - MONGODB
-     - Version 1.17.6
-     - 'org.testcontainers:mongodb:1.17.6'
-   - PROJECT REACTOR
-     - Version 3.1.0 Release
-     - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
-   - SPRING BOOT STARTER TEST
-     - Version 3.06
-     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
-   - 
+- ASSERTJ
+    - Version 3.24.2
+    - 'org.assertj:assertj-core:3.24.2'
+- SPRING
+    - Version 5.3.13
+    - 'org.springframework:spring-test:5.3.13'
+- HAMCREST
+    - Version 2.2
+    - 'org.hamcrest:hamcrest:2.2'
+- JUNIT
+    - 'org.junit.jupiter:junit-jupiter'
+- JUNIT JUPITER
+    - Version 1.17.6
+    - 'org.testcontainers:junit-jupiter:1.17.6'
+- JUNIT PLATAFORM SUITE
+    - Version 1.8.1
+    - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
+- MOCKITO
+    - Version 5.3.1
+    - 'org.mockito:mockito-core:5.3.1'
+- MOCK WEBSERVER
+    - Version 4.9.3
+    - 'com.squareup.okhttp3:mockwebserver:4.9.3'
+- MONGODB
+    - Version 1.17.6
+    - 'org.testcontainers:mongodb:1.17.6'
+- PROJECT REACTOR
+    - Version 3.1.0 Release
+    - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
+- SPRING BOOT STARTER TEST
+    - Version 3.06
+    - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
+-
 
 ----------------------------------------------------------------
 
