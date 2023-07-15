@@ -1,49 +1,49 @@
-# IT-Challenge Style Guide
+# Guía de estilo de IT-Challenge
 
-## Table of Contents
+## Tabla de contenidos
 
-1. [**PROJECT'S LINKS**](#1-projec-s-links)\
-   1.1 [Project's Links](#11-project-links)
+1. [**ENLACES DEL PROYECTO**](#1-enlaces-del-proyecto)\
+   1.1 [Enlaces del proyecto](#11-enlaces-del-proyecto)
 
-2. [**WORK PROCEDURES**](#2-work-procedures)\
-   2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
-   2.2 [Git configurations](#22-git-configurations)\
-   2.3 [Daily Procedure](#23-daily-procedure)\
-   2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
-   2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
-   2.6 [Scrum metodology](#26-scrum-metodology)
+2. [**PROCEDIMIENTOS DE TRABAJO**](#2-procedimientos-de-trabajo)\
+   2.1 [Primeras tareas del proyecto](#21-primeras-tareas-del-proyecto)\
+   2.2 [Configuraciones Git](#22-configuraciones-git)\
+   2.3 [Procedimiento diario](#23-procedimiento-diario)\
+   2.4 [Procedimiento de trabajo con tarjetas](#24-procedimiento-de-trabajo-con-tarjeta)\
+   2.5 [Aspectos a tener en cuenta al hacer una PR](#25-aspectos-a-tener-en-cuenta-al-hacer-una-pr)\
+   2.6 [Metodología Scrum](#26-metodología-scrum)
 
-3. [**URL NORMALIZATION**](#3-url-normalization)\
-   3.1 [Convencions](#31-convencions)
+3. [**NORMALIZACIÓN DE URL**](#3-normalización-de-url)\
+   3.1 [Convenciones](#31-convenciones)
 
-4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)\
-   4.1 [Package names](#41-package-names)\
-   4.2 [Class names](#42-class-names)\
-   4.2.1 [Test Class names](#421-test-class-names)\
-   4.2.2 [Interface Class names](#422-interface-class-names)\
-   4.3 [Method names](#43-method-names)\
-   4.3.1 [Test Method names](#431-test-method-names)\
-   4.4 [Constant names](#44-constant-names)\
-   4.5 [Local variable names](#45-local-variable-names)\
-   4.5.1 [Temporary "throwaway" variables](#451-temporary-"throwaway"-variables)\
-   4.6 [Type variable names](#46-type-variable-names)\
-   4.7 [Camel case: defined](#47-camel-case:-defined)
+4. [**DEFINICIONES DE MÉTODO, CLASES, ETC...**](#4-definiciones-de-método-clases-etc)\
+   4.1 [Nombre de los Packages](#41-nombre-de-los-packages)\
+   4.2 [Nombre de las clases](#42-nombre-de-las-clases)\
+   4.2.1 [Nombre de las clases de prueba (testing)](#421-nombre-de-las-clases-de-prueba--testing-)\
+   4.2.2 [Nombre de las clases de interficie](#422-nombre-de-las-clases-de-interficie)\
+   4.3 [Nombre de los métodos](#43-nombre-de-los-métodos)\
+   4.3.1 [Nombre de los métodos de prueba (testing)](#431-nombre-de-los-métodos-de-prueba--testing-)\
+   4.4 [Nombre de constantes](#44-nombre-de-constantes)\
+   4.5 [Nombres de variables locales](#45-nombre-de-variables-locales)\
+   4.5.1 [Variables temporales "throwaway"](#451-variables-temporales--throwaway-)\
+   4.6 [Nombres de variables de tipo](#46-nombres-de-variables-de-tipo)\
+   4.7 [Camel case: definido](#47-camel-case--definido)
 
-5. [**LIBRARIES USED**](#5-libraries-used)\
-   5.1 [Main Plugins](#51-main-plugins)\
-   5.2 [Implementation area](#52-implementation-area)\
-   5.3 [Testimplementation area](#53-testimplementation-area)
+5. [**LIBRERÍAS USADAS**](#5-librerías-usadas)\
+   5.1 [Plugins principales](#51-plugins-principales)\
+   5.2 [Área de implementación](#52-área-de-implementación)\
+   5.3 [Área de pruebas (testing)](#53-área-de-pruebas--testing-)
 
-6. [**REQUIRED PROGRAMS**](#6-required-programs)\
-   6.1 [Requierd programs](#61-required-programs)
+6. [**PROGRAMAS REQUERIDOS**](#6-programas-requeridos)\
+   6.1 [Programas requeridos](#61-programas-requeridos)
 
-7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
-   7.1 [Recommended programs](#71-recommended-programs)
+7. [**PROGRAMAS RECOMENDADOS**](#7-programas-recomendados)\
+   7.1 [Programas recomendados](#71-programas-recomendados)
 
 ----------------------------------------------------------------
 
-# 1. PROJECT'S LINKS
-## 1.1 Project links
+# 1. ENLACES DEL PROYECTO
+## 1.1 Enlaces del proyecto
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
   <img src="img/GitHub.jpg" alt="isolated" width="400"/>
 - Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
@@ -55,9 +55,9 @@
 
 ----------------------------------------------------------------
 
-# 2. WORK PROCEDURES
+# 2. PROCEDIMIENTOS DE TRABAJO
 
-## 2.1 First things to do in the project
+## 2.1 Primeras tareas del proyecto
 ### 1. Añadir tu nombre y GitHub al archivo contributors.md
 
 1. Clona el repositorio ita-challenges-backend de GitHub en tu sistema local:
@@ -146,39 +146,39 @@
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.2 Git configurations
+## 2.2 Configuraciones Git
 
-Necessary Git configurations to prevent problems
+Configuraciones Git necesarias para evitar problemas
 
 ### 2.2.1 Git ignore
-1. Copy file ".gitignore" from root project\
+1. Copie el archivo ".gitignore" del proyecto raíz\
    <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
-2. Paste it in the PC directory (outside of project folder)
-3. In Git Bash...
-4. Run the command: 'git config --global core-excludesfile path/.gitignore'\
+2. Péguelo en el directorio del PC (fuera de la carpeta del proyecto)
+3. En Git Bash...
+4. Ejecute el comando: 'git config --global core-excludesfile ruta/.gitignore'\
    Where...\
-   'Path': is the path of the folder where the ".gitignore" file is located.\
-   Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
+   'Path': es la ruta de la carpeta donde se encuentra el archivo ".gitignore".\
+   ¡Nota! Esta configuración no solo te servirá para el proyecto actual, sino también para todos los proyectos que hagas con GIT.
 
 ### 2.2.2 Autocrlf
-If you have a problem with a PR that modify a lot of files, >100, you need do next...
-1. In Git Bash...
-2. Run the command: 'git config --global core.autocrlf true'
+Si tiene un problema con una PR que modifica muchos archivos, >100, debe hacer lo siguiente ...
+1. En Git Bash...
+2. Ejecute el comando: 'git config --global core.autocrlf true'
 
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.3 Daily Procedure
+## 2.3 Procedimiento diario
 1. Conectarse a Teams a las 9:15h
 2. Hacer pull de la rama "develop"
 3. Hacer merge de develop con la rama en la que estás trabajando
-4. Coffee time a las 10:15h aproximadamente
+4. "Coffee time" a las 10:15h aproximadamente
 
 IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.4 Work with cards Procedure
+## 2.4 Procedimiento de trabajo con tarjeta
 ### Como asignarse una tarjeta
 1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
 2. Haz clic en la tarjeta para abrirla y ver más detalles.
@@ -209,7 +209,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.5 Points to consider when doing a PR
+## 2.5 Aspectos a tener en cuenta al hacer una PR
 1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
     - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
     - La rama comparada es la rama que contiene tus cambios.
@@ -222,7 +222,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.6 Scrum metodology
+## 2.6 Metodología Scrum
 https://scrumguides.org/
 
 
@@ -230,10 +230,10 @@ https://scrumguides.org/
 
 ----------------------------------------------------------------
 
-# 3. URL NORMALIZATION
+# 3. NORMALIZACIÓN DE URL
 En este proyecto, es importante seguir ciertas convenciones al establecer la estructura y nomenclatura de las URL's utilizadas en el backend.
 
-## 3.1 Convencions
+## 3.1 Convenciones
 
 A continuación, se presentan las convenciones que deben seguirse al normalizar las URL's:
 
@@ -269,14 +269,14 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 
-# 4. DEFINITIONS OF METHOD, CLASS, ETC...
+# 4. DEFINICIONES DE MÉTODO, CLASES, ETC...
 
-## 4.1 Package names
-#### RULES
+## 4.1 Nombre de los Packages
+#### NORMAS
     - All in Lowercase
     - Only letters & digits
 
-#### EXEMPLE
+#### EJEMPLO
     - com.itachallenge.user
     - exception
     - helper
@@ -287,12 +287,12 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.2 Class names
-#### RULES
+## 4.2 Nombre de las clases
+#### NORMAS
     - UpperCamelCase
     - Only letters & digits
 
-#### EXEMPLE
+#### EJEMPLO
     - UserController
     - PropertiesConfig
 
@@ -300,13 +300,13 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.2 class names](https://google.github.io/styleguide/javaguide.html#s5.2.2-class-names)
 
-### 4.2.1 Test Class names
-#### RULES
+### 4.2.1 Nombre de las clases de prueba (testing)
+#### NORMAS
     - UpperCamelCase
     - End with 'Test'
     - Only letters & digits
 
-#### EXEMPLE
+#### EJEMPLOS
     - ChallengeControllerTest
     - ResourceHelperTest
 
@@ -314,19 +314,19 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.2 class names](https://google.github.io/styleguide/javaguide.html#s5.2.2-class-names)
 
-### 4.2.2 Interface Class names
-#### RULES
+### 4.2.2 Nombre de las clases de interficie
+#### NORMAS
     - UpperCamelCase
     - Only letters & digits
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.3 Method names
-#### RULES
+## 4.3 Nombre de los métodos
+#### NORMAS
     - lowerCamelCase 
     - Only letters & digits
 
-#### EXEMPLE
+#### EJEMPLO
     - isValidUUID
     - initReactorHttpClient
 
@@ -334,13 +334,13 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
 
-## 4.3.1 Test Method names
-#### RULES
+## 4.3.1 Nombre de los métodos de prueba (testing)
+#### NORMAS
     - lowerCamelCase
     - Only letters & digits
     - Ended with '_test'
 
-#### EXEMPLE
+#### EJEMPLO
     - getChallengeId_test
     - findAll_test
 
@@ -350,13 +350,13 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.4 Constant names
-#### RULES
+## 4.4 Nombre de constantes
+#### NORMAS
     - Uppercase letters
     - Only letters & digits
     - Word separete with a single underscore '_'
 
-#### EXEMPLE
+#### EJEMPLO
     - static final int BEST_YEAR = 1977;
     - static final String BEST_MONTH = "February";
 
@@ -366,13 +366,13 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.5 Local variable names
-#### RULES
+## 4.5 Nombre de variables locales
+#### NORMAS
     - lowerCamelCase
     - Start with letter
     - Variable names should be short yet meaningful  
 
-#### EXEMPLE
+#### EJEMPLO
     - int  = 1977;
     - static final String BEST_MONTH = "February";
 
@@ -380,12 +380,12 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.4 constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
 
-### 4.5.1 Temporary "throwaway" variables
-#### RULES
+### 4.5.1 Variables temporales "throwaway"
+#### NORMAS
     - Only use for temporary "throwaway" variables
     - lower case
 
-#### EXEMPLE
+#### EJEMPLO
     - int   => i, j, k, m and n
     - char  => c, d and e
 
@@ -394,12 +394,12 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.6 Type variable names
-#### RULES
+## 4.6 Nombres de variables de tipo
+#### NORMAS
     - A single capital letter, optionally followed by a single numeral
     - A name in the form used for classes
 
-#### EXEMPLE
+#### EJEMPLO
     - E, T, X, T2
     - RequestT, ChallengeT
 
@@ -408,8 +408,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.7 Camel case: defined
-#### RULES
+## 4.7 Camel case: definido
+#### NORMAS
     - only letters & digits
     - UpperCamelCase
         - Every first letter of every word are Upper letter
@@ -417,7 +417,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
         - The first letter of each word is in lowercase, except for the first word which starts 
           with a lowercase letter 
 
-#### EXEMPLE
+#### EJEMPLO
     - UpperCamelCase
         - UserController
         - ChallengeService
@@ -429,109 +429,107 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Google Java Style Guide: 5.3 Camel case defined](https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)
 
 ----------------------------------------------------------------
-# 5. LIBRARIES USED
+# 5. LIBRERÍAS USADAS
 
-## 5.1 Main Plugins
+## 5.1 Plugins principales
 - 'java'
     - 'org.springframework.boot' version '3.0.6'
 - 'jacoco'
     - 'org.sonarqube' version '4.0.0.2929'
 
-## 5.2 Implementation area
+## 5.2 Área de implementación
 
 - BOOTSTRAP
-    - Version 4.0.2
+    - Versión 4.0.2
     - group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
 
 - COMMONS IO
-    - Version 2.11.0
+    - Versión 2.11.0
     - 'commons-io:commons-io:2.11.0'
 - COMMONS LANG
-    - Version 3.12.0
+    - Versión 3.12.0
     - 'org.apache.commons:commons-lang3:3.12.0'
 - COMMONS VALIDATOR
-    - Version 1.7
+    - Versión 1.7
     - 'commons-validator:commons-validator:1.7'
 - CONSUL CONFIG
-    - Version 4.0.2
+    - Versión 4.0.2
     - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
 - CONSUL DISCOVERY
-    - Version 4.0.2
+    - Versión 4.0.2
     - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
 - PROJECTLOMBOK
-    - Version 1.18.26
+    - Versión 1.18.26
     - 'org.projectlombok:lombok:1.18.26'
 - SPRING CONTEXT
-    - Version 3
+    - Versión 3
     - 'org.springframework:spring-context:5.3.13'
 - SPRING BOOT AUTOCONFIGURE
-    -  Version 3.0.6
+    -  Versión 3.0.6
     - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
 - SPRING BOOT CLOUD COMMONS
-    - Version 4.0.1
+    - Versión 4.0.1
     - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
 - SPRING BOOT STARTER ACTUATOR
-    - Version 3.0.6
+    - Versión 3.0.6
     - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
 - SPRING BOOT STARTER DATA MONGODB
-    - Version 3.0.6
+    - Versión 3.0.6
     - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
 - SPRING BOOT STARTER DATA MONGODB REACTIVE
-    - Version 3.0.6
+    - Versión 3.0.6
     - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
 - SPRING BOOT STARTER WEB
-    - Version 3.0.6
+    - Versión 3.0.6
     - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
 - SPRING BOOT STARTER WEBFLUX
-    - Version 3.0.6
+    - Versión 3.0.6
     - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
 - SPRINGDOC OPENAPI
-    - Version 2.1.0
+    - Versión 2.1.0
     - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-- sdf
 
-## 5.3 Testimplementation area
+## 5.3 Área de pruebas (testing)
 
 - ASSERTJ
-    - Version 3.24.2
+    - Versión 3.24.2
     - 'org.assertj:assertj-core:3.24.2'
 - SPRING
-    - Version 5.3.13
+    - Versión 5.3.13
     - 'org.springframework:spring-test:5.3.13'
 - HAMCREST
-    - Version 2.2
+    - Versión 2.2
     - 'org.hamcrest:hamcrest:2.2'
 - JUNIT
     - 'org.junit.jupiter:junit-jupiter'
 - JUNIT JUPITER
-    - Version 1.17.6
+    - Versión 1.17.6
     - 'org.testcontainers:junit-jupiter:1.17.6'
 - JUNIT PLATAFORM SUITE
-    - Version 1.8.1
+    - Versión 1.8.1
     - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
 - MOCKITO
-    - Version 5.3.1
+    - Versión 5.3.1
     - 'org.mockito:mockito-core:5.3.1'
 - MOCK WEBSERVER
-    - Version 4.9.3
+    - Versión 4.9.3
     - 'com.squareup.okhttp3:mockwebserver:4.9.3'
 - MONGODB
-    - Version 1.17.6
+    - Versión 1.17.6
     - 'org.testcontainers:mongodb:1.17.6'
 - PROJECT REACTOR
-    - Version 3.1.0 Release
+    - Versión 3.1.0 Release
     - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
 - SPRING BOOT STARTER TEST
-    - Version 3.06
+    - Versión 3.06
     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
--
 
 ----------------------------------------------------------------
 
-# 6. REQUIRED PROGRAMS
+# 6. PROGRAMAS REQUERIDOS
 Los siguientes programas son requeridos para poder trabajar en el proyecto:
 
-## 6.1 Required programs
+## 6.1 Programas requeridos
 
 - **MongoDB**: MongoDB es una base de datos NoSQL ampliamente utilizada en el desarrollo de aplicaciones. Se utiliza para almacenar y recuperar datos de forma eficiente. Puedes descargar [MongoCompass](https://www.mongodb.com/try/download/compass) desde la web oficial.
 
@@ -548,11 +546,11 @@ Los siguientes programas son requeridos para poder trabajar en el proyecto:
 Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
 
 ----------------------------------------------------------------
-# 7 RECOMMENDED PROGRAMS
+# 7 PROGRAMAS RECOMENDADOS
 
 Los siguientes programas son recomendables para facilitar el trabajo en el proyecto:
 
-## 7.1 Recommended programs
+## 7.1 Programas recomendados
 
 - **Mongo Tools**: Mongo Tools es un conjunto de utilidades de línea de comandos para trabajar con MongoDB. Proporciona herramientas adicionales para importar y exportar datos, entre otras tareas. Puedes descargar [MongoDB Command Line Database Tools](https://www.mongodb.com/try/download/database-tools) desde la web oficial.
 

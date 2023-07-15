@@ -29,7 +29,7 @@
    4.6 [Noms de variables de tipus](#46-noms-de-variables-de-tipus)\
    4.7 [Camel case: definit](#47-camel-case--definit)
 
-5. [**LLIBRERIES UTILITZADES**](#5-libraries-utilitzades)\
+5. [**LLIBRERIES UTILITZADES**](#5-llibreries-utilitzades)\
    5.1 [Plugins principals](#51-plugins-principals)\
    5.2 [Àrea d'implementació](#52-àrea-dimplementació)\
    5.3 [Àrea de proves (testing)](#53-àrea-de-proves--testing-)
@@ -430,7 +430,7 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 [Google Java Style Guide: 5.3 Camel case defined](https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)
 
 ----------------------------------------------------------------
-# 5. LIBRARIES UTILITZADES
+# 5. LLIBRERIES UTILITZADES
 
 ## 5.1 Plugins principals
 - 'java'
@@ -441,95 +441,94 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ## 5.2 Àrea d'implementació
 
 - BOOTSTRAP
-    - Version 4.0.2
-    - group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+    - Versió 4.0.2
+    - 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
 
 - COMMONS IO
-    - Version 2.11.0
+    - Versió 2.11.0
     - 'commons-io:commons-io:2.11.0'
 - COMMONS LANG
-    - Version 3.12.0
+    - Versió 3.12.0
     - 'org.apache.commons:commons-lang3:3.12.0'
 - COMMONS VALIDATOR
-    - Version 1.7
+    - Versió 1.7
     - 'commons-validator:commons-validator:1.7'
 - CONSUL CONFIG
-    - Version 4.0.2
+    - Versió 4.0.2
     - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
 - CONSUL DISCOVERY
-    - Version 4.0.2
+    - Versió 4.0.2
     - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
 - PROJECTLOMBOK
-    - Version 1.18.26
+    - Versió 1.18.26
     - 'org.projectlombok:lombok:1.18.26'
 - SPRING CONTEXT
-    - Version 3
+    - Versió 3
     - 'org.springframework:spring-context:5.3.13'
 - SPRING BOOT AUTOCONFIGURE
-    -  Version 3.0.6
+    -  Versió 3.0.6
     - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
 - SPRING BOOT CLOUD COMMONS
-    - Version 4.0.1
+    - Versió 4.0.1
     - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
 - SPRING BOOT STARTER ACTUATOR
-    - Version 3.0.6
+    - Versió 3.0.6
     - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
 - SPRING BOOT STARTER DATA MONGODB
-    - Version 3.0.6
+    - Versió 3.0.6
     - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
 - SPRING BOOT STARTER DATA MONGODB REACTIVE
-    - Version 3.0.6
+    - Versió 3.0.6
     - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
 - SPRING BOOT STARTER WEB
-    - Version 3.0.6
+    - Versió 3.0.6
     - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
 - SPRING BOOT STARTER WEBFLUX
-    - Version 3.0.6
+    - Versió 3.0.6
     - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
 - SPRINGDOC OPENAPI
-    - Version 2.1.0
+    - Versió 2.1.0
     - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 ## 5.3 Àrea de proves (testing)
 
 - ASSERTJ
-    - Version 3.24.2
+    - Versió 3.24.2
     - 'org.assertj:assertj-core:3.24.2'
 - SPRING
-    - Version 5.3.13
+    - Versió 5.3.13
     - 'org.springframework:spring-test:5.3.13'
 - HAMCREST
-    - Version 2.2
+    - Versió 2.2
     - 'org.hamcrest:hamcrest:2.2'
 - JUNIT
     - 'org.junit.jupiter:junit-jupiter'
 - JUNIT JUPITER
-    - Version 1.17.6
+    - Versió 1.17.6
     - 'org.testcontainers:junit-jupiter:1.17.6'
 - JUNIT PLATAFORM SUITE
-    - Version 1.8.1
+    - Versió 1.8.1
     - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
 - MOCKITO
-    - Version 5.3.1
+    - Versió 5.3.1
     - 'org.mockito:mockito-core:5.3.1'
 - MOCK WEBSERVER
-    - Version 4.9.3
+    - Versió 4.9.3
     - 'com.squareup.okhttp3:mockwebserver:4.9.3'
 - MONGODB
-    - Version 1.17.6
+    - Versió 1.17.6
     - 'org.testcontainers:mongodb:1.17.6'
 - PROJECT REACTOR
     - Version 3.1.0 Release
     - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
 - SPRING BOOT STARTER TEST
-    - Version 3.06
+    - Versió 3.06
     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
--
 
 ----------------------------------------------------------------
 
 # 6. PROGRAMES REQUERITS
-Los siguientes programas son requeridos para poder trabajar en el proyecto:
+Els programes següents són requerits per poder treballar en el projecte:
 
 ## 6.1 Programes requerits
 
