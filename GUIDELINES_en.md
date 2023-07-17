@@ -210,15 +210,15 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 ## 2.5 Points to consider when doing a PR
-1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
-   - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
-   - La rama comparada es la rama que contiene tus cambios.
-2. Proporciona una descripción de los cambios que has realizado. Sé claro y conciso.
-3. Cuando hayas terminado de completar la información de la pull request, haz clic en el botón verde "Create pull request" para crearla.
-4. A continuación verás como se hace un análisis del build. Si el análisis pasa con éxito, se mostrará un tick verde en el resultado. Por el contrario, si detecta problemas en el código, se mostrará una aspa roja. En este caso, aprieta en "Details" y observa donde se encuentra el problema.
-5. SonarCloud también va a analizar tu código. Te proporcionará información sobre los bugs, vulnerabilities, security hotspots y code smell. El converage debe ser igual o superior al 80.0%.
-6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
-7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
+1. On the pull request creation page, select the base branch and the compared branch:
+   - The base branch is the branch you want to merge your changes to. In this case it is the "develop" branch.
+   - The compared branch is the branch that contains your changes.
+2. Provide a description of the changes you have made. Be clear and concise.
+3. When you have finished completing the pull request information, click the green "Create pull request" button to create the pull request.
+4. You will then see an analysis of the build. If the analysis passes successfully, a green tick will be shown in the result. On the contrary, if it detects problems in the code, a red cross will be shown. In this case, click on "Details" and see where the problem is.
+5. SonarCloud will also analyze your code. It will provide you with information about bugs, vulnerabilities, security hotspots and code smell. The converage must be equal or higher than 80.0%.
+6. In case you need to review and fix some problems, update your local branch with the changes and push back to the corresponding remote branch.
+7. The pull request will be automatically updated with the new changes made to your branch.
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
@@ -231,40 +231,40 @@ https://scrumguides.org/
 ----------------------------------------------------------------
 
 # 3. URL NORMALIZATION
-En este proyecto, es importante seguir ciertas convenciones al establecer la estructura y nomenclatura de las URL's utilizadas en el backend.
+In this project, it is important to follow certain conventions when establishing the structure and nomenclature of the URL's used in the backend.
 
-## 3.1 Convencions
+## 3.1 Conventions
 
-A continuación, se presentan las convenciones que deben seguirse al normalizar las URL's:
+The following are the conventions to be followed when normalizing URLs:
 
-- **Pluralización**: Se recomienda utilizar nombres plurales para los recursos en las URL's. Por ejemplo, en lugar de "/challenge", se utilizaría "/challenges".
+- **Pluralization**: It is recommended to use plural names for resources in URL's. For example, instead of "/challenge", "/challenges" would be used.
 
-- **Uso de sustantivos**: Se deben utilizar sustantivos en lugar de verbos en los nombres de los recursos para mantener una estructura coherente. Por ejemplo, "/challenges" en lugar de "/obtener-challenges".
+- **Use of nouns**: Nouns should be used instead of verbs in resource names to maintain a consistent structure. For example, "/challenges" instead of "/get-challenges".
 
-- **Separadores**: Se ha establecido el uso de guiones ("-") como separador para las palabras en las URL's. Por ejemplo, "/bcn-zones"
+- **Separators**: The use of hyphens ("-") as a separator for words in URLs has been established. For example, "/bcn-zones."
 
-- **Consistencia en minúsculas**: Las URL's deben seguir una convención de minúsculas. Por ejemplo, "/challenges" en minúsculas en lugar de "/Challenges" o "/CHALLENGES".
+- **Consistency in lowercase**: URL's must follow a lowercase convention. For example, "/challenges" in lowercase instead of "/Challenges" or "/CHALLENGES".
 
-- **Evitar caracteres especiales**: Se deben evitar los caracteres especiales en las URL's y, en su lugar, utilizar caracteres alfanuméricos.
+- **Avoid special characters**: Avoid special characters in URLs and use alphanumeric characters instead.
 
-- **Orden jerárquico**: Si hay una jerarquía en los recursos, se debe reflejar en la estructura de las URL's. Por ejemplo, "/challenges/{challengeId}/update" para obtener los desafios del usuario.
+- **Versioned**: If versioning of the API is required, consider including the version in the URL. For example, "/itachallenge/api/v1/challenge" for version 1 of the challenges API.
 
-- **Versionado**: Si se requiere versionar la API, se debe considerar incluir la versión en la URL. Por ejemplo, "/itachallenge/api/v1/challenge" para la versión 1 de la API de challenges.
+- **Versioned**: If versioning of the API is required, consider including the version in the URL. For example, "/itachallenge/api/v1/challenge" for version 1 of the challenges API.
 
-- **Evitar verbos en URL's**: En general, se recomienda evitar incluir verbos en las URL's y utilizar los métodos HTTP adecuados para realizar acciones en los recursos.
+- **Avoid verbs in URLs**: In general, it is recommended to avoid including verbs in URLs and use the appropriate HTTP methods to perform actions on resources.
 
-- **Consistencia con nombres de atributos**: Los nombres de atributos utilizados en las URL's deben ser coherentes con los nombres utilizados en el modelo de datos.
+- **Consistency with attribute names**: The attribute names used in URLs should be consistent with the names used in the data model.
 
-- **Evitar URL's demasiado largas**: Se debe evitar el uso de URL's excesivamente largas y buscar mantenerlas concisas y significativas.
+- **Avoid excessively long URLs**: Avoid using excessively long URLs and try to keep them concise and meaningful.
 
 
-## Ejemplos
+## Examples
 
-Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's según las convenciones establecidas:
+Here are example of how URL's should be strucutrued according to esablished conventions:
 
-- `/challenges` - Obtener una lista de todos los challenges.
-- `/challenges/{challengeId}` - Obtener los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
-- `/challenges/{challengeId}/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
+- `/challenges` - Get a list of all challenges.
+- `/challenges/{challengeId}` - Get the details of the challenges with ID 550e8400-e29b-41d4-a716-446655440000.
+- `/challenges/{challengeId}/update` - Edit challenge details with ID 550e8400-e29b-41d4-a716-446655440000.
 
 
 ----------------------------------------------------------------
@@ -529,37 +529,38 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ----------------------------------------------------------------
 
 # 6. REQUIRED PROGRAMS
-Los siguientes programas son requeridos para poder trabajar en el proyecto:
+
+The following programs are required to work on the project:
 
 ## 6.1 Required programs
 
-- **MongoDB**: MongoDB es una base de datos NoSQL ampliamente utilizada en el desarrollo de aplicaciones. Se utiliza para almacenar y recuperar datos de forma eficiente. Puedes descargar [MongoCompass](https://www.mongodb.com/try/download/compass) desde la web oficial.
+- **MongoDB**: MongoDB is a NoSQL database widley used in application development. It is used to store and retrive data efficiently. You can download [MongoCompass](https://www.mongodb.com/try/download/compass) from the official website.
+  
+- **Postman**: Postman is a tool that will allow you to easily test and document APIs. It is especially useful for sending HTTP requests and verifying the responses. You can download [Postman](https://www.postman.com/downloads/) from the official website.
 
-- **Postman**: Postman es una herramienta que te permitirá probar y documentar las API de forma sencilla. Es especialmente útil para enviar solicitudes HTTP y verificar las respuestas. Puedes descargar [Postman](https://www.postman.com/downloads/) desde la web oficial.
+- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
 
-- **Consul**: Consul es una herramienta de descubrimiento y configuración de servicios. Se utiliza para gestionar la comunicación entre diferentes componentes de la aplicación. Puedes descargar [Consul](https://developer.hashicorp.com/consul/downloads) desde la web oficial.
+- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
 
-- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) desde la web oficial.
+- **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
-- **Git**: Git es un sistema de control de versiones distribuido ampliamente utilizado en el desarrollo de software. Te permitirá colaborar con otros desarrolladores y mantener un historial de cambios en el código fuente. Puedes descargar [Git](https://git-scm.com/downloads) desde la web oficial.
+- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 17.0.7 del JDK que es la que se usa en este proyecto. Puedes descargar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) desde la web oficial de Oracle.
-
-Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
+It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
 ----------------------------------------------------------------
 # 7 RECOMMENDED PROGRAMS
 
-Los siguientes programas son recomendables para facilitar el trabajo en el proyecto:
+The following programs are recommended to failitate the work on the project::
 
 ## 7.1 Recommended programs
 
-- **Mongo Tools**: Mongo Tools es un conjunto de utilidades de línea de comandos para trabajar con MongoDB. Proporciona herramientas adicionales para importar y exportar datos, entre otras tareas. Puedes descargar [MongoDB Command Line Database Tools](https://www.mongodb.com/try/download/database-tools) desde la web oficial.
+- **Mongo Tools**: Mongo Tools is a set of command line utilities for working with MongoDB. It provides additional tools for importing and exporting data, among other tasks. You can download [MongoDB Command Line Database Tools](https://www.mongodb.com/try/download/database-tools) from the official website.
 
-- **Mongo Shell**: Mongo Shell es una interfaz de línea de comandos para MongoDB. Proporciona una forma interactiva de interactuar con la base de datos, ejecutar consultas y administrar colecciones. Puedes descargar [MongoDB Shell](https://www.mongodb.com/try/download/shell) desde la web oficial.
+- **Mongo Shell**: Mongo Shell is a command line interface for MongoDB. It provides an interactive way to interact with the database, execute queries and manage collections. You can download [MongoDB Shell](https://www.mongodb.com/try/download/shell) from the official website.
 
-- **IntelliJ IDEA**: IntelliJ IDEA es un entorno de desarrollo integrado (IDE) muy utilizado en el desarrollo de aplicaciones Java y otros lenguajes de programación. Puedes descargar [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) desde la web oficial.
+- **IntelliJ IDEA**: IntelliJ IDEA is an integrated development environment (IDE) widely used in the development of Java applications and other programming languages. You can download [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) from the official website.
 
-- **Plugin SonarLint para IntelliJ IDEA**: SonarLint es una herramienta de análisis estático de código que te ayudará a identificar y corregir problemas de calidad en tu código. Es una ayuda útil para detectar Code Smell. Puedes obtener más información de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) desde la web ofical de Jetbrains.
+- **Plugin SonarLint para IntelliJ IDEA**: SonarLint is a static code analysis tool that will help you identify and correct quality problems in your code. It is a useful aid to detect Code Smell. You can get more information about [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) from the Jetbrains offical website.
 
-Recuerda que estos programas o plugins son recomendados, pero no son obligatorios. Utilizarlos puede mejorar tu productividad y la calidad del código, pero puedes optar por otras alternativas según tus preferencias y necesidades.
+Remember that these programs or plugins are recommended, but not mandatory. Using them can improve your productivity and code quality, but you can opt for other alternatives according to your preferences and needs.
