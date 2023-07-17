@@ -1,9 +1,6 @@
 package com.itachallenge.challenge.repository;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.DetailDocument;
-import com.itachallenge.challenge.document.ExampleDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,8 +21,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.fail;
 

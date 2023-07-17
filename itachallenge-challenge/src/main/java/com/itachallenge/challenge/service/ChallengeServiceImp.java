@@ -38,7 +38,6 @@ public class ChallengeServiceImp implements IChallengeService {
     public boolean removeResourcesByUuid(UUID idResource){
         Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(idResource);
 
-
         return challengeFlux.flatMap(challenge -> {
                     challenge.setResources(challenge.getResources().stream()
                             .filter(s -> !s.equals(idResource))
