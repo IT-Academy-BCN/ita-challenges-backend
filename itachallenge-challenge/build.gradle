@@ -31,8 +31,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     testCompileOnly 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
-    // USED BY MAPSTRUCT
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
 
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
@@ -43,10 +41,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
     implementation 'org.springframework:spring-context:5.3.13'
-    // mapStruct converter REMOVE IF NOT NEEDED
-    implementation group: 'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
-    // modelmapper converter REMOVE IF NOT NEEDED
-    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
