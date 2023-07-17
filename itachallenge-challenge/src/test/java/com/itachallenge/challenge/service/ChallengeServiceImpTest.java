@@ -164,4 +164,3 @@ class ChallengeServiceImpTest {
         verify(converter).fromChallengeToChallengeDto(any());
     }
 }
-
