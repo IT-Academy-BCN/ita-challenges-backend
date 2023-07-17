@@ -35,7 +35,6 @@ public class ConverterAbstract <F, T> {
         this.methodsOfT = getAllMethods(toClass);
     }
 
-    //TODO: implement reactive Flux
     public T convert(F object) throws ConverterException {
         T instance = getInstance(classToType);
 
