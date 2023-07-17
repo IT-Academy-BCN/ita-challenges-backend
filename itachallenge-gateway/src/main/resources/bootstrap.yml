@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: itachallenge-gateway
+  cloud:
+    consul:
+      enabled: true #habilitar / deshabilitar el uso de consul
+      #host: 172.24.2.0 #IP del agente consul (Docker)
+      host: 127.0.0.1 #IP del agente consul (local)
+      #port: 8500       #puerto HTTP del agente (Docker)
+      port: 8500       #puerto HTTP del agente (local)
+      config:
+        enabled: true
+      discovery:
+        instanceId: id:${spring.application.name}:${random.value}
+        serviceName: ${spring.application.name}
+        enabled: true
+        register: true
+        register-health-check: true
+        deregister: true
+        port: 8080 #puerto del servicio
+        prefer-ip-address: true
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 10s
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: account-service
+          uri: lb://account-service
+          predicates:
+            - Path=/account/**
+          filters:
+            - RewritePath=/account/(?<path>.*), /$\{path}
+        - id: customer-service
+          uri: lb://customer-service
+          predicates:
+            - Path=/customer/**
+          filters:
+            - RewritePath=/customer/(?<path>.*), /$\{path}
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+          filters:
+            - RewritePath=/order/(?<path>.*), /$\{path}
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/product/**
+          filters:
+            - RewritePath=/product/(?<path>.*), /$\{path}
+
