@@ -26,28 +26,12 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: account-service
-          uri: lb://account-service
+        - id: itachallenge
+          uri: http://localhost:8762
           predicates:
-            - Path=/account/**
+            - Path=/itachallenge/api/v1/challenge/**
           filters:
-            - RewritePath=/account/(?<path>.*), /$\{path}
-        - id: customer-service
-          uri: lb://customer-service
-          predicates:
-            - Path=/customer/**
-          filters:
-            - RewritePath=/customer/(?<path>.*), /$\{path}
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/order/**
-          filters:
-            - RewritePath=/order/(?<path>.*), /$\{path}
-        - id: product-service
-          uri: lb://product-service
-          predicates:
-            - Path=/product/**
-          filters:
-            - RewritePath=/product/(?<path>.*), /$\{path}
+            - RewritePath=*/challenge/(?<path>.*), /$\{path}
+server:
+  port: 8080
 
