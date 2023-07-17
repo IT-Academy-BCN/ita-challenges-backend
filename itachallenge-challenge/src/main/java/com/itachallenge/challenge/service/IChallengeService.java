@@ -8,7 +8,6 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id);
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
-
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
 
 }
