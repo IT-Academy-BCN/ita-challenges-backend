@@ -2,21 +2,23 @@
 
 ## Table of Contents
 
-1. [**PROJECT'S LINKS**](#1-projec-s-links)\
+1. [**PROJECT'S LINKS**](#1-project-links)\
    1.1 [Project's Links](#11-project-links) 
 
 2. [**WORK PROCEDURES**](#2-work-procedures)\
    2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
    2.2 [Git configurations](#22-git-configurations)\
+   2.2.1 [Git ignore](#221-git-ignore)\
+   2.2.2 [Autocrlf](#222-autocrlf)\
    2.3 [Daily Procedure](#23-daily-procedure)\
    2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
    2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
    2.6 [Scrum metodology](#26-scrum-metodology)
 
 3. [**URL NORMALIZATION**](#3-url-normalization)\
-   3.1 [Convencions](#31-convencions)
+   3.1 [Conventions](#31-conventions)
 
-4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)\
+4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc---)\
    4.1 [Package names](#41-package-names)\
    4.2 [Class names](#42-class-names)\
    4.2.1 [Test Class names](#421-test-class-names)\
@@ -25,9 +27,9 @@
    4.3.1 [Test Method names](#431-test-method-names)\
    4.4 [Constant names](#44-constant-names)\
    4.5 [Local variable names](#45-local-variable-names)\
-   4.5.1 [Temporary "throwaway" variables](#451-temporary-"throwaway"-variables)\
+   4.5.1 [Temporary "throwaway" variables](#451-temporary--throwaway--variables)\
    4.6 [Type variable names](#46-type-variable-names)\
-   4.7 [Camel case: defined](#47-camel-case:-defined)  
+   4.7 [Camel case: defined](#47-camel-case--defined)  
    
 5. [**LIBRARIES USED**](#5-libraries-used)\
    5.1 [Main Plugins](#51-main-plugins)\
@@ -42,7 +44,7 @@
 
 ----------------------------------------------------------------
 
-# 1. PROJECT'S LINKS
+# 1. PROJECT LINKS
 ## 1.1 Project links
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
 <img src="img/GitHub.jpg" alt="isolated" width="400"/>
