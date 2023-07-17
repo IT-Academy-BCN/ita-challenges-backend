@@ -273,8 +273,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ## 4.1 Nombre de los Packages
 #### NORMAS
-    - All in Lowercase
-    - Only letters & digits
+    - Todo en minúscula
+    - Sólo letras y dígitos
 
 #### EJEMPLO
     - com.itachallenge.user
@@ -290,7 +290,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.2 Nombre de las clases
 #### NORMAS
     - UpperCamelCase
-    - Only letters & digits
+    - Sólo letras y dígitos
 
 #### EJEMPLO
     - UserController
@@ -303,8 +303,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ### 4.2.1 Nombre de las clases de prueba (testing)
 #### NORMAS
     - UpperCamelCase
-    - End with 'Test'
-    - Only letters & digits
+    - Terminar con 'Test'
+    - Sólo letras y dígitos
 
 #### EJEMPLOS
     - ChallengeControllerTest
@@ -317,14 +317,14 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ### 4.2.2 Nombre de las clases de interficie
 #### NORMAS
     - UpperCamelCase
-    - Only letters & digits
+    - Sólo letras y dígitos
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 ## 4.3 Nombre de los métodos
 #### NORMAS
     - lowerCamelCase 
-    - Only letters & digits
+    - Sólo letras y dígitos
 
 #### EJEMPLO
     - isValidUUID
@@ -337,8 +337,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.3.1 Nombre de los métodos de prueba (testing)
 #### NORMAS
     - lowerCamelCase
-    - Only letters & digits
-    - Ended with '_test'
+    - Sólo letras y dígitos
+    - Terminar con '_test'
 
 #### EJEMPLO
     - getChallengeId_test
@@ -352,9 +352,9 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ----------------------------------------------------------------
 ## 4.4 Nombre de constantes
 #### NORMAS
-    - Uppercase letters
-    - Only letters & digits
-    - Word separete with a single underscore '_'
+    - Mayúsculas
+    - Sólo letras y dígitos
+    - Palabra separada con un solo guión bajo '_'
 
 #### EJEMPLO
     - static final int BEST_YEAR = 1977;
@@ -369,11 +369,11 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.5 Nombre de variables locales
 #### NORMAS
     - lowerCamelCase
-    - Start with letter
-    - Variable names should be short yet meaningful  
+    - Comienza con letra
+    - Los nombres de las variables deben ser breves pero significativos.  
 
 #### EJEMPLO
-    - int  = 1977;
+    - int year = 1977;
     - static final String BEST_MONTH = "February";
 
 #### LINKS
@@ -383,7 +383,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ### 4.5.1 Variables temporales "throwaway"
 #### NORMAS
     - Only use for temporary "throwaway" variables
-    - lower case
+    - Minúscula
 
 #### EJEMPLO
     - int   => i, j, k, m and n
@@ -396,8 +396,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ----------------------------------------------------------------
 ## 4.6 Nombres de variables de tipo
 #### NORMAS
-    - A single capital letter, optionally followed by a single numeral
-    - A name in the form used for classes
+    - Una sola letra mayúscula, opcionalmente seguida de un solo número
+    - Un nombre en la forma utilizada para las clases
 
 #### EJEMPLO
     - E, T, X, T2
@@ -410,12 +410,12 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ----------------------------------------------------------------
 ## 4.7 Camel case: definido
 #### NORMAS
-    - only letters & digits
+    - Sólo letras y dígitos
     - UpperCamelCase
-        - Every first letter of every word are Upper letter
+        - Cada primera letra de cada palabra es letra mayúscula
     - lowerCamelCase
-        - The first letter of each word is in lowercase, except for the first word which starts 
-          with a lowercase letter 
+        - La primera letra de cada palabra está en minúscula, excepto la primera palabra que comienza
+           con una letra minúscula 
 
 #### EJEMPLO
     - UpperCamelCase

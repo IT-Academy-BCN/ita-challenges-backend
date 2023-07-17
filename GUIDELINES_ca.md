@@ -274,8 +274,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 
 ## 4.1 Noms dels Packages
 #### NORMES
-    - All in Lowercase
-    - Only letters & digits
+    - Tot en minúscula
+    - Només lletres i dígits
 
 #### EXEMPLE
     - com.itachallenge.user
@@ -291,7 +291,7 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ## 4.2 Noms de les classes
 #### NORMES
     - UpperCamelCase
-    - Only letters & digits
+    - Només lletres i dígits
 
 #### EXEMPLE
     - UserController
@@ -304,8 +304,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ### 4.2.1 Noms de les classes de prova (testing)
 #### NORMES
     - UpperCamelCase
-    - End with 'Test'
-    - Only letters & digits
+    - Final amb 'Test'
+    - Només lletres i dígits
 
 #### EXEMPLE
     - ChallengeControllerTest
@@ -318,14 +318,14 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ### 4.2.2 Noms de les classes d'interfice
 #### NORMES
     - UpperCamelCase
-    - Only letters & digits
+    - Només lletres i dígits
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
 ## 4.3 Noms dels mètodes
 #### NORMES
-    - lowerCamelCase 
-    - Only letters & digits
+    - lowerCamelCase
+    - Només lletres i dígits
 
 #### EXEMPLE
     - isValidUUID
@@ -338,8 +338,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ## 4.3.1 Noms dels mètodes de prova (testing)
 #### NORMES
     - lowerCamelCase
-    - Only letters & digits
-    - Ended with '_test'
+    - Només lletres i dígits
+    - Final amb '_test'
 
 #### EXEMPLE
     - getChallengeId_test
@@ -353,9 +353,9 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ----------------------------------------------------------------
 ## 4.4 Noms de constants
 #### NORMES
-    - Uppercase letters
-    - Only letters & digits
-    - Word separete with a single underscore '_'
+    - Majúscules
+    - Només lletres i dígits
+    - Paraula separada amb un sol guió baix '_'
 
 #### EXEMPLE
     - static final int BEST_YEAR = 1977;
@@ -370,11 +370,11 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ## 4.5 Noms de variables locals
 #### NORMES
     - lowerCamelCase
-    - Start with letter
-    - Variable names should be short yet meaningful  
+    - Comença amb lletra
+    - Els noms de variables han de ser curts però significatius  
 
 #### EXEMPLE
-    - int  = 1977;
+    - int year = 1977;
     - static final String BEST_MONTH = "February";
 
 #### LINKS
@@ -383,8 +383,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 
 ### 4.5.1 Variables temporals "throwaway"
 #### NORMES
-    - Only use for temporary "throwaway" variables
-    - lower case
+    - Utilice sólo para variables temporales "throwaway"
+    - Minúscula
 
 #### EXEMPLE
     - int   => i, j, k, m and n
@@ -397,8 +397,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ----------------------------------------------------------------
 ## 4.6 Noms de variables de tipus
 #### NORMES
-    - A single capital letter, optionally followed by a single numeral
-    - A name in the form used for classes
+    - Una sola lletra majúscula, seguida opcionalment d'un sol número
+    - Un nom en la forma utilitzada per a les classes
 
 #### EXEMPLE
     - E, T, X, T2
@@ -411,12 +411,12 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 ----------------------------------------------------------------
 ## 4.7 Camel case: definit
 #### NORMES
-    - only letters & digits
+    - Només lletres i dígits
     - UpperCamelCase
-        - Every first letter of every word are Upper letter
+        - Cada primera lletra de cada paraula és lletra majúscula
     - lowerCamelCase
-        - The first letter of each word is in lowercase, except for the first word which starts 
-          with a lowercase letter 
+        - La primera lletra de cada paraula està en minúscula, excepte la primera paraula que comença
+           amb una lletra minúscula 
 
 #### EXEMPLE
     - UpperCamelCase
