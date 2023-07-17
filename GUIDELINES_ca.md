@@ -70,7 +70,7 @@
 3. Assegureu-vos d'estar a la branca "develop". Podeu verificar les branques disponibles i la branca actual executant la següent ordre:
 
          git branch
-4. Si no estàs a la branca "develop", canvieu-hi executant la següent ordre:
+4. Si no estàs a la branca "develop", canvieu-ho executant la següent ordre:
 
          git checkout develop
 5. Creeu una nova branca amb el vostre nom per realitzar els vostres canvis:
@@ -115,7 +115,7 @@
 5. Executeu la següent ordre per veure si l'usuari s'ha creat correctament:
 
           show users
-6. Sal de la terminal de MongoDB escrivint la següent ordre:
+6. Surt de la terminal de MongoDB escrivint la següent ordre:
 
           exit
 
@@ -190,7 +190,7 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 1. Et pots assignar qualsevol targeta que estigui a la columna "Todo" sempre que estigui lliure.
 2. Quan comencis a treballar amb la targeta, l'hauràs de moure a la columna "Doing".
 3. Quan la tasca de la targeta hagi estat completada i hagis fet la PR a la branca "develop", pots moure la targeta a la columna "Testing" per indicar que ja està a punt per ser provada.
-4. Finalment, quan el teu PR hagi estat acceptada i, per tant, la targeta hagi estat aprovada a les proves, aquesta es passarà a la columna "Done". Això indica que la targeta ha estat completada amb èxit.
+4. Finalment, quan el teu PR hagi estat acceptat i, per tant, la targeta hagi estat aprovada a les proves, aquesta es passarà a la columna "Done". Això indica que la targeta ha estat completada amb èxit.
 
 ### Ja tinc una targeta assignada. Ara que faig?
 1. Obre el teu terminal o línia d'ordres i navega fins al directori del teu projecte. Assegureu-vos d'estar a la branca "develop".
