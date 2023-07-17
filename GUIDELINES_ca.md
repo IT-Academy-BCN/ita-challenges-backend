@@ -1,107 +1,108 @@
-# IT-Challenge Style Guide
+# Guia d'estil de IT-Challenge
 
-## Table of Contents
+## Taula de continguts
 
-1. [**PROJECT'S LINKS**](#1-projec-s-links)\
-   1.1 [Project's Links](#11-project-links) 
+1. [**ENLLAÇOS DEL PROJECTE**](#1-enllaços-del-projecte)\
+   1.1 [Enllaços del projecte](#11-enllaços-del-projecte)
 
-2. [**WORK PROCEDURES**](#2-work-procedures)\
-   2.1 [First things to do in the project](#21-first-things-to-do-in-the-project)\
-   2.2 [Git configurations](#22-git-configurations)\
-   2.3 [Daily Procedure](#23-daily-procedure)\
-   2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
-   2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
-   2.6 [Scrum metodology](#26-scrum-metodology)
+2. [**PROCEDIMENTS DE TREBALL**](#2-procediments-de-treball)\
+   2.1 [Primeres tasques del projecte](#21-primeres-tasques-del-projecte)\
+   2.2 [Configuracions de Git](#22-configuracions-git)\
+   2.3 [Procediment diari](#23-procediment-diari)\
+   2.4 [Procediment de treball amb targetes](#24-treball-amb-les-targetes)\
+   2.5 [Aspectes a tenir en compte en fer una PR](#25-aspectes-a-tenir-en-compte-a-lhora-de-fer-un-pr)\
+   2.6 [Metodologia Scrum](#26-metodologia-scrum)
 
-3. [**URL NORMALIZATION**](#3-url-normalization)\
+3. [**NORMALITZACIÓ D'URL**](#3-normalització-durl)\
    3.1 [Convencions](#31-convencions)
 
-4. [**DEFINITIONS OF METHOD, CLASS, ETC...**](#4-definitions-of-method,-class,-etc...)\
-   4.1 [Package names](#41-package-names)\
-   4.2 [Class names](#42-class-names)\
-   4.2.1 [Test Class names](#421-test-class-names)\
-   4.2.2 [Interface Class names](#422-interface-class-names)\
-   4.3 [Method names](#43-method-names)\
-   4.3.1 [Test Method names](#431-test-method-names)\
-   4.4 [Constant names](#44-constant-names)\
-   4.5 [Local variable names](#45-local-variable-names)\
-   4.5.1 [Temporary "throwaway" variables](#451-temporary-"throwaway"-variables)\
-   4.6 [Type variable names](#46-type-variable-names)\
-   4.7 [Camel case: defined](#47-camel-case:-defined)  
-   
-5. [**LIBRARIES USED**](#5-libraries-used)\
-   5.1 [Main Plugins](#51-main-plugins)\
-   5.2 [Implementation area](#52-implementation-area)\
-   5.3 [Testimplementation area](#53-testimplementation-area)
+4. [**DEFINICIONS DE MÈTODE, CLASSE, ETC...**](#4-definicions-de-mètode-classe-etc)\
+   4.1 [Noms dels Packages](#41-noms-dels-packages)\
+   4.2 [Noms de les classes](#42-noms-de-les-classes)\
+   4.2.1 [Noms de les classes de prova (testing)](#421-noms-de-les-classes-de-prova--testing-)\
+   4.2.2 [Noms de les classes d'interficie](#422-noms-de-les-classes-dinterfice)\
+   4.3 [Noms dels mètodes](#43-noms-dels-mètodes)\
+   4.3.1 [Noms dels mètodes de prova (testing)](#431-noms-dels-mètodes-de-prova--testing-)\
+   4.4 [Noms de constants](#44-noms-de-constants)\
+   4.5 [Noms de variables locals](#45-noms-de-variables-locals)\
+   4.5.1 [Variables temporals "throwaway"](#451-variables-temporals--throwaway-)\
+   4.6 [Noms de variables de tipus](#46-noms-de-variables-de-tipus)\
+   4.7 [Camel case: definit](#47-camel-case--definit)
 
-6. [**REQUIRED PROGRAMS**](#6-required-programs)\
-   6.1 [Requierd programs](#61-required-programs)
+5. [**LLIBRERIES UTILITZADES**](#5-llibreries-utilitzades)\
+   5.1 [Plugins principals](#51-plugins-principals)\
+   5.2 [Àrea d'implementació](#52-àrea-dimplementació)\
+   5.3 [Àrea de proves (testing)](#53-àrea-de-proves--testing-)
 
-7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
-   7.1 [Recommended programs](#71-recommended-programs)
+6. [**PROGRAMES REQUERITS**](#6-programes-requerits)\
+   6.1 [Programes requerits](#61-programes-requerits)
+
+7. [**PROGRAMAS RECOMANATS**](#7-programas-recomanats)\
+   7.1 [Programas recomanats](#71-programes-recomanats)
+
 
 ----------------------------------------------------------------
 
-# 1. LINKS DEL PROJECTE
-## 1.1 Links del projecte
+# 1. ENLLAÇOS DEL PROJECTE
+## 1.1 Enllaços del projecte
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
-<img src="img/GitHub.jpg" alt="isolated" width="400"/>
+  <img src="img/GitHub.jpg" alt="isolated" width="400"/>
 - Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
-<img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
+  <img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
 - Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
-<img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
+  <img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
-<img src="img/Figma.jpg" alt="Figma image" width="400"/>
+  <img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
 ----------------------------------------------------------------
 
 # 2. PROCEDIMENTS DE TREBALL
 
-## 2.1 Primers passos per fer en el projecte
-### 1. Afegi nom i GITHUB a l'arxiu contributors.md
+## 2.1 Primeres tasques del projecte
+### 1. Afegir el teu nom y GitHub al arxiu contributors.md
 
-1. Clona el repositori ita-challenges-backend del GitHub en el teu sistema local:
+1. Clona el repositori ita-challenges-backend de GitHub al teu sistema local:
 
          git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
-2. Modifica el directori del repositori clonat:
+2. Canvia el directori del repositori clonat:
 
          cd ita-challenges-backend
-3. Assegurar-se d'estar en la branca "develop". Pots verificar les branques disponibles y la branca actual executant la següent comanda:
+3. Assegureu-vos d'estar a la branca "develop". Podeu verificar les branques disponibles i la branca actual executant la següent ordre:
 
          git branch
-4. Si no estàs en la branca "develop", canvia a ella executant la següent comanda:
+4. Si no estàs a la branca "develop", canvieu-hi executant la següent ordre:
 
          git checkout develop
-5. Crea una nova branca amb el seu nom per realitzar els canvis:
+5. Creeu una nova branca amb el vostre nom per realitzar els vostres canvis:
 
-         git checkout -b nom-de-la-branca
-   Substitueix "nom-de-la-branca" per un nom que descriptiu dels canvis que es planteja fer.
-
-
-6. Obra l'arxiu contributors.md i afegeix el nom i el teu GitHub.
+         git checkout -b nombre-de-su-rama
+   Reemplaça "nom-de-la-branca" amb un nom descriptiu que indiqui els canvis que planeja realitzar.
 
 
-7. Después de hacer un git add y un git commit, realize el siguiente git push:
+6. Obriu el fitxer contributors.md i afegiu-ne el nom i el GitHub.
+
+
+7. Després de fer un git add y un git commit, realitzi el següent git push:
 
          git push origin nombre-de-su-rama
-8. Abra el repositorio en GitHub y debería ver un mensaje que le permite crear un "pull request" desde su rama recién creada a la rama "develop". Haga clic en el enlace para crear el pull request.
+8. Obriu el repositori a GitHub i hauríeu de veure un missatge que us permet crear un "pull request" des de la seva branca acabada de crear a la branca "develop". Feu clic a l'enllaç per crear el pull request.
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-### 2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
+### 2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
 
-1. Asegúrate de tener las MongoDB Tools instaladas. Si aún no las tienes, ve al apartado de “Programas necesarios” y sigue las instrucciones proporcionadas para descargarlas en tu sistema operativo.
+1. Assegureu-vos de tenir les MongoDB Tools instal·lades. Si encara no en tens, vés a l'apartat de “Programes necessaris” i segueix les instruccions proporcionades per descarregar-les al sistema operatiu.
 
 
-2. Ahora que tienes las MongoDB Tools instaladas, abre la terminal de MongoDB ejecutando el siguiente comando:
+2. Ara que tens les MongoDB Tools instal·lades, obre la terminal de MongoDB executant la següent ordre:
 
-         mongosh
+          mongosh
 
-3. Usa el siguiente comando para crear la base de datos "challenges":
+3. Fes servir la següent ordre per crear la base de dades "challenges":
 
-         use challenges
+          use challenges
 
-4. Una vez dentro de la base de datos "challenges", pega el siguiente bloque de código:
+4. Un cop dins de la base de dades "challenges", enganxa el següent bloc de codi:
 
          db.createUser({
          user: "admin_challenge",
@@ -111,118 +112,118 @@
          ]
          });
 
-5. Ejecuta el siguiente comando para ver si el usuario se ha creado correctamente:
+5. Executeu la següent ordre per veure si l'usuari s'ha creat correctament:
 
-         show users
-6. Sal de la terminal de MongoDB escribiendo el siguiente comando:
+          show users
+6. Sal de la terminal de MongoDB escrivint la següent ordre:
 
-         exit
+          exit
 
-7. Mueve el archivo load-data de la carpeta monogdb.init a la carpeta mongodb-test-data.
-   Si estás utilizando Windows, utiliza el archivo .bat, en cambio, si estás utilizando Mac o Linux, el archivo es .sh.
-
-
-8. En la terminal normal, navega a la carpeta mongodb-test-data utilizando el comando cd.
+7. Mou el fitxer load-data de la carpeta monogdb.init a la carpeta mongodb-test-data.
+   Si utilitzeu Windows, utilitzeu el fitxer .bat, en canvi, si utilitzeu Mac o Linux, el fitxer és .sh.
 
 
-9. Para importar el documento, ejecuta el siguiente comando:
-
-   · En Windows:
-
-         load-data.bat
-
-   · En Mac o Linux:
-
-         ./load-data.sh
-
-   Si recibes un mensaje de permiso denegado, otorga permisos de ejecución al archivo con el siguiente comando:
-
-         chmod +x load-data.sh
-
-10. Luego, mueve el archivo load-data.bat o load-data.sh de vuelta a su carpeta original, mongodb.init.
+8. A la terminal normal, navega a la carpeta mongodb-test-data utilitzant l'ordre cd.
 
 
-11. Abre MongoDB Compass, haz un "Reload Data" y ya verás la base de datos correctamente importada.
+9. Per importar el document, executa la següent ordre:
+
+   · A Windows:
+
+          load-data.bat
+
+   · A Mac o Linux:
+
+          ./load-data.sh
+
+   Si rebeu un missatge de permís denegat, atorgueu permisos d'execució al fitxer amb l'ordre següent:
+
+          chmod +x load-data.sh
+
+10. Després, moveu el fitxer load-data.bat o load-data.sh de tornada a la vostra carpeta original, mongodb.init.
+
+
+11. Obre MongoDB Compass, fes un "Reload Data" i ja veuràs la base de dades correctament importada.
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.2 Git configurations
+## 2.2 Configuracions Git
 
-Necessary Git configurations to prevent problems
+Configuracions necessàries de Git per evitar problemes
 
 ### 2.2.1 Git ignore
-1. Copy file ".gitignore" from root project\
+1. Copieu el fitxer ".gitignore" del projecte arrel\
    <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
-2. Paste it in the PC directory (outside of project folder)
-3. In Git Bash...
-4. Run the command: 'git config --global core-excludesfile path/.gitignore'\
-Where...\
-'Path': is the path of the folder where the ".gitignore" file is located.\
-Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
+2. Enganxeu-lo al directori de l'ordinador (fora de la carpeta del projecte)
+3. A Git Bash...
+4. Executeu l'ordre: 'git config --global core-excludesfile path/.gitignore'\
+   Where...\
+   'Path': és el camí de la carpeta on es troba el fitxer ".gitignore".\
+   Nota! Aquesta configuració no només servirà per al projecte actual, sinó també per a tots els projectes que feu amb GIT.
 
 ### 2.2.2 Autocrlf
-If you have a problem with a PR that modify a lot of files, >100, you need do next...
-1. In Git Bash...
-2. Run the command: 'git config --global core.autocrlf true'
+Si teniu un problema amb un PR que modifica molts fitxers, >100, heu de fer el següent...
+1. A Git Bash...
+2. Executeu l'ordre: 'git config --global core.autocrlf true'
 
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.3 Daily Procedure
-1. Conectarse a Teams a las 9:15h
-2. Hacer pull de la rama "develop"
-3. Hacer merge de develop con la rama en la que estás trabajando
-4. Coffee time a las 10:15h aproximadamente
+## 2.3 Procediment diari
+1. Connectar-se a Teams a les 9:15h
+2. Fer pull de la branca "develop"
+3. Fer merge de develop amb la branca en què estàs treballant
+4. "Coffee time" a les 10:15h aproximadament
 
-IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
-
-----------------------------------------------------------------
-----------------------------------------------------------------
-## 2.4 Work with cards Procedure
-### Como asignarse una tarjeta
-1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
-2. Haz clic en la tarjeta para abrirla y ver más detalles.
-3. En la parte de la derecha, en el campo "Assigness", si aprietas "Add assigness" se abre un desplegable con todos los participantes del proyecto y ya te puedes seleccionar a ti para asignártela.
-4. Una vez que te has asignado la tarjeta, tu perfil de usuario se mostrará como el responsable de la tarjeta.
-
-### Sistema de columnas para organizar y visualizar el progreso de las tarjetas
-1. Te puedes asignar cualquier tarjeta que esté en la columna "Todo" siempre y cuando esté libre.
-2. Cuando empieces a trabajar con la tarjeta, la deberás mover a la columna "Doing".
-3. Cuando la tarea de la tarjeta haya sido completada y hayas hecho la PR a la rama "develop", puedes mover la tarjeta a la columna "Testing" para indicar que ya está lista para ser probada.
-4. Finalmente, cuando tu PR haya sido aceptada y, por lo tanto, la tarjeta haya sido aprobada en las pruebas, esta se pasará a la columna "Done". Esto indica que la tarjeta se ha completado con éxito.
-
-### Ya tengo una targeta asignada. ¿Ahora que hago?
-1. Abre tu terminal o línea de comandos y navega hasta el directorio de tu proyecto. Asegúrate de estar en la rama "develop".
-
-
-2. Crea una nueva rama utilizando el formato "feature#numeroDeLaTarjeta". Se refiere al número de la tarjeta del Spring Backlog. Por ejemplo:
-
-         git checkout -b feature#123
-3. Ahora puedes comenzar a realizar los cambios en tu rama.
-
-
-4. Una vez hayas realizado las modificaciones necesarias haz un push de tu rama al repositorio remoto. Si estuviésemos en la feature#123 deberíamos hacer:
-
-         git push origin feature#123
-
-5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature#123" hacia la rama "develop".
+IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de les 9:15h fins a les 13:15h, per treballar en equip (tret de circumstàncies que ho justifiquin).
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.5 Points to consider when doing a PR
-1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
-   - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
-   - La rama comparada es la rama que contiene tus cambios.
-2. Proporciona una descripción de los cambios que has realizado. Sé claro y conciso.
-3. Cuando hayas terminado de completar la información de la pull request, haz clic en el botón verde "Create pull request" para crearla.
-4. A continuación verás como se hace un análisis del build. Si el análisis pasa con éxito, se mostrará un tick verde en el resultado. Por el contrario, si detecta problemas en el código, se mostrará una aspa roja. En este caso, aprieta en "Details" y observa donde se encuentra el problema.
-5. SonarCloud también va a analizar tu código. Te proporcionará información sobre los bugs, vulnerabilities, security hotspots y code smell. El converage debe ser igual o superior al 80.0%.
-6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
-7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
+## 2.4 Treball amb les targetes
+### Com assignar-se una targeta
+1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te.
+2. Fes clic a la targeta per obrir-la i veure'n més detalls.
+3. A la part de la dreta, al camp "Assigness", si prems "Add assigness" s'obre un desplegable amb tots els participants del projecte i ja et pots seleccionar a tu per assignar-te-la.
+4. Un cop t'has assignat la targeta, el vostre perfil d'usuari es mostrarà com el responsable de la targeta.
+
+### Sistema de columnes per organitzar i visualitzar el progrés de les targetes
+1. Et pots assignar qualsevol targeta que estigui a la columna "Todo" sempre que estigui lliure.
+2. Quan comencis a treballar amb la targeta, l'hauràs de moure a la columna "Doing".
+3. Quan la tasca de la targeta hagi estat completada i hagis fet la PR a la branca "develop", pots moure la targeta a la columna "Testing" per indicar que ja està a punt per ser provada.
+4. Finalment, quan el teu PR hagi estat acceptada i, per tant, la targeta hagi estat aprovada a les proves, aquesta es passarà a la columna "Done". Això indica que la targeta ha estat completada amb èxit.
+
+### Ja tinc una targeta assignada. Ara que faig?
+1. Obre el teu terminal o línia d'ordres i navega fins al directori del teu projecte. Assegureu-vos d'estar a la branca "develop".
+
+
+2. Crea una nova branca utilitzant el format "feature#numeroDeLaTarjeta". Es refereix al número de la targeta del Spring Backlog. Per exemple:
+
+          git checkout -b feature#123
+3. Ara pots començar a fer els canvis a la teva branca.
+
+
+4. Un cop hagis realitzat les modificacions necessàries fes un push de la teva branca al repositori remot. Si estiguéssim a la feature#123 hauríem de fer:
+
+          git push origin feature#123
+
+5. Finalment, vés a GitHub on es troba el teu repositori i crea un "pull request" des de la teva branca "feature#123" cap a la branca "develop".
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 2.6 Scrum metodology
+## 2.5 Aspectes a tenir en compte a l'hora de fer un PR
+1. A la pàgina de creació de "pull request", selecciona la branca base i la branca comparada:
+    - La branca base és la branca a la qual vols fusionar els teus canvis. En aquest cas és la branca “develop”.
+    - La branca comparada és la branca que conté els teus canvis.
+2. Proporciona una descripció dels canvis que has fet. Sigues clar i concís.
+3. Quan hagis acabat de completar la informació de la pull request, fes clic al botó verd "Create pull request" per crear-la.
+4. A continuació veuràs com es fa una anàlisi del "build". Si l'anàlisi passa amb èxit, es mostrarà un tick verd al resultat. Per contra, si detecta problemes al codi, es mostrarà una aspa vermella. En aquest cas, prem a "Details" i observa on es troba el problema.
+5. SonarCloud també analitzarà el teu codi. Et proporcionarà informació sobre els bugs, vulnerabilities, security hotspots i code smell. El converage ha de ser igual o superior al 80,0%.
+6. En cas que hagis de revisar i corregir alguns problemes, actualitza la teva branca local amb els canvis i fes push novament a la branca remota corresponent.
+7. La pull request s'actualitzarà automàticament amb els nous canvis realitzats a la teva branca.
+
+----------------------------------------------------------------
+----------------------------------------------------------------
+## 2.6 Metodologia Scrum
 https://scrumguides.org/
 
 
@@ -230,51 +231,51 @@ https://scrumguides.org/
 
 ----------------------------------------------------------------
 
-# 3. URL NORMALIZATION
-En este proyecto, es importante seguir ciertas convenciones al establecer la estructura y nomenclatura de las URL's utilizadas en el backend.
+# 3. NORMALITZACIÓ D'URL
+En aquest projecte, és important seguir certes convencions en establir l'estructura i la nomenclatura de les URL's utilitzades en el backend.
 
 ## 3.1 Convencions
 
-A continuación, se presentan las convenciones que deben seguirse al normalizar las URL's:
+A continuació, es presenten les convencions que cal seguir en normalitzar les URL's:
 
-- **Pluralización**: Se recomienda utilizar nombres plurales para los recursos en las URL's. Por ejemplo, en lugar de "/challenge", se utilizaría "/challenges".
+- **Pluralització**: Es recomana utilitzar noms plurals per als recursos a les URL's. Per exemple, en lloc de "/challenge", s'utilitzaria "/challenges".
 
-- **Uso de sustantivos**: Se deben utilizar sustantivos en lugar de verbos en los nombres de los recursos para mantener una estructura coherente. Por ejemplo, "/challenges" en lugar de "/obtener-challenges".
+- **Ús de substantius**: Cal utilitzar substantius en lloc de verbs en els noms dels recursos per mantenir una estructura coherent. Per exemple, "/challenges" en lloc de "/obtenir-challenges".
 
-- **Separadores**: Se ha establecido el uso de guiones ("-") como separador para las palabras en las URL's. Por ejemplo, "/bcn-zones"
+- **Separadors**: S'ha establert l'ús de guions ("-") com a separador per a les paraules a les URL's. Per exemple, "/bcn-zones"
 
-- **Consistencia en minúsculas**: Las URL's deben seguir una convención de minúsculas. Por ejemplo, "/challenges" en minúsculas en lugar de "/Challenges" o "/CHALLENGES".
+- **Consistència en minúscules**: Les URL's han de seguir una convenció de minúscules. Per exemple, "/challenges" en minúscules en lloc de "/Challenges" o "/CHALLENGES".
 
-- **Evitar caracteres especiales**: Se deben evitar los caracteres especiales en las URL's y, en su lugar, utilizar caracteres alfanuméricos.
+- **Evitar caràcters especials**: Cal evitar els caràcters especials a les URL's i, al seu lloc, utilitzar caràcters alfanumèrics.
 
-- **Orden jerárquico**: Si hay una jerarquía en los recursos, se debe reflejar en la estructura de las URL's. Por ejemplo, "/challenges/{challengeId}/update" para obtener los desafios del usuario.
+- **Ordre jeràrquic**: Si hi ha una jerarquia als recursos, s'ha de reflectir en l'estructura de les URL's. Per exemple, "/challenges/{challengeId}/update" per obtenir els desafiaments de l'usuari.
 
-- **Versionado**: Si se requiere versionar la API, se debe considerar incluir la versión en la URL. Por ejemplo, "/itachallenge/api/v1/challenge" para la versión 1 de la API de challenges.
+- **Versionat**: Si cal versionar l'API, cal considerar incloure la versió a la URL. Per exemple, "/itachallenge/api/v1/challenge" per a la versió 1 de l'API de challenges.
 
-- **Evitar verbos en URL's**: En general, se recomienda evitar incluir verbos en las URL's y utilizar los métodos HTTP adecuados para realizar acciones en los recursos.
+- **Evitar verbs a URL's**: En general, es recomana evitar incloure verbs a les URL's i utilitzar els mètodes HTTP adequats per realitzar accions en els recursos.
 
-- **Consistencia con nombres de atributos**: Los nombres de atributos utilizados en las URL's deben ser coherentes con los nombres utilizados en el modelo de datos.
+- **Consistència amb noms d'atributs**: Els noms d'atributs utilitzats a les URL han de ser coherents amb els noms utilitzats en el model de dades.
 
-- **Evitar URL's demasiado largas**: Se debe evitar el uso de URL's excesivamente largas y buscar mantenerlas concisas y significativas.
+- **Evitar URL's massa llargues**: S'ha d'evitar l'ús d'URLs excessivament llargues i cercar mantenir-les concises i significatives.
 
 
-## Ejemplos
+## Exemples
 
-Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's según las convenciones establecidas:
+Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les convencions establertes:
 
-- `/challenges` - Obtener una lista de todos los challenges.
-- `/challenges/{challengeId}` - Obtener los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
-- `/challenges/{challengeId}/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
+- `/challenges` - Obtenir una llista de tots els challenges.
+- `/challenges/{challengeId}` - Obtenir els detalls del challenge amb ID 550e8400-e29b-41d4-a716-446655440000.
+- `/challenges/{challengeId}/update` - Editeu els detalls del challenge amb ID 550e8400-e29b-41d4-a716-446655440000.
 
 
 ----------------------------------------------------------------
 
-# 4. DEFINITIONS OF METHOD, CLASS, ETC...
+# 4. DEFINICIONS DE MÈTODE, CLASSE, ETC...
 
-## 4.1 Package names
-#### RULES
-    - All in Lowercase
-    - Only letters & digits
+## 4.1 Noms dels Packages
+#### NORMES
+    - Tot en minúscula
+    - Només lletres i dígits
 
 #### EXEMPLE
     - com.itachallenge.user
@@ -287,10 +288,10 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.2 Class names
-#### RULES
+## 4.2 Noms de les classes
+#### NORMES
     - UpperCamelCase
-    - Only letters & digits
+    - Només lletres i dígits
 
 #### EXEMPLE
     - UserController
@@ -300,11 +301,11 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.2 class names](https://google.github.io/styleguide/javaguide.html#s5.2.2-class-names)
 
-### 4.2.1 Test Class names
-#### RULES
+### 4.2.1 Noms de les classes de prova (testing)
+#### NORMES
     - UpperCamelCase
-    - End with 'Test'
-    - Only letters & digits
+    - Final amb 'Test'
+    - Només lletres i dígits
 
 #### EXEMPLE
     - ChallengeControllerTest
@@ -314,17 +315,17 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.2 class names](https://google.github.io/styleguide/javaguide.html#s5.2.2-class-names)
 
-### 4.2.2 Interface Class names
-#### RULES
+### 4.2.2 Noms de les classes d'interfice
+#### NORMES
     - UpperCamelCase
-    - Only letters & digits
+    - Només lletres i dígits
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.3 Method names
-#### RULES
-    - lowerCamelCase 
-    - Only letters & digits
+## 4.3 Noms dels mètodes
+#### NORMES
+    - lowerCamelCase
+    - Només lletres i dígits
 
 #### EXEMPLE
     - isValidUUID
@@ -334,11 +335,11 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
 
-## 4.3.1 Test Method names
-#### RULES
+## 4.3.1 Noms dels mètodes de prova (testing)
+#### NORMES
     - lowerCamelCase
-    - Only letters & digits
-    - Ended with '_test'
+    - Només lletres i dígits
+    - Final amb '_test'
 
 #### EXEMPLE
     - getChallengeId_test
@@ -350,11 +351,11 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.4 Constant names
-#### RULES
-    - Uppercase letters
-    - Only letters & digits
-    - Word separete with a single underscore '_'
+## 4.4 Noms de constants
+#### NORMES
+    - Majúscules
+    - Només lletres i dígits
+    - Paraula separada amb un sol guió baix '_'
 
 #### EXEMPLE
     - static final int BEST_YEAR = 1977;
@@ -366,24 +367,24 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.5 Local variable names
-#### RULES
+## 4.5 Noms de variables locals
+#### NORMES
     - lowerCamelCase
-    - Start with letter
-    - Variable names should be short yet meaningful  
+    - Comença amb lletra
+    - Els noms de variables han de ser curts però significatius  
 
 #### EXEMPLE
-    - int  = 1977;
+    - int year = 1977;
     - static final String BEST_MONTH = "February";
 
 #### LINKS
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.4 constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
 
-### 4.5.1 Temporary "throwaway" variables
-#### RULES
-    - Only use for temporary "throwaway" variables
-    - lower case
+### 4.5.1 Variables temporals "throwaway"
+#### NORMES
+    - Utilice sólo para variables temporales "throwaway"
+    - Minúscula
 
 #### EXEMPLE
     - int   => i, j, k, m and n
@@ -394,10 +395,10 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.6 Type variable names
-#### RULES
-    - A single capital letter, optionally followed by a single numeral
-    - A name in the form used for classes
+## 4.6 Noms de variables de tipus
+#### NORMES
+    - Una sola lletra majúscula, seguida opcionalment d'un sol número
+    - Un nom en la forma utilitzada per a les classes
 
 #### EXEMPLE
     - E, T, X, T2
@@ -408,14 +409,14 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ----------------------------------------------------------------
 ----------------------------------------------------------------
-## 4.7 Camel case: defined
-#### RULES
-    - only letters & digits
+## 4.7 Camel case: definit
+#### NORMES
+    - Només lletres i dígits
     - UpperCamelCase
-        - Every first letter of every word are Upper letter
+        - Cada primera lletra de cada paraula és lletra majúscula
     - lowerCamelCase
-        - The first letter of each word is in lowercase, except for the first word which starts 
-          with a lowercase letter 
+        - La primera lletra de cada paraula està en minúscula, excepte la primera paraula que comença
+           amb una lletra minúscula 
 
 #### EXEMPLE
     - UpperCamelCase
@@ -429,137 +430,135 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Google Java Style Guide: 5.3 Camel case defined](https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)
 
 ----------------------------------------------------------------
-# 5. LIBRARIES USED
+# 5. LLIBRERIES UTILITZADES
 
-## 5.1 Main Plugins
-   - 'java'
-     - 'org.springframework.boot' version '3.0.6'
-   - 'jacoco'
-     - 'org.sonarqube' version '4.0.0.2929'
+## 5.1 Plugins principals
+- 'java'
+    - 'org.springframework.boot' version '3.0.6'
+- 'jacoco'
+    - 'org.sonarqube' version '4.0.0.2929'
 
-## 5.2 Implementation area
-    
-   - BOOTSTRAP
-     - Version 4.0.2
-     - group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
-  
-   - COMMONS IO
-     - Version 2.11.0
-     - 'commons-io:commons-io:2.11.0'
-   - COMMONS LANG
-     - Version 3.12.0
-     - 'org.apache.commons:commons-lang3:3.12.0'
-   - COMMONS VALIDATOR
-     - Version 1.7
-     - 'commons-validator:commons-validator:1.7'
-   - CONSUL CONFIG
-     - Version 4.0.2 
-     - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
-   - CONSUL DISCOVERY
-     - Version 4.0.2
-     - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
-   - PROJECTLOMBOK
-     - Version 1.18.26
-     - 'org.projectlombok:lombok:1.18.26'
-   - SPRING CONTEXT
-     - Version 3
-     - 'org.springframework:spring-context:5.3.13' 
-   - SPRING BOOT AUTOCONFIGURE
-        -  Version 3.0.6
-        - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
-   - SPRING BOOT CLOUD COMMONS
-      - Version 4.0.1
-     - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
-   - SPRING BOOT STARTER ACTUATOR
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6' 
-   - SPRING BOOT STARTER DATA MONGODB
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
-   - SPRING BOOT STARTER DATA MONGODB REACTIVE
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
-   - SPRING BOOT STARTER WEB
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
-   - SPRING BOOT STARTER WEBFLUX
-     - Version 3.0.6
-     - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
-   - SPRINGDOC OPENAPI
-     - Version 2.1.0
-     - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
-   - sdf
+## 5.2 Àrea d'implementació
 
-## 5.3 Testimplementation area
+- BOOTSTRAP
+    - Versió 4.0.2
+    - 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
 
-   - ASSERTJ
-     - Version 3.24.2
-     - 'org.assertj:assertj-core:3.24.2'
-   - SPRING
-     - Version 5.3.13
-     - 'org.springframework:spring-test:5.3.13'
-   - HAMCREST
-     - Version 2.2
-     - 'org.hamcrest:hamcrest:2.2'
-   - JUNIT
-     - 'org.junit.jupiter:junit-jupiter'
-   - JUNIT JUPITER
-     - Version 1.17.6 
-     - 'org.testcontainers:junit-jupiter:1.17.6'
-   - JUNIT PLATAFORM SUITE
-     - Version 1.8.1
-     - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
-   - MOCKITO
-     - Version 5.3.1
-     - 'org.mockito:mockito-core:5.3.1'
-   - MOCK WEBSERVER
-     - Version 4.9.3
-     - 'com.squareup.okhttp3:mockwebserver:4.9.3'
-   - MONGODB
-     - Version 1.17.6
-     - 'org.testcontainers:mongodb:1.17.6'
-   - PROJECT REACTOR
-     - Version 3.1.0 Release
-     - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
-   - SPRING BOOT STARTER TEST
-     - Version 3.06
-     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
-   - 
+- COMMONS IO
+    - Versió 2.11.0
+    - 'commons-io:commons-io:2.11.0'
+- COMMONS LANG
+    - Versió 3.12.0
+    - 'org.apache.commons:commons-lang3:3.12.0'
+- COMMONS VALIDATOR
+    - Versió 1.7
+    - 'commons-validator:commons-validator:1.7'
+- CONSUL CONFIG
+    - Versió 4.0.2
+    - 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
+- CONSUL DISCOVERY
+    - Versió 4.0.2
+    - 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
+- PROJECTLOMBOK
+    - Versió 1.18.26
+    - 'org.projectlombok:lombok:1.18.26'
+- SPRING CONTEXT
+    - Versió 3
+    - 'org.springframework:spring-context:5.3.13'
+- SPRING BOOT AUTOCONFIGURE
+    -  Versió 3.0.6
+    - 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
+- SPRING BOOT CLOUD COMMONS
+    - Versió 4.0.1
+    - 'org.springframework.cloud:spring-cloud-commons:4.0.1'
+- SPRING BOOT STARTER ACTUATOR
+    - Versió 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
+- SPRING BOOT STARTER DATA MONGODB
+    - Versió 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
+- SPRING BOOT STARTER DATA MONGODB REACTIVE
+    - Versió 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
+- SPRING BOOT STARTER WEB
+    - Versió 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-web:3.0.6'
+- SPRING BOOT STARTER WEBFLUX
+    - Versió 3.0.6
+    - 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
+- SPRINGDOC OPENAPI
+    - Versió 2.1.0
+    - 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+## 5.3 Àrea de proves (testing)
+
+- ASSERTJ
+    - Versió 3.24.2
+    - 'org.assertj:assertj-core:3.24.2'
+- SPRING
+    - Versió 5.3.13
+    - 'org.springframework:spring-test:5.3.13'
+- HAMCREST
+    - Versió 2.2
+    - 'org.hamcrest:hamcrest:2.2'
+- JUNIT
+    - 'org.junit.jupiter:junit-jupiter'
+- JUNIT JUPITER
+    - Versió 1.17.6
+    - 'org.testcontainers:junit-jupiter:1.17.6'
+- JUNIT PLATAFORM SUITE
+    - Versió 1.8.1
+    - 'org.junit.platform:junit-platform-suite-engine:1.8.1'
+- MOCKITO
+    - Versió 5.3.1
+    - 'org.mockito:mockito-core:5.3.1'
+- MOCK WEBSERVER
+    - Versió 4.9.3
+    - 'com.squareup.okhttp3:mockwebserver:4.9.3'
+- MONGODB
+    - Versió 1.17.6
+    - 'org.testcontainers:mongodb:1.17.6'
+- PROJECT REACTOR
+    - Version 3.1.0 Release
+    - 'io.projectreactor:reactor-test:3.1.0.RELEASE'
+- SPRING BOOT STARTER TEST
+    - Versió 3.06
+    - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
 
 ----------------------------------------------------------------
 
-# 6. REQUIRED PROGRAMS
-Los siguientes programas son requeridos para poder trabajar en el proyecto:
+# 6. PROGRAMES REQUERITS
+Els programes següents són requerits per poder treballar en el projecte:
 
-## 6.1 Required programs
+## 6.1 Programes requerits
 
-- **MongoDB**: MongoDB es una base de datos NoSQL ampliamente utilizada en el desarrollo de aplicaciones. Se utiliza para almacenar y recuperar datos de forma eficiente. Puedes descargar [MongoCompass](https://www.mongodb.com/try/download/compass) desde la web oficial.
+- **MongoDB**: MongoDB és una base de dades NoSQL àmpliament utilitzada en el desenvolupament d'aplicacions. S'utilitza per emmagatzemar i recuperar dades de manera eficient. Pots descarregar [MongoCompass](https://www.mongodb.com/try/download/compass) des de la web oficial.
 
-- **Postman**: Postman es una herramienta que te permitirá probar y documentar las API de forma sencilla. Es especialmente útil para enviar solicitudes HTTP y verificar las respuestas. Puedes descargar [Postman](https://www.postman.com/downloads/) desde la web oficial.
+- **Postman**: Postman és una eina que us permetrà provar i documentar les API de forma senzilla. És especialment útil per enviar sol·licituds HTTP i verificar les respostes. Pots descarregar [Postman](https://www.postman.com/downloads/) des de la web oficial.
 
-- **Consul**: Consul es una herramienta de descubrimiento y configuración de servicios. Se utiliza para gestionar la comunicación entre diferentes componentes de la aplicación. Puedes descargar [Consul](https://developer.hashicorp.com/consul/downloads) desde la web oficial.
+- **Consul**: Consul és una eina de descobriment i configuració de serveis. Es fa servir per gestionar la comunicació entre diferents components de l'aplicació. Pots descarregar [Consul](https://developer.hashicorp.com/consul/downloads) des de la web oficial.
 
-- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) desde la web oficial.
+- **Docker**: Docker és una plataforma que permet empaquetar i distribuir aplicacions en contenidors. Proporciona un entorn aïllat per executar l'aplicació i les dependències. Pots descarregar [Docker](https://www.docker.com/products/docker-desktop/) des de la web oficial.
 
-- **Git**: Git es un sistema de control de versiones distribuido ampliamente utilizado en el desarrollo de software. Te permitirá colaborar con otros desarrolladores y mantener un historial de cambios en el código fuente. Puedes descargar [Git](https://git-scm.com/downloads) desde la web oficial.
+- **Git**: Git és un sistema de control de versions distribuït àmpliament utilitzat en el desenvolupament de programari. Et permetrà col·laborar amb altres desenvolupadors i mantenir un historial de canvis al codi font. Pots descarregar [Git](https://git-scm.com/downloads) des de la web oficial.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 17.0.7 del JDK que es la que se usa en este proyecto. Puedes descargar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) desde la web oficial de Oracle.
+- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 17.0.7 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) des del web oficial d'Oracle.
 
-Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
+És important assegurar-se de tenir totes aquestes eines instal·lades i configurades correctament abans de començar a treballar al projecte.
 
 ----------------------------------------------------------------
-# 7 RECOMMENDED PROGRAMS
+# 7 PROGRAMAS RECOMANATS
 
-Los siguientes programas son recomendables para facilitar el trabajo en el proyecto:
+Els programes següents són recomanables per facilitar el treball en el projecte:
 
-## 7.1 Recommended programs
+## 7.1 Programes recomanats
 
-- **Mongo Tools**: Mongo Tools es un conjunto de utilidades de línea de comandos para trabajar con MongoDB. Proporciona herramientas adicionales para importar y exportar datos, entre otras tareas. Puedes descargar [MongoDB Command Line Database Tools](https://www.mongodb.com/try/download/database-tools) desde la web oficial.
+- **Mongo Tools**: Mongo Tools és un conjunt d'utilitats de línia d'ordres per treballar amb MongoDB. Proporciona eines addicionals per importar i exportar dades, entre d'altres tasques. Podeu descarregar [MongoDB Command Line Database Tools](https://www.mongodb.com/try/download/database-tools) des del web oficial.
 
-- **Mongo Shell**: Mongo Shell es una interfaz de línea de comandos para MongoDB. Proporciona una forma interactiva de interactuar con la base de datos, ejecutar consultas y administrar colecciones. Puedes descargar [MongoDB Shell](https://www.mongodb.com/try/download/shell) desde la web oficial.
+- **Mongo Shell**: Mongo Shell és una interfície de línia d'ordres per a MongoDB. Proporciona una manera interactiva d'interactuar amb la base de dades, executar consultes i administrar col·leccions. Pots descarregar [MongoDB Shell](https://www.mongodb.com/try/download/shell) des de la web oficial.
 
-- **IntelliJ IDEA**: IntelliJ IDEA es un entorno de desarrollo integrado (IDE) muy utilizado en el desarrollo de aplicaciones Java y otros lenguajes de programación. Puedes descargar [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) desde la web oficial.
+- **IntelliJ IDEA**: IntelliJ IDEA és un entorn de desenvolupament integrat (IDE) molt utilitzat en el desenvolupament d'aplicacions Java i altres llenguatges de programació. Pots descarregar [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) des de la web oficial.
 
-- **Plugin SonarLint para IntelliJ IDEA**: SonarLint es una herramienta de análisis estático de código que te ayudará a identificar y corregir problemas de calidad en tu código. Es una ayuda útil para detectar Code Smell. Puedes obtener más información de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) desde la web ofical de Jetbrains.
+- **Plugin SonarLint per a IntelliJ IDEA**: SonarLint és una eina d'anàlisi estàtica de codi que t'ajudarà a identificar i corregir problemes de qualitat al teu codi. És una ajuda útil per detectar Code Smell. Pots obtenir més informació de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) des del web ofical de Jetbrains.
 
-Recuerda que estos programas o plugins son recomendados, pero no son obligatorios. Utilizarlos puede mejorar tu productividad y la calidad del código, pero puedes optar por otras alternativas según tus preferencias y necesidades.
+Recordeu que aquests programes o plugins són recomanats, però no són obligatoris. Utilitzar-los pot millorar la teva productivitat i la qualitat del codi, però pots optar per altres alternatives segons les teves preferències i necessitats.
