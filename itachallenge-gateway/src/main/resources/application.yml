@@ -4,12 +4,16 @@ spring:
   config:
     import: optional:consul:localhost:8500
 
-management:
-  security:
-    enabled: false
-
 server:
     port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  security:
+    enabled: false
 
 logging:
   level:
