@@ -8,7 +8,7 @@ public class PaginationHelper {
 
     private final static int DEFAULT_PAGE_SIZE= 5;
 
-    protected int getValidPageNumber(String pageNumber) {
+    public int getValidPageNumber(String pageNumber) {
         if (pageNumber == null || pageNumber.isEmpty()) {
             return 1;
         }
@@ -18,7 +18,7 @@ public class PaginationHelper {
         return Integer.parseInt(pageNumber);
     }
 
-    protected int getValidPageSize(String pageSize) {
+    public int getValidPageSize(String pageSize) {
         if (pageSize == null || pageSize.isEmpty()) {
             return DEFAULT_PAGE_SIZE;
         }
