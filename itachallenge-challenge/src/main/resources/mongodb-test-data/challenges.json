@@ -290,7 +290,7 @@
       "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
     },
     "challenge_title": "Coding Challenge",
-    "level": "INTERMEDIATE",
+    "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
