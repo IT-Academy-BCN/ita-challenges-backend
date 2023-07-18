@@ -92,7 +92,7 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/filtered-challenges")
-    public Flux<ChallengeDocument> getChallenges(@RequestParam Set<String> language, @RequestParam String level) {
+    public Flux<ChallengeDocument> getChallenges(@RequestParam Set<String> language, @RequestParam Set<String> level) {
         log.info("Received request parameter with language: {} and level: {}", language, level);
         return challengeService.getChallengesByLanguagesAndLevel(language, level);
     }

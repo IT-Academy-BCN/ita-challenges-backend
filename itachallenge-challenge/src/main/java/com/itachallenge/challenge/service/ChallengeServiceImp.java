@@ -97,8 +97,8 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, String level) {
-        return challengeRepository.findByLanguages_LanguageNameInAndLevel(languageNames, level);
+    public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> level) {
+        return challengeRepository.findByLanguages_LanguageNameInAndLevelIn(languageNames, level);
     }
 
 }
