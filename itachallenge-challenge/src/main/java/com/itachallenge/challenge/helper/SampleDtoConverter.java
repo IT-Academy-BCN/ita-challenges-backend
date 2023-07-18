@@ -3,6 +3,7 @@ package com.itachallenge.challenge.helper;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exception.ConverterException;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Component
 public class SampleDtoConverter extends ConverterAbstract<ChallengeDocument, ChallengeDto>{
 
     //setting fromClass to Class
@@ -22,15 +24,14 @@ public class SampleDtoConverter extends ConverterAbstract<ChallengeDocument, Cha
     }
 
     @Override
-    public ChallengeDto convert(ChallengeDocument object) throws ConverterException {
-        ConverterAbstract<ChallengeDocument, ChallengeDto> output = new ConverterAbstract<>(ChallengeDocument.class, ChallengeDto.class);
-        ChallengeDto dto = output.convert(object);
+    protected ChallengeDto convert(ChallengeDocument object) throws ConverterException {
+        ChallengeDto dto = super.convert(object);
         dto.setCreationDate(getFormattedCreationDateTime(object.getCreationDate()));
         return dto;
     }
 
     //method to set document creationDate attribute into requested UTC String .json format
-    public String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
+    private String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
 
         ZoneId zoneId = ZoneId.of("Europe/Paris");
         ZonedDateTime zonedDateTime = ZonedDateTime.of(creationDateDocument, zoneId);

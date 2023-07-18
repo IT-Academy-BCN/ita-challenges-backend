@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
 public class ConverterAbstract <F, T> {
 
     private final static String SET_METHOD_PREFIX = "set";
@@ -35,7 +34,7 @@ public class ConverterAbstract <F, T> {
         this.methodsOfT = getAllMethods(toClass);
     }
 
-    public T convert(F object) throws ConverterException {
+    protected T convert(F object) throws ConverterException {
         T instance = getInstance(classToType);
 
         for (Field item : fieldsOfF) {

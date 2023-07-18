@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@Tag(name = "Challenge Controller")
+//@Tag(name = "Challenge Controller")
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
