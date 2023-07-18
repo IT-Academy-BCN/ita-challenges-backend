@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -93,6 +94,11 @@ public class ChallengeServiceImp implements IChallengeService {
         }
 
         return Mono.just(UUID.fromString(id));
+    }
+
+    @Override
+    public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, String level) {
+        return challengeRepository.findByLanguages_LanguageNameInAndLevel(languageNames, level);
     }
 
 }
