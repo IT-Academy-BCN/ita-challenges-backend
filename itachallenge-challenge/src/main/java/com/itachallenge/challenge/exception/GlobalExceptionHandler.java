@@ -28,6 +28,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
+    @ExceptionHandler(ParameterNotValidException.class)
+    public ResponseEntity<ErrorMessage> handleParameterNotValidException(ParameterNotValidException ex){
+        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
+    }
+
     @AllArgsConstructor
     @Getter
     static

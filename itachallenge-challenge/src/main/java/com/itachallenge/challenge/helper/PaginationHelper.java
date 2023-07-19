@@ -1,19 +1,24 @@
 package com.itachallenge.challenge.helper;
 
+import com.itachallenge.challenge.exception.ParameterNotValidException;
+import com.itachallenge.challenge.service.ChallengeServiceImp;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PaginationHelper {
 
     private final static int DEFAULT_PAGE_SIZE= 5;
+
+    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
     public int getValidPageNumber(String pageNumber) {
         if (pageNumber == null || pageNumber.isEmpty() || pageNumber.equals("0")) {
             return 1;
         }
         if (!NumberUtils.isDigits(pageNumber)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            log.warn("Parameter not valid: {}", pageNumber);
+            throw new ParameterNotValidException("Parameter not valid. Must be an integer and positive number.");
         }
         return Integer.parseInt(pageNumber);
     }
@@ -23,7 +28,8 @@ public class PaginationHelper {
             return DEFAULT_PAGE_SIZE;
         }
         if (!NumberUtils.isDigits(pageSize)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            log.warn("Parameter not valid: {}", pageSize);
+            throw new ParameterNotValidException("Parameter not valid. Must be an integer and positive number.");
         }
         return Integer.parseInt(pageSize);
     }
