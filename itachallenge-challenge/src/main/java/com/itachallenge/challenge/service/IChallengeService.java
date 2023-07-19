@@ -14,5 +14,5 @@ public interface IChallengeService {
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
 
-    Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, String level);
+    Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> level);
 }
