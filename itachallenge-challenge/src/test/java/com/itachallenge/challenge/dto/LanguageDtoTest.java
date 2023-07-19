@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.io.IOException;
 import java.util.UUID;
 
@@ -29,8 +28,10 @@ class LanguageDtoTest {
 
     private LanguageDto languageDto;
     @BeforeEach
+
     void setUp(){
-        languageDto = LanguageDtoTest.buildLanguageDto(UUID.randomUUID(), "Javascript");
+        UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        languageDto = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
     }
 
     @Test

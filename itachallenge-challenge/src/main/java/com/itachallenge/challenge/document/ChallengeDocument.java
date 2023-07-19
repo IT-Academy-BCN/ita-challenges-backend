@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ public class ChallengeDocument {
     private Set<LanguageDocument> languages;
 
     @Field(name="solutions")
-    private Set<UUID> solutions;
+    private List<UUID> solutions;
 
     @Field(name="resources")
     private Set<UUID> resources;

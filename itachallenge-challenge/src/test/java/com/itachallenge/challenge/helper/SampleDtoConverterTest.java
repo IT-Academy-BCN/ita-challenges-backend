@@ -11,11 +11,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,9 +30,13 @@ public class SampleDtoConverterTest {
 
     private final SampleDtoConverter converter = new SampleDtoConverter();
 
-    private ChallengeDocument challengeDoc;
+    private ChallengeDocument challengeDoc1;
 
-    private ChallengeDto challengeDto;
+    private ChallengeDocument challengeDoc2;
+
+    private ChallengeDto challengeDto1;
+
+    private ChallengeDto challengeDto2;
 
     private LanguageDocument languageDoc1;
 
@@ -64,11 +74,15 @@ public class SampleDtoConverterTest {
         languageDto1 = new LanguageDto(languageRandomId1, languageNames[0]);
         languageDto2 = new LanguageDto(languageRandomId2, languageNames[1]);
 
-        challengeDoc = getChallengeMocked(challengeRandomId, title, level, localDateTime, detail,
+        challengeDoc1 = getChallengeMocked(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
                 Set.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
 
-        challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
+        challengeDoc2 = getChallengeMocked(challengeRandomId, title, level, localDateTime, detail,
+                Set.of(languageDoc1, languageDoc2),
+                Set.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
+
+        challengeDto1 = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 Set.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId),
                 popularity, percentage);
@@ -77,15 +91,30 @@ public class SampleDtoConverterTest {
     @Test
     @DisplayName("Conversion from document to dto")
     void testConvertToDto() throws ConverterException {
-        ChallengeDocument challengeDocumentMocked = challengeDoc;
+        ChallengeDocument challengeDocumentMocked = challengeDoc1;
         ChallengeDto resultDto = converter.convert(challengeDocumentMocked);
-        ChallengeDto expectedDto = challengeDto;
+        ChallengeDto expectedDto = challengeDto1;
         assertThat(expectedDto).usingRecursiveComparison().ignoringFields("percentage", "popularity").isEqualTo(resultDto);
     }
 
+    @Test
+    @DisplayName("Testing Flux conversion")
+    void fromFluxDocToFluxDto() {
+        ChallengeDocument challengeMock1 = challengeDoc1;
+        ChallengeDocument challengeMock2 = challengeDoc2;
+
+        Flux<ChallengeDto> resultDto = converter.convertToDto(Flux.just(challengeMock1, challengeMock2));
+
+        StepVerifier.create(resultDto)
+                .expectNextMatches(challengeDto -> validateChallengeDto(challengeDto, challengeMock1))
+                .expectNextMatches(challengeDto -> validateChallengeDto(challengeDto, challengeMock2))
+                .expectComplete()
+                .verify();
+    }
+
     private ChallengeDocument getChallengeMocked(UUID challengeId, String title, String level, LocalDateTime creationDate,
-                               DetailDocument detail, Set<LanguageDocument> languageIS,
-                               Set<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges) {
+                                                 DetailDocument detail, Set<LanguageDocument> languageIS,
+                                                 Set<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges) {
         ChallengeDocument challengeIMocked = Mockito.mock(ChallengeDocument.class);
         when(challengeIMocked.getUuid()).thenReturn(challengeId);
         when(challengeIMocked.getTitle()).thenReturn(title);
@@ -116,6 +145,61 @@ public class SampleDtoConverterTest {
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         return challengeDocMocked;
+    }
+
+    /*private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challengeDoc) {
+
+        return challengeDto.getUuid() == challengeDoc.getUuid() &&
+                challengeDto.getTitle().equalsIgnoreCase(challengeDoc.getTitle()) &&
+                challengeDto.getLevel().equalsIgnoreCase(challengeDoc.getLevel()) &&
+                challengeDto.getCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getCreationDate())) &&
+                validateLanguageSet(challengeDto.getLanguages(), challengeDoc.getLanguages());
+
+    }*/
+
+    private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challengeDoc) {
+        Set<LanguageDto> languageDtoSet = challengeDoc.getLanguages().stream()
+                .map(this::convertLanguageDocumentToDto)
+                .collect(Collectors.toSet());
+
+        return challengeDto.getUuid() == challengeDoc.getUuid() &&
+                challengeDto.getTitle().equalsIgnoreCase(challengeDoc.getTitle()) &&
+                challengeDto.getLevel().equalsIgnoreCase(challengeDoc.getLevel()) &&
+                challengeDto.getCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getCreationDate())) &&
+                validateLanguageSet(languageDtoSet, challengeDto.getLanguages());
+    }
+
+    private LanguageDto convertLanguageDocumentToDto(LanguageDocument languageDocument) {
+        return new LanguageDto(languageDocument.getIdLanguage(), languageDocument.getLanguageName());
+    }
+
+
+    private boolean validateLanguageSet(Set<LanguageDto> languageDtoSet, Set<LanguageDto> languageSet) {
+        boolean validate;
+
+        if (languageDtoSet.size() == languageSet.size()) {
+            validate = languageDtoSet.stream()
+                    .map(LanguageDto::getIdLanguage)
+                    .collect(Collectors.toSet())
+                    .equals(languageSet.stream()
+                            .map(LanguageDto::getIdLanguage)
+                            .collect(Collectors.toSet()));
+        } else {
+            validate = false;
+        }
+
+        return validate;
+    }
+
+
+    private String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
+
+        ZoneId zoneId = ZoneId.of("Europe/Paris");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(creationDateDocument, zoneId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
+        return zonedDateTime.format(formatter);
+
     }
 
 }

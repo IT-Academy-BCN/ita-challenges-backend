@@ -3,7 +3,7 @@ spring:
     name: itachallenge-gateway
   cloud:
     consul:
-      enabled: true #habilitar / deshabilitar el uso de consul
+      enabled: false #habilitar / deshabilitar el uso de consul
       #host: 172.24.2.0 #IP del agente consul (Docker)
       host: 127.0.0.1 #IP del agente consul (local)
       #port: 8500       #puerto HTTP del agente (Docker)
@@ -26,12 +26,12 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: itachallenge
-          uri: http://localhost:8762
+        - id: itachallenge-challenge
+          uri: lb://itachallenge-challenge
           predicates:
-            - Path=/itachallenge/api/v1/challenge/**
+            - Path=*/challenge/**
           filters:
-            - RewritePath=*/challenge/(?<path>.*), /$\{path}
+            - RewritePath=/challenge/(?<path>.*), /$\{path}
 server:
   port: 8080
 

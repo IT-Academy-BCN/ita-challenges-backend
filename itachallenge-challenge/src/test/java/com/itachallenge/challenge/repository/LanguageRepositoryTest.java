@@ -15,7 +15,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.time.Duration;
 import java.util.*;
 
@@ -46,16 +45,18 @@ class LanguageRepositoryTest {
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
+    UUID uuidLang1, uuidLang2;
+
     @BeforeEach
     public void setUp() {
 
+        uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+
         languageRepository.deleteAll().block();
 
-        Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
-        Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
-
-        LanguageDocument language = new LanguageDocument(UUID.randomUUID(), "Java");
-        LanguageDocument language2 = new LanguageDocument(UUID.randomUUID(), "Python");
+        LanguageDocument language = new LanguageDocument(uuidLang1, "Java");
+        LanguageDocument language2 = new LanguageDocument(uuidLang2, "Python");
         Set<LanguageDocument> languageSet = new HashSet<>(Arrays.asList(language2, language));
 
         languageRepository.saveAll(Flux.just(language, language2)).blockLast();
@@ -83,7 +84,7 @@ class LanguageRepositoryTest {
     @DisplayName("Exists by Id Test")
     @Test
     void existsByIdTest() {
-        Boolean exists = languageRepository.existsById(1).block();
+        Boolean exists = languageRepository.existsById(uuidLang1).block();
         assertEquals(exists, true);
     }
 
@@ -91,41 +92,41 @@ class LanguageRepositoryTest {
     @Test
     void findByIdTest() {
 
-        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(1);
+        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(uuidLang1);
         firstLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), 1),
-                () -> fail("Language with id " + 1 + " not found"));
+                u -> assertEquals(u.getIdLanguage(), uuidLang1),
+                () -> fail("Language with id " + uuidLang1 + " not found"));
 
-        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(2);
+        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(uuidLang2);
         secondLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), 2),
-                () -> fail("Language with id " + 2 + " not found"));
+                u -> assertEquals(u.getIdLanguage(), uuidLang2),
+                () -> fail("Language with id " + uuidLang2 + " not found"));
     }
 
     @DisplayName("Delete by Id Test")
     @Test
     void deleteByIdTest() {
 
-        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(1);
+        Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(uuidLang1);
         firstLanguage.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = languageRepository.deleteByIdLanguage(1);
+                    Mono<Void> deletion = languageRepository.deleteByIdLanguage(uuidLang1);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
                 },
-                () -> fail("Language with id " + 1 + " not found")
+                () -> fail("Language with id " + uuidLang1 + " not found")
         );
 
-        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(2);
+        Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(uuidLang2);
         secondLanguage.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = languageRepository.deleteByIdLanguage(2);
+                    Mono<Void> deletion = languageRepository.deleteByIdLanguage(uuidLang2);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
                 },
-                () -> fail("Language with id " + 2 + " not found")
+                () -> fail("Language with id " + uuidLang2 + " not found")
         );
     }
 

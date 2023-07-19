@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.exception.ConverterException;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,16 +42,6 @@ public class ConverterAbstract <F, T> {
 
         return instance;
     }
-
-    /*public F convertToDto(T object) throws ConverterException {
-        F instance = getInstance(classFromType);
-
-        for (Field item : fieldsOfT) {
-            setValue(instance, getValue(object, item, methodsOfT), item, fieldsOfF, methodsOfF);
-        }
-
-        return instance;
-    }*/
 
     private Object getValue(Object object, Field field, List<Method> methods) throws ConverterException {
         Optional<Method> optionalMethod;
