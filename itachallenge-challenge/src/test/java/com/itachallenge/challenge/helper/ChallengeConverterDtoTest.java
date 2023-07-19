@@ -10,7 +10,7 @@ import com.itachallenge.challenge.exception.ConverterException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -23,12 +23,15 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SampleDtoConverterTest {
+public class ChallengeConverterDtoTest {
 
-    private final SampleDtoConverter converter = new SampleDtoConverter();
+    private final ChallengeConverterDto converter = new ChallengeConverterDto();
+
+    private final LanguageConverterDto languageConverterDto = new LanguageConverterDto();
 
     private ChallengeDocument challengeDoc1;
 
@@ -49,7 +52,8 @@ public class SampleDtoConverterTest {
     @BeforeEach
     public void setUp(){
 
-        UUID challengeRandomId = UUID.randomUUID();
+        UUID challengeRandomId1 = UUID.randomUUID();
+        UUID challengeRandomId2 = UUID.randomUUID();
         UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
@@ -74,22 +78,27 @@ public class SampleDtoConverterTest {
         languageDto1 = new LanguageDto(languageRandomId1, languageNames[0]);
         languageDto2 = new LanguageDto(languageRandomId2, languageNames[1]);
 
-        challengeDoc1 = getChallengeMocked(challengeRandomId, title, level, localDateTime, detail,
+        challengeDoc1 = getChallengeMocked(challengeRandomId1, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
-                Set.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
+                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
 
-        challengeDoc2 = getChallengeMocked(challengeRandomId, title, level, localDateTime, detail,
+        challengeDoc2 = getChallengeMocked(challengeRandomId2, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
-                Set.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
+                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
 
-        challengeDto1 = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
+        challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
-                Set.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId),
+                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId),
+                popularity, percentage);
+
+        challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate, detail,
+                Set.of(languageDto1, languageDto2),
+                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId),
                 popularity, percentage);
     }
 
     @Test
-    @DisplayName("Conversion from document to dto")
+    @DisplayName("Conversion from document to dto. Testing 'convert' method from ConverterAbstract, inherited by the subclass")
     void testConvertToDto() throws ConverterException {
         ChallengeDocument challengeDocumentMocked = challengeDoc1;
         ChallengeDto resultDto = converter.convert(challengeDocumentMocked);
@@ -114,8 +123,8 @@ public class SampleDtoConverterTest {
 
     private ChallengeDocument getChallengeMocked(UUID challengeId, String title, String level, LocalDateTime creationDate,
                                                  DetailDocument detail, Set<LanguageDocument> languageIS,
-                                                 Set<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges) {
-        ChallengeDocument challengeIMocked = Mockito.mock(ChallengeDocument.class);
+                                                 List<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges) {
+        ChallengeDocument challengeIMocked = mock(ChallengeDocument.class);
         when(challengeIMocked.getUuid()).thenReturn(challengeId);
         when(challengeIMocked.getTitle()).thenReturn(title);
         when(challengeIMocked.getLevel()).thenReturn(level);
@@ -130,8 +139,8 @@ public class SampleDtoConverterTest {
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate,
                                                DetailDocument detail, Set<LanguageDto> languageIS,
-                                               Set<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges, Integer popularity, Float percentage){
-        ChallengeDto challengeDocMocked = Mockito.mock(ChallengeDto.class);
+                                               List<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges, Integer popularity, Float percentage){
+        ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getUuid()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
         when(challengeDocMocked.getLevel()).thenReturn(level);
@@ -146,16 +155,6 @@ public class SampleDtoConverterTest {
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         return challengeDocMocked;
     }
-
-    /*private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challengeDoc) {
-
-        return challengeDto.getUuid() == challengeDoc.getUuid() &&
-                challengeDto.getTitle().equalsIgnoreCase(challengeDoc.getTitle()) &&
-                challengeDto.getLevel().equalsIgnoreCase(challengeDoc.getLevel()) &&
-                challengeDto.getCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getCreationDate())) &&
-                validateLanguageSet(challengeDto.getLanguages(), challengeDoc.getLanguages());
-
-    }*/
 
     private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challengeDoc) {
         Set<LanguageDto> languageDtoSet = challengeDoc.getLanguages().stream()

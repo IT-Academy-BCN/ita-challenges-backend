@@ -46,7 +46,7 @@ public class ChallengeDto{
     private Set<LanguageDto> languages;
 
     @JsonProperty(index = 6)
-    private Set<UUID> solutions;
+    private List<UUID> solutions;
 
     @JsonProperty(index = 7)
     private Set<UUID> resources;
