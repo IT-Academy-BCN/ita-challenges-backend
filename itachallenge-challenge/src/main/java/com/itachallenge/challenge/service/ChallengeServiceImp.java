@@ -97,16 +97,24 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> level) {
-        return challengeRepository.findByLanguages_LanguageNameInAndLevelIn(languageNames, level);
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> language, Set<String> level) {
+
+
+        if ((level == null || level.isEmpty()) && (language == null || language.isEmpty())) {
+            //return challengeRepository.findAll();
+            return getAllChallenges();
+        } //else if (language == null || language.isEmpty()) {
+           // return challengeRepository.findByLevelIn(level);
+       // } else if (level == null || level.isEmpty()) {
+           // return challengeRepository.findByLanguages_LanguageNameIn(language);
+        //} else {
+           // return challengeRepository.findByLanguages_LanguageNameInAndLevelIn(language, level);
+        //}
+        return null;
     }
 
-    /*public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> levels) {
-        return challengeRepository.findAll()
-                .filter(challenge -> languageNames == null || languageNames.isEmpty() || languageNames.contains(challenge.getLanguages()))
-                .filter(challenge -> levels == null || levels.isEmpty() || levels.contains(challenge.getLevel()))
-                .distinct();
-    }*/
+
+
 
 
 }

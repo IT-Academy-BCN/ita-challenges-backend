@@ -19,6 +19,8 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     Mono<ChallengeDocument> findByTitle(String title);
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
     Flux<ChallengeDocument> findByLanguages_LanguageNameInAndLevelIn(Set<String> language, Set<String> level);
+    Flux<ChallengeDocument> findByLanguages_LanguageNameIn(Set<String> language);
+    Flux<ChallengeDocument> findByLevelIn(Set<String> level);
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
 
