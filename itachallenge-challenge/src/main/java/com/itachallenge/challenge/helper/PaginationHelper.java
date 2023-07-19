@@ -9,7 +9,7 @@ public class PaginationHelper {
     private final static int DEFAULT_PAGE_SIZE= 5;
 
     public int getValidPageNumber(String pageNumber) {
-        if (pageNumber == null || pageNumber.isEmpty()) {
+        if (pageNumber == null || pageNumber.isEmpty() || pageNumber.equals("0")) {
             return 1;
         }
         if (!NumberUtils.isDigits(pageNumber)) {
@@ -19,7 +19,7 @@ public class PaginationHelper {
     }
 
     public int getValidPageSize(String pageSize) {
-        if (pageSize == null || pageSize.isEmpty()) {
+        if (pageSize == null || pageSize.isEmpty() || pageSize.equals("0")) {
             return DEFAULT_PAGE_SIZE;
         }
         if (!NumberUtils.isDigits(pageSize)) {
