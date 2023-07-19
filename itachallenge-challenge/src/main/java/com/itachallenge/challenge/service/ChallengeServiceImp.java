@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
-    //VARIABLES
+    //region VARIABLES
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
@@ -33,7 +33,22 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private Converter converter;
 
+    //endregion VARIABLES
 
+
+    //region METHODS: Public
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
+        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
+
+        return challengeDtoFlux.collectList().map(challenges -> {
+            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
+            return resultDto;
+        });
+    }
+
+    @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -49,6 +64,40 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> language, Set<String> level) {
+        //region VARIABLES
+        Flux<ChallengeDto> challengeDtoFlux;
+
+        //endregion VARIABLES
+
+
+        //region ACTIONS
+        if ((level == null || level.isEmpty()) && (language == null || language.isEmpty())){
+            challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
+        }else if (language == null || language.isEmpty()) {
+            challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findByLevelIn(level));
+        } else if (level == null || level.isEmpty()) {
+            challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findByLanguages_LanguageNameIn(language));
+        } else {
+            challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findByLanguages_LanguageNameInAndLevelIn(language, level));
+        }
+
+        //endregion ACTIONS
+
+
+        // OUT
+        return challengeDtoFlux.collectList().map(challenges -> {
+            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
+            return resultDto;
+        })
+        .doOnSuccess(resultDto -> log.info("All good!"))
+        .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()));
+
+    }
+
+    @Override
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
@@ -75,16 +124,10 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
-        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
+    //endregion METHODS: Public
 
-        return challengeDtoFlux.collectList().map(challenges -> {
-            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
-            return resultDto;
-        });
-    }
 
+    //region METHODS: Private
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
@@ -96,21 +139,6 @@ public class ChallengeServiceImp implements IChallengeService {
         return Mono.just(UUID.fromString(id));
     }
 
-    @Override
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> language, Set<String> level) {
-
-
-        if ((level == null || level.isEmpty()) && (language == null || language.isEmpty())) {
-            //return challengeRepository.findAll();
-            return getAllChallenges();
-        } //else if (language == null || language.isEmpty()) {
-           // return challengeRepository.findByLevelIn(level);
-       // } else if (level == null || level.isEmpty()) {
-           // return challengeRepository.findByLanguages_LanguageNameIn(language);
-        //} else {
-           // return challengeRepository.findByLanguages_LanguageNameInAndLevelIn(language, level);
-        //}
-        return null;
-    }
+    //endregion METHODS: Private
 
 }

@@ -50,7 +50,7 @@ url:
 
 levels:
   options:
-    - Easy
-    - Medium
-    - Hard
+  - "easy"
+  - "medium"
+  - "hard"
 
