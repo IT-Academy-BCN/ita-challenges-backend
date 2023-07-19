@@ -23,11 +23,15 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     Mono<ChallengeDocument> findByTitle(String title);
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
 
-    Flux<ChallengeDocument> findByLanguages_LanguageNameInAndLevelIn(Set<String> language, Set<String> level);
+    Flux<ChallengeDocument> findByLanguagesLevels_LanguageNameInAndLevelIn(Set<String> language, Set<String> level);
     //findByLanguages: filtra la búsqueda en el campo languages
     //_LanguageNameIn: filtra la búsqueda dentro del campo languages con un valor específico como el nombre del lenguaje
     //And: añade otro filtro adicional
     //Level: filtra la búsqueda en el campo level
+
+    Flux<ChallengeDocument> findByLanguages_LanguageNameIn(Set<String> language, Set<String> level);
+    Flux<ChallengeDocument> findByLevels_LevelIn(Set<String> language, Set<String> level);
+
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
