@@ -62,7 +62,9 @@ class ChallengeRepositoryTest {
         ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
 
-        int[] idsLanguages = new int[]{1, 2};
+        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
         LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
@@ -73,15 +75,15 @@ class ChallengeRepositoryTest {
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Level 1", "Loops", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, "Loops", "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "Level 2", "If", languageSet, LocalDateTime.now(), detail, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, "If", "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
 
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
