@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -13,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.Optional;
@@ -92,7 +90,7 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/filtered-challenges")
-    public Flux<ChallengeDocument> getChallenges(@RequestParam Set<String> language, @RequestParam Set<String> level) {
+    public Mono<GenericResultDto<ChallengeDto>> getChallenges(@RequestParam(required = false) Set<String> language, @RequestParam(required = false) Set<String> level) {
         log.info("Received request parameter with language: {} and level: {}", language, level);
         return challengeService.getChallengesByLanguagesAndLevel(language, level);
     }
