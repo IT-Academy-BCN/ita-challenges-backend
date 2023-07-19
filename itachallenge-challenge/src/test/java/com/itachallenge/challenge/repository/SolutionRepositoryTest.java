@@ -15,7 +15,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.time.Duration;
 import java.util.UUID;
 
@@ -50,10 +49,13 @@ class SolutionRepositoryTest {
     @BeforeEach
     void setUp(){
 
+        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+
         solutionRepository.deleteAll().block();
 
-        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", 1);
-        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", 2);
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", uuidLang1);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", uuidLang2);
 
         solutionRepository.saveAll(Flux.just(solution, solution2)).blockLast();
 

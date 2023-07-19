@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ResourceHelperTest {
+class ResourceHelperTest {
 
     @Test
     @DisplayName("Read a resource as String test")

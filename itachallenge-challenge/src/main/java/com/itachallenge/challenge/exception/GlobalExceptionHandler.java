@@ -19,8 +19,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadUUIDException.class)
-    public ResponseEntity<ErrorMessage> handleBadUUID(){
-        return ResponseEntity.badRequest().body(new ErrorMessage("The provided UUID is not valid"));
+    public ResponseEntity<ErrorMessage> handleBadUUID(BadUUIDException ex){
+        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ChallengeNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleChallengeNotFoundException(ChallengeNotFoundException ex){
+        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
     @AllArgsConstructor
