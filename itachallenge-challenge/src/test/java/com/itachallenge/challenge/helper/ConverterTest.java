@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ConverterTest {
+class ConverterTest {
 
     @Autowired
     private Converter converter;
@@ -46,7 +46,10 @@ public class ConverterTest {
         String title = "title challenge";
         String level = "some level";
         LocalDateTime creationDate = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
-        int[] idsLanguages = new int[]{1, 2};
+
+        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
 
         languageMocked1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
@@ -59,7 +62,7 @@ public class ConverterTest {
 
     }
 
-    private LanguageDocument getLanguageMocked(int idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);

@@ -2,123 +2,106 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.exception.BadUUIDException;
-import com.itachallenge.challenge.exception.ErrorResponseMessage;
-import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import reactor.core.publisher.Mono;
-
 import java.net.URI;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
-    private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
+        private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
-    @Autowired
-    private IChallengeService challengeService;
+        @Autowired
+        private DiscoveryClient discoveryClient;
+        @Autowired
+        IChallengeService challengeService;
 
+        @GetMapping(value = "/test")
+        public String test() {
+                log.info("** Saludos desde el logger **");
 
-    @Operation(summary = "Testing the App")
-    @GetMapping(value = "/test")
-    public String test() {
-        log.info("** Saludos desde el logger **");
+                Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
+                                .stream()
+                                .findAny()
+                                .map(s -> s.getUri());
 
- Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
-                .stream()
-                .findAny()
-                .map( s -> s.getUri());
+                log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
 
-        log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
+                Optional<String> services = discoveryClient.getInstances("itachallenge-user")
+                                .stream()
+                                .findAny()
+                                .map(s -> s.toString());
 
-        Optional<String> services = discoveryClient.getInstances("itachallenge-user")
-                .stream()
-                .findAny()
-                .map( s -> s.toString());
-
-        log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
-        return "Hello from ITA Challenge!!!";
-    }
-
-    @GetMapping(path = "/challenges/{challengeId}")
-    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
-        try {
-            boolean validUUID = challengeService.isValidUUID(id);
-
-            if (!validUUID) {
-                ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.BAD_REQUEST.value(), "Invalid ID format. Please indicate the correct format.");
-                log.error("{} ID: {}, incorrect.", errorMessage, id);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage.getMessage());
-            }
-
-            ErrorResponseMessage errorMessage = new ErrorResponseMessage(HttpStatus.OK.value(), "Challenge not found");
-            log.info("Challenge not found. ID: {}", id);
-            return challengeService.getChallengeId(UUID.fromString(id))
-                    .map(challenge -> ResponseEntity.ok().body(challenge))
-                    .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.OK, errorMessage.getMessage())));
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("An Exception was thrown with Internal Server Error response: {}", e.getMessage());
-            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build());
-        }
-    }
-
-    @DeleteMapping("/resources/{idResource}")
-    public ResponseEntity<Void> removeResourcesById(@PathVariable String idResource) throws BadUUIDException {
-        UUID uuidResource = getUUID(idResource);
-        if (challengeService.removeResourcesByUuid(uuidResource)) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    private UUID getUUID(String uuidString) throws BadUUIDException {
-        if (uuidString.matches("^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$")) {
-            return UUID.fromString(uuidString);
-        } else {
-            throw new BadUUIDException("Invalid UUID");
-        }
-    }
-    
-    @GetMapping(path = "/{challengeId}/related")
-    public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
-            @RequestParam(value = "offset", defaultValue = "0") int offset,
-            @RequestParam(value = "limit", defaultValue = "10") int limit,
-            @PathVariable("challengeId") String id) {
-
-        if (!UuidValidator.isValidUUID(id)) {
-            log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.", id);
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid ID format. Please indicate the correct format.");
+                log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
+                return "Hello from ITA Challenge!!!";
         }
 
-        return challengeService.getRelatedChallenge(id)
-                .collectList().map(challengeDtos -> {
-                	GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
-                	result.setLimit(limit);
-                	result.setOffset(offset);
-                	result.setResults(challengeDtos.toArray(new ChallengeDto[0]));
-                	result.setCount(challengeDtos.toArray(new ChallengeDto[0]).length);
-                	return ResponseEntity.ok(result);
-        });
-    }
+        @GetMapping(path = "/challenges/{challengeId}")
+        @Operation(operationId = "Get the information from a chosen challenge.", summary = "Get to see the Challenge level, its details and the available languages.", description = "Sending the ID Challenge through the URI to retrieve it from the database.", responses = {
+                        @ApiResponse(responseCode = "200", content = {
+                                        @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                        @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {
+                                        @Content(schema = @Schema()) })
+        })
+        public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
+                return challengeService.getChallengeById(id);
+        }
 
+        @DeleteMapping("/resources/{idResource}")
+        @Operation(operationId = "Get the information from a chosen resource.", summary = "Get to see the resource and all its related parameters.", description = "Sending the ID Resource through the URI to retrieve it from the database.", responses = {
+                        @ApiResponse(responseCode = "200", content = {
+                                        @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                        @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {
+                                        @Content(schema = @Schema()) })
+        })
+        public Mono<GenericResultDto<String>> removeResourcesById(@PathVariable String idResource) {
+                return challengeService.removeResourcesByUuid(idResource);
+        }
+
+        @GetMapping("/challenges")
+        @Operation(operationId = "Get all the stored challenges into the Database.", summary = "Get to see all challenges and their levels, details and their available languages.", description = "Requesting all the challenges through the URI from the database.", responses = {
+                        @ApiResponse(responseCode = "200", content = {
+                                        @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                        @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {
+                                        @Content(schema = @Schema()) })
+        })
+        public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
+                return challengeService.getAllChallenges();
+        }
+
+        @GetMapping(path = "/{challengeId}/related")
+        public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
+                        @RequestParam(value = "offset", defaultValue = "0") int offset,
+                        @RequestParam(value = "limit", defaultValue = "10") int limit,
+                        @PathVariable("challengeId") String id) {
+
+                if (!UuidValidator.isValidUUID(id)) {
+                        log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.",
+                                        id);
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                        "Invalid ID format. Please indicate the correct format.");
+                }
+
+                return challengeService.getRelatedChallenge(id)
+                                .collectList().map(challengeDtos -> {
+                                        GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
+                                        result.setLimit(limit);
+                                        result.setOffset(offset);
+                                        result.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+                                        result.setCount(challengeDtos.toArray(new ChallengeDto[0]).length);
+                                        return ResponseEntity.ok(result);
+                                });
+        }
 
 }
