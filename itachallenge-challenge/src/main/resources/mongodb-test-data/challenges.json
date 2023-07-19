@@ -101,13 +101,13 @@
     "languages": [
       {
         "_id" : {
-          "$uuid" : "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
       },
       {
         "_id" : {
-          "$uuid" : "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+          "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
         },
         "language_name": "Python"
       }
@@ -174,7 +174,7 @@
       },
       {
         "_id" : {
-          "$uuid" : "1e047ea2-b787-49e7-acea-d79e92be3909"
+          "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
         },
         "language_name": "PHP"
       }
@@ -200,7 +200,7 @@
       "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
     },
     "challenge_title": "Coding Challenge",
-    "level": "INTERMEDIATE",
+    "level": "MEDIUM",
     "creation_date": { "$date": "2018-09-09T11:43:54+0200" },
     "detail": {
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ultricies sapien sed neque condimentum sagittis.",
@@ -238,12 +238,14 @@
           "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
         },
         "language_name": "Javascript"
+
       },
       {
         "_id" : {
-          "$uuid" : "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+
       }
     ],
     "solutions": [

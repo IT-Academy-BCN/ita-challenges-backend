@@ -26,12 +26,12 @@ spring:
         locator:
           enabled: true
       routes:
-        - id: itachallenge
-          uri: http://localhost:8762
+        - id: itachallenge-challenge
+          uri: lb://itachallenge-challenge
           predicates:
-            - Path=/itachallenge/api/v1/challenge/**
+            - Path=*/challenge/**
           filters:
-            - RewritePath=*/challenge/(?<path>.*), /$\{path}
+            - RewritePath=/challenge/(?<path>.*), /$\{path}
 server:
   port: 8080
 
