@@ -20,5 +20,5 @@ public class SolutionDocument {
     private String solutionText;
 
     @Field(name="id_language")
-    private int idLanguage;
+    private UUID idLanguage;
 }

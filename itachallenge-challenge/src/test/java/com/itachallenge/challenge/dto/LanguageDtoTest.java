@@ -11,8 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.io.IOException;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,8 +28,10 @@ class LanguageDtoTest {
 
     private LanguageDto languageDto;
     @BeforeEach
+
     void setUp(){
-        languageDto = LanguageDtoTest.buildLanguageDto(1, "Javascript");
+        UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        languageDto = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
     }
 
     @Test
@@ -52,7 +54,7 @@ class LanguageDtoTest {
         assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
     }
 
-    static LanguageDto buildLanguageDto(int languageId, String languageName){
+    static LanguageDto buildLanguageDto(UUID languageId, String languageName){
         return new LanguageDto(languageId,languageName);
     }
 }
