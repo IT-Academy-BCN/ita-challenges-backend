@@ -101,4 +101,12 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeRepository.findByLanguages_LanguageNameInAndLevelIn(languageNames, level);
     }
 
+    /*public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> levels) {
+        return challengeRepository.findAll()
+                .filter(challenge -> languageNames == null || languageNames.isEmpty() || languageNames.contains(challenge.getLanguages()))
+                .filter(challenge -> levels == null || levels.isEmpty() || levels.contains(challenge.getLevel()))
+                .distinct();
+    }*/
+
+
 }
