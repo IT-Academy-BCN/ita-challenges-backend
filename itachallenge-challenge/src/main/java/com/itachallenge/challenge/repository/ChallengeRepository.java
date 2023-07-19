@@ -41,7 +41,7 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
      * @param level Levels to find
      * @return
      */
-    Flux<ChallengeDocument> findByLevels_LevelIn(Set<String> level);
+    Flux<ChallengeDocument> findByLevelIn(Set<String> level);
 
 
     @Override

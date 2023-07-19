@@ -12,6 +12,10 @@ public class PropertiesConfig {
     @Value("${url.maxBytesInMemory}")
     private Integer maxBytesInMemory;
 
+    @Value("${levels.options}")
+    private String[] levelsOptions;
+
+
     public Integer getConnectionTimeout() {
         return connectionTimeout;
     }
@@ -19,4 +23,7 @@ public class PropertiesConfig {
     public Integer getMaxBytesInMemory() {
         return maxBytesInMemory;
     }
+
+    public String[] getOptions() {return levelsOptions;}
+
 }
