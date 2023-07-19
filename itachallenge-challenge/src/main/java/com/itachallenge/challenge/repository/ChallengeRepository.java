@@ -29,8 +29,19 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     //And: añade otro filtro adicional
     //Level: filtra la búsqueda en el campo level
 
-    Flux<ChallengeDocument> findByLanguages_LanguageNameIn(Set<String> language, Set<String> level);
-    Flux<ChallengeDocument> findByLevels_LevelIn(Set<String> language, Set<String> level);
+    /**
+     * Find challenges with languages filters
+     * @param language Languages to find
+     * @return
+     */
+    Flux<ChallengeDocument> findByLanguages_LanguageNameIn(Set<String> language);
+
+    /**
+     * Find challenges with level filters
+     * @param level Levels to find
+     * @return
+     */
+    Flux<ChallengeDocument> findByLevels_LevelIn(Set<String> level);
 
 
     @Override
