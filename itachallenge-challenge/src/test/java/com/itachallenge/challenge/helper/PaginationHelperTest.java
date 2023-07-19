@@ -24,12 +24,14 @@ public class PaginationHelperTest {
         int result = paginationHelper.getValidPageNumber("");
         assertEquals(1, result);
     }
+
     @Test
     void getValidPageNumberTest_PageNumberZero() {
         PaginationHelper paginationHelper = new PaginationHelper();
         int result = paginationHelper.getValidPageNumber("0");
         assertEquals(1, result);
     }
+
     @Test
     void getValidPageNumberTest_NonNumericPageNumber_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
@@ -72,12 +74,14 @@ public class PaginationHelperTest {
         int result = paginationHelper.getValidPageSize("");
         assertEquals(5, result);
     }
+
     @Test
     void getValidPageNumberTest_PageSizeZero() {
         PaginationHelper paginationHelper = new PaginationHelper();
         int result = paginationHelper.getValidPageSize("0");
         assertEquals(5, result);
     }
+
     @Test
     void getValidPageSizeTest_NonNumericPageSize_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
