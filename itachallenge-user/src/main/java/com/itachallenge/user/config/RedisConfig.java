@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConfiguration;
+import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -21,6 +24,9 @@ public class RedisConfig {
 
     @Value("${redis.port}")
     private int redisPort;
+
+    @Value("${redis.password}")
+    private String redisPasswd;
 
 
     @Bean
@@ -41,7 +47,9 @@ public class RedisConfig {
     @Bean
     @Primary
     ReactiveRedisConnectionFactory reactiveRedisConnectionFactory(){
-        return new LettuceConnectionFactory(redisHost,redisPort);
+        RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration(redisHost,redisPort);
+        redisConfiguration.setPassword(RedisPassword.of(redisPasswd));
+        return new LettuceConnectionFactory(redisConfiguration);
     }
 
 
