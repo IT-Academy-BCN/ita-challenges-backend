@@ -11,6 +11,8 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -31,6 +33,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private ChallengeRepository challengeRepository;
     @Autowired
     private Converter converter;
+    @Autowired
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
@@ -95,4 +99,12 @@ public class ChallengeServiceImp implements IChallengeService {
         return Mono.just(UUID.fromString(id));
     }
 
+    public Flux<ChallengeDto> getChallengesPaginated (int pageNumber, int pageSize) {
+        Flux<ChallengeDocument> challengesList = reactiveMongoTemplate.find(paginationQuery(pageNumber,pageSize),
+                ChallengeDocument.class);
+        return converter.fromChallengeToChallengeDto(challengesList);
+    }
+    public static Query paginationQuery(int pageNumber, int pageSize) {
+        return new Query().skip((pageNumber - 1) * pageSize).limit(pageSize);
+    }
 }
