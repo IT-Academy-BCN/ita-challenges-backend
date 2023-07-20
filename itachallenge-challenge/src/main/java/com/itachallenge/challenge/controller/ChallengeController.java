@@ -90,6 +90,15 @@ public class ChallengeController {
     }
 
     @GetMapping(path = "/filtered-challenges")
+    @Operation(
+            operationId = "Get all filtered Challenges",
+            summary = "Get all the stored challenges into the Database.",
+            description = "Get to see all challenges and their levels, details, and available languages.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Challenges retrieval completed.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResultDto.class)) }),
+                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = { @Content(mediaType = "application/json", schema = @Schema()) })
+            }
+    )
     public Mono<GenericResultDto<ChallengeDto>> getChallenges(@RequestParam(required = false) Set<String> language, @RequestParam(required = false) Set<String> level) {
         log.info("Received request parameter with language: {} and level: {}", language, level);
         return challengeService.getChallengesByLanguagesAndLevel(language, level);
