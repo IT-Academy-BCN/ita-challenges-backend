@@ -105,6 +105,6 @@ public class ChallengeServiceImp implements IChallengeService {
         return converter.fromChallengeToChallengeDto(challengesList);
     }
     public static Query paginationQuery(int pageNumber, int pageSize) {
-        return new Query().skip((pageNumber - 1) * pageSize).limit(pageSize);
+        return new Query().skip((long) (pageNumber - 1) * pageSize).limit(pageSize);
     }
 }
