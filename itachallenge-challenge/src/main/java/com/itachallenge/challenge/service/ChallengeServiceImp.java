@@ -5,7 +5,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.ChallengeConverterDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
@@ -29,14 +29,15 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeRepository challengeRepository;
+
     @Autowired
-    private Converter converter;
+    private ChallengeConverterDto converter;
 
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .flatMap(challenge -> Mono.from(converter.fromChallengeToChallengeDto(Flux.just(challenge))))
+                        .flatMap(challenge -> Mono.from(converter.convertToDto(Flux.just(challenge))))
                         .map(challengeDto -> {
                             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
                             resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
@@ -75,7 +76,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
-        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
+        Flux<ChallengeDto> challengeDtoFlux = converter.convertToDto(challengeRepository.findAll());
 
         return challengeDtoFlux.collectList().map(challenges -> {
             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();

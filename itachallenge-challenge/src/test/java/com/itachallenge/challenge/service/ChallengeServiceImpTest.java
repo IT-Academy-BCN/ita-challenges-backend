@@ -5,7 +5,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.ChallengeConverterDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ChallengeServiceImpTest {
     private ChallengeRepository challengeRepository;
 
     @Mock
-    private Converter converter;
+    private ChallengeConverterDto converter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -48,7 +48,7 @@ class ChallengeServiceImpTest {
         expectedDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto));
+        when(converter.convertToDto(any())).thenReturn(Flux.just(challengeDto));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
@@ -60,7 +60,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verify(converter).fromChallengeToChallengeDto(any());
+        verify(converter).convertToDto(any());
     }
 
     @Test
@@ -149,7 +149,7 @@ class ChallengeServiceImpTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
 
         when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        when(converter.convertToDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
@@ -161,6 +161,6 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findAll();
-        verify(converter).fromChallengeToChallengeDto(any());
+        verify(converter).convertToDto(any());
     }
 }
