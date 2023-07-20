@@ -10,7 +10,6 @@ import com.itachallenge.challenge.exception.ConverterException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -30,8 +29,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ChallengeConverterDtoTest {
 
     private final ChallengeConverterDto converter = new ChallengeConverterDto();
-
-    private final LanguageConverterDto languageConverterDto = new LanguageConverterDto();
 
     private ChallengeDocument challengeDoc1;
 
@@ -103,6 +100,7 @@ public class ChallengeConverterDtoTest {
         ChallengeDocument challengeDocumentMocked = challengeDoc1;
         ChallengeDto resultDto = converter.convert(challengeDocumentMocked);
         ChallengeDto expectedDto = challengeDto1;
+
         assertThat(expectedDto).usingRecursiveComparison().ignoringFields("percentage", "popularity").isEqualTo(resultDto);
     }
 

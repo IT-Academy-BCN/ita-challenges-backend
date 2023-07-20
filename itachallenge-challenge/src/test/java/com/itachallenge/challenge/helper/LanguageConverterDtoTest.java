@@ -7,16 +7,17 @@ import com.itachallenge.challenge.exception.ConverterException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LanguageConverterDtoTest {
+import org.junit.jupiter.api.Assertions;
 
-    //private final LanguageConverterDto converter = new LanguageConverterDto();
+class LanguageConverterDtoTest {
+
     private final LanguageConverterDto converter = new LanguageConverterDto();
 
     private LanguageDocument languageDocument1;
@@ -47,7 +48,27 @@ public class LanguageConverterDtoTest {
         LanguageDocument languageDocumentMocked = languageDocument1;
         LanguageDto resultDto = converter.convert(languageDocumentMocked);
         LanguageDto expectedDto = languageDto1;
-        assertThat(expectedDto).usingRecursiveComparison().isEqualTo(resultDto);
+        assertEquals(expectedDto.getIdLanguage(), resultDto.getIdLanguage());
+        assertEquals(expectedDto.getLanguageName(), resultDto.getLanguageName());
     }
 
+    @Test
+    @DisplayName("Test convertToDto method")
+    void testConvertToDtoMethod() {
+        Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
+
+        Flux<LanguageDto> resultFlux = converter.converToDto(documentFlux);
+
+        StepVerifier.create(resultFlux)
+                .assertNext(languageDto -> {
+                    Assertions.assertEquals(languageDto1.getIdLanguage(), languageDto.getIdLanguage());
+                    Assertions.assertEquals(languageDto1.getLanguageName(), languageDto.getLanguageName());
+                })
+                .assertNext(languageDto -> {
+                    Assertions.assertEquals(languageDto2.getIdLanguage(), languageDto.getIdLanguage());
+                    Assertions.assertEquals(languageDto2.getLanguageName(), languageDto.getLanguageName());
+                })
+                .expectComplete()
+                .verify();
+    }
 }

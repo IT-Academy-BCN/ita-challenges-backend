@@ -36,15 +36,15 @@ public class ChallengeConverterDto extends ConverterAbstract<ChallengeDocument, 
         ChallengeDto dto = super.convert(document);
 
         dto.setLanguages(document.getLanguages().stream()
-                .map(languageConverterDto::convert).collect(Collectors.toSet()));
+                .map(this::convertLanguageDocumentToDto).collect(Collectors.toSet()));
 
         dto.setCreationDate(getFormattedCreationDateTime(document.getCreationDate()));
         return dto;
     }
 
-    /*private LanguageDto convertLanguageDocumentToDto(LanguageDocument languageDocument) {
+    private LanguageDto convertLanguageDocumentToDto(LanguageDocument languageDocument) {
         return new LanguageDto(languageDocument.getIdLanguage(), languageDocument.getLanguageName());
-    }*/
+    }
 
     //method to set document creationDate attribute into requested UTC String .json format
     private String getFormattedCreationDateTime(LocalDateTime creationDateDocument) {
