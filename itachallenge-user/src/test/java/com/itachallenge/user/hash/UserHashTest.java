@@ -16,6 +16,7 @@ class UserHashTest {
         UUID originUuid = UUID.randomUUID();
         // Given
         UserHash user = UserHash.builder()
+                .dni("12345678A")
                 .uuid(originUuid)
                 .name("John")
                 .surname("Doe")
@@ -27,6 +28,7 @@ class UserHashTest {
 
         // Assert
         Assertions.assertEquals(originUuid, user.getUuid());
+        Assertions.assertEquals("12345678A", user.getDni());
         Assertions.assertEquals("John", user.getName());
         Assertions.assertEquals("Doe", user.getSurname());
         Assertions.assertEquals("johndoe", user.getNickname());
@@ -37,6 +39,7 @@ class UserHashTest {
         // Modify
         UUID newUuid = UUID.randomUUID();
         user.setUuid(newUuid);
+        user.setDni("23456789B");
         user.setName("Jane");
         user.setSurname("Smith");
         user.setNickname("janesmith");
@@ -47,6 +50,7 @@ class UserHashTest {
 
         // Assert
         Assertions.assertEquals(newUuid, user.getUuid());
+        Assertions.assertEquals("23456789B", user.getDni());
         Assertions.assertEquals("Jane", user.getName());
         Assertions.assertEquals("Smith", user.getSurname());
         Assertions.assertEquals("janesmith", user.getNickname());

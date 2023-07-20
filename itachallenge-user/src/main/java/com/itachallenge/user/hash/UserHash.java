@@ -19,6 +19,7 @@ public class UserHash implements Serializable {
     private UUID uuid;
     private String name;
     private String surname;
+    private String dni;
     private String nickname;
     private String email;
     private String password;
