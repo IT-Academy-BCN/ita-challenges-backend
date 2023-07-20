@@ -24,4 +24,7 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
 
+    Flux<ChallengeDocument> getChallengePaginated(
+            int pageNumber, int pageSize);
+
 }
