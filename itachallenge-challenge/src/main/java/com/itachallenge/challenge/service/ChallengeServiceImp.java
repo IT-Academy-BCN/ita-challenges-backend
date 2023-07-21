@@ -11,8 +11,6 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -20,7 +18,6 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -33,9 +30,6 @@ public class ChallengeServiceImp implements IChallengeService {
     private ChallengeRepository challengeRepository;
     @Autowired
     private Converter converter;
-    @Autowired
-    private ReactiveMongoTemplate reactiveMongoTemplate;
-
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -100,11 +94,8 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Flux<ChallengeDto> getChallengesPaginated (int pageNumber, int pageSize) {
-        Flux<ChallengeDocument> challengesList = reactiveMongoTemplate.find(paginationQuery(pageNumber,pageSize),
-                ChallengeDocument.class);
+        Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated(pageNumber,pageSize);
         return converter.fromChallengeToChallengeDto(challengesList);
     }
-    public static Query paginationQuery(int pageNumber, int pageSize) {
-        return new Query().skip((long) (pageNumber - 1) * pageSize).limit(pageSize);
-    }
+
 }
