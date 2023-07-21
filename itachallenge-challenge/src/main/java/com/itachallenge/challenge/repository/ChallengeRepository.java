@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -19,12 +20,14 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     Mono<ChallengeDocument> findByLevel(String level);
 
     Mono<ChallengeDocument> findByTitle(String title);
+
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
 
-    Flux<ChallengeDocument> getChallengePaginated(
+    @Query("{().skip((pageNumber - 1) * pageSize).limit(pageSize)}")
+    Flux<ChallengeDocument> findChallengesPaginated(
             int pageNumber, int pageSize);
 
 }

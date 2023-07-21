@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -21,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
-import static com.itachallenge.challenge.service.ChallengeServiceImp.paginationQuery;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -32,9 +30,6 @@ class ChallengeServiceImpTest {
 
     @Mock
     private Converter converter;
-
-    @Mock
-    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -171,7 +166,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void getAllChallengesPaginated_ChallengesExist_ChallengesReturned() {
+    void getChallengesPaginated_ChallengesExist_ChallengesReturned() {
         // Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
@@ -182,8 +177,8 @@ class ChallengeServiceImpTest {
         int pageNumber = 2;
         int pageSize = 2;
 
-        when(reactiveMongoTemplate.find(paginationQuery(pageNumber, pageSize),
-                ChallengeDocument.class)).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
+        when(challengeRepository.findChallengesPaginated(pageNumber, pageSize))
+                .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
 
         // Act
@@ -195,8 +190,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        verify(reactiveMongoTemplate).find(paginationQuery(pageNumber,pageSize),
-                ChallengeDocument.class);
+        verify(challengeRepository).findChallengesPaginated(pageNumber,pageSize);
         verify(converter).fromChallengeToChallengeDto(any());
     }
 }
