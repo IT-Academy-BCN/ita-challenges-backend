@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class PaginationHelper {
 
-    private final static int DEFAULT_PAGE_SIZE= 5;
+    private static final int DEFAULT_PAGE_SIZE= 5;
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
