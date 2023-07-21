@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
+import static com.itachallenge.challenge.service.ChallengeServiceImp.paginationQuery;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +32,9 @@ class ChallengeServiceImpTest {
 
     @Mock
     private Converter converter;
+
+    @Mock
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -178,8 +182,8 @@ class ChallengeServiceImpTest {
         int pageNumber = 2;
         int pageSize = 2;
 
-        when(challengeRepository.findChallengesPaginated(pageNumber, pageSize))
-                .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
+        when(reactiveMongoTemplate.find(paginationQuery(pageNumber, pageSize),
+                ChallengeDocument.class)).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
 
         // Act
@@ -191,8 +195,8 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        verify(challengeRepository).findChallengesPaginated(pageNumber,pageSize);
-                //ChallengeDocument.class);
+        verify(reactiveMongoTemplate).find(paginationQuery(pageNumber,pageSize),
+                ChallengeDocument.class);
         verify(converter).fromChallengeToChallengeDto(any());
     }
 }
