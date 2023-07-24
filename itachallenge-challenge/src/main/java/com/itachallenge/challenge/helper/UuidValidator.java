@@ -13,7 +13,7 @@ public class UuidValidator {
 
     	private UuidValidator() {};
     
-    public static  boolean isValidUUID(String id) {
+    public static   boolean isValidUUID(String id) {
         return !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
     }
 

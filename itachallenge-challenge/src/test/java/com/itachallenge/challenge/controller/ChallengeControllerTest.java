@@ -3,18 +3,30 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.service.IChallengeService;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -26,9 +38,18 @@ class ChallengeControllerTest {
 
     @MockBean
     private IChallengeService challengeService;
+    
 
     @MockBean
     private DiscoveryClient discoveryClient;
+    
+    @InjectMocks
+    ChallengeController challengecontroller;
+    
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
     void test() {
@@ -113,4 +134,34 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
+    
+    @Test
+    @DisplayName("Test EndPoint: related")
+    void ChallengeRelatedTest_VALID_ID () throws Exception{
+    	
+    final String VALID_ID="40728c9c-a557-4d12-bf8f-3747d0924197";
+    
+    	
+        ChallengeDto ch1 = ChallengeDto.builder()
+				.challengeId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+				.build();
+        ChallengeDto ch2 = ChallengeDto.builder()
+				.challengeId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+				.build();
+        ChallengeDto ch3 = ChallengeDto.builder()
+				.challengeId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+				.build();
+        
+        when(challengeService.getRelatedChallenge(VALID_ID)).thenReturn(Flux.just(ch1, ch2, ch3));
+
+      Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> response = challengecontroller.relatedChallenge(0, 10, VALID_ID);
+    	
+      StepVerifier.create(response)
+      .expectNextMatches(resp -> resp.getStatusCode().equals(HttpStatus.OK)
+              && resp.getBody().getResults()[0].equals(ch1) 
+              && resp.getBody().getCount()==3)
+      .verifyComplete();
+            
+    }
+
 }

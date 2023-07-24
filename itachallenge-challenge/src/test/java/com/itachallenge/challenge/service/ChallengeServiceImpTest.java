@@ -16,6 +16,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import java.util.Arrays;
+import java.util.Set;
+
 import java.util.Collections;
 import java.util.UUID;
 
@@ -156,6 +158,22 @@ class ChallengeServiceImpTest {
 						UUID.fromString("f71e51d-1e3e-44a2-bc97-158021f1a344")))
 				.build();
 
+			UUID thisId = challenge.getUuid();
+			
+			//mocks
+			when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(challenge));
+					
+			//Tests
+			Flux<ChallengeDto> serviceResponse = challengeService.getRelatedChallenge("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
+
+			StepVerifier.create(serviceResponse)
+			.expectNextMatches(response -> response.getTitle().equals("Primer Titulo")
+								&& response.getChallengeId().equals(thisId)
+						         && response instanceof ChallengeDto
+						         && response.getLevel().equals("dos"));
+
+		}
+	
     @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange

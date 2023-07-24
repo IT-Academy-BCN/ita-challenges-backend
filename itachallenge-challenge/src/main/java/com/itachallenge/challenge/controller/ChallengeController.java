@@ -2,6 +2,8 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.exception.BadUUIDException;
+import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.Optional;
@@ -84,13 +88,12 @@ public class ChallengeController {
         public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
                         @RequestParam(value = "offset", defaultValue = "0") int offset,
                         @RequestParam(value = "limit", defaultValue = "10") int limit,
-                        @PathVariable("challengeId") String id) {
+                        @PathVariable("challengeId") String id) throws BadUUIDException {
 
                 if (!UuidValidator.isValidUUID(id)) {
                         log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.",
                                         id);
-                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                                        "Invalid ID format. Please indicate the correct format.");
+                        throw new BadUUIDException("Invalid ID format. Please indicate the correct format.");
                 }
 
                 return challengeService.getRelatedChallenge(id)
