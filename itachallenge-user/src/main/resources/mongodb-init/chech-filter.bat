@@ -20,6 +20,6 @@ IF ERRORLEVEL 1 (
   echo "Error occurred. Unique index might not be working."
 )
 
-echo Made it
+echo Done
 pause
 exit
