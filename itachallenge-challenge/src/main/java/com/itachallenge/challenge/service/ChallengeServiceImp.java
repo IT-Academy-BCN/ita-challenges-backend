@@ -94,12 +94,14 @@ public class ChallengeServiceImp implements IChallengeService {
         return Mono.just(UUID.fromString(id));
     }
 
-    public Flux<ChallengeDto> getChallengesPaginated (int pageNumber, int pageSize) {
-        Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated(pageNumber,pageSize);
-        return converter.fromChallengeToChallengeDto(challengesList);
-    }
-    public Flux<ChallengeDto> getChallengesPaginated () {
+    public Flux<ChallengeDto> getChallengesPaginated() {
         Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated();
         return converter.fromChallengeToChallengeDto(challengesList);
     }
+
+    public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
+        Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated(pageNumber,pageSize);
+        return converter.fromChallengeToChallengeDto(challengesList);
+    }
+
 }

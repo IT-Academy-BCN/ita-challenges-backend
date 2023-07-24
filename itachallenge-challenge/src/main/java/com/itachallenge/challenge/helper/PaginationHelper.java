@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.exception.ParameterNotValidException;
-import com.itachallenge.challenge.service.ChallengeServiceImp;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +9,7 @@ public class PaginationHelper {
 
     private static final int DEFAULT_PAGE_SIZE = 5;
 
-    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
+    private static final Logger log = LoggerFactory.getLogger(PaginationHelper.class);
 
     public int getValidPageNumber(String pageNumber) {
         if (pageNumber == null || pageNumber.isEmpty() || pageNumber.equals("0")) {

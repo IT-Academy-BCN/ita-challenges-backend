@@ -28,7 +28,7 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     @Query("{().skip((pageNumber - 1) * pageSize).limit(pageSize)}") default
     Flux<ChallengeDocument> findChallengesPaginated() {
-        return findChallengesPaginated(1, 3);
+        return findChallengesPaginated(1, 1);
     }
 
     @Query("{().skip((pageNumber - 1) * pageSize).limit(pageSize)}")

@@ -166,7 +166,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void getChallengesPaginated_ChallengesExist_ChallengesReturned() {
+    void getChallengesPaginated_WithPagingParameters() {
         // Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
@@ -191,6 +191,32 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findChallengesPaginated(pageNumber,pageSize);
+        verify(converter).fromChallengeToChallengeDto(any());
+    }
+
+    @Test
+    void getChallengesPaginated_WithoutPagingParameters() {
+        // Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto challengeDto4 = new ChallengeDto();
+        ChallengeDto[] expectedChallengesPaged = {challengeDto1};
+
+        when(challengeRepository.findChallengesPaginated())
+                .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
+        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto1));
+
+        // Act
+        Flux<ChallengeDto> result = challengeService.getChallengesPaginated();
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNext(expectedChallengesPaged)
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository).findChallengesPaginated();
         verify(converter).fromChallengeToChallengeDto(any());
     }
 }

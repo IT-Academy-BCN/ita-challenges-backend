@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.exception.GlobalExceptionHandler;
-import com.itachallenge.challenge.exception.ParameterNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,12 +7,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class PaginationHelperTest {
+class PaginationHelperTest {
 
     @Test
     @DisplayName("Validate pagination parameters")
-
-    public void getValidPageNumberTest_PageNumberNull() {
+    void getValidPageNumberTest_PageNumberNull() {
         PaginationHelper paginationHelper = new PaginationHelper();
         int result = paginationHelper.getValidPageNumber(null);
         assertEquals(1, result);
@@ -38,7 +35,7 @@ public class PaginationHelperTest {
     void getValidPageNumberTest_NonNumericPageNumber_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String nonNumericPageNumber = "a";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(nonNumericPageNumber));
+        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(nonNumericPageNumber));
     }
 
     @Test
@@ -52,7 +49,7 @@ public class PaginationHelperTest {
     void getValidPageNumberTest_DoublePageNumber_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String doublePageNumber = "1.1";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageNumber), "Error message");
+        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageNumber), "Error message");
     }
 
     @Test
@@ -88,21 +85,21 @@ public class PaginationHelperTest {
     void getValidPageSizeTest_NonNumericPageSize_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String nonNumericPageSize = "a";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageSize(nonNumericPageSize));
+        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageSize(nonNumericPageSize));
     }
 
     @Test
     void getValidPageSizeTest_NegativePageSize_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String negativePageSize = "-1";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(negativePageSize));
+        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(negativePageSize));
     }
 
     @Test
     void getValidPageSizeTest_DoublePageSize_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String doublePageSize = "1.1";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageSize));
+        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageSize));
     }
 
     @Test
