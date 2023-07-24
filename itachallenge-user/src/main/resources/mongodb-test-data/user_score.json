@@ -1,0 +1,596 @@
+[
+  {
+    "_id" : {
+      "$uuid" : "a75fa943-6bc9-4e62-b1db-d43d15b149c7"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid":"5c1a97e5-1cca-4144-9981-2de1fb73b178"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 95
+  },
+  {
+    "_id" : {
+      "$uuid" : "956c9dbd-2e85-4d68-a75b-9783d83c7f72"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "7fc6a737-dc36-4e1b-87f3-120d81c548aa"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "1e8f64e2-6d68-4ae1-9425-8102d0ab61d3"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 60
+  },
+  {
+    "_id" : {
+      "$uuid" : "d9275a97-8317-4da7-9b4f-2a54d5a3b2f9"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "18c323ce-025c-4f21-8152-8e46bc94c690"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "8d30afbd-7c57-438c-9063-7d9d79c12d75"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "8c47cf24-ccfa-4bac-88d4-e7fbdadea5af"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 100
+  },
+  {
+    "_id" : {
+      "$uuid" : "47fa6202-61d5-4de8-9fa1-6f5e4d82a4a0"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "d0a82421-de75-46a5-903e-69e4addf7e75"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 100
+  },
+  {
+    "_id" : {
+      "$uuid" : "83f4b85c-77d0-4ae5-b0cd-aa5b0e7ac3d0"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "2cdcb5a8-ef85-41cb-84d4-08e6cdde9b5e"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 100
+  },
+  {
+    "_id" : {
+      "$uuid" : "61b39223-83d2-4eaa-9382-3c2f3e681fa8"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 100
+  },
+  {
+    "_id" : {
+      "$uuid" : "fa74239f-9060-40c5-a08a-68e1a491d9a5"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "c6656d38-f592-4be2-b256-7c4015333445"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 95
+  },
+  {
+    "_id" : {
+      "$uuid" : "5cd6fe26-362d-43db-b07c-2a0a7d61f8e0"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "eb7a15e4-499e-481d-a909-6acc642b0c09"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 70
+  },
+  {
+    "_id" : {
+      "$uuid" : "53242ff7-9e8a-4b94-aa3b-d9289a02dbad"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "107f2216-4814-4b6d-ab3d-7ef85ff0eb6a"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 80
+  },
+  {
+    "_id" : {
+      "$uuid" : "f83b0e13-5be5-4c85-913e-9d091721f51f"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 40
+  },
+  {
+    "_id" : {
+      "$uuid" : "1a3f6eac-1027-4e6d-9e3b-63be9fc84fc8"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "462d7617-477d-497f-8bd2-2fa5d897f20f"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 50
+  },
+  {
+    "_id" : {
+      "$uuid" : "b2b32a8d-d31d-4d27-98e5-58dc7dd4ffdb"
+    },
+    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
+    "challenge_id": { "$uuid": "468c70e7-57ea-4fba-b57d-73034ad5aa5f"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 90
+  },
+  {
+    "_id" : {
+      "$uuid" : "9a2d29f7-53f8-45dd-a4f6-29bbf76fd6d1"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "5c1a97e5-1cca-4144-9981-2de1fb73b178"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 90
+  },
+  {
+    "_id" : {
+      "$uuid" : "9874c28d-2e4c-44f9-af1d-5cd18a62b4d7"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "a3960f5e-e820-4f8e-9cfd-6e952ae236d7"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 20
+  },
+  {
+    "_id" : {
+      "$uuid" : "c6f2d87e-6b38-4a60-a68f-90ae24b12f53"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 90
+  },
+  {
+    "_id" : {
+      "$uuid" : "e1f8bc03-33c9-4b2d-8d3b-70f7b835d4a6"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "18c323ce-025c-4f21-8152-8e46bc94c690"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "753b56a9-af30-4e23-ae9a-879e22519629"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "4345bf25-9dbe-429f-80e5-42e68b2f8a85"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "84f2d9bc-ec56-4a43-8c6d-317d78d4377e"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "d0a82421-de75-46a5-903e-69e4addf7e75"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 95
+  },
+  {
+    "_id" : {
+      "$uuid" : "9e107c77-6ff3-4c0b-8ef9-0d53b5987a52"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 10
+  },
+  {
+    "_id" : {
+      "$uuid" : "d05f0d7a-ccf3-4e3a-b03f-3a0fe9976eef"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "577f459b-a1f9-4905-a689-a060677d393d"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 90
+  },
+  {
+    "_id" : {
+      "$uuid" : "521de0a8-8773-484c-b70d-33c7c4b7d532"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "eb7a15e4-499e-481d-a909-6acc642b0c09"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 60
+  },
+  {
+    "_id" : {
+      "$uuid" : "4f93e3dc-06e5-4b11-9f9b-94f3f5c5e129"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "c0c7510b-f867-4375-b46f-0c164f30429f"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 10
+  },
+  {
+    "_id" : {
+      "$uuid" : "a3a6239e-4d0f-4923-a4b2-75fd5e202168"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 60
+  },
+  {
+    "_id" : {
+      "$uuid" : "6d8c7b92-04a5-4de7-8246-3d740d150402"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 15
+  },
+  {
+    "_id" : {
+      "$uuid" : "bce0ed97-c9da-4f5a-bfd1-5934c2a03c5e"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "4ca047df-326e-4e56-affa-5541f63ab0af"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 25
+  },
+  {
+    "_id" : {
+      "$uuid" : "28882aa5-8e14-4a23-b3fc-6e2c171b615b"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "6646a97f-17a7-49d6-b325-6db9e84a456f"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 95
+  },
+  {
+    "_id" : {
+      "$uuid" : "d1e3fd63-41c7-49c1-8d3d-7f19d276fb24"
+    },
+    "user_id": { "$uuid": "b24f6d1a-4f7d-432a-bab0-8949c915ef2f"},
+    "challenge_id": { "$uuid": "ea9a9b70-273c-4322-acc4-ac4950558a4a"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "c52153d4-ae39-4b34-a1c3-8d1d0c9e9c3f"
+    },
+    "user_id": { "$uuid": "ef43e8a5-558d-4f59-aa86-5e3273c12c9a"},
+    "challenge_id": { "$uuid": "a3960f5e-e820-4f8e-9cfd-6e952ae236d7"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "9bfa7f81-48fd-4219-8d18-8d7308b0a979"
+    },
+    "user_id": { "$uuid": "ef43e8a5-558d-4f59-aa86-5e3273c12c9a"},
+    "challenge_id": { "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "3e4a2998-7a75-4e94-8e5d-90708b5ef993"
+    },
+    "user_id": { "$uuid": "ef43e8a5-558d-4f59-aa86-5e3273c12c9a"},
+    "challenge_id": { "$uuid": "d2ce221e-cb49-42d6-b43b-b66eba4ca52d"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "f2c648f5-5f5e-44d7-a5a3-dc7520c915f7"
+    },
+    "user_id": { "$uuid": "ef43e8a5-558d-4f59-aa86-5e3273c12c9a"},
+    "challenge_id": { "$uuid": "d0a82421-de75-46a5-903e-69e4addf7e75"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "7d8d265b-546e-4e09-aecf-8fcab94db1fb"
+    },
+    "user_id": { "$uuid": "ef43e8a5-558d-4f59-aa86-5e3273c12c9a"},
+    "challenge_id": { "$uuid": "b3c3ddb5-dc3e-4659-9f11-fca3f18f49f4"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "a5d186d2-49f3-41c0-a879-c66d8741e7be"
+    },
+    "user_id": { "$uuid": "ef43e8a5-558d-4f59-aa86-5e3273c12c9a"},
+    "challenge_id": { "$uuid": "72bc6c83-e9b1-4f25-9000-58af4d49ab9c"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 0
+  },
+  {
+    "_id" : {
+      "$uuid" : "4f8c6d92-8e6e-4c9a-93a1-7b0aef3e8692"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "124684b8-3272-4f29-9b82-8f8f1e0db6fc"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 60
+  },
+  {
+    "_id" : {
+      "$uuid" : "a1e8f5c2-3e83-4a45-96c7-9c63b40b42b7"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "c1bcc067-f787-4a6f-867a-834193de6032"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 85
+  },
+  {
+    "_id" : {
+      "$uuid" : "edbf0c56-5bb5-4e86-9b8e-fb6ed6de2ce4"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "7c55adc0-f985-4829-a2a6-e7571d1be7de"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 20
+  },
+  {
+    "_id" : {
+      "$uuid" : "52d4a8f3-93d7-4c60-8769-6f8f3c9d92ef"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "6c340690-692c-43f7-a39b-3926eabc0e91"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 15
+  },
+  {
+    "_id" : {
+      "$uuid" : "b17e2d36-9a90-4d63-b4e1-240dd2189fd6"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "6f189158-881c-4165-ad08-1c306c7752db"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 50
+  },
+  {
+    "_id" : {
+      "$uuid" : "f57bfeef-9db0-4f4e-b3e2-1f3d292b1830"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "d43506aa-266b-4ea4-af29-e3b75e3879d6"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 95
+  },
+  {
+    "_id" : {
+      "$uuid" : "634d1de6-80f7-4aa9-99b5-d2db01162f8c"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "67e62585-93e7-485e-8d78-0cd1e9331886"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 40
+  },
+  {
+    "_id" : {
+      "$uuid" : "e97d4a6c-1aeb-48e4-b2e2-ae5c5d4bb07e"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "4345bf25-9dbe-429f-80e5-42e68b2f8a85"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 45
+  },
+  {
+    "_id" : {
+      "$uuid" : "4b8a7bce-66a4-49d1-93d7-5f989ad0b254"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 65
+  },
+  {
+    "_id" : {
+      "$uuid" : "e3f72e1e-0db4-4429-9b50-142543d292d5"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 95
+  },
+  {
+    "_id" : {
+      "$uuid" : "9a3f4f7e-7d49-4f88-b91d-62a5d173918c"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 85
+  },
+  {
+    "_id" : {
+      "$uuid" : "82e0d57a-8d7b-4a2b-8f27-81cde0b77b49"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 75
+  },
+  {
+    "_id" : {
+      "$uuid" : "63a892ff-2b6e-437c-a6f5-84542f03db85"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 45
+  },
+  {
+    "_id" : {
+      "$uuid" : "c5fe791c-2676-4da0-8c42-bd3ff1a69a1c"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 100
+  },
+  {
+    "_id" : {
+      "$uuid" : "28af3a8c-ee67-46b0-8a8a-16cb92480d76"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 15
+  },
+  {
+    "_id" : {
+      "$uuid" : "d6e3540c-3db0-4a92-99d3-79ef09f8f9a9"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 45
+  },
+  {
+    "_id" : {
+      "$uuid" : "742a69bc-9e14-47a1-9a0e-1db4b3beaa61"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": 2,
+    "score": 10
+  },
+  {
+    "_id" : {
+      "$uuid" : "f6e7d8c6-15b3-4815-b1b2-7b8bccc8e53d"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": 1,
+    "score": 40
+  },
+  {
+    "_id" : {
+      "$uuid" : "a5f4d8c7-3a1e-4f2c-852b-6b48a7e93d94"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid": "cebd2d65-8562-4691-a066-f1d1b3d7be86"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": 3,
+    "score": 70
+  }
+]
