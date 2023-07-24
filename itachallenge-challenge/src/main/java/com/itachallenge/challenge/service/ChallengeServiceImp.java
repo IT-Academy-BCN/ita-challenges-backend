@@ -98,5 +98,8 @@ public class ChallengeServiceImp implements IChallengeService {
         Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated(pageNumber,pageSize);
         return converter.fromChallengeToChallengeDto(challengesList);
     }
-
+    public Flux<ChallengeDto> getChallengesPaginated () {
+        Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated();
+        return converter.fromChallengeToChallengeDto(challengesList);
+    }
 }

@@ -26,8 +26,12 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
 
+    @Query("{().skip((pageNumber - 1) * pageSize).limit(pageSize)}") default
+    Flux<ChallengeDocument> findChallengesPaginated() {
+        return findChallengesPaginated(1, 3);
+    }
+
     @Query("{().skip((pageNumber - 1) * pageSize).limit(pageSize)}")
-    Flux<ChallengeDocument> findChallengesPaginated(
-            int pageNumber, int pageSize);
+    Flux<ChallengeDocument> findChallengesPaginated(int pageNumber, int pageSize);
 
 }

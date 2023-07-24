@@ -1,8 +1,10 @@
 package com.itachallenge.challenge.helper;
 
+import com.itachallenge.challenge.exception.GlobalExceptionHandler;
 import com.itachallenge.challenge.exception.ParameterNotValidException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,14 +45,14 @@ public class PaginationHelperTest {
     void getValidPageNumberTest_NegativePageNumber_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String negativePageNumber = "-1";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(negativePageNumber));
+        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(negativePageNumber));
     }
 
     @Test
     void getValidPageNumberTest_DoublePageNumber_ThrowsParameterNotValidException() {
         PaginationHelper paginationHelper = new PaginationHelper();
         String doublePageNumber = "1.1";
-        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageNumber));
+        assertThrows(ParameterNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageNumber), "Error message");
     }
 
     @Test
