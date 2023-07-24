@@ -46,55 +46,19 @@
       }
     ],
     "solutions": [
-      {
-        "_id" : {
-          "$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "998bc504-265d-40a4-b579-62feacc3c8cd"
-        }
-      }
+      {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
+      {"$uuid": "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"},
+      {"$uuid": "998bc504-265d-40a4-b579-62feacc3c8cd"}
     ],
     "resources": [
-      {
-        "_id" : {
-          "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-        }
-      },
-      {
-        "_id" :  {
-          "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-        }
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "_id": {
-          "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"
-        }
-      },
-      {
-        "_id" :  {
-          "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"
-        }
-      }
+      {"$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"},
+      {"$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
+      {"$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"}
     ]
   },
   {
@@ -149,47 +113,19 @@
       }
     ],
     "solutions": [
-      {
-        "_id" : {
-          "$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"
-        }
-      },
-      {"_id" : {
-        "$uuid": "7e181ec8-3f9a-4e43-a75c-8319e245ccee"
-      }
-      },
-      {"_id" : {
-        "$uuid": "a7a789a9-2006-4b59-94bb-3afe0d1c161d"
-      }
-      }
+      {"$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+      {"$uuid": "7e181ec8-3f9a-4e43-a75c-8319e245ccee"},
+      {"$uuid": "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
-      {"_id" : {
-        "$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"
-      }
-      },
-      {"_id" : {
-        "$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"
-      }
-      },
-      {"_id" : {
-        "$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"
-      }
-      }
+      {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
+      {"$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"},
+      {"$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"}
     ],
     "related": [
-      {"_id" : {
-        "$uuid": "9f85c579-c84f-40c6-a593-81ff3d9e5873"
-      }
-      },
-      {"_id" : {
-        "$uuid": "3e93fdd6-5c7a-4b12-9b64-96488ccbe2ae"
-      }
-      },
-      {"_id" : {
-        "$uuid": "f02b0577-b059-4f26-a2ad-b09a0a7e9905"
-      }
-      }
+      {"$uuid": "9f85c579-c84f-40c6-a593-81ff3d9e5873"},
+      {"$uuid": "3e93fdd6-5c7a-4b12-9b64-96488ccbe2ae"},
+      {"$uuid": "f02b0577-b059-4f26-a2ad-b09a0a7e9905"}
     ]
   },
   {
@@ -230,9 +166,10 @@
       "note": "Nulla finibus ligula in ante molestie, ac lacinia arcu volutpat."
     },
     "languages": [
-      {"_id" : {
-        "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
-      },
+      {
+        "_id" : {
+          "$uuid" : "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
         "language_name": "Java"
       },
       {
@@ -243,46 +180,19 @@
       }
     ],
     "solutions": [
-      {"_id" : {
-        "$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"
-      }
-      },
-      {"_id" : {
-        "$uuid": "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"
-      }
-      },
-      {"_id" : {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
-      }
+      {"$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"},
+      {"$uuid": "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {"_id" : {
-        "$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"
-      }
-      },
-      {"_id" : {
-        "$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
-      }
-      },
-      {"_id" : {
-        "$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"
-      }
-      }
+      {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
+      {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"}
     ],
     "related": [
-      {"_id" : {
-        "$uuid": "6a13e0a4-1a15-4c5c-8c37-8445f1ef8e7c"
-      }
-      },
-      {"_id" : {
-        "$uuid": "e4486b46-41c2-4d0f-b4f7-ec01c2e647f1"
-      }
-      },
-      {"_id" : {
-        "$uuid": "3f9c7f43-00b5-41a7-bd9e-1b1d8ef648c8"
-      }
-      }
+      {"$uuid": "6a13e0a4-1a15-4c5c-8c37-8445f1ef8e7c"},
+      {"$uuid": "e4486b46-41c2-4d0f-b4f7-ec01c2e647f1"},
+      {"$uuid": "3f9c7f43-00b5-41a7-bd9e-1b1d8ef648c8"}
     ]
   },
   {
@@ -290,10 +200,8 @@
       "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
     },
     "challenge_title": "Coding Challenge",
-    "level": "INTERMEDIATE",
-    "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
-    },
+    "level": "MEDIUM",
+    "creation_date": { "$date": "2018-09-09T11:43:54+0200" },
     "detail": {
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ultricies sapien sed neque condimentum sagittis.",
       "examples": [
@@ -341,54 +249,19 @@
       }
     ],
     "solutions": [
-      {
-        "_id" : {
-          "$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
-        }
-      }
+      {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
+      {"$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
     ],
     "resources": [
-      {"_id" : {
-        "$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"
-      }
-      },
-      {
-        "_id" : {
-          "$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"
-        }
-      }
+      {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
+      {"$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"},
+      {"$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"}
     ],
     "related": [
-      {
-        "_id" : {
-          "$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"
-        }
-      },
-      {
-        "_id" : {
-          "$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"
-        }
-      }
+      {"$uuid": "40728c9c-a557-4d12-bf8f-3747d0924197"},
+      {"$uuid": "1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"},
+      {"$uuid": "5f71e51d-1e3e-44a2-bc97-158021f1a344"}
     ]
   }
 ]
