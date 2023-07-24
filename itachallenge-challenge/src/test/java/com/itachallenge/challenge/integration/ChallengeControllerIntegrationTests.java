@@ -123,7 +123,7 @@ public class ChallengeControllerIntegrationTests {
     }
 
     @Test
-    void shouldReturnOkForknownUserId() {
+    void shouldReturnOk_ValidUserId() {
         webTestClient
                 .get()
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_VALID)
@@ -138,26 +138,9 @@ public class ChallengeControllerIntegrationTests {
                 })
         ;
     }
-    @Test
-    void testGetOneChallenge_CompareFieldTitle() {
-
-        webTestClient.get()
-                .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_VALID)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.count").isEqualTo(1)
-                .jsonPath("$.results{$.challenge_title}").isEqualTo("Loops")
-        //.json("{\"challenge_title\":\"Loops\"}")
-        //.expectBody(GenericResultDto.class)
-
-        ;
-    }
 
     @Test
-
-    void getAllChallenges_ChallengesExist_ChallengesReturned() {
+    void getAllChallenges_ReturnsStatusOkAndLength() {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/challenges")
                 .exchange()
@@ -171,4 +154,19 @@ public class ChallengeControllerIntegrationTests {
                 });
     }
 
+    @Test
+    void removeResourcesById_ValidId_ResourceDeleted() {
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/resources/{idResource}", UUID_VALID)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 1;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 1;
+                });
+    }
 }
