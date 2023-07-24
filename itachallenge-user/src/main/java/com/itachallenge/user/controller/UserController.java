@@ -21,8 +21,9 @@ import java.util.UUID;
 public class UserController {
     //region ATTRIBUTES
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    @Autowired()
+    @Autowired
     ServiceChallengeStatistics serviceChallengeStatistics;
+
 
     //endregion ATTRIBUTES
 
