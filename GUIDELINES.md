@@ -153,7 +153,7 @@ Necessary Git configurations to prevent problems
 
 ### 2.2.1 Git ignore
 1. Copy file ".gitignore" from root project\
-   <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
+   <img src="img/GitIgnore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
 2. Paste it in the PC directory (outside of project folder)
 3. In Git Bash...
 4. Run the command: 'git config --global core.excludesfile C:\\temp\\.gitignore'\
