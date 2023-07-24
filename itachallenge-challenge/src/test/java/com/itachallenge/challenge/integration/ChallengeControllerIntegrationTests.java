@@ -69,7 +69,7 @@ public class ChallengeControllerIntegrationTests {
 
         ExampleDocument example = new ExampleDocument(uuid_1, "Example Text 1");
         ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
-        List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
+        List<ExampleDocument> exampleList = new ArrayList<>(Arrays.asList(example2, example));
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
@@ -102,14 +102,13 @@ public class ChallengeControllerIntegrationTests {
     @Test
     @DisplayName("Test response Hello")
     void testDevProfile_OKwithoutAuthentication() {
-        final String URI_TEST = "/test";
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/test")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
-                .value(s -> s.toString(), equalTo("Hello from ITA Challenge!!!"));
+                .value(String::toString, equalTo("Hello from ITA Challenge!!!"));
     }
 
     @Test
