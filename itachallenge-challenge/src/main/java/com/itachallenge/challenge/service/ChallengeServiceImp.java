@@ -3,10 +3,12 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.SolutionRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -29,6 +32,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeRepository challengeRepository;
+    @Autowired
+    private SolutionRepository solutionRepository;
     @Autowired
     private Converter converter;
 
@@ -83,6 +88,60 @@ public class ChallengeServiceImp implements IChallengeService {
             return resultDto;
         });
     }
+
+    /*public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
+        Mono<UUID> languageIdMono = validateUUID(idLanguage);
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeId = tuple.getT1();
+                    UUID languageId = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeId)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
+                            .flatMapMany(challenge -> {
+                                List<UUID> solutionIds = challenge.getSolutions(); // Obtenemos las soluciones del challenge
+                                return Flux.fromIterable(solutionIds)
+                                        .flatMap(solutionId -> solutionRepository.findById(solutionId)) // Obtenemos las soluciones por sus IDs
+                                        .filter(solution -> solution.getIdLanguage().equals(languageId)) // Filtramos las soluciones por idLanguage
+                                        //.flatMap(solution -> Mono.from(converter.fromSolutionToSolutionDto(Flux.just(solution)))); // Mapeamos a SolutionDto
+                                        .map(solution -> new SolutionDto(solution.getUuid(), solution.getSolutionText(), solution.getIdLanguage()));
+                            })
+                            .collectList()
+                            .map(solutions -> {
+                                GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
+                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                return resultDto;
+                            });
+                });
+    }*/
+
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
+        Mono<UUID> languageIdMono = validateUUID(idLanguage);
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeId = tuple.getT1();
+                    UUID languageId = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeId)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
+                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
+                                    .flatMap(solutionId -> solutionRepository.findById(solutionId))
+                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
+                                    .map(solution -> new SolutionDto(solution.getUuid(), solution.getSolutionText(), solution.getIdLanguage()))
+                            )
+                            .collectList()
+                            .map(solutions -> {
+                                GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
+                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                return resultDto;
+                            });
+                });
+    }
+
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

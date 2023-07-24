@@ -3,8 +3,10 @@ package com.itachallenge.challenge.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -43,6 +45,9 @@ public class ChallengeDto{
 
     @JsonProperty(index = 6)
     private Set<LanguageDto> languages;
+
+    @JsonProperty(index = 7)
+    private List<UUID> solutions;
 
     /*
     TODO: ADD more fields "on demand" (when needed)
