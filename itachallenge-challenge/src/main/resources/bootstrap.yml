@@ -9,7 +9,7 @@ spring:
       #port: 8500       #puerto HTTP del agente (Docker)
       port: 8500       #puerto HTTP del agente (local)
       config:
-        enabled: true
+        enabled: false
       discovery:
         instanceId: id:${spring.application.name}:${random.value}
         serviceName: ${spring.application.name}
