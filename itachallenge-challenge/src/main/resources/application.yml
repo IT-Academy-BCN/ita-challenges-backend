@@ -30,9 +30,6 @@ management:
   security:
     enabled: false
 
-
-
-
 logging:
   level:
     root: INFO
