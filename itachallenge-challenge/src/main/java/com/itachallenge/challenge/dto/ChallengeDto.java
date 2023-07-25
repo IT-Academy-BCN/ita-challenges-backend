@@ -42,24 +42,25 @@ public class ChallengeDto{
     @JsonProperty(index = 4)
     private DetailDocument detail;
 
-    @JsonProperty(index = 5)
-    private Set<LanguageDto> languages;
-
-    @JsonProperty(index = 6)
-    private List<UUID> solutions;
-
-    @JsonProperty(index = 7)
-    private Set<UUID> resources;
-
-    @JsonProperty(value = "related", index = 8)
-    private Set<UUID> relatedChallenges;
-
     // Info a obtener del micro score
-    @JsonProperty(index = 9)
+    @JsonProperty(index = 5)
     private Integer popularity;
 
-    @JsonProperty(index = 10)
+    // Info a obtener del micro score
+    @JsonProperty(index = 6)
     private Float percentage;
+
+    @JsonProperty(index = 7)
+    private Set<LanguageDto> languages;
+
+    @JsonProperty(index = 8)
+    private List<UUID> solutions;
+
+    @JsonProperty(index = 9)
+    private Set<UUID> resources;
+
+    @JsonProperty(value = "related", index = 10)
+    private Set<UUID> relatedChallenges;
 
     /*
     TODO: ADD more fields "on demand" (when needed)
