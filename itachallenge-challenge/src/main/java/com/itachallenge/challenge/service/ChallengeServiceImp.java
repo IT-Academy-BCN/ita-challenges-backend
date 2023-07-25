@@ -107,5 +107,14 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
-
+    
+    public Flux<ChallengeDto> getRelatedChallenge(String challengeId) {
+    	
+    	return challengeRepository.findByUuid(UUID.fromString(challengeId))
+    	        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
+    	        .flatMap(uuid -> challengeRepository.findByUuid(uuid))
+    	        .collectList() 
+                .flatMapMany(challenges -> converter.fromChallengeToChallengeDto(Flux.fromIterable(challenges))) // Convert List<ChallengeDocument> to Flux<ChallengeDocument>
+                .onErrorResume(throwable -> Flux.empty());
+    }
 }
