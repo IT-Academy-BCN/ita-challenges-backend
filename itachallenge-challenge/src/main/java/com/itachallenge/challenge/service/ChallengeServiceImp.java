@@ -3,10 +3,12 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.ChallengeConverterDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,13 @@ public class ChallengeServiceImp implements IChallengeService {
     private ChallengeRepository challengeRepository;
 
     @Autowired
+<<<<<<< HEAD
     private ChallengeConverterDto converter;
+=======
+    private LanguageRepository languageRepository;
+    @Autowired
+    private Converter converter;
+>>>>>>> 2492a1860466b41be5a07ae3a0e7abc43a023c67
 
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
@@ -81,6 +89,15 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeDtoFlux.collectList().map(challenges -> {
             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
+            return resultDto;
+        });
+    }
+
+    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
+        Flux<LanguageDto> languagesDto = converter.fromLanguageToLanguageDto(languageRepository.findAll());
+        return languagesDto.collectList().map(language -> {
+            GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
             return resultDto;
         });
     }
