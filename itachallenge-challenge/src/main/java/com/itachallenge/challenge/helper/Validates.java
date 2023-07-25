@@ -17,8 +17,10 @@ public class Validates {
 
     public boolean isValidLevel(String level) {
         return level != null && Stream.of(propertiesConfig.getEasy(), propertiesConfig.getMedium(), propertiesConfig.getHard())
+                .filter(description -> description != null) // Filtrar descripciones que no sean nulas
                 .anyMatch(description -> description.equalsIgnoreCase(level));
     }
+
 
     public boolean isValidLanguage(String language) {
         return language != null && Stream.of(propertiesConfig.getJava(), propertiesConfig.getJavascript(), propertiesConfig.getPhp(), propertiesConfig.getPython())

@@ -1,9 +1,6 @@
 package com.itachallenge.challenge.controller;
 
-<<<<<<< HEAD
-=======
 import com.google.gson.JsonObject;
->>>>>>> develop
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
@@ -33,31 +30,31 @@ public class ChallengeController {
     IChallengeService challengeService;
 
     @GetMapping(value = "/test")
-    public Mono <?> test() {
+    public Mono<?> test() {
         log.info("** Saludos desde el logger **");
 
         Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(s -> s.toString());
 
         Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(s -> s.toString());
 
         Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(s -> s.toString());
 
         return Mono.just(
                 (userService.isPresent() ? userService.get().toString() : "No Services")
                         .concat(System.lineSeparator())
-                                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                        .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
                         .concat(System.lineSeparator())
-                                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services")
-                );
+                        .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services")
+        );
 
         //return "Hello from ITA Challenge!!!";
     }
@@ -68,8 +65,8 @@ public class ChallengeController {
             summary = "Get to see the Challenge level, its details and the available languages.",
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
     public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
@@ -82,8 +79,8 @@ public class ChallengeController {
             summary = "Get to see the resource and all its related parameters.",
             description = "Sending the ID Resource through the URI to retrieve it from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
     public Mono<GenericResultDto<String>> removeResourcesById(@PathVariable String idResource) {
@@ -96,33 +93,27 @@ public class ChallengeController {
             summary = "Get to see all challenges and their levels, details and their available languages.",
             description = "Requesting all the challenges through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             }
     )
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
         return challengeService.getAllChallenges();
     }
 
-<<<<<<< HEAD
     @GetMapping(path = "/filtered-challenges")
     @Operation(
             operationId = "Get all filtered Challenges",
             summary = "Get all the stored challenges into the Database.",
             description = "Get to see all challenges and their levels, details, and available languages.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Challenges retrieval completed.", content = { @Content(mediaType = "application/json", schema = @Schema(implementation = GenericResultDto.class)) }),
-                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = { @Content(mediaType = "application/json", schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", description = "Challenges retrieval completed.", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = GenericResultDto.class))}),
+                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(mediaType = "application/json", schema = @Schema())})
             }
     )
     public Mono<GenericResultDto<ChallengeDto>> getChallenges(@RequestParam(required = false) Set<String> language, @RequestParam(required = false) Set<String> level) {
         log.info("Received request parameter with language: {} and level: {}", language, level);
         return challengeService.getChallengesByLanguagesAndLevel(language, level);
-=======
-    @GetMapping("/language")
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        return challengeService.getAllLanguages();
->>>>>>> develop
     }
 
 }

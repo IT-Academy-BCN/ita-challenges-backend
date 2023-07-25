@@ -8,6 +8,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.Validates;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,10 +37,10 @@ class ChallengeServiceImpTest {
     private ChallengeRepository challengeRepository;
     @Mock
     private LanguageRepository languageRepository;
-
     @Mock
     private Converter converter;
-
+    @Mock
+    private Validates validates;
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
@@ -152,23 +153,39 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void testGetChallengesByLanguagesAndLevel_ChallengeNotFoundException() {
+    public void testGetChallengesByLanguagesAndLevelThrowsException() {
+        List<ChallengeDocument> challengeDocuments = new ArrayList<>();
+        List<ChallengeDto> challengeDtos = new ArrayList<>();
+
         Set<String> languages = new HashSet<>();
         languages.add("Not_languages");
         Set<String> levels = new HashSet<>();
         levels.add("Not_levels");
 
-        //Listas vacías
-        List<ChallengeDocument> challengeDocuments = new ArrayList<>();
-        List<ChallengeDto> challengeDtos = new ArrayList<>();
+        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDto.setTitle("Challenge title");
+        challengeDto.setLevel("Not_levels");
+        challengeDto.setLanguages(Set.of(
+                new LanguageDto(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Not_lenguages")
+        ));
 
-        when(challengeRepository.findByLevelIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
+        challengeDtos.add(challengeDto);
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setLevel("Not_levels");
+        challengeDocument.setLanguages(Set.of(
+                new LanguageDocument(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Not_lenguages")
+        ));
+
+        challengeDocuments.add(challengeDocument);
+
+        validates.validLenguageLevel(levels, languages);
+
         when(challengeRepository.findByLanguages_LanguageNameIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
+        when(challengeRepository.findByLevelIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.fromIterable(challengeDtos));
 
-        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguagesAndLevel(languages, levels);
-
-        StepVerifier.create(resultMono)
+        StepVerifier.create(challengeService.getChallengesByLanguagesAndLevel(languages, levels))
                 .expectError(ChallengeNotFoundException.class)
                 .verify();
     }
@@ -200,6 +217,8 @@ class ChallengeServiceImpTest {
 
         challengeDocuments.add(challengeDocument);
 
+        validates.validLenguageLevel(levels, languages);
+
         when(challengeRepository.findByLanguages_LanguageNameIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
         when(challengeRepository.findByLevelIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.fromIterable(challengeDtos));
@@ -218,6 +237,7 @@ class ChallengeServiceImpTest {
                     assertEquals(challengeDto.getLanguages(), resultDto.getResults()[0].getLanguages());
                 })
                 .verifyComplete();
+
     }
 
     void getAllLanguages_LanguageExist_LanguageReturned() {

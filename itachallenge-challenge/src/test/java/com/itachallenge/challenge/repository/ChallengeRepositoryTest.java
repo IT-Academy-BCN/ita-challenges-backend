@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -189,5 +186,32 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge with name If not found."));
     }
 
+    @DisplayName("Find by Level Test")
+    @Test
+    void findByLevelIn_test() {
+        Set<String> levels = new HashSet<>();
+        levels.add("level 1");
+
+        Flux<ChallengeDocument> challenge = challengeRepository.findByLevelIn(levels);
+
+        ChallengeDocument firstChallenge = challenge.blockFirst();
+
+        Assertions.assertNotNull(firstChallenge);
+        Assertions.assertEquals("The level of the first challenge does not match the expected level (level 1).", firstChallenge.getLevel(), "level 1");
+    }
+
+    @DisplayName("Find by Languages Test")
+    @Test
+    void findByLanguages_LanguageNameIn_test() {
+        Set<String> languages = new HashSet<>();
+        languages.add("name1");
+
+        Flux<ChallengeDocument> challenge = challengeRepository.findByLanguages_LanguageNameIn(languages);
+
+        ChallengeDocument firstChallenge = challenge.blockFirst();
+
+        Assertions.assertNotNull(firstChallenge);
+        Assertions.assertTrue(firstChallenge.getLanguages().contains("name1"), "The language of the first challenge does not contain the expected language (name1).");
+    }
 
 }

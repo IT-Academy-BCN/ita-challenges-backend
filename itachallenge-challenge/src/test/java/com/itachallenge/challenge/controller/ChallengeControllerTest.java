@@ -1,16 +1,11 @@
 package com.itachallenge.challenge.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
-<<<<<<< HEAD
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-=======
 import com.itachallenge.challenge.dto.LanguageDto;
->>>>>>> develop
 import com.itachallenge.challenge.service.IChallengeService;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -21,12 +16,8 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
-import java.util.*;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anySet;
-import static org.mockito.ArgumentMatchers.argThat;
+import java.util.*;
 import static org.mockito.Mockito.*;
 
 @WebFluxTest(ChallengeController.class)
@@ -130,7 +121,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     void testGetChallenges() {
         // Arrange
         ChallengeDto challenge1 = new ChallengeDto();
@@ -159,9 +149,9 @@ class ChallengeControllerTest {
     void testGetChallenges_NoChallengesFound() {
         // Arrange
         Set<String> languages = new HashSet<>();
-        languages.add("Not_languages");
+        languages.add("Javaw");
         Set<String> levels = new HashSet<>();
-        levels.add("Not_levels");
+        levels.add("Easyq");
 
         when(challengeService.getChallengesByLanguagesAndLevel(languages, levels)).thenReturn(Mono.error(new ChallengeNotFoundException("No challenges found for the given filters.")));
 
@@ -171,7 +161,6 @@ class ChallengeControllerTest {
         verifyNoInteractions(challengeService);
     }
 
-=======
     void getAllLanguages_LanguagesExist_LanguagesReturned() {
         // Arrange
         GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
@@ -192,5 +181,5 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
->>>>>>> develop
+
 }

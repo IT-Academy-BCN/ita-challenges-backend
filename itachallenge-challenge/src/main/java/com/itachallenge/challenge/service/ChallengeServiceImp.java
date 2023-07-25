@@ -57,43 +57,6 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> language, Set<String> level) {
-        // Convertir parámetros de entrada en cualquier tipo excepto PHP
-        Set<String> upperCaseLevel = level.stream().map(String::toUpperCase).collect(Collectors.toSet());
-        Set<String> upperCaseLanguage = language.stream()
-                .map(s -> s.equalsIgnoreCase("PHP") ? "PHP" : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
-                .collect(Collectors.toSet());
-
-        validates.validLenguageLevel(upperCaseLevel, upperCaseLanguage);
-
-        Flux<ChallengeDto> filteredChallenge = Optional.ofNullable(upperCaseLevel)
-                .filter(challengeLevel -> !challengeLevel.isEmpty())
-                .map(challengeLevel -> converter.fromChallengeToChallengeDto(challengeRepository.findByLevelIn(challengeLevel)))
-                .orElseGet(() -> converter.fromChallengeToChallengeDto(challengeRepository.findAll()));
-
-        return filteredChallenge
-                .filter(challenge -> upperCaseLanguage.isEmpty() || challenge.getLanguages().stream().anyMatch(lang -> upperCaseLanguage.contains(lang.getLanguageName())))
-                .doOnNext(challenge -> log.info("Retrieved challenge: {}", challenge.getTitle()))
-                .collectList()
-                .doOnTerminate(() -> log.info("Challenges retrieval completed."))
-                .map(challenges -> {
-                    if (challenges.isEmpty() && (!upperCaseLanguage.isEmpty() && !upperCaseLevel.isEmpty())) {
-                        throw new ChallengeNotFoundException("No challenges found for the given filters.");
-                    } else {
-                        log.info("Challenges retrieved successfully!");
-                    }
-
-                    GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
-                    genericResultDto.setInfo(0, 5, challenges.size(), challenges.toArray(new ChallengeDto[0]));
-                    return genericResultDto;
-                })
-                .onErrorResume(error -> {
-                    log.error("Error occurred while retrieving challenges: {}", error.getMessage());
-                    return Mono.error(error);
-                });
-    }
-
-    @Override
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
@@ -137,6 +100,43 @@ public class ChallengeServiceImp implements IChallengeService {
             resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
             return resultDto;
         });
+    }
+
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> language, Set<String> level) {
+        // Convertir parámetros de entrada en cualquier tipo excepto PHP
+        Set<String> upperCaseLevel = level.stream().map(String::toUpperCase).collect(Collectors.toSet());
+        Set<String> upperCaseLanguage = language.stream()
+                .map(s -> s.equalsIgnoreCase("PHP") ? "PHP" : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
+                .collect(Collectors.toSet());
+
+        validates.validLenguageLevel(upperCaseLevel, upperCaseLanguage);
+
+        Flux<ChallengeDto> filteredChallenge = Optional.ofNullable(upperCaseLevel)
+                .filter(challengeLevel -> !challengeLevel.isEmpty())
+                .map(challengeLevel -> converter.fromChallengeToChallengeDto(challengeRepository.findByLevelIn(challengeLevel)))
+                .orElseGet(() -> converter.fromChallengeToChallengeDto(challengeRepository.findAll()));
+
+        return filteredChallenge
+                .filter(challenge -> upperCaseLanguage.isEmpty() || challenge.getLanguages().stream().anyMatch(lang -> upperCaseLanguage.contains(lang.getLanguageName())))
+                .doOnNext(challenge -> log.info("Retrieved challenge: {}", challenge.getTitle()))
+                .collectList()
+                .doOnTerminate(() -> log.info("Challenges retrieval completed."))
+                .map(challenges -> {
+                    if (challenges.isEmpty() && (!upperCaseLanguage.isEmpty() && !upperCaseLevel.isEmpty())) {
+                        throw new ChallengeNotFoundException("No challenges found for the given filters.");
+                    } else {
+                        log.info("Challenges retrieved successfully!");
+                    }
+
+                    GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+                    genericResultDto.setInfo(0, 5, challenges.size(), challenges.toArray(new ChallengeDto[0]));
+                    return genericResultDto;
+                })
+                .onErrorResume(error -> {
+                    log.error("Error occurred while retrieving challenges: {}", error.getMessage());
+                    return Mono.error(error);
+                });
     }
 
     private Mono<UUID> validateUUID(String id) {
