@@ -27,8 +27,8 @@ class LanguageDtoTest {
     private final String languageJsonPath = "json/Language.json";
 
     private LanguageDto languageDto;
-    @BeforeEach
 
+    @BeforeEach
     void setUp(){
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         languageDto = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
