@@ -32,8 +32,14 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeRepository challengeRepository;
+
+    @Autowired
     private ChallengeConverterDto challengeConverter;
+
+    @Autowired
     private LanguageConverterDto languageConverter;
+
+    @Autowired
     private LanguageRepository languageRepository;
 
 
