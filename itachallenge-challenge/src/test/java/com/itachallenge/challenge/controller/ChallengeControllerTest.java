@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -38,14 +39,13 @@ class ChallengeControllerTest {
 
     @MockBean
     private IChallengeService challengeService;
-    
 
     @MockBean
     private DiscoveryClient discoveryClient;
-    
+
     @InjectMocks
     ChallengeController challengecontroller;
-    
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -134,34 +134,56 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
-    
+
+    @Test
+    void getAllLanguages_LanguagesExist_LanguagesReturned() {
+        // Arrange
+        GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new LanguageDto[] { new LanguageDto(), new LanguageDto() });
+
+        when(challengeService.getAllLanguages()).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/language")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
+                });
+    }
+
     @Test
     @DisplayName("Test EndPoint: related")
-    void ChallengeRelatedTest_VALID_ID () throws Exception{
-    	
-    final String VALID_ID="40728c9c-a557-4d12-bf8f-3747d0924197";
-    
-    	
+    void ChallengeRelatedTest_VALID_ID() throws Exception {
+
+        final String VALID_ID = "40728c9c-a557-4d12-bf8f-3747d0924197";
+
         ChallengeDto ch1 = ChallengeDto.builder()
-				.challengeId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
-				.build();
+                .challengeId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+                .build();
         ChallengeDto ch2 = ChallengeDto.builder()
-				.challengeId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
-				.build();
+                .challengeId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+                .build();
         ChallengeDto ch3 = ChallengeDto.builder()
-				.challengeId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
-				.build();
-        
+                .challengeId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+                .build();
+
         when(challengeService.getRelatedChallenge(VALID_ID)).thenReturn(Flux.just(ch1, ch2, ch3));
 
-      Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> response = challengecontroller.relatedChallenge(0, 10, VALID_ID);
-    	
-      StepVerifier.create(response)
-      .expectNextMatches(resp -> resp.getStatusCode().equals(HttpStatus.OK)
-              && resp.getBody().getResults()[0].equals(ch1) 
-              && resp.getBody().getCount()==3)
-      .verifyComplete();
-            
+        Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> response = challengecontroller.relatedChallenge(0, 10,
+                VALID_ID);
+
+        StepVerifier.create(response)
+                .expectNextMatches(resp -> resp.getStatusCode().equals(HttpStatus.OK)
+                        && resp.getBody().getResults()[0].equals(ch1)
+                        && resp.getBody().getCount() == 3)
+                .verifyComplete();
+
     }
 
 }

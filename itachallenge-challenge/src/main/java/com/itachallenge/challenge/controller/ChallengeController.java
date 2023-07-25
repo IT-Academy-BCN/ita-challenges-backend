@@ -1,7 +1,9 @@
 package com.itachallenge.challenge.controller;
 
+import com.google.gson.JsonObject;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.helper.UuidValidator;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -32,23 +34,34 @@ public class ChallengeController {
         IChallengeService challengeService;
 
         @GetMapping(value = "/test")
-        public String test() {
+        public Mono<?> test() {
                 log.info("** Saludos desde el logger **");
 
-                Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
-                                .stream()
-                                .findAny()
-                                .map(s -> s.getUri());
-
-                log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
-
-                Optional<String> services = discoveryClient.getInstances("itachallenge-user")
+                Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                                 .stream()
                                 .findAny()
                                 .map(s -> s.toString());
 
-                log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
-                return "Hello from ITA Challenge!!!";
+                Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
+                                .stream()
+                                .findAny()
+                                .map(s -> s.toString());
+
+                Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
+                                .stream()
+                                .findAny()
+                                .map(s -> s.toString());
+
+                return Mono.just(
+                                (userService.isPresent() ? userService.get().toString() : "No Services")
+                                                .concat(System.lineSeparator())
+                                                .concat(challengeService.isPresent() ? challengeService.get().toString()
+                                                                : "No Services")
+                                                .concat(System.lineSeparator())
+                                                .concat(scoreService.isPresent() ? scoreService.get().toString()
+                                                                : "No Services"));
+
+                // return "Hello from ITA Challenge!!!";
         }
 
         @GetMapping(path = "/challenges/{challengeId}")
@@ -84,27 +97,9 @@ public class ChallengeController {
                 return challengeService.getAllChallenges();
         }
 
-        @GetMapping(path = "/{challengeId}/related")
-        public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
-                        @RequestParam(value = "offset", defaultValue = "0") int offset,
-                        @RequestParam(value = "limit", defaultValue = "10") int limit,
-                        @PathVariable("challengeId") String id) throws BadUUIDException {
-
-                if (!UuidValidator.isValidUUID(id)) {
-                        log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.",
-                                        id);
-                        throw new BadUUIDException("Invalid ID format. Please indicate the correct format.");
-                }
-
-                return challengeService.getRelatedChallenge(id)
-                                .collectList().map(challengeDtos -> {
-                                        GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
-                                        result.setLimit(limit);
-                                        result.setOffset(offset);
-                                        result.setResults(challengeDtos.toArray(new ChallengeDto[0]));
-                                        result.setCount(challengeDtos.toArray(new ChallengeDto[0]).length);
-                                        return ResponseEntity.ok(result);
-                                });
+        @GetMapping("/language")
+        public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
+                return challengeService.getAllLanguages();
         }
 
 }
