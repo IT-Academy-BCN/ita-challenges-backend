@@ -1,8 +1,9 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
+import com.google.gson.JsonObject;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,23 +31,33 @@ public class ChallengeController {
     IChallengeService challengeService;
 
     @GetMapping(value = "/test")
-    public String test() {
+    public Mono <?> test() {
         log.info("** Saludos desde el logger **");
 
-        Optional<URI> uri = discoveryClient.getInstances("itachallenge-challenge")
-                .stream()
-                .findAny()
-                .map( s -> s.getUri());
-
-        log.info("****** URI: " + (uri.isPresent() ? uri.get().toString() : "No URI"));
-
-        Optional<String> services = discoveryClient.getInstances("itachallenge-user")
+        Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
                 .map( s -> s.toString());
 
-        log.info("****** Services: " + (services.isPresent() ? services.get().toString() : "No Services"));
-        return "Hello from ITA Challenge!!!";
+        Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
+                .stream()
+                .findAny()
+                .map( s -> s.toString());
+
+        Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
+                .stream()
+                .findAny()
+                .map( s -> s.toString());
+
+        return Mono.just(
+                (userService.isPresent() ? userService.get().toString() : "No Services")
+                        .concat(System.lineSeparator())
+                                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                        .concat(System.lineSeparator())
+                                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services")
+                );
+
+        //return "Hello from ITA Challenge!!!";
     }
 
     @GetMapping(path = "/challenges/{challengeId}")
@@ -91,10 +102,9 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
-    @GetMapping(path = "/filtered-challenges")
-    public Flux<ChallengeDocument> getChallenges(@RequestParam Set<String> language, @RequestParam Set<String> level) {
-        log.info("Received request parameter with language: {} and level: {}", language, level);
-        return challengeService.getChallengesByLanguagesAndLevel(language, level);
+    @GetMapping("/language")
+    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
+        return challengeService.getAllLanguages();
     }
 
 }
