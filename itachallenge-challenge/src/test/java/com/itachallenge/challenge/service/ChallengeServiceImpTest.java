@@ -1,12 +1,15 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +22,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -28,6 +32,8 @@ class ChallengeServiceImpTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
+    @Mock
+    private LanguageRepository languageRepository;
 
     @Mock
     private Converter converter;
@@ -195,5 +201,32 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findAll();
         verify(converter).fromChallengeToChallengeDto(any());
+    }
+
+    @Test
+    void getAllLanguages_LanguageExist_LanguageReturned() {
+        // Arrange
+        UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript");
+        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python");
+        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript");
+        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python");
+        LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
+
+        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
+        when(converter.fromLanguageToLanguageDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
+
+        // Act
+        Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
+                .expectComplete()
+                .verify();
+
+        verify(languageRepository).findAll();
+        verify(converter).fromLanguageToLanguageDto(any());
     }
 }

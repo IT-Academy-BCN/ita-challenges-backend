@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -134,6 +135,7 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
+
     
     @Test
     @DisplayName("Test EndPoint: related")
@@ -162,6 +164,29 @@ class ChallengeControllerTest {
               && resp.getBody().getCount()==3)
       .verifyComplete();
             
+    }
+
+
+    @Test
+    void getAllLanguages_LanguagesExist_LanguagesReturned() {
+        // Arrange
+        GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new LanguageDto[]{new LanguageDto(), new LanguageDto()});
+
+        when(challengeService.getAllLanguages()).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/language")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
+                });
     }
 
 }
