@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-<<<<<<< HEAD
 import lombok.Setter;
-=======
->>>>>>> 2492a1860466b41be5a07ae3a0e7abc43a023c67
 
 import java.util.UUID;
 
