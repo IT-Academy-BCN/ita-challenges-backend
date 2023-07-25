@@ -95,4 +95,10 @@ public class ChallengeController {
 
     }
 
+    /*@GetMapping("/solution/{idChallenge}")
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge) {
+        return challengeService.getSolutions(idChallenge);
+
+    }*/
+
 }
