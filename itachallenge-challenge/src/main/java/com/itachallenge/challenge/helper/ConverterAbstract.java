@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.exception.ConverterException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,6 +11,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConverterAbstract <F, T> {
+
+    private static final Logger log = LoggerFactory.getLogger(ConverterAbstract.class);
 
     private final static String SET_METHOD_PREFIX = "set";
     private final static String GET_METHOD_PREFIX = "get";
@@ -51,7 +55,7 @@ public class ConverterAbstract <F, T> {
             try {
                 value = field.get(object);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                log.error("Can't access field");
 
                 throw new ConverterException(e.getMessage(), e);
             }
@@ -63,7 +67,7 @@ public class ConverterAbstract <F, T> {
                 try {
                     value = optionalMethod.get().invoke(object);
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    e.printStackTrace();
+                    log.warn("No other optional method found");
 
                     throw new ConverterException(e.getMessage(), e);
                 }
@@ -84,7 +88,7 @@ public class ConverterAbstract <F, T> {
             try {
                 optionalField.get().set(instance, value);
             } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
+                log.warn("No other field available");
             }
         } else {
             Optional<Method> optionalMethod = methods.stream().filter(
@@ -96,7 +100,7 @@ public class ConverterAbstract <F, T> {
                     try {
                         optionalMethod.get().invoke(instance, value);
                     } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                        e.printStackTrace();
+                        log.warn("No other method available");
 
                         throw new ConverterException(e.getMessage(), e);
                     }
@@ -111,7 +115,7 @@ public class ConverterAbstract <F, T> {
             instance = instanceClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                  | NoSuchMethodException | SecurityException e) {
-            e.printStackTrace();
+            log.error("Unable to access instance");
 
             throw new ConverterException(e.getMessage(), e);
         }
@@ -124,7 +128,7 @@ public class ConverterAbstract <F, T> {
         }
 
         List<Field> result = new ArrayList<>(getAllFields(clazz.getSuperclass()));
-        List<Field> filteredFields = Arrays.stream(clazz.getDeclaredFields()).collect(Collectors.toList());
+        List<Field> filteredFields = Arrays.stream(clazz.getDeclaredFields()).toList();
         result.addAll(filteredFields);
         return result;
     }
@@ -135,7 +139,7 @@ public class ConverterAbstract <F, T> {
         }
 
         List<Method> result = new ArrayList<>(getAllMethods(clazz.getSuperclass()));
-        List<Method> filteredFields = Arrays.stream(clazz.getDeclaredMethods()).collect(Collectors.toList());
+        List<Method> filteredFields = Arrays.stream(clazz.getDeclaredMethods()).toList();
         result.addAll(filteredFields);
         return result;
     }
