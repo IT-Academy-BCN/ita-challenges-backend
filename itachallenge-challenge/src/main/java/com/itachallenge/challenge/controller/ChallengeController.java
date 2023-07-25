@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -89,16 +90,15 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
+    @GetMapping("/language")
+    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
+        return challengeService.getAllLanguages();
+    }
+
     @GetMapping("/solution/{idChallenge}/language/{idLanguage}")
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
-
-    /*@GetMapping("/solution/{idChallenge}")
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge) {
-        return challengeService.getSolutions(idChallenge);
-
-    }*/
 
 }
