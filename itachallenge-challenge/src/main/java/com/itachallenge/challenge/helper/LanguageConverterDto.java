@@ -14,7 +14,7 @@ public class LanguageConverterDto extends ConverterAbstract<LanguageDocument, La
         super(LanguageDocument.class, LanguageDto.class);
     }
 
-    public Flux<LanguageDto> converToDto(Flux<LanguageDocument> documentFlux) {
+    public Flux<LanguageDto> convertToDto(Flux<LanguageDocument> documentFlux) {
         return documentFlux.map(this::convert);
     }
 

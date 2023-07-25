@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 @Component
 public class ChallengeConverterDto extends ConverterAbstract<ChallengeDocument, ChallengeDto>{
 
-    @Autowired
-    private LanguageConverterDto languageConverterDto;
-
     //setting fromClass to Class
     public ChallengeConverterDto(){
         super(ChallengeDocument.class, ChallengeDto.class);

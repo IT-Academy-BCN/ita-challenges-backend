@@ -8,6 +8,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.ChallengeConverterDto;
+import com.itachallenge.challenge.helper.LanguageConverterDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +34,10 @@ class ChallengeServiceImpTest {
     private LanguageRepository languageRepository;
 
     @Mock
-    private ChallengeConverterDto converter;
+    private ChallengeConverterDto challengeConverter;
+
+    @Mock
+    private LanguageConverterDto languageConverter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -54,7 +57,7 @@ class ChallengeServiceImpTest {
         expectedDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(converter.convertToDto(any())).thenReturn(Flux.just(challengeDto));
+        when(challengeConverter.convertToDto(any())).thenReturn(Flux.just(challengeDto));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
@@ -66,7 +69,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verify(converter).convertToDto(any());
+        verify(challengeConverter).convertToDto(any());
     }
 
     @Test
@@ -83,7 +86,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verifyNoInteractions(challengeRepository);
-        verifyNoInteractions(converter);
+        verifyNoInteractions(challengeConverter);
     }
 
     @Test
@@ -102,7 +105,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verifyNoInteractions(converter);
+        verifyNoInteractions(challengeConverter);
     }
 
     @Test
@@ -155,7 +158,7 @@ class ChallengeServiceImpTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
 
         when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(converter.convertToDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        when(challengeConverter.convertToDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
@@ -167,7 +170,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findAll();
-        verify(converter).convertToDto(any());
+        verify(challengeConverter).convertToDto(any());
     }
 
     @Test
@@ -182,7 +185,7 @@ class ChallengeServiceImpTest {
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(converter.fromLanguageToLanguageDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
+        when(languageConverter.convertToDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
 
         // Act
         Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
@@ -194,6 +197,6 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(languageRepository).findAll();
-        verify(converter).fromLanguageToLanguageDto(any());
+        verify(languageConverter).convertToDto(any());
     }
 }

@@ -7,6 +7,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.ChallengeConverterDto;
+import com.itachallenge.challenge.helper.LanguageConverterDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
@@ -31,21 +32,15 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeRepository challengeRepository;
-
-    @Autowired
-<<<<<<< HEAD
-    private ChallengeConverterDto converter;
-=======
+    private ChallengeConverterDto challengeConverter;
+    private LanguageConverterDto languageConverter;
     private LanguageRepository languageRepository;
-    @Autowired
-    private Converter converter;
->>>>>>> 2492a1860466b41be5a07ae3a0e7abc43a023c67
 
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .flatMap(challenge -> Mono.from(converter.convertToDto(Flux.just(challenge))))
+                        .flatMap(challenge -> Mono.from(challengeConverter.convertToDto(Flux.just(challenge))))
                         .map(challengeDto -> {
                             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
                             resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
@@ -84,7 +79,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
-        Flux<ChallengeDto> challengeDtoFlux = converter.convertToDto(challengeRepository.findAll());
+        Flux<ChallengeDto> challengeDtoFlux = challengeConverter.convertToDto(challengeRepository.findAll());
 
         return challengeDtoFlux.collectList().map(challenges -> {
             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -94,7 +89,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = converter.fromLanguageToLanguageDto(languageRepository.findAll());
+        Flux<LanguageDto> languagesDto = languageConverter.convertToDto(languageRepository.findAll());
         return languagesDto.collectList().map(language -> {
             GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));

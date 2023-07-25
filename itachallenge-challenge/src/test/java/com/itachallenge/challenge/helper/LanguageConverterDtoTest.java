@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.ConverterException;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,7 +56,7 @@ class LanguageConverterDtoTest {
     void testConvertToDtoMethod() {
         Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
 
-        Flux<LanguageDto> resultFlux = converter.converToDto(documentFlux);
+        Flux<LanguageDto> resultFlux = converter.convertToDto(documentFlux);
 
         StepVerifier.create(resultFlux)
                 .assertNext(languageDto -> {
