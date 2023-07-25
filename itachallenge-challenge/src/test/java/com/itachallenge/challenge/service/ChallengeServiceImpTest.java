@@ -1,8 +1,10 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.Converter;
@@ -15,10 +17,10 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.UUID;
 
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -142,25 +144,72 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void getAllChallenges_ChallengesExist_ChallengesReturned() {
-        // Arrange
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
+    void testGetChallengesByLanguagesAndLevel_ChallengeNotFoundException() {
+        Set<String> languages = new HashSet<>();
+        languages.add("Not_languages");
+        Set<String> levels = new HashSet<>();
+        levels.add("Not_levels");
 
-        when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        //Listas vacías
+        List<ChallengeDocument> challengeDocuments = new ArrayList<>();
+        List<ChallengeDto> challengeDtos = new ArrayList<>();
 
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
+        when(challengeRepository.findByLevelIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
+        when(challengeRepository.findByLanguages_LanguageNameIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
+        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.fromIterable(challengeDtos));
 
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedChallenges))
-                .expectComplete()
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguagesAndLevel(languages, levels);
+
+        StepVerifier.create(resultMono)
+                .expectError(ChallengeNotFoundException.class)
                 .verify();
-
-        verify(challengeRepository).findAll();
-        verify(converter).fromChallengeToChallengeDto(any());
     }
+
+    @Test
+    void testGetChallengesByLanguagesAndLevel() {
+        List<ChallengeDocument> challengeDocuments = new ArrayList<>();
+        List<ChallengeDto> challengeDtos = new ArrayList<>();
+
+        Set<String> languages = new HashSet<>();
+        languages.add("Javascript");
+        Set<String> levels = new HashSet<>();
+        levels.add("MEDIUM");
+
+        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDto.setTitle("Challenge title");
+        challengeDto.setLevel("MEDIUM");
+        challengeDto.setLanguages(Set.of(
+                new LanguageDto(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Javascript")
+        ));
+
+        challengeDtos.add(challengeDto);
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setLevel("MEDIUM");
+        challengeDocument.setLanguages(Set.of(
+                new LanguageDocument(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"), "Javascript")
+        ));
+
+        challengeDocuments.add(challengeDocument);
+
+        when(challengeRepository.findByLanguages_LanguageNameIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
+        when(challengeRepository.findByLevelIn(any())).thenReturn(Flux.fromIterable(challengeDocuments));
+        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.fromIterable(challengeDtos));
+
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguagesAndLevel(languages, levels);
+
+        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+        genericResultDto.setInfo(0, 5, 1, new ChallengeDto[] {challengeDto});
+
+        StepVerifier.create(resultMono)
+                .assertNext(resultDto -> {
+                    assertEquals(genericResultDto.getOffset(), resultDto.getOffset());
+                    assertEquals(genericResultDto.getLimit(), resultDto.getLimit());
+                    assertEquals(genericResultDto.getCount(), resultDto.getCount());
+                    assertEquals(challengeDto.getLevel(), resultDto.getResults()[0].getLevel());
+                    assertEquals(challengeDto.getLanguages(), resultDto.getResults()[0].getLanguages());
+                })
+                .verifyComplete();
+    }
+
 }

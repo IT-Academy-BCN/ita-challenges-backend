@@ -28,12 +28,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @AllArgsConstructor
     @Getter
     static
     class ErrorMessage{
         String msg;
     }
-
 
 }
