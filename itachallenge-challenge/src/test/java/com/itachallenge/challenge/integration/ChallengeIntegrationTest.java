@@ -32,7 +32,7 @@ import reactor.core.publisher.Flux;
 @AutoConfigureWebTestClient
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class ChallengeControllerIntegrationTests {
+public class ChallengeIntegrationTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -92,6 +92,7 @@ public class ChallengeControllerIntegrationTests {
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
+    //TODO - Refactor this method, getLanguages endpoint already available
     private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
