@@ -136,6 +136,35 @@ class ChallengeControllerTest {
     }
 
     @Test
+    @DisplayName("Test EndPoint: related")
+    void ChallengeRelatedTest_VALID_ID() throws Exception {
+
+        final String VALID_ID = "40728c9c-a557-4d12-bf8f-3747d0924197";
+
+        ChallengeDto ch1 = ChallengeDto.builder()
+                .challengeId(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+                .build();
+        ChallengeDto ch2 = ChallengeDto.builder()
+                .challengeId(UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"))
+                .build();
+        ChallengeDto ch3 = ChallengeDto.builder()
+                .challengeId(UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344"))
+                .build();
+
+        when(challengeService.getRelatedChallenge(VALID_ID)).thenReturn(Flux.just(ch1, ch2, ch3));
+
+        Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> response = challengecontroller.relatedChallenge(0, 10,
+                VALID_ID);
+
+        StepVerifier.create(response)
+                .expectNextMatches(resp -> resp.getStatusCode().equals(HttpStatus.OK)
+                        && resp.getBody().getResults()[0].equals(ch1)
+                        && resp.getBody().getCount() == 3)
+                .verifyComplete();
+
+    }
+
+    @Test
     void getAllLanguages_LanguagesExist_LanguagesReturned() {
         // Arrange
         GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
