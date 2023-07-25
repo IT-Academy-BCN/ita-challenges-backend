@@ -15,27 +15,27 @@ public class ParameterValidator {
     @Pattern(regexp = "^[1-9]+$", message = "pageSize must be positive integer")
     private String pageSize;
 
-    public Integer getValidPageNumber(String pageNumber) {
-        boolean validPageNumber = !StringUtils.isEmpty(pageNumber) && POSITIVE_INTEGER_FORM.matcher(pageNumber).matches();
-        if (validPageNumber) {
-            return Integer.parseInt(pageNumber);
-        }
-        return null;
+    public void setPageNumber(String pageNumber) {
+        this.pageNumber = pageNumber;
     }
 
-/*    public Optional<Integer> getValidPageSize(String pageSize) {
+    public void setPageSize(String pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public Optional<Integer> getValidPageNumber(String pageNumber) {
+        boolean validPageNumber = !StringUtils.isEmpty(pageNumber) && POSITIVE_INTEGER_FORM.matcher(pageNumber).matches();
+        if (validPageNumber) {
+            return Optional.of(Integer.parseInt(pageNumber));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Integer> getValidPageSize(String pageSize) {
         boolean validPageSize =!StringUtils.isEmpty(pageSize) && POSITIVE_INTEGER_FORM.matcher(pageSize).matches();
         if (validPageSize) {
             return Optional.of(Integer.parseInt(pageSize));
         }
         return Optional.empty();
-    }*/
-
-    public Integer getValidPageSize(String pageSize) {
-        boolean validPageSize =!StringUtils.isEmpty(pageSize) && POSITIVE_INTEGER_FORM.matcher(pageSize).matches();
-        if (validPageSize) {
-            return Integer.parseInt(pageSize);
-        }
-        return null;
     }
 }
