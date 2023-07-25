@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)

@@ -2,8 +2,10 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -13,23 +15,21 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
+import reactor.test.StepVerifier;
+import java.util.*;
+import static org.mockito.Mockito.*;
 
 @WebFluxTest(ChallengeController.class)
 class ChallengeControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
-
     @MockBean
     private IChallengeService challengeService;
-
     @MockBean
     private DiscoveryClient discoveryClient;
+    @MockBean
+    private ChallengeController challengeController;
 
     @Test
     void test() {
@@ -117,6 +117,46 @@ class ChallengeControllerTest {
     }
 
     @Test
+    void getChallenges_test() {
+        // Arrange
+        ChallengeDto challenge1 = new ChallengeDto();
+        ChallengeDto challenge2 = new ChallengeDto();
+
+        Set<String> languages = new HashSet<>();
+        languages.add("Javascript");
+        Set<String> levels = new HashSet<>();
+        levels.add("Medium");
+
+        ChallengeDto[] challenges = {challenge1, challenge2};
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 5, challenges.length, challenges);
+
+        when(challengeService.getChallengesByLanguagesAndLevel(languages, levels)).thenReturn(Mono.just(expectedResult));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/filtered-challenges")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class);
+    }
+
+    @Test
+    void getChallenges_NoChallengesFound_test() {
+        // Arrange
+        Set<String> languages = new HashSet<>();
+        languages.add("Javaw");
+        Set<String> levels = new HashSet<>();
+        levels.add("Easyq");
+
+        when(challengeService.getChallengesByLanguagesAndLevel(languages, levels)).thenReturn(Mono.error(new ChallengeNotFoundException("No challenges found for the given filters.")));
+
+        StepVerifier.create(challengeController.getChallenges(languages, levels))
+                .expectError(ChallengeNotFoundException.class);
+
+        verifyNoInteractions(challengeService);
+    }
+
     void getAllLanguages_LanguagesExist_LanguagesReturned() {
         // Arrange
         GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
@@ -137,4 +177,5 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
+
 }

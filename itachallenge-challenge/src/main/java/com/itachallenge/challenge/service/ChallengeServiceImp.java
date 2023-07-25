@@ -7,6 +7,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.Validates;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
@@ -14,20 +15,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ChallengeServiceImp implements IChallengeService {
     //VARIABLES
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
-
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
     @Autowired
@@ -36,8 +37,10 @@ public class ChallengeServiceImp implements IChallengeService {
     private LanguageRepository languageRepository;
     @Autowired
     private Converter converter;
+    @Autowired
+    private Validates validates;
 
-
+    @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -53,6 +56,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    @Override
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
@@ -98,6 +102,43 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> language, Set<String> level) {
+        // Convertir parámetros de entrada en cualquier tipo excepto PHP
+        Set<String> upperCaseLevel = level.stream().map(String::toUpperCase).collect(Collectors.toSet());
+        Set<String> upperCaseLanguage = language.stream()
+                .map(s -> s.equalsIgnoreCase("PHP") ? "PHP" : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
+                .collect(Collectors.toSet());
+
+        validates.validLenguageLevel(upperCaseLevel, upperCaseLanguage);
+
+        Flux<ChallengeDto> filteredChallenge = Optional.ofNullable(upperCaseLevel)
+                .filter(challengeLevel -> !challengeLevel.isEmpty())
+                .map(challengeLevel -> converter.fromChallengeToChallengeDto(challengeRepository.findByLevelIn(challengeLevel)))
+                .orElseGet(() -> converter.fromChallengeToChallengeDto(challengeRepository.findAll()));
+
+        return filteredChallenge
+                .filter(challenge -> upperCaseLanguage.isEmpty() || challenge.getLanguages().stream().anyMatch(lang -> upperCaseLanguage.contains(lang.getLanguageName())))
+                .doOnNext(challenge -> log.info("Retrieved challenge: {}", challenge.getTitle()))
+                .collectList()
+                .doOnTerminate(() -> log.info("Challenges retrieval completed."))
+                .map(challenges -> {
+                    if (challenges.isEmpty() && (!upperCaseLanguage.isEmpty() && !upperCaseLevel.isEmpty())) {
+                        throw new ChallengeNotFoundException("No challenges found for the given filters.");
+                    } else {
+                        log.info("Challenges retrieved successfully!");
+                    }
+
+                    GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+                    genericResultDto.setInfo(0, 5, challenges.size(), challenges.toArray(new ChallengeDto[0]));
+                    return genericResultDto;
+                })
+                .onErrorResume(error -> {
+                    log.error("Error occurred while retrieving challenges: {}", error.getMessage());
+                    return Mono.error(error);
+                });
+    }
+
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
@@ -108,9 +149,5 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
-
-
-
-
 
 }
