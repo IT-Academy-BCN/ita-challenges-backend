@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -34,7 +33,6 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -57,7 +55,7 @@ class ChallengeControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    /*@Test
+    @Test
     void test() {
         // Arrange
         List<ServiceInstance> instances = Arrays.asList(
@@ -72,7 +70,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
-    }*/
+    }
 
     @Test
     void getOneChallenge_ValidId_ChallengeReturned() {
