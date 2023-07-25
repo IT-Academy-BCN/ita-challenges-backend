@@ -3,10 +3,12 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +32,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private ChallengeRepository challengeRepository;
+    @Autowired
+    private LanguageRepository languageRepository;
     @Autowired
     private Converter converter;
 
@@ -85,6 +89,15 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
+        Flux<LanguageDto> languagesDto = converter.fromLanguageToLanguageDto(languageRepository.findAll());
+        return languagesDto.collectList().map(language -> {
+            GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
+            return resultDto;
+        });
+    }
+
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
@@ -96,9 +109,8 @@ public class ChallengeServiceImp implements IChallengeService {
         return Mono.just(UUID.fromString(id));
     }
 
-    @Override
-    public Flux<ChallengeDocument> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> level) {
-        return challengeRepository.findByLanguagesLevels_LanguageNameInAndLevelIn(languageNames, level);
-    }
+
+
+
 
 }
