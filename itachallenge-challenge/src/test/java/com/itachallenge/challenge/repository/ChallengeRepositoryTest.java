@@ -189,28 +189,38 @@ class ChallengeRepositoryTest {
     @Test
     void findByLevelIn_test() {
         Set<String> levels = new HashSet<>();
-        levels.add("level 1");
+        levels.add("Level 1");
 
         Flux<ChallengeDocument> challenge = challengeRepository.findByLevelIn(levels);
 
         ChallengeDocument firstChallenge = challenge.blockFirst();
 
-        Assertions.assertNotNull(firstChallenge);
-        Assertions.assertEquals("The level of the first challenge does not match the expected level (level 1).", firstChallenge.getLevel(), "level 1");
+        Assertions.assertNotNull(firstChallenge, "No challenges found for the given filters.");
+        Assertions.assertEquals("Level 1", firstChallenge.getLevel(), "No challenges found for the given filters.");
     }
 
     @DisplayName("Find by Languages Test")
     @Test
     void findByLanguages_LanguageNameIn_test() {
-        Set<String> languages = new HashSet<>();
-        languages.add("name1");
+        // Arrange
+        LanguageDocument language1 = new LanguageDocument(null, "name1");
+        LanguageDocument language2 = new LanguageDocument(null, "name2");
 
-        Flux<ChallengeDocument> challenge = challengeRepository.findByLanguages_LanguageNameIn(languages);
+        Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
-        ChallengeDocument firstChallenge = challenge.blockFirst();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"));
+        challengeDocument.setLevel("MEDIUM");
+        challengeDocument.setLanguages(languageSet);
 
-        Assertions.assertNotNull(firstChallenge);
-        Assertions.assertTrue(firstChallenge.getLanguages().contains("name1"), "The language of the first challenge does not contain the expected language (name1).");
+        challengeRepository.save(challengeDocument).block();
+
+        Flux<ChallengeDocument> challengeFlux = challengeRepository.findByLanguages_LanguageNameIn(Collections.singleton("name1"));
+        
+        StepVerifier.create(challengeFlux)
+                .expectNextMatches(challengeResult -> challengeResult.getLanguages().stream()
+                        .anyMatch(language -> language.getLanguageName().equals("name1")))
+                .verifyComplete();
     }
 
 }
