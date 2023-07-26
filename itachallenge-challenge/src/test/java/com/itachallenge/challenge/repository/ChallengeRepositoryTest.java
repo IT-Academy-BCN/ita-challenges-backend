@@ -189,5 +189,25 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge with name If not found."));
     }
 
+    @DisplayName("Find Challenges Paginated without parameters Test")
+    @Test
+    void findChallengesPaginatedTest_WithoutParameters() {
 
+        Flux<ChallengeDocument> challenges = challengeRepository.findChallengesPaginated();
+
+        StepVerifier.create(challenges)
+                .expectNextCount(1)
+                .verifyComplete();
+    }
+
+    @DisplayName("Find Challenges Paginated with parameters Test")
+    @Test
+    void findChallengesPaginatedTest_WithParameters() {
+
+        Flux<ChallengeDocument> challenges = challengeRepository.findChallengesPaginated(1, 2);
+
+        StepVerifier.create(challenges)
+                .expectNextCount(2)
+                .verifyComplete();
+    }
 }
