@@ -30,6 +30,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
+    private final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
@@ -49,7 +51,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
                             return resultDto;
                         })
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                         .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
                 );
@@ -110,7 +112,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
                     return challengeRepository.findByUuid(challengeId)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
                                     .filter(solution -> solution.getIdLanguage().equals(languageId))
