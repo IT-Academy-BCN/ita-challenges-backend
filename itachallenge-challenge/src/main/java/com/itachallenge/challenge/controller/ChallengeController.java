@@ -17,7 +17,6 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -118,7 +117,7 @@ public class ChallengeController {
                     throw new BadUUIDException("Invalid ID format. Please indicate the correct format.");
             }
 
-            return challengeService.getRelatedChallenge(id)
+            return challengeService.getRelatedChallenge(id) 		
                             .collectList().map(challengeDtos -> {
                                     GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
                                     result.setLimit(limit);

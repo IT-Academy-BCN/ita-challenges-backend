@@ -97,24 +97,23 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    private Mono<UUID> validateUUID(String id) {
-        boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
+	private Mono<UUID> validateUUID(String id) {
+		boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
-        if (!validUUID) {
-            log.warn("Invalid ID format: {}", id);
-            return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
-        }
+		if (!validUUID) {
+			log.warn("Invalid ID format: {}", id);
+			return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
+		}
 
-        return Mono.just(UUID.fromString(id));
-    }
-    
-    public Flux<ChallengeDto> getRelatedChallenge(String challengeId) {
-    	
-    	return challengeRepository.findByUuid(UUID.fromString(challengeId))
-    	        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
-    	        .flatMap(uuid -> challengeRepository.findByUuid(uuid))
-    	        .collectList() 
-                .flatMapMany(challenges -> converter.fromChallengeToChallengeDto(Flux.fromIterable(challenges))) // Convert List<ChallengeDocument> to Flux<ChallengeDocument>
-                .onErrorResume(throwable -> Flux.empty());
-    }
+		return Mono.just(UUID.fromString(id));
+	}
+
+	public Flux<ChallengeDto> getRelatedChallenge(String challengeId) {
+
+		return challengeRepository.findByUuid(UUID.fromString(challengeId))
+	            .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
+	            .flatMap(uuid -> challengeRepository.findByUuid(uuid))
+	            .flatMap(challenge -> Mono.just(converter.toChallengeDto(challenge)))
+	            .onErrorResume(throwable -> Flux.empty());
+	}
 }
