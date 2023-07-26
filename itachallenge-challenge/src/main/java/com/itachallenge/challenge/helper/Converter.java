@@ -4,6 +4,8 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
+
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -24,7 +26,7 @@ public class Converter {
         return languageFlux.map(this::toLanguageDto);
     }
 
-    private ChallengeDto toChallengeDto(ChallengeDocument challenge) {
+    public ChallengeDto toChallengeDto(ChallengeDocument challenge) {
         return ChallengeDto.builder()
                 .challengeId(challenge.getUuid())
                 .level(challenge.getLevel())
@@ -49,6 +51,11 @@ public class Converter {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
         return zonedDateTime.format(formatter);
 
+    }
+    
+    public static RelatedDto toRelatedDto(ChallengeDocument challenge) {
+   	   
+        return new RelatedDto(challenge.getUuid(), challenge.getTitle());
     }
 
 }
