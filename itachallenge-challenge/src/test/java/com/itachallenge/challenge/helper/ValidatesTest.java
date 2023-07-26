@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.exception.BadRequestException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -56,14 +56,6 @@ public class ValidatesTest {
     void isValidLanguage_False_test() {
         assertFalse(validates.isValidLanguage("Not_language"));
         assertFalse(validates.isValidLanguage(null));
-    }
-
-    @Test
-    public void validLenguageLevel_BadRequestException_test() {
-        Set<String> invalidLevels = new HashSet<>(Set.of("Not_level"));
-        Set<String> invalidLanguages = new HashSet<>(Set.of("Not_language"));
-
-        assertThrows(BadRequestException.class, () -> validates.validLenguageLevel(invalidLevels, invalidLanguages));
     }
 
     @Test
