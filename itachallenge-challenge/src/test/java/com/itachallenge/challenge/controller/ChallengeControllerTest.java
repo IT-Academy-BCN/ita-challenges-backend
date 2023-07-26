@@ -156,7 +156,7 @@ class ChallengeControllerTest {
         when(challengeService.getChallengesByLanguagesAndLevel(languages, levels)).thenReturn(Mono.just(expectedResult));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/filtered-challenges")
+                .uri("/itachallenge/api/v1/challenge/challenge")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class);
