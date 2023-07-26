@@ -102,11 +102,28 @@ public class ChallengeController {
     }
 
     @GetMapping("/language")
+    @Operation(
+            operationId = "Get all the stored languages into the Database.",
+            summary = "Get to see all id language and name.",
+            description = "Requesting all the languages through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+            }
+    )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         return challengeService.getAllLanguages();
     }
 
     @GetMapping("/solution/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Get the solutions from a chosen challenge and language.",
+            summary = "Get to see the Solution id, text and language.",
+            description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+            }
+    )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
