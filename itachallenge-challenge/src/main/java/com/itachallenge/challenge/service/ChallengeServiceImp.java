@@ -30,7 +30,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
-    private final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
