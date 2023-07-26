@@ -8,7 +8,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 3,
-    "score": 95
+    "score": 95,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -19,7 +20,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -30,7 +32,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 2,
-    "score": 60
+    "score": 60,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -41,7 +44,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -52,7 +56,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 3,
-    "score": 100
+    "score": 100,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -63,7 +68,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 3,
-    "score": 100
+    "score": 100,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -74,7 +80,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 2,
-    "score": 100
+    "score": 100,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -85,7 +92,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 3,
-    "score": 100
+    "score": 100,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -96,7 +104,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 3,
-    "score": 95
+    "score": 95,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -107,7 +116,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 2,
-    "score": 70
+    "score": 70,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -118,7 +128,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 2,
-    "score": 80
+    "score": 80,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -129,7 +140,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 2,
-    "score": 40
+    "score": 40,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -140,7 +152,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 2,
-    "score": 50
+    "score": 50,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -151,7 +164,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 2,
-    "score": 90
+    "score": 90,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -162,7 +176,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 90
+    "score": 90,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -173,7 +188,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 1,
-    "score": 20
+    "score": 20,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -184,7 +200,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 90
+    "score": 90,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -195,7 +212,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -206,7 +224,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -217,7 +236,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 95
+    "score": 95,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -228,7 +248,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 1,
-    "score": 10
+    "score": 10,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -239,7 +260,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 90
+    "score": 90,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -250,7 +272,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 2,
-    "score": 60
+    "score": 60,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -261,7 +284,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 10
+    "score": 10,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -272,7 +296,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 2,
-    "score": 60
+    "score": 60,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -283,7 +308,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 2,
-    "score": 15
+    "score": 15,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -294,7 +320,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 2,
-    "score": 25
+    "score": 25,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -305,7 +332,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 3,
-    "score": 95
+    "score": 95,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -316,7 +344,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -327,7 +356,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -338,7 +368,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -349,7 +380,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -360,7 +392,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -371,7 +404,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -382,7 +416,8 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": 1,
-    "score": 0
+    "score": 0,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -393,7 +428,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 2,
-    "score": 60
+    "score": 60,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -404,7 +440,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 85
+    "score": 85,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -415,7 +452,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 1,
-    "score": 20
+    "score": 20,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -426,7 +464,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 1,
-    "score": 15
+    "score": 15,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -437,7 +476,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 2,
-    "score": 50
+    "score": 50,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -448,7 +488,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 95
+    "score": 95,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -459,7 +500,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 2,
-    "score": 40
+    "score": 40,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -470,7 +512,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 2,
-    "score": 45
+    "score": 45,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -481,7 +524,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 2,
-    "score": 65
+    "score": 65,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -492,7 +536,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 95
+    "score": 95,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -503,7 +548,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 85
+    "score": 85,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -514,7 +560,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 2,
-    "score": 75
+    "score": 75,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -525,7 +572,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 2,
-    "score": 45
+    "score": 45,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -536,7 +584,8 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 100
+    "score": 100,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -547,7 +596,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 1,
-    "score": 15
+    "score": 15,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -558,7 +608,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 3,
-    "score": 45
+    "score": 45,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -569,7 +620,8 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": 2,
-    "score": 10
+    "score": 10,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -580,7 +632,8 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": 1,
-    "score": 40
+    "score": 40,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   },
   {
     "_id" : {
@@ -591,6 +644,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": 3,
-    "score": 70
+    "score": 70,
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
   }
 ]
