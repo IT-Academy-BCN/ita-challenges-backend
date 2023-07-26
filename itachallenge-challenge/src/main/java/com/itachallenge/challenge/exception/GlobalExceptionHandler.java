@@ -34,23 +34,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
     }
 
-    /*ExceptionHandler(ParameterNotValidException.class)
-    public ResponseEntity<ErrorMessage> handleParameterNotValidException(ParameterNotValidException ex) {
-        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
-    }
-
-    protected ResponseEntity<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error ->{
-
-            String fieldName = ((FieldError) error).getField();
-            String message = error.getDefaultMessage();
-            errors.put(fieldName, message);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
-    }*/
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, List<String>>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 

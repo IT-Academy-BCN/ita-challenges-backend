@@ -10,11 +10,9 @@ import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class ParameterValidatorTest {
@@ -41,34 +39,5 @@ public class ParameterValidatorTest {
         parameterValidator.setPageSize("b");
         Set<ConstraintViolation<ParameterValidator>> violations = validator.validate(parameterValidator);
         assertFalse(violations.isEmpty());
-    }
-    @Test
-    public void getValidPageNumberTest_ValidPageNumber() {
-        ParameterValidator parameterValidator = new ParameterValidator();
-        String expectedPageNumber = "1";
-        Optional<Integer> result = parameterValidator.getValidPageNumber(expectedPageNumber);
-        assertEquals(Optional.of(1), result);
-    }
-    @Test
-    public void getValidPageNumberTest_NotValidPageNumber() {
-        ParameterValidator parameterValidator = new ParameterValidator();
-        String notValidPageNumber = "a";
-        Optional<Integer> result = parameterValidator.getValidPageNumber(notValidPageNumber);
-        assertEquals(Optional.empty(), result);
-    }
-
-    @Test
-    public void getValidPageSizeTest_ValidPageSize() {
-        ParameterValidator parameterValidator = new ParameterValidator();
-        String expectedPageSize = "3";
-        Optional<Integer> result = parameterValidator.getValidPageSize(expectedPageSize);
-        assertEquals(Optional.of(3), result);
-    }
-    @Test
-    public void getValidPageSizeTest_NotValidPageSize() {
-        ParameterValidator parameterValidator = new ParameterValidator();
-        String notValidPageSize= "a";
-        Optional<Integer> result = parameterValidator.getValidPageNumber(notValidPageSize);
-        assertEquals(Optional.empty(), result);
     }
 }

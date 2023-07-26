@@ -1,112 +1,48 @@
 package com.itachallenge.challenge.helper;
 
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PaginationHelperTest {
 
-    @Test
-    @DisplayName("Validate pagination parameters")
-    void getValidPageNumberTest_PageNumberNull() {
+    @DisplayName("Test get valid pageNumber and pageSize")
+    @ParameterizedTest
+    @ValueSource(strings = {"1"})
+    void getValidPageNumberTest_ValidPageNumber(String validPageNumber) {
         PaginationHelper paginationHelper = new PaginationHelper();
-        int result = paginationHelper.getValidPageNumber(null);
-        assertEquals(1, result);
+        Optional<Integer> result = paginationHelper.getValidPageNumber(validPageNumber);
+        assertEquals(Optional.of(1), result);
+    }
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"","a","0","-1","1.1"})
+    void getValidPageNumberTest_NotValidPageNumber(String notValidPageNumber) {
+        PaginationHelper paginationHelper = new PaginationHelper();
+        Optional<Integer> result = paginationHelper.getValidPageNumber(notValidPageNumber);
+        assertEquals(Optional.empty(), result);
     }
 
-    @Test
-    void getValidPageNumberTest_PageNumberEmpty() {
+    @ParameterizedTest
+    @ValueSource(strings = {"3"})
+    void getValidPageSizeTest_ValidPageSize(String validPageSize) {
         PaginationHelper paginationHelper = new PaginationHelper();
-        int result = paginationHelper.getValidPageNumber("");
-        assertEquals(1, result);
+        Optional<Integer> result = paginationHelper.getValidPageSize(validPageSize);
+        assertEquals(Optional.of(3), result);
     }
 
-    @Test
-    void getValidPageNumberTest_PageNumberZero() {
+    @ParameterizedTest
+    @NullAndEmptySource
+    @ValueSource(strings = {"","a","0","-1","1.1"})
+    void getValidPageSizeTest_NotValidPageSize(String notValidPageSize) {
         PaginationHelper paginationHelper = new PaginationHelper();
-        int result = paginationHelper.getValidPageNumber("0");
-        assertEquals(1, result);
+        Optional<Integer> result = paginationHelper.getValidPageSize(notValidPageSize);
+        assertEquals(Optional.empty(), result);
     }
 
-    @Test
-    void getValidPageNumberTest_NonNumericPageNumber_ThrowsParameterNotValidException() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String nonNumericPageNumber = "a";
-        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(nonNumericPageNumber));
-    }
-
-    @Test
-    void getValidPageNumberTest_NegativePageNumber_ThrowsParameterNotValidException() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String negativePageNumber = "-1";
-        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(negativePageNumber));
-    }
-
-    @Test
-    void getValidPageNumberTest_DoublePageNumber_ThrowsParameterNotValidException() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String doublePageNumber = "1.1";
-        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageNumber), "Error message");
-    }
-
-    @Test
-    void getValidPageNumberTest_ValidPageNumber() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String expectedPageNumber = "3";
-        int result = paginationHelper.getValidPageNumber(expectedPageNumber);
-        assertEquals(3, result);
-    }
-
-    @Test
-    void getValidPageSizeTest_PageSizeNull() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        int result = paginationHelper.getValidPageSize(null);
-        assertEquals(5, result);
-    }
-
-    @Test
-    void getValidPageSizeTest_PageSizeEmpty() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        int result = paginationHelper.getValidPageSize("");
-        assertEquals(5, result);
-    }
-
-    @Test
-    void getValidPageNumberTest_PageSizeZero() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        int result = paginationHelper.getValidPageSize("0");
-        assertEquals(5, result);
-    }
-
-    @Test
-    void getValidPageSizeTest_NonNumericPageSize_ThrowsParameterNotValidException() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String nonNumericPageSize = "a";
-        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageSize(nonNumericPageSize));
-    }
-
-    @Test
-    void getValidPageSizeTest_NegativePageSize_ThrowsParameterNotValidException() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String negativePageSize = "-1";
-        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(negativePageSize));
-    }
-
-    @Test
-    void getValidPageSizeTest_DoublePageSize_ThrowsParameterNotValidException() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String doublePageSize = "1.1";
-        assertThrows(MethodArgumentNotValidException.class, () -> paginationHelper.getValidPageNumber(doublePageSize));
-    }
-
-    @Test
-    void getValidPageSizeTest_ValidPageSize() {
-        PaginationHelper paginationHelper = new PaginationHelper();
-        String expectedPageSize = "10";
-        int result = paginationHelper.getValidPageNumber(expectedPageSize);
-        assertEquals(10, result);
-    }
 }
