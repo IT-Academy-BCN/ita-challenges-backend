@@ -31,7 +31,7 @@ public class ChallengeController {
     IChallengeService challengeService;
 
     @GetMapping(value = "/test")
-    public Mono <?> test() {
+    public String test() {
         log.info("** Saludos desde el logger **");
 
         Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
@@ -49,15 +49,16 @@ public class ChallengeController {
                 .findAny()
                 .map( s -> s.toString());
 
-        return Mono.just(
-                (userService.isPresent() ? userService.get().toString() : "No Services")
-                        .concat(System.lineSeparator())
-                                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
-                        .concat(System.lineSeparator())
-                                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services")
-                );
+        log.info("~~~~~~~~~~~~~~~~~~~~~~");
+        log.info("Scanning micros:");
+        log.info((userService.isPresent() ? userService.get().toString() : "No Services")
+                .concat(System.lineSeparator())
+                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                .concat(System.lineSeparator())
+                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services"));
 
-        //return "Hello from ITA Challenge!!!";
+        log.info("~~~~~~~~~~~~~~~~~~~~~~");
+        return "Hello from ITA Challenge!!!";
     }
 
     @GetMapping(path = "/challenges/{challengeId}")
