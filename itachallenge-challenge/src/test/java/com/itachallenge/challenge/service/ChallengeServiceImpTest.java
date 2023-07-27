@@ -153,7 +153,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    public void getChallengesByLanguagesAndLevelThrowsException_test() {
+    void getChallengesByLanguagesAndLevelThrowsException_test() {
         List<ChallengeDocument> challengeDocuments = new ArrayList<>();
         List<ChallengeDto> challengeDtos = new ArrayList<>();
 
