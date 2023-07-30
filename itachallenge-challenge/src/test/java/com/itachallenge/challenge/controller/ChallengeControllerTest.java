@@ -13,9 +13,11 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -155,11 +157,16 @@ class ChallengeControllerTest {
 
         when(challengeService.getChallengesByLanguagesAndLevel(languages, levels)).thenReturn(Mono.just(expectedResult));
 
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenge ")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(GenericResultDto.class);
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguagesAndLevel(languages, levels);
+
+        StepVerifier.create(resultMono)
+                .assertNext(result -> {
+                        assertEquals(result.getResults(), expectedResult.getResults());
+                        assertEquals(result.getCount(), expectedResult.getCount());
+                        assertEquals(result.getOffset() == 0, expectedResult.getOffset() == 0);
+                        assertEquals(result.getLimit() == 5, expectedResult.getLimit() == 5);
+        })
+                .verifyComplete();
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-public class ValidatesTest {
+class ValidatesTest {
 
     @Mock
     private PropertiesConfig propertiesConfig;
@@ -59,7 +59,7 @@ public class ValidatesTest {
     }
 
     @Test
-    public void validLenguageLevel_test() {
+    void validLenguageLevel_test() {
         Set<String> validLevels = new HashSet<>(Set.of("Easy", "Medium", "Hard"));
         Set<String> validLanguages = new HashSet<>(Set.of("Java", "Python", "PHP", "Javascript"));
 

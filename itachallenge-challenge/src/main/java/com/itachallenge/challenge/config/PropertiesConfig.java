@@ -13,19 +13,19 @@ public class PropertiesConfig {
     private Integer connectionTimeout;//millis
     @Value("${url.maxBytesInMemory}")
     private Integer maxBytesInMemory;
-    @Value("${levels.easy.description}")
+    @Value("${levels.easy}")
     private String easy;
-    @Value("${levels.medium.description}")
+    @Value("${levels.medium}")
     private String medium;
-    @Value("${levels.hard.description}")
+    @Value("${levels.hard}")
     private String hard;
-    @Value("${languages.java.description}")
+    @Value("${languages.java}")
     private String java;
-    @Value("${languages.javascript.description}")
+    @Value("${languages.javascript}")
     private String javascript;
-    @Value("${languages.php.description}")
+    @Value("${languages.php}")
     private String php;
-    @Value("${languages.python.description}")
+    @Value("${languages.python}")
     private String python;
 
     public Integer getConnectionTimeout() {

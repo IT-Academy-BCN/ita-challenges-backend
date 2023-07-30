@@ -153,6 +153,33 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void getAllLanguages_LanguageExist_LanguageReturned() {
+        // Arrange
+        UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript");
+        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python");
+        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript");
+        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python");
+        LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
+
+        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
+        when(converter.fromLanguageToLanguageDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
+
+        // Act
+        Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
+                .expectComplete()
+                .verify();
+
+        verify(languageRepository).findAll();
+        verify(converter).fromLanguageToLanguageDto(any());
+    }
+
+    @Test
     void getChallengesByLanguagesAndLevelThrowsException_test() {
         List<ChallengeDocument> challengeDocuments = new ArrayList<>();
         List<ChallengeDto> challengeDtos = new ArrayList<>();
@@ -238,33 +265,6 @@ class ChallengeServiceImpTest {
                 })
                 .verifyComplete();
 
-    }
-
-    @Test
-    void getAllLanguages_LanguageExist_LanguageReturned() {
-        // Arrange
-        UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
-        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript");
-        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python");
-        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript");
-        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python");
-        LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
-
-        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(converter.fromLanguageToLanguageDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
-
-        // Act
-        Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
-
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
-                .expectComplete()
-                .verify();
-
-        verify(languageRepository).findAll();
-        verify(converter).fromLanguageToLanguageDto(any());
     }
 
 }
