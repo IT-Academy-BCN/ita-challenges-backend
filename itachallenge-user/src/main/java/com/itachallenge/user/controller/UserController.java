@@ -1,16 +1,18 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.dtos.SolutionUserDto;
+import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
+import com.itachallenge.user.service.UserScoreServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -23,7 +25,8 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     ServiceChallengeStatistics serviceChallengeStatistics;
-
+    @Autowired
+    private UserScoreServiceImp userScoreServiceImp;
 
     //endregion ATTRIBUTES
 
@@ -62,6 +65,22 @@ public class UserController {
     }
 
     //endregion ENDPOINTS
+
+    @GetMapping(path = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            summary = "obtains all the solutions to a challenge with the same language made by a given user.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = SolutionUserDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "No challenges for user with the required id and lenguage.", content = { @Content(schema = @Schema()) })
+            }
+    )
+    public Mono<SolutionUserDto<UserScoreDto>> SolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
+        return userScoreServiceImp.getChallengeById(idUser, idChallenge, idLanguage);
+    }
+
+
+
+
 
 }
 
