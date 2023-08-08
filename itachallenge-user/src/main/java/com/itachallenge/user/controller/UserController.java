@@ -1,8 +1,11 @@
 package com.itachallenge.user.controller;
 
+import com.itachallenge.user.document.UserScoreDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
+import com.itachallenge.user.repository.IUserScoreRepository;
+import com.itachallenge.user.service.IUserScoreService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import com.itachallenge.user.service.UserScoreServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -26,8 +30,10 @@ public class UserController {
     @Autowired
     ServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
-    private UserScoreServiceImp userScoreServiceImp;
+    private IUserScoreService userScoreService;
 
+    @Autowired
+    private IUserScoreRepository userScoreRepository;
     //endregion ATTRIBUTES
 
 
@@ -68,19 +74,32 @@ public class UserController {
 
     @GetMapping(path = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
-            summary = "obtains all the solutions to a challenge with the same language made by a given user.",
+            summary = "obtains all the solutions to a challenge with the given language and user.",
             responses = {
                     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = SolutionUserDto.class), mediaType = "application/json") }),
                     @ApiResponse(responseCode = "404", description = "No challenges for user with the required id and lenguage.", content = { @Content(schema = @Schema()) })
             }
     )
     public Mono<SolutionUserDto<UserScoreDto>> SolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
-        return userScoreServiceImp.getChallengeById(idUser, idChallenge, idLanguage);
+        return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 
 
+    /**
+     * Metodo de prueba
+     * @return
+     */
 
-
-
+    @GetMapping(path = "/prueba")
+    @Operation(
+            summary = "Metodo de prueba para chequear la conección a la base de datos y la integridad de ellos.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = SolutionUserDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "No challenges for user with the required id and lenguage.", content = { @Content(schema = @Schema()) })
+            }
+    )
+    public Flux<UserScoreDocument> prueba (){
+        return userScoreRepository.findAll();
+    }
 }
 

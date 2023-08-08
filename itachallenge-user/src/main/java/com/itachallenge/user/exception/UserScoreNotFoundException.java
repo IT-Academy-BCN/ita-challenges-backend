@@ -2,7 +2,7 @@ package com.itachallenge.user.exception;
 
 public class UserScoreNotFoundException extends RuntimeException{
 
-    public UserScoreNotFoundException(String message) {
+    public UserScoreNotFoundException(int httpStatus, String message) {
         super(message);
     }
 }

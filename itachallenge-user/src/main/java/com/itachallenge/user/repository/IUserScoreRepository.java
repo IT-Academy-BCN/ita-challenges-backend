@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface IUserScoreRepository extends ReactiveMongoRepository<UserScoreDocument, UUID> {
 
-    Flux<UserScoreDocument> findByUserId(String userId);
+    Flux<UserScoreDocument> findByUserId(UUID userId);
 
 }

@@ -5,14 +5,17 @@ import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.exception.UserScoreNotFoundException;
 import com.itachallenge.user.helper.Converter;
 import com.itachallenge.user.repository.IUserScoreRepository;
+import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+@Service
 public class UserScoreServiceImp implements IUserScoreService {
     @Autowired
     private IUserScoreRepository userScoreRepository;
@@ -21,13 +24,13 @@ public class UserScoreServiceImp implements IUserScoreService {
     private Converter converter;
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
-        UUID userId = convertToUUID(idUser);
-        UUID challengeId = convertToUUID(idChallenge);
-        UUID languageId = convertToUUID(idLanguage);
+        UUID userUuid = convertToUUID(idUser);
+        UUID challengeUuid = convertToUUID(idChallenge);
+        UUID languageUuid = convertToUUID(idLanguage);
 
-        return this.userScoreRepository.findByUserId(idUser)
-                .filter(s -> s.getChallengeId().equals(challengeId) && s.getLanguajeId().equals(languageId))
-                .switchIfEmpty(Mono.error(new UserScoreNotFoundException("No challenges for user with id " + idUser + " and language " + idLanguage + " were found")))
+        return this.userScoreRepository.findByUserId(userUuid)
+                .filter(s -> s.getChallengeId().equals(challengeUuid) && s.getLanguajeId().equals(languageUuid))
+                .switchIfEmpty(Mono.error(new UserScoreNotFoundException(HttpStatus.SC_NOT_FOUND, "No challenges for user with id " + idUser + " and language " + idLanguage + " were found")))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()
                 .map(userScoreDtos -> {
