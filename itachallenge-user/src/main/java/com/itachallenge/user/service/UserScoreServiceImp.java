@@ -23,21 +23,27 @@ public class UserScoreServiceImp implements IUserScoreService {
     @Autowired
     private Converter converter;
 
+    private static final Logger log = LoggerFactory.getLogger(UserScoreServiceImp.class);
+
+
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
         UUID userUuid = convertToUUID(idUser);
         UUID challengeUuid = convertToUUID(idChallenge);
         UUID languageUuid = convertToUUID(idLanguage);
 
         return this.userScoreRepository.findByUserId(userUuid)
-                .filter(s -> s.getChallengeId().equals(challengeUuid) && s.getLanguajeId().equals(languageUuid))
-                .switchIfEmpty(Mono.error(new UserScoreNotFoundException(HttpStatus.SC_NOT_FOUND, "No challenges for user with id " + idUser + " and language " + idLanguage + " were found")))
+                .switchIfEmpty(Mono.error(new UserScoreNotFoundException("No challenges for user with id " + idUser)))
+                .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguajeId().equals(languageUuid))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()
-                .map(userScoreDtos -> {
-                    SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                    solutionUserDto.setInfo(0, 1, 1, userScoreDtos.toArray(new UserScoreDto[0]));
-                    return solutionUserDto;
-                });
+                    .map(userScoreDtos -> {
+                        SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
+                        solutionUserDto.setInfo(0, 1, userScoreDtos.size(), userScoreDtos.toArray(new UserScoreDto[0]));
+                        return solutionUserDto;
+                })
+                //.doOnSuccess(solutionUserDto -> log.info("Data found with given id"))
+                //.doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
+                ;
     }
 
     public UUID convertToUUID(String id) {

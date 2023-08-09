@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -77,7 +80,7 @@ public class UserController {
             summary = "obtains all the solutions to a challenge with the given language and user.",
             responses = {
                     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = SolutionUserDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "No challenges for user with the required id and lenguage.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "400", description = "No user with the required id.", content = { @Content(schema = @Schema()) })
             }
     )
     public Mono<SolutionUserDto<UserScoreDto>> SolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
