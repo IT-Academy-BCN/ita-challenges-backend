@@ -5,7 +5,6 @@ import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.exception.UserScoreNotFoundException;
 import com.itachallenge.user.helper.Converter;
 import com.itachallenge.user.repository.IUserScoreRepository;
-import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,6 @@ public class UserScoreServiceImp implements IUserScoreService {
     @Autowired
     private Converter converter;
 
-    private static final Logger log = LoggerFactory.getLogger(UserScoreServiceImp.class);
-
-
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
         UUID userUuid = convertToUUID(idUser);
         UUID challengeUuid = convertToUUID(idChallenge);
@@ -40,15 +36,10 @@ public class UserScoreServiceImp implements IUserScoreService {
                         SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
                         solutionUserDto.setInfo(0, 1, userScoreDtos.size(), userScoreDtos.toArray(new UserScoreDto[0]));
                         return solutionUserDto;
-                })
-                //.doOnSuccess(solutionUserDto -> log.info("Data found with given id"))
-                //.doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
-                ;
+                });
     }
 
     public UUID convertToUUID(String id) {
             return UUID.fromString(id);
     }
-
-
 }

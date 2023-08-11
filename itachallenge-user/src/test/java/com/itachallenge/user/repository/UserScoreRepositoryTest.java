@@ -1,6 +1,8 @@
 package com.itachallenge.user.repository;
 
+import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserScoreDocument;
+import org.apache.catalina.LifecycleState;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -15,6 +17,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -59,9 +62,17 @@ public class UserScoreRepositoryTest {
         UUID solutionId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
         UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
 
-        UserScoreDocument userScoreDocument1 = new UserScoreDocument(uuid_1, userId1, challengeId1, languageId1, true, 1, 90, solutionId1, "solution text 1");
-        UserScoreDocument userScoreDocument2 = new UserScoreDocument(uuid_2, userId2, challengeId2, languageId2, true, 1, 90, solutionId2, "solution text 2");
-        UserScoreDocument userScoreDocument3 = new UserScoreDocument(uuid_3, userId1, challengeId1, languageId1, true, 1, 90, solutionId1, "solution text 3");
+        String solutionText1 = "Ipsum.. 1";
+        String solutionText2 = "Ipsum.. 2";
+
+        SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1,languageId1);
+        SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2,languageId2);
+
+        List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
+
+        UserScoreDocument userScoreDocument1 = new UserScoreDocument(uuid_1, userId1, challengeId1, languageId1, true, 1, 90, solutionDocumentList);
+        UserScoreDocument userScoreDocument2 = new UserScoreDocument(uuid_2, userId2, challengeId2, languageId2, true, 1, 90, solutionDocumentList);
+        UserScoreDocument userScoreDocument3 = new UserScoreDocument(uuid_3, userId1, challengeId1, languageId1, true, 1, 90, solutionDocumentList);
 
         userScoreRepository.saveAll(Flux.just(userScoreDocument1, userScoreDocument2, userScoreDocument3)).blockLast();
     }

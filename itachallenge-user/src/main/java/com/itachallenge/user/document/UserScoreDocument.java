@@ -37,10 +37,6 @@ public class UserScoreDocument {
     @Field("score")
     private int score;
 
-    @Field("solution_id")
-    private UUID solutionId;
-
      @Field("solution")
      private List<SolutionDocument> solutionDocument;
-
 }
