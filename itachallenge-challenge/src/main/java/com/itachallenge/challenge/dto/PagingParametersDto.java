@@ -6,11 +6,18 @@ import lombok.Setter;
 @Setter
 public class PagingParametersDto {
 
-    @Pattern(regexp = "^[1-9]+$", message = "pageNumber must be positive integer")
+/*    @Pattern(regexp = "^[1-9]+$", message = "pageNumber must be positive integer")
     private String pageNumber;
 
     @Pattern(regexp = "^[1-9]+$", message = "pageSize must be positive integer")
-    private String pageSize;
+    private String pageSize;*/
+
+    @Pattern(regexp = "^[1-9]+$", message = "pageNumber must be positive integer")
+    private int pageNumber;
+
+    @Pattern(regexp = "^[1-9]+$", message = "pageSize must be positive integer")
+    private int pageSize;
+
 
 }
 

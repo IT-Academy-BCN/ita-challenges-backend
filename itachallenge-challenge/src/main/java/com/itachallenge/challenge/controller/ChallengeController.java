@@ -120,13 +120,13 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-    public Flux<ChallengeDto> getChallengesPaginated(//@Valid @RequestBody PagingParametersDto pagingParametersDto,
+    public Flux<ChallengeDto> getChallengesPaginated(@Valid @RequestBody PagingParametersDto pagingParametersDto,
                                                      @RequestParam(name = "pageNumber") int pageNumber,
                                                      @RequestParam(name = "pageSize") int pageSize)
 
 
-                                                    /* @RequestParam(required = false, defaultValue = "1") String pageNumber,
-                                                     @RequestParam(required = false, defaultValue = "3") String pageSize) */
+                                                   /*  @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                     @RequestParam(required = false, defaultValue = "3") int pageSize)*/
 
     {
 
