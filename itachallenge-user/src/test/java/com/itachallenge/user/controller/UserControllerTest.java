@@ -164,8 +164,6 @@ class UserControllerTest {
                    assert dto.getResults() != null;
                    assert dto.getResults().length == 1;
               });
-
-
    }
 
 
