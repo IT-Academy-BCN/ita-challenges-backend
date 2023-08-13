@@ -13,6 +13,7 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -108,14 +109,19 @@ public class ChallengeServiceImp implements IChallengeService {
         return Mono.just(UUID.fromString(id));
     }
 
+    public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
+        Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of(pageNumber, pageSize));
+        return converter.fromChallengeToChallengeDto(challengesList);
+    }
+
 /*    public Flux<ChallengeDto> getChallengesPaginated() {
         Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated();
         return converter.fromChallengeToChallengeDto(challengesList);
     }*/
 
-    public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
+/*    public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
         Flux<ChallengeDocument> challengesList = challengeRepository.findChallengesPaginated(pageNumber,pageSize);
         return converter.fromChallengeToChallengeDto(challengesList);
-    }
+    }*/
 
 }
