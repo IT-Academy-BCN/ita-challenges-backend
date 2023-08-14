@@ -12,7 +12,9 @@ public interface IChallengeService {
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
- /*   Flux<ChallengeDto> getChallengesPaginated();*/
+
     Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize);
+
+    //Mono<PagingParametersDto<ChallengeDto>> getChallengesPaginated(int pageNumber, int pageSize);
 
 }

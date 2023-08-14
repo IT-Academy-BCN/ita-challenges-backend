@@ -97,6 +97,14 @@ public class ChallengeServiceImp implements IChallengeService {
             return resultDto;
         });
     }
+/*    public Mono<PagingParametersDto<ChallengeDto>> getChallengesPaginated(int pageNumber, int pageSize) {
+        Flux<ChallengeDto> challengesList = converter.fromChallengeToChallengeDto(challengeRepository.findAllBy(PageRequest.of(pageNumber, pageSize)));
+        return challengesList.collectList().map(challenges -> {
+            PagingParametersDto<ChallengeDto> pageDto = new PagingParametersDto<>();
+            pageDto.setInfo(String.valueOf(pageNumber), String.valueOf(pageSize), challenges.toArray(new ChallengeDto[0]));
+            return pageDto;
+        });
+    }*/
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
@@ -108,6 +116,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
+
+
 
     public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
         Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of(pageNumber, pageSize));

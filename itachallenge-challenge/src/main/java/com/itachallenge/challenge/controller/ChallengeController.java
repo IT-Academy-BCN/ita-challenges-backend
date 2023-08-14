@@ -120,24 +120,17 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
+/*    public Mono<PagingParametersDto<ChallengeDto>> getChallengesPaginated(@Valid @RequestBody PagingParametersDto pagingParametersDto,
+                                                     @RequestParam(name = "pageNumber") String pageNumber,
+                                                     @RequestParam(name = "pageSize") String pageSize)*/
+
     public Flux<ChallengeDto> getChallengesPaginated(@Valid @RequestBody PagingParametersDto pagingParametersDto,
-                                                     @RequestParam(name = "pageNumber") int pageNumber,
-                                                     @RequestParam(name = "pageSize") int pageSize)
-
-
-                                                   /*  @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                                     @RequestParam(required = false, defaultValue = "3") int pageSize)*/
-
+                                                     @RequestParam(name = "pageNumber", required = false, defaultValue = "1") String pageNumber,
+                                                     @RequestParam(name = "pageSize", required = false, defaultValue = "2") String pageSize)
     {
 
         //return challengeService.getChallengesPaginated(getValidPageNumber(pageNumber), getValidPageSize(pageSize));
-        return challengeService.getChallengesPaginated(pageNumber, pageSize);
-/*        @GetMapping("/quotes-reactive-paged")
-        public Flux<Quote> getQuoteFlux(final @RequestParam(name = "page") int page,
-        final @RequestParam(name = "size") int size) {
-            return quoteMongoReactiveRepository.findAllByIdNotNullOrderByIdAsc(PageRequest.of(page, size))
-                    .delayElements(Duration.ofMillis(DELAY_PER_ITEM_MS));
-        }*/
+        return challengeService.getChallengesPaginated(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
 
 /*        Optional<Integer> optionalPageNumber = this.PaginationHelper.getValidPageNumber(pageNumber);
 
