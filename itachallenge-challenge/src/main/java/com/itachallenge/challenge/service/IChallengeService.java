@@ -9,12 +9,13 @@ import reactor.core.publisher.Mono;
 public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id);
+
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
+
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
+
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
 
     Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize);
-
-    //Mono<PagingParametersDto<ChallengeDto>> getChallengesPaginated(int pageNumber, int pageSize);
 
 }

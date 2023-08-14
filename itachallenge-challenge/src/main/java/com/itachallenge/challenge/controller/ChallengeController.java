@@ -10,14 +10,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -106,11 +103,6 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
-    @GetMapping("/language")
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        return challengeService.getAllLanguages();
-    }
-
     @GetMapping("/challengesPaginated")
     @Operation(
             operationId = "Get only the challenges paginated.",
@@ -120,45 +112,15 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-/*    public Mono<PagingParametersDto<ChallengeDto>> getChallengesPaginated(@Valid @RequestBody PagingParametersDto pagingParametersDto,
-                                                     @RequestParam(name = "pageNumber") String pageNumber,
-                                                     @RequestParam(name = "pageSize") String pageSize)*/
-
-    public Flux<ChallengeDto> getChallengesPaginated(@Valid @RequestBody PagingParametersDto pagingParametersDto,
-                                                     @RequestParam(name = "pageNumber", required = false, defaultValue = "1") String pageNumber,
-                                                     @RequestParam(name = "pageSize", required = false, defaultValue = "2") String pageSize)
-    {
-
-        //return challengeService.getChallengesPaginated(getValidPageNumber(pageNumber), getValidPageSize(pageSize));
-        return challengeService.getChallengesPaginated(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
-
-/*        Optional<Integer> optionalPageNumber = this.PaginationHelper.getValidPageNumber(pageNumber);
-
-        return challengeService.getChallengesPaginated((PaginationHelper.getValidPageNumber(pageNumber)).get(),
-                (PaginationHelper.getValidPageSize(pageSize)).get());
-*/
-
-       // return challengeService.getChallengesPaginated(getValidPageNumber(pageNumber), getValidPageSize(pageSize));
+    public Flux<ChallengeDto> getChallengesPaginated(@Valid PagingParametersDto pagingParametersDto,
+                                                     @RequestParam(name = "pageNumber", required = false, defaultValue = "0") String pageNumber,
+                                                     @RequestParam(name = "pageSize", required = false, defaultValue = "2") String pageSize) {
+        return challengeService.getChallengesPaginated((Integer.parseInt(pageNumber) + 1), Integer.parseInt(pageSize));
     }
 
-    public int getValidPageNumber(String pageNumber) {
-        if (pageNumber == null || pageNumber.isEmpty()) {
-            return 1;
-        }
-        if (!NumberUtils.isDigits(pageNumber)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        return Integer.parseInt(pageNumber);
-    }
-
-    public int getValidPageSize(String pageSize) {
-        if (pageSize == null || pageSize.isEmpty()) {
-            return 3;
-        }
-        if (!NumberUtils.isDigits(pageSize)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        return Integer.parseInt(pageSize);
+    @GetMapping("/language")
+    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
+        return challengeService.getAllLanguages();
     }
 
 }
