@@ -1,6 +1,5 @@
 package com.itachallenge.user.controller;
 
-import com.itachallenge.user.document.UserScoreDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
