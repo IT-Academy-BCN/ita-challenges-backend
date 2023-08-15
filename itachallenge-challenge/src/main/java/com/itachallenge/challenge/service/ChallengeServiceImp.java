@@ -99,7 +99,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
-        Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of(pageNumber, pageSize));
+        Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of((pageNumber - 1), pageSize));
         return converter.fromChallengeToChallengeDto(challengesList);
     }
 

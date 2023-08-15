@@ -3,7 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.PagingParametersDto;
+import com.itachallenge.challenge.dto.PageParametersDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,12 +23,18 @@ import java.util.Optional;
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
+
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
+    private static final String DEFAULT_PAGE_NUMBER = "${defaultPageParameters.pageNumber}";
+    private static final String DEFAULT_PAGE_SIZE = "${defaultPageParameters.pageSize}";
 
     @Autowired
     private DiscoveryClient discoveryClient;
     @Autowired
     IChallengeService challengeService;
+
+    public ChallengeController() {
+    }
 
     @GetMapping(value = "/test")
     public String test() {
@@ -112,10 +118,10 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-    public Flux<ChallengeDto> getChallengesPaginated(@Valid PagingParametersDto pagingParametersDto,
-                                                     @RequestParam(name = "pageNumber", required = false, defaultValue = "0") String pageNumber,
-                                                     @RequestParam(name = "pageSize", required = false, defaultValue = "2") String pageSize) {
-        return challengeService.getChallengesPaginated((Integer.parseInt(pageNumber) + 1), Integer.parseInt(pageSize));
+    public Flux<ChallengeDto> getChallengesPaginated(@Valid PageParametersDto pageParametersDto,
+                                                     @RequestParam(name = "pageNumber", required = false, defaultValue = DEFAULT_PAGE_NUMBER) String pageNumber,
+                                                     @RequestParam(name = "pageSize", required = false, defaultValue = DEFAULT_PAGE_SIZE) String pageSize) {
+        return challengeService.getChallengesPaginated(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
     }
 
     @GetMapping("/language")
