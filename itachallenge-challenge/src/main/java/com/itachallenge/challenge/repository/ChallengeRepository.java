@@ -27,6 +27,6 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
 
-    Flux<ChallengeDocument> findAllBy(Pageable page);
+    Flux<ChallengeDocument> findAllBy(Pageable pageable);
 
 }

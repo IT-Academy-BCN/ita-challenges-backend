@@ -81,7 +81,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
         Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
-
         return challengeDtoFlux.collectList().map(challenges -> {
             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
@@ -98,7 +97,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    public Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize) {
+    public Flux<ChallengeDto> getChallengesByPage (int pageNumber, int pageSize) {
         Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of((pageNumber - 1), pageSize));
         return converter.fromChallengeToChallengeDto(challengesList);
     }

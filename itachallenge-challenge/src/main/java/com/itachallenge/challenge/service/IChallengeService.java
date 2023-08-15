@@ -16,6 +16,6 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
 
-    Flux<ChallengeDto> getChallengesPaginated(int pageNumber, int pageSize);
+    Flux<ChallengeDto> getChallengesByPage(int pageNumber, int pageSize);
 
 }

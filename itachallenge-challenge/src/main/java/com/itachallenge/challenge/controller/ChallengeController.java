@@ -109,19 +109,19 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
-    @GetMapping("/challengesPaginated")
+    @GetMapping("/challengesByPage")
     @Operation(
-            operationId = "Get only the challenges paginated.",
-            summary = "Get to see challenges paginated and their levels, details and their available languages.",
-            description = "Requesting the challenges paginated through the URI from the database.",
+            operationId = "Get only the challenges on a page.",
+            summary = "Get to see challenges on a page and their levels, details and their available languages.",
+            description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-    public Flux<ChallengeDto> getChallengesPaginated(@Valid PageParametersDto pageParametersDto,
+    public Flux<ChallengeDto> getChallengesByPage(@Valid PageParametersDto pageParametersDto,
                                                      @RequestParam(name = "pageNumber", required = false, defaultValue = DEFAULT_PAGE_NUMBER) String pageNumber,
                                                      @RequestParam(name = "pageSize", required = false, defaultValue = DEFAULT_PAGE_SIZE) String pageSize) {
-        return challengeService.getChallengesPaginated(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
+        return challengeService.getChallengesByPage(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
     }
 
     @GetMapping("/language")

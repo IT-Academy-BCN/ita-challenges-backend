@@ -8,6 +8,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -108,6 +110,37 @@ class ChallengeRepositoryTest {
         StepVerifier.create(challenges)
                 .expectNextCount(2)
                 .verifyComplete();
+    }
+
+    @DisplayName("Find Challenges for a Page")
+    @Test
+    void findAllByPageTest() {
+
+        Pageable pageNumber0Size1 = PageRequest.of(0,1);
+        Pageable pageNumber0Size2 = PageRequest.of(0,2);
+        Pageable pageNumber1Size1 = PageRequest.of(1,1);
+        Pageable pageNumber1Size2 = PageRequest.of(1,2);
+
+        Flux<ChallengeDocument> challengesPageNumber0Size1 = challengeRepository.findAllBy(pageNumber0Size1);
+        StepVerifier.create(challengesPageNumber0Size1)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        Flux<ChallengeDocument> challengesPageNumber0Size2 = challengeRepository.findAllBy(pageNumber0Size2);
+        StepVerifier.create(challengesPageNumber0Size2)
+                .expectNextCount(2)
+                .verifyComplete();
+
+        Flux<ChallengeDocument> challengesPageNumber1Size1 = challengeRepository.findAllBy(pageNumber1Size1);
+        StepVerifier.create(challengesPageNumber1Size1)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        Flux<ChallengeDocument> challengesPageNumber1Size2 = challengeRepository.findAllBy(pageNumber1Size2);
+        StepVerifier.create(challengesPageNumber1Size2)
+                .expectNextCount(0)
+                .verifyComplete();
+
     }
 
     @DisplayName("Exists by UUID Test")
