@@ -12,9 +12,8 @@ public class ErrorResponse {
     private int statusCode;
     private String message;
 
-    public ErrorResponse(String message, HttpStatus httpStatus) {
+    public ErrorResponse(String message) {
         this.message = message;
-        this.statusCode = statusCode;
     }
 
 
