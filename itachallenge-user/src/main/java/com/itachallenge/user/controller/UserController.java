@@ -82,22 +82,4 @@ public class UserController {
     public Mono<SolutionUserDto<UserScoreDto>> SolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
-
-
-    /**
-     * Metodo de prueba
-     * @return
-     */
-
-    @GetMapping(path = "/prueba")
-    @Operation(
-            summary = "Metodo de prueba para chequear la conección a la base de datos y la integridad de ellos.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = SolutionUserDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "No challenges for user with the required id and lenguage.", content = { @Content(schema = @Schema()) })
-            }
-    )
-    public Flux<UserScoreDocument> prueba (){
-        return userScoreRepository.findAll();
-    }
 }
