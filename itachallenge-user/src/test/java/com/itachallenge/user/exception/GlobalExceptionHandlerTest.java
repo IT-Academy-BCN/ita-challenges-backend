@@ -2,7 +2,6 @@ package com.itachallenge.user.exception;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -27,10 +26,6 @@ public class GlobalExceptionHandlerTest {
 
     @MockBean
     private UserScoreNotFoundException userScoreNotFoundException;
-
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testStatusCodeAndMessageForException () {
