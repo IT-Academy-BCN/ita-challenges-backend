@@ -5,8 +5,6 @@ import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.exception.UserScoreNotFoundException;
 import com.itachallenge.user.helper.Converter;
 import com.itachallenge.user.repository.IUserScoreRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -34,7 +32,7 @@ public class UserScoreServiceImp implements IUserScoreService {
                 .collectList()
                     .map(userScoreDtos -> {
                         SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                        solutionUserDto.setInfo(0, 1, userScoreDtos.size(), userScoreDtos.toArray(new UserScoreDto[0]));
+                        solutionUserDto.setInfo(0, 1, new UserScoreDto().getSolutionsSize(), userScoreDtos.toArray(new UserScoreDto[0]));
                         return solutionUserDto;
                 });
     }

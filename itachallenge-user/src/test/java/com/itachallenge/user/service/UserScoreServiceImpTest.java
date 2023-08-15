@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserScoreDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
@@ -42,19 +44,23 @@ public class UserScoreServiceImpTest {
         UUID idLanguage = UUID.randomUUID();
         UUID idChallenge = UUID.randomUUID();
 
-        UserScoreDocument userScoreDocument = new UserScoreDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true,1,1,null );
+        SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), "solutionText1",idLanguage);
+        SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), "solutionText2",idLanguage);
+        SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), "solutionText3",idLanguage);
+        List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
+
+        UserScoreDocument userScoreDocument = new UserScoreDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true,1,1,solutionDocumentList );
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
+        expectedSolutionUserDto.setInfo(0,1,3, new UserScoreDto[]{userScoreDto});
 
         when(userScoreRepository.findByUserId(userId)).thenReturn(Flux.just(userScoreDocument));
         when(converter.fromUserScoreDocumentToUserScoreDto(any())).thenReturn(Flux.just(userScoreDto));
 
-
         Mono<SolutionUserDto<UserScoreDto>> result = userScoreService.getChallengeById(userId.toString(), idChallenge.toString(), idLanguage.toString() );
 
         StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 1 && Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
+                .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
                 .expectComplete()
                 .verify();
     }
@@ -75,10 +81,4 @@ public class UserScoreServiceImpTest {
                 .verify();
 
     }
-
-
-
-
-
-
 }

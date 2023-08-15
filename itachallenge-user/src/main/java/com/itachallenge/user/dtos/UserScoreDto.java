@@ -1,17 +1,14 @@
 package com.itachallenge.user.dtos;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.document.SolutionDocument;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Component
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor//(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
@@ -29,5 +26,7 @@ public class UserScoreDto {
 
     @JsonProperty(value = "solutions", index = 4)
     private List<SolutionDocument> solutions;
+
+    private int solutionsSize;
 
 }
