@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -171,6 +173,36 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void getChallengesByPageTest() {
+        // Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto challengeDto4 = new ChallengeDto();
+        ChallengeDto[] expectedChallengesPaged = {challengeDto3, challengeDto4};
+
+        int pageNumber = 2;
+        int pageSize = 2;
+        Pageable pageable = PageRequest.of((pageNumber - 1), pageSize);
+
+        when(challengeRepository.findAllBy(pageable))
+                .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
+        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
+
+        // Act
+        Flux<ChallengeDto> result = challengeService.getChallengesByPage(2, 2);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNext(expectedChallengesPaged)
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository).findAllBy(pageable);
+        verify(converter).fromChallengeToChallengeDto(any());
+    }
+
+    @Test
     void getAllLanguages_LanguageExist_LanguageReturned() {
         // Arrange
         UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
@@ -196,4 +228,5 @@ class ChallengeServiceImpTest {
         verify(languageRepository).findAll();
         verify(converter).fromLanguageToLanguageDto(any());
     }
+
 }
