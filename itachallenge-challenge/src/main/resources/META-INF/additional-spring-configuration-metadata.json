@@ -1,0 +1,72 @@
+{"properties": [
+  {
+    "name": "spring.spring.main.allow-bean-definition-overriding",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.spring.main.allow-bean-definition-overriding'"
+  },
+  {
+    "name": "springdoc.swagger-ui.operationsSorted",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.swagger-ui.operationsSorted'"
+  },
+  {
+    "name": "springdoc.api-docs.enable",
+    "type": "java.lang.String",
+    "description": "A description for 'springdoc.api-docs.enable'"
+  },
+  {
+    "name": "management.security.enabled",
+    "type": "java.lang.String",
+    "description": "A description for 'management.security.enabled'"
+  },
+  {
+    "name": "url.connection_timeout",
+    "type": "java.lang.String",
+    "description": "A description for 'url.connection_timeout'"
+  },
+  {
+    "name": "url.maxBytesInMemory",
+    "type": "java.lang.String",
+    "description": "A description for 'url.maxBytesInMemory'"
+  },
+  {
+    "name": "spring.datasource.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.secret'"
+  },
+  {
+    "name": "spring.datasource.headerString",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.headerString'"
+  },
+  {
+    "name": "spring.datasource.authoritiesClaim",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.authoritiesClaim'"
+  },
+  {
+    "name": "spring.datasource.err",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.datasource.err'"
+  },
+  {
+    "name": "spring.security.datasource.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.datasource.secret'"
+  },
+  {
+    "name": "spring.security.datasource.headerString",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.datasource.headerString'"
+  },
+  {
+    "name": "spring.security.datasource.authoritiesClaim",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.datasource.authoritiesClaim'"
+  },
+  {
+    "name": "spring.security.datasource.err",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.datasource.err'"
+  }
+]}

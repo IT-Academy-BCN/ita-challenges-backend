@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@WebFluxTest(ChallengeController.class)
+
 class ChallengeControllerTest {
 
     @Autowired
