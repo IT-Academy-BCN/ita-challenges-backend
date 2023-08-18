@@ -31,3 +31,7 @@ url:
   fake_connection_timeout: 1
   maxBytesInMemory: 30000000
   ds_test: https://swapi.py4e.com/api/vehicles/
+
+defaultPageParameters:
+  pageNumber: "1"
+  pageSize: "2"

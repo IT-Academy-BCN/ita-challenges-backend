@@ -12,7 +12,9 @@ import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -136,5 +138,50 @@ class ChallengeControllerTest {
                     assert dto.getResults() != null;
                     assert dto.getResults().length == 2;
                 });
+    }
+
+    @Test
+    void getChallengesByPages_ValidPageParameters_ChallengesReturned() {
+        //Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+
+        String pageNumber = "1";
+        String pageSize = "3";
+
+        when(challengeService.getChallengesByPage(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
+                .thenReturn(expectedChallengesFlux);
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challengesByPage?pageNumber=1&pageSize=3")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getChallengesByPages_NullPageParameters_ChallengesReturned() {
+        //Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+
+        String defaultPageNumber = "1";
+        String defaultPageSize = "2";
+
+        when(challengeService.getChallengesByPage(Integer.parseInt(defaultPageNumber), Integer.parseInt(defaultPageSize)))
+                .thenReturn(expectedChallengesFlux);
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challengesByPage")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
     }
 }
