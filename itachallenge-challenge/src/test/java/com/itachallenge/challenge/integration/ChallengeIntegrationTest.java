@@ -36,7 +36,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @AutoConfigureWebTestClient
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class ChallengeIntegrationTest {
+class ChallengeIntegrationTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
