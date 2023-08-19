@@ -119,8 +119,8 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
     public Flux<ChallengeDto> getChallengesByPage(@Valid PageParametersDto pageParametersDto,
-                                                     @RequestParam(name = "pageNumber", required = false, defaultValue = DEFAULT_PAGE_NUMBER) String pageNumber,
-                                                     @RequestParam(name = "pageSize", required = false, defaultValue = DEFAULT_PAGE_SIZE) String pageSize) {
+                                                  @RequestParam(name = "pageNumber", defaultValue = DEFAULT_PAGE_NUMBER) String pageNumber,
+                                                  @RequestParam(name = "pageSize", defaultValue = DEFAULT_PAGE_SIZE) String pageSize) {
         return challengeService.getChallengesByPage(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
     }
 
