@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -38,18 +36,6 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(new ErrorMessage("Parameter not valid", errors));
-    }
-
-    @AllArgsConstructor
-    @Getter
-    static
-    class ErrorMessage {
-        String msg;
-        Map<String, String> errors = new HashMap<>();
-
-        public ErrorMessage(String msg) {
-            this.msg = msg;
-        }
     }
 
 }
