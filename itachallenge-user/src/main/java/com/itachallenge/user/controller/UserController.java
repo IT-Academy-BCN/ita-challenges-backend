@@ -28,7 +28,6 @@ public class UserController {
     ServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserScoreService userScoreService;
-
     @Autowired
     private IUserScoreRepository userScoreRepository;
     //endregion ATTRIBUTES
