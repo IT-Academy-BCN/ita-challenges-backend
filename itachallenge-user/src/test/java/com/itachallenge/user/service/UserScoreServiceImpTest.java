@@ -23,7 +23,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.*;
 
 
-public class UserScoreServiceImpTest {
+class UserScoreServiceImpTest {
 
     @Mock
     private IUserScoreRepository userScoreRepository;
@@ -38,7 +38,7 @@ public class UserScoreServiceImpTest {
     }
 
     @Test
-    public void getUserScoreByUserId (){
+    void getUserScoreByUserId (){
 
         UUID userId = UUID.randomUUID();
         UUID idLanguage = UUID.randomUUID();
@@ -66,7 +66,7 @@ public class UserScoreServiceImpTest {
     }
 
     @Test
-    public void getUserScoreByUserId_ThrowsException (){
+    void getUserScoreByUserId_ThrowsException (){
 
         UUID userId_NotFound = UUID.randomUUID();
         UUID idLanguage = UUID.randomUUID();

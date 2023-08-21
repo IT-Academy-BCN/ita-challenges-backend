@@ -6,7 +6,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class SolutionDocumentTest {
+class SolutionDocumentTest {
 
     UUID uuid = UUID.randomUUID();
     String solutionText = "Ipsum...";

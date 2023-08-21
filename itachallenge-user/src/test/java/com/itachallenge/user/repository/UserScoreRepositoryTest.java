@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class UserScoreRepositoryTest {
+class UserScoreRepositoryTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")

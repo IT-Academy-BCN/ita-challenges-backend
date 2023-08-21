@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class ConverterTest {
+class ConverterTest {
 
     @Autowired
     private Converter converter;

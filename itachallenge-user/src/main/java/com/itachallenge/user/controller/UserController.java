@@ -1,6 +1,5 @@
 package com.itachallenge.user.controller;
 
-import com.itachallenge.user.document.UserScoreDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
@@ -15,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -79,7 +77,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = { @Content(schema = @Schema()) })
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> SolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
+    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 }
