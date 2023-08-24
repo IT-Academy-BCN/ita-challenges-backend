@@ -3,7 +3,7 @@ spring:
     name: itachallenge-score
   jmx:
     enabled: true
-
+    
   #profiles: dev: no security; prod: security activated
   profiles:
     active:
@@ -15,15 +15,6 @@ spring:
       headerString: Authorization
       authoritiesClaim: authorities
       err: Auth Error, Token Unavailable 
-
-
-springdoc:
-  swagger-ui:
-    path: "/swagger-ui-custom.html"
-    operationsSorted: method
-  api-docs:
-    enable: true
-    path: "/api-docs"
 
 server:
   port: 8763
@@ -40,10 +31,15 @@ logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
-    "[com.businessassistantbcn]": INFO
+    "[com.itachallenge]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-score.log
+#    name: itachallenge-challenge.log
 
+url:
+  connection_timeout: 30000
+  fake_connection_timeout: 1
+  maxBytesInMemory: 30000000
+  ds_test: https://swapi.py4e.com/api/vehicles/

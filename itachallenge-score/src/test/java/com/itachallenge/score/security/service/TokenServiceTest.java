@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.security.service;
+package com.itachallenge.score.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,8 +16,10 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import com.itachallenge.challenge.config.SecurityPropertiesConfig;
-import com.itachallenge.challenge.security.service.exceptions.InvalidTokenException;
+
+import com.itachallenge.score.config.SecurityPropertiesConfig;
+import com.itachallenge.score.security.service.exceptions.InvalidTokenException;
+
 import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
@@ -27,7 +29,6 @@ import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(TokenService.class)
-
 
 public class TokenServiceTest {
 
@@ -70,10 +71,10 @@ public class TokenServiceTest {
 				.verifyComplete();
 
 	}
-	
+
 	@Test
 	@DisplayName(value = "invalid token test")
-	void ValidateToken_InValid_Token_test(){
+	void ValidateToken_InValid_Token_test() {
 
 		String secret = "SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid";
 
@@ -81,29 +82,29 @@ public class TokenServiceTest {
 
 		Mono<Claims> response = tokenservice.validateToken(NOT_VALID_TOKEN);
 
-		StepVerifier.create(response)
-		.expectErrorMatches(throwable -> throwable instanceof InvalidTokenException
-				&& throwable.getMessage().equals("Invalid token"))
-		.verify();
-			
+		StepVerifier.create(response).expectErrorMatches(throwable -> throwable instanceof InvalidTokenException
+				&& throwable.getMessage().equals("Invalid token")).verify();
+
 	}
-	
-	/*@Test
-	@DisplayName(value = "EXPIRED token test")
-	void ValidateToken_Expired_Token_test(){
 
-		String secret = "SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid";
-
-		when(config.getSecret()).thenReturn(secret);
-
-		Mono<Claims> response = tokenservice.validateToken(EXPIRED_TOKEN);
-
-		StepVerifier.create(response)
-		.expectErrorMatches(throwable -> throwable instanceof TokenExpiredException
-				&& throwable.getMessage().equals("Token has expired"))
-		.verify();
-			
-	}*/
+	/*
+	 * @Test
+	 * 
+	 * @DisplayName(value = "EXPIRED token test") void
+	 * ValidateToken_Expired_Token_test(){
+	 * 
+	 * String secret = "SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid";
+	 * 
+	 * when(config.getSecret()).thenReturn(secret);
+	 * 
+	 * Mono<Claims> response = tokenservice.validateToken(EXPIRED_TOKEN);
+	 * 
+	 * StepVerifier.create(response) .expectErrorMatches(throwable -> throwable
+	 * instanceof TokenExpiredException &&
+	 * throwable.getMessage().equals("Token has expired")) .verify();
+	 * 
+	 * }
+	 */
 
 	@Test
 	void extractAuthenticationFromToken_Test() {
@@ -119,8 +120,7 @@ public class TokenServiceTest {
 
 		StepVerifier.create(response)
 				.expectNextMatches(
-						rsp -> rsp.getName().equals("John Doe")
-						&& rsp.getAuthorities().containsAll(grantAuth))
+						rsp -> rsp.getName().equals("John Doe") && rsp.getAuthorities().containsAll(grantAuth))
 				.verifyComplete();
 
 	}

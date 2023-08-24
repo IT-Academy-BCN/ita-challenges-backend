@@ -1,4 +1,4 @@
-package com.itachallenge.challenge.config;
+package com.itachallenge.score.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
