@@ -10,6 +10,18 @@ spring:
     mongodb:
       uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
       uuid-representation: standard
+      
+    #profiles: dev: no security; prod: security activated
+  profiles:
+    active:
+    - prod
+    
+  security:
+    datasource:
+      secret: SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid
+      headerString: Authorization
+      authoritiesClaim: authorities
+      err: Auth Error, Token Unavailable 
 
 springdoc:
   swagger-ui:
