@@ -12,8 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.itachallenge.challenge.App;
 import com.itachallenge.challenge.config.SecurityPropertiesConfig;
+import com.itachallenge.challenge.security.service.exceptions.InvalidTokenException;
+import com.itachallenge.challenge.security.service.exceptions.TokenExpiredException;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
@@ -34,8 +38,15 @@ public class TokenService {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        });
-    }
+        })
+        	      .onErrorResume(ExpiredJwtException.class, ex -> {
+        	            return Mono.error(new TokenExpiredException("Token has expired"));
+        	        })
+        	        .onErrorResume(JwtException.class, ex -> {
+        	            return Mono.error(new InvalidTokenException("Invalid token"));
+        	        });
+        	    }
+    
     public Mono<Authentication> extractAuthenticationFromToken(String token) {
         return validateToken(token)
                 .map(claims -> {

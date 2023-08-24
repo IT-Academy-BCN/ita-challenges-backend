@@ -12,14 +12,18 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import com.itachallenge.challenge.security.AuthenticationManager;
 import com.itachallenge.challenge.security.SecurityContextRepository;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
+
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfig {
 	
 	@Autowired
-    AuthenticationManager authenticationManager;
+	AuthenticationManager authenticationmanager;
+	
 	@Autowired
-    SecurityContextRepository securityContextRepository;
+	SecurityContextRepository securitycontextrepository;
 
 	@Profile("dev")
 	@Bean
@@ -37,20 +41,18 @@ public class SecurityConfig {
 		
 
 		return http
-				.csrf().disable()
-				.authenticationManager(authenticationManager)
-                .securityContextRepository(securityContextRepository)
-				.authorizeExchange()
-				.pathMatchers("/itachallenge/api/v1/challenge/test")
-				.permitAll()
-				.pathMatchers(HttpMethod.POST).hasRole("ADMIN")
-				.pathMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-				.pathMatchers(HttpMethod.PUT).hasRole("ADMIN")
-				.anyExchange()
-				.authenticated()
-				.and()
-				.formLogin()
-				.and()
-				.build();
+                .csrf().disable()
+                .authenticationManager(authenticationmanager)
+                .securityContextRepository(securitycontextrepository)
+                .authorizeExchange(exchange -> exchange
+                        .pathMatchers("/itachallenge/api/v1/challenge/test")
+                        .permitAll()
+                        .pathMatchers(HttpMethod.POST).hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.DELETE).hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.PUT).hasRole("ADMIN")
+                        .anyExchange()
+                        .authenticated())
+                .formLogin(withDefaults())
+                .build();
 	}
 }

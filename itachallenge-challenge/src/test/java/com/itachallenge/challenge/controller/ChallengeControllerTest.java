@@ -40,7 +40,6 @@ class ChallengeControllerTest {
         );
         when(discoveryClient.getInstances("itachallenge-challenge")).thenReturn(instances);
         when(discoveryClient.getInstances("itachallenge-user")).thenReturn(Collections.singletonList(instances.get(1)));
-
         // Act & Assert
         webTestClient.get().uri("/itachallenge/api/v1/challenge/test")
                 .exchange()

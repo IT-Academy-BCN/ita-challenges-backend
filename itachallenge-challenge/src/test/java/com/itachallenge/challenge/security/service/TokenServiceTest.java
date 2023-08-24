@@ -10,38 +10,25 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
-
-import com.itachallenge.challenge.App;
-import com.itachallenge.challenge.config.SecurityConfig;
 import com.itachallenge.challenge.config.SecurityPropertiesConfig;
-import com.itachallenge.challenge.controller.ChallengeController;
-import com.itachallenge.challenge.security.service.TokenService;
-
+import com.itachallenge.challenge.security.service.exceptions.InvalidTokenException;
 import static org.mockito.Mockito.when;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(TokenService.class)
-@ContextConfiguration // (loader = AnnotationConfigContextLoader.class)
+
 
 public class TokenServiceTest {
 
@@ -49,6 +36,7 @@ public class TokenServiceTest {
 	final String VALID_AUTH_HEADER = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX0FETUlOIl19.DRLWzvViTasSpPflis_LKJIzKLQ1qcehFX5wZd_NThQ";
 	final String NOT_VALID_AUTH_HEADER = " eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyMTIzIiwiZXhwIjoxNjc3NjQ5NDIzLCJyb2xlcyI6WyJST0xFX1VTRVIiLCJST0xFX0FETUlOIl19.QP7L_5GF8hS3FHdw09oq4sUZyPEtYdNCnOkEIkVS4DE";
 	final String NOT_VALID_TOKEN = "QP7L_5GF8hS3FHdw09oq4sUZyPEtYdNCnOkEIkVS4DE";
+	final String EXPIRED_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkxMjIsInJvbGVzIjpbIlJPTEVfVVNFUiIsIlJPTEVfQURNSU4iXX0.eMxgvPwMhQqWV0z7BPIT4JOTWGqffBjRgjlzGC9pdnE";
 
 	@MockBean
 	private SecurityPropertiesConfig config;
@@ -62,6 +50,7 @@ public class TokenServiceTest {
 	}
 
 	@Test
+	@DisplayName(value = "valid token test")
 	void ValidateTokenValid_Token_test() throws UnsupportedEncodingException {
 
 		Claims claims = Jwts.claims();
@@ -82,6 +71,40 @@ public class TokenServiceTest {
 				.verifyComplete();
 
 	}
+	
+	@Test
+	@DisplayName(value = "invalid token test")
+	void ValidateToken_InValid_Token_test(){
+
+		String secret = "SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid";
+
+		when(config.getSecret()).thenReturn(secret);
+
+		Mono<Claims> response = tokenservice.validateToken(NOT_VALID_TOKEN);
+
+		StepVerifier.create(response)
+		.expectErrorMatches(throwable -> throwable instanceof InvalidTokenException
+				&& throwable.getMessage().equals("Invalid token"))
+		.verify();
+			
+	}
+	
+	/*@Test
+	@DisplayName(value = "EXPIRED token test")
+	void ValidateToken_Expired_Token_test(){
+
+		String secret = "SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid";
+
+		when(config.getSecret()).thenReturn(secret);
+
+		Mono<Claims> response = tokenservice.validateToken(EXPIRED_TOKEN);
+
+		StepVerifier.create(response)
+		.expectErrorMatches(throwable -> throwable instanceof TokenExpiredException
+				&& throwable.getMessage().equals("Token has expired"))
+		.verify();
+			
+	}*/
 
 	@Test
 	void extractAuthenticationFromToken_Test() {

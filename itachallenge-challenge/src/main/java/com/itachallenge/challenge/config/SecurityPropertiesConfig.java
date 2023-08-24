@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 
-@Component // @Configuration not used due there isn't any @bean method
+
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "spring.security.datasource")
 @AllArgsConstructor
