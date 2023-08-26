@@ -1,10 +1,19 @@
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: itachallenge-challenge
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
-    
-  #profiles: dev: no security; prod: security activated
+  data:
+    mongodb:
+      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+      uuid-representation: standard
+      
+    #profiles: dev: no security; prod: security activated
   profiles:
     active:
     - prod
@@ -15,6 +24,14 @@ spring:
       headerString: Authorization
       authoritiesClaim: authorities
       err: Auth Error, Token Unavailable 
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui-custom.html"
+    operationsSorted: method
+  api-docs:
+    enable: true
+    path: "/api-docs"
 
 server:
   port: 8762
@@ -31,15 +48,13 @@ logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
-    "[com.itachallenge]": INFO
+    "[com.businessassistantbcn]": INFO
   pattern:
-    # console: Spring's default
+  # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
 
 url:
   connection_timeout: 30000
-  fake_connection_timeout: 1
   maxBytesInMemory: 30000000
-  ds_test: https://swapi.py4e.com/api/vehicles/

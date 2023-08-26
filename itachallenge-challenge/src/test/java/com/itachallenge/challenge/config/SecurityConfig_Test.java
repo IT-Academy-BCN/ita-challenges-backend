@@ -1,18 +1,26 @@
 package com.itachallenge.challenge.config;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@SpringBootTest
+import com.itachallenge.challenge.security.AuthenticationManager;
+import com.itachallenge.challenge.security.SecurityContextRepository;
+
+import lombok.AllArgsConstructor;
+
+@SpringBootTest//(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@SpringBootTest(classes = {SecurityConfig.class, AuthenticationManager.class, SecurityContextRepository.class})
 @AutoConfigureWebTestClient
 public class SecurityConfig_Test {
 
     @Autowired
-    private WebTestClient webtestclient;
+    public WebTestClient webtestclient;
 
     @Test
     public void testProfileConfigAnyUser() {

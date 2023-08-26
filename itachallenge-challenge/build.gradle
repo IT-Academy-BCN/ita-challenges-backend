@@ -34,7 +34,10 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
+    //for tests to work
+    //implementation 'org.springframework.boot:spring-boot-starter:2.3.3.RELEASE'
+    //for tests to work eliminate this dependency
+    //implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
