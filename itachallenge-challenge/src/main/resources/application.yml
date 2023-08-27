@@ -11,7 +11,7 @@ spring:
       uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
       uuid-representation: standard
       
-    #profiles: dev: no security; prod: security activated
+  #profiles: dev: no security; prod: security activated
   profiles:
     active: 
       - dev

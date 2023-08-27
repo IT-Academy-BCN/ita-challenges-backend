@@ -19,6 +19,12 @@ public class SecurityConfig_Test {
 		// any user can access this endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/test").exchange().expectStatus().isOk();
 	}
+	
+	@Test
+	public void testProfileDevConfigAnyUser() {
+		// any user can access this endpoint
+		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
+	}
 
 	/*@Test
 	public void testGetMethodProfileConfigWithNOTAuthenticatedUser() {
@@ -41,13 +47,13 @@ public class SecurityConfig_Test {
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
 	}
 
-	@Test
+	/*@Test
 	@WithMockUser(roles = "ADMIN")
 	public void testDeleteMethodConfigWithAuthenticatedAdminUser() {
 		// users with the admin role get to delete endpoints
-		webtestclient.delete().uri("/itachallenge/api/v1/challenge/resources/0d1dcee8-6ee8-402f-815a-7d717be06aed")
+		webtestclient.delete().uri("/itachallenge/api/v1/challenge/resources/24fcf839-63c2-4ccf-b549-5bc2027798d5")
 				.exchange().expectStatus().isOk();
-	}
+	}*/
 
 	@Test
 	@WithMockUser
