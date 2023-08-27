@@ -13,8 +13,8 @@ spring:
       
     #profiles: dev: no security; prod: security activated
   profiles:
-    active:
-    - prod
+    active: 
+      - dev
     
   security:
     datasource:

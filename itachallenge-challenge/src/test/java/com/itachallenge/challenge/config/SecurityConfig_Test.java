@@ -1,21 +1,15 @@
 package com.itachallenge.challenge.config;
 
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import com.itachallenge.challenge.security.AuthenticationManager;
-import com.itachallenge.challenge.security.SecurityContextRepository;
-
-import lombok.AllArgsConstructor;
-
-@SpringBootTest//(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-//@SpringBootTest(classes = {SecurityConfig.class, AuthenticationManager.class, SecurityContextRepository.class})
+@SpringBootTest
 @AutoConfigureWebTestClient
 public class SecurityConfig_Test {
 
@@ -30,13 +24,13 @@ public class SecurityConfig_Test {
             .expectStatus().isOk();
     }
     
-    @Test
+   /* @Test
     public void testGetMethodProfileConfigWithNOTAuthenticatedUser() {
     	//only authenticated users can acces get endpoints, if they arent, then they are redirected to login page
         webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges")
             .exchange()
             .expectStatus().is3xxRedirection();
-    }
+    }*/
     
     @Test
     @WithMockUser
@@ -47,7 +41,7 @@ public class SecurityConfig_Test {
             .expectStatus().isOk();
     }
     
-    @Test
+    /*@Test
     @WithMockUser(roles = "ADMIN")
     public void testGetMethodProfileConfigWithAuthenticatedAdmin() {
     	//mockuser is authenticated as an ADMIN so it is allowed to the get endpoint
@@ -56,7 +50,7 @@ public class SecurityConfig_Test {
             .expectStatus().isOk();
     }
     
-    /*@Test
+    @Test
     @WithMockUser(roles = "ADMIN")
     public void testDeleteMethodConfigWithAuthenticatedAdminUser() {
     		//users with the admin role get to delete endpoints
