@@ -1,18 +1,19 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.config.TestSecurityConfig;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import java.util.Arrays;
@@ -21,7 +22,8 @@ import java.util.List;
 
 import static org.mockito.Mockito.when;
 
-@WebFluxTest(ChallengeController.class)
+@SpringBootTest
+@AutoConfigureWebTestClient
 class ChallengeControllerTest {
 
     @Autowired

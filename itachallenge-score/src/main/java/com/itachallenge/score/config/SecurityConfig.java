@@ -30,6 +30,7 @@ public class SecurityConfig {
 	@Bean
 	protected SecurityWebFilterChain configureDev(ServerHttpSecurity http) {
 		return http
+				.csrf().disable()
                 .authorizeExchange(exchange -> exchange
                         .anyExchange()
                         .permitAll())
