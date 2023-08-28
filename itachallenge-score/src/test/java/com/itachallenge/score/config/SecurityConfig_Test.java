@@ -9,19 +9,19 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
-public class SecurityConfig_Test {
+class SecurityConfig_Test {
 
 	@Autowired
 	private WebTestClient webtestclient;
 
 	@Test
-	public void testProfileConfigAnyUser() {
+	void testProfileConfigAnyUser() {
 		// any user can access this endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/score/test").exchange().expectStatus().isOk();
 	}
 
 	@Test
-	public void testGetMethodProfileConfigWithNOTAuthenticatedUser() {
+	void testGetMethodProfileConfigWithNOTAuthenticatedUser() {
 		// only authenticated users can acces get endpoints, if they arent, then they
 		// are redirected to login page
 		webtestclient.get().uri("/itachallenge/api/v1/score/scores").exchange().expectStatus().is3xxRedirection();

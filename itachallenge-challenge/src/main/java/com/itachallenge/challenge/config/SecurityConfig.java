@@ -19,6 +19,8 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebFluxSecurity
 public class SecurityConfig {
 	
+	String admin = "ADMIN";
+	
 	@Autowired
 	AuthenticationManager authenticationmanager;
 	
@@ -48,9 +50,9 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         .pathMatchers("/itachallenge/api/v1/challenge/test")
                         .permitAll()
-                        .pathMatchers(HttpMethod.POST).hasRole("ADMIN")
-                        .pathMatchers(HttpMethod.DELETE).hasRole("ADMIN")
-                        .pathMatchers(HttpMethod.PUT).hasRole("ADMIN")
+                        .pathMatchers(HttpMethod.POST).hasRole(admin)
+                        .pathMatchers(HttpMethod.DELETE).hasRole(admin)
+                        .pathMatchers(HttpMethod.PUT).hasRole(admin)
                         .anyExchange()
                         .authenticated())
                 .formLogin(withDefaults())

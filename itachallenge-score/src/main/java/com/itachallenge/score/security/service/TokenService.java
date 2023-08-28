@@ -38,12 +38,12 @@ public class TokenService {
                     .parseClaimsJws(token)
                     .getBody();
         })
-        	      .onErrorResume(ExpiredJwtException.class, ex -> {
-        	            return Mono.error(new TokenExpiredException("Token has expired"));
-        	        })
-        	        .onErrorResume(JwtException.class, ex -> {
-        	            return Mono.error(new InvalidTokenException("Invalid token"));
-        	        });
+        	      .onErrorResume(ExpiredJwtException.class, ex ->
+        	            Mono.error(new TokenExpiredException("Token has expired"))
+        	        )
+        	        .onErrorResume(JwtException.class, ex ->
+        	             Mono.error(new InvalidTokenException("Invalid token"))
+        	        );
         	    }
     
     public Mono<Authentication> extractAuthenticationFromToken(String token) {

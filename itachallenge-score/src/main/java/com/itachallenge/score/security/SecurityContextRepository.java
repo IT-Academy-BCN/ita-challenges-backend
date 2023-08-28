@@ -14,7 +14,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Service
-//@RequiredArgsConstructor
 public class SecurityContextRepository implements ServerSecurityContextRepository {
 
 	@Autowired
