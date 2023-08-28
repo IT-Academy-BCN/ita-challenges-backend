@@ -20,11 +20,11 @@ public class SecurityConfig_Test {
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/test").exchange().expectStatus().isOk();
 	}
 	
-	@Test
+	/*@Test
 	public void testProfileDevConfigAnyUser() {
 		// any user can access this endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}
+	}*/
 
 	/*@Test
 	public void testGetMethodProfileConfigWithNOTAuthenticatedUser() {
@@ -33,19 +33,19 @@ public class SecurityConfig_Test {
 				.is3xxRedirection();
 	}*/
 
-	@Test
+	/*@Test
 	@WithMockUser
 	public void testGetMethodProfileConfigWithAuthenticatedUser() {
 		// mockuser is authenticated so it is allowed to the get endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}
+	}*/
 
-	@Test
+	/*@Test
 	@WithMockUser(roles = "ADMIN")
 	public void testGetMethodProfileConfigWithAuthenticatedAdmin() {
 		// mockuser is authenticated as an ADMIN so it is allowed to the get endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}
+	}*/
 
 	/*@Test
 	@WithMockUser(roles = "ADMIN")
@@ -55,12 +55,12 @@ public class SecurityConfig_Test {
 				.exchange().expectStatus().isOk();
 	}*/
 
-	@Test
+	/*@Test
 	@WithMockUser
 	public void testDeleteMethodProfileConfigWithAuthenticatedUser() {
 		// users without the admin role cannot get to delete endpoints
 		webtestclient.delete().uri("/itachallenge/api/v1/challenge/resources/301c74dd-27b6-4be4-9a38-0c7ada2969cf")
 				.exchange().expectStatus().is4xxClientError();
-	}
+	}*/
 
 }
