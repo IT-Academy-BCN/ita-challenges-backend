@@ -31,13 +31,13 @@ public class TokenService {
    
 
     public Mono<Claims> validateToken(String token) {
-        return Mono.fromCallable(() -> {
-            return Jwts.parserBuilder()
+        return Mono.fromCallable(() ->
+             Jwts.parserBuilder()
                     .setSigningKey(config.getSecret())
                     .build()
                     .parseClaimsJws(token)
-                    .getBody();
-        })
+                    .getBody()
+        )
         	      .onErrorResume(ExpiredJwtException.class, ex ->
         	            Mono.error(new TokenExpiredException("Token has expired"))
         	        )
