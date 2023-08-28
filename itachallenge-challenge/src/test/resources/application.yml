@@ -3,6 +3,18 @@ spring:
     name: itachallenge-challenge
   jmx:
     enabled: true
+    
+  #profiles: dev: no security; prod: security activated
+  profiles:
+    active: 
+      - dev
+    
+  security:
+    datasource:
+      secret: SgVkYp3s6v9yBEH+MbQeThWmZq4t7p09ventepamadrid
+      headerString: Authorization
+      authoritiesClaim: authorities
+      err: Auth Error, Token Unavailable 
 
 server:
   port: 8762
