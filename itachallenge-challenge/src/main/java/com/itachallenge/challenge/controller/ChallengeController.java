@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.helper.UuidValidator;
+import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -106,8 +108,8 @@ public class ChallengeController {
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         return challengeService.getAllLanguages();
     }
-    @GetMapping(path = "/{challengeId}/related")
-    public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> relatedChallenge(
+    @GetMapping(path = "challenges/{challengeId}/related")
+    public Mono<ResponseEntity<GenericResultDto<UUID>>> relatedChallenge(
                     @RequestParam(value = "offset", defaultValue = "0") int offset,
                     @RequestParam(value = "limit", defaultValue = "10") int limit,
                     @PathVariable("challengeId") String id) throws BadUUIDException {
@@ -119,12 +121,12 @@ public class ChallengeController {
             }
 
             return challengeService.getRelatedChallenge(id) 		
-                            .collectList().map(challengeDtos -> {
-                                    GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
+                            .collectList().map(uuid -> {
+                                    GenericResultDto<UUID> result = new GenericResultDto<>();
                                     result.setLimit(limit);
                                     result.setOffset(offset);
-                                    result.setResults(challengeDtos.toArray(new ChallengeDto[0]));
-                                    result.setCount(challengeDtos.toArray(new ChallengeDto[0]).length);
+                                    result.setResults(uuid.toArray(new UUID[0]));
+                                    result.setCount(uuid.toArray(new UUID[0]).length);
                                     return ResponseEntity.ok(result);
                             });
     }

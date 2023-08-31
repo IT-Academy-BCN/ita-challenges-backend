@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
@@ -210,17 +211,19 @@ class ChallengeServiceImpTest {
 						UUID.fromString("f71e51d-1e3e-44a2-bc97-158021f1a344")))
 				.build();
 		
-		UUID thisID= challenge.getUuid();
+		Set<UUID> related = Set.of
+				(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"),
+				UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0"),
+				UUID.fromString("f71e51d-1e3e-44a2-bc97-158021f1a344"));
 		//mocks
 				when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(challenge));
 						
 				//Tests
-				Flux<ChallengeDto> serviceResponse = challengeService.getRelatedChallenge("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
+				Flux<UUID> serviceResponse = challengeService.getRelatedChallenge("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
 
 				StepVerifier.create(serviceResponse)
-				.expectNextMatches(response -> response.getTitle().equals("Primer Titulo")
-									&& response.getChallengeId().equals(thisID)
-							         && response instanceof ChallengeDto);
+				.expectNextSequence(related)	
+				.verifyComplete();
 
 			}
 		}
