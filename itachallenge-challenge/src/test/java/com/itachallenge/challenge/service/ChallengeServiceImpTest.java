@@ -11,6 +11,7 @@ import com.itachallenge.challenge.helper.Converter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -196,4 +197,57 @@ class ChallengeServiceImpTest {
         verify(languageRepository).findAll();
         verify(converter).fromLanguageToLanguageDto(any());
     }
+    @Test
+	@DisplayName("Test EndPoint: GET RELATED VALID ID")
+	void TestGetRelatedChallenge_VALID_ID() {
+	  
+	        // Mock data
+	    	ChallengeDocument challenge1 = ChallengeDocument.builder()
+					.uuid(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+					.title("Primer Titulo")
+					.level("dos")
+					.relatedChallenges
+					(Set.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())).build();
+	    	
+	    	ChallengeDto chdto1 = new ChallengeDto();
+	    	ChallengeDto chdto2 = new ChallengeDto();
+	    	ChallengeDto chdto3 = new ChallengeDto();
+	    	Set<ChallengeDto> related = Set.of(chdto1, chdto2, chdto3);
+	    	
+	    	
+	    	//Mocks
+	        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(challenge1));
+	        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.fromIterable(related));
+
+	        // Call the method
+	        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenge("40728c9c-a557-4d12-bf8f-3747d0924197");
+
+	        // Verify 
+	        StepVerifier.create(resultMono)
+	        .expectNextMatches(response -> response.getResults().length == 3)        
+			.verifyComplete();
+	    }
+
+	@Test
+	@DisplayName("Test EndPoint: NOT EXISTS ID")
+	void TestGetRelatedChallenge_ID_NOT_EXISTS() {
+		
+		String NOT_EXISTS_ID = "1beb27aa-7d7d-46c7-b5b8-4a2354966cd0";
+		
+		ChallengeDto chdto1 = new ChallengeDto();
+    	ChallengeDto chdto2 = new ChallengeDto();
+    	ChallengeDto chdto3 = new ChallengeDto();
+    	Set<ChallengeDto> related = Set.of(chdto1, chdto2, chdto3);
+		
+       when(challengeRepository.findByUuid(UUID.fromString(NOT_EXISTS_ID))).thenReturn(Mono.empty());
+	   when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.fromIterable(related));
+		
+		Mono<GenericResultDto<ChallengeDto>> serviceResponse = 
+				challengeService.getRelatedChallenge(NOT_EXISTS_ID);
+		
+		StepVerifier.create(serviceResponse)
+		.expectError(ChallengeNotFoundException.class);
+
+	}
+
 }

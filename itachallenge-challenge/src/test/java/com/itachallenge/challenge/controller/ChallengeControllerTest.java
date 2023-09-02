@@ -4,6 +4,8 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -16,7 +18,6 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -137,4 +138,44 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
+    @Test
+    @DisplayName("Test EndPoint: related valid id")
+    void ChallengeRelatedTest_VALID_ID () {
+	   
+        // Mock data    	
+    	ChallengeDto chdto1 = new ChallengeDto();
+    	ChallengeDto chdto2 = new ChallengeDto();
+    	ChallengeDto chdto3 = new ChallengeDto();
+    	
+        GenericResultDto<ChallengeDto> response = new GenericResultDto<>();
+        response.setInfo(0, 2, 2, new ChallengeDto[]{chdto1, chdto2, chdto3});
+	
+        when(challengeService.getRelatedChallenge("40728c9c-a557-4d12-bf8f-3747d0924197"))
+        .thenReturn(Mono.just(response));
+        
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/40728c9c-a557-4d12-bf8f-3747d0924197/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 3;
+                });
+    
+    }
+   
+    @Test
+    @DisplayName("Test EndPoint: related_not_valid_id")
+    void ChallengeRelatedTest_INVALID_ID () {
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/123456789/related")
+                .exchange()
+                .expectStatus().isBadRequest();
+       }
+
 }
