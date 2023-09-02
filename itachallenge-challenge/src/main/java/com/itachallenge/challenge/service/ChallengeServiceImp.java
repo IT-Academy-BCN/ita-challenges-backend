@@ -108,10 +108,21 @@ public class ChallengeServiceImp implements IChallengeService {
 		return Mono.just(UUID.fromString(id));
 	}
 
-	public Flux<UUID> getRelatedChallenge(String challengeId) {
+	public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenge(String challengeId) {
+		
+		Flux<ChallengeDto> relatedDto = converter.fromChallengeToChallengeDto(
+		        challengeRepository.findByUuid(UUID.fromString(challengeId))
+		            .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges()))
+		            .flatMap(relateduuid -> challengeRepository.findByUuid(relateduuid))
+		            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge not found with ID: " + challengeId)))
+		);
 
-		return challengeRepository.findByUuid(UUID.fromString(challengeId))
-	            .flatMapMany(challenge ->Flux.fromIterable(challenge.getRelatedChallenges()))
-	            .onErrorResume(throwable -> Flux.empty());
+
+    	
+    	return relatedDto.collectList().map(related -> {
+            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, related.size(), related.size(), related.toArray(new ChallengeDto[0]));
+            return resultDto;
+        });
 	}
 }

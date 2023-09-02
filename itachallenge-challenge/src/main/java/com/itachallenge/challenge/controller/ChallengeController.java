@@ -3,9 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.helper.UuidValidator;
-import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,11 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
 import reactor.core.publisher.Mono;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -109,26 +108,26 @@ public class ChallengeController {
         return challengeService.getAllLanguages();
     }
     @GetMapping(path = "challenges/{challengeId}/related")
-    public Mono<ResponseEntity<GenericResultDto<UUID>>> relatedChallenge(
-                    @RequestParam(value = "offset", defaultValue = "0") int offset,
-                    @RequestParam(value = "limit", defaultValue = "10") int limit,
-                    @PathVariable("challengeId") String id) throws BadUUIDException {
-
-            if (!UuidValidator.isValidUUID(id)) {
-                    log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.",
-                                    id);
-                    throw new BadUUIDException("Invalid ID format. Please indicate the correct format.");
+    @Operation(
+            operationId = "Get all the related challenges",
+            summary = "Get to see all related challenges",
+            description = "Requesting all the related challenges  through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
             }
+            )
+    public Mono<GenericResultDto<ChallengeDto>> relatedChallenge(
+            @PathVariable("challengeId") String id) {
 
-            return challengeService.getRelatedChallenge(id) 		
-                            .collectList().map(uuid -> {
-                                    GenericResultDto<UUID> result = new GenericResultDto<>();
-                                    result.setLimit(limit);
-                                    result.setOffset(offset);
-                                    result.setResults(uuid.toArray(new UUID[0]));
-                                    result.setCount(uuid.toArray(new UUID[0]).length);
-                                    return ResponseEntity.ok(result);
-                            });
+    if (!UuidValidator.isValidUUID(id)) {
+            log.error("{} ID: {}, incorrect.", "Invalid ID format. Please indicate the correct format.",
+                            id);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "Invalid ID format. Please indicate the correct format.");
+    }
+
+    return challengeService.getRelatedChallenge(id);
+                
     }
 
 }

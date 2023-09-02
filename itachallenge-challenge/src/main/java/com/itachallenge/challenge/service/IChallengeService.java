@@ -1,10 +1,9 @@
 package com.itachallenge.challenge.service;
 
-import java.util.UUID;
-
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -15,6 +14,6 @@ public interface IChallengeService {
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
-    Flux<UUID> getRelatedChallenge(String challengeId); 
+    Mono<GenericResultDto<ChallengeDto>> getRelatedChallenge(String challengeId); 
 
 }

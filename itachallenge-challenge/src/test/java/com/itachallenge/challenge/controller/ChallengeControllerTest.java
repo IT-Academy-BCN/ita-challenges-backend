@@ -1,9 +1,11 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
 
 import org.junit.Assert;
@@ -29,6 +31,7 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -162,8 +165,21 @@ class ChallengeControllerTest {
                 });
     }
        @Test
-        @DisplayName("Test EndPoint: related")
-        void ChallengeRelatedTest_VALID_ID () throws Exception{
+        @DisplayName("Test EndPoint: related valid id")
+        void ChallengeRelatedTest_VALID_ID () {
+    	   
+	        // Mock data
+	    	ChallengeDocument challenge1 = ChallengeDocument.builder()
+					.uuid(UUID.fromString("40728c9c-a557-4d12-bf8f-3747d0924197"))
+					.title("Primer Titulo")
+					.level("dos")
+					.relatedChallenges
+					(Set.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())).build();
+	    	
+	    	ChallengeDto chdto1 = new ChallengeDto();
+	    	ChallengeDto chdto2 = new ChallengeDto();
+	    	ChallengeDto chdto3 = new ChallengeDto();
+	    	Set<ChallengeDto> related = Set.of(chdto1, chdto2, chdto3);
         
     	   final String VALID_ID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
     	   
@@ -171,40 +187,36 @@ class ChallengeControllerTest {
     				
             UUID id2 = UUID.fromString("1aeb27aa-7d7d-46c7-b5b8-4a2354966cd0");
             UUID id3 = UUID.fromString("5f71e51d-1e3e-44a2-bc97-158021f1a344");
+            
+            GenericResultDto<ChallengeDto> response = new GenericResultDto<>();
+            response.setInfo(0, 2, 2, new ChallengeDto[]{chdto1, chdto2, chdto3});
     	
-            when(challengeService.getRelatedChallenge(any(String.class))).thenReturn(Flux.just(id1, id2, id3));
-
-            Mono<ResponseEntity<GenericResultDto<UUID>>> responseRelated = challengecontroller
-            		.relatedChallenge(0, 10, VALID_ID);
-        	
-          StepVerifier.create(responseRelated)
-          .expectNextMatches(response -> response.getStatusCode().equals(HttpStatus.OK))
-                  //&& (response.getBody().getResults().toString()
-                 // .equals("40728c9c-a557-4d12-bf8f-3747d0924197")))
-          .verifyComplete();
-          
-
-
-
+            when(challengeService.getRelatedChallenge("40728c9c-a557-4d12-bf8f-3747d0924197"))
+            .thenReturn(Mono.just(response));
+            
+            // Act & Assert
+            webTestClient.get()
+                    .uri("/itachallenge/api/v1/challenge/challenges/40728c9c-a557-4d12-bf8f-3747d0924197/related")
+                    .exchange()
+                    .expectStatus().isOk()
+                    .expectBody(GenericResultDto.class)
+                    .value(dto -> {
+                        assert dto != null;
+                        assert dto.getCount() == 2;
+                        assert dto.getResults() != null;
+                        assert dto.getResults().length == 3;
+                    });
+        
         }
+       
         @Test
         @DisplayName("Test EndPoint: related_not_valid_id")
         void ChallengeRelatedTest_INVALID_ID () {
-        	
-            final String INVALID_ID = "123456789";   
-        	
-               BadUUIDException exception = Assert.assertThrows(BadUUIDException.class,() -> {
-                   challengecontroller.relatedChallenge(0, 0, INVALID_ID);
-               });
 
-               StepVerifier.create(Mono.just(exception))
-                               .expectNextMatches(resp -> {
-                                   
-                                   assertEquals("Invalid ID format. Please indicate the correct format.", exception.getMessage());
-                                   return true;
-                               })
-                                       .verifyComplete();
-
+            webTestClient.get()
+                    .uri("/itachallenge/api/v1/challenge/challenges/123456789/related")
+                    .exchange()
+                    .expectStatus().isBadRequest();
            }
 
     }
