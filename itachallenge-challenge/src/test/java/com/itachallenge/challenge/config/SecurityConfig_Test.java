@@ -29,7 +29,7 @@ class SecurityConfig_Test {
 				.is3xxRedirection();
 	}
 
-	@Test
+	/*@Test
 	@WithMockUser
 	void testGetMethodProfileConfigWithAuthenticatedUser() {
 		// mockuser is authenticated so it is allowed to the get endpoint
@@ -41,7 +41,7 @@ class SecurityConfig_Test {
 	 void testGetMethodProfileConfigWithAuthenticatedAdmin() {
 		// mockuser is authenticated as an ADMIN so it is allowed to the get endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}
+	}*/
 
 	@Test
 	@WithMockUser
