@@ -5,10 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
+@ActiveProfiles(profiles = "prod")
 class SecurityConfig_Test {
 
 	@Autowired
@@ -19,48 +21,34 @@ class SecurityConfig_Test {
 		// any user can access this endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/test").exchange().expectStatus().isOk();
 	}
-	
-	/*@Test
-	void testProfileDevConfigAnyUser() {
-		// any user can access this endpoint
-		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}*/
 
-	/*@Test
+	@Test
 	void testGetMethodProfileConfigWithNOTAuthenticatedUser() {
 		// only authenticated users can access get endpoints, if they aren't, then they are redirected to login page
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus()
 				.is3xxRedirection();
-	}*/
+	}
 
-	/*@Test
+	@Test
 	@WithMockUser
 	void testGetMethodProfileConfigWithAuthenticatedUser() {
 		// mockuser is authenticated so it is allowed to the get endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}*/
+	}
 
-	/*@Test
+	@Test
 	@WithMockUser(roles = "ADMIN")
 	 void testGetMethodProfileConfigWithAuthenticatedAdmin() {
 		// mockuser is authenticated as an ADMIN so it is allowed to the get endpoint
 		webtestclient.get().uri("/itachallenge/api/v1/challenge/challenges").exchange().expectStatus().isOk();
-	}*/
+	}
 
-	/*@Test
-	@WithMockUser(roles = "ADMIN")
-	void testDeleteMethodConfigWithAuthenticatedAdminUser() {
-		// users with the admin role get to delete endpoints
-		webtestclient.delete().uri("/itachallenge/api/v1/challenge/resources/24fcf839-63c2-4ccf-b549-5bc2027798d5")
-				.exchange().expectStatus().isOk();
-	}*/
-
-	/*@Test
+	@Test
 	@WithMockUser
 	void testDeleteMethodProfileConfigWithAuthenticatedUser() {
 		// users without the admin role cannot get to delete endpoints
 		webtestclient.delete().uri("/itachallenge/api/v1/challenge/resources/301c74dd-27b6-4be4-9a38-0c7ada2969cf")
 				.exchange().expectStatus().is4xxClientError();
-	}*/
+	}
 
 }

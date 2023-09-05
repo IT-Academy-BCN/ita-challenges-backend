@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.security.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,6 @@ import com.itachallenge.challenge.security.service.exceptions.InvalidTokenExcept
 import com.itachallenge.challenge.security.service.exceptions.TokenExpiredException;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -37,9 +37,6 @@ public class TokenService {
                     .parseClaimsJws(token)
                     .getBody()
         )
-        	      .onErrorResume(ExpiredJwtException.class, ex -> 
-        	             Mono.error(new TokenExpiredException("Token has expired"))
-        	        )
         	        .onErrorResume(JwtException.class, ex ->
         	           Mono.error(new InvalidTokenException("Invalid token"))
         	        );
@@ -47,16 +44,23 @@ public class TokenService {
     
     public Mono<Authentication> extractAuthenticationFromToken(String token) {
         return validateToken(token)
-                .map(claims -> {
-                	@SuppressWarnings("unchecked")
-					List<String> authorities = (List<String>) claims.get("roles");     
-                	List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
-                            .map(SimpleGrantedAuthority::new)
-                            .collect(Collectors.toList());
+            .flatMap(claims -> {
+                @SuppressWarnings("unchecked")
+                List<String> authorities = (List<String>) claims.get("roles");
+                List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-                    String username = claims.get("name").toString();
-
-                    return new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities);
-                });
+                String username = claims.get("name").toString();
+                
+                if (claims.getExpiration().before(new Date())) {
+                    // Token is expired, return an error
+                    return Mono.error(new TokenExpiredException("Token has expired"));
+                } else {
+                    // Token is valid, return the authentication
+                    return Mono.just(new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities));
+                }
+            });
     }
+
 }

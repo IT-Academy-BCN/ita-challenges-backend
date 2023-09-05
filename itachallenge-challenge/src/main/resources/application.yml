@@ -22,6 +22,7 @@ spring:
       headerString: Authorization
       authoritiesClaim: authorities
       err: Auth Error, Token Unavailable 
+      tokenExpiration: 3600000
 
 springdoc:
   swagger-ui:

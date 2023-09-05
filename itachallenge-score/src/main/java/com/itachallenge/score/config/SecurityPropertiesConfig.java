@@ -21,6 +21,7 @@ public class SecurityPropertiesConfig {
 	private String headerString;
 	private String authoritiesClaim;
 	private String err;
+	private long tokenExpiration;
 
 }
 

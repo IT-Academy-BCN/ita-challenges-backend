@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest
 @AutoConfigureWebTestClient
+@ActiveProfiles(profiles = "prod")
 class SecurityConfig_Test {
 
 	@Autowired
@@ -26,12 +28,5 @@ class SecurityConfig_Test {
 		// are redirected to login page
 		webtestclient.get().uri("/itachallenge/api/v1/score/scores").exchange().expectStatus().is3xxRedirection();
 	}
-
-	/*@Test
-	@WithMockUser
-	public void testGetMethodProfileConfigWithAuthenticatedUser() {
-		// mockuser is authenticated so it is allowed to the get endpoint
-		webtestclient.get().uri("/itachallenge/api/v1/score/scores").exchange().expectStatus().isOk();
-	}*/
 
 }
