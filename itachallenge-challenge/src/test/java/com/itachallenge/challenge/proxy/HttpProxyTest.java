@@ -94,7 +94,7 @@ public class HttpProxyTest {
         );
     }
 
-   /* @Test
+    @Test
     @DisplayName("Timeout verification")
     public void timeoutTest() {
         int absurdTimeout = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
@@ -115,7 +115,7 @@ public class HttpProxyTest {
         StepVerifier.create(responsePublisher)
                 .expectError(WebClientException.class)
                 .verify();
-    }*/
+    }
 
     @Test
     @DisplayName("Requesting an invalid url test")
