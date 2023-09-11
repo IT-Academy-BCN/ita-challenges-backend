@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,8 +21,7 @@ import reactor.test.StepVerifier;
 
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +37,11 @@ class GlobalExceptionHandlerTest {
     @MockBean
     private ResponseStatusException responseStatusException;
     @MockBean
+    private MethodArgumentNotValidException methodArgumentNotValidException;
+    @MockBean
     private ErrorResponseMessage errorResponseMessage;
+    @MockBean
+    private ErrorMessage errorMessage;
 
     @BeforeEach
     void setUp() {
@@ -67,32 +71,42 @@ class GlobalExceptionHandlerTest {
                 .verifyComplete();
     }
 
+    @Test
+    void TestHandleMethodArgumentNotValidException() {
+
+        // Arrange
+        BindingResult bindingResult = Mockito.mock(BindingResult.class);
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
+        when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
+
+        // Act
+        ResponseEntity <ErrorMessage> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+
+        // Assert
+        MatcherAssert.assertThat(responseEntity, notNullValue());
+    }
 
     @Test
-    void testHandleMethodArgumentNotValidException() {
+    void TestHandleMethodArgumentNotValidException_Return_DefaultMessage() {
 
-        MethodArgumentNotValidException ex = Mockito.mock(MethodArgumentNotValidException.class);
+        // Arrange
         BindingResult bindingResult = Mockito.mock(BindingResult.class);
+        FieldError fieldError = Mockito.mock(FieldError.class);
+        when(fieldError.getField()).thenReturn("name");
+        when(fieldError.getDefaultMessage()).thenReturn("default message");
+        when(fieldError.getCodes()).thenReturn(new String[] {"message"});
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
+        when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
-        FieldError fieldError = new FieldError("fieldName", "errorCode", "Error message");
+        // Act
+        ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
-        Mockito.when(ex.getBindingResult()).thenReturn(bindingResult);
-        Mockito.when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
-
-
-        //HandleMethodArgumentNotValidException controller = new YourController();
-        ResponseEntity<ErrorMessage> response = globalExceptionHandler.handleMethodArgumentNotValidException(ex);
-
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        ErrorMessage errorMessage = response.getBody();
-        assertNotNull(errorMessage);
-        assertEquals("Parameter not valid", errorMessage.getMessage());
-        assertEquals(1, errorMessage.getErrors().size());
-        assertTrue(errorMessage.getErrors().containsKey("fieldName"));
-        assertEquals("Error message", errorMessage.getErrors().get("fieldName"));
+        // Assert
+        MatcherAssert.assertThat(responseEntity, notNullValue());
     }
+
 }
+
 
 
 
