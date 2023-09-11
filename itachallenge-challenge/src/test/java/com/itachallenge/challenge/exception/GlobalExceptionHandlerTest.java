@@ -4,16 +4,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -60,4 +68,32 @@ class GlobalExceptionHandlerTest {
     }
 
 
+    @Test
+    void testHandleMethodArgumentNotValidException() {
+
+        MethodArgumentNotValidException ex = Mockito.mock(MethodArgumentNotValidException.class);
+        BindingResult bindingResult = Mockito.mock(BindingResult.class);
+
+        FieldError fieldError = new FieldError("fieldName", "errorCode", "Error message");
+
+        Mockito.when(ex.getBindingResult()).thenReturn(bindingResult);
+        Mockito.when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
+
+
+        //HandleMethodArgumentNotValidException controller = new YourController();
+        ResponseEntity<ErrorMessage> response = globalExceptionHandler.handleMethodArgumentNotValidException(ex);
+
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ErrorMessage errorMessage = response.getBody();
+        assertNotNull(errorMessage);
+        assertEquals("Parameter not valid", errorMessage.getMessage());
+        assertEquals(1, errorMessage.getErrors().size());
+        assertTrue(errorMessage.getErrors().containsKey("fieldName"));
+        assertEquals("Error message", errorMessage.getErrors().get("fieldName"));
+    }
 }
+
+
+
+
