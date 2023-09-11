@@ -33,9 +33,6 @@ public class ChallengeController {
     @Autowired
     IChallengeService challengeService;
 
-    public ChallengeController() {
-    }
-
     @GetMapping(value = "/test")
     public String test() {
         log.info("** Saludos desde el logger **");
