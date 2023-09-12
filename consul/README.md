@@ -8,11 +8,15 @@ Para trabajar en un microservicio que necesita registrarse en Consul, hay dos po
 - **Arrancar Consul en localhost con una sola instancia**, como se indica en [Arranque de Consul localhost](#arranque-de-consul-localhost), o bien...
 - **Arrancar Consul utilizando contenedores Docker (cluster)**, como se indica en [Arranque de Consul Docker](#arranque-de-consul-docker)
 
-Para que el microservicio se registre, en ambos casos es necesario fijar en bootstrap.yml del microservicio:
+En ambos casos, el microservicio se registra correctamente (tanto si Consul está corriendo sobre Docker como si no).
+Para que el/los microservicio(s) se registre(n), en cualquiera de los casos anteriores es necesario fijar en bootstrap.yml del microservicio que se desea registrar:
 
-```
-spring.cloud.consul.enabled = true
-```
+````  
+spring:
+  cloud:
+   consul:
+     enabled: true
+````
 
 
 #### <span style='color: brown;'>Arranque de Consul localhost</span>
@@ -24,15 +28,6 @@ consul agent -bootstrap-expect=1 -config-file=consul/server1_standalone.json -bi
 ```
 
 - bootstrap-expect=1: número de nodos que se esperan en el cluster
-
-- Verificar que todos los microservicios que se desean registrar tienen configuración en bootstrap.yml:
-
-````  
-spring:
-  cloud:
-   consul:
-     enabled: true
-````
 
 #### <span style='color: brown;'>Arranque de Consul Docker</span>
 
