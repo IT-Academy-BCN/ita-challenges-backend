@@ -94,6 +94,17 @@ services:
       consul-net:
         ipv4_address: 172.24.2.11
 
+  apisix-dashboard:
+    image: apache/apisix-dashboard:3.0.1-alpine
+    restart: always
+    volumes:
+      - ./apisix_conf/dashboard-conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
+    ports:
+      - "9000:9000"
+    networks:
+      consul-net:
+
+
   apisix:
     image: apache/apisix:3.5.0-centos
     restart: always
@@ -124,6 +135,29 @@ services:
     networks:
       consul-net:
         #ipv4_address: 172.24.2.10
+
+  prometheus:
+    image: prom/prometheus:v2.25.0
+    restart: always
+    volumes:
+      - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      consul-net:
+
+  grafana:
+    image: grafana/grafana:7.3.7
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana_conf/provisioning:/etc/grafana/provisioning
+      - ./grafana_conf/dashboards:/var/lib/grafana/dashboards
+      - ./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini
+    networks:
+      consul-net:
+
 
 volumes:
   itachallenge_mongodb_data:
