@@ -94,6 +94,37 @@ services:
       consul-net:
         ipv4_address: 172.24.2.11
 
+  apisix:
+    image: apache/apisix:3.5.0-centos
+    restart: always
+    volumes:
+      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+    depends_on:
+      - etcd
+    ##network_mode: host
+    ports:
+      - "9180:9180/tcp"
+      - "9080:9080/tcp"
+      - "9091:9091/tcp"
+      - "9443:9443/tcp"
+      - "9092:9092/tcp"
+    networks:
+      consul-net:
+
+  etcd:
+    image: bitnami/etcd:3.5.9
+    restart: always
+    environment:
+      ETCD_ENABLE_V2: true
+      ALLOW_NONE_AUTHENTICATION: yes
+      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
+      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
+    ports:
+      - 2379:2379/tcp
+    networks:
+      consul-net:
+        #ipv4_address: 172.24.2.10
+
 volumes:
   itachallenge_mongodb_data:
 
@@ -104,3 +135,4 @@ networks:
       driver: default
       config:
         - subnet: 172.24.2.0/16
+        - gateway: 172.24.2.254
