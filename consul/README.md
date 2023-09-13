@@ -1,6 +1,25 @@
-## Desarrollo con Consul
+## <span style='color: purple;'>Desarrollo con Consul</span>
 
-#### Arranque de Consul localhost (desarrollo)
+### <span style='color: green;'>Workflow de desarrollo</span>
+
+
+Para trabajar en un microservicio que necesita registrarse en Consul, hay dos posibilidades:
+
+- **Arrancar Consul en localhost con una sola instancia**, como se indica en [Arranque de Consul localhost](#arranque-de-consul-localhost), o bien...
+- **Arrancar Consul utilizando contenedores Docker (cluster)**, como se indica en [Arranque de Consul Docker](#arranque-de-consul-docker)
+
+En ambos casos, el microservicio se registra correctamente (tanto si Consul está corriendo sobre Docker como si no).
+Para que el/los microservicio(s) se registre(n), en cualquiera de los casos anteriores es necesario fijar en bootstrap.yml del microservicio que se desea registrar:
+
+````  
+spring:
+  cloud:
+   consul:
+     enabled: true
+````
+
+
+#### <span style='color: brown;'>Arranque de Consul localhost</span>
 
 - Instalar previamente Consul en la máquina y establecer PATH de contexto
 
@@ -10,16 +29,7 @@ consul agent -bootstrap-expect=1 -config-file=consul/server1_standalone.json -bi
 
 - bootstrap-expect=1: número de nodos que se esperan en el cluster
 
-- Verificar que todos los microservicios que se desean registrar tienen configuración en bootstrap.yml:
-
-````  
-spring:
-  cloud:
-   consul:
-     enabled: true
-````
-
-#### Arranque de Consul Docker
+#### <span style='color: brown;'>Arranque de Consul Docker</span>
 
 - Arrancar Docker en la máquina (UNIX based)
 ```
@@ -38,7 +48,12 @@ docker compose -f consul/docker-compose.yml up -d --remove-orphans consul-server
 - http://localhost:8500 debe mostrar consola de Administración Consul 
 
 
-#### Utilidades Consul
+<hr/>
+
+#### <span style='color: navy;'>Utilidades Consul</span>
+
+**NOTA:** Las bases de datos de los microservicios son privadas, por lo que no estan registran en Consul. 
+Para registrarlas, puede utilizarse el fichero register-[db].json, haciendo las siguientes invocaciones a API:
  
 - **Registrar servicios externos**. Para registrar las DB, pueden utilizarse los files register-[db].json y deregister-[db].json
 ```
