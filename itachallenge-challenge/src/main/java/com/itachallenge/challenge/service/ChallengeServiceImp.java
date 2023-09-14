@@ -22,7 +22,6 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ChallengeServiceImp implements IChallengeService {
     //VARIABLES
@@ -41,7 +40,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Autowired
     private LanguageRepository languageRepository;
-
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -95,7 +93,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = languageConverter.convertToDto(languageRepository.findAll());
+        Flux<LanguageDto> languagesDto = languageConverter.convertFluxEntityToFluxDto((languageRepository.findAll()));
         return languagesDto.collectList().map(language -> {
             GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));

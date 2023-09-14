@@ -2,7 +2,7 @@ package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.exception.ConverterException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +13,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Assertions;
-
 class LanguageConverterDtoTest {
 
-    private final LanguageConverterDto converter = new LanguageConverterDto();
+    private LanguageConverterDto languageConverter = new LanguageConverterDto();
 
     private LanguageDocument languageDocument1;
 
@@ -26,6 +24,7 @@ class LanguageConverterDtoTest {
     private LanguageDto languageDto1;
 
     private LanguageDto languageDto2;
+
 
     @BeforeEach
     public void setUp() {
@@ -42,21 +41,23 @@ class LanguageConverterDtoTest {
     }
 
     @Test
-    @DisplayName("Conversion from document to dto. Testing 'convert' method from ConverterAbstract, inherited by the subclass")
-    void testConvertToDto() throws ConverterException {
+    @DisplayName("Conversion from document to dto when the field types and names perfectly match the source")
+    void testConvertLanguageDocumentToLanguageDto() {
+        // when
         LanguageDocument languageDocumentMocked = languageDocument1;
-        LanguageDto resultDto = converter.convert(languageDocumentMocked);
+        LanguageDto resultDto = languageConverter.convertEntityToDto(languageDocumentMocked);
         LanguageDto expectedDto = languageDto1;
+
+        // then
         assertEquals(expectedDto.getIdLanguage(), resultDto.getIdLanguage());
         assertEquals(expectedDto.getLanguageName(), resultDto.getLanguageName());
     }
 
     @Test
-    @DisplayName("Test convertToDto method")
-    void testConvertToDtoMethod() {
+    @DisplayName("Test convertFluxEntityToFluxDto method")
+    void testConvertFluxEntityToFluxDto() {
         Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
-
-        Flux<LanguageDto> resultFlux = converter.convertToDto(documentFlux);
+        Flux<LanguageDto> resultFlux = languageConverter.convertFluxEntityToFluxDto(documentFlux);
 
         StepVerifier.create(resultFlux)
                 .assertNext(languageDto -> {
@@ -70,4 +71,6 @@ class LanguageConverterDtoTest {
                 .expectComplete()
                 .verify();
     }
+
 }
+

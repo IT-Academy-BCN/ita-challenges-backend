@@ -30,6 +30,7 @@ class ChallengeServiceImpTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
+
     @Mock
     private LanguageRepository languageRepository;
 
@@ -185,7 +186,7 @@ class ChallengeServiceImpTest {
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(languageConverter.convertToDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
+        when(languageConverter.convertFluxEntityToFluxDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
 
         // Act
         Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
@@ -197,6 +198,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(languageRepository).findAll();
-        verify(languageConverter).convertToDto(any());
+        verify(languageConverter).convertFluxEntityToFluxDto(any());
     }
+
 }

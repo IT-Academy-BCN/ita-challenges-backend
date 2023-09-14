@@ -3,24 +3,24 @@ package com.itachallenge.challenge.helper;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.ConverterException;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 @Component
-public class LanguageConverterDto extends ConverterAbstract<LanguageDocument, LanguageDto>{
+public class LanguageConverterDto {
 
-    //setting fromClass to Class
-    public LanguageConverterDto(){
-        super(LanguageDocument.class, LanguageDto.class);
+    @Autowired
+    private ModelMapper modelMapper;
+
+    public Flux<LanguageDto> convertFluxEntityToFluxDto(Flux<LanguageDocument> documentFlux) {
+        return documentFlux.map(this::convertEntityToDto);
     }
 
-    public Flux<LanguageDto> convertToDto(Flux<LanguageDocument> documentFlux) {
-        return documentFlux.map(this::convert);
-    }
-
-    @Override
-    protected LanguageDto convert(LanguageDocument document) throws ConverterException {
-        return super.convert(document);
+    public LanguageDto convertEntityToDto(LanguageDocument document) throws ConverterException {
+        ModelMapper entityToDto = new ModelMapper();
+        return entityToDto.map(document, LanguageDto.class);
     }
 
 }
