@@ -38,42 +38,14 @@ services:
         ipv4_address: 172.24.2.2
     command: "agent -bootstrap-expect=3"
 
-      #consul-client-mongodb:
-      # image: consul:1.12.3
-      #container_name: consul-client-mongodb
-      #restart: always
-      #volumes:
-      #- ./consul-client-mongodb.json:/consul/config/client.json:ro
-      #networks:
-    #consul-net:
-    # ipv4_address: 172.24.2.3
-    #command: "agent"
-
-  itachallenge-challenge:
-    image: ita:challenge-v1.0-SNAPSHOT
-    container_name: itachallenge-v1.0-SNAPSHOT
-    restart: always
-    networks:
-      consul-net:
-        ipv4_address: 172.24.2.6
-    ports:
-      - '${CHALLENGE_CONTAINER_PORT}:8763'
-    environment:
-      - 'spring.data.mongodb.host=172.24.0.1'
-      - 'spring.data.mongodb.port=27018'
-      - 'spring.data.mongodb.username=admin_itachallenge'
-      - 'spring.data.mongodb.password=qcauYwWBx5AXp9S'
-      - 'spring.data.mongodb.database=itachallenge'
-
-
   itachallenge-mongodb:
     container_name: mongodb-itachallenge
     image: mongo:5.0.9
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin_itachallenge
-      MONGO_INITDB_ROOT_PASSWORD: qcauYwWBx5AXp9S
-      MONGO_INITDB_DATABASE: itachallenge
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_PASSWORD}'
+      MONGO_INITDB_DATABASE: '${MONGODB_CHALLENGE_DATABASE}'
     ports:
       - '${MONGODB_CONTAINER_PORT}:27017'
     volumes:
@@ -82,7 +54,22 @@ services:
       - ../itachallenge-challenge/src/main/resources/mongodb-test-data:/tmp/data/
     networks:
       consul-net:
-        ipv4_address: 172.24.2.9
+        ipv4_address: 172.24.2.3
+
+  itachallenge-challenge:
+    image: ita:challenge-v1.0-SNAPSHOT
+    container_name: itachallenge-v1.0-SNAPSHOT
+    restart: always
+    depends_on:
+      -  itachallenge-mongodb
+    ports:
+      - '${CHALLENGE_CONTAINER_PORT}:8763'
+    environment:
+      - 'spring.data.mongodb.uri=mongodb://${MONGODB_USERNAME}@172.24.2.3:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}'
+    networks:
+      consul-net:
+        ipv4_address: 172.24.2.4
+
 
   itachallenge-nginx: #docker run -it -p 80:80 babcn:nginx-frontend2-v1.0.0-SNAPSHOT
     container_name: nginx-itachallenge
@@ -92,27 +79,16 @@ services:
       - '${NGINX_CONTAINER_PORT}:80'
     networks:
       consul-net:
-        ipv4_address: 172.24.2.11
-
-  apisix-dashboard:
-    image: apache/apisix-dashboard:3.0.1-alpine
-    restart: always
-    volumes:
-      - ./apisix_conf/dashboard-conf.yaml:/usr/local/apisix-dashboard/conf/conf.yaml
-    ports:
-      - "9000:9000"
-    networks:
-      consul-net:
-
+        ipv4_address: 172.24.2.5
 
   apisix:
+    container_name: apisix
     image: apache/apisix:3.5.0-centos
     restart: always
     volumes:
-      - ./apisix_conf/config.yaml:/usr/local/apisix/conf/config.yaml:ro
-    depends_on:
-      - etcd
-    ##network_mode: host
+      - ./apisix_conf/apisix_standalone.yaml:/usr/local/apisix/conf/apisix.yaml:ro
+    environment:
+      APISIX_STAND_ALONE: true
     ports:
       - "9180:9180/tcp"
       - "9080:9080/tcp"
@@ -121,43 +97,7 @@ services:
       - "9092:9092/tcp"
     networks:
       consul-net:
-
-  etcd:
-    image: bitnami/etcd:3.5.9
-    restart: always
-    environment:
-      ETCD_ENABLE_V2: true
-      ALLOW_NONE_AUTHENTICATION: yes
-      ETCD_ADVERTISE_CLIENT_URLS: "http://etcd:2379"
-      ETCD_LISTEN_CLIENT_URLS: "http://0.0.0.0:2379"
-    ports:
-      - 2379:2379/tcp
-    networks:
-      consul-net:
-        #ipv4_address: 172.24.2.10
-
-  prometheus:
-    image: prom/prometheus:v2.25.0
-    restart: always
-    volumes:
-      - ./prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      consul-net:
-
-  grafana:
-    image: grafana/grafana:7.3.7
-    restart: always
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./grafana_conf/provisioning:/etc/grafana/provisioning
-      - ./grafana_conf/dashboards:/var/lib/grafana/dashboards
-      - ./grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini
-    networks:
-      consul-net:
-
+        ipv4_address: 172.24.2.6
 
 volumes:
   itachallenge_mongodb_data:

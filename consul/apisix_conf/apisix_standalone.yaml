@@ -1,0 +1,18 @@
+
+routes:
+  -
+    uri: /itachallenge/api/v1/challenge/test
+    upstream_id: 1
+upstreams:
+  -
+    id: 1
+    nodes:
+        "itachallenge-challenge:8762": 1
+    type: roundrobin
+
+#plugins:
+ # - name: ip-restriction
+ # - name: jwt-auth
+ # - name: mqtt-proxy
+
+#END
