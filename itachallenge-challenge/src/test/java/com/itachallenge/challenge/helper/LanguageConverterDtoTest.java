@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LanguageConverterDtoTest {
 
-    private LanguageConverterDto languageConverter = new LanguageConverterDto();
+    private LanguageConverter languageConverter = new LanguageConverter();
 
     private LanguageDocument languageDocument1;
 
@@ -45,7 +45,7 @@ class LanguageConverterDtoTest {
     void testConvertLanguageDocumentToLanguageDto() {
         // when
         LanguageDocument languageDocumentMocked = languageDocument1;
-        LanguageDto resultDto = languageConverter.convertEntityToDto(languageDocumentMocked);
+        LanguageDto resultDto = languageConverter.convertDocumentToDto(languageDocumentMocked);
         LanguageDto expectedDto = languageDto1;
 
         // then
@@ -57,7 +57,7 @@ class LanguageConverterDtoTest {
     @DisplayName("Test convertFluxEntityToFluxDto method")
     void testConvertFluxEntityToFluxDto() {
         Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
-        Flux<LanguageDto> resultFlux = languageConverter.convertFluxEntityToFluxDto(documentFlux);
+        Flux<LanguageDto> resultFlux = languageConverter.convertDocumentFluxToDtoFlux(documentFlux);
 
         StepVerifier.create(resultFlux)
                 .assertNext(languageDto -> {
