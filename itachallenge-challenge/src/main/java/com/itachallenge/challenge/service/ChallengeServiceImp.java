@@ -6,8 +6,8 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.ChallengeConverter;
-import com.itachallenge.challenge.helper.LanguageConverter;
+import com.itachallenge.challenge.helper.ChallengeDocumentToDtoConverter;
+import com.itachallenge.challenge.helper.LanguageDocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
@@ -36,10 +36,10 @@ public class ChallengeServiceImp implements IChallengeService {
     private LanguageRepository languageRepository;
 
     @Autowired
-    private ChallengeConverter challengeConverter;
+    private ChallengeDocumentToDtoConverter challengeConverter;
 
     @Autowired
-    private LanguageConverter languageConverter;
+    private LanguageDocumentToDtoConverter languageConverter;
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)

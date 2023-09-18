@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 @Component
-public class LanguageConverter {
+public class LanguageDocumentToDtoConverter {
 
     public LanguageDto convertDocumentToDto(LanguageDocument document) throws ConverterException {
         ModelMapper entityToDto = new ModelMapper();

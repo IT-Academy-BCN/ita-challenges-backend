@@ -7,8 +7,8 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.ChallengeConverter;
-import com.itachallenge.challenge.helper.LanguageConverter;
+import com.itachallenge.challenge.helper.ChallengeDocumentToDtoConverter;
+import com.itachallenge.challenge.helper.LanguageDocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,10 +36,10 @@ class ChallengeServiceImpTest {
     private LanguageRepository languageRepository;
 
     @Mock
-    private ChallengeConverter challengeConverter;
+    private ChallengeDocumentToDtoConverter challengeConverter;
 
     @Mock
-    private LanguageConverter languageConverter;
+    private LanguageDocumentToDtoConverter languageConverter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;

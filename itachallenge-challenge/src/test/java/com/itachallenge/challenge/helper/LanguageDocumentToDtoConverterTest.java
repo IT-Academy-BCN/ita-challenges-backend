@@ -13,9 +13,9 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class LanguageConverterDtoTest {
+class LanguageDocumentToDtoConverterTest {
 
-    private LanguageConverter languageConverter = new LanguageConverter();
+    private LanguageDocumentToDtoConverter languageConverter = new LanguageDocumentToDtoConverter();
 
     private LanguageDocument languageDocument1;
 

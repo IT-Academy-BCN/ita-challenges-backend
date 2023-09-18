@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
 @Component
-public class ChallengeConverter {
+public class ChallengeDocumentToDtoConverter {
 
     public ChallengeDto convertDocumentToDto(ChallengeDocument document) throws ConverterException {
         ModelMapper entityToDto = new ModelMapper();
