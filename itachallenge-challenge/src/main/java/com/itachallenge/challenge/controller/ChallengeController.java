@@ -25,6 +25,8 @@ import java.util.Optional;
 public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
+
+    //JVR - preferible sacar a PropertiesConfig. Centralizamos properties, posible inyección múltiples orígenes
     private static final String DEFAULT_PAGE_NUMBER = "${defaultPageParameters.pageNumber}";
     private static final String DEFAULT_PAGE_SIZE = "${defaultPageParameters.pageSize}";
 
@@ -106,6 +108,24 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
+
+    /**
+     * JVR - La PR no es válida. Es necesario revisar:
+     *      - La paginación ha de añadirse al método de arriba. No tiene sentido tener dos métodos que hacen lo mismo (el de abajo)
+     *      - Los parámetros de entrada han de llamarse 'page' y 'size'
+     *      - ChallengeServiceImp: La invocación al Repository desde ChallengeServiceImp line 101 se efectúa con pageNumber - 1. Parece que debe ser pageNumber (sin restar nada)
+     *      - ChallengeRepository: el método findAllBy debe llamarse findAll(Pageable pageable)
+     *      - ChallengeRepository: analizar si es posible extender de ReactiveSortingRepository en lugar de ReactiveMongoRepository (provee funcionalidades de ordenado que 7
+     *          podemos necesitar después)
+     *      - Converter: la clase Converter debe renombrarse a 'DocumentToDtoConverter' o similar.
+     *              No es un Converter genérico, sino que es específico para convertir de Document a Dto
+     *      - PageParametersDto debe renombrarse a UrlParamsValidator o similar. No es un DTO, sino un validador de parámetros de entrada
+     *
+     *  Referencias:
+     *  https://thepracticaldeveloper.com/full-reactive-stack-2-backend-webflux/ (muestra diferencias Reactive-NonReactive repository)
+     *  https://medium.com/@davidpetro/spring-webflux-and-pageable-be55104c234f
+     *
+     */
     @GetMapping("/challengesByPage")
     @Operation(
             operationId = "Get only the challenges on a page.",
