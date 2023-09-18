@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
@@ -32,6 +33,9 @@ class ChallengeControllerTest {
 
     @MockBean
     private DiscoveryClient discoveryClient;
+
+    @MockBean
+    private PropertiesConfig config;
 
     @Test
     void test() {
@@ -149,10 +153,10 @@ class ChallengeControllerTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
         Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        String pageNumber = "1";
-        String pageSize = "3";
+        String page= "1";
+        String size = "3";
 
-        when(challengeService.getChallengesByPage(Integer.parseInt(pageNumber), Integer.parseInt(pageSize)))
+        when(challengeService.getChallengesByPage(Integer.parseInt(page), Integer.parseInt(size)))
                 .thenReturn(expectedChallengesFlux);
 
         // Act & Assert
@@ -171,10 +175,10 @@ class ChallengeControllerTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
         Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        String defaultPageNumber = "1";
-        String defaultPageSize = "2";
+        String defaultPage = "1";
+        String defaultSize = "2";
 
-        when(challengeService.getChallengesByPage(Integer.parseInt(defaultPageNumber), Integer.parseInt(defaultPageSize)))
+        when(challengeService.getChallengesByPage(Integer.parseInt(defaultPage), Integer.parseInt(defaultSize)))
                 .thenReturn(expectedChallengesFlux);
 
         // Act & Assert

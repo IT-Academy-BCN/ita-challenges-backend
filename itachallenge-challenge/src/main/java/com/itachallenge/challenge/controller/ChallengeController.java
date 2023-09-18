@@ -1,10 +1,11 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.PageParametersDto;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.validator.UrlParamsValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,14 +27,18 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
-    //JVR - preferible sacar a PropertiesConfig. Centralizamos properties, posible inyección múltiples orígenes
-    private static final String DEFAULT_PAGE_NUMBER = "${defaultPageParameters.pageNumber}";
-    private static final String DEFAULT_PAGE_SIZE = "${defaultPageParameters.pageSize}";
+    @Autowired
+    private final PropertiesConfig config;
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
     @Autowired
     IChallengeService challengeService;
+
+    public ChallengeController(PropertiesConfig config) {
+        this.config = config;
+    }
 
     @GetMapping(value = "/test")
     public String test() {
@@ -111,21 +116,22 @@ public class ChallengeController {
 
     /**
      * JVR - La PR no es válida. Es necesario revisar:
-     *      - La paginación ha de añadirse al método de arriba. No tiene sentido tener dos métodos que hacen lo mismo (el de abajo)
-     *      - Los parámetros de entrada han de llamarse 'page' y 'size'
-     *      - ChallengeServiceImp: La invocación al Repository desde ChallengeServiceImp line 101 se efectúa con pageNumber - 1. Parece que debe ser pageNumber (sin restar nada)
-     *      - ChallengeRepository: el método findAllBy debe llamarse findAll(Pageable pageable)
-     *      - ChallengeRepository: analizar si es posible extender de ReactiveSortingRepository en lugar de ReactiveMongoRepository (provee funcionalidades de ordenado que 7
-     *          podemos necesitar después)
-     *      - Converter: la clase Converter debe renombrarse a 'DocumentToDtoConverter' o similar.
-     *              No es un Converter genérico, sino que es específico para convertir de Document a Dto
-     *      - PageParametersDto debe renombrarse a UrlParamsValidator o similar. No es un DTO, sino un validador de parámetros de entrada
-     *
-     *  Referencias:
-     *  https://thepracticaldeveloper.com/full-reactive-stack-2-backend-webflux/ (muestra diferencias Reactive-NonReactive repository)
-     *  https://medium.com/@davidpetro/spring-webflux-and-pageable-be55104c234f
-     *
+     * - La paginación ha de añadirse al método de arriba. No tiene sentido tener dos métodos que hacen lo mismo (el de abajo)
+     * - Los parámetros de entrada han de llamarse 'page' y 'size'
+     * - ChallengeServiceImp: La invocación al Repository desde ChallengeServiceImp line 101 se efectúa con pageNumber - 1. Parece que debe ser pageNumber (sin restar nada)
+     * - ChallengeRepository: el método findAllBy debe llamarse findAll(Pageable pageable)
+     * - ChallengeRepository: analizar si es posible extender de ReactiveSortingRepository en lugar de ReactiveMongoRepository (provee funcionalidades de ordenado que 7
+     * podemos necesitar después)
+     * - Converter: la clase Converter debe renombrarse a 'DocumentToDtoConverter' o similar.
+     * No es un Converter genérico, sino que es específico para convertir de Document a Dto
+     * - PageParametersDto debe renombrarse a UrlParamsValidator o similar. No es un DTO, sino un validador de parámetros de entrada
+     * <p>
+     * Referencias:
+     * https://thepracticaldeveloper.com/full-reactive-stack-2-backend-webflux/ (muestra diferencias Reactive-NonReactive repository)
+     * https://medium.com/@davidpetro/spring-webflux-and-pageable-be55104c234f
      */
+
+
     @GetMapping("/challengesByPage")
     @Operation(
             operationId = "Get only the challenges on a page.",
@@ -135,10 +141,10 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-    public Flux<ChallengeDto> getChallengesByPage(@Valid PageParametersDto pageParametersDto,
-                                                  @RequestParam(name = "pageNumber", required = false, defaultValue = DEFAULT_PAGE_NUMBER) String pageNumber,
-                                                  @RequestParam(name = "pageSize", required = false, defaultValue = DEFAULT_PAGE_SIZE) String pageSize) {
-        return challengeService.getChallengesByPage(Integer.parseInt(pageNumber), Integer.parseInt(pageSize));
+    public Flux<ChallengeDto> getChallengesByPage(@Valid UrlParamsValidator urlParamsValidator,
+                                                  @RequestParam(name = "page", required = false, defaultValue = ("${validator.page}")) String page,
+                                                  @RequestParam(name = "size", required = false, defaultValue = ("${validator.size}")) String size) {
+        return challengeService.getChallengesByPage(Integer.parseInt(page), Integer.parseInt(size));
     }
 
     @GetMapping("/language")
