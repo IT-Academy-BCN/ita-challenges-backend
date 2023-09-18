@@ -44,17 +44,17 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux((Flux.just(challenge))))
-                                .map(challengeDto -> {
-                                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                                    resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
-                                    return resultDto;
-                                })
-                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
-                                .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
-                                .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))));
+                        .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge))))
+                        .map(challengeDto -> {
+                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                            resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
+                            return resultDto;
+                        })
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
+                        .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
+                        .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
+                );
     }
-
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
