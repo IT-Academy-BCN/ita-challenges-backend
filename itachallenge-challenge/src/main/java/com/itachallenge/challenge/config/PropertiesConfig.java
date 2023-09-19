@@ -13,6 +13,12 @@ public class PropertiesConfig {
     @Value("${url.maxBytesInMemory}")
     private Integer maxBytesInMemory;
 
+    @Value("${validator.defaultPage}")
+    private String page;
+
+    @Value("${validator.defaultSize}")
+    private String size;
+
     public Integer getConnectionTimeout() {
         return connectionTimeout;
     }
@@ -20,4 +26,5 @@ public class PropertiesConfig {
     public Integer getMaxBytesInMemory() {
         return maxBytesInMemory;
     }
+
 }

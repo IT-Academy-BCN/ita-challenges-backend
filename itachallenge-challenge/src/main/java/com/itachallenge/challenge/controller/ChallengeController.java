@@ -99,7 +99,7 @@ public class ChallengeController {
         return challengeService.removeResourcesByUuid(idResource);
     }
 
-    @GetMapping("/challenges")
+/*    @GetMapping("/challenges")
     @Operation(
             operationId = "Get all the stored challenges into the Database.",
             summary = "Get to see all challenges and their levels, details and their available languages.",
@@ -111,7 +111,7 @@ public class ChallengeController {
     )
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
         return challengeService.getAllChallenges();
-    }
+    }*/
 
 
     /**
@@ -132,7 +132,7 @@ public class ChallengeController {
      */
 
 
-    @GetMapping("/challengesByPage")
+    @GetMapping("/challenges")
     @Operation(
             operationId = "Get only the challenges on a page.",
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
@@ -142,9 +142,9 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
     public Flux<ChallengeDto> getChallengesByPage(@Valid UrlParamsValidator urlParamsValidator,
-                                                  @RequestParam(name = "page", required = false, defaultValue = ("${validator.page}")) String page,
-                                                  @RequestParam(name = "size", required = false, defaultValue = ("${validator.size}")) String size) {
-        return challengeService.getChallengesByPage(Integer.parseInt(page), Integer.parseInt(size));
+                                                  @RequestParam(name = "page", required = false, defaultValue = ("${validator.defaultPage}")) String page,
+                                                  @RequestParam(name = "size", required = false, defaultValue = ("${validator.defaultSize}")) String size) {
+        return challengeService.getAllChallenges((Integer.parseInt(page)), Integer.parseInt(size));
     }
 
     @GetMapping("/language")

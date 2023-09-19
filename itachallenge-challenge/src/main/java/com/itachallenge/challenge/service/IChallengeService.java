@@ -12,10 +12,10 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
 
-    Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
+    //Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
 
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
 
-    Flux<ChallengeDto> getChallengesByPage(int pageNumber, int pageSize);
-
+   // Flux<ChallengeDto> getChallengesByPage(int pageNumber, int pageSize);
+    Flux<ChallengeDto> getAllChallenges(int pageNumber, int pageSize);
 }

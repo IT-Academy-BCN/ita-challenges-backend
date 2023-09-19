@@ -33,5 +33,5 @@ url:
   ds_test: https://swapi.py4e.com/api/vehicles/
 
 validator:
-  page: "1"
-  size: "2"
+  defaultPage: "1"
+  defaultSize: "2"

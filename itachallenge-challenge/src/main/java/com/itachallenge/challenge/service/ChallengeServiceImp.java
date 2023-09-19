@@ -37,7 +37,6 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private Converter converter;
 
-
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -79,14 +78,14 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
+/*    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
         Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
         return challengeDtoFlux.collectList().map(challenges -> {
             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
             return resultDto;
         });
-    }
+    }*/
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = converter.fromLanguageToLanguageDto(languageRepository.findAll());
@@ -97,7 +96,8 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    public Flux<ChallengeDto> getChallengesByPage (int pageNumber, int pageSize) {
+    @Override
+    public Flux<ChallengeDto> getAllChallenges(int pageNumber, int pageSize) {
         Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of((pageNumber - 1), pageSize));
         return converter.fromChallengeToChallengeDto(challengesList);
     }

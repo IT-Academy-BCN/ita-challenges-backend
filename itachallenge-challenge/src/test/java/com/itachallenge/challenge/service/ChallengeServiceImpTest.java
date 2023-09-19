@@ -149,7 +149,7 @@ class ChallengeServiceImpTest {
         verifyNoMoreInteractions(challengeRepository);
     }
 
-    @Test
+/*    @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
@@ -170,10 +170,10 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findAll();
         verify(converter).fromChallengeToChallengeDto(any());
-    }
+    }*/
 
     @Test
-    void getChallengesByPageTest() {
+    void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
@@ -190,7 +190,7 @@ class ChallengeServiceImpTest {
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getChallengesByPage(2, 2);
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(2, 2);
 
         // Assert
         StepVerifier.create(result)

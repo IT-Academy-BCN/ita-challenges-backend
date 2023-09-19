@@ -101,7 +101,7 @@ class ChallengeRepositoryTest {
 
     }
 
-    @DisplayName("Find All Test")
+/*    @DisplayName("Find All Test")
     @Test
     void findAllTest() {
 
@@ -110,11 +110,11 @@ class ChallengeRepositoryTest {
         StepVerifier.create(challenges)
                 .expectNextCount(2)
                 .verifyComplete();
-    }
+    }*/
 
     @DisplayName("Find Challenges for a Page")
     @Test
-    void findAllByPageTest() {
+    void findAllTest() {
 
         Pageable pageNumber0Size1 = PageRequest.of(0,1);
         Pageable pageNumber0Size2 = PageRequest.of(0,2);

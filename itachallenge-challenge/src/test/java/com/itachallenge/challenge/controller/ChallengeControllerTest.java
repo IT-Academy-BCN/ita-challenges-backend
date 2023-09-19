@@ -100,7 +100,7 @@ class ChallengeControllerTest {
                 });
     }
 
-    @Test
+/*    @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
@@ -120,6 +120,51 @@ class ChallengeControllerTest {
                     assert dto.getResults() != null;
                     assert dto.getResults().length == 2;
                 });
+    }*/
+
+    @Test
+    void getAllChallenges_ValidPageParameters_ChallengesReturned() {
+        //Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+
+        String page= "1";
+        String size = "3";
+
+        when(challengeService.getAllChallenges(Integer.parseInt(page), Integer.parseInt(size)))
+                .thenReturn(expectedChallengesFlux);
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challengesByPage?pageNumber=1&pageSize=3")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getAllChallenges_NullPageParameters_ChallengesReturned() {
+        //Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+
+        String defaultPage = "1";
+        String defaultSize = "2";
+
+        when(challengeService.getAllChallenges(Integer.parseInt(defaultPage), Integer.parseInt(defaultSize)))
+                .thenReturn(expectedChallengesFlux);
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challengesByPage")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
     }
 
     @Test
@@ -142,50 +187,5 @@ class ChallengeControllerTest {
                     assert dto.getResults() != null;
                     assert dto.getResults().length == 2;
                 });
-    }
-
-    @Test
-    void getChallengesByPages_ValidPageParameters_ChallengesReturned() {
-        //Arrange
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto challengeDto3 = new ChallengeDto();
-        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
-        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
-
-        String page= "1";
-        String size = "3";
-
-        when(challengeService.getChallengesByPage(Integer.parseInt(page), Integer.parseInt(size)))
-                .thenReturn(expectedChallengesFlux);
-
-        // Act & Assert
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challengesByPage?pageNumber=1&pageSize=3")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(ChallengeDto.class);
-    }
-
-    @Test
-    void getChallengesByPages_NullPageParameters_ChallengesReturned() {
-        //Arrange
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
-        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
-
-        String defaultPage = "1";
-        String defaultSize = "2";
-
-        when(challengeService.getChallengesByPage(Integer.parseInt(defaultPage), Integer.parseInt(defaultSize)))
-                .thenReturn(expectedChallengesFlux);
-
-        // Act & Assert
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challengesByPage")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(ChallengeDto.class);
     }
 }
