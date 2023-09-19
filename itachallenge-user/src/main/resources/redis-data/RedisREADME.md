@@ -10,4 +10,5 @@ When you execute the redis-cli command to import the data, make sure you are in 
  * cd /path/to/my_project/
  * redis-cli -h localhost -p 6379 < users
 
+ Ensure that your Redis server is running and accessible on the specified host and port
 
