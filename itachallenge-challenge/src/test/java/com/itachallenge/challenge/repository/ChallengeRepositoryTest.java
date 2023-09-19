@@ -140,7 +140,6 @@ class ChallengeRepositoryTest {
         StepVerifier.create(challengesPageNumber1Size2)
                 .expectNextCount(0)
                 .verifyComplete();
-
     }
 
     @DisplayName("Exists by UUID Test")

@@ -25,9 +25,8 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
 
-    //@Override
+    @Override
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
 
     Flux<ChallengeDocument> findAllBy(Pageable pageable);
-
 }
