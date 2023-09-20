@@ -9,7 +9,7 @@ services:
       - ./server1.json:/consul/config/server1.json:ro
     networks:
       consul-net:
-        ipv4_address: 172.24.2.0
+        ipv4_address: 172.18.0.2
     ports:
       - '8500:8500'
       - '8600:8600/tcp'
@@ -24,7 +24,7 @@ services:
       - ./server2.json:/consul/config/server2.json:ro
     networks:
       consul-net:
-        ipv4_address: 172.24.2.1
+        ipv4_address: 172.18.0.3
     command: "agent -bootstrap-expect=3"
 
   consul-server3:
@@ -35,7 +35,7 @@ services:
       - ./server3.json:/consul/config/server3.json:ro
     networks:
       consul-net:
-        ipv4_address: 172.24.2.2
+        ipv4_address: 172.18.0.4
     command: "agent -bootstrap-expect=3"
 
   itachallenge-mongodb:
@@ -54,10 +54,11 @@ services:
       - ../itachallenge-challenge/src/main/resources/mongodb-test-data:/tmp/data/
     networks:
       consul-net:
-        ipv4_address: 172.24.2.3
+        ipv4_address: 172.18.0.5
 
   itachallenge-challenge:
-    image: ita:challenge-v1.0-SNAPSHOT
+    #image: '${REGISTRY_NAME}:{CHALLENGE_CONTAINER_NAME}-${CHALLENGE_TAG}'
+    image: itachallenge:itachallenge-challenge-1.0.0-SNAPSHOT
     container_name: itachallenge-v1.0-SNAPSHOT
     restart: always
     depends_on:
@@ -65,10 +66,10 @@ services:
     ports:
       - '${CHALLENGE_CONTAINER_PORT}:8763'
     environment:
-      - 'spring.data.mongodb.uri=mongodb://${MONGODB_USERNAME}@172.24.2.3:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}'
+      - 'spring.data.mongodb.uri=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}'
     networks:
       consul-net:
-        ipv4_address: 172.24.2.4
+        ipv4_address: 172.18.0.6
 
 
   itachallenge-nginx: #docker run -it -p 80:80 babcn:nginx-frontend2-v1.0.0-SNAPSHOT
@@ -79,7 +80,7 @@ services:
       - '${NGINX_CONTAINER_PORT}:80'
     networks:
       consul-net:
-        ipv4_address: 172.24.2.5
+        ipv4_address: 172.18.0.7
 
   apisix:
     container_name: apisix
@@ -97,7 +98,7 @@ services:
       - "9092:9092/tcp"
     networks:
       consul-net:
-        ipv4_address: 172.24.2.6
+        ipv4_address: 172.18.0.8
 
 volumes:
   itachallenge_mongodb_data:
@@ -108,5 +109,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.24.2.0/16
-        - gateway: 172.24.2.254
+        - subnet: 172.18.0.0/16
+        #- gateway: 172.18.0.16
