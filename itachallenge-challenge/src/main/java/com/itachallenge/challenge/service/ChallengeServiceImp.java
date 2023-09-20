@@ -6,7 +6,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
@@ -22,10 +22,9 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ChallengeServiceImp implements IChallengeService {
-    //VARIABLES
+
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
@@ -35,7 +34,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private LanguageRepository languageRepository;
     @Autowired
-    private Converter converter;
+    private DocumentToDtoConverter converter;
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -78,15 +77,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-/*    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
-        Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
-        return challengeDtoFlux.collectList().map(challenges -> {
-            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
-            return resultDto;
-        });
-    }*/
-
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = converter.fromLanguageToLanguageDto(languageRepository.findAll());
         return languagesDto.collectList().map(language -> {
@@ -98,7 +88,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Flux<ChallengeDto> getAllChallenges(int pageNumber, int pageSize) {
-        Flux<ChallengeDocument> challengesList = challengeRepository.findAllBy(PageRequest.of((pageNumber - 1), pageSize));
+        Flux<ChallengeDocument> challengesList = challengeRepository
+                .findAllByUuidNotNull((PageRequest.of((pageNumber - 1), pageSize)));
         return converter.fromChallengeToChallengeDto(challengesList);
     }
 

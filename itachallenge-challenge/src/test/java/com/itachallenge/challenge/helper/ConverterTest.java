@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 class ConverterTest {
 
     @Autowired
-    private Converter converter;
+    private DocumentToDtoConverter converter;
 
     private LanguageDocument languageMocked1;
 

@@ -99,39 +99,6 @@ public class ChallengeController {
         return challengeService.removeResourcesByUuid(idResource);
     }
 
-/*    @GetMapping("/challenges")
-    @Operation(
-            operationId = "Get all the stored challenges into the Database.",
-            summary = "Get to see all challenges and their levels, details and their available languages.",
-            description = "Requesting all the challenges through the URI from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
-        return challengeService.getAllChallenges();
-    }*/
-
-
-    /**
-     * JVR - La PR no es válida. Es necesario revisar:
-     * - La paginación ha de añadirse al método de arriba. No tiene sentido tener dos métodos que hacen lo mismo (el de abajo)
-     * - Los parámetros de entrada han de llamarse 'page' y 'size'
-     * - ChallengeServiceImp: La invocación al Repository desde ChallengeServiceImp line 101 se efectúa con pageNumber - 1. Parece que debe ser pageNumber (sin restar nada)
-     * - ChallengeRepository: el método findAllBy debe llamarse findAll(Pageable pageable)
-     * - ChallengeRepository: analizar si es posible extender de ReactiveSortingRepository en lugar de ReactiveMongoRepository (provee funcionalidades de ordenado que 7
-     * podemos necesitar después)
-     * - Converter: la clase Converter debe renombrarse a 'DocumentToDtoConverter' o similar.
-     * No es un Converter genérico, sino que es específico para convertir de Document a Dto
-     * - PageParametersDto debe renombrarse a UrlParamsValidator o similar. No es un DTO, sino un validador de parámetros de entrada
-     * <p>
-     * Referencias:
-     * https://thepracticaldeveloper.com/full-reactive-stack-2-backend-webflux/ (muestra diferencias Reactive-NonReactive repository)
-     * https://medium.com/@davidpetro/spring-webflux-and-pageable-be55104c234f
-     */
-
-
     @GetMapping("/challenges")
     @Operation(
             operationId = "Get only the challenges on a page.",
@@ -141,9 +108,9 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-    public Flux<ChallengeDto> getChallengesByPage(@Valid UrlParamsValidator urlParamsValidator,
-                                                  @RequestParam(name = "page", required = false, defaultValue = ("${validator.defaultPage}")) String page,
-                                                  @RequestParam(name = "size", required = false, defaultValue = ("${validator.defaultSize}")) String size) {
+    public Flux<ChallengeDto> getAllChallenges(@Valid UrlParamsValidator urlParamsValidator,
+                                               @RequestParam(name = "page", required = false, defaultValue = ("${validator.defaultPage}")) String page,
+                                               @RequestParam(name = "size", required = false, defaultValue = ("${validator.defaultSize}")) String size) {
         return challengeService.getAllChallenges((Integer.parseInt(page)), Integer.parseInt(size));
     }
 

@@ -32,7 +32,6 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class ChallengeRepositoryTest {
 
-
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
             .withStartupTimeout(Duration.ofSeconds(60));
@@ -51,11 +50,10 @@ class ChallengeRepositoryTest {
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
-
     @BeforeEach
     public void setUp() {
 
-        challengeRepository.deleteAll().block();
+        //challengeRepository.deleteAll().block();
 
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
@@ -81,7 +79,6 @@ class ChallengeRepositoryTest {
         ChallengeDocument challenge2 = new ChallengeDocument
                 (uuid_2, "If", "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
 
-
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
@@ -92,25 +89,11 @@ class ChallengeRepositoryTest {
         return languageIMocked;
     }
 
-
     @DisplayName("Repository not null Test")
     @Test
     void testDB() {
-
         assertNotNull(challengeRepository);
-
     }
-
-/*    @DisplayName("Find All Test")
-    @Test
-    void findAllTest() {
-
-        Flux<ChallengeDocument> challenges = challengeRepository.findAll();
-
-        StepVerifier.create(challenges)
-                .expectNextCount(2)
-                .verifyComplete();
-    }*/
 
     @DisplayName("Find Challenges for a Page")
     @Test
@@ -121,22 +104,22 @@ class ChallengeRepositoryTest {
         Pageable pageNumber1Size1 = PageRequest.of(1,1);
         Pageable pageNumber1Size2 = PageRequest.of(1,2);
 
-        Flux<ChallengeDocument> challengesPageNumber0Size1 = challengeRepository.findAllBy(pageNumber0Size1);
+        Flux<ChallengeDocument> challengesPageNumber0Size1 = challengeRepository.findAllByUuidNotNull(pageNumber0Size1);
         StepVerifier.create(challengesPageNumber0Size1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesPageNumber0Size2 = challengeRepository.findAllBy(pageNumber0Size2);
+        Flux<ChallengeDocument> challengesPageNumber0Size2 = challengeRepository.findAllByUuidNotNull(pageNumber0Size2);
         StepVerifier.create(challengesPageNumber0Size2)
                 .expectNextCount(2)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesPageNumber1Size1 = challengeRepository.findAllBy(pageNumber1Size1);
+        Flux<ChallengeDocument> challengesPageNumber1Size1 = challengeRepository.findAllByUuidNotNull(pageNumber1Size1);
         StepVerifier.create(challengesPageNumber1Size1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesPageNumber1Size2 = challengeRepository.findAllBy(pageNumber1Size2);
+        Flux<ChallengeDocument> challengesPageNumber1Size2 = challengeRepository.findAllByUuidNotNull(pageNumber1Size2);
         StepVerifier.create(challengesPageNumber1Size2)
                 .expectNextCount(0)
                 .verifyComplete();
@@ -220,6 +203,5 @@ class ChallengeRepositoryTest {
                 u -> assertEquals(u.getTitle(), "If"),
                 () -> fail("Challenge with name If not found."));
     }
-
 
 }

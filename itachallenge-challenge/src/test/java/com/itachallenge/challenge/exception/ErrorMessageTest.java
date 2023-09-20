@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @WebFluxTest(controllers = ErrorMessage.class)
 class ErrorMessageTest {
 
-    private final String MESSAGE = "Parameter not valid";
-
     @MockBean
     private ErrorMessage errorMessage;
 
@@ -31,7 +29,8 @@ class ErrorMessageTest {
     @Test
     void testErrorMessage() {
         Map<String, String> errors = Map.of("Field1", "DefaultMessage1", "Field2", "DefaultMessage2");
-        ErrorMessage response = new ErrorMessage(MESSAGE, errors);
+        String message = "Parameter not valid";
+        ErrorMessage response = new ErrorMessage(message, errors);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {
@@ -41,4 +40,5 @@ class ErrorMessageTest {
                 })
                 .verifyComplete();
     }
+
 }

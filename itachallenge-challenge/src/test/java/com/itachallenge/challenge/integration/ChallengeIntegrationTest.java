@@ -56,17 +56,13 @@ class ChallengeIntegrationTest {
 
     private final String UUID_VALID = "8ecbfe54-fec8-11ed-be56-0242ac120002";
     private final String UUID_INVALID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
-
     @BeforeEach
     public void setUp() {
-
-        challengeRepository.deleteAll().block();
 
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
@@ -105,7 +101,7 @@ class ChallengeIntegrationTest {
 
     @Test
     @DisplayName("Test response Hello")
-    void testDevProfile_OKwithoutAuthentication() {
+    void testDevProfile_OKWithoutAuthentication() {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/test")
                 .accept(MediaType.APPLICATION_JSON)
@@ -142,24 +138,9 @@ class ChallengeIntegrationTest {
     }
 
     @Test
-    void getAllChallenges_ReturnsStatusOkAndLength() {
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
-                });
-    }
-
-    @Test
     void getChallengesByPages_ValidPageParameters_ChallengesReturned() {
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challengesByPage?pageNumber=1&pageSize=1")
+                .uri("/itachallenge/api/v1/challenge/challenges?page=1&size=1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
@@ -170,7 +151,7 @@ class ChallengeIntegrationTest {
     @Test
     void getChallengesByPages_NullPageParameters_ChallengesReturned() {
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challengesByPage")
+                .uri("/itachallenge/api/v1/challenge/challenges")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
@@ -180,7 +161,6 @@ class ChallengeIntegrationTest {
 
     @Test
     void removeResourcesById_ValidId_ResourceDeleted() {
-
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", UUID_VALID)
                 .exchange()
@@ -193,4 +173,5 @@ class ChallengeIntegrationTest {
                     assert dto.getResults().length == 1;
                 });
     }
+
 }

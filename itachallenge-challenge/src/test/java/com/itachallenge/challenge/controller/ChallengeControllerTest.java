@@ -100,28 +100,6 @@ class ChallengeControllerTest {
                 });
     }
 
-/*    @Test
-    void getAllChallenges_ChallengesExist_ChallengesReturned() {
-        // Arrange
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
-
-        when(challengeService.getAllChallenges()).thenReturn(Mono.just(expectedResult));
-
-        // Act & Assert
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
-                });
-    }*/
-
     @Test
     void getAllChallenges_ValidPageParameters_ChallengesReturned() {
         //Arrange
@@ -139,7 +117,7 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challengesByPage?pageNumber=1&pageSize=3")
+                .uri("/itachallenge/api/v1/challenge/challenges?page=1&size=3")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
@@ -161,7 +139,7 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challengesByPage")
+                .uri("/itachallenge/api/v1/challenge/challenges")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
@@ -188,4 +166,5 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
+
 }

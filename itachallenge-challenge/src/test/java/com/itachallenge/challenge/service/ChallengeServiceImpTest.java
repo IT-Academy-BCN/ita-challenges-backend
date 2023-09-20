@@ -7,7 +7,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ class ChallengeServiceImpTest {
     private LanguageRepository languageRepository;
 
     @Mock
-    private Converter converter;
+    private DocumentToDtoConverter converter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -149,29 +149,6 @@ class ChallengeServiceImpTest {
         verifyNoMoreInteractions(challengeRepository);
     }
 
-/*    @Test
-    void getAllChallenges_ChallengesExist_ChallengesReturned() {
-        // Arrange
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
-
-        when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
-
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedChallenges))
-                .expectComplete()
-                .verify();
-
-        verify(challengeRepository).findAll();
-        verify(converter).fromChallengeToChallengeDto(any());
-    }*/
-
     @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
@@ -185,7 +162,7 @@ class ChallengeServiceImpTest {
         int pageSize = 2;
         Pageable pageable = PageRequest.of((pageNumber - 1), pageSize);
 
-        when(challengeRepository.findAllBy(pageable))
+        when(challengeRepository.findAllByUuidNotNull(pageable))
                 .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
 
@@ -198,7 +175,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        verify(challengeRepository).findAllBy(pageable);
+        verify(challengeRepository).findAllByUuidNotNull(pageable);
         verify(converter).fromChallengeToChallengeDto(any());
     }
 

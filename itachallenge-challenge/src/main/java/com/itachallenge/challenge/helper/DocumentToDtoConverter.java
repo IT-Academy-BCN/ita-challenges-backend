@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @Component
-public class Converter {
+public class DocumentToDtoConverter {
 
     public Flux<ChallengeDto> fromChallengeToChallengeDto(Flux<ChallengeDocument> challengeFlux) {
         return challengeFlux.map(this::toChallengeDto);
