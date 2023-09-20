@@ -11,5 +11,5 @@ public interface IChallengeService {
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
-
+    Mono<GenericResultDto<ChallengeDto>> getRelatedChallenge(String challengeId); 
 }
