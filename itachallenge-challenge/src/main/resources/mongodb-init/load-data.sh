@@ -1,10 +1,8 @@
 #!/bin/bash
 
-echo "Beginning of insertion"
+echo "Loading data to mongoDB"
 
-mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=challenges --jsonArray --file=challenges.json
-mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=languages --jsonArray --file=languages.json
-mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=solutions --jsonArray --file=solutions.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=challenges --jsonArray --file=/tmp/data/challenges.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=languages --jsonArray --file=/tmp/data/languages.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=solutions --jsonArray --file=/tmp/data/solutions.json
 
-echo "Done!"
-exit
