@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.google.gson.JsonObject;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
@@ -15,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import java.net.URI;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/itachallenge/api/v1/challenge")
+@RequestMapping(value = "/" +
+        "itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
@@ -35,25 +34,25 @@ public class ChallengeController {
         Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);
 
         Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);
 
         Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
-        log.info((userService.isPresent() ? userService.get().toString() : "No Services")
+        log.info((userService.map(String::toString).orElse("No Services"))
                 .concat(System.lineSeparator())
-                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                .concat(challengeService.map(String::toString).orElse("No Services"))
                 .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services"));
+                .concat(scoreService.map(String::toString).orElse("No Services")));
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         return "Hello from ITA Challenge!!!";
@@ -102,8 +101,16 @@ public class ChallengeController {
     }
 
     @GetMapping("/language")
+    @Operation(
+            operationId = "Get all the stored languages from the Database.",
+            summary = "Get to see all languages available.",
+            description = "Requesting all available languages through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "No languages were found.", content = { @Content(schema = @Schema()) })
+            }
+    )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         return challengeService.getAllLanguages();
     }
-
 }
