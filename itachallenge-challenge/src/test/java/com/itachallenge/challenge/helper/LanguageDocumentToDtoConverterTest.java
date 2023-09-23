@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LanguageDocumentToDtoConverterTest {
 
-    private LanguageDocumentToDtoConverter languageConverter = new LanguageDocumentToDtoConverter();
+    private final LanguageDocumentToDtoConverter languageConverter = new LanguageDocumentToDtoConverter();
 
     private LanguageDocument languageDocument1;
 

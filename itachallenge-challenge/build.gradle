@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
     implementation 'org.springframework:spring-context:5.3.13'
-    implementation 'org.modelmapper:modelmapper:2.3.8'
+    implementation 'org.modelmapper:modelmapper:3.1.1'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'

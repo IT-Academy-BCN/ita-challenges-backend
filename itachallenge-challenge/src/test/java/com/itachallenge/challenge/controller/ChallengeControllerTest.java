@@ -126,7 +126,7 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/language")
+                .uri("/itachallenge/api/v1/challenge/languages")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)

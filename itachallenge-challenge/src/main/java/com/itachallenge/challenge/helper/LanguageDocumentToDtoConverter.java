@@ -11,8 +11,8 @@ import reactor.core.publisher.Flux;
 public class LanguageDocumentToDtoConverter {
 
     public LanguageDto convertDocumentToDto(LanguageDocument document) throws ConverterException {
-        ModelMapper entityToDto = new ModelMapper();
-        return entityToDto.map(document, LanguageDto.class);
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(document, LanguageDto.class);
     }
     public Flux<LanguageDto> convertDocumentFluxToDtoFlux(Flux<LanguageDocument> documentFlux) {
         return documentFlux.map(this::convertDocumentToDto);

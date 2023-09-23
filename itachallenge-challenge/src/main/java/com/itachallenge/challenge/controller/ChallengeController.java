@@ -102,7 +102,7 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
-    @GetMapping("/language")
+    @GetMapping("/languages")
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         return challengeService.getAllLanguages();
     }
