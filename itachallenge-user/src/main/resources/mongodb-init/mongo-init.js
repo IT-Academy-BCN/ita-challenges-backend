@@ -3,9 +3,9 @@ db.createUser({
     user: "admin_challenges_user",
     pwd: "BYBcMJEEWw5egRUo",
     roles: [
-      { role: "dbOwner", db: "challenges-users" }
+      { role: "dbOwner", db: "users" }
     ]
   });
 
 //create collections
-db.createCollection("users");
+db.createCollection("challenges");
