@@ -18,4 +18,5 @@
 * Annia Kuzmina - https://github.com/anniakuz
 * Susana Portabella - https://github.com/SPortabella
 * Miguel Ángel Manzano - https://github.com/mmanzanomo
+* Josep Olivé Diaz - https://github.com/JosepOli
 
