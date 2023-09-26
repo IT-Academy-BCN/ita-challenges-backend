@@ -104,11 +104,12 @@ public class ChallengeController {
 
     @GetMapping("/language")
     @Operation(
-            operationId = "Get all the stored languages into the Database.",
-            summary = "Get to see all id language and name.",
-            description = "Requesting all the languages through the URI from the database.",
+            operationId = "Get all the stored languages from the Database.",
+            summary = "Get to see all languages available.",
+            description = "Requesting all available languages through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "No languages were found.", content = { @Content(schema = @Schema()) })
             }
     )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
@@ -127,7 +128,6 @@ public class ChallengeController {
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
-
     }
 
 }
