@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +128,31 @@ class ChallengeControllerTest {
         // Act & Assert
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/language")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
+                });
+    }
+
+    @Test
+    void getSolutions_ValidIds_SolutionsReturned() {
+        // Arrange
+        String idChallenge = "valid-challenge-id";
+        String idLanguage = "valid-language-id";
+
+        GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+
+        when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)

@@ -2,8 +2,10 @@ package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -24,6 +26,10 @@ public class Converter {
         return languageFlux.map(this::toLanguageDto);
     }
 
+    public Flux<SolutionDto> fromSolutionToSolutionDto(Flux<SolutionDocument> solutionFlux) {
+        return solutionFlux.map(this::toSolutionDto);
+    }
+
     private ChallengeDto toChallengeDto(ChallengeDocument challenge) {
         return ChallengeDto.builder()
                 .challengeId(challenge.getUuid())
@@ -38,6 +44,10 @@ public class Converter {
 
     private LanguageDto toLanguageDto(LanguageDocument language) {
         return new LanguageDto(language.getIdLanguage(), language.getLanguageName());
+    }
+
+    private SolutionDto toSolutionDto(SolutionDocument solution) {
+        return new SolutionDto(solution.getUuid(), solution.getSolutionText(), solution.getIdLanguage());
     }
 
     //metodo para formatear creationDate del document al formato requerido en el .json

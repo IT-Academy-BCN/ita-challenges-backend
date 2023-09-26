@@ -19,6 +19,6 @@ public class SolutionDocument {
     @Field(name="solution_text")
     private String solutionText;
 
-    @Field(name="id_language")
+    @Field(name="language")
     private UUID idLanguage;
 }
