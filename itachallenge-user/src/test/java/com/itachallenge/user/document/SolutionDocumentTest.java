@@ -10,8 +10,7 @@ class SolutionDocumentTest {
 
     UUID uuid = UUID.randomUUID();
     String solutionText = "Ipsum...";
-    UUID idLanguage = UUID.randomUUID();
-    SolutionDocument solutionDocument = new SolutionDocument(uuid, solutionText,idLanguage);
+    SolutionDocument solutionDocument = new SolutionDocument(uuid, solutionText);
 
     @Test
     void getUuid(){
@@ -21,8 +20,5 @@ class SolutionDocumentTest {
     void getSolutionText(){
         assertEquals(solutionText, solutionDocument.getSolutionText());
     }
-    @Test
-    void getLanguageId(){
-        assertEquals(idLanguage, solutionDocument.getIdLanguage());
-    }
+
 }

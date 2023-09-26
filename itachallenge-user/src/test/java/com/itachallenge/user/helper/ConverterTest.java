@@ -28,9 +28,9 @@ class ConverterTest {
     UUID idChallenge = UUID.randomUUID();
     String solutionText1 = "Ipsum.. 1";
     String solutionText2 = "Ipsum.. 2";
-    SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), solutionText1,idLanguage);
-    SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), solutionText2,idLanguage);
-    SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2,idLanguage);
+    SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), solutionText1);
+    SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), solutionText2);
+    SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
     UserScoreDocument userScoreDocument = new UserScoreDocument(uuid_1, idUser, idChallenge, idLanguage, true, 1, 90, solutionDocumentList);
 

@@ -19,11 +19,11 @@ class UserScoreDtoTest {
     private final String solutionText1 = "Solution number 1";
     private final String solutionText2 = "Solution number 2";
     private final int solutionSize1 = 2;
-    SolutionDocument SolutionDocument1 = new SolutionDocument(solutionId1,solutionText1,languageId1);
-    SolutionDocument SolutionDocument2 = new SolutionDocument(solutionId2,solutionText2,languageId1);
-    private List<SolutionDocument> solutions1 = List.of(SolutionDocument1,SolutionDocument2);
+    SolutionDocument SolutionDocument1 = new SolutionDocument(solutionId1,solutionText1);
+    SolutionDocument SolutionDocument2 = new SolutionDocument(solutionId2,solutionText2);
+    private final List<SolutionDocument> solutions1 = List.of(SolutionDocument1,SolutionDocument2);
 
-    private UserScoreDto userScoreDto1 = UserScoreDto.builder()
+    private final UserScoreDto userScoreDto1 = UserScoreDto.builder()
             .challengeId(challengeId1)
             .languageID(languageId1)
             .userId(userId1)

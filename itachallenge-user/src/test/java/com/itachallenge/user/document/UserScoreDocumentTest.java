@@ -19,8 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
     String solutionText1 = "Ipsum.. 1";
     String solutionText2 = "Ipsum.. 2";
-    SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1,languageId);
-    SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2,languageId);
+    SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
+    SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
     UserScoreDocument userScoreDocument = new UserScoreDocument(uuid, userId, challengeId, languageId, bookmarked, status,score, solutionDocumentList);
 

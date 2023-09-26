@@ -44,9 +44,9 @@ class UserScoreServiceImpTest {
         UUID idLanguage = UUID.randomUUID();
         UUID idChallenge = UUID.randomUUID();
 
-        SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), "solutionText1",idLanguage);
-        SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), "solutionText2",idLanguage);
-        SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), "solutionText3",idLanguage);
+        SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), "solutionText1");
+        SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), "solutionText2");
+        SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), "solutionText3");
         List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
 
         UserScoreDocument userScoreDocument = new UserScoreDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true,1,1,solutionDocumentList );
