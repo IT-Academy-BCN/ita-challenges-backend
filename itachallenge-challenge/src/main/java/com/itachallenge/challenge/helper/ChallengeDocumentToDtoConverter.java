@@ -18,6 +18,10 @@ public class ChallengeDocumentToDtoConverter {
 
     static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+    public Flux<ChallengeDto> convertDocumentFluxToDtoFlux(Flux<ChallengeDocument> documentFlux) {
+        return documentFlux.map(this::convertDocumentToDto);
+    }
+
     public ChallengeDto convertDocumentToDto(ChallengeDocument document) throws ConverterException {
 
         ModelMapper mapper = new ModelMapper();
@@ -27,14 +31,14 @@ public class ChallengeDocumentToDtoConverter {
                 return creationDateFromDocument.format(CUSTOM_FORMATTER);
             }
         };
+        mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class)
+            .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
+            .addMapping(ChallengeDocument::getLevel, ChallengeDto::setLevel);
 
-        mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class);
         mapper.addConverter(fromLocalDateTimeToString);
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         return mapper.map(document, ChallengeDto.class);
     }
 
-    public Flux<ChallengeDto> convertDocumentFluxToDtoFlux(Flux<ChallengeDocument> documentFlux) {
-        return documentFlux.map(this::convertDocumentToDto);
-    }
+
 }

@@ -3,12 +3,14 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.ChallengeDocumentToDtoConverter;
 import com.itachallenge.challenge.helper.LanguageDocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
@@ -17,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -29,12 +31,12 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+
     @Autowired
     private ChallengeRepository challengeRepository;
-
     @Autowired
     private LanguageRepository languageRepository;
-
     @Autowired
     private ChallengeDocumentToDtoConverter challengeConverter;
 
@@ -111,4 +113,8 @@ public class ChallengeServiceImp implements IChallengeService {
         return Mono.just(UUID.fromString(id));
     }
 
+    @Override
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+        return null;
+    }
 }

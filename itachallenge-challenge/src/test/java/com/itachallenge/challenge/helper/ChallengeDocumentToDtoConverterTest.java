@@ -133,7 +133,7 @@ class ChallengeDocumentToDtoConverterTest {
                                                DetailDocument detail, Set<LanguageDto> languageIS,
                                                List<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
-        when(challengeDocMocked.getUuid()).thenReturn(challengeId);
+        when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
         when(challengeDocMocked.getLevel()).thenReturn(level);
       //  when(challengeDocMocked.getCreationDate()).thenReturn("2018-09-09");
@@ -153,7 +153,7 @@ class ChallengeDocumentToDtoConverterTest {
                 .map(this::convertLanguageDocumentToDto)
                 .collect(Collectors.toSet());
 
-        return challengeDto.getUuid() == challengeDoc.getUuid() &&
+        return challengeDto.getChallengeId() == challengeDoc.getUuid() &&
                 challengeDto.getTitle().equalsIgnoreCase(challengeDoc.getTitle()) &&
                 challengeDto.getLevel().equalsIgnoreCase(challengeDoc.getLevel()) &&
                 challengeDto.getCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getCreationDate())) &&
