@@ -1,15 +1,18 @@
 package com.itachallenge.user.document;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.List;
 import java.util.UUID;
 @AllArgsConstructor
+@Setter
+@Builder
+@NoArgsConstructor
 @Getter
-@Document(collection="user_score")
+@Document(collection="challenges")
 public class UserScoreDocument {
 
     @Id
@@ -34,12 +37,6 @@ public class UserScoreDocument {
     @Field("score")
     private int score;
 
-    @Field("solution_id")
-    private UUID solutionId;
-
-    // @Field("solution_text")
-    // private String solutionText;
      @Field("solution")
-     private SolutionDocument solutionDocument;
-
+     private List<SolutionDocument> solutionDocument;
 }

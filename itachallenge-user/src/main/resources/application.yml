@@ -1,8 +1,15 @@
 spring:
   application:
     name: itachallenge-user
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
+  data:
+    mongodb:
+      uri: mongodb://admin_challenges_user:BYBcMJEEWw5egRUo@localhost:27017/users
+      uuid-representation: standard
 
 redis:
   port: 6379

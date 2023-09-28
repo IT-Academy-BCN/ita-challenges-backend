@@ -7,11 +7,12 @@ db.createUser({
     ]
   });
 
+
 //use challenges
 //create collections
-db.createCollection("challenges");
-db.createCollection("languages");
-db.createCollection("solutions");
+//db.createCollection("challenges");
+//db.createCollection("languages");
+//db.createCollection("solutions");
 
 
 

@@ -17,5 +17,6 @@
 * Milos Vasovic - https://github.com/vaskebcn
 * Annia Kuzmina - https://github.com/anniakuz
 * Susana Portabella - https://github.com/SPortabella
-
+* Miguel Ángel Manzano - https://github.com/mmanzanomo
+* Miquel Debón Villagrasa - https://github.com/MiquelDebon
 

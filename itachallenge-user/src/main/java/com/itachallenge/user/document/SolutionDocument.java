@@ -8,10 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.UUID;
 
-@Document(collection="solutions")
+
 @Getter
 @AllArgsConstructor
-
 public class SolutionDocument {
 
     @Id
@@ -21,6 +20,4 @@ public class SolutionDocument {
     @Field(name="solution_text")
     private String solutionText;
 
-    @Field(name="id_language")
-    private UUID idLanguage;
 }
