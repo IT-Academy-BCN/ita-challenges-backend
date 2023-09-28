@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MockController {
 
-    @RequestMapping(value = "/test")
+    @RequestMapping(value = "/")
     public String test() {
         return "Hello ITAchallenge-Mock  ;) !!!";
     }

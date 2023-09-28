@@ -87,7 +87,7 @@ services:
     image: apache/apisix:3.5.0-centos
     restart: always
     volumes:
-      - ./apisix_conf/apisix_standalone.yaml:/usr/local/apisix/conf/apisix.yaml:ro
+      - ./apisix_conf/apisix_standalone.yaml:/usr/local/apisix/conf/config.yaml:ro
     environment:
       APISIX_STAND_ALONE: true
     ports:
