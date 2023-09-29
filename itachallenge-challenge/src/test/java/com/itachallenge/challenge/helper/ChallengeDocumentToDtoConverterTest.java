@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 class ChallengeDocumentToDtoConverterTest {
 
-    private final ChallengeDocumentToDtoConverter converter = new ChallengeDocumentToDtoConverter();
+    private final GenericDocumentToDtoConverter<ChallengeDocument, ChallengeDto> converter = new GenericDocumentToDtoConverter<>();
 
     private ChallengeDocument challengeDoc1;
 
@@ -40,7 +40,6 @@ class ChallengeDocumentToDtoConverterTest {
 
     @BeforeEach
     public void setUp() {
-
         UUID challengeRandomId1 = UUID.randomUUID();
         UUID challengeRandomId2 = UUID.randomUUID();
         UUID exampleRandomId = UUID.randomUUID();
@@ -90,7 +89,7 @@ class ChallengeDocumentToDtoConverterTest {
     @DisplayName("Conversion from ChallengeDocument to ChallengeDto. Testing 'convertDocumentToDto' method.")
     void testConvertToDto() throws ConverterException {
         ChallengeDocument challengeDocumentMocked = challengeDoc1;
-        ChallengeDto resultDto = converter.convertDocumentToDto(challengeDocumentMocked);
+        ChallengeDto resultDto = converter.convertDocumentToDto(challengeDocumentMocked, ChallengeDto.class);
         ChallengeDto expectedDto = challengeDto1;
 
         assertThat(expectedDto).usingRecursiveComparison()
@@ -104,13 +103,24 @@ class ChallengeDocumentToDtoConverterTest {
         ChallengeDocument challengeMock1 = challengeDoc1;
         ChallengeDocument challengeMock2 = challengeDoc2;
 
-        Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeMock1, challengeMock2));
+        Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeMock1, challengeMock2), ChallengeDto.class);
+
+        ChallengeDto expectedDto1 = challengeDto1;
+        ChallengeDto expectedDto2 = challengeDto2;
 
         StepVerifier.create(resultDto)
                 .expectNextMatches(challengeDto -> validateChallengeDto(challengeDto, challengeMock1))
                 .expectNextMatches(challengeDto -> validateChallengeDto(challengeDto, challengeMock2))
                 .expectComplete()
                 .verify();
+
+        assertThat(resultDto.count().block()).isEqualTo(Long.valueOf(2));
+        assertThat(resultDto.blockFirst()).usingRecursiveComparison()
+                .ignoringFields("percentage", "popularity")
+                .isEqualTo(expectedDto1);
+        assertThat(resultDto.blockLast()).usingRecursiveComparison()
+                .ignoringFields("percentage", "popularity")
+                .isEqualTo(expectedDto2);
     }
 
     private ChallengeDocument getChallengeMocked(UUID challengeId, String title, String level, LocalDateTime creationDate,
@@ -133,10 +143,10 @@ class ChallengeDocumentToDtoConverterTest {
                                                DetailDocument detail, Set<LanguageDto> languageIS,
                                                List<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
-        when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
+        when(challengeDocMocked.getUuid()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
         when(challengeDocMocked.getLevel()).thenReturn(level);
-      //  when(challengeDocMocked.getCreationDate()).thenReturn("2018-09-09");
+        when(challengeDocMocked.getCreationDate()).thenReturn("2018-09-09");
         when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
         when(challengeDocMocked.getDetail()).thenReturn(detail);
         when(challengeDocMocked.getLanguages()).thenReturn(languageIS);
@@ -153,7 +163,7 @@ class ChallengeDocumentToDtoConverterTest {
                 .map(this::convertLanguageDocumentToDto)
                 .collect(Collectors.toSet());
 
-        return challengeDto.getChallengeId() == challengeDoc.getUuid() &&
+        return challengeDto.getUuid() == challengeDoc.getUuid() &&
                 challengeDto.getTitle().equalsIgnoreCase(challengeDoc.getTitle()) &&
                 challengeDto.getLevel().equalsIgnoreCase(challengeDoc.getLevel()) &&
                 challengeDto.getCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getCreationDate())) &&
@@ -168,10 +178,10 @@ class ChallengeDocumentToDtoConverterTest {
         boolean validate;
         if (languageDtoSet.size() == languageSet.size()) {
             validate = languageDtoSet.stream()
-                    .map(LanguageDto::getIdLanguage)
+                    .map(LanguageDto::getLanguageId)
                     .collect(Collectors.toSet())
                     .equals(languageSet.stream()
-                            .map(LanguageDto::getIdLanguage)
+                            .map(LanguageDto::getLanguageId)
                             .collect(Collectors.toSet()));
         } else {
             validate = false;

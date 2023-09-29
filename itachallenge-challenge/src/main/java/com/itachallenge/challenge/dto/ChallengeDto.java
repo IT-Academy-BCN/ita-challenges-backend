@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.challenge.document.DetailDocument;
 import lombok.*;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
@@ -21,7 +20,7 @@ import java.util.UUID;
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
-    private UUID challengeId;
+    private UUID uuid;
 
     @JsonProperty(value = "challenge_title", index = 1)
     private String title;

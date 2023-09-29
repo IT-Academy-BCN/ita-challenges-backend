@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LanguageDocumentToDtoConverterTest {
 
-    private final LanguageDocumentToDtoConverter languageConverter = new LanguageDocumentToDtoConverter();
+    private final GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> mapper = new GenericDocumentToDtoConverter();
 
     private LanguageDocument languageDocument1;
 
@@ -45,11 +45,11 @@ class LanguageDocumentToDtoConverterTest {
     void testConvertLanguageDocumentToLanguageDto() {
         // when
         LanguageDocument languageDocumentMocked = languageDocument1;
-        LanguageDto resultDto = languageConverter.convertDocumentToDto(languageDocumentMocked);
+        LanguageDto resultDto = mapper.convertDocumentToDto(languageDocumentMocked, LanguageDto.class);
         LanguageDto expectedDto = languageDto1;
 
         // then
-        assertEquals(expectedDto.getIdLanguage(), resultDto.getIdLanguage());
+        assertEquals(expectedDto.getLanguageId(), resultDto.getLanguageId());
         assertEquals(expectedDto.getLanguageName(), resultDto.getLanguageName());
     }
 
@@ -57,15 +57,15 @@ class LanguageDocumentToDtoConverterTest {
     @DisplayName("Test convertFluxEntityToFluxDto method")
     void testConvertFluxEntityToFluxDto() {
         Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
-        Flux<LanguageDto> resultFlux = languageConverter.convertDocumentFluxToDtoFlux(documentFlux);
+        Flux<LanguageDto> resultFlux = mapper.convertDocumentFluxToDtoFlux(documentFlux, LanguageDto.class);
 
         StepVerifier.create(resultFlux)
                 .assertNext(languageDto -> {
-                    Assertions.assertEquals(languageDto1.getIdLanguage(), languageDto.getIdLanguage());
+                    Assertions.assertEquals(languageDto1.getLanguageId(), languageDto.getLanguageId());
                     Assertions.assertEquals(languageDto1.getLanguageName(), languageDto.getLanguageName());
                 })
                 .assertNext(languageDto -> {
-                    Assertions.assertEquals(languageDto2.getIdLanguage(), languageDto.getIdLanguage());
+                    Assertions.assertEquals(languageDto2.getLanguageId(), languageDto.getLanguageId());
                     Assertions.assertEquals(languageDto2.getLanguageName(), languageDto.getLanguageName());
                 })
                 .expectComplete()
