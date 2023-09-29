@@ -8,4 +8,4 @@ db.createUser({
   });
 
 //create collections
-db.createCollection("challenges");
+db.createCollection("solutions");

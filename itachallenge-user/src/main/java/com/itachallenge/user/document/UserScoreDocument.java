@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @Getter
-@Document(collection="challenges")
+@Document(collection="solutions")
 public class UserScoreDocument {
 
     @Id
