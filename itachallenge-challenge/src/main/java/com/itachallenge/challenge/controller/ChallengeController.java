@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.google.gson.JsonObject;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
@@ -16,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import java.net.URI;
 import java.util.Optional;
+
+/**
+ * @author Luis
+ */
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -36,25 +38,25 @@ public class ChallengeController {
         Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);//he cambiado la expresión lambda por un metodo referencial (luis)
 
         Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);
 
         Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
-        log.info((userService.isPresent() ? userService.get().toString() : "No Services")
+        log.info((userService.map(String::toString).orElse("No Services"))//también utilizo un map, trabaja de manera más óptima
                 .concat(System.lineSeparator())
-                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                .concat(challengeService.map(String::toString).orElse("No Services"))
                 .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services"));
+                .concat(scoreService.map(String::toString).orElse("No Services")));
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         return "Hello from ITA Challenge!!!";
@@ -102,6 +104,7 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
+    //He catalogado este endpoint (Luis)
     @GetMapping("/language")
     @Operation(
             operationId = "Get all the stored languages from the Database.",

@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+/**
+ * @author Luis
+ */
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/score")
 public class ScoreController {
