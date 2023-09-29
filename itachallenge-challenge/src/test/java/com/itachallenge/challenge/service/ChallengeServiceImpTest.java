@@ -18,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -30,10 +29,8 @@ class ChallengeServiceImpTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
-
     @Mock
     private LanguageRepository languageRepository;
-
     @Mock
     private GenericDocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
 

@@ -65,7 +65,7 @@ class ChallengeDtoTest {
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(challengeDtoToSerialize);
         String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
-        //Assertions.assertEquals(jsonExpected, jsonResult);
+        //Assertions.assertEquals(jsonExpectedV2, jsonResult);
         assertEquals(jsonExpected, jsonResult);
     }
 
