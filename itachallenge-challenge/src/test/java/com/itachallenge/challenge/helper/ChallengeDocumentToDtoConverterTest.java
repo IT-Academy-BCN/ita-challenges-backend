@@ -93,7 +93,7 @@ class ChallengeDocumentToDtoConverterTest {
         ChallengeDto expectedDto = challengeDto1;
 
         assertThat(expectedDto).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
+                .ignoringFields("challengePercentage", "challengePopularity")
                 .isEqualTo(resultDto);
     }
 
@@ -116,10 +116,10 @@ class ChallengeDocumentToDtoConverterTest {
 
         assertThat(resultDto.count().block()).isEqualTo(Long.valueOf(2));
         assertThat(resultDto.blockFirst()).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
+                .ignoringFields("challengePercentage", "challengePopularity")
                 .isEqualTo(expectedDto1);
         assertThat(resultDto.blockLast()).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
+                .ignoringFields("challengePercentage", "challengePopularity")
                 .isEqualTo(expectedDto2);
     }
 
@@ -127,15 +127,15 @@ class ChallengeDocumentToDtoConverterTest {
                                                  DetailDocument detail, Set<LanguageDocument> languageIS,
                                                  List<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges) {
         ChallengeDocument challengeIMocked = mock(ChallengeDocument.class);
-        when(challengeIMocked.getUuid()).thenReturn(challengeId);
-        when(challengeIMocked.getTitle()).thenReturn(title);
-        when(challengeIMocked.getLevel()).thenReturn(level);
-        when(challengeIMocked.getCreationDate()).thenReturn(creationDate);
-        when(challengeIMocked.getDetail()).thenReturn(detail);
-        when(challengeIMocked.getLanguages()).thenReturn(languageIS);
-        when(challengeIMocked.getSolutions()).thenReturn(solutions);
-        when(challengeIMocked.getResources()).thenReturn(resources);
-        when(challengeIMocked.getRelatedChallenges()).thenReturn(relatedChallenges);
+        when(challengeIMocked.getChallengeId()).thenReturn(challengeId);
+        when(challengeIMocked.getChallengeTitle()).thenReturn(title);
+        when(challengeIMocked.getChallengeLevel()).thenReturn(level);
+        when(challengeIMocked.getChallengeCreationDate()).thenReturn(creationDate);
+        when(challengeIMocked.getChallengeDetail()).thenReturn(detail);
+        when(challengeIMocked.getChallengeLanguages()).thenReturn(languageIS);
+        when(challengeIMocked.getChallengeSolutions()).thenReturn(solutions);
+        when(challengeIMocked.getChallengeResources()).thenReturn(resources);
+        when(challengeIMocked.getChallengeRelatedChallenges()).thenReturn(relatedChallenges);
         return challengeIMocked;
     }
 
@@ -143,35 +143,35 @@ class ChallengeDocumentToDtoConverterTest {
                                                DetailDocument detail, Set<LanguageDto> languageIS,
                                                List<UUID> solutions, Set<UUID> resources, Set<UUID> relatedChallenges, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
-        when(challengeDocMocked.getUuid()).thenReturn(challengeId);
-        when(challengeDocMocked.getTitle()).thenReturn(title);
-        when(challengeDocMocked.getLevel()).thenReturn(level);
-        when(challengeDocMocked.getCreationDate()).thenReturn("2018-09-09");
-        when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
-        when(challengeDocMocked.getDetail()).thenReturn(detail);
-        when(challengeDocMocked.getLanguages()).thenReturn(languageIS);
-        when(challengeDocMocked.getSolutions()).thenReturn(solutions);
-        when(challengeDocMocked.getResources()).thenReturn(resources);
-        when(challengeDocMocked.getRelatedChallenges()).thenReturn(relatedChallenges);
-        when(challengeDocMocked.getPopularity()).thenReturn(popularity);
-        when(challengeDocMocked.getPercentage()).thenReturn(percentage);
+        when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
+        when(challengeDocMocked.getChallengeTitle()).thenReturn(title);
+        when(challengeDocMocked.getChallengeLevel()).thenReturn(level);
+        when(challengeDocMocked.getChallengeCreationDate()).thenReturn("2018-09-09");
+        when(challengeDocMocked.getChallengeCreationDate()).thenReturn(creationDate);
+        when(challengeDocMocked.getChallengeDetail()).thenReturn(detail);
+        when(challengeDocMocked.getChallengeLanguages()).thenReturn(languageIS);
+        when(challengeDocMocked.getChallengeSolutions()).thenReturn(solutions);
+        when(challengeDocMocked.getChallengeResources()).thenReturn(resources);
+        when(challengeDocMocked.getChallengeRelatedChallenges()).thenReturn(relatedChallenges);
+        when(challengeDocMocked.getChallengePopularity()).thenReturn(popularity);
+        when(challengeDocMocked.getChallengePercentage()).thenReturn(percentage);
         return challengeDocMocked;
     }
 
     private boolean validateChallengeDto(ChallengeDto challengeDto, ChallengeDocument challengeDoc) {
-        Set<LanguageDto> languageDtoSet = challengeDoc.getLanguages().stream()
+        Set<LanguageDto> languageDtoSet = challengeDoc.getChallengeLanguages().stream()
                 .map(this::convertLanguageDocumentToDto)
                 .collect(Collectors.toSet());
 
-        return challengeDto.getUuid() == challengeDoc.getUuid() &&
-                challengeDto.getTitle().equalsIgnoreCase(challengeDoc.getTitle()) &&
-                challengeDto.getLevel().equalsIgnoreCase(challengeDoc.getLevel()) &&
-                challengeDto.getCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getCreationDate())) &&
-                validateLanguageSet(languageDtoSet, challengeDto.getLanguages());
+        return challengeDto.getChallengeId() == challengeDoc.getChallengeId() &&
+                challengeDto.getChallengeTitle().equalsIgnoreCase(challengeDoc.getChallengeTitle()) &&
+                challengeDto.getChallengeLevel().equalsIgnoreCase(challengeDoc.getChallengeLevel()) &&
+                challengeDto.getChallengeCreationDate().equalsIgnoreCase(getFormattedCreationDateTime(challengeDoc.getChallengeCreationDate())) &&
+                validateLanguageSet(languageDtoSet, challengeDto.getChallengeLanguages());
     }
 
     private LanguageDto convertLanguageDocumentToDto(LanguageDocument languageDocument) {
-        return new LanguageDto(languageDocument.getIdLanguage(), languageDocument.getLanguageName());
+        return new LanguageDto(languageDocument.getLanguageId(), languageDocument.getLanguageName());
     }
 
     private boolean validateLanguageSet(Set<LanguageDto> languageDtoSet, Set<LanguageDto> languageSet) {

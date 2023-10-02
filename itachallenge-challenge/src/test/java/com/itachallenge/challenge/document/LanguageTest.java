@@ -11,7 +11,7 @@ class LanguageTest {
     void getIdLanguage() {
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         LanguageDocument language = new LanguageDocument(uuid, null);
-        assertEquals(uuid, language.getIdLanguage());
+        assertEquals(uuid, language.getLanguageId());
     }
 
     @Test

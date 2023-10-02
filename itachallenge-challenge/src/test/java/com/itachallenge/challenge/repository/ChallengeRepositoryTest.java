@@ -85,7 +85,7 @@ class ChallengeRepositoryTest {
 
     private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
-        when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
+        when(languageIMocked.getLanguageId()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
         return languageIMocked;
     }
@@ -123,12 +123,12 @@ class ChallengeRepositoryTest {
 
         Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getUuid(), uuid_1),
+                u -> assertEquals(u.getChallengeId(), uuid_1),
                 () -> fail("Challenge not found: " + uuid_1));
 
         Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getUuid(), uuid_2),
+                u -> assertEquals(u.getChallengeId(), uuid_2),
                 () -> fail("Challenge not found: " + uuid_2));
     }
 
@@ -165,12 +165,12 @@ class ChallengeRepositoryTest {
 
         Mono<ChallengeDocument> firstChallenge = challengeRepository.findByLevel("Level 1");
         firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getLevel(), "Level 1"),
+                u -> assertEquals(u.getChallengeLevel(), "Level 1"),
                 () -> fail("Challenge not found: " + uuid_1));
 
         Mono<ChallengeDocument> secondChallenge = challengeRepository.findByLevel("Level 2");
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getLevel(), "Level 2"),
+                u -> assertEquals(u.getChallengeLevel(), "Level 2"),
                 () -> fail("Challenge not found: " + uuid_2));
     }
 
@@ -180,12 +180,12 @@ class ChallengeRepositoryTest {
 
         Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle("Loops");
         firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTitle(), "Loops"),
+                u -> assertEquals(u.getChallengeTitle(), "Loops"),
                 () -> fail("Challenge with name Loops  not found."));
 
         Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle("If");
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTitle(), "If"),
+                u -> assertEquals(u.getChallengeTitle(), "If"),
                 () -> fail("Challenge with name If not found."));
     }
 

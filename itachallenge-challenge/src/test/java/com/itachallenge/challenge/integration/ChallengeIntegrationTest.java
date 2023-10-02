@@ -95,7 +95,7 @@ public class ChallengeIntegrationTest {
     //TODO - Refactor this method, getLanguages endpoint already available
     private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
-        when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
+        when(languageIMocked.getLanguageId()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
         return languageIMocked;
     }

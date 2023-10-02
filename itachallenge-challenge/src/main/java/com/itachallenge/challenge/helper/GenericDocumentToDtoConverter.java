@@ -1,7 +1,5 @@
 package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.exception.ConverterException;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
@@ -29,10 +27,18 @@ public class GenericDocumentToDtoConverter <S,D> {
                 return creationDateFromDocument.format(CUSTOM_FORMATTER);
             }
         };
+
+        /**
+         * If you want to map the different field's name document/dto
+         * mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class)
+         *                 .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
+         *                 .addMapping(ChallengeDocument::getTitle, ChallengeDto::setChallengeTitle);
+         */
         mapper.createTypeMap(document, dtoClass);
         mapper.addConverter(converterFromLocalDateTimeToString);
         return mapper.map(document, dtoClass);
     }
+
 
 
 

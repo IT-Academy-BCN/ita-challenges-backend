@@ -94,12 +94,12 @@ class LanguageRepositoryTest {
 
         Mono<LanguageDocument> firstLanguage = languageRepository.findByIdLanguage(uuidLang1);
         firstLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), uuidLang1),
+                u -> assertEquals(u.getLanguageId(), uuidLang1),
                 () -> fail("Language with id " + uuidLang1 + " not found"));
 
         Mono<LanguageDocument> secondLanguage = languageRepository.findByIdLanguage(uuidLang2);
         secondLanguage.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getIdLanguage(), uuidLang2),
+                u -> assertEquals(u.getLanguageId(), uuidLang2),
                 () -> fail("Language with id " + uuidLang2 + " not found"));
     }
 

@@ -20,39 +20,39 @@ import java.util.UUID;
 public class ChallengeDto{
 
     @JsonProperty(value = "id_challenge", index = 0)
-    private UUID uuid;
+    private UUID challengeId;
 
     @JsonProperty(value = "challenge_title", index = 1)
-    private String title;
+    private String challengeTitle;
 
     @JsonProperty(index = 2)
-    private String level;
+    private String challengeLevel;
 
     @JsonProperty(value = "creation_date", index = 3)
-    private String creationDate;
+    private String challengeCreationDate;
 
     @JsonProperty(index = 4)
-    private DetailDocument detail;
+    private DetailDocument challengeDetail;
 
     // Info a obtener del micro score
     @JsonProperty(index = 5)
-    private Integer popularity;
+    private Integer challengePopularity;
 
     // Info a obtener del micro score
     @JsonProperty(index = 6)
-    private Float percentage;
+    private Float challengePercentage;
 
     @JsonProperty(index = 7)
-    private Set<LanguageDto> languages;
+    private Set<LanguageDto> challengeLanguages;
 
     @JsonProperty(index = 8)
-    private List<UUID> solutions;
+    private List<UUID> challengeSolutions;
 
     @JsonProperty(index = 9)
-    private Set<UUID> resources;
+    private Set<UUID> challengeResources;
 
     @JsonProperty(value = "related", index = 10)
-    private Set<UUID> relatedChallenges;
+    private Set<UUID> challengeRelatedChallenges;
 
     /*
     TODO: ADD more fields "on demand" (when needed)

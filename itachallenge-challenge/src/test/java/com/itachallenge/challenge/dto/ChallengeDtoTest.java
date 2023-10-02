@@ -93,13 +93,13 @@ class ChallengeDtoTest {
             (UUID id, String title, String level, String creationDate,
              Integer popularity, Float percentage, Set<LanguageDto> languages){
         return ChallengeDto.builder()
-                .uuid(id)
-                .title(title)
-                .level(level)
-                .creationDate(creationDate)
-                .popularity(popularity)
-                .percentage(percentage)
-                .languages(languages)
+                .challengeId(id)
+                .challengeTitle(title)
+                .challengeLevel(level)
+                .challengeCreationDate(creationDate)
+                .challengePopularity(popularity)
+                .challengePercentage(percentage)
+                .challengeLanguages(languages)
                 .build();
     }
 }
