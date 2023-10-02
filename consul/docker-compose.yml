@@ -100,6 +100,17 @@ services:
       consul-net:
         ipv4_address: 172.18.0.8
 
+  itachallenge-mock:
+    #image: '${REGISTRY_NAME}:{MOCK_CONTAINER_NAME}-${MOCK_TAG}'
+    image: itachallenge:itachallenge-mock-v1.0.0-RELEASE
+    container_name: itachallenge-mock
+    restart: always
+    ports:
+      - '${MOCK_CONTAINER_PORT}:8762'
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.9
+
 volumes:
   itachallenge_mongodb_data:
 
@@ -109,5 +120,5 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.18.0.0/16
+        - subnet: 172.18.0.0/24
         #- gateway: 172.18.0.16

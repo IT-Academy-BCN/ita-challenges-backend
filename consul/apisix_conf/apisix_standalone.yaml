@@ -4,10 +4,10 @@ apisix:
   config_center: yaml
 
 routes:
-  - uri: /*
+  - uri: /test
     upstream:
       nodes:
-        "172.18.0.1:8762": 1
+        "172.18.0.9:7779": 1
       type: roundrobin
 
 deployment:
