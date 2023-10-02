@@ -142,9 +142,10 @@ class UserControllerTest {
 
        String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
-       String userId = "valid-user-id";
-       String idLanguage = "valid-user-id";
-       String idChallenge = "valid-user-id";
+       final String VALID_MONGO_UUID = "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c";
+       String userId = VALID_MONGO_UUID;
+       String idLanguage = VALID_MONGO_UUID;
+       String idChallenge = VALID_MONGO_UUID;
 
        UserScoreDto userScoreDto = new UserScoreDto();
        SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();

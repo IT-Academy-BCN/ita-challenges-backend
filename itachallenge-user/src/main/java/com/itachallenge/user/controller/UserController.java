@@ -1,5 +1,6 @@
 package com.itachallenge.user.controller;
 
+import com.itachallenge.user.annotations.ValidMongoBDUUID;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
@@ -13,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Validated
 @RequestMapping(value = "/itachallenge/api/v1/user")
 public class UserController {
     //region ATTRIBUTES
@@ -76,7 +79,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = { @Content(schema = @Schema()) })
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") String idUser,@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage){
+    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") @ValidMongoBDUUID String idUser, @PathVariable("idChallenge") @ValidMongoBDUUID String idChallenge, @PathVariable("idLanguage") @ValidMongoBDUUID String idLanguage){
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 }

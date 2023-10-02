@@ -1,5 +1,6 @@
 package com.itachallenge.user.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockitoAnnotations;
@@ -19,13 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = GlobalExceptionHandler.class)
-public class GlobalExceptionHandlerTest {
+class GlobalExceptionHandlerTest {
 
     @Autowired
     private GlobalExceptionHandler globalExceptionHandler;
 
     @MockBean
     private UserScoreNotFoundException userScoreNotFoundException;
+
+    @MockBean
+    private ConstraintViolationException constraintViolationException;
+
 
     @Test
     void testStatusCodeAndMessageForException () {
@@ -41,6 +46,24 @@ public class GlobalExceptionHandlerTest {
                     assertEquals(httpExpected, response.getStatusCode());
                     assertEquals(expected, response.getBody().msg);
                     return true;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void testHandleConstraintViolation() {
+        String errorMessageExpected = "The MongoDB UUID is invalid";
+
+        when(constraintViolationException.getMessage()).thenReturn(errorMessageExpected);
+
+        ResponseEntity<GlobalExceptionHandler.ErrorMessage> response = globalExceptionHandler.handleConstraintViolation(constraintViolationException);
+
+        StepVerifier.create(Mono.just(response))
+                .expectNextMatches(responseEntity -> {
+                    HttpStatus statusCode = (HttpStatus) responseEntity.getStatusCode();
+                    GlobalExceptionHandler.ErrorMessage responseBody = responseEntity.getBody();
+
+                    return statusCode.equals(HttpStatus.BAD_REQUEST) && errorMessageExpected.equals(responseBody.msg);
                 })
                 .verifyComplete();
     }
