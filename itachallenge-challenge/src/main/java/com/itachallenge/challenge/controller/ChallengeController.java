@@ -36,25 +36,25 @@ public class ChallengeController {
         Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString); //Luis
 
         Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);//Luis
 
         Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
                 .stream()
                 .findAny()
-                .map( s -> s.toString());
+                .map(Object::toString);//Luis
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
-        log.info((userService.isPresent() ? userService.get().toString() : "No Services")
+        log.info((userService.map(String::toString).orElse("No Services"))//Luis
                 .concat(System.lineSeparator())
-                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                .concat(challengeService.map(String::toString).orElse("No Services"))//Luis
                 .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services"));
+                .concat(scoreService.map(String::toString).orElse("No Services")));//Luis
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         return "Hello from ITA Challenge!!!";
@@ -102,6 +102,7 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
+    //agregue este endpoint (Luis)
     @GetMapping("/language")
     @Operation(
             operationId = "Get all the stored languages into the Database.",
