@@ -13,7 +13,7 @@ import java.util.UUID;
 public class SolutionDto {
 
     @JsonProperty(value = "id_solution", index = 0)
-    private UUID uuid;
+    private UUID solutionId;
 
     @JsonProperty(value = "solution_text", index = 1)
     private String solutionText;

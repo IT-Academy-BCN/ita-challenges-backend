@@ -54,8 +54,8 @@ public class ChallengeDto{
     @JsonProperty(value = "related", index = 10)
     private Set<UUID> challengeRelatedChallenges;
 
-
     /*
     TODO: ADD more fields "on demand" (when needed)
      */
+
 }

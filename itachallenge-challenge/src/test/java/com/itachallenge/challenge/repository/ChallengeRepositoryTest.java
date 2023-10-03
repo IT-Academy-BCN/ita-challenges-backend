@@ -113,7 +113,7 @@ class ChallengeRepositoryTest {
     @DisplayName("Exists by UUID Test")
     @Test
     void existsByUuidTest() {
-        Boolean exists = challengeRepository.existsByUuid(uuid_1).block();
+        Boolean exists = challengeRepository.existsByChallengeId(uuid_1).block();
         assertEquals(true, exists);
     }
 
@@ -121,12 +121,12 @@ class ChallengeRepositoryTest {
     @Test
     void findByUuidTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByChallengeId(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getChallengeId(), uuid_1),
                 () -> fail("Challenge not found: " + uuid_1));
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByChallengeId(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getChallengeId(), uuid_2),
                 () -> fail("Challenge not found: " + uuid_2));
@@ -136,10 +136,10 @@ class ChallengeRepositoryTest {
     @Test
     void deleteByUuidTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByUuid(uuid_1);
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByChallengeId(uuid_1);
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_1);
+                    Mono<Void> deletion = challengeRepository.deleteByChallengeId(uuid_1);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
@@ -147,10 +147,10 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge to delete not found: " + uuid_1)
         );
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByUuid(uuid_2);
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByChallengeId(uuid_2);
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = challengeRepository.deleteByUuid(uuid_2);
+                    Mono<Void> deletion = challengeRepository.deleteByChallengeId(uuid_2);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
@@ -163,12 +163,12 @@ class ChallengeRepositoryTest {
     @Test
     void findByLevelTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByLevel("Level 1");
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByChallengeLevel("Level 1");
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getChallengeLevel(), "Level 1"),
                 () -> fail("Challenge not found: " + uuid_1));
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByLevel("Level 2");
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByChallengeLevel("Level 2");
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getChallengeLevel(), "Level 2"),
                 () -> fail("Challenge not found: " + uuid_2));
@@ -178,12 +178,12 @@ class ChallengeRepositoryTest {
     @Test
     void findByChallengeTitleTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle("Loops");
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByChallengeTitle("Loops");
         firstChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getChallengeTitle(), "Loops"),
                 () -> fail("Challenge with name Loops  not found."));
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle("If");
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByChallengeTitle("If");
         secondChallenge.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getChallengeTitle(), "If"),
                 () -> fail("Challenge with name If not found."));

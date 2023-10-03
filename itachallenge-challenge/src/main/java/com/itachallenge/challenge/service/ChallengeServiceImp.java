@@ -46,10 +46,9 @@ public class ChallengeServiceImp implements IChallengeService {
     private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new GenericDocumentToDtoConverter<>();
     @Autowired
     private GenericDocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new GenericDocumentToDtoConverter<>();
-
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
-                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
+                .flatMap(challengeId -> challengeRepository.findByChallengeId(challengeId)
                         .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge), ChallengeDto.class)))
                         .map(challengeDto -> {
                             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -65,7 +64,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
-                    Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(resourceId);
+                    Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByChallengeResourcesContaining(resourceId);
                     return challengeFlux
                             .flatMap(challenge -> {
                                 challenge.setChallengeResources(challenge.getChallengeResources().stream()
@@ -116,7 +115,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID challengeId = tuple.getT1();
                     UUID languageId = tuple.getT2();
 
-                    return challengeRepository.findByUuid(challengeId)
+                    return challengeRepository.findByChallengeId(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getChallengeSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
