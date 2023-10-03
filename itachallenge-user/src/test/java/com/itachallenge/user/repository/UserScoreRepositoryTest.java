@@ -31,7 +31,7 @@ class UserScoreRepositoryTest {
 
     @DynamicPropertySource
     static void initMongoProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("user_score"));
+        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("users"));
     }
 
     @Autowired
