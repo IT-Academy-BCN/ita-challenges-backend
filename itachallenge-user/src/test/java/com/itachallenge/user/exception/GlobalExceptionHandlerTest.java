@@ -1,11 +1,10 @@
 package com.itachallenge.user.exception;
 
+import com.itachallenge.user.dtos.ErrorResponseDto;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -39,12 +38,11 @@ class GlobalExceptionHandlerTest {
         String expected = "No challenges for user with id";
         when(userScoreNotFoundException.getMessage()).thenReturn("No challenges for user with id");
 
-        ResponseEntity<GlobalExceptionHandler.ErrorMessage> response = globalExceptionHandler.notFoundResponse(userScoreNotFoundException);
+        ResponseEntity<ErrorResponseDto> response = globalExceptionHandler.notFoundResponse(userScoreNotFoundException);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {
-                    assertEquals(httpExpected, response.getStatusCode());
-                    assertEquals(expected, response.getBody().msg);
+                    assertEquals(expected, response.getBody().getMessage());
                     return true;
                 })
                 .verifyComplete();
@@ -52,18 +50,20 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testHandleConstraintViolation() {
-        String errorMessageExpected = "The MongoDB UUID is invalid";
+        final String ERROR_MESSAGE_EXPECTED = "The MongoDB UUID is invalid";
 
-        when(constraintViolationException.getMessage()).thenReturn(errorMessageExpected);
+        when(constraintViolationException.getMessage()).thenReturn(ERROR_MESSAGE_EXPECTED);
 
-        ResponseEntity<GlobalExceptionHandler.ErrorMessage> response = globalExceptionHandler.handleConstraintViolation(constraintViolationException);
+        ResponseEntity<ErrorResponseDto> response = globalExceptionHandler.handleConstraintViolation(constraintViolationException);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(responseEntity -> {
-                    HttpStatus statusCode = (HttpStatus) responseEntity.getStatusCode();
-                    GlobalExceptionHandler.ErrorMessage responseBody = responseEntity.getBody();
+                    ErrorResponseDto responseBody = responseEntity.getBody();
 
-                    return statusCode.equals(HttpStatus.BAD_REQUEST) && errorMessageExpected.equals(responseBody.msg);
+                    assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+                    assertEquals(ERROR_MESSAGE_EXPECTED, responseBody.getMessage());
+                    return true;
+
                 })
                 .verifyComplete();
     }
