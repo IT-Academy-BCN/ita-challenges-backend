@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.UUID;
 
 @Document(collection="languages")
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class LanguageDocument {

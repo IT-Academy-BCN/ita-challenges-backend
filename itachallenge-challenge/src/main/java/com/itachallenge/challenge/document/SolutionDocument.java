@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.UUID;
 
 @Document(collection="solutions")
-@Getter
+@Data
 @AllArgsConstructor
 public class SolutionDocument {
 

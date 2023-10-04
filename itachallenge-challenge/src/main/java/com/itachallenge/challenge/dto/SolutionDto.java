@@ -2,6 +2,7 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
 public class SolutionDto {
 
     @JsonProperty(value = "id_solution", index = 0)

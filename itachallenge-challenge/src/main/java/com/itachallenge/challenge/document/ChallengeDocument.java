@@ -11,8 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Document(collection="challenges")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
