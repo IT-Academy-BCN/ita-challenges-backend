@@ -8,7 +8,7 @@ services:
     volumes:
       - ./server1.json:/consul/config/server1.json:ro
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.2
     ports:
       - '8500:8500'
@@ -23,7 +23,7 @@ services:
     volumes:
       - ./server2.json:/consul/config/server2.json:ro
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.3
     command: "agent -bootstrap-expect=3"
 
@@ -34,7 +34,7 @@ services:
     volumes:
       - ./server3.json:/consul/config/server3.json:ro
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.4
     command: "agent -bootstrap-expect=3"
 
@@ -53,7 +53,7 @@ services:
       - ../itachallenge-challenge/src/main/resources/mongodb-init:/docker-entrypoint-initdb.d
       - ../itachallenge-challenge/src/main/resources/mongodb-test-data:/tmp/data/
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.5
 
   itachallenge-challenge:
@@ -68,7 +68,7 @@ services:
     environment:
       - 'spring.data.mongodb.uri=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}'
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.6
 
 
@@ -79,7 +79,7 @@ services:
     ports:
       - '${NGINX_CONTAINER_PORT}:80'
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.7
 
   apisix-gateway:
@@ -95,7 +95,7 @@ services:
       - "9091:9091/tcp"
       - "9443:9443/tcp"
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.8
 
   itachallenge-mock:
@@ -106,18 +106,25 @@ services:
     ports:
       - '${MOCK_CONTAINER_PORT}:8762'
     networks:
-      consul-net:
+      apisix:
         ipv4_address: 172.18.0.9
 
 volumes:
   itachallenge_mongodb_data:
 
+
 networks:
-  consul-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.18.0.0/16
+    apisix:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: 172.18.0.0/24
+#  apisix:
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 172.18.0.0/16
         #- ip_range: 172.18.5.0/24
         #- gateway: 172.18.5.254
