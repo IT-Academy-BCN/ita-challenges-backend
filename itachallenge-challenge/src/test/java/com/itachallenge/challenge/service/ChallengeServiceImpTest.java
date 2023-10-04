@@ -44,7 +44,7 @@ class ChallengeServiceImpTest {
     @Mock
     private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
     @Mock
-    private GenericDocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new GenericDocumentToDtoConverter<>();
+    private GenericDocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @InjectMocks
     private ChallengeServiceImp challengeService;
 

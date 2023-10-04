@@ -11,7 +11,9 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class LanguageDocumentToDtoConverterTest {
 
@@ -59,6 +61,7 @@ class LanguageDocumentToDtoConverterTest {
     void testConvertFluxEntityToFluxDto() {
         Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
         Flux<LanguageDto> resultFlux = mapper.convertDocumentFluxToDtoFlux(documentFlux, LanguageDto.class);
+        Flux<LanguageDto> expectedFlux = Flux.just(languageDto1, languageDto2);
 
         StepVerifier.create(resultFlux)
                 .assertNext(languageDto -> {
@@ -71,6 +74,9 @@ class LanguageDocumentToDtoConverterTest {
                 })
                 .expectComplete()
                 .verify();
+
+        assertThat(expectedFlux.blockFirst()).usingRecursiveComparison().isEqualTo(resultFlux.blockFirst());
+        assertThat(expectedFlux.blockLast()).usingRecursiveComparison().isEqualTo(resultFlux.blockLast());
     }
 
 }
