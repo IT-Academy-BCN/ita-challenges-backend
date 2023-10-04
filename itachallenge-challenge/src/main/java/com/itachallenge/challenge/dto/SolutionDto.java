@@ -16,7 +16,7 @@ public class SolutionDto {
     @JsonProperty(value = "id_solution", index = 0)
     private UUID solutionId;
 
-    @JsonProperty(value = "solution_text", index = 1)
+    @JsonProperty(value = "solution", index = 1)
     private String solutionText;
 
     @JsonProperty(value = "language", index = 2)

@@ -21,33 +21,33 @@ public class ChallengeDto{
     @JsonProperty(value = "id_challenge", index = 0)
     private UUID challengeId;
 
-    @JsonProperty(value = "challenge_title", index = 1)
+    @JsonProperty(value = "title", index = 1)
     private String challengeTitle;
 
-    @JsonProperty(index = 2)
+    @JsonProperty(value = "level", index = 2)
     private String challengeLevel;
 
     @JsonProperty(value = "creation_date", index = 3)
     private String challengeCreationDate;
 
-    @JsonProperty(index = 4)
+    @JsonProperty(value = "detail", index = 4)
     private DetailDocument challengeDetail;
 
     // Info a obtener del micro score
-    @JsonProperty(index = 5)
+    @JsonProperty(value = "popularity", index = 5)
     private Integer challengePopularity;
 
     // Info a obtener del micro score
-    @JsonProperty(index = 6)
+    @JsonProperty(value = "percentage",  index = 6)
     private Float challengePercentage;
 
-    @JsonProperty(index = 7)
+    @JsonProperty(value = "languages", index = 7)
     private Set<LanguageDto> challengeLanguages;
 
-    @JsonProperty(index = 8)
+    @JsonProperty(value = "solutions",  index = 8)
     private List<UUID> challengeSolutions;
 
-    @JsonProperty(index = 9)
+    @JsonProperty(value = "resources", index = 9)
     private Set<UUID> challengeResources;
 
     @JsonProperty(value = "related", index = 10)

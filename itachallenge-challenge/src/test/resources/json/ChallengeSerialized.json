@@ -1,6 +1,6 @@
 {
   "id_challenge" : "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-  "challenge_title" : "Sociis Industries",
+  "title" : "Sociis Industries",
   "level" : "EASY",
   "creation_date" : "2023-06-05T12:30:00+02:00",
   "popularity" : 105,
@@ -8,11 +8,11 @@
   "languages" : [
     {
       "id_language" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f",
-      "language_name" : "Javascript"
+      "name" : "Javascript"
     },
     {
       "id_language" : "409c9fe8-74de-4db3-81a1-a55280cf92ef",
-      "language_name" : "Python"
+      "name" : "Python"
     }
   ]
 }

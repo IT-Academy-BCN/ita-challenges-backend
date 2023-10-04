@@ -21,7 +21,7 @@ public class ChallengeDocument {
     @Field("_id")
     private UUID challengeId;
 
-    @Field(name="challenge_title")
+    @Field(name="title")
     private String challengeTitle;
 
     @Field(name="level")
