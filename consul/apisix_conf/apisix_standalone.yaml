@@ -7,11 +7,13 @@ routes:
   - uri: /test
     upstream:
       nodes:
-        "172.18.0.9:7779": 1
+        "127.0.0.1:7779": 1
       type: roundrobin
 
 deployment:
   role: data_plane
   role_data_plane:
     config_provider: yaml
+
+
 #END

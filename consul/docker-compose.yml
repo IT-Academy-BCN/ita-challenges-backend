@@ -82,7 +82,7 @@ services:
       consul-net:
         ipv4_address: 172.18.0.7
 
-  apisix:
+  apisix-gateway:
     container_name: apisix
     image: apache/apisix:3.5.0-centos
     restart: always
@@ -91,11 +91,9 @@ services:
     environment:
       APISIX_STAND_ALONE: true
     ports:
-      - "9180:9180/tcp"
       - "9080:9080/tcp"
       - "9091:9091/tcp"
       - "9443:9443/tcp"
-      - "9092:9092/tcp"
     networks:
       consul-net:
         ipv4_address: 172.18.0.8
@@ -120,5 +118,6 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 172.18.0.0/24
-        #- gateway: 172.18.0.16
+        - subnet: 172.18.0.0/16
+        #- ip_range: 172.18.5.0/24
+        #- gateway: 172.18.5.254
