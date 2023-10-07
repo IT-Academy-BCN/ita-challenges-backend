@@ -1,6 +1,6 @@
 package com.itachallenge.user.controller;
 
-import com.itachallenge.user.annotations.ValidMongoBDUUID;
+import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
@@ -79,7 +79,10 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = { @Content(schema = @Schema()) })
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(@PathVariable("idUser") @ValidMongoBDUUID String idUser, @PathVariable("idChallenge") @ValidMongoBDUUID String idChallenge, @PathVariable("idLanguage") @ValidMongoBDUUID String idLanguage){
+    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user", pattern = "${validation.mongodb_pattern}") String idUser,
+            @PathVariable("idChallenge") @GenericUUIDValid(message =  "Invalid UUID for challenge", pattern = "${validation.mongodb_pattern}") String idChallenge,
+            @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language", pattern = "${validation.mongodb_pattern}") String idLanguage) {
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 }
