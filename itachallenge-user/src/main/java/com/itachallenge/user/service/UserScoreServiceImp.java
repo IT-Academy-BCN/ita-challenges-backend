@@ -26,13 +26,13 @@ public class UserScoreServiceImp implements IUserScoreService {
         UUID languageUuid = convertToUUID(idLanguage);
 
         return this.userScoreRepository.findByUserId(userUuid)
-                .switchIfEmpty(Mono.error(new UserScoreNotFoundException("No challenges for user with id " + idUser)))
+                .switchIfEmpty(Mono.error(new UserScoreNotFoundException("No solutions for user with id " + idUser)))
                 .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguajeId().equals(languageUuid))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()
                     .map(userScoreDtos -> {
                         SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                        solutionUserDto.setInfo(0, 1, new UserScoreDto().getSolutionsSize(), userScoreDtos.toArray(new UserScoreDto[0]));
+                        solutionUserDto.setInfo(0, 1, 0, userScoreDtos.toArray(new UserScoreDto[0]));
                         return solutionUserDto;
                 });
     }

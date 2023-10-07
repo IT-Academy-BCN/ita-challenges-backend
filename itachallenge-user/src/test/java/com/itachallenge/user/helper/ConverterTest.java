@@ -51,8 +51,6 @@ class ConverterTest {
         return userScoreDto.getUserId().equals(userScoreDocument.getUserId()) &&
                 userScoreDto.getChallengeId().equals(userScoreDocument.getChallengeId()) &&
                 userScoreDto.getSolutions().equals(userScoreDocument.getSolutionDocument()) &&
-                userScoreDto.getLanguageID().equals(userScoreDocument.getLanguajeId()) &&
-                (userScoreDto.getSolutionsSize() == 3) &&
-                (userScoreDto.getSolutions().size() ==  userScoreDocument.getSolutionDocument().size());
+                userScoreDto.getLanguageID().equals(userScoreDocument.getLanguajeId());
     }
 }

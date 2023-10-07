@@ -28,7 +28,6 @@ class UserScoreDtoTest {
             .languageID(languageId1)
             .userId(userId1)
             .solutions(solutions1)
-            .solutionsSize(solutionSize1)
             .build();
 
     @Test
@@ -47,10 +46,6 @@ class UserScoreDtoTest {
     @Test
     void getSolutions(){
         assertEquals(solutions1, userScoreDto1.getSolutions());
-    }
-    @Test
-    void getSolutionSize(){
-        assertEquals(solutionSize1, userScoreDto1.getSolutionsSize());
     }
 
 }

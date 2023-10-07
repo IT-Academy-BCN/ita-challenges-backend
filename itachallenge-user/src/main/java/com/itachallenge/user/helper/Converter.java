@@ -20,7 +20,6 @@ public class Converter {
             .languageID(userScoreDocument.getLanguajeId())
             .userId(userScoreDocument.getUserId())
             .solutions(userScoreDocument.getSolutionDocument())
-            .solutionsSize(userScoreDocument.getSolutionDocument().size())
             .build();
     }
 }

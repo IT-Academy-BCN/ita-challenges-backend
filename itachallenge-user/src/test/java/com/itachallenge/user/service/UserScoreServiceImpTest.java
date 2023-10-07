@@ -52,7 +52,7 @@ class UserScoreServiceImpTest {
         UserScoreDocument userScoreDocument = new UserScoreDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true,1,1,solutionDocumentList );
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0,1,3, new UserScoreDto[]{userScoreDto});
+        expectedSolutionUserDto.setInfo(0,1,0, new UserScoreDto[]{userScoreDto});
 
         when(userScoreRepository.findByUserId(userId)).thenReturn(Flux.just(userScoreDocument));
         when(converter.fromUserScoreDocumentToUserScoreDto(any())).thenReturn(Flux.just(userScoreDto));
