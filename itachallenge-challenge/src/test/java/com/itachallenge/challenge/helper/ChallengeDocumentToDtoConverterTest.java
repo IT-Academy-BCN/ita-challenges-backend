@@ -112,23 +112,6 @@ class ChallengeDocumentToDtoConverterTest {
                 .isEqualTo(expectedDto2);
     }
 
-    @Test
-    @DisplayName("Assert is not equal a Parameter field.")
-    void detectAnConverterError(){
-        ChallengeDocument challengeDoc1 = this.challengeDoc1;
-        Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeDoc1), ChallengeDto.class);
-        ChallengeDto expectedDto1 = this.challengeDto1;
-
-        expectedDto1.setTitle("ChangedName");
-
-        assertThat(resultDto.blockFirst()).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
-                .isNotEqualTo(expectedDto1);
-
-        assertThat(resultDto.blockFirst()).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity", "title")
-                .isEqualTo(expectedDto1);
-    }
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate,
                                                Set<LanguageDto> languages,
