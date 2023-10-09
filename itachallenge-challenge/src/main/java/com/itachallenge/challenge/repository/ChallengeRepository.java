@@ -10,16 +10,16 @@ import java.util.UUID;
 @Repository
 public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDocument,UUID> {
 
-    Mono<Boolean> existsByChallengeId(UUID uuid);
+    Mono<Boolean> existsByUuid(UUID uuid);
 
-    Mono<ChallengeDocument> findByChallengeId(UUID uuid);
+    Mono<ChallengeDocument> findByUuid(UUID uuid);
 
-    Mono<Void> deleteByChallengeId(UUID uuid);
+    Mono<Void> deleteByUuid(UUID uuid);
 
-    Mono<ChallengeDocument> findByChallengeLevel(String level);
+    Mono<ChallengeDocument> findByLevel(String level);
 
-    Mono<ChallengeDocument> findByChallengeTitle(String title);
-    Flux<ChallengeDocument> findAllByChallengeResourcesContaining(UUID idResource);
+    Mono<ChallengeDocument> findByTitle(String title);
+    Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);

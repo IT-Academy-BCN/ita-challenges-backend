@@ -8,13 +8,13 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.UUID;
 
 @Document(collection="solutions")
-@Data
+@Getter
 @AllArgsConstructor
 public class SolutionDocument {
 
     @Id
     @Field(name="id_solution")
-    private UUID solutionId;
+    private UUID uuid;
 
     @Field(name="solution_text")
     private String solutionText;

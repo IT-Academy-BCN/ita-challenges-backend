@@ -19,30 +19,30 @@ public class ChallengeDocument {
 
     @Id
     @Field("_id")
-    private UUID challengeId;
+    private UUID uuid;
 
-    @Field(name="title")
-    private String challengeTitle;
+    @Field(name="challenge_title")
+    private String title;
 
     @Field(name="level")
-    private String challengeLevel;   //valor seteado fom properties
+    private String level;   //valor seteado fom properties
 
     @Field(name="creation_date")
-    private LocalDateTime challengeCreationDate;
+    private LocalDateTime creationDate;
 
     @Field(name="detail")
-    private DetailDocument challengeDetail;
+    private DetailDocument detail;
 
     @Field(name="languages")
-    private Set<LanguageDocument> challengeLanguages;
+    private Set<LanguageDocument> languages;
 
     @Field(name="solutions")
-    private List<UUID> challengeSolutions;
+    private List<UUID> solutions;
 
     @Field(name="resources")
-    private Set<UUID> challengeResources;
+    private Set<UUID> resources;
 
     @Field(name="related")
-    private Set<UUID> challengeRelatedChallenges;
+    private Set<UUID> relatedChallenges;
 
 }

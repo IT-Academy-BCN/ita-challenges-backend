@@ -46,6 +46,7 @@ public class ChallengeServiceImp implements IChallengeService {
     private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new GenericDocumentToDtoConverter<>();
     @Autowired
     private GenericDocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new GenericDocumentToDtoConverter<>();
+
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)

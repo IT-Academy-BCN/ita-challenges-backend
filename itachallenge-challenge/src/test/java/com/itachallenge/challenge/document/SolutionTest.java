@@ -11,7 +11,7 @@ class SolutionTest {
     void getUuid() {
         UUID uuid = UUID.randomUUID();
         SolutionDocument solution = new SolutionDocument(uuid, null, null);
-        assertEquals(uuid, solution.getSolutionId());
+        assertEquals(uuid, solution.getUuid());
     }
 
     @Test

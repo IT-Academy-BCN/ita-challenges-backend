@@ -14,7 +14,7 @@ public class LanguageDocument {
 
     @Id
     @Field(name="id_languages")
-    private UUID languageId;
+    private UUID idLanguage;
 
     @Field(name="language_name")
     private String languageName;
