@@ -4,7 +4,6 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.exception.ConverterException;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -23,7 +22,7 @@ public class GenericDocumentToDtoConverter <S,D> {
 
     static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public D convertDocumentToDto(S document, Class<D> dtoClass) throws ConverterException {
+    public D convertDocumentToDto(S document, Class<D> dtoClass){
         ModelMapper mapper = new ModelMapper();
 
         if(dtoClass.isAssignableFrom(ChallengeDto.class)) {
@@ -43,8 +42,6 @@ public class GenericDocumentToDtoConverter <S,D> {
             mapper.createTypeMap(LanguageDocument.class, LanguageDto.class)
                 .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
         }
-
-
 
         return mapper.map(document, dtoClass);
     }

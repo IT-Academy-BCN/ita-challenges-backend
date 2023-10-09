@@ -6,7 +6,6 @@ import com.itachallenge.challenge.document.ExampleDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.exception.ConverterException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,7 +75,7 @@ class ChallengeDocumentToDtoConverterTest {
 
     @Test
     @DisplayName("Conversion from ChallengeDocument to ChallengeDto. Testing 'convertDocumentToDto' method.")
-    void testConvertToDto() throws ConverterException {
+    void testConvertToDto(){
         ChallengeDocument challengeDocumentMocked = challengeDoc1;
         ChallengeDto resultDto = converter.convertDocumentToDto(challengeDocumentMocked, ChallengeDto.class);
         ChallengeDto expectedDto = challengeDto1;
