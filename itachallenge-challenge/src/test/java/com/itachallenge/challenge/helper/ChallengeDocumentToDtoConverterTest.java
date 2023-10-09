@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ChallengeDocumentToDtoConverterTest {
 
@@ -65,12 +67,16 @@ class ChallengeDocumentToDtoConverterTest {
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
                 List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
-        challengeDto1 = new ChallengeDto(challengeRandomId1, title, level, creationDate, popularity, percentage,
+
+        challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate,
                 Set.of(languageDto1, languageDto2),
-                List.of(solutionsRandomId));
-        challengeDto2 = new ChallengeDto(challengeRandomId2, title, level, creationDate,popularity, percentage,
+                List.of(solutionsRandomId),
+                popularity, percentage);
+
+        challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate,
                 Set.of(languageDto1, languageDto2),
-                List.of(solutionsRandomId));
+                List.of(solutionsRandomId),
+                popularity, percentage);
     }
 
     @Test
@@ -124,5 +130,19 @@ class ChallengeDocumentToDtoConverterTest {
                 .isEqualTo(expectedDto1);
     }
 
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate,
+                                               Set<LanguageDto> languages,
+                                               List<UUID> solutions, Integer popularity, Float percentage) {
+        ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
+        when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
+        when(challengeDocMocked.getTitle()).thenReturn(title);
+        when(challengeDocMocked.getLevel()).thenReturn(level);
+        when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
+        when(challengeDocMocked.getLanguages()).thenReturn(languages);
+        when(challengeDocMocked.getSolutions()).thenReturn(solutions);
+        when(challengeDocMocked.getPopularity()).thenReturn(popularity);
+        when(challengeDocMocked.getPercentage()).thenReturn(percentage);
+        return challengeDocMocked;
+    }
 
 }
