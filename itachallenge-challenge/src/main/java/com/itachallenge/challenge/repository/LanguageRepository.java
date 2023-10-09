@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface LanguageRepository extends ReactiveMongoRepository<LanguageDocument, UUID> {
 
 
-    Mono<LanguageDocument> findByIdLanguage(UUID id);
+    Mono<LanguageDocument> findByLanguageId(UUID id);
 
-    Mono<Void> deleteByIdLanguage(UUID id);
+    Mono<Void> deleteByLanguageId(UUID id);
 }

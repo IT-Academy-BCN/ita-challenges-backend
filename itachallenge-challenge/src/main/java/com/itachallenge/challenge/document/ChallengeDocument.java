@@ -11,8 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Document(collection="challenges")
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,30 +19,30 @@ public class ChallengeDocument {
 
     @Id
     @Field("_id")
-    private UUID uuid;
+    private UUID challengeId;
 
-    @Field(name="challenge_title")
-    private String title;
+    @Field(name="title")
+    private String challengeTitle;
 
     @Field(name="level")
-    private String level;   //valor seteado fom properties
+    private String challengeLevel;   //valor seteado fom properties
 
     @Field(name="creation_date")
-    private LocalDateTime creationDate;
+    private LocalDateTime challengeCreationDate;
 
     @Field(name="detail")
-    private DetailDocument detail;
+    private DetailDocument challengeDetail;
 
     @Field(name="languages")
-    private Set<LanguageDocument> languages;
+    private Set<LanguageDocument> challengeLanguages;
 
     @Field(name="solutions")
-    private List<UUID> solutions;
+    private List<UUID> challengeSolutions;
 
     @Field(name="resources")
-    private Set<UUID> resources;
+    private Set<UUID> challengeResources;
 
     @Field(name="related")
-    private Set<UUID> relatedChallenges;
+    private Set<UUID> challengeRelatedChallenges;
 
 }

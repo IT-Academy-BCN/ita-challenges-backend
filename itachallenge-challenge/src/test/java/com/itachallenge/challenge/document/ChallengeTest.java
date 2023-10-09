@@ -15,35 +15,35 @@ class ChallengeTest {
     void getUuid() {
         UUID uuid = UUID.randomUUID();
         ChallengeDocument challenge = new ChallengeDocument(uuid, null, null, null, null, null, null, null, null);
-        assertEquals(uuid, challenge.getUuid());
+        assertEquals(uuid, challenge.getChallengeId());
     }
 
     @Test
     void getTitle() {
         String title = "Test Challenge";
         ChallengeDocument challenge = new ChallengeDocument(null, title, null, null, null, null, null, null, null);
-        assertEquals(title, challenge.getTitle());
+        assertEquals(title, challenge.getChallengeTitle());
     }
 
     @Test
     void getLevel() {
         String level = "Intermediate";
         ChallengeDocument challenge = new ChallengeDocument(null, null, level, null, null, null, null, null, null);
-        assertEquals(level, challenge.getLevel());
+        assertEquals(level, challenge.getChallengeLevel());
     }
 
     @Test
     void getCreationDate() {
         LocalDateTime creationDate = now();
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, creationDate, null, null, null, null, null);
-        assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getCreationDate().truncatedTo(ChronoUnit.SECONDS)));
+        assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getChallengeCreationDate().truncatedTo(ChronoUnit.SECONDS)));
     }
 
     @Test
     void getDetail() {
         DetailDocument detail = new DetailDocument(null, null, null);
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null, null, null);
-        assertEquals(detail, challenge.getDetail());
+        assertEquals(detail, challenge.getChallengeDetail());
     }
 
     @Test
@@ -53,7 +53,7 @@ class ChallengeTest {
         Set<LanguageDocument> languages = Set.of(new LanguageDocument(uuid, "Javascript"), new LanguageDocument(uuid2, "Python"));
 
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, null, null);
-        assertEquals(languages, challenge.getLanguages());
+        assertEquals(languages, challenge.getChallengeLanguages());
     }
 
     @Test
@@ -61,7 +61,7 @@ class ChallengeTest {
         List<UUID> solutions = List.of(UUID.randomUUID(),UUID.randomUUID());
 
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, solutions, null, null);
-        assertEquals(solutions, challenge.getSolutions());
+        assertEquals(solutions, challenge.getChallengeSolutions());
     }
 
     @Test
@@ -72,7 +72,7 @@ class ChallengeTest {
         resources.add(resourceId1);
         resources.add(resourceId2);
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, resources, null);
-        assertEquals(resources, challenge.getResources());
+        assertEquals(resources, challenge.getChallengeResources());
     }
 
     @Test
@@ -83,7 +83,7 @@ class ChallengeTest {
         relatedChallenges.add(challengeId1);
         relatedChallenges.add(challengeId2);
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, null, relatedChallenges);
-        assertEquals(relatedChallenges, challenge.getRelatedChallenges());
+        assertEquals(relatedChallenges, challenge.getChallengeRelatedChallenges());
     }
 
 }
