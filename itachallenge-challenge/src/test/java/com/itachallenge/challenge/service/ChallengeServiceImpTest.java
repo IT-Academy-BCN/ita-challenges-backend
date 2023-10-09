@@ -7,8 +7,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.ChallengeDocumentToDtoConverter;
-import com.itachallenge.challenge.helper.LanguageDocumentToDtoConverter;
+import com.itachallenge.challenge.helper.GenericDocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +18,6 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -31,16 +29,12 @@ class ChallengeServiceImpTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
-
     @Mock
     private LanguageRepository languageRepository;
-
     @Mock
-    private ChallengeDocumentToDtoConverter challengeConverter;
-
+    private GenericDocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
     @Mock
-    private LanguageDocumentToDtoConverter languageConverter;
-
+    private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
@@ -59,7 +53,7 @@ class ChallengeServiceImpTest {
         expectedDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any())).thenReturn(Flux.just(challengeDto));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
@@ -71,7 +65,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any());
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -160,7 +154,7 @@ class ChallengeServiceImpTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
 
         when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
@@ -172,7 +166,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findAll();
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any());
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -187,7 +181,7 @@ class ChallengeServiceImpTest {
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(languageConverter.convertDocumentFluxToDtoFlux(any())).thenReturn(Flux.just(languageDto1, languageDto2));
+        when(languageConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(languageDto1, languageDto2));
 
         // Act
         Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
@@ -199,7 +193,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(languageRepository).findAll();
-        verify(languageConverter).convertDocumentFluxToDtoFlux(any());
+        verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
 }

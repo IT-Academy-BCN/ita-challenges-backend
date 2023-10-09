@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,7 @@ class ChallengeDtoTest {
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(challengeDtoToSerialize);
         String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
-        //Assertions.assertEquals(jsonExpected, jsonResult);
+        //Assertions.assertEquals(jsonExpectedV2, jsonResult);
         assertEquals(jsonExpected, jsonResult);
     }
 
@@ -94,7 +93,7 @@ class ChallengeDtoTest {
             (UUID id, String title, String level, String creationDate,
              Integer popularity, Float percentage, Set<LanguageDto> languages){
         return ChallengeDto.builder()
-                .uuid(id)
+                .challengeId(id)
                 .title(title)
                 .level(level)
                 .creationDate(creationDate)

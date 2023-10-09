@@ -11,11 +11,13 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class LanguageDocumentToDtoConverterTest {
 
-    private final LanguageDocumentToDtoConverter languageConverter = new LanguageDocumentToDtoConverter();
+    private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> mapper;
 
     private LanguageDocument languageDocument1;
 
@@ -28,6 +30,7 @@ class LanguageDocumentToDtoConverterTest {
 
     @BeforeEach
     public void setUp() {
+        mapper  = new GenericDocumentToDtoConverter();
 
         UUID[] languageID = new UUID[]{UUID.randomUUID(), UUID.randomUUID()};
         String[] languageNames = new String[]{"Java", "Python"};
@@ -45,11 +48,11 @@ class LanguageDocumentToDtoConverterTest {
     void testConvertLanguageDocumentToLanguageDto() {
         // when
         LanguageDocument languageDocumentMocked = languageDocument1;
-        LanguageDto resultDto = languageConverter.convertDocumentToDto(languageDocumentMocked);
+        LanguageDto resultDto = mapper.convertDocumentToDto(languageDocumentMocked, LanguageDto.class);
         LanguageDto expectedDto = languageDto1;
 
         // then
-        assertEquals(expectedDto.getIdLanguage(), resultDto.getIdLanguage());
+        assertEquals(expectedDto.getLanguageId(), resultDto.getLanguageId());
         assertEquals(expectedDto.getLanguageName(), resultDto.getLanguageName());
     }
 
@@ -57,19 +60,23 @@ class LanguageDocumentToDtoConverterTest {
     @DisplayName("Test convertFluxEntityToFluxDto method")
     void testConvertFluxEntityToFluxDto() {
         Flux<LanguageDocument> documentFlux = Flux.just(languageDocument1, languageDocument2);
-        Flux<LanguageDto> resultFlux = languageConverter.convertDocumentFluxToDtoFlux(documentFlux);
+        Flux<LanguageDto> resultFlux = mapper.convertDocumentFluxToDtoFlux(documentFlux, LanguageDto.class);
+        Flux<LanguageDto> expectedFlux = Flux.just(languageDto1, languageDto2);
 
         StepVerifier.create(resultFlux)
                 .assertNext(languageDto -> {
-                    Assertions.assertEquals(languageDto1.getIdLanguage(), languageDto.getIdLanguage());
+                    Assertions.assertEquals(languageDto1.getLanguageId(), languageDto.getLanguageId());
                     Assertions.assertEquals(languageDto1.getLanguageName(), languageDto.getLanguageName());
                 })
                 .assertNext(languageDto -> {
-                    Assertions.assertEquals(languageDto2.getIdLanguage(), languageDto.getIdLanguage());
+                    Assertions.assertEquals(languageDto2.getLanguageId(), languageDto.getLanguageId());
                     Assertions.assertEquals(languageDto2.getLanguageName(), languageDto.getLanguageName());
                 })
                 .expectComplete()
                 .verify();
+
+        assertThat(expectedFlux.blockFirst()).usingRecursiveComparison().isEqualTo(resultFlux.blockFirst());
+        assertThat(expectedFlux.blockLast()).usingRecursiveComparison().isEqualTo(resultFlux.blockLast());
     }
 
 }

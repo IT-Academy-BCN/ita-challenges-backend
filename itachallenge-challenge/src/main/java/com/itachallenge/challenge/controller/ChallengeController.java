@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.google.gson.JsonObject;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +20,6 @@ import java.net.URI;
 import java.util.Optional;
 
 @RestController
-//@Tag(name = "Challenge Controller")
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
@@ -102,9 +102,32 @@ public class ChallengeController {
         return challengeService.getAllChallenges();
     }
 
-    @GetMapping("/languages")
+    @GetMapping("/language")
+    @Operation(
+            operationId = "Get all the stored languages into the Database.",
+            summary = "Get to see all id language and name.",
+            description = "Requesting all the languages through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+            }
+    )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         return challengeService.getAllLanguages();
+    }
+
+    @GetMapping("/solution/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Get the solutions from a chosen challenge and language.",
+            summary = "Get to see the Solution id, text and language.",
+            description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+            }
+    )
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
+        return challengeService.getSolutions(idChallenge, idLanguage);
+
     }
 
 }

@@ -66,8 +66,8 @@ class ChallengeRepositoryTest {
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
-        LanguageDocument language1 = getLanguageMocked(UUID.randomUUID(), languageNames[0]);
-        LanguageDocument language2 = getLanguageMocked(UUID.randomUUID(), languageNames[1]);
+        LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
+        LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
         List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
