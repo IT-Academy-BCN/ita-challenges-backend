@@ -113,6 +113,7 @@ class ChallengeDocumentToDtoConverterTest {
     }
 
 
+
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
