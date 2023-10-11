@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 
 import reactor.core.publisher.Mono;
@@ -14,5 +15,6 @@ public interface IChallengeService {
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> languageNames, Set<String> level);
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
+    Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage);
 
 }

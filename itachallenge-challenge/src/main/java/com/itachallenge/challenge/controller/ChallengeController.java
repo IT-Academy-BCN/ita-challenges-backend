@@ -1,7 +1,9 @@
 package com.itachallenge.challenge.controller;
 
+import com.google.gson.JsonObject;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+import java.net.URI;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -101,22 +103,31 @@ public class ChallengeController {
     }
 
     @GetMapping("/language")
+    @Operation(
+            operationId = "Get all the stored languages into the Database.",
+            summary = "Get to see all id language and name.",
+            description = "Requesting all the languages through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+            }
+    )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         return challengeService.getAllLanguages();
     }
 
-    @GetMapping(path = "/challenge")
+    @GetMapping("/solution/{idChallenge}/language/{idLanguage}")
     @Operation(
-            operationId = "Get all filtered Challenges",
-            summary = "Get all the stored challenges into the Database.",
-            description = "Get to see all challenges and their levels, details, and available languages.",
+            operationId = "Get the solutions from a chosen challenge and language.",
+            summary = "Get to see the Solution id, text and language.",
+            description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Challenges retrieval completed.", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = GenericResultDto.class))}),
-                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(mediaType = "application/json", schema = @Schema())})
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
             }
     )
-    public Mono<GenericResultDto<ChallengeDto>> getChallenges(@RequestParam(required = false) Set<String> language, @RequestParam(required = false) Set<String> level) {
-        return challengeService.getChallengesByLanguagesAndLevel(language, level);
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
+        return challengeService.getSolutions(idChallenge, idLanguage);
+
     }
 
 }

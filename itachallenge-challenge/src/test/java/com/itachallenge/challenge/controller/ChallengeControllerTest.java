@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,10 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -140,33 +140,27 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallenges_test() {
+    void getSolutions_ValidIds_SolutionsReturned() {
         // Arrange
-        ChallengeDto challenge1 = new ChallengeDto();
-        ChallengeDto challenge2 = new ChallengeDto();
+        String idChallenge = "valid-challenge-id";
+        String idLanguage = "valid-language-id";
 
-        Set<String> languages = new HashSet<>();
-        languages.add("Javascript");
-        Set<String> levels = new HashSet<>();
-        levels.add("Medium");
+        GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
-        ChallengeDto[] challenges = {challenge1, challenge2};
+        when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 5, challenges.length, challenges);
-
-        when(challengeService.getChallengesByLanguagesAndLevel(languages, levels)).thenReturn(Mono.just(expectedResult));
-
-        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguagesAndLevel(languages, levels);
-
-        StepVerifier.create(resultMono)
-                .assertNext(result -> {
-                        assertEquals(result.getResults(), expectedResult.getResults());
-                        assertEquals(result.getCount(), expectedResult.getCount());
-                        assertEquals(result.getOffset() == 0, expectedResult.getOffset() == 0);
-                        assertEquals(result.getLimit() == 5, expectedResult.getLimit() == 5);
-        })
-                .verifyComplete();
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
+                });
     }
-
 }
