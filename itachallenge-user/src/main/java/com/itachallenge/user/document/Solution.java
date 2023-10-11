@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Solution {
 
     @Id
-    @Field(name="id_solution")
+    @Field(name="_id")
     private UUID uuid;
 
     @Field(name="solution_text")

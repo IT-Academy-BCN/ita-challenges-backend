@@ -1,11 +1,13 @@
 package com.itachallenge.user.document;
 
 import lombok.*;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.UUID;
+
 
 @Getter
 @Setter
@@ -17,7 +19,7 @@ import java.util.UUID;
 public class Solutions {
 
     @MongoId
-    @Field(name = "uuid")
+    @Field(name = "_id")
     private UUID uuid;
 
     @Field(name = "user_id")
@@ -33,8 +35,8 @@ public class Solutions {
     private boolean bookmarked;
 
     @Field(name = "status")
-    private Status status;
+    private String status;
 
-    @Field(name = "solutions")
-    private Solution[] solutions;
+    @Field(name = "solution")
+    private Solution[] solution;
 }
