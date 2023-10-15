@@ -3,11 +3,13 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
@@ -17,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -29,12 +30,16 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
     private LanguageRepository languageRepository;
     @Autowired
     private DocumentToDtoConverter converter;
+    @Autowired
+    private SolutionRepository solutionRepository;
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -45,7 +50,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
                             return resultDto;
                         })
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                         .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
                 );
@@ -91,6 +96,31 @@ public class ChallengeServiceImp implements IChallengeService {
         Flux<ChallengeDocument> challengesList = challengeRepository
                 .findAllByUuidNotNull((PageRequest.of((pageNumber - 1), pageSize)));
         return converter.fromChallengeToChallengeDto(challengesList);
+    }
+
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
+        Mono<UUID> languageIdMono = validateUUID(idLanguage);
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeId = tuple.getT1();
+                    UUID languageId = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeId)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
+                                    .flatMap(solutionId -> solutionRepository.findById(solutionId))
+                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
+                                    .flatMap(solution -> Mono.from(converter.fromSolutionToSolutionDto(Flux.just(solution))))
+                            )
+                            .collectList()
+                            .map(solutions -> {
+                                GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
+                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                return resultDto;
+                            });
+                });
     }
 
     private Mono<UUID> validateUUID(String id) {
