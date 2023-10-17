@@ -2,7 +2,6 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.exception.UserScoreNotFoundException;
 import com.itachallenge.user.helper.Converter;
 import com.itachallenge.user.repository.IUserScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ public class UserScoreServiceImp implements IUserScoreService {
         UUID languageUuid = convertToUUID(idLanguage);
 
         return this.userScoreRepository.findByUserId(userUuid)
-                .switchIfEmpty(Mono.error(new UserScoreNotFoundException("No solutions for user with id " + idUser)))
                 .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguajeId().equals(languageUuid))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()

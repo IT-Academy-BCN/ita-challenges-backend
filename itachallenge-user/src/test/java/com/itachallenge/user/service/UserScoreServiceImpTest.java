@@ -4,7 +4,6 @@ import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserScoreDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.exception.UserScoreNotFoundException;
 import com.itachallenge.user.helper.Converter;
 import com.itachallenge.user.repository.IUserScoreRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,20 +64,4 @@ class UserScoreServiceImpTest {
                 .verify();
     }
 
-    @Test
-    void getUserScoreByUserId_ThrowsException (){
-
-        UUID userId_NotFound = UUID.randomUUID();
-        UUID idLanguage = UUID.randomUUID();
-        UUID idChallenge = UUID.randomUUID();
-
-        when(userScoreRepository.findByUserId(userId_NotFound)).thenReturn(Flux.empty());
-
-        Mono<SolutionUserDto<UserScoreDto>> result = userScoreService.getChallengeById(userId_NotFound.toString(), idChallenge.toString(), idLanguage.toString() );
-
-        StepVerifier.create(result)
-                .expectError(UserScoreNotFoundException.class)
-                .verify();
-
-    }
 }
