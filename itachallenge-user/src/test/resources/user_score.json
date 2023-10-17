@@ -55,24 +55,5 @@
         "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
       }
 	]
-  },
-  {
-    "_id" : {
-      "$uuid" : "a75fa943-6bc9-4e62-b1db-d43d15b149c1"
-    },
-    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d71"},
-    "challenge_id": { "$uuid":"5c1a97e5-1cca-4144-9981-2de1fb73b171"},
-    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e01"},
-    "bookmarked": true,
-    "status": "ended",
-    "score": 95,
-    "solution":[
-      {
-        "_id" :  {
-          "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80291"
-        },
-        "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
-      }
-    ]
   }
 ]

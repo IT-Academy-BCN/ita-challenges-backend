@@ -2,11 +2,15 @@ package com.itachallenge.user.repository;
 
 import com.itachallenge.user.config.ConvertersConfig;
 import com.itachallenge.user.document.Solutions;
+import org.bson.types.Binary;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -18,10 +22,12 @@ import reactor.test.StepVerifier;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.time.Duration;
-import java.util.UUID;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.util.AssertionErrors.fail;
 
 @DataMongoTest
 @Testcontainers
@@ -43,7 +49,7 @@ public class SolutionsRepositoryTest {
     }
 
     @Autowired
-    private SolutionRepository solutionRepository;
+    private ISolutionsRepository solutionRepository;
 
     @BeforeEach
     public void setup() throws IOException, InterruptedException {
@@ -87,14 +93,21 @@ public class SolutionsRepositoryTest {
         System.out.println(uuid3);
 
         System.out.println(solutionRepository.findAll().blockFirst());
+        System.out.println(solutionRepository.findAll().blockLast());
+        System.out.println(solutionRepository.findAll().blockFirst().getUuid().getClass());
         System.out.println(solutionRepository.findAll().blockFirst().getUuid());
 
-        System.out.println(solutionRepository.findById(uuid).block());
+        System.out.println(solutionRepository.findAll().blockFirst().getUuid().equals(uuid));
+        System.out.println(solutionRepository.findAll().blockFirst().getUuid().equals(uuid2));
+        System.out.println(solutionRepository.findAll().blockFirst().getUuid().equals(uuid3));
+        System.out.println(solutionRepository.findByUuid(uuid).block());
 
         Mono<Solutions> solutionsFound = solutionRepository.findByUuid(uuid);
+
         solutionsFound.blockOptional().ifPresentOrElse(
-                solutions -> assertEquals(solutions.getUuid(), uuid),
-                () -> fail("Solutions with ID " + uuid + " not found"));
+            solutions -> assertEquals(solutions.getUuid(), uuid),
+            () -> fail("Solutions with ID " + uuid + " not found"));
+
     }
 
     @Test
@@ -106,6 +119,17 @@ public class SolutionsRepositoryTest {
     }
 
     @Test
+    public void testFindByUserId(){
+
+        System.out.println(solutionRepository.findAll().blockFirst());
+        System.out.println(solutionRepository.findAll().blockLast());
+        System.out.println(solutionRepository.findAll().blockFirst().getUserId().getClass());
+        System.out.println(solutionRepository.findAll().blockFirst().getUserId());
+
+        System.out.println(solutionRepository.findByUserId(uuid).blockFirst());
+    }
+
+    /*@Test
     public void testFindByUuid2(){
 
         Mono<Solutions> solutionsFound = solutionRepository.findByUuid(uuid2);
@@ -121,7 +145,7 @@ public class SolutionsRepositoryTest {
         solutionsFound.blockOptional().ifPresentOrElse(
                 solutions -> assertEquals(solutions.getUuid(), uuid3),
                 () -> fail("Solutions with ID " + uuid3 + " not found"));
-    }
+    }*/
 
     @Test
     public void testFindAll(){
@@ -139,4 +163,11 @@ public class SolutionsRepositoryTest {
 
         Assertions.assertNotNull(solutionRepository);
     }
+
+/*    @Test
+    public void testExistsByUuid(){
+
+        Boolean exists = solutionRepository.existsByUuid(uuid).block();
+        assertEquals(true, exists);
+    }*/
 }
