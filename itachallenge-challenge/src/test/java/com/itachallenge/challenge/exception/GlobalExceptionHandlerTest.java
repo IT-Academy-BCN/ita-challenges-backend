@@ -1,5 +1,7 @@
 package com.itachallenge.challenge.exception;
 
+import com.itachallenge.challenge.dto.ErrorMessageDto;
+import com.itachallenge.challenge.dto.ErrorResponseMessageDto;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +41,9 @@ class GlobalExceptionHandlerTest {
     @MockBean
     private MethodArgumentNotValidException methodArgumentNotValidException;
     @MockBean
-    private ErrorResponseMessage errorResponseMessage;
+    private ErrorResponseMessageDto errorResponseMessage;
     @MockBean
-    private ErrorMessage errorMessage;
+    private ErrorMessageDto errorMessage;
 
     @BeforeEach
     void setUp() {
@@ -56,11 +58,11 @@ class GlobalExceptionHandlerTest {
         when(errorResponseMessage.getStatusCode()).thenReturn(BAD_REQUEST.value());
         when(errorResponseMessage.getMessage()).thenReturn(REQUEST);
 
-        ErrorResponseMessage expectedErrorMessage = new ErrorResponseMessage(BAD_REQUEST.value(), REQUEST);
+        ErrorResponseMessageDto expectedErrorMessage = new ErrorResponseMessageDto(BAD_REQUEST.value(), REQUEST);
         expectedErrorMessage.setStatusCode(BAD_REQUEST.value());
         expectedErrorMessage.setMessage(REQUEST);
 
-        ResponseEntity<ErrorResponseMessage> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
+        ResponseEntity<ErrorResponseMessageDto> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {
@@ -80,7 +82,7 @@ class GlobalExceptionHandlerTest {
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         // Act
-        ResponseEntity <ErrorMessage> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity <ErrorMessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -99,7 +101,7 @@ class GlobalExceptionHandlerTest {
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         // Act
-        ResponseEntity<ErrorMessage> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<ErrorMessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());

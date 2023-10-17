@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.itachallenge.challenge.dto.ErrorResponseMessageDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +15,7 @@ import reactor.test.StepVerifier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(controllers = ErrorResponseMessage.class)
+@WebFluxTest(controllers = ErrorResponseMessageDto.class)
 class ErrorResponseMessageTest {
     //VARIABLES
     private final int STATUS_CODE = 500;
@@ -22,7 +23,7 @@ class ErrorResponseMessageTest {
     private final HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
     @MockBean
-    private ErrorResponseMessage errorResponseMessage;
+    private ErrorResponseMessageDto errorResponseMessage;
 
     @BeforeEach
     void setUp() {
@@ -31,7 +32,7 @@ class ErrorResponseMessageTest {
 
     @Test
     void testErrorResponseMessage() {
-        ErrorResponseMessage response = new ErrorResponseMessage(STATUS_CODE, ERROR_MESSAGE);
+        ErrorResponseMessageDto response = new ErrorResponseMessageDto(STATUS_CODE, ERROR_MESSAGE);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {

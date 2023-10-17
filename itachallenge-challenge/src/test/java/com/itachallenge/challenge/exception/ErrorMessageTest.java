@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.itachallenge.challenge.dto.ErrorMessageDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +16,11 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(controllers = ErrorMessage.class)
+@WebFluxTest(controllers = ErrorMessageDto.class)
 class ErrorMessageTest {
 
     @MockBean
-    private ErrorMessage errorMessage;
+    private ErrorMessageDto errorMessage;
 
     @BeforeEach
     void setUp() {
@@ -30,7 +31,7 @@ class ErrorMessageTest {
     void testErrorMessage() {
         Map<String, String> errors = Map.of("Field1", "DefaultMessage1", "Field2", "DefaultMessage2");
         String message = "Parameter not valid";
-        ErrorMessage response = new ErrorMessage(message, errors);
+        ErrorMessageDto response = new ErrorMessageDto(message, errors);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {
