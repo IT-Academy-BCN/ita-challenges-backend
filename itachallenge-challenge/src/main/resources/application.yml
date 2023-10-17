@@ -45,6 +45,5 @@ url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
 
-validator:
-  defaultPage: "1"
-  defaultSize: "2"
+validation:
+  pageSize: "^([1-9]\\d?|1\\d{2}|200)$"

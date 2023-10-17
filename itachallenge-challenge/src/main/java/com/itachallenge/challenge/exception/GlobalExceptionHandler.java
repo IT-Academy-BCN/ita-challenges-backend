@@ -1,5 +1,7 @@
 package com.itachallenge.challenge.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -38,8 +41,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new ErrorMessage("Parameter not valid", errors));
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseMessage> handleConstraintViolation(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining("; "));
+
+        return ResponseEntity.badRequest().body(new ErrorResponseMessage( 400, errorMessage));
+    }
+
 }
-
-
-
 
