@@ -80,9 +80,9 @@ public class UserController {
             }
     )
     public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
-            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user", pattern = "${validation.mongodb_pattern}") String idUser,
-            @PathVariable("idChallenge") @GenericUUIDValid(message =  "Invalid UUID for challenge", pattern = "${validation.mongodb_pattern}") String idChallenge,
-            @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language", pattern = "${validation.mongodb_pattern}") String idLanguage) {
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
+            @PathVariable("idChallenge") @GenericUUIDValid(message =  "Invalid UUID for challenge") String idChallenge,
+            @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 }

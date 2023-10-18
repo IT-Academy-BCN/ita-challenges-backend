@@ -17,5 +17,5 @@ public @interface GenericUUIDValid {
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 
-    String pattern();
+    String pattern() default ""; // Optional
 }
