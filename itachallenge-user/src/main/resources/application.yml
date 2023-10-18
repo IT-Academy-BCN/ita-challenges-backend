@@ -8,7 +8,7 @@ spring:
     enabled: true
   data:
     mongodb:
-      uri: mongodb://admin_challenges_user:BYBcMJEEWw5egRUo@localhost:27017/users
+      uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users
       uuid-representation: standard
 
 redis:

@@ -20,10 +20,10 @@ mongosh --port 27017 --authenticationDatabase "admin" -u "rootMongoDb" -p
 ```
 use admin
 ```
-- Crear un usuario administrador con permisos sobre la base de datos `challenges-users`, con el comando existente en el file mongo-init.js
+- Crear un usuario administrador con permisos sobre la base de datos `users`, con el comando existente en el file mongo-init.js
 ```
 db.createUser({
-    user: "admin_challenges_user",
+    user: "admin_user",
     pwd: "mypassword",
     roles: [
       { role: "dbOwner", db: "users" }
@@ -32,15 +32,15 @@ db.createUser({
 ```
 - Conectar con el nuevo usuario creado
 ```
-mongosh --port 27017 -u admin_challenges_user --authenticationDatabase "admin" -p
+mongosh --port 27017 -u admin_user --authenticationDatabase "admin" -p
 ```
 - Crear la nueva collection
 ```
-db.createCollection("challenges");
+db.createCollection("solutions");
 ```
 - Desde fuera de db, importar el/los files de test en la base de datos `users`
 ```
-mongoimport --db=users --username admin_challenges_user --authenticationDatabase admin --password mypassword --collection=challenges --jsonArray --file=user_score.json
+mongoimport --db=users --username admin_user --authenticationDatabase admin --password mypassword --collection=solutions --jsonArray --file=user_score.json
 ```
 
 ### Configuración local de Redis 
