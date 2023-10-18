@@ -33,4 +33,4 @@ url:
   ds_test: https://swapi.py4e.com/api/vehicles/
 
 validation:
-  pageSize: "^([1-9]\\d?|1\\d{2}|200)$"
+  number: "^\\d{1,9}$"

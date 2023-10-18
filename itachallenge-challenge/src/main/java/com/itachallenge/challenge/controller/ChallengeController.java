@@ -38,6 +38,13 @@ public class ChallengeController {
     @Autowired
     IChallengeService challengeService;
 
+
+    /* Customized values */
+    private static final String DEFAULT_PAGE_VALUE = "1";
+    private static final String DEFAULT_SIZE_VALUE = "20";
+    private static final String SIZE = "^([1-9]\\d?|1\\d{2}|200)$";  // Positive integer in range [1-200]
+
+
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
     }
@@ -110,8 +117,8 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
-    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = "1") @ValidGenericPattern String page,
-                                               @RequestParam(defaultValue = "2") @ValidGenericPattern String size) {
+    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_PAGE_VALUE) @ValidGenericPattern String page,
+                                               @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = SIZE, message = "Page size must be in range 1-200") String size) {
         return challengeService.getAllChallenges((Integer.parseInt(page)), Integer.parseInt(size));
     }
 
