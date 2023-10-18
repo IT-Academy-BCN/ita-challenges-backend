@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LanguageDocumentToDtoConverterTest {
 
-    private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> mapper;
+    private DocumentToDtoConverter<LanguageDocument, LanguageDto> mapper;
 
     private LanguageDocument languageDocument1;
 
@@ -30,7 +30,7 @@ class LanguageDocumentToDtoConverterTest {
 
     @BeforeEach
     public void setUp() {
-        mapper  = new GenericDocumentToDtoConverter();
+        mapper  = new DocumentToDtoConverter();
 
         UUID[] languageID = new UUID[]{UUID.randomUUID(), UUID.randomUUID()};
         String[] languageNames = new String[]{"Java", "Python"};

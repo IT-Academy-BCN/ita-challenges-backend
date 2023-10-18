@@ -9,7 +9,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.GenericDocumentToDtoConverter;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -41,11 +41,11 @@ class ChallengeServiceImpTest {
     private SolutionRepository solutionRepository;
 
     @Mock
-    private GenericDocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
+    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
     @Mock
-    private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
+    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
     @Mock
-    private GenericDocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @InjectMocks
     private ChallengeServiceImp challengeService;
 

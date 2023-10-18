@@ -9,7 +9,7 @@ import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.GenericDocumentToDtoConverter;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
@@ -41,11 +41,11 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
-    private GenericDocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new GenericDocumentToDtoConverter<>();
+    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
     @Autowired
-    private GenericDocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new GenericDocumentToDtoConverter<>();
+    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
-    private GenericDocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new GenericDocumentToDtoConverter<>();
+    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
