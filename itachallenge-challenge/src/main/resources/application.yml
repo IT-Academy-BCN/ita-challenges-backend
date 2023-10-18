@@ -44,14 +44,3 @@ logging:
 url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
-
-levels:
-  easy: EASY
-  medium: MEDIUM
-  hard: HARD
-
-languages:
-  java: Java
-  javascript: Javascript
-  php: PHP
-  python: Python

@@ -30,16 +30,4 @@ url:
   connection_timeout: 30000
   fake_connection_timeout: 1
   maxBytesInMemory: 30000000
-
-levels:
-  easy: EASY
-  medium: MEDIUM
-  hard: HARD
-
-languages:
-  java: Java
-  javascript: Javascript
-  php: PHP
-  python: Python
-
   ds_test: https://swapi.py4e.com/api/vehicles/
