@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 class ChallengeDocumentToDtoConverterTest {
 
-    private GenericDocumentToDtoConverter<ChallengeDocument, ChallengeDto> converter;
+    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> converter;
 
     private ChallengeDocument challengeDoc1;
 
@@ -34,7 +34,7 @@ class ChallengeDocumentToDtoConverterTest {
 
     @BeforeEach
     public void setUp() {
-        converter = new GenericDocumentToDtoConverter<>();
+        converter = new DocumentToDtoConverter<>();
 
         UUID challengeRandomId1 = UUID.randomUUID();
         UUID challengeRandomId2 = UUID.randomUUID();

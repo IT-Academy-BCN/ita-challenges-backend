@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class GenericDocumentToDtoConverter <S,D> {
+public class DocumentToDtoConverter<S,D> {
 
     public Flux<D> convertDocumentFluxToDtoFlux(Flux<S> documentFlux, Class<D> dtoClass) {
         return documentFlux.map(doc -> convertDocumentToDto(doc, dtoClass));
