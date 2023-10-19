@@ -166,16 +166,16 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto4 = new ChallengeDto();
         ChallengeDto[] expectedChallengesPaged = {challengeDto3, challengeDto4};
 
-        int pageNumber = 2;
-        int pageSize = 2;
-        Pageable pageable = PageRequest.of((pageNumber - 1), pageSize);
+        int offset = 1;
+        int limit = 2;
+        Pageable pageable = PageRequest.of((offset), limit);
 
         when(challengeRepository.findAllByUuidNotNull(pageable))
                 .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
         when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getAllChallenges(2, 2);
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(1, 2);
 
         // Assert
         StepVerifier.create(result)

@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.service.ChallengeServiceImp;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,15 +111,15 @@ class ChallengeControllerTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
         Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        String page= "1";
-        String size = "3";
+        String offset= "0";
+        String limit = "3";
 
-        when(challengeService.getAllChallenges(Integer.parseInt(page), Integer.parseInt(size)))
+        when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
                 .thenReturn(expectedChallengesFlux);
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges?page=1&size=3")
+                .uri("/itachallenge/api/v1/challenge/challenges?offset=0&limit=3")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
@@ -132,10 +133,10 @@ class ChallengeControllerTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
         Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        String defaultPage = "1";
-        String defaultSize = "2";
+        String offset = "0";
+        String limit = "2";
 
-        when(challengeService.getAllChallenges(Integer.parseInt(defaultPage), Integer.parseInt(defaultSize)))
+        when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
                 .thenReturn(expectedChallengesFlux);
 
         // Act & Assert

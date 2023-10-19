@@ -15,6 +15,7 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -40,6 +41,9 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter converter;
     @Autowired
     private SolutionRepository solutionRepository;
+
+    @Value("${validation.defaultLimit}")
+    private int maxLimit;
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -92,9 +96,10 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<ChallengeDto> getAllChallenges(int pageNumber, int pageSize) {
+    public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
+        limit = (limit == -1) ? this.maxLimit : limit;
         Flux<ChallengeDocument> challengesList = challengeRepository
-                .findAllByUuidNotNull((PageRequest.of((pageNumber - 1), pageSize)));
+                .findAllByUuidNotNull((PageRequest.of((offset), limit)));
         return converter.fromChallengeToChallengeDto(challengesList);
     }
 

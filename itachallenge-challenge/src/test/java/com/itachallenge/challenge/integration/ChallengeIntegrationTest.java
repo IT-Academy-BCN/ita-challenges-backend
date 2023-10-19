@@ -140,7 +140,7 @@ class ChallengeIntegrationTest {
     @Test
     void getChallengesByPages_ValidPageParameters_ChallengesReturned() {
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges?page=1&size=1")
+                .uri("/itachallenge/api/v1/challenge/challenges?offset=0&limit=1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
