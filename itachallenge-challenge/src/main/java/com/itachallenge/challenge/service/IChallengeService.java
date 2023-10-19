@@ -10,14 +10,8 @@ import reactor.core.publisher.Mono;
 public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id);
-
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
-
-    //Mono<GenericResultDto<ChallengeDto>> getAllChallenges();
-
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
     Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage);
-
-   // Flux<ChallengeDto> getChallengesByPage(int pageNumber, int pageSize);
     Flux<ChallengeDto> getAllChallenges(int offset, int limit);
 }

@@ -43,7 +43,7 @@ public class ChallengeController {
     private static final String DEFAULT_PAGE_VALUE = "0";
     private static final String DEFAULT_SIZE_VALUE = "20";
     private static final String LIMIT = "^-1$|^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200] or -1 for all.
-
+    private static final String NO_SERVICE = "No Services";
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -56,25 +56,25 @@ public class ChallengeController {
         Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
-                .map(s -> s.toString());
+                .map(Object::toString);
 
         Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
                 .stream()
                 .findAny()
-                .map(s -> s.toString());
+                .map(Object::toString);
 
         Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
                 .stream()
                 .findAny()
-                .map(s -> s.toString());
+                .map(Object::toString);
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
-        log.info((userService.isPresent() ? userService.get().toString() : "No Services")
+        log.info((userService.isPresent() ? userService.get() : NO_SERVICE)
                 .concat(System.lineSeparator())
-                .concat(challengeService.isPresent() ? challengeService.get().toString() : "No Services")
+                .concat(challengeService.isPresent() ? challengeService.get() : NO_SERVICE)
                 .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? scoreService.get().toString() : "No Services"));
+                .concat(scoreService.isPresent() ? scoreService.get() : NO_SERVICE));
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         return "Hello from ITA Challenge!!!";
