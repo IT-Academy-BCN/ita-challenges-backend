@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
@@ -41,6 +43,12 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter converter;
     @Autowired
     private SolutionRepository solutionRepository;
+    @Autowired
+    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
 
     @Value("${validation.defaultLimit}")
     private int maxLimit;
@@ -48,18 +56,17 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .flatMap(challenge -> Mono.from(converter.fromChallengeToChallengeDto(Flux.just(challenge))))
+                        .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge), ChallengeDto.class)))
                         .map(challengeDto -> {
                             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
                             resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
                             return resultDto;
                         })
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
                         .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
                 );
     }
-
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
@@ -86,8 +93,9 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
+
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = converter.fromLanguageToLanguageDto(languageRepository.findAll());
+        Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
             GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
@@ -98,9 +106,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
         limit = (limit == -1) ? this.maxLimit : limit;
-        Flux<ChallengeDocument> challengesList = challengeRepository
-                .findAllByUuidNotNull((PageRequest.of((offset), limit)));
-        return converter.fromChallengeToChallengeDto(challengesList);
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull( (PageRequest.of((offset), limit)) ) , ChallengeDto.class);
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
@@ -117,7 +123,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
                                     .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                    .flatMap(solution -> Mono.from(converter.fromSolutionToSolutionDto(Flux.just(solution))))
+                                    .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
                             )
                             .collectList()
                             .map(solutions -> {

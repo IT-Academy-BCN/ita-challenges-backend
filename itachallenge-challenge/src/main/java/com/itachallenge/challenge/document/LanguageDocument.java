@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Document(collection="languages")
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class LanguageDocument {

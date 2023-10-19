@@ -1,11 +1,13 @@
 //create user logged as root User
+//use admin
 db.createUser({
-    user: "admin_challenges_user",
-    pwd: "BYBcMJEEWw5egRUo",
+    user: "admin_user",
+    pwd: "yxRG4sYBDjPFzbh5",
     roles: [
-      { role: "dbOwner", db: "challenges-users" }
+      { role: "dbOwner", db: "users" }
     ]
   });
 
+//use users
 //create collections
-db.createCollection("users");
+//db.createCollection("solutions");
