@@ -20,6 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -130,6 +133,88 @@ public class ChallengeServiceImp implements IChallengeService {
                             });
                 });
     }
+
+
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(String idLanguage, String level) {
+
+        UUID uuidLanguage = UUID.fromString(idLanguage);
+        Flux<ChallengeDocument> challengeDocByLanguagesAndLevel = challengeRepository.findAllByLanguagesContainingAndLevelContaining(uuidLanguage, level);
+        Flux<ChallengeDto> challengeDtoByLanguagesAndLevel = challengeConverter.convertDocumentFluxToDtoFlux(challengeDocByLanguagesAndLevel, ChallengeDto.class);
+
+        return challengeDtoByLanguagesAndLevel.collectList().map(challenges -> {
+            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
+            return resultDto;
+        });
+    }
+
+
+//    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguagesAndLevel(Set<String> languages, Set<String> levels) {
+//        boolean noLanguageParam = languages == null || languages.isEmpty();
+//        boolean noLevelParam = levels == null || levels.isEmpty();
+//        boolean filtersNotParams = noLanguageParam && noLevelParam;
+//
+//        if (filtersNotParams) {
+//            Flux<ChallengeDto> challengeDtoFlux = converter.fromChallengeToChallengeDto(challengeRepository.findAll());
+//
+//            return processFilteredChallenges(challengeDtoFlux, Collections.emptySet(), Collections.emptySet());
+//        } else {
+//            Set<String> upperCaseLevel = (levels != null) ? levels.stream().map(String::toUpperCase).collect(Collectors.toSet()) : Collections.emptySet();
+//            Set<String> upperCaseLanguage;
+//
+//            if (languages != null) {
+//                upperCaseLanguage = languages.stream()
+//                        .map(s -> s.equalsIgnoreCase("PHP") ? "PHP" : s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
+//                        .collect(Collectors.toSet());
+//            } else {
+//                upperCaseLanguage = Collections.emptySet();
+//            }
+//
+//            validates.validLenguageLevel(upperCaseLevel, upperCaseLanguage);
+//
+//            Flux<ChallengeDto> filteredChallenge = getFilteredChallenges(upperCaseLevel, upperCaseLanguage);
+//
+//            return processFilteredChallenges(filteredChallenge, upperCaseLevel, upperCaseLanguage);
+//        }
+//    }
+//
+//    private Flux<ChallengeDto> getFilteredChallenges(Set<String> upperCaseLevels, Set<String> upperCaseLanguages) {
+//        return Optional.ofNullable(upperCaseLevels)
+//                .filter(challengeLevel -> !challengeLevel.isEmpty())
+//                .map(challengeLevel -> converter.fromChallengeToChallengeDto(challengeRepository.findByLevelIn(challengeLevel)))
+//                .orElseGet(() -> Optional.ofNullable(upperCaseLanguages)
+//                        .filter(challengeLanguage -> !challengeLanguage.isEmpty())
+//                        .map(challengeLanguage -> converter.fromChallengeToChallengeDto(challengeRepository.findByLanguages_LanguageNameIn(challengeLanguage)))
+//                        .orElse(converter.fromChallengeToChallengeDto(challengeRepository.findAll())));
+//    }
+//
+//    private Mono<GenericResultDto<ChallengeDto>> buildChallengesResultDto(List<ChallengeDto> challenges) {
+//        if (challenges.isEmpty()) {
+//            return Mono.error(new ChallengeNotFoundException("No challenges found for the given filters."));
+//        } else {
+//            log.info("Challenges retrieved successfully!");
+//            GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+//            genericResultDto.setInfo(0, 5, challenges.size(), challenges.toArray(new ChallengeDto[0]));
+//            return Mono.just(genericResultDto);
+//        }
+//    }
+//
+//    private Mono<GenericResultDto<ChallengeDto>> processFilteredChallenges (Flux<ChallengeDto> filteredChallenge, Set<String> upperCaseLevels, Set<String> upperCaseLanguages){
+//        return filteredChallenge
+//                .filter(challenge -> (upperCaseLanguages.isEmpty() || challenge.getLanguages().stream().anyMatch(lang -> upperCaseLanguages.contains(lang.getLanguageName())))
+//                        && (upperCaseLevels.isEmpty() || upperCaseLevels.contains(challenge.getLevel())))
+//                .doOnNext(challenge -> log.info("Retrieved challenge: {}", challenge.getTitle()))
+//                .collectList()
+//                .doOnTerminate(() -> log.info("Challenges retrieval completed."))
+//                .flatMap(this::buildChallengesResultDto)
+//                .onErrorResume(error -> {
+//                    log.error("Error occurred while retrieving challenges: {}", error.getMessage());
+//                    return Mono.error(error);
+//                });
+//    }
+
+
+
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

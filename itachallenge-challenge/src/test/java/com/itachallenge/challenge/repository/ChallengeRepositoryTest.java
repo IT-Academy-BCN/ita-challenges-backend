@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -29,7 +26,6 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class ChallengeRepositoryTest {
-
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -189,5 +185,65 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge with name If not found."));
     }
 
+    @DisplayName("Fins by Languages and Level - Throw Error Test")
+    @Test
+    void findAllChallengeByLanguagesAndLevel() {
+        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findAllByLanguagesContainingAndLevelContaining(uuidLang1, "Level");
+        ChallengeDocument firstChallenge = filteredChallenges.blockFirst();
+        Assertions.assertNotNull(firstChallenge, "No challenges found for the given filters.");
+
+    }
+    @DisplayName("Fins by Languages and Level - Get one Test")
+    @Test
+    void findAllChallengeByLanguagesAndLevelGetOne() {
+        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findAllByLanguagesContainingAndLevelContaining(uuidLang1, "Level 1");
+        ChallengeDocument firstChallenge = filteredChallenges.blockFirst();
+
+        Assertions.assertEquals("Level 1", firstChallenge.getLevel());
+        Assertions.assertEquals("Loops", firstChallenge.getTitle());
+    }
+
+
+//    @DisplayName("Find by Level Test")
+//    @Test
+//    void findByLevelIn_test() {
+//        Set<String> levels = new HashSet<>();
+//        levels.add("Level 1");
+//
+//        Flux<ChallengeDocument> challenge = challengeRepository.findByLevelIn(levels);
+//
+//        ChallengeDocument firstChallenge = challenge.blockFirst();
+//
+//        Assertions.assertNotNull(firstChallenge, "No challenges found for the given filters.");
+//        Assertions.assertEquals("Level 1", firstChallenge.getLevel(), "No challenges found for the given filters.");
+//    }
+//
+//    @DisplayName("Find by Languages Test")
+//    @Test
+//    void findByLanguages_LanguageNameIn_test() {
+//        // Arrange
+//        LanguageDocument language1 = new LanguageDocument(null, "name1");
+//        LanguageDocument language2 = new LanguageDocument(null, "name2");
+//
+//        Set<LanguageDocument> languageSet = Set.of(language1, language2);
+//
+//        ChallengeDocument challengeDocument = new ChallengeDocument();
+//        challengeDocument.setUuid(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"));
+//        challengeDocument.setLevel("MEDIUM");
+//        challengeDocument.setLanguages(languageSet);
+//
+//        challengeRepository.save(challengeDocument).block();
+//
+//        Flux<ChallengeDocument> challengeFlux = challengeRepository.findByLanguages_LanguageNameIn(Collections.singleton("name1"));
+//
+//        StepVerifier.create(challengeFlux)
+//                .expectNextMatches(challengeResult -> challengeResult.getLanguages().stream()
+//                        .anyMatch(language -> language.getLanguageName().equals("name1")))
+//                .verifyComplete();
+//    }
 
 }

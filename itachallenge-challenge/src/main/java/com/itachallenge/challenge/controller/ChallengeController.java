@@ -10,14 +10,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.constraints.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
@@ -128,6 +134,20 @@ public class ChallengeController {
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
+    }
+
+
+    @GetMapping("/challenges/{idLanguage}/{level}")
+    public Mono<GenericResultDto<ChallengeDto>> getChallengeByLanguageAndByDifficulty(
+            @PathVariable @NotBlank @NotEmpty @NotNull @Min(0) String idLanguage,
+            @PathVariable @NotBlank @NotEmpty @NotNull @Min(0) String level
+    ) {
+        //TODO PAGINATION
+        if (idLanguage == null || idLanguage.isBlank() || level == null || level.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid idLanguage");
+        }
+
+        return challengeService.getChallengesByLanguagesAndLevel(idLanguage, level);
     }
 
 }
