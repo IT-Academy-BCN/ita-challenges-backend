@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @WebFluxTest(controllers = ErrorResponseMessageDto.class)
 class ErrorResponseMessageTest {
     //VARIABLES
-    private final int STATUS_CODE = 500;
     private final String ERROR_MESSAGE = "INTERNAL SERVER ERROR";
     private final HttpStatus INTERNAL_SERVER_ERROR = HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -32,11 +31,10 @@ class ErrorResponseMessageTest {
 
     @Test
     void testErrorResponseMessage() {
-        ErrorResponseMessageDto response = new ErrorResponseMessageDto(STATUS_CODE, ERROR_MESSAGE);
+        ErrorResponseMessageDto response = new ErrorResponseMessageDto(ERROR_MESSAGE);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {
-                    assertEquals(INTERNAL_SERVER_ERROR.value(), response.getStatusCode());
                     assertEquals("INTERNAL SERVER ERROR", response.getMessage());
                     return true;
                 })

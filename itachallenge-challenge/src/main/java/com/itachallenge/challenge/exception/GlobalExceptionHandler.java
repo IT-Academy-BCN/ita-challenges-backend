@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponseMessageDto> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
-        ErrorResponseMessageDto errorResponseMessage = new ErrorResponseMessageDto(statusCode.value(), ex.getReason());
+        ErrorResponseMessageDto errorResponseMessage = new ErrorResponseMessageDto(ex.getReason());
         return ResponseEntity.status(statusCode).body(errorResponseMessage);
     }
 
@@ -48,9 +48,9 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getConstraintViolations()
                 .stream()
                 .map(ConstraintViolation::getMessage)
-                .collect(Collectors.joining("; "));
+                .collect(Collectors.joining(" "));
 
-        return ResponseEntity.badRequest().body(new ErrorResponseMessageDto( 400, errorMessage));
+        return ResponseEntity.badRequest().body(new ErrorResponseMessageDto(errorMessage));
     }
 
 }

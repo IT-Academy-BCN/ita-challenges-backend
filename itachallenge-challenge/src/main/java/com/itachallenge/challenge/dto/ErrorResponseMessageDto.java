@@ -8,12 +8,10 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class ErrorResponseMessageDto {
-    private int statusCode;
     private String message;
 
-    public ErrorResponseMessageDto(int statusCode, String message) {
+    public ErrorResponseMessageDto(String message) {
         this.message = message;
-        this.statusCode = statusCode;
     }
 
 }

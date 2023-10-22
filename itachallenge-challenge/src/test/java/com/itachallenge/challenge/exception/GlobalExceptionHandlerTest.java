@@ -2,12 +2,13 @@ package com.itachallenge.challenge.exception;
 
 import com.itachallenge.challenge.dto.ErrorMessageDto;
 import com.itachallenge.challenge.dto.ErrorResponseMessageDto;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,10 +22,12 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
@@ -55,11 +58,9 @@ class GlobalExceptionHandlerTest {
 
         when(responseStatusException.getStatusCode()).thenReturn(BAD_REQUEST);
         when(responseStatusException.getReason()).thenReturn(REQUEST);
-        when(errorResponseMessage.getStatusCode()).thenReturn(BAD_REQUEST.value());
         when(errorResponseMessage.getMessage()).thenReturn(REQUEST);
 
-        ErrorResponseMessageDto expectedErrorMessage = new ErrorResponseMessageDto(BAD_REQUEST.value(), REQUEST);
-        expectedErrorMessage.setStatusCode(BAD_REQUEST.value());
+        ErrorResponseMessageDto expectedErrorMessage = new ErrorResponseMessageDto(REQUEST);
         expectedErrorMessage.setMessage(REQUEST);
 
         ResponseEntity<ErrorResponseMessageDto> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
@@ -77,7 +78,7 @@ class GlobalExceptionHandlerTest {
     void TestHandleMethodArgumentNotValidException() {
 
         // Arrange
-        BindingResult bindingResult = Mockito.mock(BindingResult.class);
+        BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
@@ -92,8 +93,8 @@ class GlobalExceptionHandlerTest {
     void TestHandleMethodArgumentNotValidException_Return_DefaultMessage() {
 
         // Arrange
-        BindingResult bindingResult = Mockito.mock(BindingResult.class);
-        FieldError fieldError = Mockito.mock(FieldError.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+        FieldError fieldError = mock(FieldError.class);
         when(fieldError.getField()).thenReturn("name");
         when(fieldError.getDefaultMessage()).thenReturn("default message");
         when(fieldError.getCodes()).thenReturn(new String[] {"message"});
@@ -107,9 +108,30 @@ class GlobalExceptionHandlerTest {
         MatcherAssert.assertThat(responseEntity, notNullValue());
     }
 
+    @Test
+    void handleConstraintViolation() {
+        // Arrange
+        Set<ConstraintViolation<?>> constraints = new HashSet<>();
+
+        ConstraintViolation<?> constraint1 = mock(ConstraintViolation.class);
+        when(constraint1.getMessage()).thenReturn("Message 1");
+        constraints.add(constraint1);
+
+        ConstraintViolation<?> constraint2 = mock(ConstraintViolation.class);
+        when(constraint2.getMessage()).thenReturn("Message 2");
+        constraints.add(constraint2);
+
+        ConstraintViolationException exception = new ConstraintViolationException("Validation failed.", constraints);
+
+        // Act
+        ResponseEntity<ErrorResponseMessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
+
+        // Assert
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        assertTrue(responseBody.contains("Message 1"));
+        assertTrue(responseBody.contains("Message 2"));
+    }
+
 }
-
-
-
-
-
