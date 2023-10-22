@@ -5,7 +5,6 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.service.ChallengeServiceImp;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
