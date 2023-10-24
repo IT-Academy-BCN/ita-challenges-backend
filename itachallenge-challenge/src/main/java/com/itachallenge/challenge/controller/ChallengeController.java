@@ -115,10 +115,10 @@ public class ChallengeController {
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "No challenges were found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "400", description = "No challenges were found.", content = {@Content(schema = @Schema())})
             })
     public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_PAGE_VALUE) @ValidGenericPattern String offset,
-                                               @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = LIMIT, message = "Page size must be in range 1-200") String limit) {
+                                               @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = LIMIT, message = "Page size must be in range 1-200 (-1 for all)") String limit) {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
