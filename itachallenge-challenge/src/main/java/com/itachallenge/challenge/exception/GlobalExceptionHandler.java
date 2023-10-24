@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.ErrorMessageDto;
 import com.itachallenge.challenge.dto.ErrorResponseMessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,10 +14,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @Value("${messages.errorMessage}")
+    private String errorMessage;
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponseMessageDto> handleResponseStatusException(ResponseStatusException ex) {
@@ -26,13 +28,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadUUIDException.class)
-    public ResponseEntity<ErrorMessageDto> handleBadUUID(BadUUIDException ex) {
-        return ResponseEntity.badRequest().body(new ErrorMessageDto(ex.getMessage()));
+    public ResponseEntity<ErrorResponseMessageDto> handleBadUUID(BadUUIDException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponseMessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
-    public ResponseEntity<ErrorMessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.badRequest().body(new ErrorMessageDto(ex.getMessage()));
+    public ResponseEntity<ErrorResponseMessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
+        return ResponseEntity.badRequest().body(new ErrorResponseMessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -40,17 +42,15 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
-        return ResponseEntity.badRequest().body(new ErrorMessageDto("Parameter not valid", errors));
+        return ResponseEntity.badRequest().body(new ErrorMessageDto(errorMessage, errors));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponseMessageDto> handleConstraintViolation(ConstraintViolationException ex) {
         String errorMessage = ex.getConstraintViolations()
-                .stream()
-                .map(ConstraintViolation::getMessage)
-                .collect(Collectors.joining(" "));
+                .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
 
-        return ResponseEntity.badRequest().body(new ErrorResponseMessageDto(errorMessage));
+        return ResponseEntity.ok().body(new ErrorResponseMessageDto(errorMessage));
     }
 
 }

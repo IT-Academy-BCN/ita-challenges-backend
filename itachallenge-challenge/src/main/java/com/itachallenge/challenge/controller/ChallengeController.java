@@ -2,10 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,6 +41,7 @@ public class ChallengeController {
     private static final String DEFAULT_SIZE_VALUE = "20";
     private static final String LIMIT = "^-1$|^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200] or -1 for all.
     private static final String NO_SERVICE = "No Services";
+    private static final String INVALID_PARAM = "Invalid parameter.";
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -114,11 +112,10 @@ public class ChallengeController {
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "No challenges were found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_PAGE_VALUE) @ValidGenericPattern String offset,
-                                               @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = LIMIT, message = "Page size must be in range 1-200 (-1 for all)") String limit) {
+    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_PAGE_VALUE) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                               @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
