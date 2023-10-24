@@ -15,7 +15,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class SolutionUserDto {
-    @JsonProperty(value = "id_solutionUser", index = 0)
+    @JsonProperty(value = "_id", index = 0)
     private UUID uuid_SolutionUser;
     @JsonProperty(index = 1)
     private UUID uuid_challenge;
