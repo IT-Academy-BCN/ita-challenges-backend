@@ -159,10 +159,4 @@ class UserRedisRepositoryTest {
                 .expectNextCount(0)
                 .verifyComplete();
     }
-
-
-
-
-
-
 }
