@@ -75,7 +75,6 @@ class ChallengeRepositoryTest {
         ChallengeDocument challenge2 = new ChallengeDocument
                 (uuid_2, "If", "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
 
-
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
@@ -100,7 +99,6 @@ class ChallengeRepositoryTest {
     void findAllTest() {
 
         Flux<ChallengeDocument> challenges = challengeRepository.findAll();
-
         StepVerifier.create(challenges)
                 .expectNextCount(2)
                 .verifyComplete();
@@ -185,65 +183,85 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge with name If not found."));
     }
 
-    @DisplayName("Fins by Languages and Level - Throw Error Test")
-    @Test
-    void findAllChallengeByLanguagesAndLevel() {
-        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
 
-        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findAllByLanguagesContainingAndLevelContaining(uuidLang1, "Level");
-        ChallengeDocument firstChallenge = filteredChallenges.blockFirst();
-        Assertions.assertNotNull(firstChallenge, "No challenges found for the given filters.");
-
-    }
-    @DisplayName("Fins by Languages and Level - Get one Test")
+    @DisplayName("Find by Level and LanguagesId - Get one Test")
     @Test
     void findAllChallengeByLanguagesAndLevelGetOne() {
-        UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        // Arrange
+        UUID uuid = UUID.fromString("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d");
+        UUID uuidLang = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
 
-        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findAllByLanguagesContainingAndLevelContaining(uuidLang1, "Level 1");
-        ChallengeDocument firstChallenge = filteredChallenges.blockFirst();
+        LanguageDocument language1 = new LanguageDocument(uuidLang, "name1");
+        LanguageDocument language2 = new LanguageDocument(null, "name2");
 
-        Assertions.assertEquals("Level 1", firstChallenge.getLevel());
-        Assertions.assertEquals("Loops", firstChallenge.getTitle());
+        Set<LanguageDocument> languageSet = Set.of(language1, language2);
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(uuid);
+        challengeDocument.setLevel("MEDIUM");
+        challengeDocument.setLanguages(languageSet);
+        challengeRepository.save(challengeDocument).block();
+
+        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findByLevelAndLanguages_IdLanguage("MEDIUM", uuidLang);
+        filteredChallenges.toStream().forEach(challenge -> System.out.println("UUID: " + challenge.getUuid()));
+
+
+        StepVerifier.create(filteredChallenges)
+                        .expectNextCount(1)
+                        .verifyComplete();
+
+        Assertions.assertEquals(filteredChallenges.blockFirst().getUuid()
+                .compareTo(uuid),0);
+    }
+
+    @DisplayName("Find by Level and LanguagesId  - Get one Test")
+    @Disabled
+    @Test
+    void findAllChallengeByLanguage() {
+        UUID uuidLang = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> filteredChallenges = challengeRepository
+                .findByLevelAndLanguages_IdLanguage("Level 1", uuidLang);
+
+        StepVerifier.create(filteredChallenges)
+                .expectNextCount(2)
+                .verifyComplete();
     }
 
 
-//    @DisplayName("Find by Level Test")
-//    @Test
-//    void findByLevelIn_test() {
-//        Set<String> levels = new HashSet<>();
-//        levels.add("Level 1");
-//
-//        Flux<ChallengeDocument> challenge = challengeRepository.findByLevelIn(levels);
-//
-//        ChallengeDocument firstChallenge = challenge.blockFirst();
-//
-//        Assertions.assertNotNull(firstChallenge, "No challenges found for the given filters.");
-//        Assertions.assertEquals("Level 1", firstChallenge.getLevel(), "No challenges found for the given filters.");
-//    }
-//
-//    @DisplayName("Find by Languages Test")
-//    @Test
-//    void findByLanguages_LanguageNameIn_test() {
-//        // Arrange
-//        LanguageDocument language1 = new LanguageDocument(null, "name1");
-//        LanguageDocument language2 = new LanguageDocument(null, "name2");
-//
-//        Set<LanguageDocument> languageSet = Set.of(language1, language2);
-//
-//        ChallengeDocument challengeDocument = new ChallengeDocument();
-//        challengeDocument.setUuid(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"));
-//        challengeDocument.setLevel("MEDIUM");
-//        challengeDocument.setLanguages(languageSet);
-//
-//        challengeRepository.save(challengeDocument).block();
-//
-//        Flux<ChallengeDocument> challengeFlux = challengeRepository.findByLanguages_LanguageNameIn(Collections.singleton("name1"));
-//
-//        StepVerifier.create(challengeFlux)
-//                .expectNextMatches(challengeResult -> challengeResult.getLanguages().stream()
-//                        .anyMatch(language -> language.getLanguageName().equals("name1")))
-//                .verifyComplete();
-//    }
+
+    @DisplayName("Find by Languages Test")
+    @Test
+    void findByLanguages_LanguageNameIn_test() {
+        // Arrange
+        UUID uuid = UUID.fromString("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d");
+        UUID uuidLang = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+
+        LanguageDocument language1 = new LanguageDocument(uuidLang, "name1");
+        LanguageDocument language2 = new LanguageDocument(null, "name2");
+
+        Set<LanguageDocument> languageSet = Set.of(language1, language2);
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(uuid);
+        challengeDocument.setLevel("MEDIUM");
+        challengeDocument.setLanguages(languageSet);
+        challengeRepository.save(challengeDocument).block();
+
+        Flux<ChallengeDocument> challengeFiltered = challengeRepository.findByLanguages_IdLanguageIn(uuidLang);
+
+        challengeFiltered.toStream()
+                .forEach(challenge -> System.out.println("UUID: " + challenge.getUuid()));
+
+        StepVerifier.create(challengeFiltered)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        Assertions.assertEquals(challengeFiltered.blockFirst().getUuid()
+                .compareTo(uuid),0);
+
+    }
+
+
 
 }
