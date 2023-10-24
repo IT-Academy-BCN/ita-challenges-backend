@@ -202,7 +202,7 @@ class ChallengeRepositoryTest {
         challengeDocument.setLanguages(languageSet);
         challengeRepository.save(challengeDocument).block();
 
-        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findByLevelAndLanguages_IdLanguage("MEDIUM", uuidLang);
+        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findChallengesByLevelAndLanguage("MEDIUM", uuidLang);
         filteredChallenges.toStream().forEach(challenge -> System.out.println("UUID: " + challenge.getUuid()));
 
 
@@ -215,13 +215,14 @@ class ChallengeRepositoryTest {
     }
 
     @DisplayName("Find by Level and LanguagesId  - Get one Test")
-    @Disabled
     @Test
     void findAllChallengeByLanguage() {
         UUID uuidLang = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
 
         Flux<ChallengeDocument> filteredChallenges = challengeRepository
-                .findByLevelAndLanguages_IdLanguage("Level 1", uuidLang);
+                .findChallengesByLevelAndLanguage("Level 1", uuidLang);
+
+        filteredChallenges.toStream().forEach(challenge -> System.out.println("UUID: " + challenge.getUuid()));
 
         StepVerifier.create(filteredChallenges)
                 .expectNextCount(2)
