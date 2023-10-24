@@ -40,8 +40,6 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private LanguageRepository languageRepository;
     @Autowired
-    private DocumentToDtoConverter converter;
-    @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
@@ -106,7 +104,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
         limit = (limit == -1) ? this.maxLimit : limit;
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull( (PageRequest.of((offset), limit)) ) , ChallengeDto.class);
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull( (PageRequest.of(offset, limit)) ) , ChallengeDto.class);
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
