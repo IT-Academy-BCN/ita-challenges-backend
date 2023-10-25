@@ -120,5 +120,115 @@ public class SolutionsRepositoryTest {
         userSolutionsRepository.saveAll(Flux.fromIterable(userSolutions)).blockLast();
     }
 
+    @DisplayName("Repository not null Test")
+    @Test
+    public void testRepositoryNotNull(){
 
+        assertNotNull(userSolutionsRepository);
+    }
+
+    @DisplayName("Find UserSolution by UUID test")
+    @Test
+    public void testFindByUuid() {
+
+        Mono<UserSolutions> solutionsFound = userSolutionsRepository.findByUuid(testUuid);
+        solutionsFound.blockOptional().ifPresentOrElse(
+                solutions -> assertEquals(solutions.getUuid(), testUuid),
+                () -> fail("Solutions with ID " + testUuid + " not found"));
+    }
+
+    @DisplayName("Exists by UUID test")
+    @Test
+    public void testExistsByUuid(){
+
+        Boolean exists = userSolutionsRepository.existsByUuid(testUuid).block();
+        assertEquals(true, exists);
+    }
+
+    @DisplayName("Find UserSolution by UserId test")
+    @Test
+    public void testFindByUserId(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByUserId(testUserUuid);
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution -> userSolution.getUserId().equals(testUserUuid))
+                .thenCancel()
+                .verify();
+    }
+
+    @DisplayName("Find UserSolution by ChallengeId test")
+    @Test
+    public void testFindByChallengeId(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByChallengeId(testChallengeUuid);
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution -> userSolution.getChallengeId().equals(testChallengeUuid))
+                .thenCancel()
+                .verify();
+    }
+
+    @DisplayName("Find UserSolution by LanguageId test")
+    @Test
+    public void testFindByLanguageId(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByLanguageId(testLanguageUuid);
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution -> userSolution.getLanguageId().equals(testLanguageUuid))
+                .thenCancel()
+                .verify();
+    }
+
+    @DisplayName("Find all UserSolutions by bookmarked test")
+    @Test
+    public void testFindByBookmarked(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByBookmarked(true);
+        StepVerifier.create(solutionsFound)
+                .expectNextCount(allBookmarked)
+                .verifyComplete();
+    }
+
+    @DisplayName("Find all UserSolutions by status test")
+    @Test
+    public void testFindByStatus(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByStatus("medium");
+        StepVerifier.create(solutionsFound)
+                .expectNextCount(allMedium)
+                .verifyComplete();
+    }
+
+    @DisplayName("Find UserSolutions by score test")
+    @Test
+    public void testFindByScore(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByScore(score);
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution -> userSolution.getScore() == score) //at least one result
+                .verifyComplete();
+    }
+
+    @DisplayName("Find all UserSolutions")
+    @Test
+    public void testFindAll(){
+
+        Flux<UserSolutions> solutionsFound = userSolutionsRepository.findAll();
+
+        StepVerifier.create(solutionsFound)
+                .expectNextCount(all)
+                .verifyComplete();
+    }
+
+    @DisplayName("Delete UserSolutions by UUID test")
+    @Test
+    public void testDelete() {
+
+        Mono<Void> solutionDeleted = userSolutionsRepository.deleteById(testUuid);
+        StepVerifier.create(solutionDeleted)
+                .verifyComplete();
+
+        UserSolutions solution = userSolutionsRepository.findByUuid(testUuid).block();
+
+        assertNull(solution);
+    }
 }
