@@ -238,18 +238,17 @@ class ChallengeRepositoryTest {
         UUID uuid = UUID.fromString("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d");
         UUID uuidLang = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
 
-        LanguageDocument language1 = new LanguageDocument(uuidLang, "name1");
-        LanguageDocument language2 = new LanguageDocument(null, "name2");
+//        LanguageDocument language1 = new LanguageDocument(uuidLang, "name1");
+//        LanguageDocument language2 = new LanguageDocument(null, "name2");
+//
+//        Set<LanguageDocument> languageSet = Set.of(language1, language2);
+//
+//        ChallengeDocument challengeDocument = new ChallengeDocument();
+//        challengeDocument.setUuid(uuid);
+//        challengeDocument.setLanguages(languageSet);
+//        challengeRepository.save(challengeDocument).block();
 
-        Set<LanguageDocument> languageSet = Set.of(language1, language2);
-
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        challengeDocument.setUuid(uuid);
-        challengeDocument.setLevel("MEDIUM");
-        challengeDocument.setLanguages(languageSet);
-        challengeRepository.save(challengeDocument).block();
-
-        Flux<ChallengeDocument> challengeFiltered = challengeRepository.findByLanguages_IdLanguageIn(uuidLang);
+        Flux<ChallengeDocument> challengeFiltered = challengeRepository.findByLanguages_IdLanguage(uuidLang);
 
         challengeFiltered.toStream()
                 .forEach(challenge -> System.out.println("UUID: " + challenge.getUuid()));

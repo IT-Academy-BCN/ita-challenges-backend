@@ -3,7 +3,6 @@ package com.itachallenge.challenge.repository;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,6 +26,9 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
 
+    Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
+
+
 //    @Query("SELECT * FROM ChallengeDocument c " +
 //            "JOIN c.languages l " +
 //            "WHERE c.level = :level AND l.idLanguage = :idLanguage")
@@ -45,10 +47,8 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
     @Query("{'level' : ?0, 'languages.idLanguage' : ?1}")
     Flux<ChallengeDocument> findChallengesByLevelAndLanguage(String level, UUID idLanguage);
 
-    Flux<ChallengeDocument> findByLanguages_IdLanguageIn(UUID idLanguage);
-
     @Query("{'languages.idLanguage' : ?0}")
-    Flux<ChallengeDocument> findChallengesByLanguages(UUID idLanguage);
+    Flux<ChallengeDocument> findByLanguages(UUID idLanguage);
 
 
     @Override
