@@ -18,40 +18,22 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     Mono<Void> deleteByUuid(UUID uuid);
 
-    Mono<ChallengeDocument> findByLevel(String level);
+    Flux<ChallengeDocument> findByLevel(String level);
 
     Mono<ChallengeDocument> findByTitle(String title);
 
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
 
     Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
-
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
+    Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
 
-
-//    @Query("SELECT * FROM ChallengeDocument c " +
-//            "JOIN c.languages l " +
-//            "WHERE c.level = :level AND l.idLanguage = :idLanguage")
-//    Flux<ChallengeDocument> findChallengesByLevelAndLanguage2(
-//            @Param("level") String level,
-//            @Param("idLanguage") UUID idLanguage
-//    );
-//    @Query("SELECT * FROM ChallengeDocument c" +
-//            "JOIN LanguageDocument l ON c.languages.language_id = l.idLanguage" +
-//            "WHERE c.level = :level AND l.idLanguage = :idLanguage")
-//    Flux<ChallengeDocument> findChallengesByLevelAndLanguage2(
-//            @Param("level") String level,
-//            @Param("idLanguage") UUID idLanguage
-//    );
-
-    @Query("{'level' : ?0, 'languages.idLanguage' : ?1}")
-    Flux<ChallengeDocument> findChallengesByLevelAndLanguage(String level, UUID idLanguage);
-
-    @Query("{'languages.idLanguage' : ?0}")
-    Flux<ChallengeDocument> findByLanguages(UUID idLanguage);
 
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
+
+
+
 
 }
