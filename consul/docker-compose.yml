@@ -83,7 +83,7 @@ services:
         ipv4_address: 172.18.0.7
 
   apisix-gateway:
-    container_name: apisix
+    container_name: apisix-gateway
     image: apache/apisix:3.5.0-centos
     restart: always
     volumes:

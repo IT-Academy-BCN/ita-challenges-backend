@@ -8,7 +8,7 @@ routes:
     uri: /test
     upstream:
       nodes:
-          "172.18.0.9:7779": 1
+          "172.18.0.9:8762": 1
       type: roundrobin
 
 #END
