@@ -1,4 +1,5 @@
 //create user logged as root User
+//use admin
 db.createUser({
     user: "admin_challenge",
     pwd: "BYBcMJEEWw5egRUo",

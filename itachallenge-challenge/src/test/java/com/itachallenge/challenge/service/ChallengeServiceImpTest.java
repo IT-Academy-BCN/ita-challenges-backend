@@ -9,7 +9,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.helper.Converter;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -41,8 +41,11 @@ class ChallengeServiceImpTest {
     private SolutionRepository solutionRepository;
 
     @Mock
-    private Converter converter;
-
+    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
+    @Mock
+    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
+    @Mock
+    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
@@ -61,7 +64,7 @@ class ChallengeServiceImpTest {
         expectedDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
@@ -73,7 +76,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verify(converter).fromChallengeToChallengeDto(any());
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -90,7 +93,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verifyNoInteractions(challengeRepository);
-        verifyNoInteractions(converter);
+        verifyNoInteractions(challengeConverter);
     }
 
     @Test
@@ -109,7 +112,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verifyNoInteractions(converter);
+        verifyNoInteractions(challengeConverter);
     }
 
     @Test
@@ -162,7 +165,7 @@ class ChallengeServiceImpTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
 
         when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(converter.fromChallengeToChallengeDto(any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
@@ -174,7 +177,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findAll();
-        verify(converter).fromChallengeToChallengeDto(any());
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -189,7 +192,7 @@ class ChallengeServiceImpTest {
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(converter.fromLanguageToLanguageDto(any())).thenReturn(Flux.just(languageDto1, languageDto2));
+        when(languageConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(languageDto1, languageDto2));
 
         // Act
         Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
@@ -201,7 +204,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(languageRepository).findAll();
-        verify(converter).fromLanguageToLanguageDto(any());
+        verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -225,7 +228,7 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
-        when(converter.fromSolutionToSolutionDto(any(Flux.class))).thenReturn(Flux.fromIterable(expectedSolutions));
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
 
         // Act
         Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
@@ -242,7 +245,7 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(solutionRepository, times(2)).findById(any(UUID.class));
-        verify(converter, times(2)).fromSolutionToSolutionDto(any(Flux.class));
+        verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -258,7 +261,7 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository, never()).findByUuid(any(UUID.class));
         verify(solutionRepository, never()).findById(any(UUID.class));
-        verify(converter, never()).fromSolutionToSolutionDto(any(Flux.class));
+        verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -274,7 +277,7 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository, never()).findByUuid(any(UUID.class));
         verify(solutionRepository, never()).findById(any(UUID.class));
-        verify(converter, never()).fromSolutionToSolutionDto(any(Flux.class));
+        verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
@@ -293,7 +296,7 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(any(UUID.class));
         verify(solutionRepository, never()).findById(any(UUID.class));
-        verify(converter, never()).fromSolutionToSolutionDto(any(Flux.class));
+        verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
 
 }
