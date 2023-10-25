@@ -57,7 +57,7 @@ public class SolutionsRepositoryTest {
     private static int all;
 
     @BeforeAll
-    public static void deserializeJson() throws IOException, InterruptedException {
+    public static void deserializeJson() throws IOException {
 
         JsonNode node;
         userSolutions = new ArrayList<>();
