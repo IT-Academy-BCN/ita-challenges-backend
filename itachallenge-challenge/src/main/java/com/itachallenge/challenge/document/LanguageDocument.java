@@ -14,7 +14,7 @@ import java.util.UUID;
 public class LanguageDocument {
 
     @Id
-    @Field(name="idLanguage")
+    @Field(name="id_languages")
     private UUID idLanguage;
 
     @Field(name="language_name")
