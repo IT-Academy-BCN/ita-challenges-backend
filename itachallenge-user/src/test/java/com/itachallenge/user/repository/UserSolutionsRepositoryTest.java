@@ -28,7 +28,7 @@ import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class SolutionsRepositoryTest {
+public class UserSolutionsRepositoryTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -113,7 +113,7 @@ public class SolutionsRepositoryTest {
     }
 
     @BeforeEach
-    public void setup(){
+    void setup(){
 
         userSolutionsRepository.deleteAll();
 
@@ -122,14 +122,14 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Repository not null Test")
     @Test
-    public void testRepositoryNotNull(){
+    void testRepositoryNotNull(){
 
         assertNotNull(userSolutionsRepository);
     }
 
     @DisplayName("Find UserSolution by UUID test")
     @Test
-    public void testFindByUuid() {
+    void testFindByUuid() {
 
         Mono<UserSolutions> solutionsFound = userSolutionsRepository.findByUuid(testUuid);
         solutionsFound.blockOptional().ifPresentOrElse(
@@ -139,7 +139,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Exists by UUID test")
     @Test
-    public void testExistsByUuid(){
+    void testExistsByUuid(){
 
         Boolean exists = userSolutionsRepository.existsByUuid(testUuid).block();
         assertEquals(true, exists);
@@ -147,7 +147,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find UserSolution by UserId test")
     @Test
-    public void testFindByUserId(){
+    void testFindByUserId(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByUserId(testUserUuid);
         StepVerifier.create(solutionsFound)
@@ -158,7 +158,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find UserSolution by ChallengeId test")
     @Test
-    public void testFindByChallengeId(){
+    void testFindByChallengeId(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByChallengeId(testChallengeUuid);
         StepVerifier.create(solutionsFound)
@@ -169,7 +169,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find UserSolution by LanguageId test")
     @Test
-    public void testFindByLanguageId(){
+    void testFindByLanguageId(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByLanguageId(testLanguageUuid);
         StepVerifier.create(solutionsFound)
@@ -180,7 +180,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find all UserSolutions by bookmarked test")
     @Test
-    public void testFindByBookmarked(){
+    void testFindByBookmarked(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByBookmarked(true);
         StepVerifier.create(solutionsFound)
@@ -190,7 +190,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find all UserSolutions by status test")
     @Test
-    public void testFindByStatus(){
+    void testFindByStatus(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByStatus("medium");
         StepVerifier.create(solutionsFound)
@@ -200,7 +200,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find UserSolutions by score test")
     @Test
-    public void testFindByScore(){
+    void testFindByScore(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findByScore(score);
         StepVerifier.create(solutionsFound)
@@ -210,7 +210,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Find all UserSolutions")
     @Test
-    public void testFindAll(){
+    void testFindAll(){
 
         Flux<UserSolutions> solutionsFound = userSolutionsRepository.findAll();
 
@@ -221,7 +221,7 @@ public class SolutionsRepositoryTest {
 
     @DisplayName("Delete UserSolutions by UUID test")
     @Test
-    public void testDelete() {
+    void testDelete() {
 
         Mono<Void> solutionDeleted = userSolutionsRepository.deleteById(testUuid);
         StepVerifier.create(solutionDeleted)
