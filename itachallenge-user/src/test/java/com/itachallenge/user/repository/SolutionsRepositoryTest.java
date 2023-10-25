@@ -1,39 +1,33 @@
 package com.itachallenge.user.repository;
 
-import com.itachallenge.user.config.ConvertersConfig;
-import com.itachallenge.user.document.Solutions;
-import org.bson.types.Binary;
+import com.itachallenge.user.document.Solution;
+import com.itachallenge.user.document.UserSolutions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.type.TypeReference;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.JsonNode;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.util.AssertionErrors.fail;
+import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@PropertySource("classpath:persistence-test.properties")
-@Import(ConvertersConfig.class)
 public class SolutionsRepositoryTest {
 
     @Container
@@ -49,125 +43,82 @@ public class SolutionsRepositoryTest {
     }
 
     @Autowired
-    private ISolutionsRepository solutionRepository;
+    private IUserSolutionsRepository userSolutionsRepository;
+
+    private static List<UserSolutions> userSolutions;
+
+    private static UUID testUuid;
+    private static UUID testUserUuid;
+    private static UUID testChallengeUuid;
+    private static UUID testLanguageUuid;
+    private static int allMedium;
+    private static int allBookmarked;
+    private static int score;
+    private static int all;
+
+    @BeforeAll
+    public static void deserializeJson() throws IOException, InterruptedException {
+
+        JsonNode node;
+        userSolutions = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try (InputStream inputStream = TypeReference.class.getResourceAsStream("/user_score.json")) {
+            node = objectMapper.readValue(inputStream, JsonNode.class);
+            System.out.println(node);
+        } catch (IOException e) {
+            throw new IOException("Failed to read JSON data", e);
+        }
+
+        for(JsonNode field : node){
+
+            testUuid = UUID.fromString(field.get("_id").get("$uuid").asText());
+            testUserUuid = UUID.fromString(field.get("user_id").get("$uuid").asText());
+            testChallengeUuid = UUID.fromString(field.get("challenge_id").get("$uuid").asText());
+            testLanguageUuid = UUID.fromString(field.get("language_id").get("$uuid").asText());
+            allBookmarked = field.get("bookmarked").asBoolean() ? allBookmarked + 1 : allBookmarked;
+            allMedium = field.get("status").asText().equals("medium") ? allMedium + 1 : allMedium;
+            score = field.get("score").asInt();
+            all++;
+
+
+            UserSolutions userSolution = UserSolutions.builder()
+                                                .uuid(UUID.fromString(field.get("_id").get("$uuid").asText()))
+                                                .userId(UUID.fromString(field.get("user_id").get("$uuid").asText()))
+                                                .challengeId(UUID.fromString(field.get("challenge_id").get("$uuid").asText()))
+                                                .languageId(UUID.fromString(field.get("language_id").get("$uuid").asText()))
+                                                .bookmarked(field.get("bookmarked").asBoolean())
+                                                .score(field.get("score").asInt())
+                                                .status(field.get("status").asText())
+                                                .build();
+
+            JsonNode solutionNode = field.get("solution");
+            Solution[] solutions = new Solution[3];
+            int counter = 0;
+
+            for(JsonNode solutionField : solutionNode){
+
+                Solution builtSolution = Solution.builder()
+                                                .uuid(UUID.fromString(solutionField.get("_id").get("$uuid").asText()))
+                                                .solutionText(solutionField.get("solution_text").asText())
+                                                .build();
+
+                solutions[counter] = builtSolution;
+                counter++;
+            }
+            userSolution.setSolution(solutions);
+
+            userSolutions.add(userSolution);
+        }
+    }
 
     @BeforeEach
-    public void setup() throws IOException, InterruptedException {
+    public void setup(){
 
-        ProcessBuilder processBuilder = new ProcessBuilder(
-                "mongoimport",
-                "--uri", container.getReplicaSetUrl("users"),
-                "--db", "users",
-                "--collection", "solutions",
-                "--jsonArray",
-                "--file", "user_score.json"
-        ).directory(new File("src/test/resources"));
+        userSolutionsRepository.deleteAll();
 
-        Process process = processBuilder.start();
-
-       try{
-           int exitCode = process.waitFor();
-
-           if (exitCode == 0) {
-               System.out.println("Successful import");
-           } else {
-               System.err.println("Import error");
-           }
-
-       }catch(Exception e){
-           e.printStackTrace();
-       }
+        userSolutionsRepository.saveAll(Flux.fromIterable(userSolutions)).blockLast();
     }
 
-    private final UUID uuid = UUID.fromString("a75fa943-6bc9-4e62-b1db-d43d15b149c7");
 
-    private final UUID uuid2 = UUID.fromString("1e8f64e2-6d68-4ae1-9425-8102d0ab61d3");
-
-    private final UUID uuid3 = UUID.fromString("956c9dbd-2e85-4d68-a75b-9783d83c7f72");
-
-    @Test
-    public void testFindByUuid() {
-
-        System.out.println(uuid);
-        System.out.println(uuid2);
-        System.out.println(uuid3);
-
-        System.out.println(solutionRepository.findAll().blockFirst());
-        System.out.println(solutionRepository.findAll().blockLast());
-        System.out.println(solutionRepository.findAll().blockFirst().getUuid().getClass());
-        System.out.println(solutionRepository.findAll().blockFirst().getUuid());
-
-        System.out.println(solutionRepository.findAll().blockFirst().getUuid().equals(uuid));
-        System.out.println(solutionRepository.findAll().blockFirst().getUuid().equals(uuid2));
-        System.out.println(solutionRepository.findAll().blockFirst().getUuid().equals(uuid3));
-        System.out.println(solutionRepository.findByUuid(uuid).block());
-
-        Mono<Solutions> solutionsFound = solutionRepository.findByUuid(uuid);
-
-        solutionsFound.blockOptional().ifPresentOrElse(
-            solutions -> assertEquals(solutions.getUuid(), uuid),
-            () -> fail("Solutions with ID " + uuid + " not found"));
-
-    }
-
-    @Test
-    public void testFindByStatus(){
-
-        Flux<Solutions> solutionsFound = solutionRepository.findByStatus("medium");
-
-        System.out.println(solutionsFound.collectList().block());
-    }
-
-    @Test
-    public void testFindByUserId(){
-
-        System.out.println(solutionRepository.findAll().blockFirst());
-        System.out.println(solutionRepository.findAll().blockLast());
-        System.out.println(solutionRepository.findAll().blockFirst().getUserId().getClass());
-        System.out.println(solutionRepository.findAll().blockFirst().getUserId());
-
-        System.out.println(solutionRepository.findByUserId(uuid).blockFirst());
-    }
-
-    /*@Test
-    public void testFindByUuid2(){
-
-        Mono<Solutions> solutionsFound = solutionRepository.findByUuid(uuid2);
-        solutionsFound.blockOptional().ifPresentOrElse(
-                solutions -> assertEquals(solutions.getUuid(), uuid2),
-                () -> fail("Solutions with ID " + uuid2 + " not found"));
-    }
-
-    @Test
-    public void testFindByUuid3(){
-
-        Mono<Solutions> solutionsFound = solutionRepository.findByUuid(uuid3);
-        solutionsFound.blockOptional().ifPresentOrElse(
-                solutions -> assertEquals(solutions.getUuid(), uuid3),
-                () -> fail("Solutions with ID " + uuid3 + " not found"));
-    }*/
-
-    @Test
-    public void testFindAll(){
-
-        Flux<Solutions> solutionsFound = solutionRepository.findAll();
-
-        StepVerifier.create(solutionsFound)
-                .expectNextCount(4)
-                .verifyComplete();
-    }
-
-    @DisplayName("Repository not null Test")
-    @Test
-    public void testRepositoryNotNull(){
-
-        Assertions.assertNotNull(solutionRepository);
-    }
-
-/*    @Test
-    public void testExistsByUuid(){
-
-        Boolean exists = solutionRepository.existsByUuid(uuid).block();
-        assertEquals(true, exists);
-    }*/
 }
