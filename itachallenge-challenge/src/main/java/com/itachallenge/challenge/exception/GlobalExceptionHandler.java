@@ -1,5 +1,8 @@
 package com.itachallenge.challenge.exception;
 
+import com.itachallenge.challenge.dto.MessageDto;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,14 @@ public class GlobalExceptionHandler {
         HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
         ErrorResponseMessage errorResponseMessage = new ErrorResponseMessage(statusCode.value(), ex.getReason());
         return ResponseEntity.status(statusCode).body(errorResponseMessage);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<MessageDto> handleConstraintViolation(ConstraintViolationException ex) {
+        String errorMessage = ex.getConstraintViolations()
+                .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
+
+        return ResponseEntity.ok().body(new MessageDto(errorMessage));
     }
 
     @ExceptionHandler(BadUUIDException.class)

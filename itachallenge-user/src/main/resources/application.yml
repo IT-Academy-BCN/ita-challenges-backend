@@ -1,8 +1,15 @@
 spring:
   application:
     name: itachallenge-user
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
+  data:
+    mongodb:
+      uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
+      uuid-representation: standard
 
 redis:
   port: 6379
@@ -45,3 +52,5 @@ logging:
 #  file:
 #    name: itachallenge-user.log
 
+validation:
+  mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"

@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.controller;
 
-import com.google.gson.JsonObject;
+import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
@@ -14,12 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-import java.net.URI;
 import java.util.Optional;
 
 @RestController
+@Validated
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
@@ -28,6 +29,12 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
     @Autowired
     IChallengeService challengeService;
+
+    /* Customized values */
+    private static final String MONGOID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    private static final String DEFAULT_PATTERN = "^[A-Za-z]{1,9}$";
+
+    private static final String INVALID_PARAM = "Invalid parameter.";
 
     @GetMapping(value = "/test")
     public String test() {
@@ -100,6 +107,19 @@ public class ChallengeController {
     )
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
         return challengeService.getAllChallenges();
+    }
+
+    @GetMapping("/challenges/")
+    @Operation(
+            operationId = "Get only the challenges on a page.",
+            summary = "Get to see challenges on a page and their levels, details and their available languages.",
+            description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+            })
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = MONGOID_PATTERN, message = INVALID_PARAM) String idLanguage,
+                                               @RequestParam @ValidGenericPattern(pattern = DEFAULT_PATTERN, message = INVALID_PARAM) String difficulty) {
+        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
 
     @GetMapping("/language")

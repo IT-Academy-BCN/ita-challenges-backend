@@ -9,16 +9,10 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties
 @ConfigurationProperties
 public class PropertiesConfig {
-    //region PROPERTIES: Private
     @Value("${url.max_length}")
     private Integer maxLength;
 
-    //endregion PROPERTIES: Private
-
-
-    //region GETTERS
     public Integer getUrlMaxLength(){return maxLength;}
 
-    //endregion GETTERS
 
 }
