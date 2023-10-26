@@ -119,7 +119,7 @@ class GlobalExceptionHandlerTest {
         constraints.add(constraint1);
 
         ConstraintViolation<?> constraint2 = mock(ConstraintViolation.class);
-        when(constraint2.getMessage()).thenReturn("Message 2");
+        when(constraint2.getMessage()).thenReturn("Expected message");
         constraints.add(constraint2);
 
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed.", constraints);
