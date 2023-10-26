@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
- class UserScoreDocumentTest {
+ class UserSolutionDocumentTest {
 
     private final UUID uuid = UUID.randomUUID();
     private final UUID userId = UUID.randomUUID();
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     }
     @Test
     void getLanguageId(){
-        assertEquals(languageId, userScoreDocument.getLanguajeId());
+        assertEquals(languageId, userScoreDocument.getLanguageId());
     }
     @Test
     void getBookmark(){
