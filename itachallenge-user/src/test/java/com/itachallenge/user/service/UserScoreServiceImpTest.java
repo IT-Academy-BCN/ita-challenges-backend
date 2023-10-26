@@ -4,7 +4,7 @@ import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserScoreDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.helper.Converter;
+import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserScoreRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class UserScoreServiceImpTest {
     @InjectMocks
     private UserScoreServiceImp userScoreService;
     @Mock
-    private Converter converter;
+    private ConverterDocumentToDto converter;
 
     @BeforeEach
     void setUp(){
@@ -48,7 +48,7 @@ class UserScoreServiceImpTest {
         SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), "solutionText3");
         List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
 
-        UserScoreDocument userScoreDocument = new UserScoreDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true,1,1,solutionDocumentList );
+        UserScoreDocument userScoreDocument = new UserScoreDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true,"medium",1,solutionDocumentList );
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
         expectedSolutionUserDto.setInfo(0,1,0, new UserScoreDto[]{userScoreDto});

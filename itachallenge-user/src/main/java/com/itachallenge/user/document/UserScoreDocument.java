@@ -32,7 +32,7 @@ public class UserScoreDocument {
     private boolean bookmarked;
 
     @Field("status")
-    private int status;
+    private String status;
 
     @Field("score")
     private int score;

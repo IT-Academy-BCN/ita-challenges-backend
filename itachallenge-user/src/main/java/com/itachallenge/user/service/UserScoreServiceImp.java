@@ -2,7 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.helper.Converter;
+import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class UserScoreServiceImp implements IUserScoreService {
     private IUserScoreRepository userScoreRepository;
 
     @Autowired
-    private Converter converter;
+    private ConverterDocumentToDto converter;
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
         UUID userUuid = convertToUUID(idUser);

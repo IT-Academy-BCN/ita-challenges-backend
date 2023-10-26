@@ -7,7 +7,7 @@ import reactor.core.publisher.Flux;
 
 
 @Component
-public class Converter {
+public class ConverterDocumentToDto {
 
 
     public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserScoreDocument> just) {

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     private final UUID challengeId = UUID.randomUUID();
     private final UUID languageId  = UUID.randomUUID();
     private final boolean bookmarked = true;
-    private final int status = 1;
+    private final String status = "medium";
     private final int score = 90;
     UUID solutionId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
     UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");

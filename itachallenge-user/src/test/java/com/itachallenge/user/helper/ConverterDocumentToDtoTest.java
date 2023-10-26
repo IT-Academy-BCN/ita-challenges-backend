@@ -17,10 +17,10 @@ import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class ConverterTest {
+class ConverterDocumentToDtoTest {
 
     @Autowired
-    private Converter converter;
+    private ConverterDocumentToDto converter;
 
     UUID uuid_1 = UUID.randomUUID();
     UUID idUser = UUID.randomUUID();
@@ -32,7 +32,7 @@ class ConverterTest {
     SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
-    UserScoreDocument userScoreDocument = new UserScoreDocument(uuid_1, idUser, idChallenge, idLanguage, true, 1, 90, solutionDocumentList);
+    UserScoreDocument userScoreDocument = new UserScoreDocument(uuid_1, idUser, idChallenge, idLanguage, true, "medium", 90, solutionDocumentList);
 
     @DisplayName("Convertir un objeto UserScoreDocument en un objeto UserScoreDto")
     @Test

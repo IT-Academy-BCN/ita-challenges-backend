@@ -66,9 +66,9 @@ class UserScoreRepositoryTest {
 
         List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
 
-        UserScoreDocument userScoreDocument1 = new UserScoreDocument(uuid_1, userId1, challengeId1, languageId1, true, 1, 90, solutionDocumentList);
-        UserScoreDocument userScoreDocument2 = new UserScoreDocument(uuid_2, userId2, challengeId2, languageId2, true, 1, 90, solutionDocumentList);
-        UserScoreDocument userScoreDocument3 = new UserScoreDocument(uuid_3, userId1, challengeId1, languageId1, true, 1, 90, solutionDocumentList);
+        UserScoreDocument userScoreDocument1 = new UserScoreDocument(uuid_1, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
+        UserScoreDocument userScoreDocument2 = new UserScoreDocument(uuid_2, userId2, challengeId2, languageId2, true, "medium", 90, solutionDocumentList);
+        UserScoreDocument userScoreDocument3 = new UserScoreDocument(uuid_3, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
 
         userScoreRepository.saveAll(Flux.just(userScoreDocument1, userScoreDocument2, userScoreDocument3)).blockLast();
     }
