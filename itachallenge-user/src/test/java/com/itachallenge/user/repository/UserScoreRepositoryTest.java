@@ -1,7 +1,7 @@
 package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.SolutionDocument;
-import com.itachallenge.user.document.UserScoreDocument;
+import com.itachallenge.user.document.UserSolutionDocument;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -35,7 +35,7 @@ class UserScoreRepositoryTest {
     }
 
     @Autowired
-    private IUserScoreRepository userScoreRepository;
+    private IUserSolutionRepository userScoreRepository;
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120001");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120002");
@@ -66,9 +66,9 @@ class UserScoreRepositoryTest {
 
         List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
 
-        UserScoreDocument userScoreDocument1 = new UserScoreDocument(uuid_1, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
-        UserScoreDocument userScoreDocument2 = new UserScoreDocument(uuid_2, userId2, challengeId2, languageId2, true, "medium", 90, solutionDocumentList);
-        UserScoreDocument userScoreDocument3 = new UserScoreDocument(uuid_3, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
+        UserSolutionDocument userScoreDocument1 = new UserSolutionDocument(uuid_1, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
+        UserSolutionDocument userScoreDocument2 = new UserSolutionDocument(uuid_2, userId2, challengeId2, languageId2, true, "medium", 90, solutionDocumentList);
+        UserSolutionDocument userScoreDocument3 = new UserSolutionDocument(uuid_3, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
 
         userScoreRepository.saveAll(Flux.just(userScoreDocument1, userScoreDocument2, userScoreDocument3)).blockLast();
     }
@@ -82,7 +82,7 @@ class UserScoreRepositoryTest {
     @DisplayName("Count users by id")
     @Test
     void CountUserById(){
-        Flux<UserScoreDocument> userScoreDocTest = userScoreRepository.findByUserId(userId1);
+        Flux<UserSolutionDocument> userScoreDocTest = userScoreRepository.findByUserId(userId1);
 
         StepVerifier.create(userScoreDocTest)
                 .expectNextCount(2)

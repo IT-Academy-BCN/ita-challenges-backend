@@ -4,7 +4,7 @@ import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.repository.IUserScoreRepository;
+import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IUserScoreService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,7 +32,7 @@ public class UserController {
     @Autowired
     private IUserScoreService userScoreService;
     @Autowired
-    private IUserScoreRepository userScoreRepository;
+    private IUserSolutionRepository userScoreRepository;
     //endregion ATTRIBUTES
 
 

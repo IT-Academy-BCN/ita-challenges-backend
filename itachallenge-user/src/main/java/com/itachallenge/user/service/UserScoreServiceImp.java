@@ -3,7 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
-import com.itachallenge.user.repository.IUserScoreRepository;
+import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @Service
 public class UserScoreServiceImp implements IUserScoreService {
     @Autowired
-    private IUserScoreRepository userScoreRepository;
+    private IUserSolutionRepository userScoreRepository;
 
     @Autowired
     private ConverterDocumentToDto converter;

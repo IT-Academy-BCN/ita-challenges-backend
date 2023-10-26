@@ -1,7 +1,7 @@
 package com.itachallenge.user.helper;
 
 import com.itachallenge.user.document.SolutionDocument;
-import com.itachallenge.user.document.UserScoreDocument;
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserScoreDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ class ConverterDocumentToDtoTest {
     SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
-    UserScoreDocument userScoreDocument = new UserScoreDocument(uuid_1, idUser, idChallenge, idLanguage, true, "medium", 90, solutionDocumentList);
+    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid_1, idUser, idChallenge, idLanguage, true, "medium", 90, solutionDocumentList);
 
     @DisplayName("Convertir un objeto UserScoreDocument en un objeto UserScoreDto")
     @Test
@@ -46,7 +46,7 @@ class ConverterDocumentToDtoTest {
                 .verify();
     }
 
-    private boolean ValidateUserScoreDto(UserScoreDto userScoreDto, UserScoreDocument userScoreDocument) {
+    private boolean ValidateUserScoreDto(UserScoreDto userScoreDto, UserSolutionDocument userScoreDocument) {
 
         return userScoreDto.getUserId().equals(userScoreDocument.getUserId()) &&
                 userScoreDto.getChallengeId().equals(userScoreDocument.getChallengeId()) &&
