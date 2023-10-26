@@ -1,5 +1,9 @@
 package com.itachallenge.challenge.exception;
 
+import com.itachallenge.challenge.dto.MessageDto;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,15 +18,22 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @WebFluxTest(controllers = GlobalExceptionHandlerTest.class)
 class GlobalExceptionHandlerTest {
     //VARIABLES
-    private final String REQUEST = "Invalid request";
+    String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
+    private final HttpStatus OK_REQUEST = HttpStatus.OK;
 
     @InjectMocks
     private GlobalExceptionHandler globalExceptionHandler;
@@ -57,6 +68,31 @@ class GlobalExceptionHandlerTest {
                     return true;
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    void handleConstraintViolation() {
+        // Arrange
+        Set<ConstraintViolation<?>> constraints = new HashSet<>();
+
+        ConstraintViolation<?> constraint1 = mock(ConstraintViolation.class);
+        when(constraint1.getMessage()).thenReturn("Expected message");
+        constraints.add(constraint1);
+
+        ConstraintViolation<?> constraint2 = mock(ConstraintViolation.class);
+        when(constraint2.getMessage()).thenReturn("Expected message");
+        constraints.add(constraint2);
+
+        ConstraintViolationException exception = new ConstraintViolationException("Validation failed.", constraints);
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
+
+        // Assert
+        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Expected message"));
     }
 
 
