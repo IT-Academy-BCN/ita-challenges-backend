@@ -33,6 +33,7 @@ then
     echo "$fileConfig not found."
   fi
 
+## QQQ - pte hacer clean previo
 ./gradlew :itachallenge-challenge:build
 
 cd itachallenge-challenge

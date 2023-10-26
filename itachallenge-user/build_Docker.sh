@@ -36,7 +36,7 @@ then
 ./gradlew :itachallenge-user:build
 
 cd itachallenge-user
-docker build -t=${REGISTRY_NAME}:itachallenge-score-${USER_TAG} .
+docker build -t=${REGISTRY_NAME}:itachallenge-user-${USER_TAG} .
 
 #upload image to DockerHub
 upload_image="pre"
