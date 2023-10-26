@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.awt.print.Pageable;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -129,6 +131,18 @@ public class ChallengeServiceImp implements IChallengeService {
                                 return resultDto;
                             });
                 });
+    }
+
+
+    public Mono<GenericResultDto<ChallengeDto>> getChallengeByLevelAndIdLanguage(String level, UUID idLanguage) {
+        Flux<ChallengeDocument> filteredChallenges = challengeRepository.findByLevelAndLanguages_IdLanguage(level, idLanguage);
+
+        return filteredChallenges.collectList().map(challenge -> {
+            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, challenge.size(), challenge.size(), challenge.toArray(new ChallengeDto[0]));
+            return resultDto;
+        });
+
     }
 
     private Mono<UUID> validateUUID(String id) {

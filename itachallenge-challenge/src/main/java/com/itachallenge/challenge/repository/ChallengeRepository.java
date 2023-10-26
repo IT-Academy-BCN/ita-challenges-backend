@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.awt.print.Pageable;
 import java.util.UUID;
 
 @Repository
@@ -20,6 +22,7 @@ public interface ChallengeRepository extends ReactiveMongoRepository<ChallengeDo
 
     Mono<ChallengeDocument> findByTitle(String title);
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
+    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
 
     @Override
     Mono<ChallengeDocument> save (ChallengeDocument challenge);
