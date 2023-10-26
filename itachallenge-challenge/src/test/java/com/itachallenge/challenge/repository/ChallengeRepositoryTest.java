@@ -73,11 +73,11 @@ class ChallengeRepositoryTest {
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Loops", "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, "Loops", "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "Switch", "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, "Switch", "EASY", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, "If", "Level 2", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2);
+                (uuid_3, "If", "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
     }
@@ -175,15 +175,15 @@ class ChallengeRepositoryTest {
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
 
         Flux<ChallengeDocument> filteredChallenges1 = challengeRepository
-                .findByLevelAndLanguages_IdLanguage("Level 1", uuidLang1);
+                .findByLevelAndLanguages_IdLanguage("MEDIUM", uuidLang1);
         Flux<ChallengeDocument> filteredChallenges2 = challengeRepository
-                .findByLevelAndLanguages_IdLanguage("Level 2", uuidLang1);
+                .findByLevelAndLanguages_IdLanguage("EASY", uuidLang1);
 
         StepVerifier.create(filteredChallenges1)
                 .expectNextCount(1)
                 .verifyComplete();
         StepVerifier.create(filteredChallenges2)
-                .expectNextCount(2)
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
@@ -224,15 +224,15 @@ class ChallengeRepositoryTest {
     @Test
     void findByLevelFlux_test() {
         Flux<ChallengeDocument> filteredChallenges1 = challengeRepository
-                .findByLevel("Level 1");
+                .findByLevel("MEDIUM");
         Flux<ChallengeDocument> filteredChallenges2 = challengeRepository
-                .findByLevel("Level 2");
+                .findByLevel("EASY");
 
         StepVerifier.create(filteredChallenges1)
                 .expectNextCount(1)
                 .verifyComplete();
         StepVerifier.create(filteredChallenges2)
-                .expectNextCount(2)
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
