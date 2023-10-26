@@ -21,7 +21,6 @@ public class GenericPatternValidator implements ConstraintValidator<ValidGeneric
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (!pattern.matcher(value).matches()) return false;
-        return true;
+        return pattern.matcher(value).matches();
     }
 }

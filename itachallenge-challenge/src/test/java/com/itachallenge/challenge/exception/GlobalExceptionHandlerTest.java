@@ -1,10 +1,11 @@
 package com.itachallenge.challenge.exception;
 
 import com.itachallenge.challenge.dto.ErrorMessageDto;
-import com.itachallenge.challenge.dto.ErrorResponseMessageDto;
+import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,9 +24,11 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.*;
-
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertTrue;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -34,7 +37,7 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = GlobalExceptionHandlerTest.class)
 class GlobalExceptionHandlerTest {
     //VARIABLES
-    private final String REQUEST = "Invalid request";
+    String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
     private final HttpStatus OK_REQUEST = HttpStatus.OK;
 
@@ -45,7 +48,7 @@ class GlobalExceptionHandlerTest {
     @MockBean
     private MethodArgumentNotValidException methodArgumentNotValidException;
     @MockBean
-    private ErrorResponseMessageDto errorResponseMessage;
+    private MessageDto errorResponseMessage;
     @MockBean
     private ErrorMessageDto errorMessage;
 
@@ -61,10 +64,10 @@ class GlobalExceptionHandlerTest {
         when(responseStatusException.getReason()).thenReturn(REQUEST);
         when(errorResponseMessage.getMessage()).thenReturn(REQUEST);
 
-        ErrorResponseMessageDto expectedErrorMessage = new ErrorResponseMessageDto(REQUEST);
+        MessageDto expectedErrorMessage = new MessageDto(REQUEST);
         expectedErrorMessage.setMessage(REQUEST);
 
-        ResponseEntity<ErrorResponseMessageDto> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
+        ResponseEntity<MessageDto> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
 
         StepVerifier.create(Mono.just(response))
                 .expectNextMatches(resp -> {
@@ -125,13 +128,12 @@ class GlobalExceptionHandlerTest {
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed.", constraints);
 
         // Act
-        ResponseEntity<ErrorResponseMessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
         assertEquals(OK_REQUEST, responseEntity.getStatusCode());
-
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        assertTrue(responseBody.contains("Expected message"));
+        Assertions.assertTrue(responseBody.contains("Expected message"));
     }
 
 }

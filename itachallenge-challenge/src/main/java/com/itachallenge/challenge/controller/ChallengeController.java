@@ -2,7 +2,10 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,6 +45,9 @@ public class ChallengeController {
     private static final String LIMIT = "^-1$|^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200] or -1 for all.
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter.";
+    private static final String MONGOID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";
+
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -117,6 +123,19 @@ public class ChallengeController {
     public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_PAGE_VALUE) @ValidGenericPattern(message = INVALID_PARAM) String offset,
                                                @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
+    }
+
+    @GetMapping("/challenges/")
+    @Operation(
+            operationId = "Get only the challenges on a page.",
+            summary = "Get to see challenges on a page and their levels, details and their available languages.",
+            description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+            })
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = MONGOID_PATTERN, message = INVALID_PARAM) String idLanguage,
+                                               @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
+        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
 
     @GetMapping("/language")

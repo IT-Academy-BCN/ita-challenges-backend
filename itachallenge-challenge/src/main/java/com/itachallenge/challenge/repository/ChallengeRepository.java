@@ -13,20 +13,16 @@ import java.util.UUID;
 public interface ChallengeRepository extends ReactiveSortingRepository<ChallengeDocument, UUID> {
 
     Mono<Boolean> existsByUuid(UUID uuid);
-
     Mono<ChallengeDocument> findByUuid(UUID uuid);
-
-    Mono<ChallengeDocument> findByLevel(String level);
-
+    Flux<ChallengeDocument> findByLevel(String level);
     Mono<ChallengeDocument> findByTitle(String title);
-
     Flux<ChallengeDocument> findAllByUuidNotNull(Pageable pageable);
-
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
-
     Mono<Void> deleteByUuid(UUID uuid);
-
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
-
     Flux<ChallengeDocument> saveAll(Flux<ChallengeDocument> challengeDocumentFlux);
+    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
+    Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
+    Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
+
 }

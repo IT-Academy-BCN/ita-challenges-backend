@@ -1,7 +1,6 @@
-package com.itachallenge.challenge.annotations;
+package com.itachallenge.user.annotations;
 
-
-import com.itachallenge.challenge.validator.GenericPatternValidator;
+import com.itachallenge.user.validators.GenericUUIDValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -12,11 +11,11 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = GenericPatternValidator.class)
-public @interface ValidGenericPattern {
-    String message() default "The value is invalid.";
+@Constraint(validatedBy = GenericUUIDValidator.class)
+public @interface GenericUUIDValid {
+    String message() default "UUID is invalid";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
+
     String pattern() default ""; // Optional
 }
-

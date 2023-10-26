@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
-public class ErrorResponseMessageDto {
+public class MessageDto {
     private String message;
 
-    public ErrorResponseMessageDto(String message) {
+    public MessageDto(String message) {
         this.message = message;
     }
 
