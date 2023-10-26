@@ -1,7 +1,7 @@
 #!/bin/sh
 #  Start parameters:
 #  1.-fileConfig
-#  Example: ./itachallenge-user/build_Docker.sh conf/.env.dev
+#  Example: ./itachallenge-challenge/build_Docker.sh conf/.env.dev
 
 # Init variables
 fileConfig=$1;
@@ -33,14 +33,14 @@ then
     echo "$fileConfig not found."
   fi
 
-./gradlew :itachallenge-user:build
+./gradlew :itachallenge-mock:clean && ./gradlew :itachallenge-mock:build
 
-cd itachallenge-user
-docker build -t=${REGISTRY_NAME}:itachallenge-user-${USER_TAG} .
+cd itachallenge-mock
+docker build -t=${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG} .
 
 #upload image to DockerHub
 upload_image="pre"
 if [ ${ENV} = "$upload_image" ];
 then
-  docker push ${REGISTRY_NAME}:${USER_TAG}
+  docker push ${REGISTRY_NAME}:${CHALLENGE_TAG}
 fi
