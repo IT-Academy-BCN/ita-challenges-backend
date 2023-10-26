@@ -27,7 +27,7 @@ class UserScoreServiceImpTest {
     @Mock
     private IUserSolutionRepository userScoreRepository;
     @InjectMocks
-    private UserScoreServiceImp userScoreService;
+    private UserSolutionServiceImp userScoreService;
     @Mock
     private ConverterDocumentToDto converter;
 

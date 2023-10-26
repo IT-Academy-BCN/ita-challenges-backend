@@ -3,7 +3,7 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.service.IUserScoreService;
+import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class UserControllerTest {
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
     @MockBean
-    IUserScoreService userScoreService;
+    IUserSolutionService userScoreService;
 
     //endregion VARIABLES
 

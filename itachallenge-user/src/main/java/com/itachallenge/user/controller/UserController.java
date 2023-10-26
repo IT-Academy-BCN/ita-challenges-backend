@@ -5,7 +5,7 @@ import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
-import com.itachallenge.user.service.IUserScoreService;
+import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,7 +30,7 @@ public class UserController {
     @Autowired
     ServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
-    private IUserScoreService userScoreService;
+    private IUserSolutionService userScoreService;
     @Autowired
     private IUserSolutionRepository userScoreRepository;
     //endregion ATTRIBUTES

@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Service
-public class UserScoreServiceImp implements IUserScoreService {
+public class UserSolutionServiceImp implements IUserSolutionService {
     @Autowired
     private IUserSolutionRepository userScoreRepository;
 
