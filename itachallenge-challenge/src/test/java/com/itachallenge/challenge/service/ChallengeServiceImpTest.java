@@ -13,6 +13,7 @@ import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -298,5 +299,66 @@ class ChallengeServiceImpTest {
         verify(solutionRepository, never()).findById(any(UUID.class));
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
+
+    @Test
+    void testGetChallengeByLevelAndIdLanguage(){
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String level = "JAVA";
+        ChallengeDocument challengeDocument1 = new ChallengeDocument();
+        ChallengeDocument challengeDocument2 = new ChallengeDocument();
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(any(), any()))
+                .thenReturn(Flux.just(challengeDocument1, challengeDocument2));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any()))
+                .thenReturn(Flux.just(challengeDto1, challengeDto2));
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService
+                .getChallengesByLanguageAndDifficulty(challengeStringId, level);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getOffset()).isZero();
+                    assertThat(resultDto.getResults().length).isEqualTo(2);
+                    return true;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void testGetChallengeByLevelAndIdLanguage_invalidLevel(){
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String level = "invalidLevel";
+
+        //Act & Assert
+        Assertions.assertThrows(ChallengeNotFoundException.class, () -> {
+            challengeService.getChallengesByLanguageAndDifficulty(challengeStringId, level);
+        });
+
+        verify(challengeRepository, never()).findByLevelAndLanguages_IdLanguage(any(), any());
+        verify(challengeConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
+    }
+
+    @Test
+    void testGetChallengeByLevelAndIdLanguage_empty(){
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String level = "JAVA";
+
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(any(), any())).thenReturn(Flux.empty());
+
+        //Assert & Assert
+        StepVerifier.create(challengeService
+                        .getChallengesByLanguageAndDifficulty(challengeStringId, level))
+                .expectError(ChallengeNotFoundException.class)
+                .verify();
+    }
+
+
 
 }
