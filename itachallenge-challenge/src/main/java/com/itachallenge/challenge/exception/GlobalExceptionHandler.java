@@ -15,9 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponseMessage> handleResponseStatusException(ResponseStatusException ex) {
+    public ResponseEntity<MessageDto> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
-        ErrorResponseMessage errorResponseMessage = new ErrorResponseMessage(statusCode.value(), ex.getReason());
+        MessageDto errorResponseMessage = new MessageDto(ex.getReason());
         return ResponseEntity.status(statusCode).body(errorResponseMessage);
     }
 
