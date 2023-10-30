@@ -3,10 +3,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -20,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -46,6 +45,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -108,6 +109,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
+
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
         return Mono.zip(challengeIdMono, languageIdMono)
@@ -129,6 +131,25 @@ public class ChallengeServiceImp implements IChallengeService {
                                 return resultDto;
                             });
                 });
+    }
+
+    @Override
+    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
+
+        return validateUUID(id)
+                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
+                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
+                                .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class)))
+                        )
+                        .collectList()
+                        .map(relatedChallenges -> {
+                            GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
+                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new RelatedDto[0]));
+                            return resultDto;
+                        })
+                );
     }
 
     private Mono<UUID> validateUUID(String id) {
