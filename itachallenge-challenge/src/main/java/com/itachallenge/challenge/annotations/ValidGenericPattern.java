@@ -19,3 +19,4 @@ public @interface ValidGenericPattern {
     Class<? extends Payload>[] payload() default {};
     String pattern() default ""; // Optional
 }
+

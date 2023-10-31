@@ -4,35 +4,39 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.document.ExampleDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.*;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.*;
-
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import reactor.core.publisher.Flux;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
-@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class ChallengeIntegrationTest {
+class ChallengeIntegrationTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -52,17 +56,13 @@ public class ChallengeIntegrationTest {
 
     private final String UUID_VALID = "8ecbfe54-fec8-11ed-be56-0242ac120002";
     private final String UUID_INVALID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-
     private final String CHALLENGE_BASE_URL = "/itachallenge/api/v1/challenge";
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
 
-
     @BeforeEach
     public void setUp() {
-
-        challengeRepository.deleteAll().block();
 
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
@@ -79,7 +79,7 @@ public class ChallengeIntegrationTest {
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
-        List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
+        List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
 
         DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
 
@@ -88,12 +88,11 @@ public class ChallengeIntegrationTest {
         ChallengeDocument challenge2 = new ChallengeDocument
                 (uuid_2, "If", "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
 
-
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
     //TODO - Refactor this method, getLanguages endpoint already available
-    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName){
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName) {
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
@@ -102,7 +101,7 @@ public class ChallengeIntegrationTest {
 
     @Test
     @DisplayName("Test response Hello")
-    void testDevProfile_OKwithoutAuthentication() {
+    void testDevProfile_OKWithoutAuthentication() {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/test")
                 .accept(MediaType.APPLICATION_JSON)
@@ -135,28 +134,33 @@ public class ChallengeIntegrationTest {
                     assert dto != null;
                     assert dto.getCount() == 1;
                     assert dto.getResults() != null;
-                })
-        ;
-    }
-
-    @Test
-    void getAllChallenges_ReturnsStatusOkAndLength() {
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
                 });
     }
 
     @Test
-    void removeResourcesById_ValidId_ResourceDeleted() {
+    void getChallengesByPages_ValidPageParameters_ChallengesReturned() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges?offset=0&limit=1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class)
+                .contains(new ChallengeDto[]{})
+                .hasSize(1);
+    }
 
+    @Test
+    void getChallengesByPages_NullPageParameters_ChallengesReturned() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class)
+                .contains(new ChallengeDto[]{})
+                .hasSize(2);
+    }
+
+    @Test
+    void removeResourcesById_ValidId_ResourceDeleted() {
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", UUID_VALID)
                 .exchange()
@@ -169,4 +173,5 @@ public class ChallengeIntegrationTest {
                     assert dto.getResults().length == 1;
                 });
     }
+
 }
