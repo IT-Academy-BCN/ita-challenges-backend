@@ -26,7 +26,7 @@ public class UserSolutionDocument {
     private UUID challengeId;
 
     @Field("language_id")
-    private UUID languajeId;
+    private UUID languageId;
 
     @Field("bookmarked")
     private boolean bookmarked;
