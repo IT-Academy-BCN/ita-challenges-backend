@@ -48,8 +48,6 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
 
-    @Value("${validation.defaultLimit}")
-    private int maxLimit;
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -108,7 +106,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-        limit = (limit == -1) ? this.maxLimit : limit;
         return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull( (PageRequest.of(offset, limit)) ) , ChallengeDto.class);
     }
 

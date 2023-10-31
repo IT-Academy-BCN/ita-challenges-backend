@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,14 @@ import java.util.Optional;
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
 
+    private static final String DEFAULT_OFFSET = "0";
+    private static final String DEFAULT_LIMIT = "200";  //if no limit, all elements (avoid exception with default value 200)
+    private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200]
+    private static final String NO_SERVICE = "No Services";
+    private static final String INVALID_PARAM = "Invalid parameter";
+    private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
+
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
     @Autowired
@@ -37,17 +46,6 @@ public class ChallengeController {
 
     @Autowired
     IChallengeService challengeService;
-
-
-    /* Customized values */
-    private static final String DEFAULT_PAGE_VALUE = "0";
-    private static final String DEFAULT_SIZE_VALUE = "20";
-    private static final String LIMIT = "^-1$|^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200] or -1 for all.
-    private static final String NO_SERVICE = "No Services";
-    private static final String INVALID_PARAM = "Invalid parameter.";
-    private static final String MONGOID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";
-
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -120,8 +118,8 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_PAGE_VALUE) @ValidGenericPattern(message = INVALID_PARAM) String offset,
-                                               @RequestParam(defaultValue = DEFAULT_SIZE_VALUE) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                               @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
@@ -133,7 +131,7 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = MONGOID_PATTERN, message = INVALID_PARAM) String idLanguage,
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
                                                @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
