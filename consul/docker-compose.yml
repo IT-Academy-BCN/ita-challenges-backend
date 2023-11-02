@@ -103,8 +103,8 @@ services:
     image: itachallenge:itachallenge-mock-v1.0.0-RELEASE
     container_name: itachallenge-mock
     restart: always
-    ports:
-      - '${MOCK_CONTAINER_PORT}:8762'
+    #ports:
+      #- '${MOCK_CONTAINER_PORT}:8762'
     networks:
       apisix:
         ipv4_address: 172.18.0.9
@@ -112,19 +112,11 @@ services:
 volumes:
   itachallenge_mongodb_data:
 
-
 networks:
     apisix:
       driver: bridge
+      #internal: true
       ipam:
         driver: default
         config:
           - subnet: 172.18.0.0/24
-#  apisix:
-#    driver: bridge
-#    ipam:
-#      driver: default
-#      config:
-#        - subnet: 172.18.0.0/16
-        #- ip_range: 172.18.5.0/24
-        #- gateway: 172.18.5.254
