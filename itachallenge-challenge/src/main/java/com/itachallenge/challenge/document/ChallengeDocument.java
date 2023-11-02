@@ -46,4 +46,6 @@ public class ChallengeDocument {
     @Field(name="related")
     private Set<UUID> relatedChallenges;
 
+
+
 }

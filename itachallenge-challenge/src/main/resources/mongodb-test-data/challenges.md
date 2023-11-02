@@ -1,54 +1,130 @@
 ## EASY
+1. Descending Order
+   - Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number.
+   - Example:
+     - Input: 42145 Output: 54421
+       Input: 145263 Output: 654321
+       Input: 123456789 Output: 987654321
+   - [Link](https://www.codewars.com/kata/5467e4d82edf8bbf40000155)
 
 
-1. Multiples of 3 or 5
-- Description: If we list all the natural numbers below 10 that are multiples of 3 or 5, we get 3, 5, 6 and 9. The sum of these multiples is 23.
+2. Highest and Lowest
+   - In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number.
+   - Example: 
+     - highAndLow("1 2 3 4 5")  // return "5 1"
+       highAndLow("1 2 -3 4 5") // return "5 -3"
+       highAndLow("1 9 3 4 -5") // return "9 -5"
+  
+    - [link](https://www.codewars.com/kata/554b4ac871d6813a03000035)
 
-    Finish the solution so that it returns the sum of all the multiples of 3 or 5 below the number passed in.
+
+3. You're a square!
+   - A square of squares
+     You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!
+
+       However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square.
     
-    Note: If the number is a multiple of both 3 and 5, only count it once.
+       Task
+       Given an integral number, determine if it's a square number:
     
-    Courtesy of projecteuler.net (Problem 1)
+       In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.
+    
+       The tests will always use some integral number, so don't worry about that in dynamic typed languages.
 
-  - [link](https://www.codewars.com/kata/54ff3102c1bad923760001f3)
-
-
-2. Disemvowel Trolls
-- Welcome. In this kata, you are asked to square every digit of a number and concatenate them.
-    
-    For example, if we run 9119 through the function, 811181 will come out, because 92 is 81 and 12 is 1. (81-1-1-81)
-    
-    Example #2: An input of 765 will/should return 493625 because 72 is 49, 62 is 36, and 52 is 25. (49-36-25)
-    
-    Note: The function accepts an integer and returns an integer.
-    
-    Happy Coding!
-
-3. 
-- Title: Square Every Digit
+   - Example:
+     - -1  =>  false
+       0  =>  true
+       3  =>  false
+       4  =>  true
+       25  =>  true
+       26  =>  false
+    - [Link](https://www.codewars.com/kata/54c27a33fb7da0db0100040e)
 
 
-2. This code does not execute properly. Try to figure out why.
-    
-        public class Multiply {
-            public static Double multiply(Double a, Double b) {
-            return a * b
-            }
-        }
-    
+4. List Filtering
+   - In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out.
+   - Example:
+     - Kata.filterList(List.of(1, 2, "a", "b")) => List.of(1,2)
+       Kata.filterList(List.of(1, 2, "a", "b", 0, 15)) => List.of(1,2,0,15)
+       Kata.filterList(List.of(1, 2, "a", "b", "aasf", "1", "123", 231)) => List.of(1, 2, 231)
+   - [Link](https://www.codewars.com/kata/53dbd5315a3c69eed20002dd)
 
-3. Create a function that takes an integer as an argument and returns "Even" for even numbers or "Odd" for odd numbers.
-   
-        public class Kata {
-            public static String evenOrOdd(int number) {
-                return ""; // Place code here;
-            }
-        }
+
+5. Isograms
+   - An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.
+       Example: (Input --> Output)
+       "Dermatoglyphics" --> true "aba" --> false "moOse" --> false (ignore letter case)
+   - Example:
+     - isIsogram "Dermatoglyphics" = true
+       isIsogram "moose" = false
+       isIsogram "aba" = false
+   - [Link](https://www.codewars.com/kata/54ba84be607a92aa900000f1)
+
+
+6. Exes and Ohs
+   - Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char.
+   - Example:
+     - XO("ooxx") => true
+       XO("xooxx") => false
+       XO("ooxXm") => true
+       XO("zpzpzpp") => true // when no 'x' and 'o' is present should return true
+       XO("zzoo") => false
+   - [Link](https://www.codewars.com/kata/55908aad6620c066bc00002a)
+
+
+7. Get the Middle Character
+   - You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters.
+   - Example:
+     - Kata.getMiddle("test") should return "es"
+       Kata.getMiddle("testing") should return "t"
+       Kata.getMiddle("middle") should return "dd" 
+       Kata.getMiddle("A") should return "A"
+   - [Link](https://www.codewars.com/kata/56747fd5cb988479af000028)  
 
 
 
 ## MEDIUM
 
+1. Simple Pig Latin
+   - Move the first letter of each word to the end of it, then add "ay" to the end of the word. Leave punctuation marks untouched.
+   - Example
+     - pigIt('Pig latin is cool'); // igPay atinlay siay oolcay
+       pigIt('Hello world !');     // elloHay orldway !
+   - [Link](https://www.codewars.com/kata/520b9d2ad5c005041100000f) 
+
+2. RGB To Hex Conversion
+   - The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.
+    Note: Your answer should always be 6 characters long, the shorthand with 3 will not work here.
+   - Example:
+     - 255, 255, 255 --> "FFFFFF"
+       255, 255, 300 --> "FFFFFF"
+       0, 0, 0       --> "000000"
+       148, 0, 211   --> "9400D3"
+   - [Link](https://www.codewars.com/kata/513e08acc600c94f01000001)
+
+
+3. Scramblies
+   - Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.
+       Notes:
+           Only lower case letters will be used (a-z). No punctuation or digits will be included.
+           Performance needs to be considered.
+   - Example: 
+     - scramble('rkqodlw', 'world') ==> True
+       scramble('cedewaraaossoqqyt', 'codewars') ==> True
+       scramble('katas', 'steak') ==> False
+   - [Link](https://www.codewars.com/kata/55c04b4cc56a697bb0000048)
+
+
+4. Number of trailing zeros of N!
+   - Write a program that will calculate the number of trailing zeros in a factorial of a given number.
+    N! = 1 * 2 * 3 *  ... * N
+    Be careful 1000! has 2568 digits...
+   - Example:
+     - zeros(6) = 1
+        6! = 1 * 2 * 3 * 4 * 5 * 6 = 720 --> 1 trailing zero
+     - zeros(12) = 2
+        12! = 479001600 --> 2 trailing zeros
+   - [Link](https://www.codewars.com/kata/52f787eb172a8b4ae1000a34)
 
 
 ## HARD
