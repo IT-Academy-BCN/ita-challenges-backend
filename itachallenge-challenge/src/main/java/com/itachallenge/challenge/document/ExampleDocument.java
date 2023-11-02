@@ -17,4 +17,6 @@ public class ExampleDocument {
     @Field(name="example_text")
     private String exampleText;
 
+    private String solution_in;  // Hola Amanda
+    private String solution_out; //Hol mnda
 }
