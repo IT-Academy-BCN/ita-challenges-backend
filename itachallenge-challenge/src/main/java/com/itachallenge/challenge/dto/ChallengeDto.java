@@ -49,7 +49,4 @@ public class ChallengeDto {
     @JsonProperty(index = 7)
     private List<UUID> solutions;
 
-    /*
-    TODO: ADD more fields "on demand" (when needed)
-     */
 }
