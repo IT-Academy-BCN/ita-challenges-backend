@@ -35,7 +35,7 @@ public class HttpProxy {
 
     private final WebClient client;
 
-    protected final String MALFORMED_URL_MSG = "Proxy: provided url is not valid: ";
+    protected static final String MALFORMED_URL_MSG = "Proxy: provided url is not valid: ";
 
     @Autowired
     public HttpProxy(PropertiesConfig config) {
@@ -74,7 +74,7 @@ public class HttpProxy {
     }
 
     public <T> Mono<T> getRequestData(String url, Class<T> clazz) {
-        UrlValidator validator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS); //for testing with MockWebServer
+        UrlValidator validator = new UrlValidator(UrlValidator.ALLOW_LOCAL_URLS); //allow localhost
         if (validator.isValid(url)) {
             String msg = Strings.concat("Proxy: Executing remote invocation to ",url);
             log.info(msg);

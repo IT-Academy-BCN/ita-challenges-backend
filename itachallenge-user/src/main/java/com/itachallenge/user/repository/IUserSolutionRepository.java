@@ -8,10 +8,20 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+@Repository
 public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSolutionDocument, UUID> {
 
-    Flux<UserSolutionDocument> findByUserId(UUID userId);
     Mono<UserSolutionDocument> findByChallengeIdAndLanguajeIdAndUserId(UUID challengeId, UUID languageId, UUID userId);
+    Flux<UserSolutionDocument> findByChallengeId(UUID challengeId);
+    Flux<UserSolutionDocument> findByLanguageId(UUID languageId);
+    Flux<UserSolutionDocument> findByBookmarked(Boolean bookmarked);
+    Flux<UserSolutionDocument> findByScore(int score);
+    Flux<UserSolutionDocument> findByStatus(String status);
+    Mono<Boolean> existsByUuid(UUID uuid);
+    Mono<UserSolutionDocument> findByUuid(UUID uuid);
+    Flux<UserSolutionDocument> findByUserId(UUID userId);
+    @Override
+    Mono<UserSolutionDocument> save (UserSolutionDocument solutions);
 
 
 }

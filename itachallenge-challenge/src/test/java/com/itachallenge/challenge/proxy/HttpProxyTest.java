@@ -96,7 +96,7 @@ public class HttpProxyTest {
 
     @Test
     @DisplayName("Timeout verification")
-    public void timeoutTest() {
+    void timeoutTest() {
         int absurdTimeout = Integer.parseInt(env.getProperty("url.fake_connection_timeout"));
         //System.out.println(absurdValue); // = 1
         WebClient absurdWebClient = httpProxy.getClient().mutate()

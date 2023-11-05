@@ -33,7 +33,7 @@ public class ConverterDocumentToDto {
     private UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
     return UserScoreDto.builder()
             .challengeId(userScoreDocument.getChallengeId())
-            .languageID(userScoreDocument.getLanguajeId())
+            .languageID(userScoreDocument.getLanguageId())
             .userId(userScoreDocument.getUserId())
             .solutions(userScoreDocument.getSolutionDocument())
             .build();

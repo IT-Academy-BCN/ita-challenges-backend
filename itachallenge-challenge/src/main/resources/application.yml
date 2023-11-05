@@ -8,7 +8,7 @@ spring:
     enabled: true
   data:
     mongodb:
-      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges
+      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin
       uuid-representation: standard
 
 springdoc:
@@ -36,7 +36,7 @@ logging:
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
@@ -44,3 +44,9 @@ logging:
 url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
+
+validation:
+  number: "^\\d{1,9}$"                             # Integers up to 9 digits
+
+messages:
+  errorMessage: "Invalid values."

@@ -18,9 +18,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +49,7 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
     @Mock
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
@@ -162,21 +166,28 @@ class ChallengeServiceImpTest {
         // Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto challengeDto4 = new ChallengeDto();
+        ChallengeDto[] expectedChallengesPaged = {challengeDto3, challengeDto4};
 
-        when(challengeRepository.findAll()).thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        int offset = 1;
+        int limit = 2;
+        Pageable pageable = PageRequest.of((offset), limit);
+
+        when(challengeRepository.findAllByUuidNotNull(pageable))
+                .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges();
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(1, 2);
 
         // Assert
         StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedChallenges))
+                .expectNext(expectedChallengesPaged)
                 .expectComplete()
                 .verify();
 
-        verify(challengeRepository).findAll();
+        verify(challengeRepository).findAllByUuidNotNull(pageable);
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
@@ -206,7 +217,7 @@ class ChallengeServiceImpTest {
         verify(languageRepository).findAll();
         verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
-
+    
     @Test
     void testGetSolutions() {
         // Arrange
@@ -298,5 +309,4 @@ class ChallengeServiceImpTest {
         verify(solutionRepository, never()).findById(any(UUID.class));
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
-
 }
