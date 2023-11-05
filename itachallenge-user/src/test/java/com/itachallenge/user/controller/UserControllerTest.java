@@ -1,6 +1,7 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.dtos.OneSolutionUserDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.service.IUserSolutionService;
@@ -19,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -208,6 +210,28 @@ class UserControllerTest {
         for (int i = 1; i < numberUUID; i++) URI_TEST += String.format("&challenge=%s", UUID.randomUUID());
 
         return URI_TEST;
+    }
+
+    @Test
+    public void testPostOneSolution() {
+        String challengeId = "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79";
+        String languageId = "5c1a97e5-1cca-4144-9981-2de1fb73b178";
+        String userId = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
+        int score = 100;
+        String solution = "My Solution";
+
+        OneSolutionUserDto expectedResponse = new OneSolutionUserDto(UUID.fromString(challengeId),UUID.fromString(languageId),UUID.fromString(userId),solution,score);
+
+        when(userScoreService.postOneSolutionUser(challengeId, languageId, userId, solution, score))
+                .thenReturn(Mono.just(expectedResponse));
+
+        webTestClient.post()
+                .uri(CONTROLLER_URL + "/solution/challenge/{idChallenge}/language/{idLanguage}/user/{idUser}/score/{score}", challengeId, languageId, userId, score)
+                .bodyValue(solution)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(OneSolutionUserDto.class)
+                .isEqualTo(expectedResponse);
     }
 
     //endregion PRIVATE METHODS

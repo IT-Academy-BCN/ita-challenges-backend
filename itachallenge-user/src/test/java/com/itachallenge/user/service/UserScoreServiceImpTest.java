@@ -2,6 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.dtos.OneSolutionUserDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
@@ -15,12 +16,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.mockito.Mockito.*;
-
 
 class UserScoreServiceImpTest {
 
@@ -62,6 +60,50 @@ class UserScoreServiceImpTest {
                 .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
                 .expectComplete()
                 .verify();
+    }
+
+    @Test
+    void postSolutionUserTest() {
+        UUID idSolutionUser = UUID.randomUUID();
+        UUID idChallenge = UUID.randomUUID();
+        UUID idLanguage = UUID.randomUUID();
+        UUID idUser = UUID.randomUUID();
+        boolean bookmarked = false;
+        String status = "status";
+        int score = 60;
+        List<SolutionDocument> solutionDocuments = new ArrayList<>();
+        String solution = "My solution";
+
+        UserSolutionDocument existingDocument = UserSolutionDocument.builder()
+                .uuid(idSolutionUser)
+                .challengeId(idChallenge)
+                .languajeId(idLanguage)
+                .userId(idUser)
+                .bookmarked(bookmarked)
+                .status(status)
+                .score(score)
+                .solutionDocument(solutionDocuments)
+                .build();
+
+        OneSolutionUserDto expectedDto = new OneSolutionUserDto(idChallenge,idLanguage,idUser,solution,score);
+
+        when(userScoreRepository.findByChallengeIdAndLanguajeIdAndUserId(any(),any(),any()))
+                .thenReturn(Mono.just(existingDocument));
+
+        when(userScoreRepository.save(any())).thenAnswer(invocation -> {
+            UserSolutionDocument savedDocument = invocation.getArgument(0);
+            return Mono.just(savedDocument);
+        });
+
+        when(converter.fromUserSolutionDocumentToOneSolutionUserDto(any(),any()))
+                .thenReturn(Mono.just(expectedDto));
+
+        Mono<OneSolutionUserDto> result = userScoreService.postOneSolutionUser(
+                idChallenge.toString(), idLanguage.toString(), idUser.toString(), solution, score);
+
+        StepVerifier.create(result)
+                .expectNext(expectedDto)
+                .verifyComplete();
     }
 
 }
