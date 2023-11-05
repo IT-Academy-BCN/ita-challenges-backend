@@ -11,6 +11,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.springframework.test.context.DynamicPropertySource;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
@@ -88,4 +89,29 @@ class UserScoreRepositoryTest {
                 .expectNextCount(2)
                 .verifyComplete();
     }
+
+    @Test
+    public void testFindByChallengeAndLanguajeIdAndUserId() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
+        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .challengeId(challengeId)
+                .languajeId(languageId)
+                .userId(userId)
+                .build();
+
+        userScoreRepository.save(userSolutionDocument).block();
+
+        Mono<UserSolutionDocument> resultMono = userScoreRepository.findByChallengeIdAndLanguajeIdAndUserId(challengeId, languageId, userId);
+        
+        StepVerifier.create(resultMono)
+                .expectNextMatches(result -> result.getChallengeId().equals(challengeId)
+                        && result.getLanguajeId().equals(languageId)
+                        && result.getUserId().equals(userId))
+                .verifyComplete();
+    }
+
 }

@@ -1,8 +1,6 @@
 package com.itachallenge.user.dtos;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,7 +20,5 @@ public class SolutionUserDto<T> {
         this.count = count;
         this.results = results;
     }
-
-
 
 }

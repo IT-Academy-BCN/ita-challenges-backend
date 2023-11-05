@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.dtos.OneSolutionUserDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -85,4 +86,23 @@ public class UserController {
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
+
+    @PostMapping(path = "/solution/challenge/{idChallenge}/language/{idLanguage}/user/{idUser}/score/{score}")
+    @Operation(
+            summary = "Add a solution to your programming challenge.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = OneSolutionUserDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "400", description = "No user with the required id.", content = { @Content(schema = @Schema()) })
+            }
+    )
+    public Mono<OneSolutionUserDto> PostOneSolutionByChallengeIdLanguageIdUserId(
+            @PathVariable("idChallenge") @GenericUUIDValid(message =  "Invalid UUID for challenge") String idChallenge,
+            @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage,
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
+            @PathVariable("score") int score,
+            @RequestBody String solution
+            ) {
+        return userScoreService.postOneSolutionUser(idChallenge,idLanguage,idUser,solution,score);
+    }
+
 }
