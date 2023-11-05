@@ -77,7 +77,7 @@ class UserScoreServiceImpTest {
         UserSolutionDocument existingDocument = UserSolutionDocument.builder()
                 .uuid(idSolutionUser)
                 .challengeId(idChallenge)
-                .languajeId(idLanguage)
+                .languageId(idLanguage)
                 .userId(idUser)
                 .bookmarked(bookmarked)
                 .status(status)

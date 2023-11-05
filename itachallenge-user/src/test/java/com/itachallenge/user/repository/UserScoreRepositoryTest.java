@@ -99,7 +99,7 @@ class UserScoreRepositoryTest {
         UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
                 .uuid(UUID.randomUUID())
                 .challengeId(challengeId)
-                .languajeId(languageId)
+                .languageId(languageId)
                 .userId(userId)
                 .build();
 
@@ -109,7 +109,7 @@ class UserScoreRepositoryTest {
         
         StepVerifier.create(resultMono)
                 .expectNextMatches(result -> result.getChallengeId().equals(challengeId)
-                        && result.getLanguajeId().equals(languageId)
+                        && result.getLanguageId().equals(languageId)
                         && result.getUserId().equals(userId))
                 .verifyComplete();
     }

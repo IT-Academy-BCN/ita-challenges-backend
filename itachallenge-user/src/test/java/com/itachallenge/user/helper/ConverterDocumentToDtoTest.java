@@ -74,7 +74,7 @@ class ConverterDocumentToDtoTest {
                 .uuid(userSolutionDocumentId)
                 .userId(userId)
                 .challengeId(challengeId)
-                .languajeId(languageId)
+                .languageId(languageId)
                 .bookmarked(bookmarked)
                 .status(status)
                 .score(score)
@@ -92,7 +92,7 @@ class ConverterDocumentToDtoTest {
 
         assert result != null;
         assertEquals(userSolutionDocument.getChallengeId(), result.getChallengeId());
-        assertEquals(userSolutionDocument.getLanguajeId(), result.getLanguageId());
+        assertEquals(userSolutionDocument.getLanguageId(), result.getLanguageId());
         assertEquals(userSolutionDocument.getUserId(), result.getUserId());
         assertEquals(solution, result.getSolutionText());
         assertEquals(userSolutionDocument.getScore(), result.getScore());

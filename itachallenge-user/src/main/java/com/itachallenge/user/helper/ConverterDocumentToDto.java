@@ -23,7 +23,7 @@ public class ConverterDocumentToDto {
     private OneSolutionUserDto fromDocumentToDto(UserSolutionDocument userSolution, String solutionText){
         return OneSolutionUserDto.builder()
                 .challengeId(userSolution.getChallengeId())
-                .languageId(userSolution.getLanguajeId())
+                .languageId(userSolution.getLanguageId())
                 .userId(userSolution.getUserId())
                 .solutionText(solutionText)
                 .score(userSolution.getScore())

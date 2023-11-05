@@ -53,7 +53,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                             .uuid(UUID.randomUUID())
                             .userId(userId)
                             .challengeId(challengeId)
-                            .languajeId(languageId)
+                            .languageId(languageId)
                             .bookmarked(false) // Add logic to determine if it's marked as a favorite
                             .status("pending") // Add logic to determine the status
                             .score(score)
