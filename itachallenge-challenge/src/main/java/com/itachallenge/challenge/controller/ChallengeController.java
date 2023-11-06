@@ -163,4 +163,19 @@ public class ChallengeController {
 
     }
 
+    @GetMapping("/{idChallenge}/related")
+    @Operation(
+            operationId = "Get the related challenges from a chosen challenge.",
+            summary = "Get to see the challenge title, creation date, level, popularity and languages.",
+            description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+            }
+    )
+    public Mono<GenericResultDto<RelatedDto>> getRelated(@PathVariable("idChallenge") String idChallenge){
+
+
+    }
+
 }
