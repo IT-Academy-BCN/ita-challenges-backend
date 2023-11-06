@@ -21,3 +21,4 @@
 * Miquel Debón Villagrasa - https://github.com/MiquelDebon
 * Josep Olivé Diaz - https://github.com/JosepOli
 * Jordi Magester Lopez - https://github.com/Aebal34
+* Adria Marti Comas - https://github.com/AdriaMartiComas
