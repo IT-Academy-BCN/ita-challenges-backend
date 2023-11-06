@@ -126,5 +126,120 @@
         12! = 479001600 --> 2 trailing zeros
    - [Link](https://www.codewars.com/kata/52f787eb172a8b4ae1000a34)
 
+    
+5. Isograms
+    - An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.
+      Example: (Input --> Output)
+      "Dermatoglyphics" --> true "aba" --> false "moOse" --> false (ignore letter case)
+    - Example:
+        - isIsogram "Dermatoglyphics" = true
+          isIsogram "moose" = false
+          isIsogram "aba" = false
+    - [Link](https://www.codewars.com/kata/54ba84be607a92aa900000f1)
 
+
+6. Exes and Ohs
+    - Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char.
+    - Example:
+        - XO("ooxx") => true
+          XO("xooxx") => false
+          XO("ooxXm") => true
+          XO("zpzpzpp") => true // when no 'x' and 'o' is present should return true
+          XO("zzoo") => false
+    - [Link](https://www.codewars.com/kata/55908aad6620c066bc00002a)
+
+
+7. Get the Middle Character
+    - You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters.
+    - Example:
+        - Kata.getMiddle("test") should return "es"
+          Kata.getMiddle("testing") should return "t"
+          Kata.getMiddle("middle") should return "dd"
+          Kata.getMiddle("A") should return "A"
+    - [Link](https://www.codewars.com/kata/56747fd5cb988479af000028)
+
+    
 ## HARD
+
+1. Evaluate mathematical expression.
+    - Given a mathematical expression as a string you must return the result as a number.
+    - Example:
+        - 1 -1   // 0
+        - 1 - -1 // 2
+    - [Link](https://www.codewars.com/kata/52a78825cdfc2cfc87000005)
+
+
+2. The Millionth Fibonacci Kata.
+    - In this kata you will have to calculate fib(n) where:
+      fib(0) := 0
+      fib(1) := 1
+      fib(n + 2) := fib(n + 1) + fib(n)
+   
+
+3. Title: Compress String
+
+Statement: Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, "aaabbbccc" would be compressed as "a3b3c3".
+
+Example:
+
+Input: "aaabbbccc"
+Expected Output: "a3b3c3"
+
+
+4. Title: Longest Common Subsequence
+
+Statement: Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings.
+
+Example:
+
+Input: "ABCBDAB", "BDCAB"
+Expected Output: "BCAB"
+
+
+5. Title: Find the Equilibrium Point in an Array
+
+Statement: Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right.
+
+Example:
+
+Input: [1, 2, 3, 4, 6]
+Expected Output: 3
+
+
+6. Validate Mathematical Expressions
+
+Statement: Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators.
+
+Example:
+
+Input: "((3 + 4) * 2) / (5 - 2)"
+Expected Output: Valid
+
+
+7. Find the Largest Contiguous Subarray
+
+Statement: Implement an algorithm to find the largest contiguous subarray in an array of integers.
+
+Example:
+
+Input: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+Expected Output: [4, -1, 2, 1]
+
+
+8. Count Inversions in an Array
+
+Statement: Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order.
+
+Example:
+
+Input: [2, 4, 1, 3, 5]
+Expected Output: 3
+
+9. Find the Shortest Path in a Weighted Graph
+
+Statement: Implement an algorithm to find the shortest path between two nodes in a weighted graph using Dijkstra's algorithm.
+
+Example:
+
+Input: Graph with weights
+Expected Output: Shortest path between two nodes
