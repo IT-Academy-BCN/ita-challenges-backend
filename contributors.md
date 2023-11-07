@@ -21,3 +21,4 @@
 * Miquel Debón Villagrasa - https://github.com/MiquelDebon
 * Josep Olivé Diaz - https://github.com/JosepOli
 * Jordi Magester Lopez - https://github.com/Aebal34
+* Kathya Torres Santamaria - https://github.com/kathya0000
