@@ -169,14 +169,11 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-
-
-
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
         if (!validUUID) {
-            log.warn("Invalid ID format: {}", id);
+            log.info("Invalid ID format: {}", id);
             return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
         }
 
