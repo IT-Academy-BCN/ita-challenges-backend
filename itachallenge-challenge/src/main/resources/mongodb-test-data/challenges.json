@@ -3,36 +3,30 @@
     "_id" : {
       "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
     },
-    "challenge_title": "Sociis Industries",
+    "challenge_title": "Descending Order",
     "level": "EASY",
     "creation_date": { "$date": "2018-09-09T11:43:54+0200"},
     "detail": {
-      "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
+      "description": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number.",
       "examples": [
         {
           "_id" : {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          "example_text": "Input: 42145, Output: 54421"
         },
         {
           "_id" : {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": " Aliquam nec nisi maximus, venenatis"
+          "example_text": "Input: 145263 Output: 654321"
         },
         {
 
           "_id" : {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": "Mauris feugiat massa et suscipit malesuada."
-        },
-        {
-          "_id" : {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text": "Aenean quis maximus purus. Quisque sit amet"
+          "example_text": "Input: 123456789 Output: 987654321"
         }
       ],
       "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
@@ -61,12 +55,15 @@
       {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values" : [
-      {"in param": "a,bcde",
-      "expected_result": "java.lang.numberFormatException"},
-      {"in param": "",
-        "expected_result": ""}
+      [
+        {"in_param": "a,bcde",
+        "out_param": "java.lang.numberFormatException"}
+        ],
+      [
+        {"in param": 42145,
+          "out_param": 54421}
+      ]
     ]
-
   },
   {
     "_id": {
