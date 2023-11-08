@@ -7,6 +7,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -17,6 +18,7 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -25,7 +27,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -48,6 +49,9 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
+
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
@@ -89,15 +93,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges() {
-        Flux<ChallengeDto> challengeDtoFlux = challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAll(), ChallengeDto.class);
-
-        return challengeDtoFlux.collectList().map(challenges -> {
-            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
-            return resultDto;
-        });
-    }
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String level) {
         validateUUID(idLanguage);
@@ -125,6 +120,11 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    @Override
+    public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull( (PageRequest.of(offset, limit)) ) , ChallengeDto.class);
+    }
+
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -149,6 +149,27 @@ public class ChallengeServiceImp implements IChallengeService {
                             });
                 });
     }
+
+    @Override
+    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
+
+        return validateUUID(id)
+                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
+                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
+                                .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class)))
+                        )
+                        .collectList()
+                        .map(relatedChallenges -> {
+                            GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
+                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new RelatedDto[0]));
+                            return resultDto;
+                        })
+                );
+    }
+
+
 
 
     private Mono<UUID> validateUUID(String id) {

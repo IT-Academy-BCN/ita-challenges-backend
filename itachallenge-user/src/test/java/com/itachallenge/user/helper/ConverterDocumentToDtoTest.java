@@ -51,6 +51,6 @@ class ConverterDocumentToDtoTest {
         return userScoreDto.getUserId().equals(userScoreDocument.getUserId()) &&
                 userScoreDto.getChallengeId().equals(userScoreDocument.getChallengeId()) &&
                 userScoreDto.getSolutions().equals(userScoreDocument.getSolutionDocument()) &&
-                userScoreDto.getLanguageID().equals(userScoreDocument.getLanguajeId());
+                userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId());
     }
 }

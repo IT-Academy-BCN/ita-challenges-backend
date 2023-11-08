@@ -2,9 +2,10 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
 import org.junit.jupiter.api.*;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.util.AssertionErrors.fail;
 
 @DataMongoTest
@@ -46,11 +46,10 @@ class ChallengeRepositoryTest {
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
     UUID uuid_3 = UUID.fromString("2f948de0-6f0c-4089-90b9-7f70a0812319");
 
-
     @BeforeEach
     public void setUp() {
 
-        challengeRepository.deleteAll().block();
+        //challengeRepository.deleteAll().block();
 
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
@@ -82,23 +81,39 @@ class ChallengeRepositoryTest {
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
     }
 
-
-
     @DisplayName("Repository not null Test")
     @Test
     void testDB() {
-
         assertNotNull(challengeRepository);
-
     }
 
-    @DisplayName("Find All Test")
+    @DisplayName("Find Challenges for a Page")
     @Test
     void findAllTest() {
 
-        Flux<ChallengeDocument> challenges = challengeRepository.findAll();
-        StepVerifier.create(challenges)
-                .expectNextCount(3)
+        Pageable pageNumber0Size1 = PageRequest.of(0,1);
+        Pageable pageNumber0Size2 = PageRequest.of(0,2);
+        Pageable pageNumber1Size1 = PageRequest.of(1,1);
+        Pageable pageNumber1Size2 = PageRequest.of(1,2);
+
+        Flux<ChallengeDocument> challengesPageNumber0Size1 = challengeRepository.findAllByUuidNotNull(pageNumber0Size1);
+        StepVerifier.create(challengesPageNumber0Size1)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        Flux<ChallengeDocument> challengesPageNumber0Size2 = challengeRepository.findAllByUuidNotNull(pageNumber0Size2);
+        StepVerifier.create(challengesPageNumber0Size2)
+                .expectNextCount(2)
+                .verifyComplete();
+
+        Flux<ChallengeDocument> challengesPageNumber1Size1 = challengeRepository.findAllByUuidNotNull(pageNumber1Size1);
+        StepVerifier.create(challengesPageNumber1Size1)
+                .expectNextCount(1)
+                .verifyComplete();
+
+        Flux<ChallengeDocument> challengesPageNumber1Size2 = challengeRepository.findAllByUuidNotNull(pageNumber1Size2);
+        StepVerifier.create(challengesPageNumber1Size2)
+                .expectNextCount(1)
                 .verifyComplete();
     }
 
@@ -167,7 +182,6 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge with name If not found."));
     }
 
-
     @DisplayName("Find by Level and LanguagesId - Get one Test")
     @Test
     void findAllChallengeByLanguagesAndLevelGetOne() {
@@ -186,8 +200,6 @@ class ChallengeRepositoryTest {
                 .expectNextCount(1)
                 .verifyComplete();
     }
-
-
 
     @DisplayName("Find by idLanguage Test")
     @Test
@@ -235,9 +247,5 @@ class ChallengeRepositoryTest {
                 .expectNextCount(1)
                 .verifyComplete();
     }
-
-
-
-
 
 }

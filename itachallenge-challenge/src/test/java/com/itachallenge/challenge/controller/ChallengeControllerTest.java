@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.controller;
 
+import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
@@ -14,7 +15,9 @@ import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +35,9 @@ class ChallengeControllerTest {
 
     @MockBean
     private DiscoveryClient discoveryClient;
+
+    @MockBean
+    private PropertiesConfig config;
 
     @Test
     void test() {
@@ -97,25 +103,48 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getAllChallenges_ChallengesExist_ChallengesReturned() {
-        // Arrange
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+    void getAllChallenges_ValidPageParameters_ChallengesReturned() {
+        //Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        when(challengeService.getAllChallenges()).thenReturn(Mono.just(expectedResult));
+        String offset= "0";
+        String limit = "3";
+
+        when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
+                .thenReturn(expectedChallengesFlux);
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges?offset=0&limit=3")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getAllChallenges_NullPageParameters_ChallengesReturned() {
+        //Arrange
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+
+        String offset = "0";
+        String limit = "2";
+
+        when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
+                .thenReturn(expectedChallengesFlux);
 
         // Act & Assert
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/challenges")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
-                });
+                .expectBodyList(ChallengeDto.class);
     }
 
     @Test

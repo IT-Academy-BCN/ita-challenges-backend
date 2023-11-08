@@ -25,7 +25,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID languageUuid = convertToUUID(idLanguage);
 
         return this.userScoreRepository.findByUserId(userUuid)
-                .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguajeId().equals(languageUuid))
+                .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguageId().equals(languageUuid))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()
                     .map(userScoreDtos -> {

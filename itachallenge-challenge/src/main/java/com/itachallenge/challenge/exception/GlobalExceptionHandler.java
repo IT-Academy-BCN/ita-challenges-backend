@@ -3,10 +3,9 @@ package com.itachallenge.challenge.exception;
 import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,36 +14,28 @@ import org.springframework.web.server.ResponseStatusException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorResponseMessage> handleResponseStatusException(ResponseStatusException ex) {
+    public ResponseEntity<MessageDto> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
-        ErrorResponseMessage errorResponseMessage = new ErrorResponseMessage(statusCode.value(), ex.getReason());
+        MessageDto errorResponseMessage = new MessageDto(ex.getReason());
         return ResponseEntity.status(statusCode).body(errorResponseMessage);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<MessageDto> handleConstraintViolation(ConstraintViolationException ex) {
-        String errorMessage = ex.getConstraintViolations()
+        String constraintMessage = ex.getConstraintViolations()
                 .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
 
-        return ResponseEntity.ok().body(new MessageDto(errorMessage));
-    }
-
-    @ExceptionHandler(BadUUIDException.class)
-    public ResponseEntity<ErrorMessage> handleBadUUID(BadUUIDException ex){
-        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
+        return ResponseEntity.ok().body(new MessageDto(constraintMessage));
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleChallengeNotFoundException(ChallengeNotFoundException ex){
-        return ResponseEntity.badRequest().body(new ErrorMessage(ex.getMessage()));
+    public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 
-    @AllArgsConstructor
-    @Getter
-    static
-    class ErrorMessage{
-        String msg;
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<MessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
-
 
 }

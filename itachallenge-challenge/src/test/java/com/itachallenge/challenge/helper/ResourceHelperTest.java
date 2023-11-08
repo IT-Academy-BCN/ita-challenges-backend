@@ -3,6 +3,8 @@ package com.itachallenge.challenge.helper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ResourceHelperTest {
@@ -19,6 +21,6 @@ class ResourceHelperTest {
     void failedReadResourceTest () {
         String invalidPath = "jsonx908erfd/Randosadn90dsmJson.json";
         ResourceHelper resourceHelper = new ResourceHelper(invalidPath);
-        assertEquals(null, resourceHelper.readResourceAsString());
+        assertEquals(Optional.empty(), resourceHelper.readResourceAsString());
     }
 }
