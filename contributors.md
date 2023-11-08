@@ -23,6 +23,6 @@
 * Jordi Magester Lopez - https://github.com/Aebal34
 * Adria Marti Comas - https://github.com/AdriaMartiComas
 * Daniel Amat - https://github.com/Morganxyz
-* Kathya Torres - https://github.com/kathya0000
+
 
 
