@@ -20,5 +20,4 @@ public class PropertiesConfig {
     public Integer getMaxBytesInMemory() {
         return maxBytesInMemory;
     }
-
 }
