@@ -126,7 +126,8 @@
         12! = 479001600 --> 2 trailing zeros
    - [Link](https://www.codewars.com/kata/52f787eb172a8b4ae1000a34)
 
-    
+## Error    
+
 5. Isograms
     - An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.
       Example: (Input --> Output)
@@ -136,27 +137,56 @@
           isIsogram "moose" = false
           isIsogram "aba" = false
     - [Link](https://www.codewars.com/kata/54ba84be607a92aa900000f1)
+   
 
-
-6. Exes and Ohs
-    - Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char.
+5. Going to zero or to infinity?
+    - Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1.
+   
     - Example:
-        - XO("ooxx") => true
-          XO("xooxx") => false
-          XO("ooxXm") => true
-          XO("zpzpzpp") => true // when no 'x' and 'o' is present should return true
-          XO("zzoo") => false
-    - [Link](https://www.codewars.com/kata/55908aad6620c066bc00002a)
+         - 1.0000989217538616 will be truncated to 1.000098
+           1.2125000000000001 will be truncated to 1.2125
+    - [Link](https://www.codewars.com/kata/55a29405bc7d2efaff00007c)
 
 
-7. Get the Middle Character
-    - You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters.
+5. Find the smallest
+    - You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.
+    Task:
+    Return an array or a tuple or a string depending on the language (see "Sample Tests") with
+    
+    the smallest number you got
+    the index i of the digit d you took, i as small as possible
+    the index j (as small as possible) where you insert this digit d to have the smallest number.
+       
     - Example:
-        - Kata.getMiddle("test") should return "es"
-          Kata.getMiddle("testing") should return "t"
-          Kata.getMiddle("middle") should return "dd"
-          Kata.getMiddle("A") should return "A"
-    - [Link](https://www.codewars.com/kata/56747fd5cb988479af000028)
+         - smallest(261235) --> [126235, 2, 0] or (126235, 2, 0) or "126235, 2, 0"
+        smallest(209917) --> [29917, 0, 1]
+        smallest(1000000) --> [1, 0, 6]
+    - [Link](https://www.codewars.com/kata/573992c724fc289553000e95)
+   
+
+7. Land perimeter
+    - Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land. Some examples for better visualization:
+   
+    - Example:
+      ['XOOXO',
+      'XOOXO',
+      'OOOXO',
+      'XXOXO',
+      'OXOOO']  -> "Total land perimeter: 24"
+- ["XOOO",
+  "XOXO",
+  "XOXO",
+  "OOXX",
+  "OOOO"]  -> "Total land perimeter: 18"
+   
+  - [Link](https://www.codewars.com/kata/573992c724fc289553000e95)
+
+
+
+
+
+
+
 
     
 ## HARD
@@ -178,68 +208,70 @@
 
 3. Title: Compress String
 
-Statement: Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, "aaabbbccc" would be compressed as "a3b3c3".
-
-Example:
-
-Input: "aaabbbccc"
-Expected Output: "a3b3c3"
+    Statement: Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, "aaabbbccc" would be compressed as "a3b3c3".
+    
+    Example:
+    
+    Input: "aaabbbccc"
+    Expected Output: "a3b3c3"
 
 
 4. Title: Longest Common Subsequence
 
-Statement: Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings.
-
-Example:
-
-Input: "ABCBDAB", "BDCAB"
-Expected Output: "BCAB"
+    Statement: Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings.
+    
+    Example:
+    
+    Input: "ABCBDAB", "BDCAB"
+    Expected Output: "BCAB"
+    
+    https://www.codewars.com/kata/52756e5ad454534f220001ef
 
 
 5. Title: Find the Equilibrium Point in an Array
 
-Statement: Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right.
-
-Example:
-
-Input: [1, 2, 3, 4, 6]
-Expected Output: 3
+    Statement: Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right.
+    
+    Example:
+    
+    Input: [1, 2, 3, 4, 6]
+    Expected Output: 3
 
 
 6. Validate Mathematical Expressions
 
-Statement: Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators.
-
-Example:
-
-Input: "((3 + 4) * 2) / (5 - 2)"
-Expected Output: Valid
+    Statement: Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators.
+    
+    Example:
+    
+    Input: "((3 + 4) * 2) / (5 - 2)"
+    Expected Output: Valid
 
 
 7. Find the Largest Contiguous Subarray
 
-Statement: Implement an algorithm to find the largest contiguous subarray in an array of integers.
-
-Example:
-
-Input: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-Expected Output: [4, -1, 2, 1]
+    Statement: Implement an algorithm to find the largest contiguous subarray in an array of integers.
+    
+    Example:
+    
+    Input: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+    Expected Output: [4, -1, 2, 1]
 
 
 8. Count Inversions in an Array
 
-Statement: Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order.
-
-Example:
-
-Input: [2, 4, 1, 3, 5]
-Expected Output: 3
+    Statement: Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order.
+    
+    Example:
+    
+    Input: [2, 4, 1, 3, 5]
+    Expected Output: 3
 
 9. Find the Shortest Path in a Weighted Graph
 
-Statement: Implement an algorithm to find the shortest path between two nodes in a weighted graph using Dijkstra's algorithm.
-
-Example:
-
-Input: Graph with weights
-Expected Output: Shortest path between two nodes
+    Statement: Implement an algorithm to find the shortest path between two nodes in a weighted graph using Dijkstra's algorithm.
+    
+    Example:
+    
+    Input: Graph with weights
+    Expected Output: Shortest path between two nodes

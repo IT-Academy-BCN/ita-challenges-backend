@@ -16,6 +16,5 @@ public class ExampleDocument {
 
     @Field(name="example_text")
     private String exampleText;
-    
 
 }

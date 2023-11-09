@@ -21,5 +21,4 @@ public class SolutionDocument {
 
     @Field(name="language")
     private UUID idLanguage;
-
 }
