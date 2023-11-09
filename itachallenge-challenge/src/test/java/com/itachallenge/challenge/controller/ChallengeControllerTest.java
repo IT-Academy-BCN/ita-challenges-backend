@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,4 +217,28 @@ class ChallengeControllerTest {
                 });
     }
 
+    @Test
+    void getRelatedChallenges(){
+        //Arrange
+        String idChallenge = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+
+        GenericResultDto<RelatedDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 3, 3, new RelatedDto[]{new RelatedDto(), new RelatedDto(), new RelatedDto()});
+
+        when(challengeService.getRelatedChallenges(idChallenge)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/{idChallenge}/related", idChallenge)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 3;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 3;
+                });
+    }
 }

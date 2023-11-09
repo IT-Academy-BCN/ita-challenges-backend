@@ -164,7 +164,7 @@ public class ChallengeController {
 
     }
 
-    @GetMapping("/{idChallenge}/related")
+    @GetMapping("challenges/{idChallenge}/related")
     @Operation(
             operationId = "Get the related challenges from a chosen challenge.",
             summary = "Get to see the challenge title, creation date, level, popularity and languages.",
