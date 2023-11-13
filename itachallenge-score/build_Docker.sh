@@ -33,14 +33,13 @@ then
     echo "$fileConfig not found."
   fi
 
-./gradlew :itachallenge-score:build
+./gradlew :itachallenge-mock:clean && ./gradlew :itachallenge-score:build
 
 cd itachallenge-score
 docker build -t=${REGISTRY_NAME}:itachallenge-score-${SCORE_TAG} .
 
 #upload image to DockerHub
-upload_image="pre"
-if [ ${ENV} = "$upload_image" ];
+if [ ${ENV} = "dev" ] || [ ${ENV} = "pre" ];
 then
   docker push ${REGISTRY_NAME}:${SCORE_TAG}
 fi

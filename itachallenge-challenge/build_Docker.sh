@@ -34,14 +34,13 @@ then
   fi
 
 ## QQQ - pte hacer clean previo
-./gradlew :itachallenge-challenge:build
+./gradlew :itachallenge-mock:clean && ./gradlew :itachallenge-challenge:build
 
 cd itachallenge-challenge
 docker build -t=${REGISTRY_NAME}:itachallenge-challenge-${CHALLENGE_TAG} .
 
 #upload image to DockerHub
-upload_image="pre"
-if [ ${ENV} = "$upload_image" ];
+if [ ${ENV} = "dev" ] || [ ${ENV} = "pre" ];
 then
   docker push ${REGISTRY_NAME}:${CHALLENGE_TAG}
 fi
