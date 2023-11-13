@@ -42,5 +42,5 @@ docker build -t=${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG} .
 upload_image="pre"
 if [ ${ENV} = "$upload_image" ];
 then
-  docker push ${REGISTRY_NAME}:${CHALLENGE_TAG}
+  docker push ${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG}
 fi
