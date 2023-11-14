@@ -390,7 +390,7 @@ class ChallengeServiceImpTest {
     void testGetChallengeByLevelAndIdLanguage(){
         // Arrange
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
-        String level = "JAVA";
+        String level = "EASY";
         ChallengeDocument challengeDocument1 = new ChallengeDocument();
         ChallengeDocument challengeDocument2 = new ChallengeDocument();
         ChallengeDto challengeDto1 = new ChallengeDto();
@@ -434,7 +434,7 @@ class ChallengeServiceImpTest {
     void testGetChallengeByLevelAndIdLanguage_empty(){
         // Arrange
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
-        String level = "JAVA";
+        String level = "EASY";
 
         when(challengeRepository.findByLevelAndLanguages_IdLanguage(any(), any())).thenReturn(Flux.empty());
 

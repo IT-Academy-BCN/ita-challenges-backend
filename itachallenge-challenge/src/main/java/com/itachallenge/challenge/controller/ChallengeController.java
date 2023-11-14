@@ -132,7 +132,7 @@ public class ChallengeController {
             })
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
                                                @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
+        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty.toUpperCase());
     }
 
     @GetMapping("/language")

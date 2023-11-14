@@ -169,6 +169,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    //VALIDATION METHODS
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
@@ -181,7 +182,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     private void validationLevel(String level) {
-        Set<String> validLevels = Set.of("JavaScript", "Java", "PHP", "Python");
+        Set<String> validLevels = Set.of("EASY", "MEDIUM", "HARD");
 
         if(validLevels.stream().noneMatch(s -> s.equalsIgnoreCase(level))) {
             log.warn("Invalid level name: {}", level);
