@@ -55,7 +55,7 @@
     "testing_values" : [
       [
         { "in_param": "a,bcde",
-          "out_param": "java.lang.numberFormatException"}
+          "out_param": "java.lang.NumberFormatException"}
         ],
       [
         { "in param": 42145,
@@ -504,7 +504,7 @@
   },
   {
     "_id" : {
-      "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+      "$uuid" : "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"
     },
     "challenge_title": "Simple Pig Latin",
     "level": "MEDIUM",
@@ -1484,7 +1484,7 @@
   },
   {
     "_id" : {
-      "$uuid" : "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"
+      "$uuid" : "ec52b7f1-2f78-4a83-aef0-3b9b6f34a763"
     },
     "challenge_title": "Count Inversions in an Array",
     "level": "HARD",
