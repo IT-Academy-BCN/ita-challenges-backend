@@ -122,7 +122,7 @@ public class ChallengeController {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/{idLanguage}/{difficulty}")
+    @GetMapping("/challenges/{idLanguage}/{level}")
     @Operation(
             operationId = "Get only the challenges on a page.",
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
@@ -131,9 +131,10 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@PathVariable @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-                                               @PathVariable @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String level) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, level.toUpperCase());
+                                                                                     @PathVariable @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String level) {
+        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, level);
     }
+
 
     @GetMapping("/language")
     @Operation(

@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
-    //VARIABLES
+
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
@@ -185,7 +185,6 @@ public class ChallengeServiceImp implements IChallengeService {
         Set<String> validLevels = Set.of("EASY", "MEDIUM", "HARD");
 
         if(validLevels.stream().noneMatch(s -> s.equalsIgnoreCase(level))) {
-            log.warn("Invalid level name: {}", level);
             throw new ChallengeNotFoundException("Invalid level name. Please indicate the correct level.");
         }
     }
