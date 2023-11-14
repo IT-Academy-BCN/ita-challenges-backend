@@ -25,11 +25,11 @@ See [contributors.md](contributors.md) for more details.
 ### Instrucciones para subir la versión
 
 * Asegúrese de tener Docker instalado en su máquina
-* Modifique el archivo build.gradle del microservicio que quiera subir de versión (atributo 'version')
-* Modifique el archivo Dockerfile del microservicio para renombrar la versión 
-* Modifique el atributo correspondiente a la versión del microservicio en el fichero conf/.env.dev
+* Modifique el archivo **build.gradle** del microservicio que quiera subir de versión (atributo 'version')
+* Modifique el archivo **Dockerfile** del microservicio para renombrar la versión 
+* Modifique la tag correspondiente a la versión del microservicio en el fichero **conf/.env.dev**
 * Solicite credenciales al Administrador para subir la imagen a DockerHub
-* Desde el directorio raíz del proyecto, ejecute el siguiente comando para subir la imagen a DockerHub (Linux Bash) 
+* Desde el directorio raíz del proyecto, **ejecute el siguiente comando** para subir la imagen a DockerHub (**Linux Bash**) 
 ```
 ./itachallenge-[nombreDelMicroservicio]/build_Docker.sh conf/.env.dev
 ```

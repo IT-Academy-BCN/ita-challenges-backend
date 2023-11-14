@@ -6,6 +6,8 @@ apisix:
 routes:
   -
     uri: /test
+    methods:
+      - GET
     upstream:
       nodes:
           "172.18.0.9:8762": 1
