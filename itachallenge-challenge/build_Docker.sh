@@ -33,8 +33,7 @@ then
     echo "$fileConfig not found."
   fi
 
-## QQQ - pte hacer clean previo
-./gradlew :itachallenge-mock:clean && ./gradlew :itachallenge-challenge:build
+./gradlew :itachallenge-challenge:clean && ./gradlew :itachallenge-challenge:build
 
 cd itachallenge-challenge
 docker build -t=${REGISTRY_NAME}:itachallenge-challenge-${CHALLENGE_TAG} .

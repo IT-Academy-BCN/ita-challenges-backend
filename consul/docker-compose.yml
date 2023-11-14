@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0
+  version: 1.0.2
   last-updated: 2021-11-13
 
 services:
@@ -59,9 +59,8 @@ services:
         ipv4_address: 172.18.0.5
 
   itachallenge-challenge:
-    #image: '${REGISTRY_NAME}:{CHALLENGE_CONTAINER_NAME}-${CHALLENGE_TAG}'
-    image: itachallenge:itachallenge-challenge-1.0.0-SNAPSHOT
-    container_name: itachallenge-v1.0-SNAPSHOT
+    image: '${REGISTRY_NAME}:itachallenge-challenge-${CHALLENGE_TAG}'
+    container_name: 'itachallenge-${CHALLENGE_TAG}'
     restart: always
     depends_on:
       -  itachallenge-mongodb
