@@ -152,7 +152,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
-
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -169,6 +168,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
@@ -181,7 +181,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     private void validationLevel(String level) {
-        Set<String> validLevels = Set.of("JavaScript", "Java", "PHP", "Python");
+        Set<String> validLevels = Set.of("HARD", "EASY", "MEDIUM");
 
         if(validLevels.stream().noneMatch(s -> s.equalsIgnoreCase(level))) {
             log.warn("Invalid level name: {}", level);

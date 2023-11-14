@@ -207,7 +207,7 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&difficulty=" + difficulty)
+                .uri("/itachallenge/api/v1/challenge/challenges/" + idLanguage + "/" + difficulty)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
