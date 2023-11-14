@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -56,7 +57,7 @@ class ChallengeControllerTest {
     @Test
     void getOneChallenge_ValidId_ChallengeReturned() {
         // Arrange
-        String challengeId = "valid-challenge-id";
+        String challengeId = UUID.randomUUID().toString();
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(0, 1, 1, new ChallengeDto[]{new ChallengeDto()});
 
