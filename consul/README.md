@@ -6,11 +6,18 @@ Véase [consul.md](consul.md)
 
 ### <span style='color: green;'>Apisix Gateway</span>
 
-Inicialización está configurada con Docker. Es necesario efectuar los siguientes pasos (en este orden):
+La inicialización está configurada con Docker. Para arrancar la aplicación con Docker en local, es necesario efectuar 
+los siguientes pasos (en este orden, ejemplo con Microservicio Mock):
 
-* Arranque de **apisix**
+* Creación de la imagen del microservicio (si no existe):
 ```
-docker compose --env-file conf/.env.dev -f consul/docker-compose.yml up --remove-orphans apisix
+./itachallenge-mock/build_Docker.sh conf/.env.local
+```
+
+* Arranque de **apisix** y otros containers
+```
+docker compose --env-file conf/.env.local -f consul/docker-compose.yml up --remove-orphans itachallenge-mock
+docker compose --env-file conf/.env.local -f consul/docker-compose.yml up --remove-orphans apisix-gateway
 ```
 
 
