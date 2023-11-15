@@ -1,6 +1,7 @@
 package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.document.UserSolutionScore;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
