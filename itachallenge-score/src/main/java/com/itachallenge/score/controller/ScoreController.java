@@ -28,23 +28,17 @@ public class ScoreController {
         return Mono.just(scoreRequest)
                 .map(req -> {
                     ScoreResponse scoreResponse = new ScoreResponse();
-                    scoreResponse.setUuidChallenge(req.getUuidcChallenge());
+                    scoreResponse.setUuidChallenge(req.getUuidChallenge());
                     scoreResponse.setUuidLanguage(req.getUuidLanguage());
                     scoreResponse.setSolutionText(req.getSolutionText());
 
                     // Lógica de ejemplo para calcular el score
-                    int score = calculateScore(req.getSolutionText());
+                    int score = 99;
                     scoreResponse.setScore(score);
 
                     return ResponseEntity.ok(scoreResponse);
                 });
     }
-    private int calculateScore(String solutionText) {
-        // Lógica de ejemplo: basada en la longitud del texto de la solución
-        // Esta es una lógica simplificada y debería ser reemplazada por tu lógica real
-        return Math.min(99, solutionText.length()); // Asegura que el score no exceda 99
-    }
-
 }
 
 
