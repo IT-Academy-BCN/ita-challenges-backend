@@ -83,7 +83,7 @@
     "_id": {
       "$uuid" : "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "import java.util.Arrays;\n\npublic class DescendingOrder {\n    public static void main(String[] args) {\n        int number = 583209;\n        int result = descendingOrder(number);\n        System.out.println(result);\n    }\n\n    public static int descendingOrder(int num) {\n        // Convert the number to a char array\n        char[] digits = String.valueOf(num).toCharArray();\n\n        // Sort the array in descending order\n        Arrays.sort(digits);\n        StringBuilder result = new StringBuilder(new String(digits));\n        result.reverse();\n\n        // Convert the result back to an integer\n        return Integer.parseInt(result.toString());\n    }\n}\n",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -93,7 +93,7 @@
     "_id": {
       "$uuid" : "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "public class HighLowNumbers {\n    public static void main(String[] args) {\n        String numbersString = \"4 5 29 54 4 0 -214 542 -64 1 -3 6 -6\";\n        String result = findHighAndLow(numbersString);\n        System.out.println(result);\n    }\n\n    public static String findHighAndLow(String numbersString) {\n        String[] numbersArray = numbersString.split(\" \");\n\n        int[] numbers = new int[numbersArray.length];\n        for (int i = 0; i < numbersArray.length; i++) {\n            numbers[i] = Integer.parseInt(numbersArray[i]);\n        }\n\n        int max = Arrays.stream(numbers).max().getAsInt();\n        int min = Arrays.stream(numbers).min().getAsInt();\n\n        return \"Max: \" + max + \", Min: \" + min;\n    }\n}\n",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -104,6 +104,16 @@
       "$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
     },
     "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
+    },
+    "solution_text": "public class HighLowNumbers {\n    public static void main(String[] args) {\n        String numbersString = \"4 5 29 54 4 0 -214 542 -64 1 -3 6 -6\";\n        String result = findHighAndLow(numbersString);\n        System.out.println(result);\n    }\n\n    public static String findHighAndLow(String numbersString) {\n        String[] numbersArray = numbersString.split(\" \");\n\n        int[] numbers = new int[numbersArray.length];\n        for (int i = 0; i < numbersArray.length; i++) {\n            numbers[i] = Integer.parseInt(numbersArray[i]);\n        }\n\n        int max = Arrays.stream(numbers).max().getAsInt();\n        int min = Arrays.stream(numbers).min().getAsInt();\n\n        return \"Max: \" + max + \", Min: \" + min;\n    }\n}\n",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"

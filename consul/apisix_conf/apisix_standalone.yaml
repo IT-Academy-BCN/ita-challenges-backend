@@ -6,9 +6,18 @@ apisix:
 routes:
   -
     uri: /test
+    methods:
+      - GET
     upstream:
       nodes:
           "172.18.0.9:8762": 1
       type: roundrobin
-
+  -
+    uri: /itachallenge/api/v1/challenge/**
+    methods:
+      - GET
+    upstream:
+        nodes:
+            "172.18.0.6:8762": 1
+        type: roundrobin
 #END
