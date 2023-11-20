@@ -91,10 +91,7 @@ public class UserController {
 
    @PostMapping(path = "/solution")
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
-            @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
-            @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
-            @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage,
-            String solutionDocument) {
+             String idUser, String idChallenge, String idLanguage, String solutionDocument) {
 
         return userScoreService.addSolution(idUser, idChallenge,idLanguage,solutionDocument)
                 .map(document ->

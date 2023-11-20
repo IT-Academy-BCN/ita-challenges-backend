@@ -2,7 +2,6 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.document.UserSolutionScore;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
@@ -49,29 +48,22 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID challengeUuid = convertToUUID(idChallenge);
         UUID languageUuid = convertToUUID(idLanguage);
 
-        UserSolutionScore userSolutionScore = UserSolutionScore.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .solutionText(solutionText)
-                .build();
-
-        UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
-                .userId(userSolutionScore.getUserId())
-                .challengeId(userSolutionScore.getChallengeId())
-                .languageID(userSolutionScore.getLanguageId())
-                .solutionText(userSolutionScore.getSolutionText())
-                .score(13)
-                .build();
-
         SolutionDocument solutionDocument = new SolutionDocument();
-        solutionDocument.setSolutionText(userSolutionScore.getSolutionText());
+        solutionDocument.setSolutionText(solutionText);
 
         UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        userSolutionDocument.setUserId(userSolutionScore.getUserId());
-        userSolutionDocument.setChallengeId(userSolutionScore.getChallengeId());
-        userSolutionDocument.setLanguageId(userSolutionScore.getLanguageId());
+        userSolutionDocument.setUserId(userUuid);
+        userSolutionDocument.setChallengeId(challengeUuid);
+        userSolutionDocument.setLanguageId(languageUuid);
         userSolutionDocument.getSolutionDocument().add(solutionDocument);
+
+        UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
+                .userId(userSolutionDocument.getUserId())
+                .challengeId(userSolutionDocument.getChallengeId())
+                .languageID(userSolutionDocument.getLanguageId())
+                .solutionText(solutionDocument.getSolutionText())
+                .score(13)
+                .build();
 
         return userScoreRepository.save(userSolutionDocument).thenReturn(userSolutionScoreDto);
     }
