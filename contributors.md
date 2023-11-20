@@ -25,3 +25,5 @@
 * Daniel Amat - https://github.com/Morganxyz
 * Kathya Torres - https://github.com/kathya0000
 * Alberto Castillo Corporan - https://github.com/albertocstll70
+* Natalia Fara - https://github.com/nfaraDev
+
