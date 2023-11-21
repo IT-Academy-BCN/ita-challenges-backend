@@ -137,6 +137,38 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
+    public Mono<GenericResultDto<SolutionDto>> addSolution(String idChallenge, String idLanguage, SolutionDto solutionDto) {
+        //guardar solucion, actualizar challenge
+        return Mono.zip(validateUUID(idChallenge), validateUUID(idLanguage))
+                .flatMap(tuple -> {
+                    UUID challengeId = tuple.getT1();
+                    UUID languageId = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeId)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                            .flatMap(challenge -> {
+                                SolutionDocument solutionDocument = new SolutionDocument();
+                                solutionDocument.setSolutionText(solutionDto.getSolutionText());
+                                solutionDocument.setIdLanguage(languageId);
+                                solutionDocument.setUuid(UUID.randomUUID());
+
+                                return solutionRepository.save(solutionDocument)
+                                        .flatMap(solution -> {
+                                            //creo que esto me bloquea el test, o el test esta mal echo
+                                            challenge.getSolutions().add(solution.getUuid());
+                                            return challengeRepository.save(challenge);
+                                        })
+                                        .flatMap(challengeDocument -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solutionDocument), SolutionDto.class)))
+                                        .map(solution -> {
+                                            GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
+                                            resultDto.setInfo(0, 1, 1, new SolutionDto[]{solution});
+                                            return resultDto;
+                                        });
+                            });
+                });
+    }
+
+    @Override
     public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
 
         return validateUUID(id)

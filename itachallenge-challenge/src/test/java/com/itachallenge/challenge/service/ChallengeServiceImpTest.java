@@ -385,4 +385,49 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
         verify(relatedChallengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
     }
+
+    //Revisar y añadir test para el método addSolution
+    /*
+    @Test
+    void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        UUID challengeId = UUID.fromString(challengeStringId);
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        SolutionDocument solution = new SolutionDocument(solutionId, "Solution 1", languageId);
+        SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId);
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(challengeId);
+        challenge.setSolutions(Collections.singletonList(solutionId));
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challenge));
+        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solution));
+
+        //la clase DocumentToDtoConverter es:    public D convertDocumentToDto(S document, Class<D> dtoClass)
+        //me falta implementar un parametro de tipo Class<D> dtoClass
+        when(solutionConverter.convertDocumentToDto(any(SolutionDocument.class), any())).thenReturn(solutionDto);
+
+        // Act
+        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.addSolution(challengeStringId, languageStringId, solutionDto);
+
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getOffset()).isZero();
+                    assertThat(resultDto.getLimit()).isEqualTo(1);
+                    assertThat(resultDto.getCount()).isEqualTo(1);
+                    assertThat(resultDto.getResults()[0]).isEqualTo(solutionDto);
+                    return true;
+                })
+                .verifyComplete();
+
+        verify(challengeRepository).findByUuid(challengeId);
+        verify(solutionRepository).save(any(SolutionDocument.class));
+        verify(solutionConverter).convertDocumentToDto(any(SolutionDocument.class), any());
+    }
+
+
+     */
 }

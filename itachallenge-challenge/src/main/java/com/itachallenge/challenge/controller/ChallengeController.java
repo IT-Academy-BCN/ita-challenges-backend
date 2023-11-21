@@ -163,4 +163,19 @@ public class ChallengeController {
 
     }
 
+    @PostMapping("/solution/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Add solution to a chosen chosen challenge.",
+            summary = "Update the Challenge level, add accepted solution to the challenge.",
+            description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+            }
+    )
+    public Mono<GenericResultDto<SolutionDto>> addSolution(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage, @RequestBody SolutionDto solutionDto) {
+        return challengeService.addSolution(idChallenge, idLanguage, solutionDto);
+    }
+
+
 }
