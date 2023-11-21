@@ -27,7 +27,5 @@
 * Alberto Castillo Corporan - https://github.com/albertocstll70
 <<<<<<< HEAD
 * Joan Carles Martínez - https://github.com/leibaral
-=======
->>>>>>> 3c666f05a8af22d4e9ebbb49ec94f327ef29ef79
 * Natalia Fara - https://github.com/nfaraDev
 
