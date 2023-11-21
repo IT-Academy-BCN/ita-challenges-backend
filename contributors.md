@@ -26,3 +26,5 @@
 * Kathya Torres - https://github.com/kathya0000
 * Alberto Castillo Corporan - https://github.com/albertocstll70
 * Joan Carles Martínez - https://github.com/leibaral
+* Natalia Fara - https://github.com/nfaraDev
+
