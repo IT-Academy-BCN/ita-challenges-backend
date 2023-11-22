@@ -3,37 +3,33 @@
     "_id" : {
       "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
     },
-    "challenge_title": [
-      {
+    "challenge_title": {
         "ES": "Titulo en español",
         "CAT": "Títol en català",
         "EN": "Descending Order"
-      }
-    ],
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": [
+      "description":
         {
           "ES": "Descripcion en español",
           "CAT": "Descripció en català",
           "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
-        }
-      ] ,
+        },
       "examples": [
         {
           "_id" : {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": [
+          "example_text":
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
               "CAT": "Títol en català",
               "EN":  "Descending Order"
             }
-          ]
         },
         {
           "_id" : {
@@ -49,13 +45,11 @@
           "example_text": "Phasellus vel velit malesuada, fermentum lectus "
         }
       ],
-      "notes": [
-        {
+      "notes": {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
             "CAT": "Títol en català",
             "EN": "Descending Order"
         }
-      ]
     },
     "languages": [
       {
