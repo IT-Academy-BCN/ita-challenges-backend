@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.2
+  version: 1.0.3
   last-updated: 2021-11-13
 
 services:
@@ -52,8 +52,8 @@ services:
       MONGO_INITDB_DATABASE: '${MONGODB_CHALLENGE_DATABASE}'
     volumes:
       - itachallenge_mongodb_data:/var/lib/mongodb
-      - ../itachallenge-challenge/src/main/resources/mongodb-init:/docker-entrypoint-initdb.d
-      - ../itachallenge-challenge/src/main/resources/mongodb-test-data:/tmp/data/
+      - ${MONGODB_CHALLENGE_DATABASE_SCRIPTS_DIR}:/docker-entrypoint-initdb.d
+      - ${MONGODB_CHALLENGE_DATABASE_TEST_SCRIPTS_DIR}:/tmp/data/
     networks:
       apisix:
         ipv4_address: 172.18.0.5
