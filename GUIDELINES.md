@@ -60,7 +60,7 @@
 # 2. WORK PROCEDURES
 
 ## 2.1 First things to do in the project
-### 1. Add your name and GitHub to the  contributors.md file
+### 2.1.1. Add your name and GitHub to the  contributors.md file
 
 1. Clone the ita-challenges-backend repository from GitHub to your local system:
 
@@ -91,7 +91,7 @@
 
 <hr/>
 
-### 2. Import data into MongoDB (Example for micro itachallenge-challenge data)
+### 2.2.2. Import data into MongoDB (Example for micro itachallenge-challenge data)
 
 1. Make sure you have the MongoDB Tools installed. If you don't already have them, go the "Required programs" section and folow the instructions provided to download them to your operting system.
 
@@ -117,33 +117,23 @@
 5. Execute the following command to see if the user has been created successfully:
 
          show users
+
 6. Exit the MongoDB terminal by typing the following command:
 
          exit
 
-7. Move the "load-data" file from folder mongodb.init to folder "mongodb-test-data".
-   If you are use Windows, use the '.bat' file, while if you are using Mac or Linux, the file '.sh'.
-   
-8. In the normal terminal, navigate to the mongodb-test-data folder using the 'cd' command.
+7. Connect to Mongo (maybe with MongoDB Compass) with user created at point 4
 
-9. To import the document, execut the following command:
+8. Create the collections "challenges", "languages" and "solutions" at "challenges" database.
 
-   · Windows:
+9. Import the data from each collection, following option "Add Data" at Compass. Or, if you prefer, you can use the terminal with the following command:
 
-         load-data.bat
-
-   · Mac o Linux:
-
-         ./load-data.sh
-
-   if you receive a permission denied message, grant execute permission to the file with the following command:
-
-         chmod +x load-data.sh
-
-10. Then, move the "load-data.bat" or "load-data.sh" file back to its original folder, "mongodb.init".
+         mongoimport --db challenges --collection challenges --file challenges.json --jsonArray --username admin_challenge --password BYBcMJEEWw5egRUo
+         mongoimport --db challenges --collection languages --file languages.json --jsonArray --username admin_challenge --password BYBcMJEEWw5egRUo
+         mongoimport --db challenges --collection solutions --file solutions.json --jsonArray --username admin_challenge --password BYBcMJEEWw5egRUo 
 
 
-11. Open Mongodb Compass, do a "Reload data" and will see the data base correctly imported.
+10. Start MongoDB Compass, click on "Reload Data" and you should see the database correctly imported.
 
 <hr/>
 
