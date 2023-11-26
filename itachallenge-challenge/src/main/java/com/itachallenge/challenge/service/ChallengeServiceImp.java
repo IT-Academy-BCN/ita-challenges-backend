@@ -53,7 +53,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)
-                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
+                .flatMap(challengeId -> challengeRepository.findByUuidAndLocale(challengeId, locale)
                         .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge), ChallengeDto.class)))
                         .map(challengeDto -> {
                             GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -68,7 +68,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
-                    Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(resourceId);
+                    Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContainingAndLocale(resourceId, locale);
                     return challengeFlux
                             .flatMap(challenge -> {
                                 challenge.setResources(challenge.getResources().stream()
@@ -108,7 +108,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNullAndLocale(locale).skip(offset).take(limit) , ChallengeDto.class);
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
@@ -120,7 +120,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID challengeId = tuple.getT1();
                     UUID languageId = tuple.getT2();
 
-                    return challengeRepository.findByUuid(challengeId)
+                    return challengeRepository.findByUuidAndLocale(challengeId, locale)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
@@ -140,10 +140,10 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
 
         return validateUUID(id)
-                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
+                .flatMap(challengeId -> challengeRepository.findByUuidAndLocale(challengeId, locale)
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                         .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
-                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
+                                .flatMap(relatedChallengeId -> challengeRepository.findByUuidAndLocale(relatedChallengeId, locale))
                                 .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class)))
                         )
                         .collectList()

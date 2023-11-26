@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.repository;
 
+import com.itachallenge.challenge.document.Locale;
 import com.itachallenge.challenge.document.SolutionDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,8 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.util.UUID;
 
+import static com.itachallenge.challenge.document.Locale.EN;
+import static com.itachallenge.challenge.document.Locale.ES;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.util.AssertionErrors.fail;
@@ -54,8 +57,8 @@ class SolutionRepositoryTest {
 
         solutionRepository.deleteAll().block();
 
-        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", uuidLang1);
-        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", uuidLang2);
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", uuidLang1, EN);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", uuidLang2, ES);
 
         solutionRepository.saveAll(Flux.just(solution, solution2)).blockLast();
 
@@ -80,52 +83,52 @@ class SolutionRepositoryTest {
                 .verifyComplete();
     }
 
-    @DisplayName("Exists by UUID Test")
+    @DisplayName("Exists by UUID and Locale Test")
     @Test
-    void existsByUuidTest() {
-        Boolean exists = solutionRepository.existsByUuid(uuid_1).block();
+    void existsByUuidTest(Locale locale) {
+        Boolean exists = solutionRepository.existsByUuidAndLocale(uuid_1, locale).block();
         assertEquals(true, exists);
     }
 
-    @DisplayName("Find by UUID Test")
+    @DisplayName("Find by UUID and Locale Test")
     @Test
-    void findByUuidTest() {
+    void findByUuidTest(Locale locale) {
 
-        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuid(uuid_1);
+        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuidAndLocale(uuid_1, locale);
         firstSolution.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_1),
-                () -> fail("Solution not found: " + uuid_1));
+                () -> fail("Solution not found: " + uuid_1 + " in " + locale));
 
-        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuid(uuid_2);
+        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuidAndLocale(uuid_2, locale);
         secondSolution.blockOptional().ifPresentOrElse(
                 u -> assertEquals(u.getUuid(), uuid_2),
-                () -> fail("Solution not found: " + uuid_2));
+                () -> fail("Solution not found: " + uuid_2 + " in " + locale));
     }
 
-    @DisplayName("Delete by UUID Test")
+    @DisplayName("Delete by UUID and Locale Test")
     @Test
-    void deleteByUuidTest() {
+    void deleteByUuidAndLocaleTest(Locale locale) {
 
-        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuid(uuid_1);
+        Mono<SolutionDocument> firstSolution = solutionRepository.findByUuidAndLocale(uuid_1, locale);
         firstSolution.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = solutionRepository.deleteByUuid(uuid_1);
+                    Mono<Void> deletion = solutionRepository.deleteByUuidAndLocale(uuid_1, locale);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
                 },
-                () -> fail("Solution to delete not found: " + uuid_1)
+                () -> fail("Solution to delete not found: " + uuid_1 + " in " + locale)
         );
 
-        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuid(uuid_2);
+        Mono<SolutionDocument> secondSolution = solutionRepository.findByUuidAndLocale(uuid_2, locale);
         secondSolution.blockOptional().ifPresentOrElse(
                 u -> {
-                    Mono<Void> deletion = solutionRepository.deleteByUuid(uuid_2);
+                    Mono<Void> deletion = solutionRepository.deleteByUuidAndLocale(uuid_2, locale);
                     StepVerifier.create(deletion)
                             .expectComplete()
                             .verify();
                 },
-                () -> fail("Solution to delete not found: " + uuid_2)
+                () -> fail("Solution to delete not found: " + uuid_2 + " in " + locale)
         );
     }
 

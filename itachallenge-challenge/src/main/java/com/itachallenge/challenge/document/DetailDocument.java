@@ -17,4 +17,8 @@ public class DetailDocument {
 
     @Field(name="note")
     private String note;
+
+    @Field(name="locale")
+    private Locale locale;
+
 }

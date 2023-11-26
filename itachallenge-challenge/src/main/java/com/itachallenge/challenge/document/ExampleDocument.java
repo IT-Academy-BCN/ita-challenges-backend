@@ -17,4 +17,7 @@ public class ExampleDocument {
     @Field(name="example_text")
     private String exampleText;
 
+    @Field(name="locale")
+    private Locale locale;
+
 }

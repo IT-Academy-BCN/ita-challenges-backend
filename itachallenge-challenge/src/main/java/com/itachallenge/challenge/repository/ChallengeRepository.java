@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.Locale;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -11,17 +12,17 @@ import java.util.UUID;
 @Repository
 public interface ChallengeRepository extends ReactiveSortingRepository<ChallengeDocument, UUID> {
 
-    Mono<Boolean> existsByUuid(UUID uuid);
-    Mono<ChallengeDocument> findByUuid(UUID uuid);
-    Flux<ChallengeDocument> findByLevel(String level);
+    Mono<Boolean> existsByUuidAndLocale(UUID uuid, Locale locale);
+    Mono<ChallengeDocument> findByUuidAndLocale(UUID uuid, Locale locale);
+    Flux<ChallengeDocument> findByLevelAndLocale(String level, Locale locale);
     Mono<ChallengeDocument> findByTitle(String title);
-    Flux<ChallengeDocument> findAllByUuidNotNull();
-    Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
-    Mono<Void> deleteByUuid(UUID uuid);
+    Flux<ChallengeDocument> findAllByUuidNotNullAndLocale(Locale locale);
+    Flux<ChallengeDocument> findAllByResourcesContainingAndLocale(UUID idResource, Locale locale);
+    Mono<Void> deleteByUuidAndLocale(UUID uuid, Locale locale);
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
     Flux<ChallengeDocument> saveAll(Flux<ChallengeDocument> challengeDocumentFlux);
-    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
-    Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
-    Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
+    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguageAndLocale(String level, UUID idLanguage, Locale locale);
+    Flux<ChallengeDocument> findByLanguages_IdLanguageAndLocale(UUID idLanguage, Locale locale);
+    Flux<ChallengeDocument> findByLanguages_LanguageNameAndLocale(String languageName, Locale locale);
 
 }

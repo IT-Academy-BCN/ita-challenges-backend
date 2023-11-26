@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.Locale;
 import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
@@ -30,6 +31,7 @@ import java.util.UUID;
 import java.util.Set;
 import java.util.HashSet;
 
+import static com.itachallenge.challenge.document.Locale.EN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,11 +68,12 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID challengeId = UUID.randomUUID();
         ChallengeDocument challengeDocument = new ChallengeDocument();
+        Locale locale = challengeDocument.getLocale();
         ChallengeDto challengeDto = new ChallengeDto();
         GenericResultDto<ChallengeDto> expectedDto = new GenericResultDto<>();
         expectedDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
 
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(challengeRepository.findByUuidAndLocale(challengeId, locale)).thenReturn(Mono.just(challengeDocument));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto));
 
         // Act
@@ -82,7 +85,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        verify(challengeRepository).findByUuid(challengeId);
+        verify(challengeRepository).findByUuidAndLocale(challengeId, locale);
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
@@ -108,7 +111,7 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID challengeId = UUID.randomUUID();
 
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.empty());
+        when(challengeRepository.findByUuidAndLocale(challengeId, null)).thenReturn(Mono.empty());
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
@@ -118,7 +121,7 @@ class ChallengeServiceImpTest {
                 .expectError(ChallengeNotFoundException.class)
                 .verify();
 
-        verify(challengeRepository).findByUuid(challengeId);
+        verify(challengeRepository).findByUuidAndLocale(challengeId, null);
         verifyNoInteractions(challengeConverter);
     }
 
@@ -127,9 +130,10 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID resourceId = UUID.randomUUID();
         ChallengeDocument challengeDocument = new ChallengeDocument();
+        Locale locale = challengeDocument.getLocale();
         challengeDocument.setResources(Collections.singleton(resourceId));
 
-        when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.just(challengeDocument));
+        when(challengeRepository.findAllByResourcesContainingAndLocale(resourceId, locale)).thenReturn(Flux.just(challengeDocument));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
 
         // Act
@@ -141,7 +145,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        verify(challengeRepository).findAllByResourcesContaining(resourceId);
+        verify(challengeRepository).findAllByResourcesContainingAndLocale(resourceId, locale);
         verify(challengeRepository).save(any(ChallengeDocument.class));
     }
 
@@ -150,7 +154,7 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID resourceId = UUID.randomUUID();
 
-        when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.empty());
+        when(challengeRepository.findAllByResourcesContainingAndLocale(resourceId, null)).thenReturn(Flux.empty());
 
         // Act
         Mono<GenericResultDto<String>> result = challengeService.removeResourcesByUuid(resourceId.toString());
@@ -160,7 +164,7 @@ class ChallengeServiceImpTest {
                 .expectError(ChallengeNotFoundException.class)
                 .verify();
 
-        verify(challengeRepository).findAllByResourcesContaining(resourceId);
+        verify(challengeRepository).findAllByResourcesContainingAndLocale(resourceId, null);
         verifyNoMoreInteractions(challengeRepository);
     }
 
@@ -169,16 +173,21 @@ class ChallengeServiceImpTest {
         // Arrange
         int offset = 1;
         int limit = 2;
+        Locale locale = EN;
 
         // Simulate a set of ChallengeDocument with non-null UUID
         ChallengeDocument challenge1 = new ChallengeDocument();
         challenge1.setUuid(UUID.randomUUID());
+        challenge1.setLocale(locale);
         ChallengeDocument challenge2 = new ChallengeDocument();
         challenge2.setUuid(UUID.randomUUID());
+        challenge1.setLocale(locale);
         ChallengeDocument challenge3 = new ChallengeDocument();
         challenge3.setUuid(UUID.randomUUID());
+        challenge1.setLocale(locale);
         ChallengeDocument challenge4 = new ChallengeDocument();
         challenge4.setUuid(UUID.randomUUID());
+        challenge1.setLocale(locale);
 
         // Simulate a set of ChallengeDto
         ChallengeDto challengeDto1 = new ChallengeDto();
@@ -186,7 +195,7 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
 
-        when(challengeRepository.findAllByUuidNotNull())
+        when(challengeRepository.findAllByUuidNotNullAndLocale(locale))
                 .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
@@ -194,7 +203,7 @@ class ChallengeServiceImpTest {
         Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
-        verify(challengeRepository).findAllByUuidNotNull();
+        verify(challengeRepository).findAllByUuidNotNullAndLocale(locale);
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
 
         StepVerifier.create(result)
@@ -209,7 +218,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit))
+        StepVerifier.create(challengeRepository.findAllByUuidNotNullAndLocale(locale).skip(offset).take(limit))
                 .expectSubscription()
                 .expectNextCount(2)
                 .expectComplete()
@@ -254,14 +263,15 @@ class ChallengeServiceImpTest {
 
         ChallengeDocument challenge = new ChallengeDocument();
         challenge.setUuid(UUID.fromString(challengeStringId));
-        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
-        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+        Locale locale = challenge.getLocale();
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId, locale);
+        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId, locale);
         challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
         SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
         SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
         List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
 
-        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
+        when(challengeRepository.findByUuidAndLocale(challenge.getUuid(), locale)).thenReturn(Mono.just(challenge));
         when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
         when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
@@ -279,7 +289,7 @@ class ChallengeServiceImpTest {
                 })
                 .verifyComplete();
 
-        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
+        verify(challengeRepository).findByUuidAndLocale(UUID.fromString(challengeStringId), null);
         verify(solutionRepository, times(2)).findById(any(UUID.class));
         verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
     }
@@ -295,7 +305,7 @@ class ChallengeServiceImpTest {
                 .expectError(BadUUIDException.class)
                 .verify();
 
-        verify(challengeRepository, never()).findByUuid(any(UUID.class));
+        verify(challengeRepository, never()).findByUuidAndLocale(any(UUID.class), null);
         verify(solutionRepository, never()).findById(any(UUID.class));
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
@@ -311,7 +321,7 @@ class ChallengeServiceImpTest {
                 .expectError(BadUUIDException.class)
                 .verify();
 
-        verify(challengeRepository, never()).findByUuid(any(UUID.class));
+        verify(challengeRepository, never()).findByUuidAndLocale(any(UUID.class), null);
         verify(solutionRepository, never()).findById(any(UUID.class));
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
@@ -323,14 +333,14 @@ class ChallengeServiceImpTest {
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
 
         // Simulate that the challenge with the specified UUID is not found
-        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.empty());
+        when(challengeRepository.findByUuidAndLocale(any(UUID.class), null)).thenReturn(Mono.empty());
 
         // Act & Assert
         StepVerifier.create(challengeService.getSolutions(nonExistentChallengeStringId, languageStringId))
                 .expectError(ChallengeNotFoundException.class)
                 .verify();
 
-        verify(challengeRepository).findByUuid(any(UUID.class));
+        verify(challengeRepository).findByUuidAndLocale(any(UUID.class), null);
         verify(solutionRepository, never()).findById(any(UUID.class));
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
@@ -346,6 +356,7 @@ class ChallengeServiceImpTest {
 
         ChallengeDocument challenge = new ChallengeDocument();
         challenge.setUuid(UUID.fromString(challengeStringId));
+        Locale locale = challenge.getLocale();
         challenge.setRelatedChallenges(relatedChallenges);
         ChallengeDocument related1 = new ChallengeDocument();
         related1.setUuid(relatedId);
@@ -382,10 +393,10 @@ class ChallengeServiceImpTest {
         relatedDto3.setRelatedChallengeId(relatedId3);
         List<RelatedDto> expectedRelated = List.of(relatedDto1, relatedDto2, relatedDto3);
 
-        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
-        when(challengeRepository.findByUuid(related1.getUuid())).thenReturn(Mono.just(related1));
-        when(challengeRepository.findByUuid(related2.getUuid())).thenReturn(Mono.just(related2));
-        when(challengeRepository.findByUuid(related3.getUuid())).thenReturn(Mono.just(related3));
+        when(challengeRepository.findByUuidAndLocale(challenge.getUuid(), locale)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.findByUuidAndLocale(related1.getUuid(), locale)).thenReturn(Mono.just(related1));
+        when(challengeRepository.findByUuidAndLocale(related2.getUuid(), locale)).thenReturn(Mono.just(related2));
+        when(challengeRepository.findByUuidAndLocale(related3.getUuid(), locale)).thenReturn(Mono.just(related3));
         when(relatedChallengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
 
         // Act
@@ -401,8 +412,8 @@ class ChallengeServiceImpTest {
                 })
                 .verifyComplete();
 
-        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
-        verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
+        verify(challengeRepository).findByUuidAndLocale(UUID.fromString(challengeStringId), locale);
+        verify(challengeRepository, times(4)).findByUuidAndLocale(any(UUID.class), null);
         verify(relatedChallengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
     }
 }
