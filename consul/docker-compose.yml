@@ -81,7 +81,7 @@ services:
 
   apisix-gateway:
     container_name: apisix-gateway
-    image: apache/apisix:3.5.0-centos
+    image: apache/apisix:3.7.0-redhat
     restart: always
     volumes:
       - ./apisix_conf/apisix_standalone.yaml:/usr/local/apisix/conf/apisix.yaml:ro
