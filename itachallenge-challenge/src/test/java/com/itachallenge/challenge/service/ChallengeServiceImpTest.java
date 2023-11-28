@@ -19,25 +19,27 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.Set;
-import java.util.HashSet;
+import java.time.Duration;
+import java.util.*;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 
 class ChallengeServiceImpTest {
+
+    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImpTest.class);
 
     @Mock
     private ChallengeRepository challengeRepository;
@@ -222,7 +224,7 @@ class ChallengeServiceImpTest {
         verify(languageRepository).findAll();
         verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
-    
+
     @Test
     void testGetSolutions() {
         // Arrange
@@ -386,48 +388,43 @@ class ChallengeServiceImpTest {
         verify(relatedChallengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
     }
 
-    //Revisar y añadir test para el método addSolution
-    /*
     @Test
     void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
         // Arrange
-        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
-        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+        String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
         UUID challengeId = UUID.fromString(challengeStringId);
         UUID languageId = UUID.fromString(languageStringId);
-        UUID solutionId = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        UUID solutionId = UUID.randomUUID();
+
         SolutionDocument solution = new SolutionDocument(solutionId, "Solution 1", languageId);
-        SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId);
-        ChallengeDocument challenge = new ChallengeDocument();
-        challenge.setUuid(challengeId);
-        challenge.setSolutions(Collections.singletonList(solutionId));
+        SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId, challengeId);
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(challengeId);
 
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solution));
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(solutionDto));
 
-        //la clase DocumentToDtoConverter es:    public D convertDocumentToDto(S document, Class<D> dtoClass)
-        //me falta implementar un parametro de tipo Class<D> dtoClass
-        when(solutionConverter.convertDocumentToDto(any(SolutionDocument.class), any())).thenReturn(solutionDto);
 
         // Act
-        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.addSolution(challengeStringId, languageStringId, solutionDto);
-
+        Mono<SolutionDto> resultMono = challengeService.addSolution(solutionDto);
         // Assert
         StepVerifier.create(resultMono)
                 .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isZero();
-                    assertThat(resultDto.getLimit()).isEqualTo(1);
-                    assertThat(resultDto.getCount()).isEqualTo(1);
-                    assertThat(resultDto.getResults()[0]).isEqualTo(solutionDto);
+                    assertThat(resultDto.getUuid()).isEqualTo(solutionId);
+                    assertThat(resultDto.getSolutionText()).isEqualTo("Solution 1");
+                    assertThat(resultDto.getIdLanguage()).isEqualTo(languageId);
+                    assertThat(resultDto.getIdChallenge()).isEqualTo(challengeId);
                     return true;
                 })
                 .verifyComplete();
 
         verify(challengeRepository).findByUuid(challengeId);
         verify(solutionRepository).save(any(SolutionDocument.class));
-        verify(solutionConverter).convertDocumentToDto(any(SolutionDocument.class), any());
+        verify(solutionConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
 
-     */
 }

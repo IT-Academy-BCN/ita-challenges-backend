@@ -22,4 +22,15 @@ public class SolutionDto {
 
     @JsonProperty(value = "uuid_language", index = 2)
     private UUID idLanguage;
+
+    @JsonProperty(value = "uuid_challenge", index = 3)
+    private UUID idChallenge;
+
+    //constructor for testing with uuid, solutionText and idLanguage
+    public SolutionDto(UUID uuid, String solutionText, UUID idLanguage) {
+        this.uuid = uuid;
+        this.solutionText = solutionText;
+        this.idLanguage = idLanguage;
+    }
+
 }

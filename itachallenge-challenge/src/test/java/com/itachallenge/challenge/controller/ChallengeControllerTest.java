@@ -18,10 +18,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -111,7 +111,7 @@ class ChallengeControllerTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
         Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        String offset= "0";
+        String offset = "0";
         String limit = "3";
 
         when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
@@ -220,4 +220,39 @@ class ChallengeControllerTest {
                 });
     }
 
+    @Test
+    void AddSolution_validIdChallenge_validIdLanguage() {
+        // Mock del servicio
+        SolutionDto inputDto = new SolutionDto();
+        inputDto.setSolutionText("Test solution");
+        inputDto.setIdChallenge(UUID.randomUUID());
+        inputDto.setIdLanguage(UUID.randomUUID());
+
+        SolutionDto outputDto = new SolutionDto();
+        outputDto.setSolutionText("Test solution");
+        outputDto.setIdChallenge(inputDto.getIdChallenge());
+        outputDto.setIdLanguage(inputDto.getIdLanguage());
+
+        when(challengeService.addSolution(any())).thenReturn(Mono.just(outputDto));
+
+        // Ejecutar la solicitud y verificar la respuesta
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(inputDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .consumeWith(response -> {
+                    // Verify that the response has the expected keys
+                    assert response.getResponseBody().containsKey("uuid_challenge");
+                    assert response.getResponseBody().containsKey("uuid_language");
+                    assert response.getResponseBody().containsKey("solution_text");
+
+                    // Verify that the values are correct
+                    assert response.getResponseBody().get("uuid_challenge").equals(inputDto.getIdChallenge().toString());
+                    assert response.getResponseBody().get("uuid_language").equals(inputDto.getIdLanguage().toString());
+                    assert response.getResponseBody().get("solution_text").equals(inputDto.getSolutionText());
+                });
+    }
 }

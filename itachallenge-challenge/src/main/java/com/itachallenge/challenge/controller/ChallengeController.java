@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,7 +32,7 @@ public class ChallengeController {
 
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "200";  //if no limit, all elements (avoid exception with default value 200)
-    private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200]
+    private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
@@ -131,7 +134,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-                                               @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
+                                                                                     @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
 
@@ -141,7 +144,7 @@ public class ChallengeController {
             summary = "Get to see all id language and name.",
             description = "Requesting all the languages through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
             }
     )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
@@ -154,8 +157,8 @@ public class ChallengeController {
             summary = "Get to see the Solution id, text and language.",
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
@@ -163,18 +166,34 @@ public class ChallengeController {
 
     }
 
-    @PostMapping("/solution/{idChallenge}/language/{idLanguage}")
+    @PostMapping("/solution")
     @Operation(
             operationId = "Add solution to a chosen chosen challenge.",
             summary = "Update the Challenge level, add accepted solution to the challenge.",
             description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<SolutionDto>> addSolution(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage, @RequestBody SolutionDto solutionDto) {
-        return challengeService.addSolution(idChallenge, idLanguage, solutionDto);
+    public Mono<Map<String, Object>> addSolution(@RequestBody SolutionDto solutionDto) {
+        if (solutionDto == null || solutionDto.getSolutionText() == null || solutionDto.getSolutionText().isEmpty()) {
+            return Mono.error(new BadRequestException("La solución no puede ser nula y el texto de la solución no puede estar vacío"));
+        }
+
+        if (solutionDto.getIdChallenge() == null || solutionDto.getIdLanguage() == null) {
+            return Mono.error(new BadRequestException("El id del challenge y el id del lenguaje no pueden ser nulos"));
+        }
+
+        return challengeService.addSolution(solutionDto)
+                .map(solution -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("uuid_challenge", solution.getIdChallenge());
+                    response.put("uuid_language", solution.getIdLanguage());
+                    response.put("solution_text", solution.getSolutionText());
+                    return response;
+                });
     }
 
 
