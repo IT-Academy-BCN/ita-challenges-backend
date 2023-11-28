@@ -7,4 +7,8 @@ public class BadRequestException extends ResponseStatusException {
     public BadRequestException(String message) {
         super(HttpStatus.BAD_REQUEST, message);
     }
+
+    public HttpStatus getStatus() {
+        return (HttpStatus) this.getStatusCode();
+    }
 }

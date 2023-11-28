@@ -23,7 +23,9 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.*;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -84,7 +86,7 @@ class GlobalExceptionHandlerTest {
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         // Act
-        ResponseEntity <MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -98,7 +100,7 @@ class GlobalExceptionHandlerTest {
         FieldError fieldError = mock(FieldError.class);
         when(fieldError.getField()).thenReturn("name");
         when(fieldError.getDefaultMessage()).thenReturn("default message");
-        when(fieldError.getCodes()).thenReturn(new String[] {"message"});
+        when(fieldError.getCodes()).thenReturn(new String[]{"message"});
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
@@ -131,6 +133,21 @@ class GlobalExceptionHandlerTest {
         assertEquals(OK_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
+    }
+
+
+    @Test
+    void testBadRequestException() {
+        // Arrange
+        String expectedMessage = "Test message";
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+
+        // Act
+        BadRequestException exception = new BadRequestException(expectedMessage);
+
+        // Assert
+        assertEquals(expectedStatus, exception.getStatus());
+        assertEquals(expectedMessage, exception.getReason());
     }
 
 }
