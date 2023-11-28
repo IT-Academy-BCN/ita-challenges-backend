@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.service.IChallengeService;
+import io.swagger.v3.core.util.Json;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -257,7 +258,7 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addSolution_NullOrEmptySolutionText_ThrowsBadRequestException() {
+    void addSolution_NullSolutionText_ThrowsBadRequestException() {
         // Arrange
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText(null); // Set solution text to null
@@ -273,8 +274,26 @@ class ChallengeControllerTest {
                 .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
     }
 
+    //OrEmptySolutionText
     @Test
-    void addSolution_NullChallengeOrLanguageId_ThrowsBadRequestException() {
+    void addSolution_EmptySolutionText_ThrowsBadRequestException() {
+        // Arrange
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setSolutionText(""); // Set solution text to empty
+
+        // Act & Assert
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(solutionDto)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
+    }
+
+    @Test
+    void addSolution_NullChallengeId_ThrowsBadRequestException() {
         // Arrange
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText("Test solution");
@@ -289,5 +308,40 @@ class ChallengeControllerTest {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("El id del challenge y el id del lenguaje no pueden ser nulos");
+    }
+
+    @Test
+    void addSolution_NullLanguageId_ThrowsBadRequestException() {
+        // Arrange
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setSolutionText("Test solution");
+        solutionDto.setIdLanguage(null); // Set challenge ID to null
+
+        // Act & Assert
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(solutionDto)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("El id del challenge y el id del lenguaje no pueden ser nulos");
+    }
+
+    //test sollutionDto == null
+    @Test
+    void addSolution_NullSolutionDto_ThrowsBadRequestException() {
+        // Arrange
+        SolutionDto solutionDto = new SolutionDto(); // Create a SolutionDto with null fields
+
+        // Act & Assert
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(solutionDto) // Send the SolutionDto with null fields
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
     }
 }
