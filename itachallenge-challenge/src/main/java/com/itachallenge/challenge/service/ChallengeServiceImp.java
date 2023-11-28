@@ -17,6 +17,7 @@ import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -90,11 +91,22 @@ public class ChallengeServiceImp implements IChallengeService {
                             .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
                 });
     }
-
-
+  
+     @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        // TODO: Get challenges by languange and difficulty
-        return null;
+        UUID uuidLanguage = UUID.fromString(idLanguage);
+        Pageable pageable =  new Pageable(0,10 , null);
+    
+        Flux<ChallengeDto> challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+            challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage, pageable), ChallengeDto.class);
+    
+        return challengesDto.collectList()
+            .map(challenges -> {
+                GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                resultDto.setInfo(pageable.getSize(),pageable.getSize(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
+                return resultDto;
+            });
+            
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {

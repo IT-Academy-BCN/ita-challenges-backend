@@ -186,9 +186,9 @@ class ChallengeRepositoryTest {
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
 
         Flux<ChallengeDocument> filteredChallenges1 = challengeRepository
-                .findByLevelAndLanguages_IdLanguage("MEDIUM", uuidLang1);
+                .findByLevelAndLanguages_IdLanguage("MEDIUM", uuidLang1, null);
         Flux<ChallengeDocument> filteredChallenges2 = challengeRepository
-                .findByLevelAndLanguages_IdLanguage("EASY", uuidLang1);
+                .findByLevelAndLanguages_IdLanguage("EASY", uuidLang1, null);
 
         StepVerifier.create(filteredChallenges1)
                 .expectNextCount(1)
