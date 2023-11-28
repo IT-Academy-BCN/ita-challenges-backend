@@ -255,4 +255,39 @@ class ChallengeControllerTest {
                     assert response.getResponseBody().get("solution_text").equals(inputDto.getSolutionText());
                 });
     }
+
+    @Test
+    void addSolution_NullOrEmptySolutionText_ThrowsBadRequestException() {
+        // Arrange
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setSolutionText(null); // Set solution text to null
+
+        // Act & Assert
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(solutionDto)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
+    }
+
+    @Test
+    void addSolution_NullChallengeOrLanguageId_ThrowsBadRequestException() {
+        // Arrange
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setSolutionText("Test solution");
+        solutionDto.setIdChallenge(null); // Set challenge ID to null
+
+        // Act & Assert
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(solutionDto)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("El id del challenge y el id del lenguaje no pueden ser nulos");
+    }
 }
