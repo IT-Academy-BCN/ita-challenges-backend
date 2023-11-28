@@ -274,7 +274,7 @@ class ChallengeRepositoryTest {
         ChallengeDocument challengeDocumentSaved = challengeDocumentMono.block();
 
         // Assert
-        Assertions.assertEquals(challengeDocumentSaved.getSolutions().size(), 3);
+        Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
     }
 
     @DisplayName("Add solution to solutions Test")
@@ -308,7 +308,7 @@ class ChallengeRepositoryTest {
 
         // Assert
         assert challengeDocumentSaved != null;
-        Assertions.assertEquals(challengeDocumentSaved.getSolutions().size(), 3);
+        Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
     }
 
 }
