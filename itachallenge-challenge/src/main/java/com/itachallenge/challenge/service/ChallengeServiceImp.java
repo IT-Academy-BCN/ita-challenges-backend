@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -103,11 +102,9 @@ public class ChallengeServiceImp implements IChallengeService {
             String difficulty) {
         UUID uuidLanguage = UUID.fromString(idLanguage);
         Pageable pageable = new Pageable(0, 10, null);
-
         Flux<ChallengeDto> challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
                 challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage, pageable),
                 ChallengeDto.class);
-
         return challengesDto.collectList()
                 .map(challenges -> {
                     GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -115,7 +112,6 @@ public class ChallengeServiceImp implements IChallengeService {
                             challenges.toArray(new ChallengeDto[0]));
                     return resultDto;
                 });
-
     }
 
     @Override
