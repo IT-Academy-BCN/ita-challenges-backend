@@ -19,8 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
@@ -38,8 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 
 class ChallengeServiceImpTest {
-
-    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImpTest.class);
 
     @Mock
     private ChallengeRepository challengeRepository;
