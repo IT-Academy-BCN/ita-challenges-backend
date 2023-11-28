@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.2
+  version: 1.0.4
   last-updated: 2021-11-13
 
 services:
@@ -47,13 +47,13 @@ services:
     image: mongo:5.0.9
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_USERNAME}'
-      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_PASSWORD}'
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_CHALLENGE_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_CHALLENGE_PASSWORD}'
       MONGO_INITDB_DATABASE: '${MONGODB_CHALLENGE_DATABASE}'
     volumes:
       - itachallenge_mongodb_data:/var/lib/mongodb
-      - ../itachallenge-challenge/src/main/resources/mongodb-init:/docker-entrypoint-initdb.d
-      - ../itachallenge-challenge/src/main/resources/mongodb-test-data:/tmp/data/
+      #- ${MONGODB_CHALLENGE_DATABASE_SCRIPTS_DIR}:/docker-entrypoint-initdb.d
+      - ${MONGODB_CHALLENGE_DATABASE_TEST_SCRIPTS_DIR}:/tmp/data/
     networks:
       apisix:
         ipv4_address: 172.18.0.5
@@ -65,7 +65,7 @@ services:
     depends_on:
       -  itachallenge-mongodb
     environment:
-      - 'spring.data.mongodb.uri=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}'
+      - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}?authSource=admin'
     networks:
       apisix:
         ipv4_address: 172.18.0.6
@@ -81,7 +81,7 @@ services:
 
   apisix-gateway:
     container_name: apisix-gateway
-    image: apache/apisix:3.5.0-centos
+    image: apache/apisix:3.7.0-redhat
     restart: always
     volumes:
       - ./apisix_conf/apisix_standalone.yaml:/usr/local/apisix/conf/apisix.yaml:ro
