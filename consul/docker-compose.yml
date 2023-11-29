@@ -7,7 +7,7 @@ x-custom-metadata:
 services:
   consul-server1-DEV:
     image: consul:1.15.2
-    container_name: consul-server1
+    container_name: consul-server1-DEV
     restart: always
     volumes:
       - ./server1.json:/consul/config/server1.json:ro
@@ -22,7 +22,7 @@ services:
 
   consul-server2-DEV:
     image: consul:1.15.2
-    container_name: consul-server2
+    container_name: consul-server2-DEV
     restart: always
     volumes:
       - ./server2.json:/consul/config/server2.json:ro
@@ -33,7 +33,7 @@ services:
 
   consul-server3-DEV:
     image: consul:1.15.2
-    container_name: consul-server3
+    container_name: consul-server3-DEV
     restart: always
     volumes:
       - ./server3.json:/consul/config/server3.json:ro
@@ -43,7 +43,7 @@ services:
     command: "agent -bootstrap-expect=3"
 
   itachallenge-mongodb-DEV:
-    container_name: mongodb-itachallenge
+    container_name: mongodb-itachallenge-DEV
     image: mongo:5.0.9
     restart: always
     environment:
@@ -51,7 +51,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_CHALLENGE_PASSWORD}'
       MONGO_INITDB_DATABASE: '${MONGODB_CHALLENGE_DATABASE}'
     volumes:
-      - itachallenge_mongodb_data:/var/lib/mongodb
+      - itachallenge_mongodb_data-DEV:/var/lib/mongodb
       #- ${MONGODB_CHALLENGE_DATABASE_SCRIPTS_DIR}:/docker-entrypoint-initdb.d
       - ${MONGODB_CHALLENGE_DATABASE_TEST_SCRIPTS_DIR}:/tmp/data/
     networks:
@@ -76,7 +76,7 @@ services:
 
   itachallenge-challenge-DEV:
     image: '${REGISTRY_NAME}:itachallenge-challenge-${CHALLENGE_TAG}'
-    container_name: 'itachallenge-${CHALLENGE_TAG}'
+    container_name: 'itachallenge-${CHALLENGE_TAG}-DEV'
     restart: always
     depends_on:
       -  itachallenge-mongodb
@@ -96,7 +96,7 @@ services:
         ipv4_address: 172.18.0.7
 
   apisix-gateway-DEV:
-    container_name: apisix-gateway
+    container_name: apisix-gateway-DEV
     image: apache/apisix:3.7.0-redhat
     restart: always
     volumes:
@@ -113,14 +113,14 @@ services:
 
   itachallenge-mock-DEV:
     image: '${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG}'
-    container_name: 'itachallenge-mock-${MOCK_TAG}'
+    container_name: 'itachallenge-mock-${MOCK_TAG}-DEV'
     restart: always
     networks:
       apisix-DEV:
         ipv4_address: 172.18.0.9
 
 volumes:
-  itachallenge_mongodb_data:
+  itachallenge_mongodb_data-DEV:
   itachallenge_mongodb_data-PRO:
 
 networks:
