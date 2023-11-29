@@ -1,11 +1,11 @@
 package com.itachallenge.user.dtos;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 @Component
@@ -15,14 +15,12 @@ import java.util.UUID;
 @Data
 public class UserSolutionScoreDto {
 
-    @JsonProperty(value = "id_challenge", index = 0)
-    private UUID challengeId;
 
-    @JsonProperty(value = "language", index = 1)
-    private UUID languageID;
+    private String userId;
 
-    @JsonProperty(value = "id_user", index = 3)
-    private UUID userId;
+    private String challengeId;
+
+    private String languageId;
 
     private String solutionText;
 

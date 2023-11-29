@@ -6,18 +6,17 @@ import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
-import com.itachallenge.user.repository.IUserSolutionRepository;
+import com.itachallenge.user.repository.IUserSolutionRepository;;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.UUID;
 
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
     @Autowired
-    private IUserSolutionRepository userScoreRepository;
+    private IUserSolutionRepository userSolutionRepository;
 
     @Autowired
     private ConverterDocumentToDto converter;
@@ -27,7 +26,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID challengeUuid = convertToUUID(idChallenge);
         UUID languageUuid = convertToUUID(idLanguage);
 
-        return this.userScoreRepository.findByUserId(userUuid)
+        return this.userSolutionRepository.findByUserId(userUuid)
                 .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguageId().equals(languageUuid))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()
@@ -39,33 +38,60 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     public UUID convertToUUID(String id) {
+        try {
             return UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid UUID string: " + id, e);
+        }
     }
 
     public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge,
                                                   String idLanguage, String solutionText) {
-        UUID userUuid = convertToUUID(idUser);
-        UUID challengeUuid = convertToUUID(idChallenge);
-        UUID languageUuid = convertToUUID(idLanguage);
 
-        SolutionDocument solutionDocument = new SolutionDocument();
-        solutionDocument.setSolutionText(solutionText);
+        if (idUser == null || idChallenge== null || idLanguage == null) {
+            return Mono.error(new NullPointerException("Some of these values is null"));
+        }
 
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        userSolutionDocument.setUserId(userUuid);
-        userSolutionDocument.setChallengeId(challengeUuid);
-        userSolutionDocument.setLanguageId(languageUuid);
-        userSolutionDocument.getSolutionDocument().add(solutionDocument);
+        UUID userUuid;
+        UUID challengeUuid;
+        UUID languageUuid;
 
-        UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
-                .userId(userSolutionDocument.getUserId())
-                .challengeId(userSolutionDocument.getChallengeId())
-                .languageID(userSolutionDocument.getLanguageId())
-                .solutionText(solutionDocument.getSolutionText())
+        try {
+            userUuid = convertToUUID(idUser);
+            challengeUuid = convertToUUID(idChallenge);
+            languageUuid = convertToUUID(idLanguage);
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new IllegalArgumentException("Invalid UUID string", e));
+        }
+
+        SolutionDocument solutionDoc = new SolutionDocument();
+        solutionDoc.setSolutionText(solutionText);
+
+        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
                 .score(13)
                 .build();
 
-        return userScoreRepository.save(userSolutionDocument).thenReturn(userSolutionScoreDto);
+        userSolutionDocument.getSolutionDocument().add(solutionDoc);
+
+        if (userSolutionDocument.getUuid() == null) {
+            userSolutionDocument.setUuid(UUID.randomUUID());
+        }
+
+        return userSolutionRepository.save(userSolutionDocument)
+                .flatMap(savedDocument -> {
+                    UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
+                            .userId(idUser)
+                            .languageId(idLanguage)
+                            .challengeId(idChallenge)
+                            .solutionText(solutionText)
+                            .score(savedDocument.getScore())
+                            .build();
+
+                    return Mono.just(userSolutionScoreDto);
+                });
     }
 
 }

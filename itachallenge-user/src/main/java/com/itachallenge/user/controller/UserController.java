@@ -90,13 +90,27 @@ public class UserController {
     }
 
    @PostMapping(path = "/solution")
+   @Operation(
+           summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
+           responses = {
+                   @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
+                           mediaType = "application/json")}),
+                   @ApiResponse(responseCode = "400", description = "Something went wrong",
+                           content = {@Content(schema = @Schema())})
+           }
+   )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
-             String idUser, String idChallenge, String idLanguage, String solutionDocument) {
+            @RequestBody UserSolutionScoreDto userSolutionScoreDto) {
 
-        return userScoreService.addSolution(idUser, idChallenge,idLanguage,solutionDocument)
-                .map(document ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(document)
-                );
+
+       return userScoreService.addSolution(
+                       userSolutionScoreDto.getUserId(),
+                       userSolutionScoreDto.getChallengeId(),
+                       userSolutionScoreDto.getLanguageId(),
+                       userSolutionScoreDto.getSolutionText())
+               .map(savedScoreDto ->
+                       ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
+               );
     }
 
 }

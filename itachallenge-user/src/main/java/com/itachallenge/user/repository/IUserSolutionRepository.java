@@ -21,6 +21,6 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Mono<Boolean> existsByUuid(UUID uuid);
 
     @Override
-    Mono<UserSolutionDocument> save (UserSolutionDocument solutions);
+    Mono<UserSolutionDocument> save(UserSolutionDocument userSolutionDocument);
 
 }
