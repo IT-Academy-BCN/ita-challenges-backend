@@ -1,121 +1,184 @@
 [
   {
-    "_id" : {
-      "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+    "_id": {
+      "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
     },
-    "challenge_title": "Sociis Industries",
+    "challenge_title": {
+      "ES": "Titulo en español",
+      "CAT": "Títol en català",
+      "EN": "Descending Order"
+    },
     "level": "EASY",
-    "creation_date": { "$date": "2018-09-09T11:43:54+0200"},
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
     "detail": {
-      "description": "mi. Aliquam gravida mauris ut mi. Duis risus odio, auctor vitae, aliquet nec, imperdiet nec, leo. Morbi neque tellus, imperdiet",
+      "description": {
+        "ES": "Descripcion en español",
+        "CAT": "Descripció en català",
+        "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
+      },
       "examples": [
         {
-          "_id" : {
+          "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+          "example_text": {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus u",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+          }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": " Aliquam nec nisi maximus, venenatis"
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-
-          "_id" : {
+          "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": "Mauris feugiat massa et suscipit malesuada."
-        },
-        {
-          "_id" : {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text": "Aenean quis maximus purus. Quisque sit amet"
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         }
       ],
-      "note": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum"
+      "notes": {
+        "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+        "CAT": "Títol en català",
+        "EN": "Descending Order"
+      }
     },
     "languages": [
       {
-        "_id" : {
-          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
-        "language_name": "Javascript"
+        "language_name": "Java"
       }
     ],
     "solutions": [
-      {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
-      {"$uuid": "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"},
-      {"$uuid": "998bc504-265d-40a4-b579-62feacc3c8cd"}
+      {
+        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
+      }
     ],
     "resources": [
-      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
-      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
-      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+      {
+        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
+      },
+      {
+        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
+      },
+      {
+        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
+      }
     ],
     "related": [
-      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
-      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
-      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+      {
+        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
+      },
+      {
+        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
+      },
+      {
+        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
+      }
+    ],
+    "testing_values": [
+      {
+        "in_param": "a,bcde",
+        "out_param": "java.lang.NumberFormatException"
+      },
+      {
+        "in param": 42145,
+        "out_param": 54421
+      },
+      {
+        "in param": 145263,
+        "out_param": 654321
+      }
     ]
   },
   {
     "_id": {
       "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
     },
-    "challenge_title": "Lorem Ipsum",
-    "level": "MEDIUM",
-    "creation_date": { "$date": "2018-09-09T11:43:54+0200" },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Descending Order"
+      },
+    "level": "EASY",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
     "detail": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae tellus in sapien dignissim pharetra.",
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
+        },
       "examples": [
         {
-          "_id" : {
+          "_id": {
             "$uuid": "aef3ebe5-1a11-4b32-9f6e-98d27e2be22d"
           },
-          "example_text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT":"Phasellus vel velit malesuada, fe",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "8398539e-7b48-4a1e-9b8b-136f711c3dc9"
           },
-          "example_text": "Suspendisse potenti. Morbi at ex a velit tincidunt aliquet."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "1e6af8d0-ccbf-4ebf-90ae-8e9b098a7a15"
           },
-          "example_text": "Nullam congue dignissim fringilla. Nunc id velit a turpis lobortis ullamcorper."
-        },
-        {
-          "_id" : {
-            "$uuid": "b6bc54ae-5317-43bc-af75-7532a1980f68"
-          },
-          "example_text": "Quisque ut sapien id nisi interdum commodo."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         }
       ],
-      "note": "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur vitae sem elementum, tincidunt quam in, aliquet ipsum."
+      "notes": {
+        "ES":"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur vitae sem elementum, tincidunt quam in, aliquet ipsum.",
+        "CAT": "Títol en català",
+        "EN": "Descending Order"
+      }
     },
     "languages": [
       {
-        "_id" : {
+        "_id": {
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
-      },
-      {
-        "_id" : {
-          "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
-        },
-        "language_name": "Python"
       }
     ],
     "solutions": [
-      {"$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
-      {"$uuid": "7e181ec8-3f9a-4e43-a75c-8319e245ccee"},
-      {"$uuid": "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
@@ -126,63 +189,131 @@
       {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"},
       {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
       {"$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "out_param": [
+          5,
+          1
+        ]
+      },
+      {
+        "in param": [
+          1,
+          2,
+          -3,
+          4,
+          5
+        ],
+        "out_param": [
+          5,
+          -3
+        ]
+      },
+      {
+        "in param": [
+          1,
+          9,
+          3,
+          4,
+          -5
+        ],
+        "out_param": [
+          9,
+          -5
+        ]
+      }
     ]
   },
   {
     "_id": {
       "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
     },
-    "challenge_title": "Acme Corp Challenge",
-    "level": "HARD",
-    "creation_date": { "$date": "2018-09-09T11:43:54+0200" },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "You're a square!"
+      },
+    "level": "EASY",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
     "detail": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod mi sed magna congue viverra. Nullam mattis mauris eu faucibus eleifend.",
+      "description": {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n       In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n       The tests will always use some integral number, so don't worry about that in dynamic typed languages."
+      },
       "examples": [
         {
-          "_id" : {
+          "_id": {
             "$uuid": "843273ea-0ebe-4284-aa3b-4bce6909db0b"
           },
-          "example_text": "Vestibulum ullamcorper elit ut lacus suscipit, in efficitur nunc ullamcorper."
+          "example_text": 
+            {
+              "ES": "Vestibulum ullamcorper elit ut lacus suscipit, in efficitur nunc ullamcorper.",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "f61d3345-248d-4f3f-a0e4-2e4b64f37183"
           },
-          "example_text": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "7a5c6e49-784d-4504-88b5-0d4a2618e9f5"
           },
-          "example_text": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "26ae1f8e-5b8a-4e5d-9a0a-b44ff2356f9b"
           },
-          "example_text": "Sed ut tortor id nisl efficitur vulputate id a lorem."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         }
       ],
-      "note": "Nulla finibus ligula in ante molestie, ac lacinia arcu volutpat."
+      "notes": 
+        {
+          "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+          "CAT": "Títol en català",
+          "EN":  "Descending Order"
+        }
     },
     "languages": [
       {
-        "_id" : {
-          "$uuid" : "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
-      },
-      {
-        "_id" : {
-          "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"
-        },
-        "language_name": "PHP"
       }
     ],
     "solutions": [
-      {"$uuid": "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"},
-      {"$uuid": "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"}
     ],
     "resources": [
       {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
@@ -193,65 +324,103 @@
       {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
       {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"},
       {"$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"}
+    ],
+    "testing_values": [
+      {
+        "in_param": -1,
+        "out_param": false
+      },
+      {
+        "in param": 0,
+        "out_param": true
+      },
+      {
+        "in param": 3,
+        "out_param": false
+      }
     ]
   },
   {
     "_id": {
       "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
     },
-    "challenge_title": "Coding Challenge",
-    "level": "MEDIUM",
-    "creation_date": { "$date": "2018-09-09T11:43:54+0200" },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "List Filtering"
+      },
+    "level": "EASY",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
     "detail": {
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce ultricies sapien sed neque condimentum sagittis.",
+      "description": {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
+        },
       "examples": [
         {
-          "_id" : {
+          "_id": {
             "$uuid": "5aeaf1f1-11bc-462a-8620-23d4f2efcc30"
           },
-          "example_text": "Vestibulum tempor urna et dolor cursus, id fringilla nisl fringilla."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "9e1ab3b0-0d1e-495b-bb33-4db6efc4f9f3"
           },
-          "example_text": "Aliquam vel arcu lacinia, vulputate sem ut, auctor sapien."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "d33fdef1-1f92-4fb7-8e8f-0e42f9dcd1d4"
           },
-          "example_text": "Nullam convallis sem at tellus rutrum facilisis."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         },
         {
-          "_id" : {
+          "_id": {
             "$uuid": "0bdf4c7b-c6e2-4a37-a8fb-8cbf72c8648a"
           },
-          "example_text": "Curabitur dignissim leo id risus feugiat pharetra."
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
         }
       ],
-      "note": "Proin id mi consequat, ullamcorper neque in, venenatis ligula."
+      "notes": {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
     },
     "languages": [
       {
-        "_id" : {
-          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
-        },
-        "language_name": "Javascript"
-
-      },
-      {
-        "_id" : {
+        "_id": {
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
-
       }
     ],
     "solutions": [
-      {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
-      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
-      {"$uuid": "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
       {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
@@ -262,6 +431,2028 @@
       {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
       {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
       {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          1,
+          2,
+          "a",
+          "b"
+        ],
+        "out_param": [
+          1,
+          2
+        ]
+      },
+      {
+        "in param": [
+          1,
+          2,
+          "a",
+          "b",
+          0,
+          15
+        ],
+        "out_param": [
+          1,
+          2,
+          0,
+          15
+        ]
+      },
+      {
+        "in param": [
+          1,
+          2,
+          "a",
+          "b",
+          "aasf",
+          "1",
+          "123",
+          231
+        ],
+        "out_param": [
+          1,
+          2,
+          231
+        ]
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "6099f6e8-39b2-4c72-9ae1-21fdd3c9010a"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Isograms"
+      },
+    "level": "EASY",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
+              "CAT": "Títol en català",
+              "EN":  "Descending Order"
+            }
+        }
+      ],
+      "notes": {
+          "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
+          "CAT": "Títol en català",
+          "EN":  "Descending Order"
+      }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "Dermatoglyphics",
+        "out_param": true
+      },
+      {
+        "in param": "moose",
+        "out_param": false
+      },
+      {
+        "in param": "aba",
+        "out_param": false
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "7c8f6d12-8c2f-4b7f-9e94-6d5f5c3e02e3"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Exes and Ohs"
+      },
+    "level": "EASY",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "ooxx",
+        "out_param": true
+      },
+      {
+        "in param": "xooxx",
+        "out_param": false
+      },
+      {
+        "in param": "ooxXm",
+        "out_param": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Get the Middle Character"
+      },
+    "level": "EASY",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
+      },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "test",
+        "out_param": "es"
+      },
+      {
+        "in param": "testing",
+        "out_param": "t"
+      },
+      {
+        "in param": "middle",
+        "out_param": "dd"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Simple Pig Latin"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "Pig latin is cool",
+        "out_param": "igPay atinlay siay oolcay"
+      },
+      {
+        "in param": "Hello world !",
+        "out_param": "elloHay orldway !"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "RGB To Hex Conversion"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description":
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
+        }
+      ,
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "CAT": "Títol en català",
+            "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": {
+        "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
+        "CAT": "Títol en català",
+        "EN": "Descending Order"
+      }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          255,
+          255,
+          255
+        ],
+        "out_param": "FFFFFF"
+      },
+      {
+        "in param": [
+          0,
+          0,
+          0
+        ],
+        "out_param": "000000"
+      },
+      {
+        "in param": [
+          148,
+          0,
+          211
+        ],
+        "out_param": "9400D3"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "9d248e74-731f-4782-af2c-7ae9b53c9d5c"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Scramblies"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notess:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
+        }
+      ,
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          "rkqodlw",
+          "world"
+        ],
+        "out_param": true
+      },
+      {
+        "in param": [
+          "cedewaraaossoqqyt",
+          "codewars"
+        ],
+        "out_param": true
+      },
+      {
+        "in param": [
+          "katas",
+          "steak"
+        ],
+        "out_param": false
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "5a72d6cb-3217-4d75-9368-689ed48cb9ec"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Number of trailing zeros of N!"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": 6,
+        "out_param": 1
+      },
+      {
+        "in param": 12,
+        "out_param": 2
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "c3946e8d-e7b4-4e3c-aacf-e8d6c5e9d0b6"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Exes and Ohs"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "ooxx",
+        "out_param": true
+      },
+      {
+        "in param": "xooxx",
+        "out_param": false
+      },
+      {
+        "in param": "ooxXm",
+        "out_param": true
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "862f5d91-8394-4db1-b188-1ac2e68d73a8"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Going to zero or to infinity?"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description":
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": 1.0000989217538616,
+        "out_param": 1.000098
+      },
+      {
+        "in param": 1.2125000000000001,
+        "out_param": 1.2125
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "f1e2a8d6-64b9-4b86-b6a4-9e8c4d27f3a3"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Find the smallest"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": 261235,
+        "out_param": [
+          126235,
+          2,
+          0
+        ]
+      },
+      {
+        "in param": 209917,
+        "out_param": [
+          29917,
+          0,
+          1
+        ]
+      },
+      {
+        "in param": 1000000,
+        "out_param": [
+          1,
+          0,
+          6
+        ]
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Land perimeter"
+      },
+    "level": "MEDIUM",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          "XOOXO",
+          "XOOXO",
+          "OOOXO",
+          "XXOXO",
+          "OXOOO"
+        ],
+        "out_param": "Total land perimeter: 24"
+      },
+      {
+        "in param": [
+          "XOOO",
+          "XOXO",
+          "XOXO",
+          "OOXX",
+          "OOOO"
+        ],
+        "out_param": "Total land perimeter: 18"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "4f8a6c91-8a9d-49b0-9f2c-3e67d2b18b8d"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Evaluate mathematical expression."
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Given a mathematical expression as a string you must return the result as a number."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "1 -1",
+        "out_param": 0
+      },
+      {
+        "in param": "1 - -1",
+        "out_param": 2
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "d7a9c4b2-6e8d-4f8c-8a13-94c5e16d2f9a"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Compress String"
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "aaabbbccc",
+        "out_param": "a3b3c3"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Longest Common Subsequence"
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          "ABCBDAB",
+          "BDCAB"
+        ],
+        "out_param": "BCAB"
+      },
+      {
+        "in param": [
+          "abcdef",
+          "acf"
+        ],
+        "out_param": "acf"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "8c7e3a9d-6b2d-43e4-9d1f-4e7a8c9d3e1b"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Find the Equilibrium Point in an Array"
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
+        },
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          1,
+          2,
+          3,
+          4,
+          6
+        ],
+        "out_param": 3
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Validate Mathematical Expressions"
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
+        }
+      ,
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": "((3 + 4) * 2) / (5 - 2)",
+        "out_param": "Valid"
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Find the Largest Contiguous Subarray"
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
+        }
+      ,
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          -2,
+          1,
+          -3,
+          4,
+          -1,
+          2,
+          1,
+          -5,
+          4
+        ],
+        "out_param": [
+          4,
+          -1,
+          2,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "ec52b7f1-2f78-4a83-aef0-3b9b6f34a763"
+    },
+    "challenge_title": {
+        "ES": "Titulo en español",
+        "CAT": "Títol en català",
+        "EN": "Count Inversions in an Array"
+      },
+    "level": "HARD",
+    "creation_date": {
+      "$date": "2018-09-09T11:43:54+0200"
+    },
+    "detail": {
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Descripció en català",
+          "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
+        }
+      ,
+      "examples": [
+        {
+          "_id": {
+            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        },
+        {
+          "_id": {
+            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
+          },
+          "example_text": 
+            {
+              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+              "CAT": "Títol en català",
+              "EN": "Descending Order"
+            }
+        }
+      ],
+      "notes": 
+        {
+          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+          "CAT": "Títol en català",
+          "EN": "Descending Order"
+        }
+    },
+    "languages": [
+      {
+        "_id": {
+          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+        },
+        "language_name": "Java"
+      }
+    ],
+    "solutions": [
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+    ],
+    "resources": [
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
+    ],
+    "related": [
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
+    ],
+    "testing_values": [
+      {
+        "in_param": [
+          2,
+          4,
+          1,
+          3,
+          5
+        ],
+        "out_param": 3
+      }
     ]
   }
 ]
