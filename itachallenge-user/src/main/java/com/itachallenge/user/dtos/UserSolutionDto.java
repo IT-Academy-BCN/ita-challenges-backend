@@ -5,13 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
-public class UserSolutionScoreDto {
+public class UserSolutionDto {
 
 
     private String userId;
@@ -22,7 +21,5 @@ public class UserSolutionScoreDto {
 
     private String solutionText;
 
-    private int score;
+    }
 
-
-}

@@ -1,10 +1,7 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
-import com.itachallenge.user.dtos.ChallengeStatisticsDto;
-import com.itachallenge.user.dtos.SolutionUserDto;
-import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
@@ -89,7 +86,7 @@ public class UserController {
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 
-   @PostMapping(path = "/solution")
+   @PutMapping(path = "/solution")
    @Operation(
            summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
            responses = {
@@ -100,14 +97,13 @@ public class UserController {
            }
    )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
-            @RequestBody UserSolutionScoreDto userSolutionScoreDto) {
-
+            @RequestBody UserSolutionDto userSolutionDto) {
 
        return userScoreService.addSolution(
-                       userSolutionScoreDto.getUserId(),
-                       userSolutionScoreDto.getChallengeId(),
-                       userSolutionScoreDto.getLanguageId(),
-                       userSolutionScoreDto.getSolutionText())
+                       userSolutionDto.getUserId(),
+                       userSolutionDto.getChallengeId(),
+                       userSolutionDto.getLanguageId(),
+                       userSolutionDto.getSolutionText())
                .map(savedScoreDto ->
                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
                );

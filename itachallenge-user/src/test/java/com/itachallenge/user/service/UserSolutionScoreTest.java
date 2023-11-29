@@ -1,4 +1,5 @@
 package com.itachallenge.user.service;
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +13,9 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 
 @SpringBootTest
 public class UserSolutionScoreTest {
@@ -23,11 +27,11 @@ public class UserSolutionScoreTest {
     private UserSolutionServiceImp userSolutionService;
     ;
 
-        @BeforeEach
-        public void setUp() {
-            MockitoAnnotations.openMocks(this);
-            ;
-        }
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        ;
+    }
 
     @Test
     public void testAddSolution() {
@@ -36,6 +40,15 @@ public class UserSolutionScoreTest {
         String idChallenge = "550e8400-e29b-41d4-a716-446655440002";
         String idLanguage = "550e8400-e29b-41d4-a716-446655440003";
         String solutionText = "This is a test solution";
+
+        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
+        userSolutionDocument.setUserId(UUID.fromString(idUser));
+        userSolutionDocument.setChallengeId(UUID.fromString(idChallenge));
+        userSolutionDocument.setLanguageId(UUID.fromString(idLanguage));
+        userSolutionDocument.setScore(13);
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(userSolutionDocument));
 
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage, solutionText);
 
@@ -53,4 +66,5 @@ public class UserSolutionScoreTest {
                 .verifyComplete();
     }
 }
+
 
