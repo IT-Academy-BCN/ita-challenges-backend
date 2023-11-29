@@ -20,8 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -170,31 +168,53 @@ class ChallengeServiceImpTest {
     @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
+        int offset = 1;
+        int limit = 2;
+
+        // Simulate a set of ChallengeDocument with non-null UUID
+        ChallengeDocument challenge1 = new ChallengeDocument();
+        challenge1.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge2 = new ChallengeDocument();
+        challenge2.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge3 = new ChallengeDocument();
+        challenge3.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge4 = new ChallengeDocument();
+        challenge4.setUuid(UUID.randomUUID());
+
+        // Simulate a set of ChallengeDto
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
-        ChallengeDto[] expectedChallengesPaged = {challengeDto3, challengeDto4};
 
-        int offset = 1;
-        int limit = 2;
-        Pageable pageable = PageRequest.of((offset), limit);
-
-        when(challengeRepository.findAllByUuidNotNull(pageable))
-                .thenReturn(Flux.just(new ChallengeDocument(), new ChallengeDocument()));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto3, challengeDto4));
+        when(challengeRepository.findAllByUuidNotNull())
+                .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getAllChallenges(1, 2);
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
+        verify(challengeRepository).findAllByUuidNotNull();
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
+
         StepVerifier.create(result)
-                .expectNext(expectedChallengesPaged)
+                .expectSubscription()
+                .expectNextCount(4)
                 .expectComplete()
                 .verify();
 
-        verify(challengeRepository).findAllByUuidNotNull(pageable);
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
+        StepVerifier.create(result.skip(offset).take(limit))
+                .expectSubscription()
+                .expectNext(challengeDto2, challengeDto3)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit))
+                .expectSubscription()
+                .expectNextCount(2)
+                .expectComplete()
+                .verify();
     }
 
     @Test
