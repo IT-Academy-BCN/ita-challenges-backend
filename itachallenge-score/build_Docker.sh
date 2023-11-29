@@ -41,5 +41,5 @@ docker build -t=${REGISTRY_NAME}:itachallenge-score-${SCORE_TAG} .
 #upload image to DockerHub
 if [ ${ENV} = "dev" ] || [ ${ENV} = "pre" ];
 then
-  docker push ${REGISTRY_NAME}:${SCORE_TAG}
+  docker push ${REGISTRY_NAME}:itachallenge-score-${SCORE_TAG}
 fi

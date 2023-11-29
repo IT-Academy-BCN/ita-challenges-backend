@@ -41,7 +41,7 @@
    7.1 [Programas recomanats](#71-programes-recomanats)
 
 
-----------------------------------------------------------------
+<hr/>
 
 # 1. ENLLAÇOS DEL PROJECTE
 ## 1.1 Enllaços del projecte
@@ -54,12 +54,12 @@
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
   <img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
-----------------------------------------------------------------
+<hr/>
 
 # 2. PROCEDIMENTS DE TREBALL
 
 ## 2.1 Primeres tasques del projecte
-### 1. Afegir el teu nom y GitHub al arxiu contributors.md
+### 2.1.1. Afegir el teu nom y GitHub al arxiu contributors.md
 
 1. Clona el repositori ita-challenges-backend de GitHub al teu sistema local:
 
@@ -87,9 +87,9 @@
          git push origin nombre-de-su-rama
 8. Obriu el repositori a GitHub i hauríeu de veure un missatge que us permet crear un "pull request" des de la seva branca acabada de crear a la branca "develop". Feu clic a l'enllaç per crear el pull request.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
-### 2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
+<hr/>
+
+### 2.2.2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
 
 1. Assegureu-vos de tenir les MongoDB Tools instal·lades. Si encara no en tens, vés a l'apartat de “Programes necessaris” i segueix les instruccions proporcionades per descarregar-les al sistema operatiu.
 
@@ -115,38 +115,31 @@
 5. Executeu la següent ordre per veure si l'usuari s'ha creat correctament:
 
           show users
+
 6. Surt de la terminal de MongoDB escrivint la següent ordre:
 
           exit
 
-7. Mou el fitxer load-data de la carpeta monogdb.init a la carpeta mongodb-test-data.
-   Si utilitzeu Windows, utilitzeu el fitxer .bat, en canvi, si utilitzeu Mac o Linux, el fitxer és .sh.
+7. Connecta a Mongo (potser amb MongoDB Compass) amb l'usuari que has creat.
 
 
-8. A la terminal normal, navega a la carpeta mongodb-test-data utilitzant l'ordre cd.
+8. Crea les collections "challenges", "languages" i "solutions" en la base de dades "challenges".
 
 
-9. Per importar el document, executa la següent ordre:
+9. Importa les dades de cada collection en l'opció "Add Data" de Compass. O, si ho prefereixes, pots importar les dades des de la terminal amb
+   el comando (modifica les rutes):
 
-   · A Windows:
-
-          load-data.bat
-
-   · A Mac o Linux:
-
-          ./load-data.sh
-
-   Si rebeu un missatge de permís denegat, atorgueu permisos d'execució al fitxer amb l'ordre següent:
-
-          chmod +x load-data.sh
-
-10. Després, moveu el fitxer load-data.bat o load-data.sh de tornada a la vostra carpeta original, mongodb.init.
-
+```
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=challenges --jsonArray --file=./mongodb-test-data/challenges.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=languages --jsonArray --file=./mongodb-test-data/languages.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=solutions --jsonArray --file=./mongodb-test-data/solutions.json
+```
 
 11. Obre MongoDB Compass, fes un "Reload Data" i ja veuràs la base de dades correctament importada.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 2.2 Configuracions Git
 
 Configuracions necessàries de Git per evitar problemes
@@ -167,8 +160,8 @@ Si teniu un problema amb un PR que modifica molts fitxers, >100, heu de fer el s
 2. Executeu l'ordre: 'git config --global core.autocrlf true'
 
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.3 Procediment diari
 1. Connectar-se a Teams a les 9:15h
 2. Fer pull de la branca "develop"
@@ -177,8 +170,8 @@ Si teniu un problema amb un PR que modifica molts fitxers, >100, heu de fer el s
 
 IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de les 9:15h fins a les 13:15h, per treballar en equip (tret de circumstàncies que ho justifiquin).
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.4 Treball amb les targetes
 ### Com assignar-se una targeta
 1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te.
@@ -208,8 +201,8 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 
 5. Finalment, vés a GitHub on es troba el teu repositori i crea un "pull request" des de la teva branca "feature#123" cap a la branca "develop".
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.5 Aspectes a tenir en compte a l'hora de fer un PR
 1. A la pàgina de creació de "pull request", selecciona la branca base i la branca comparada:
     - La branca base és la branca a la qual vols fusionar els teus canvis. En aquest cas és la branca “develop”.
@@ -221,15 +214,15 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 6. En cas que hagis de revisar i corregir alguns problemes, actualitza la teva branca local amb els canvis i fes push novament a la branca remota corresponent.
 7. La pull request s'actualitzarà automàticament amb els nous canvis realitzats a la teva branca.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.6 Metodologia Scrum
 https://scrumguides.org/
 
 
 <img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
 
-----------------------------------------------------------------
+<hr/>
 
 # 3. NORMALITZACIÓ D'URL
 En aquest projecte, és important seguir certes convencions en establir l'estructura i la nomenclatura de les URL's utilitzades en el backend.
@@ -268,7 +261,7 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 - `/challenges/{challengeId}/update` - Editeu els detalls del challenge amb ID 550e8400-e29b-41d4-a716-446655440000.
 
 
-----------------------------------------------------------------
+<hr/>
 
 # 4. DEFINICIONS DE MÈTODE, CLASSE, ETC...
 
@@ -286,8 +279,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.1 package names](https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.2 Noms de les classes
 #### NORMES
     - UpperCamelCase
@@ -320,8 +313,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
     - UpperCamelCase
     - Només lletres i dígits
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.3 Noms dels mètodes
 #### NORMES
     - lowerCamelCase
@@ -349,8 +342,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.4 Noms de constants
 #### NORMES
     - Majúscules
@@ -365,8 +358,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.4 constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.5 Noms de variables locals
 #### NORMES
     - lowerCamelCase
@@ -393,8 +386,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 #### LINKS
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.6 Noms de variables de tipus
 #### NORMES
     - Una sola lletra majúscula, seguida opcionalment d'un sol número
@@ -407,8 +400,9 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 #### LINKS
 [Google Java Style Guide: 5.2.8 Type variable names](https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 4.7 Camel case: definit
 #### NORMES
     - Només lletres i dígits
@@ -429,7 +423,8 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
 #### LINKS
 [Google Java Style Guide: 5.3 Camel case defined](https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)
 
-----------------------------------------------------------------
+<hr/>
+
 # 5. LLIBRERIES UTILITZADES
 
 ## 5.1 Plugins principals
@@ -525,7 +520,7 @@ Aquí es presenten alguns exemples de com s'han d'estructurar les URL segons les
     - Versió 3.06
     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
 
-----------------------------------------------------------------
+<hr/>
 
 # 6. PROGRAMES REQUERITS
 Els programes següents són requerits per poder treballar en el projecte:
@@ -546,7 +541,8 @@ Els programes següents són requerits per poder treballar en el projecte:
 
 És important assegurar-se de tenir totes aquestes eines instal·lades i configurades correctament abans de començar a treballar al projecte.
 
-----------------------------------------------------------------
+<hr/>
+
 # 7 PROGRAMAS RECOMANATS
 
 Els programes següents són recomanables per facilitar el treball en el projecte:

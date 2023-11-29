@@ -108,7 +108,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull( (PageRequest.of(offset, limit)) ) , ChallengeDto.class);
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
