@@ -9,7 +9,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import static org.mockito.ArgumentMatchers.*;
@@ -24,13 +26,15 @@ public class UserDocumentControllerTest {
         @Mock
         private UserSolutionServiceImp userSolutionServiceImp;
 
+        private WebTestClient webTestClient;
+
         @BeforeEach
         void setUp() {
             MockitoAnnotations.openMocks(this);
         }
 
         @Test
-        void testAddSolution() {
+        public void testAddSolution() {
 
             UserSolutionDto userSolutionDto = new UserSolutionDto();
             userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
@@ -38,7 +42,9 @@ public class UserDocumentControllerTest {
             userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
             userSolutionDto.setSolutionText("This is a test solution");
 
-            UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(/* ... valores esperados ... */);
+            UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
+                    userSolutionDto.getChallengeId(),userSolutionDto.getLanguageId(),
+                    userSolutionDto.getSolutionText(),13);
             when(userSolutionServiceImp.addSolution(any(), any(), any(), any()))
                     .thenReturn(Mono.just(expectedResponse));
 
@@ -57,5 +63,44 @@ public class UserDocumentControllerTest {
                     eq(userSolutionDto.getSolutionText())
             );
         }
+    @Test
+    public void testAddSolutionII(){
+
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
+        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
+        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setSolutionText("This is a test solution");
+
+        UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
+                userSolutionDto.getChallengeId(),userSolutionDto.getLanguageId(),
+                userSolutionDto.getSolutionText(),13);
+        when(userSolutionServiceImp.addSolution(any(), any(), any(), any()))
+                .thenReturn(Mono.just(expectedResponse));
+
+        webTestClient.put()
+                .uri("/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userSolutionDto)
+                .exchange()
+                .expectStatus().isAccepted()
+                .expectBody(UserSolutionScoreDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getUserId() != null;
+                    assert dto.getChallengeId() != null;
+                    assert dto.getLanguageId() != null;
+                    assert dto.getScore() >= 0;
+
+                    verify(userSolutionServiceImp, times(1)).addSolution(
+                            userSolutionDto.getUserId(),
+                            userSolutionDto.getChallengeId(),
+                            userSolutionDto.getLanguageId(),
+                            userSolutionDto.getSolutionText()
+                    );
+
+                });
     }
+}
+
 
