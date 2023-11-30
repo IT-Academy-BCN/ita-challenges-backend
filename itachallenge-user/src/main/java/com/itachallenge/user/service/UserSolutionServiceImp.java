@@ -22,9 +22,9 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private ConverterDocumentToDto converter;
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
-        UUID userUuid = convertToUUID(idUser);
-        UUID challengeUuid = convertToUUID(idChallenge);
-        UUID languageUuid = convertToUUID(idLanguage);
+        UUID userUuid = UUID.fromString(idUser);
+        UUID challengeUuid = UUID.fromString(idChallenge);
+        UUID languageUuid = UUID.fromString(idLanguage);
 
         return this.userSolutionRepository.findByUserId(userUuid)
                 .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguageId().equals(languageUuid))
@@ -36,33 +36,47 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         return solutionUserDto;
                 });
     }
-
-    public UUID convertToUUID(String id) {
+    //aquest metode no cal ja que es pot fer servir UUID.fromString(string) i retorna un objecte UUID
+  /*  public UUID convertToUUID(String id) {
         try {
             return UUID.fromString(id);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid UUID string: " + id, e);
         }
-    }
+    }*/
 
     public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge,
                                                   String idLanguage, String solutionText) {
 
-        if (idUser == null || idChallenge== null || idLanguage == null) {
-            return Mono.error(new NullPointerException("Some of these values is null"));
-        }
-
+        //if (idUser == null || idChallenge== null || idLanguage == null) {
+         //   return Mono.error(new NullPointerException("Some of these values is null"));
+        //}
+/*
         UUID userUuid;
         UUID challengeUuid;
         UUID languageUuid;
 
         try {
-            userUuid = convertToUUID(idUser);
-            challengeUuid = convertToUUID(idChallenge);
-            languageUuid = convertToUUID(idLanguage);
+            userUuid = UUID.fromString(idUser);
+            challengeUuid = UUID.fromString(idChallenge);
+            languageUuid = UUID.fromString(idLanguage);
         } catch (IllegalArgumentException e) {
             return Mono.error(new IllegalArgumentException("Invalid UUID string", e));
+        }*/
+
+        //valida si ja existeix un usuari que ja a antregat una solucio per el challenge
+        //la excepcio esta gestionada a la clase GlobalExceptionHandler
+        if (Boolean.TRUE.equals(userSolutionRepository.findByUserId(UUID.fromString(idUser))
+                .filter(userScore -> userScore.getChallengeId().equals(UUID.fromString(idChallenge)))
+                .hasElements().block())) {
+            return Mono.error(new IllegalArgumentException("User already has a solution for this challenge"));
         }
+
+        //les validacions no calen ja que es fan a la clase controller amb @Valid i a la clase GenericUUIDValid
+        UUID userUuid = UUID.fromString(idUser);
+        UUID challengeUuid = UUID.fromString(idChallenge);
+        UUID languageUuid = UUID.fromString(idLanguage);
+
 
         SolutionDocument solutionDoc = new SolutionDocument();
         solutionDoc.setSolutionText(solutionText);
@@ -79,6 +93,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         if (userSolutionDocument.getUuid() == null) {
             userSolutionDocument.setUuid(UUID.randomUUID());
         }
+
 
         return userSolutionRepository.save(userSolutionDocument)
                 .flatMap(savedDocument -> {

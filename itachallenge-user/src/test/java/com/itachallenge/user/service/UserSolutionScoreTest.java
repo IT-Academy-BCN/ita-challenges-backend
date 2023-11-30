@@ -52,9 +52,9 @@ public class UserSolutionScoreTest {
 
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage, solutionText);
 
-        UUID userUuid = userSolutionService.convertToUUID(idUser);
-        UUID challengeUuid = userSolutionService.convertToUUID(idChallenge);
-        UUID languageUuid = userSolutionService.convertToUUID(idLanguage);
+        UUID userUuid = UUID.fromString(idUser);
+        UUID challengeUuid = UUID.fromString(idChallenge);
+        UUID languageUuid = UUID.fromString(idLanguage);
 
         StepVerifier.create(resultMono)
                 .expectNextMatches(userSolutionScoreDto ->
