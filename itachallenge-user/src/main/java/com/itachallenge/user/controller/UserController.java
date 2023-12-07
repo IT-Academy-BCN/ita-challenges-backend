@@ -18,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -86,27 +87,28 @@ public class UserController {
         return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 
-   @PutMapping(path = "/solution")
-   @Operation(
-           summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
-           responses = {
-                   @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
-                           mediaType = "application/json")}),
-                   @ApiResponse(responseCode = "400", description = "Something went wrong",
-                           content = {@Content(schema = @Schema())})
-           }
-   )
+    @PutMapping(path = "/solution")
+    @Operation(
+            summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
-            @RequestBody UserSolutionDto userSolutionDto) {
-
-       return userScoreService.addSolution(
-                       userSolutionDto.getUserId(),
-                       userSolutionDto.getChallengeId(),
-                       userSolutionDto.getLanguageId(),
-                       userSolutionDto.getSolutionText())
-               .map(savedScoreDto ->
-                       ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
-               );
+            @Valid @RequestBody UserSolutionDto userSolutionDto) {
+        //@Valid revisa que els parametres d'entrada siguin correctes
+        //si no son correctes, els misatges d'error estan a la classe UserSolutionDto i gestionats a GlobalExceptionHandler
+        return userScoreService.addSolution(
+                        userSolutionDto.getUserId(),
+                        userSolutionDto.getChallengeId(),
+                        userSolutionDto.getLanguageId(),
+                        userSolutionDto.getSolutionText())
+                .map(savedScoreDto ->
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
+                );
     }
 
 }

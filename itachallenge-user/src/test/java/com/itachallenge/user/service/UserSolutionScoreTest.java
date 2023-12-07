@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -49,12 +50,14 @@ public class UserSolutionScoreTest {
 
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
                 .thenReturn(Mono.just(userSolutionDocument));
+        when(userSolutionRepository.findByUserId(UUID.fromString(userSolutionDocument.getUserId().toString())))
+                .thenReturn(Flux.empty());
 
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage, solutionText);
 
-        UUID userUuid = userSolutionService.convertToUUID(idUser);
-        UUID challengeUuid = userSolutionService.convertToUUID(idChallenge);
-        UUID languageUuid = userSolutionService.convertToUUID(idLanguage);
+        UUID userUuid = UUID.fromString(idUser);
+        UUID challengeUuid = UUID.fromString(idChallenge);
+        UUID languageUuid = UUID.fromString(idLanguage);
 
         StepVerifier.create(resultMono)
                 .expectNextMatches(userSolutionScoreDto ->

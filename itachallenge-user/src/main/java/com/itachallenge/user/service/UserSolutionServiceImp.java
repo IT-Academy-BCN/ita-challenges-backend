@@ -22,9 +22,9 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private ConverterDocumentToDto converter;
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
-        UUID userUuid = convertToUUID(idUser);
-        UUID challengeUuid = convertToUUID(idChallenge);
-        UUID languageUuid = convertToUUID(idLanguage);
+        UUID userUuid = UUID.fromString(idUser);
+        UUID challengeUuid = UUID.fromString(idChallenge);
+        UUID languageUuid = UUID.fromString(idLanguage);
 
         return this.userSolutionRepository.findByUserId(userUuid)
                 .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguageId().equals(languageUuid))
@@ -37,32 +37,18 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-    public UUID convertToUUID(String id) {
-        try {
-            return UUID.fromString(id);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid UUID string: " + id, e);
-        }
-    }
-
     public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge,
                                                   String idLanguage, String solutionText) {
 
-        if (idUser == null || idChallenge== null || idLanguage == null) {
-            return Mono.error(new NullPointerException("Some of these values is null"));
+        if (Boolean.TRUE.equals(userSolutionRepository.findByUserId(UUID.fromString(idUser))
+                .filter(userScore -> userScore.getChallengeId().equals(UUID.fromString(idChallenge)))
+                .hasElements().block())) {
+            return Mono.error(new IllegalArgumentException("User already has a solution for this challenge"));
         }
 
-        UUID userUuid;
-        UUID challengeUuid;
-        UUID languageUuid;
-
-        try {
-            userUuid = convertToUUID(idUser);
-            challengeUuid = convertToUUID(idChallenge);
-            languageUuid = convertToUUID(idLanguage);
-        } catch (IllegalArgumentException e) {
-            return Mono.error(new IllegalArgumentException("Invalid UUID string", e));
-        }
+        UUID userUuid = UUID.fromString(idUser);
+        UUID challengeUuid = UUID.fromString(idChallenge);
+        UUID languageUuid = UUID.fromString(idLanguage);
 
         SolutionDocument solutionDoc = new SolutionDocument();
         solutionDoc.setSolutionText(solutionText);
