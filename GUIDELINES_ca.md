@@ -89,7 +89,7 @@
 
 <hr/>
 
-### 2.2.2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
+### 2.1.2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
 
 1. Assegureu-vos de tenir les MongoDB Tools instal·lades. Si encara no en tens, vés a l'apartat de “Programes necessaris” i segueix les instruccions proporcionades per descarregar-les al sistema operatiu.
 
@@ -98,11 +98,11 @@
 
           mongosh
 
-3. Fes servir la següent ordre per crear la base de dades "challenges":
+3. Fes servir la següent ordre per a canviar a la base de dades "admin":
 
-          use challenges
+          use admin
 
-4. Un cop dins de la base de dades "challenges", enganxa el següent bloc de codi:
+4. Un cop dins de la base de dades "admin", enganxa el següent bloc de codi:
 
          db.createUser({
          user: "admin_challenge",
@@ -123,7 +123,9 @@
 7. Connecta a Mongo (potser amb MongoDB Compass) amb l'usuari que has creat.
 
 
-8. Crea les collections "challenges", "languages" i "solutions" en la base de dades "challenges".
+8. Crea les collections "challenges", "languages" i "solutions" en la base de dades "challenges". Executeu la següent ordre per a crear la base de dades "challenges":
+
+          use challenges
 
 
 9. Importa les dades de cada collection en l'opció "Add Data" de Compass. O, si ho prefereixes, pots importar les dades des de la terminal amb
