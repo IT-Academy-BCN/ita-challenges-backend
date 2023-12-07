@@ -57,10 +57,10 @@ public class UserDocumentControllerTest {
                     .verifyComplete();
 
             verify(userSolutionServiceImp, times(1)).addSolution(
-                    eq(userSolutionDto.getUserId()),
-                    eq(userSolutionDto.getChallengeId()),
-                    eq(userSolutionDto.getLanguageId()),
-                    eq(userSolutionDto.getSolutionText())
+                    userSolutionDto.getUserId(),
+                    userSolutionDto.getChallengeId(),
+                    userSolutionDto.getLanguageId(),
+                    userSolutionDto.getSolutionText()
             );
         }
     @Test
