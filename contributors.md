@@ -28,3 +28,4 @@
 * Joan Carles Martínez - https://github.com/leibaral
 * Christian Bowser - https://github.com/bowserchris
 * Natalia Fara - https://github.com/nfaraDev
+* Pau Franco Toda - https://github.com/Parapau
