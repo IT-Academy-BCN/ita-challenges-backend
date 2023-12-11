@@ -20,7 +20,9 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.Locale;
 
+import static javax.swing.UIManager.put;
 import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
@@ -56,8 +58,14 @@ class ChallengeRepositoryTest {
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
 
-        ExampleDocument example = new ExampleDocument(uuid_1, "Example Text 1");
-        ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
+        Map<Locale, String> titleMap1 = new HashMap<>();
+        Map<Locale, String> titleMap2 = new HashMap<>();
+        Map<Locale, String> titleMap3 = new HashMap<>();
+        titleMap1.put(Locale.ENGLISH, "Loops");
+        titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
+        titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
+        ExampleDocument example = new ExampleDocument(uuid_1, titleMap1);
+        ExampleDocument example2 = new ExampleDocument(uuid_2, titleMap2);
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
@@ -69,16 +77,22 @@ class ChallengeRepositoryTest {
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
         Set<LanguageDocument> languageSet3 = Set.of(language1);
 
+        Map<Locale, String> description = new HashMap<>();
+        description.put(Locale.ENGLISH, "Description");
+
+        Map<Locale, String> note = new HashMap<>();
+        note.put(Locale.ENGLISH, "Detail note");
+
         List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
-        DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
+        DetailDocument detail = new DetailDocument(description, exampleList, note);
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Loops", "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, titleMap1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "Switch", "EASY", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, titleMap2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, "If", "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2);
+                (uuid_3, titleMap3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
     }
@@ -164,19 +178,26 @@ class ChallengeRepositoryTest {
     }
 
 
-    @DisplayName("Find by Title Test")
+    @DisplayName("Find by Title Test in different languages")
     @Test
     void findByChallengeTitleTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle("Loops");
-        firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTitle(), "Loops"),
-                () -> fail("Challenge with name Loops  not found."));
+        Map<Locale, String> titleMap1 = new HashMap<>();
+        Map<Locale, String> titleMap2 = new HashMap<>();
+        Map<Locale, String> titleMap3 = new HashMap<>();
+        titleMap1.put(Locale.ENGLISH, "Loops");
+        titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
+        titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle("If");
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle(titleMap1);
+        firstChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals("Loops", u.getTitle().get("EN")),
+                () -> fail("Challenge with name 'Loops' in english not found."));
+
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle(titleMap3);
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTitle(), "If"),
-                () -> fail("Challenge with name If not found."));
+                u -> assertEquals("Col·leccio", u.getTitle().get("CA")),
+                () -> fail("Challenge with name 'Col·leccio' in catalan not found."));
     }
 
     @DisplayName("Find by Level and LanguagesId - Get one Test")
