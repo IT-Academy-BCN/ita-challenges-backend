@@ -5,7 +5,7 @@
     },
     "challenge_title": {
       "ES": "Titulo en español",
-      "CAT": "Títol en català",
+      "CAT": "Ordre descendent",
       "EN": "Descending Order"
     },
     "level": "EASY",
@@ -15,7 +15,7 @@
     "detail": {
       "description": {
         "ES": "Descripcion en español",
-        "CAT": "Descripció en català",
+        "CAT": "La teva tasca es fer una funció que pugui prendre qualsevol nombre no negatiu com a argument i retornar-lo amb tots els seus digits reordenats de forma descendent. Basicament, reordenar els digits per crear el nombre mes alt possible.",
         "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
       },
       "examples": [
@@ -25,7 +25,7 @@
           },
           "example_text": {
             "ES": "Phasellus vel velit malesuada, fermentum lectus u",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
           }
         },
@@ -36,7 +36,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -47,14 +47,14 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         }
       ],
       "notes": {
         "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-        "CAT": "Títol en català",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       }
     },
@@ -114,7 +114,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       },
     "level": "EASY",
@@ -125,7 +125,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "En aquesta petita tasca set donara una string de nombre separats per espais, hauras de retornar el major i menor d'aquests nombres.",
           "EN": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
         },
       "examples": [
@@ -136,7 +136,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT":"Phasellus vel velit malesuada, fe",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -147,7 +147,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -158,14 +158,14 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         }
       ],
       "notes": {
         "ES":"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur vitae sem elementum, tincidunt quam in, aliquet ipsum.",
-        "CAT": "Títol en català",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       }
     },
@@ -238,7 +238,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Ets molt quadrat!",
         "EN": "You're a square!"
       },
     "level": "EASY",
@@ -248,7 +248,7 @@
     "detail": {
       "description": {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "T'agraden els blocs de construcció. T'agraden especialment els blocs quadrats. I el que encara t'agrada més, és colocar-los de forma que creïn un quadrat de blocs de construcció!	Però, de vegades no els pots ordenar en un quadrat. En canvi, acabes amb un simple rectangle! Maleíts rectangles! Tant de bó tinguessis una manera de saber si estas treballant en va... Espera! Ja ho tinc! Nomes has de comprovar si el teu nombre de quadrats es un quadrat. Tasca\n	Donat un nombre natural(int), deterimna si es tracta d'un nombre quadrat:\n	\n	En les matemàtiques. un nombre quadrat o quadrat perfecte es un nombre natural que es el quadrat de un altre nombre natural. Dit d'una altre manera, és el producte d'un nombre amb ell mateix.\n	\n	Els tests sempre fan servir nombres naturals ossigui que no et preocupis sobre aquesta dinamica en llenguatges tipats.",
           "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n       In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n       The tests will always use some integral number, so don't worry about that in dynamic typed languages."
       },
       "examples": [
@@ -270,7 +270,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -281,7 +281,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -292,7 +292,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         }
@@ -300,7 +300,7 @@
       "notes": 
         {
           "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN":  "Descending Order"
         }
     },
@@ -346,7 +346,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Filtratge de llistes",
         "EN": "List Filtering"
       },
     "level": "EASY",
@@ -356,7 +356,7 @@
     "detail": {
       "description": {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "En aquesta kata hauràs de crear una funcio que prengui una llista de nombres no negatius i strings i retorni una nova llista amb les string filtrades i eliminades.",
           "EN": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
         },
       "examples": [
@@ -367,7 +367,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -378,7 +378,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -389,7 +389,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -400,14 +400,14 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         }
       ],
       "notes": {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
     },
@@ -486,7 +486,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Isogrames",
         "EN": "Isograms"
       },
     "level": "EASY",
@@ -496,7 +496,7 @@
     "detail": {
       "description": {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Un isograma es una paraula que no te cap lleta repetida, sigui consecutiva o no consecutiva. Implementa una funció que determini si una string que només conté lletres es un isograma. Assumeix que una string buida es un isgorama. Ignora la capitalització.\n	Exemple: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ingorar capitalització)",
           "EN": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
         },
       "examples": [
@@ -507,7 +507,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -518,7 +518,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -529,7 +529,7 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         },
@@ -540,14 +540,14 @@
           "example_text": 
             {
               "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN":  "Descending Order"
             }
         }
       ],
       "notes": {
           "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN":  "Descending Order"
       }
     },
@@ -593,7 +593,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Xs i Os",
         "EN": "Exes and Ohs"
       },
     "level": "EASY",
@@ -603,7 +603,7 @@
     "detail": {
       "description": {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha retornar un boleà i ignorar la capitalització. la string pot contenir qualsevol char.",
           "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
         },
       "examples": [
@@ -614,7 +614,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -625,7 +625,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -636,7 +636,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -647,7 +647,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         }
@@ -655,7 +655,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -701,7 +701,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Consegueix el caracter del mig.",
         "EN": "Get the Middle Character"
       },
     "level": "EASY",
@@ -711,7 +711,7 @@
     "detail": {
       "description": {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Set donarà una paraula. La teva feina i retorna la lletra que es troba al mig. Si la llargada de la paraula es una nombre senar, retorna el caracter del mig. si la llargada es un nombre parell, retorna els dos caracters del mig.",
           "EN": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
       },
       "examples": [
@@ -722,7 +722,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -733,7 +733,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -744,7 +744,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -755,7 +755,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         }
@@ -763,7 +763,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -809,7 +809,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Porc simple llatí",
         "EN": "Simple Pig Latin"
       },
     "level": "MEDIUM",
@@ -819,7 +819,7 @@
     "detail": {
       "description": {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Mou la primera lletra de cada paraula que set doni al seu final, despres afegeix 'ay' al final de la paraula. No toquis els simbols de puntuacio.",
           "EN": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
         },
       "examples": [
@@ -830,7 +830,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -841,7 +841,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -852,7 +852,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -863,7 +863,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         }
@@ -871,7 +871,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -913,7 +913,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Conversió de RGB a Hex",
         "EN": "RGB To Hex Conversion"
       },
     "level": "MEDIUM",
@@ -924,7 +924,7 @@
       "description":
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "La funcio rgb està incompleta. Completala de manera que passant-li RGB en valors decimals ho retorni en una representació haxadecimal. Els valors valids de RGB son 0 - 255. Qualsevol valor que estigui fora d'aquesta ran s'haurà d'arrodonir al valor valid més proper.\n	notes: La teva resposta sempre hauria de tenir una llargada de 6 caracters, la versió reduida amb 3 no no és correcte aqui.",
           "EN": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
         }
       ,
@@ -936,7 +936,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -947,7 +947,7 @@
           "example_text": 
             {
             "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
             }
         },
@@ -958,7 +958,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -969,14 +969,14 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
       ],
       "notes": {
         "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
-        "CAT": "Títol en català",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       }
     },
@@ -1034,7 +1034,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Scramblies",
         "EN": "Scramblies"
       },
     "level": "MEDIUM",
@@ -1045,8 +1045,8 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
-          "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notess:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
+          "CAT": "Completa la funció scramble(str1, str2) que retorna true si una part dels caracters de str1 es poden reodenar per ser igual que str2, en cas contrari retorna false.\n	notes:\n	Només es faran servir lletres minuscules (a-z). No hi hauran ni signes de puntuació ni digits.\n	El rendiment s'ha de tenir en consideració.",
+          "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notes:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
         }
       ,
       "examples": [
@@ -1057,7 +1057,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1068,7 +1068,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1079,7 +1079,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1090,7 +1090,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1098,7 +1098,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1153,7 +1153,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Nombre de zeros finals de N!",
         "EN": "Number of trailing zeros of N!"
       },
     "level": "MEDIUM",
@@ -1164,7 +1164,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Escriu un programa que calculi el nombre de zeros finals en el factorial de un nombre.\n	N! = 1 * 2 * 3 * ... * N\n	Vigila, 1000! te 2568 digits...",
           "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
         },
       "examples": [
@@ -1175,7 +1175,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1186,7 +1186,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1197,7 +1197,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1208,7 +1208,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1216,7 +1216,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1258,7 +1258,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "X i O",
         "EN": "Exes and Ohs"
       },
     "level": "MEDIUM",
@@ -1269,7 +1269,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha retornar un boleà i ignorar la capitalització. La string pot contenir qualsevol char.",
           "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
         },
       "examples": [
@@ -1291,7 +1291,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1302,7 +1302,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1313,7 +1313,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1321,7 +1321,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1367,7 +1367,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Anant de zero a l'infinit?",
         "EN": "Going to zero or to infinity?"
       },
     "level": "MEDIUM",
@@ -1378,7 +1378,7 @@
       "description":
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Calcual (1 / n!) * (1! + 2! + 3! + ... + n!) per n donada, on n es un int mes gran o igual a 1.",
           "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
         },
       "examples": [
@@ -1400,7 +1400,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1411,7 +1411,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1422,7 +1422,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1430,7 +1430,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1472,7 +1472,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Troba el més petit",
         "EN": "Find the smallest"
       },
     "level": "MEDIUM",
@@ -1483,7 +1483,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Tens un nombre positiu n que consistex de digits. Com a molt pots realitzar una operacio com a maxim: Escull l'index d'un digit del nombre, treu el digit que es troba en aquest index i insertal un altre cop al mateix o un altre lloc per aconseguir el nombre més petit que puguis.\n\nTasca:\nRetorna un array, un tuple o una string depenen del teu llenguatge (veure \"Sample Tests"\) with\namb el nombre mes petit que puguis trobar\nl'index i del digit que hsa pres que sigui tan petit petit com sigui possible\nl'index j (tan petit com sigui possible) corresponent a on insertis el nombre perque sigui el mes petit possible.",
           "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
         },
       "examples": [
@@ -1494,7 +1494,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1505,7 +1505,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1516,7 +1516,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1527,7 +1527,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1535,7 +1535,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1593,7 +1593,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Perimetre terrestre",
         "EN": "Land perimeter"
       },
     "level": "MEDIUM",
@@ -1604,7 +1604,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Donat un array d'strings, completa la funcio calculant el perimetre total de totes les illes. Cada peça de terra estarà marcada amb un 'X' mentre que l'aigua esta representada com a 'O'. Assumeix que cada casella es un quadrat de terra perfecte 1x1.",
           "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
         },
       "examples": [
@@ -1615,7 +1615,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1626,7 +1626,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1637,7 +1637,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1648,7 +1648,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1656,7 +1656,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1710,7 +1710,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Evalua l'expresió matemàtica.",
         "EN": "Evaluate mathematical expression."
       },
     "level": "HARD",
@@ -1721,7 +1721,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Donada una expresió matemàtica en forma d'string has de retornar el resultat en forma de numero.",
           "EN": "Given a mathematical expression as a string you must return the result as a number."
         },
       "examples": [
@@ -1732,7 +1732,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1743,7 +1743,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1754,7 +1754,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1765,7 +1765,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1773,7 +1773,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1815,7 +1815,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Comprimir String",
         "EN": "Compress String"
       },
     "level": "HARD",
@@ -1826,7 +1826,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Escriu un programa que pren una cadena de caracters i la comprimeix treient caracters que es repeteixin consecutivament. Per exemple, \"aaabbbccc\" seria comprimit com \"a3b3c3".",
           "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
         },
       "examples": [
@@ -1837,7 +1837,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1848,7 +1848,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1859,7 +1859,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1870,7 +1870,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1878,7 +1878,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -1916,7 +1916,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Subseqëncia Comú més llarga.",
         "EN": "Longest Common Subsequence"
       },
     "level": "HARD",
@@ -1927,7 +1927,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Implementa un programa que trobi la subseqüencia comú mes llarga possible entre dos strings. Una subseqüencia es una seqüencia de caracters que es troba amb el mateix ordre relatiu en ambdues strings.",
           "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
         },
       "examples": [
@@ -1938,7 +1938,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1949,7 +1949,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1960,7 +1960,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -1971,7 +1971,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -1979,7 +1979,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -2027,7 +2027,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Troba el punt d'equilibri d'un Array.",
         "EN": "Find the Equilibrium Point in an Array"
       },
     "level": "HARD",
@@ -2038,7 +2038,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Escriu un programa que trobi el punt d'esquilibre en un array, el qual és un index on la suma dels elements a l'esquerra es igual que la suma dels elements a la dreta.",
           "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
         },
       "examples": [
@@ -2049,7 +2049,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2060,7 +2060,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2071,7 +2071,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2082,7 +2082,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -2090,7 +2090,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -2134,7 +2134,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Valida Expressions Matemàtiques.",
         "EN": "Validate Mathematical Expressions"
       },
     "level": "HARD",
@@ -2145,7 +2145,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Crea un programa que validi si una expresió matemàtica es valida, considerant parentesis equilibrats i operadors matemàtics valids.",
           "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
         }
       ,
@@ -2157,7 +2157,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2168,7 +2168,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2179,7 +2179,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2190,7 +2190,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -2198,7 +2198,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -2236,7 +2236,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Troba el Subarray Contigu més Gran.",
         "EN": "Find the Largest Contiguous Subarray"
       },
     "level": "HARD",
@@ -2247,7 +2247,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Implementa un algoritme per trobar el subarray contigu més gran possible en un array d'integers.",
           "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
         }
       ,
@@ -2259,7 +2259,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2270,7 +2270,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2281,7 +2281,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2292,7 +2292,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -2300,7 +2300,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
@@ -2353,7 +2353,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CAT": "Compta inversions en un Array",
         "EN": "Count Inversions in an Array"
       },
     "level": "HARD",
@@ -2364,7 +2364,7 @@
       "description": 
         {
           "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "CAT": "Esctriu un programa que compti el nombre d'inversions en un array. Una inversió és quan una parella d'elements en l'array es troba en l'ordre equivocat",
           "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
         }
       ,
@@ -2376,7 +2376,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2387,7 +2387,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2398,7 +2398,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         },
@@ -2409,7 +2409,7 @@
           "example_text": 
             {
               "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
+              "CAT": "Ordre descendent",
               "EN": "Descending Order"
             }
         }
@@ -2417,7 +2417,7 @@
       "notes": 
         {
           "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
+          "CAT": "Ordre descendent",
           "EN": "Descending Order"
         }
     },
