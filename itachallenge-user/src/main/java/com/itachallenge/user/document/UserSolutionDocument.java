@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +38,6 @@ public class UserSolutionDocument {
     private int score;
 
     @Field("solution")
-    @Builder.Default
-    private List<SolutionDocument> solutionDocument = new ArrayList<>();
+    private List<SolutionDocument> solutionDocument;
 
 }

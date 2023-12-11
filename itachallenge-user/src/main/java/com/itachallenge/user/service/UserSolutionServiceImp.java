@@ -11,7 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+
+import static ch.qos.logback.classic.spi.ThrowableProxyVO.build;
 
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
@@ -50,14 +55,19 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID challengeUuid = UUID.fromString(idChallenge);
         UUID languageUuid = UUID.fromString(idLanguage);
 
+        List<SolutionDocument> solutionDocuments = new ArrayList<>();
         SolutionDocument solutionDoc = new SolutionDocument();
+        solutionDoc.setUuid(UUID.randomUUID());
         solutionDoc.setSolutionText(solutionText);
 
         UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
+                .status("PENDING")
                 .score(13)
+                .solutionDocument(solutionDocuments)
                 .build();
 
         userSolutionDocument.getSolutionDocument().add(solutionDoc);
