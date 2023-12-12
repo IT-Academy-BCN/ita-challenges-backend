@@ -1,4 +1,7 @@
 
+#### itachallenge-challenge-1.1.0-RELEASE
+* CORS enabled
+
 #### itachallenge-challenge-1.0.0-RELEASE
 * First version
 
