@@ -59,22 +59,19 @@ class GlobalExceptionHandlerTest {
     @Test
     void testHandleResponseStatusException() {
 
-        when(responseStatusException.getStatusCode()).thenReturn(BAD_REQUEST);
-        when(responseStatusException.getReason()).thenReturn(REQUEST);
-        when(errorMessage.getMessage()).thenReturn(REQUEST);
+        // Arrange
+        String expectedErrorMessage = "Validation failed";
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+        ResponseStatusException ex = new ResponseStatusException(expectedStatus, expectedErrorMessage);
 
-        MessageDto expectedErrorMessage = new MessageDto(REQUEST);
-        expectedErrorMessage.setMessage(REQUEST);
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
 
-        ResponseEntity<MessageDto> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
+        // Act
+        ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
-        StepVerifier.create(Mono.just(response))
-                .expectNextMatches(resp -> {
-                    //assertEquals(BAD_REQUEST, response.getStatusCode());
-                    assertEquals(expectedErrorMessage, response.getBody());
-                    return true;
-                })
-                .verifyComplete();
+        // Assert
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -137,17 +134,19 @@ class GlobalExceptionHandlerTest {
 
 
     @Test
-    void testBadRequestException() {
+    void testHandleChallengeNotFoundException() {
         // Arrange
-        String expectedMessage = "Test message";
-        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+        ChallengeNotFoundException challengeNotFoundException = new ChallengeNotFoundException("Challenge not found");
 
         // Act
-        BadRequestException exception = new BadRequestException(expectedMessage);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
-        assertEquals(expectedStatus, exception.getStatus());
-        assertEquals(expectedMessage, exception.getReason());
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Challenge not found"));
     }
+
+
 
 }

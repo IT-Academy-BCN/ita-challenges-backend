@@ -6,7 +6,6 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.service.IChallengeService;
-import io.swagger.v3.core.util.Json;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -22,7 +21,6 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -262,6 +260,8 @@ class ChallengeControllerTest {
         // Arrange
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText(null); // Set solution text to null
+        solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
+        solutionDto.setIdLanguage(UUID.randomUUID()); // Set language ID to a valid UUID
 
         // Act & Assert
         webTestClient.post()
@@ -271,15 +271,16 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
+                .jsonPath("$.message").isEqualTo("solutionText: 'cannot be empty'");
     }
 
-    //OrEmptySolutionText
     @Test
     void addSolution_EmptySolutionText_ThrowsBadRequestException() {
         // Arrange
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText(""); // Set solution text to empty
+        solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
+        solutionDto.setIdLanguage(UUID.randomUUID()); // Set language ID to a valid UUID
 
         // Act & Assert
         webTestClient.post()
@@ -289,7 +290,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
+                .jsonPath("$.message").isEqualTo("solutionText: 'cannot be empty'");
     }
 
     @Test
@@ -298,6 +299,7 @@ class ChallengeControllerTest {
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText("Test solution");
         solutionDto.setIdChallenge(null); // Set challenge ID to null
+        solutionDto.setIdLanguage(UUID.randomUUID()); // Set language ID to a valid UUID
 
         // Act & Assert
         webTestClient.post()
@@ -307,7 +309,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("El id del challenge y el id del lenguaje no pueden ser nulos");
+                .jsonPath("$.message").isEqualTo("idChallenge: 'Invalid UUID'");
     }
 
     @Test
@@ -315,6 +317,7 @@ class ChallengeControllerTest {
         // Arrange
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText("Test solution");
+        solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
         solutionDto.setIdLanguage(null); // Set challenge ID to null
 
         // Act & Assert
@@ -325,10 +328,9 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("El id del challenge y el id del lenguaje no pueden ser nulos");
+                .jsonPath("$.message").isEqualTo("idLanguage: 'Invalid UUID'");
     }
 
-    //test sollutionDto == null
     @Test
     void addSolution_NullSolutionDto_ThrowsBadRequestException() {
         // Arrange
@@ -340,8 +342,6 @@ class ChallengeControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(solutionDto) // Send the SolutionDto with null fields
                 .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo("La solución no puede ser nula y el texto de la solución no puede estar vacío");
+                .expectStatus().isBadRequest();
     }
 }

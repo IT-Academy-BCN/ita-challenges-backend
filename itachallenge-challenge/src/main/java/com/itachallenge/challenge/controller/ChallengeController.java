@@ -6,12 +6,12 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -177,15 +177,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<Map<String, Object>> addSolution(@RequestBody SolutionDto solutionDto) {
-        if (solutionDto == null || solutionDto.getSolutionText() == null || solutionDto.getSolutionText().isEmpty()) {
-            return Mono.error(new BadRequestException("La solución no puede ser nula y el texto de la solución no puede estar vacío"));
-        }
-
-        if (solutionDto.getIdChallenge() == null || solutionDto.getIdLanguage() == null) {
-            return Mono.error(new BadRequestException("El id del challenge y el id del lenguaje no pueden ser nulos"));
-        }
-
+    public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
         return challengeService.addSolution(solutionDto)
                 .map(solution -> {
                     Map<String, Object> response = new HashMap<>();
