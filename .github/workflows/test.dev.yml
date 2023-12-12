@@ -4,14 +4,15 @@ on:
     branches:
       - develop
 jobs:
-  name: Deploy
-  runs-on: ubuntu-latest
-  steps:
-    - name: Execute SSH
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST_URL }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          echo "Deploying..."
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST_URL }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo "Deploying..."
