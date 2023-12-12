@@ -3,10 +3,8 @@ on:
   push:
     branches:
       - develop
-
 jobs:
   name: Deploy
-  # needs: build
   runs-on: ubuntu-latest
   steps:
     - name: Execute SSH
