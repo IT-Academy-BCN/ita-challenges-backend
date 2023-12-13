@@ -20,6 +20,7 @@ public class ScoreController {
         log.info("** Saludos desde el logger **");
         return "Hello from ITA Score!!!";
     }
+    //post para crear el score
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)

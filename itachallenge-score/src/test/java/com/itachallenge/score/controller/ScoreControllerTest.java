@@ -14,6 +14,7 @@ class ScoreControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    //test para probar el endpoint test
     @Test
     void testCreateScore() {
         ScoreRequest scoreRequest = new ScoreRequest(
