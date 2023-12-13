@@ -109,7 +109,7 @@ class ChallengeControllerTest {
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
         Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
 
-        String offset= "0";
+        String offset = "0";
         String limit = "3";
 
         when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
@@ -219,12 +219,12 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getRelatedChallenges(){
+    void getRelatedChallenges() {
         //Arrange
         String idChallenge = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
 
-        GenericResultDto<RelatedDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 3, 3, new RelatedDto[]{new RelatedDto(), new RelatedDto(), new RelatedDto()});
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 3, 3, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto(), new ChallengeDto()});
 
         when(challengeService.getRelatedChallenges(idChallenge)).thenReturn(Mono.just(expectedResult));
 

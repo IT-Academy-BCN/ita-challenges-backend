@@ -30,7 +30,7 @@ public class ChallengeController {
 
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "200";  //if no limit, all elements (avoid exception with default value 200)
-    private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$" ;  // Integer in range [1, 200]
+    private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
@@ -92,7 +92,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable ("challengeId") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String id) {
+    public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String id) {
         return challengeService.getChallengeById(id);
     }
 
@@ -132,7 +132,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-                                               @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
+                                                                                     @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
 
@@ -142,7 +142,7 @@ public class ChallengeController {
             summary = "Get to see all id language and name.",
             description = "Requesting all the languages through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
             }
     )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
@@ -155,8 +155,8 @@ public class ChallengeController {
             summary = "Get to see the Solution id, text and language.",
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
@@ -170,11 +170,11 @@ public class ChallengeController {
             summary = "Get to see the challenge title, creation date, level, popularity and languages.",
             description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json") }),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = { @Content(schema = @Schema()) })
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<RelatedDto>> getRelated(@PathVariable("idChallenge") String idChallenge){
+    public Mono<GenericResultDto<ChallengeDto>> getRelated(@PathVariable("idChallenge") String idChallenge) {
 
         return challengeService.getRelatedChallenges(idChallenge);
     }

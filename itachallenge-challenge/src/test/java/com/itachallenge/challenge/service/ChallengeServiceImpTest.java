@@ -354,22 +354,22 @@ class ChallengeServiceImpTest {
                 .creationDate("01-01-2020")
                 .popularity(5)
                 .languages(relatedLanguages).build();*/
-        RelatedDto relatedDto1 = new RelatedDto();
-        relatedDto1.setRelatedChallengeId(relatedId);
-        RelatedDto relatedDto2 = new RelatedDto();
-        relatedDto2.setRelatedChallengeId(relatedId2);
-        RelatedDto relatedDto3 = new RelatedDto();
-        relatedDto3.setRelatedChallengeId(relatedId3);
-        List<RelatedDto> expectedRelated = List.of(relatedDto1, relatedDto2, relatedDto3);
+        ChallengeDto relatedDto1 = new ChallengeDto();
+        relatedDto1.setChallengeId(relatedId);
+        ChallengeDto relatedDto2 = new ChallengeDto();
+        relatedDto2.setChallengeId(relatedId2);
+        ChallengeDto relatedDto3 = new ChallengeDto();
+        relatedDto3.setChallengeId(relatedId3);
+        List<ChallengeDto> expectedRelated = List.of(relatedDto1, relatedDto2, relatedDto3);
 
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(challengeRepository.findByUuid(related1.getUuid())).thenReturn(Mono.just(related1));
         when(challengeRepository.findByUuid(related2.getUuid())).thenReturn(Mono.just(related2));
         when(challengeRepository.findByUuid(related3.getUuid())).thenReturn(Mono.just(related3));
-        when(relatedChallengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
 
         // Act
-        Mono<GenericResultDto<RelatedDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId);
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId);
 
         // Assert
         StepVerifier.create(resultMono)
@@ -383,6 +383,6 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
-        verify(relatedChallengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
+
     }
 }

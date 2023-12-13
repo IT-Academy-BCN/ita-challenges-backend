@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
-public class DocumentToDtoConverter<S,D> {
+public class DocumentToDtoConverter<S, D> {
 
     public Flux<D> convertDocumentFluxToDtoFlux(Flux<S> documentFlux, Class<D> dtoClass) {
         return documentFlux.map(doc -> convertDocumentToDto(doc, dtoClass));
@@ -22,10 +22,10 @@ public class DocumentToDtoConverter<S,D> {
 
     static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    public D convertDocumentToDto(S document, Class<D> dtoClass){
+    public D convertDocumentToDto(S document, Class<D> dtoClass) {
         ModelMapper mapper = new ModelMapper();
 
-        if(dtoClass.isAssignableFrom(ChallengeDto.class)) {
+        if (dtoClass.isAssignableFrom(ChallengeDto.class)) {
             Converter<LocalDateTime, String> converterFromLocalDateTimeToString = new AbstractConverter<>() {
                 @Override
                 protected String convert(LocalDateTime creationDateFromDocument) {
@@ -33,14 +33,14 @@ public class DocumentToDtoConverter<S,D> {
                 }
             };
             mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class)
-                .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
-                .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle);
+                    .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
+                    .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle);
             mapper.addConverter(converterFromLocalDateTimeToString);
         }
 
-        if(dtoClass.isAssignableFrom(LanguageDto.class)) {
+        if (dtoClass.isAssignableFrom(LanguageDto.class)) {
             mapper.createTypeMap(LanguageDocument.class, LanguageDto.class)
-                .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
+                    .addMapping(LanguageDocument::getIdLanguage, LanguageDto::setLanguageId);
         }
 
         return mapper.map(document, dtoClass);

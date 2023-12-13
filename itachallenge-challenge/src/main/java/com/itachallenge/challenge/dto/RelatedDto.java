@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -17,23 +18,28 @@ import java.util.UUID;
 @Setter
 
 public class RelatedDto {
-    @JsonProperty(value = "related_id", index = 0)
-    private UUID relatedChallengeId;
 
-    @JsonProperty(value = "related_title", index = 1)
+
+    @JsonProperty(value = "id_challenge", index = 0)
+    private UUID challengeId;
+
+    @JsonProperty(value = "challenge_title", index = 1)
     private String challengeTitle;
 
-    @JsonProperty(value = "related_creation_date", index = 2)
-    private String creationDate;
-
-    @JsonProperty(value = "related_level", index = 3)
+    @JsonProperty(index = 2)
     private String level;
 
-    @JsonProperty(value = "related_popularity", index = 4)
+    @JsonProperty(value = "creation_date", index = 3)
+    private String creationDate;
+
+    @JsonProperty(index = 4)
     private Integer popularity;
 
-    @JsonProperty(value = "related_languages", index = 5)
+    @JsonProperty(index = 5)
     private Set<LanguageDto> languages;
+
+    @JsonProperty(index = 6)
+    private List<UUID> solutions;
 
 
 }
