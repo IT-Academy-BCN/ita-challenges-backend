@@ -99,8 +99,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
-        //@Valid revisa que els parametres d'entrada siguin correctes
-        //si no son correctes, els misatges d'error estan a la classe UserSolutionDto i gestionats a GlobalExceptionHandler
+
         return userScoreService.addSolution(
                         userSolutionDto.getUserId(),
                         userSolutionDto.getChallengeId(),
