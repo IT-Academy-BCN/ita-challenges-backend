@@ -75,6 +75,24 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    void testHandleResponseStatusException_NullDetailMessageArguments() {
+        // Arrange
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+        ResponseStatusException ex = mock(ResponseStatusException.class);
+        when(ex.getStatusCode()).thenReturn(expectedStatus);
+        when(ex.getDetailMessageArguments()).thenReturn(null);
+
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
+
+        // Assert
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+    }
+
+    @Test
     void TestHandleMethodArgumentNotValidException() {
 
         // Arrange
