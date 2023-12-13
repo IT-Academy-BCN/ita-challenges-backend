@@ -15,4 +15,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            deploy_dev.sh
+            ./deploy_dev.sh
