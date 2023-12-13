@@ -28,7 +28,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
         String errorMessage;
-        if (ex.getDetailMessageArguments() == null || ex.getDetailMessageArguments().length == 0) {
+        if (ex.getDetailMessageArguments() == null) {
+            errorMessage = "Validation failed";
+        } else if (ex.getDetailMessageArguments().length == 0) {
             errorMessage = "Validation failed";
         } else {
             errorMessage = Arrays.stream(ex.getDetailMessageArguments())
