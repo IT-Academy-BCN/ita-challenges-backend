@@ -13,11 +13,7 @@ jobs:
         name: Load env from file
         run: |
           echo "Loading env vars from .env file"
-          while IFS='=' read -r key value
-          do
-            key=$(echo $key | tr '.' '_')
-            echo "$key=$value" >> $GITHUB_ENV
-          done < .github/workflows/env.CI.dev
+          export $(egrep -v '^#' env.CI.dev | xargs)
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
