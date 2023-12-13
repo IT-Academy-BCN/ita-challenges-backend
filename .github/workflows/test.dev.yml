@@ -16,3 +16,5 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             ./deploy_dev.sh
+
+
