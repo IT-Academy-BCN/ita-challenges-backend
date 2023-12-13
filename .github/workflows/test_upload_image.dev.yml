@@ -10,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Load env from file
+        run: |
+          echo "Loading env vars from .env file"
+          export $(egrep -v '^#' ./../../conf/.env.CI.dev | xargs)
+      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       -
