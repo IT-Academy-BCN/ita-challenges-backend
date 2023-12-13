@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<MessageDto> handleResponseStatusException(ResponseStatusException ex) {
+        public ResponseEntity<MessageDto> handleResponseStatusException(ResponseStatusException ex) {
         HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
         String errorMessage;
         try {
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
                         .collect(Collectors.joining(", "));
                 errorMessage = errorMessage.replace("[", "").replace("]", "");
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             errorMessage = "Validation failed due to null pointer exception";
         }
         MessageDto errorResponseMessage = new MessageDto(errorMessage);
