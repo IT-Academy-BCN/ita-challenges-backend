@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
-public class UserDocumentControllerTest {
+class UserDocumentControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;

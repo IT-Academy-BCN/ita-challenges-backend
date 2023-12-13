@@ -2,11 +2,9 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 
 @SpringBootTest
-public class UserSolutionScoreTest {
+class UserSolutionScoreTest {
 
     @Mock
     private IUserSolutionRepository userSolutionRepository;
@@ -27,15 +25,8 @@ public class UserSolutionScoreTest {
     @InjectMocks
     private UserSolutionServiceImp userSolutionService;
     ;
-
-    @BeforeEach
-    public void setUp() {
-        MockitoAnnotations.openMocks(this);
-        ;
-    }
-
     @Test
-    public void testAddSolution() {
+    void testAddSolution() {
 
         String idUser = "550e8400-e29b-41d4-a716-446655440001";
         String idChallenge = "550e8400-e29b-41d4-a716-446655440002";
