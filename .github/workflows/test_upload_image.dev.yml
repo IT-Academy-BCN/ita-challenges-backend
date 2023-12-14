@@ -18,6 +18,7 @@ jobs:
           while IFS='=' read -r key value
           do
             key=$(echo $key | tr '.' '_')
+            echo "$key=$value"
             echo "$key=$value" >> $GITHUB_ENV
           done < conf/.env.CI.dev
       -
