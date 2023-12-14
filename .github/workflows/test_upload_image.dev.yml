@@ -36,7 +36,9 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
       -
         name: Build
-        run: ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build
+        run: |
+          ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build
+          cp ${{ env.MICROSERVICE_DEPLOY }}/build/libs/*.jar .
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -53,6 +55,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ${{ env.MICROSERVICE_DEPLOY }}
           push: true
           tags: itacademybcn/itachallenges:${{ env.MICROSERVICE_DEPLOY}}-${{ env.MICROSERVICE_VERSION }}
