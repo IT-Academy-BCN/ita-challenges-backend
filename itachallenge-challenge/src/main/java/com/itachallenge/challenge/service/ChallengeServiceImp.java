@@ -155,27 +155,7 @@ public class ChallengeServiceImp implements IChallengeService {
                         })
                 );
     }
-
-
-    //      Old Solution
-//    @Override
-//    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
-//
-//        return validateUUID(id)
-//                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-//                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-//                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
-//                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
-//                                .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class)))
-//                        )
-//                        .collectList()
-//                        .map(relatedChallenges -> {
-//                            GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
-//                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new RelatedDto[0]));
-//                            return resultDto;
-//                        })
-//                );
-//    }
+    
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
