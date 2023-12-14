@@ -1,5 +1,4 @@
 name: Upload Image to Docker Hub
-
 on:
   push:
     branches:
