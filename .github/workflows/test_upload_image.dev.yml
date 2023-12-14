@@ -19,7 +19,7 @@ jobs:
           do
             key=$(echo $key | tr '.' '_')
             echo "$key=$value" >> $GITHUB_ENV
-          done < .github/workflows/env.CI.dev
+          done < .conf/.env.CI.dev
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
