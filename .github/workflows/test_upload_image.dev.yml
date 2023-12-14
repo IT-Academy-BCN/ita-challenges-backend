@@ -20,7 +20,8 @@ jobs:
             key=$(echo $key | tr '.' '_')
             echo "$key=$value" >> $GITHUB_ENV
           done < conf/.env.CI.dev
-          echo $GITHUB_ENV
+          echo ${{ env.MICROSERVICE_DEPLOY }}
+          echo ${{ env.MICROSERVICE_VERSION }}
           echo "Done"
       -
         name: Set up QEMU
