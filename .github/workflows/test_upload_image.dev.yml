@@ -53,6 +53,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: ${{ env.MICROSERVICE_DEPLOY }}
+          context: .
           push: true
           tags: itacademybcn/itachallenges:${{ env.MICROSERVICE_DEPLOY}}-${{ env.MICROSERVICE_VERSION }}
