@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -46,13 +44,22 @@ class ChallengeDocumentToDtoConverterTest {
         UUID relatedChallengesRandomId = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        String title = "Java";
+        Map<Locale, String> title = new HashMap<>();
+        title.put(Locale.ENGLISH, "Java");
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, "Example text"),
-                new ExampleDocument(exampleRandomId, "Random example"));
-        DetailDocument detail = new DetailDocument("Some detail", exampleDocumentList, "Notes");
+        Map<Locale, String> exampleMap1 = new HashMap<>();
+        exampleMap1.put(Locale.ENGLISH, "Example text");
+        Map<Locale, String> exampleMap2 = new HashMap<>();
+        exampleMap2.put(Locale.ENGLISH, "Random example");
+        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap1),
+                new ExampleDocument(exampleRandomId, exampleMap2));
+        Map<Locale, String> descriptionMap = new HashMap<>();
+        descriptionMap.put(Locale.ENGLISH, "Some detail");
+        Map<Locale, String> notesMap = new HashMap<>();
+        notesMap.put(Locale.ENGLISH, "Notes");
+        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
         Integer popularity = 0;
         Float percentage = 0.0f;
 
@@ -114,7 +121,7 @@ class ChallengeDocumentToDtoConverterTest {
 
 
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);

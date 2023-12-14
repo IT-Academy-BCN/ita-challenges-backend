@@ -92,19 +92,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        return validateUUID(idLanguage)
-                .flatMap(languageId -> {
-                    Flux<ChallengeDocument> challengesFlux = challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, languageId);
-
-                    return challengesFlux
-                            .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge), ChallengeDto.class)))
-                            .collectList()
-                            .map(challenges -> {
-                                GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, challenges.size(), challenges.size(), challenges.toArray(new ChallengeDto[0]));
-                                return resultDto;
-                            });
-                });
+        // TODO: Get challenges by languange and difficulty
+        return null;
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {

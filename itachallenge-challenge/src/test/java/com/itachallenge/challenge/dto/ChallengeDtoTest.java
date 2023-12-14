@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,13 +44,15 @@ class ChallengeDtoTest {
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
+        Map<Locale, String> titleMap = new HashMap<>();
+        titleMap.put(Locale.ENGLISH, "Sociis Industries");
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",
+                , titleMap, "EASY", "2023-06-05T12:30:00+02:00",
                 105, 23.58f,buildLanguagesSorted(firstLanguage, secondLanguage));
 
         challengeDtoFromDeserialization = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",
+                , titleMap, "EASY", "2023-06-05T12:30:00+02:00",
                 105, 23.58f,buildLanguages(firstLanguage, secondLanguage));
     }
 
@@ -90,11 +89,11 @@ class ChallengeDtoTest {
     }
 
     static ChallengeDto buildChallengeWithBasicInfoDto
-            (UUID id, String title, String level, String creationDate,
+            (UUID id, Map<Locale, String> titleMap, String level, String creationDate,
              Integer popularity, Float percentage, Set<LanguageDto> languages){
         return ChallengeDto.builder()
                 .challengeId(id)
-                .title(title)
+                .title(titleMap)
                 .level(level)
                 .creationDate(creationDate)
                 .popularity(popularity)
