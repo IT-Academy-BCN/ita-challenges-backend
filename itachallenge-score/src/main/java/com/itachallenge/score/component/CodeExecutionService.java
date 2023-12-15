@@ -55,7 +55,7 @@ public class CodeExecutionService {
                 executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);            }
 
         } catch (Exception e) {
-            // Si la ejecución falla, actualizar y devolver ExecutionResultDto
+            // Error en la ejecucion
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Execution failed: " + e.getCause());
             return executionResultDto;
