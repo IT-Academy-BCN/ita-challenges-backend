@@ -1,0 +1,43 @@
+
+apisix:
+  node_listen:
+    - ${{APISIX_NODE_LISTEN:=9080}}
+  enable_admin: true
+  config_center: yaml
+
+routes:
+  -
+    uri: /test
+    methods:
+      - GET
+    upstream_id: 1
+  -
+    uri: /itachallenge/api/v1/challenge/**
+    methods:
+      - GET
+    upstream_id: 2
+  -
+    uri: /api-docs**
+    methods:
+      - GET
+    upstream_id: 2
+  -
+    uri: /swagger-ui/**
+    methods:
+      - GET
+    upstream_id: 2
+
+
+upstreams:
+  -
+    id: 1
+    nodes:
+      "172.18.0.9:8762": 1
+    type: roundrobin
+  -
+    id: 2
+    nodes:
+      "172.18.0.6:8762": 1
+    type: roundrobin
+
+#END

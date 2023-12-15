@@ -2,10 +2,12 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -91,28 +93,23 @@ class ChallengeRepositoryTest {
     @Test
     void findAllTest() {
 
-        Pageable pageNumber0Size1 = PageRequest.of(0,1);
-        Pageable pageNumber0Size2 = PageRequest.of(0,2);
-        Pageable pageNumber1Size1 = PageRequest.of(1,1);
-        Pageable pageNumber1Size2 = PageRequest.of(1,2);
-
-        Flux<ChallengeDocument> challengesPageNumber0Size1 = challengeRepository.findAllByUuidNotNull(pageNumber0Size1);
-        StepVerifier.create(challengesPageNumber0Size1)
+        Flux<ChallengeDocument> challengesOffset0Limit1 = challengeRepository.findAllByUuidNotNull().skip(0).take(1);
+        StepVerifier.create(challengesOffset0Limit1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesPageNumber0Size2 = challengeRepository.findAllByUuidNotNull(pageNumber0Size2);
-        StepVerifier.create(challengesPageNumber0Size2)
+        Flux<ChallengeDocument> challengesOffset0Limit2 = challengeRepository.findAllByUuidNotNull().skip(0).take(2);
+        StepVerifier.create(challengesOffset0Limit2)
                 .expectNextCount(2)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesPageNumber1Size1 = challengeRepository.findAllByUuidNotNull(pageNumber1Size1);
-        StepVerifier.create(challengesPageNumber1Size1)
+        Flux<ChallengeDocument> challengesOffset1Limit1 = challengeRepository.findAllByUuidNotNull().skip(1).take(1);
+        StepVerifier.create(challengesOffset1Limit1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesPageNumber1Size2 = challengeRepository.findAllByUuidNotNull(pageNumber1Size2);
-        StepVerifier.create(challengesPageNumber1Size2)
+        Flux<ChallengeDocument> challengesOffset1Limit2 = challengeRepository.findAllByUuidNotNull().skip(2).take(2);
+        StepVerifier.create(challengesOffset1Limit2)
                 .expectNextCount(1)
                 .verifyComplete();
     }
@@ -246,6 +243,72 @@ class ChallengeRepositoryTest {
         StepVerifier.create(filteredChallenges2)
                 .expectNextCount(1)
                 .verifyComplete();
+    }
+
+    @DisplayName("Add solution to challenge Test")
+    @Test
+    void addSolutionToChallengeTest() {
+        // Arrange
+        UUID uuidLang1 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID uuidLang2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> challengeFiltered1 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang1);
+        Flux<ChallengeDocument> challengeFiltered2 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang2);
+
+        StepVerifier.create(challengeFiltered1)
+                .expectNextCount(2)
+                .verifyComplete();
+        StepVerifier.create(challengeFiltered2)
+                .expectNextCount(3)
+                .verifyComplete();
+
+        // Act
+        Mono<ChallengeDocument> challengeMono = challengeRepository.findByUuid(uuid_1);
+        ChallengeDocument challengeDocument = challengeMono.block();
+        List<UUID> solutions = challengeDocument.getSolutions();
+        solutions.add(UUID.randomUUID());
+        challengeDocument.setSolutions(solutions);
+        Mono<ChallengeDocument> challengeDocumentMono = challengeRepository.save(challengeDocument);
+        ChallengeDocument challengeDocumentSaved = challengeDocumentMono.block();
+
+        // Assert
+        Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
+    }
+
+    @DisplayName("Add solution to solutions Test")
+    @Test
+    void addSolutionToSolutionsTest() {
+        // Arrange
+        UUID uuidLang1 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID uuidLang2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> challengeFiltered1 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang1);
+        Flux<ChallengeDocument> challengeFiltered2 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang2);
+
+        StepVerifier.create(challengeFiltered1)
+                .expectNextCount(2)
+                .verifyComplete();
+        StepVerifier.create(challengeFiltered2)
+                .expectNextCount(3)
+                .verifyComplete();
+
+        // Act
+        Mono<ChallengeDocument> challengeMono = challengeRepository.findByUuid(uuid_1);
+        ChallengeDocument challengeDocument = challengeMono.block();
+        assert challengeDocument != null;
+        List<UUID> solutions = challengeDocument.getSolutions();
+        solutions.add(UUID.randomUUID());
+        challengeDocument.setSolutions(solutions);
+        Mono<ChallengeDocument> challengeDocumentMono = challengeRepository.save(challengeDocument);
+        ChallengeDocument challengeDocumentSaved = challengeDocumentMono.block();
+
+        // Assert
+        assert challengeDocumentSaved != null;
+        Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
     }
 
 }

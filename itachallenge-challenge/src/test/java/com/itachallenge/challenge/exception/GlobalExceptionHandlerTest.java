@@ -23,7 +23,9 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.*;
+
 import static org.hamcrest.CoreMatchers.notNullValue;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -57,22 +59,37 @@ class GlobalExceptionHandlerTest {
     @Test
     void testHandleResponseStatusException() {
 
-        when(responseStatusException.getStatusCode()).thenReturn(BAD_REQUEST);
-        when(responseStatusException.getReason()).thenReturn(REQUEST);
-        when(errorMessage.getMessage()).thenReturn(REQUEST);
+        // Arrange
+        String expectedErrorMessage = "Validation failed";
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+        ResponseStatusException ex = new ResponseStatusException(expectedStatus, expectedErrorMessage);
 
-        MessageDto expectedErrorMessage = new MessageDto(REQUEST);
-        expectedErrorMessage.setMessage(REQUEST);
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
 
-        ResponseEntity<MessageDto> response = globalExceptionHandler.handleResponseStatusException(responseStatusException);
+        // Act
+        ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
-        StepVerifier.create(Mono.just(response))
-                .expectNextMatches(resp -> {
-                    //assertEquals(BAD_REQUEST, response.getStatusCode());
-                    assertEquals(expectedErrorMessage, response.getBody());
-                    return true;
-                })
-                .verifyComplete();
+        // Assert
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
+    }
+
+    @Test
+    void testHandleResponseStatusException_NullDetailMessageArguments() {
+        // Arrange
+        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
+        ResponseStatusException ex = mock(ResponseStatusException.class);
+        when(ex.getStatusCode()).thenReturn(expectedStatus);
+        when(ex.getDetailMessageArguments()).thenReturn(null);
+
+        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
+
+        // Assert
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
     }
 
     @Test
@@ -84,7 +101,7 @@ class GlobalExceptionHandlerTest {
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         // Act
-        ResponseEntity <MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -98,7 +115,7 @@ class GlobalExceptionHandlerTest {
         FieldError fieldError = mock(FieldError.class);
         when(fieldError.getField()).thenReturn("name");
         when(fieldError.getDefaultMessage()).thenReturn("default message");
-        when(fieldError.getCodes()).thenReturn(new String[] {"message"});
+        when(fieldError.getCodes()).thenReturn(new String[]{"message"});
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
@@ -132,5 +149,22 @@ class GlobalExceptionHandlerTest {
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
     }
+
+
+    @Test
+    void testHandleChallengeNotFoundException() {
+        // Arrange
+        ChallengeNotFoundException challengeNotFoundException = new ChallengeNotFoundException("Challenge not found");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
+
+        // Assert
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Challenge not found"));
+    }
+
+
 
 }

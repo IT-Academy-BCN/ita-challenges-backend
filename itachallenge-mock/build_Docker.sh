@@ -39,8 +39,7 @@ cd itachallenge-mock
 docker build -t=${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG} .
 
 #upload image to DockerHub
-upload_image="pre"
-if [ ${ENV} = "$upload_image" ];
+if [ ${ENV} = "dev" ] || [ ${ENV} = "pre" ];
 then
-  docker push ${REGISTRY_NAME}:${CHALLENGE_TAG}
+  docker push ${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG}
 fi

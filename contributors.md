@@ -21,3 +21,12 @@
 * Miquel Debón Villagrasa - https://github.com/MiquelDebon
 * Josep Olivé Diaz - https://github.com/JosepOli
 * Jordi Magester Lopez - https://github.com/Aebal34
+* Adria Marti Comas - https://github.com/AdriaMartiComas
+* Daniel Amat - https://github.com/Morganxyz
+* Kathya Torres - https://github.com/kathya0000
+* Alberto Castillo Corporan - https://github.com/albertocstll70
+* Joan Carles Martínez - https://github.com/leibaral
+* Christian Bowser - https://github.com/bowserchris
+* Natalia Fara - https://github.com/nfaraDev
+* Kirill Dolgopolov - https://github.com/KirillDolgopolov
+* Pau Franco Toda - https://github.com/Parapau

@@ -24,7 +24,7 @@
 *.war
 *.ear
 *.rpm
-
+.vscode
 # Directories & config files #
 ##############################
 CVS/

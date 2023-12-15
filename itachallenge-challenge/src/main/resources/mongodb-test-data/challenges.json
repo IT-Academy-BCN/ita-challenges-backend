@@ -996,7 +996,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1016,7 +1016,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1026,14 +1026,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1105,7 +1105,7 @@
       "$uuid": "9d248e74-731f-4782-af2c-7ae9b53c9d5c"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Scramblies",
       "CAT": "Títol en català",
       "EN": "Scramblies"
     },
@@ -1115,7 +1115,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Completa la función scramble(str1, str2) que devuelve true si una porción de los caracteres de str1 se puede reorganizar para que coincida con str2, de lo contrario, devuelve false.\n       Notas:\n           Solo se utilizarán letras minúsculas (a-z). No se incluirán signos de puntuación ni dígitos.\n           Se debe tener en cuenta el rendimiento.",
         "CAT": "Descripció en català",
         "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notess:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
       },
@@ -1125,7 +1125,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "POrden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1135,7 +1135,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1145,7 +1145,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1155,14 +1155,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1231,7 +1231,7 @@
       "$uuid": "5a72d6cb-3217-4d75-9368-689ed48cb9ec"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "El número de ceros finales de N! ",
       "CAT": "Títol en català",
       "EN": "Number of trailing zeros of N!"
     },
@@ -1241,7 +1241,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Escribe un programa que calcule la cantidad de ceros finales en el factorial de un número dado.\n    N! = 1 * 2 * 3 *  ... * N\n    Ten cuidado, 1000! tiene 2568 dígitos...",
         "CAT": "Descripció en català",
         "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
       },
@@ -1251,7 +1251,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1261,7 +1261,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1271,7 +1271,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1281,14 +1281,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1344,7 +1344,7 @@
       "$uuid": "c3946e8d-e7b4-4e3c-aacf-e8d6c5e9d0b6"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Tres en raya",
       "CAT": "Títol en català",
       "EN": "Exes and Ohs"
     },
@@ -1354,7 +1354,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Verifica si una cadena tiene la misma cantidad de 'x' y 'o'. El método debe devolver un booleano y ser insensible a mayúsculas y minúsculas. La cadena puede contener cualquier carácter",
         "CAT": "Descripció en català",
         "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
       },
@@ -1364,7 +1364,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1374,7 +1374,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1384,7 +1384,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1394,14 +1394,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1461,7 +1461,7 @@
       "$uuid": "862f5d91-8394-4db1-b188-1ac2e68d73a8"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Dirigiéndose hacia cero o hacia el infinito?",
       "CAT": "Títol en català",
       "EN": "Going to zero or to infinity?"
     },
@@ -1471,7 +1471,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) para un valor dado de n, donde n es un entero mayor o igual a 1.",
         "CAT": "Descripció en català",
         "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
       },
@@ -1481,7 +1481,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1491,7 +1491,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1501,7 +1501,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1511,14 +1511,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1574,7 +1574,7 @@
       "$uuid": "f1e2a8d6-64b9-4b86-b6a4-9e8c4d27f3a3"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Encuentra el más pequeño",
       "CAT": "Títol en català",
       "EN": "Find the smallest"
     },
@@ -1584,7 +1584,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Tienes un número positivo n que consiste en dígitos. Puedes realizar como máximo una operación: elegir el índice de un dígito en el número, quitar este dígito en ese índice e insertarlo nuevamente en otro lugar o en el mismo lugar en el número para encontrar el número más pequeño que puedas obtener.\n\nTarea:\nDevuelve un array o una tupla o una cadena, dependiendo del lenguaje (mira \"Sample Tests\") con\n\nel número más pequeño que obtuviste\nel índice i del dígito d que tomaste, con i tan pequeño como sea posible\nel índice j (tan pequeño como sea posible) donde insertas este dígito d para obtener el número más pequeño.",
         "CAT": "Descripció en català",
         "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
       },
@@ -1594,7 +1594,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1604,7 +1604,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1614,7 +1614,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1624,14 +1624,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1703,7 +1703,7 @@
       "$uuid": "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Perímetro de la Tierra",
       "CAT": "Títol en català",
       "EN": "Land perimeter"
     },
@@ -1713,7 +1713,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Dado un array arr de strings, completa la función calculando el perímetro total de todas las islas. Cada pieza de tierra estará marcada con 'X', mientras que los campos de agua se representarán como 'O'. Considera que cada pieza es una pieza de tierra perfecta de 1 x 1.",
         "CAT": "Descripció en català",
         "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
       },
@@ -1723,7 +1723,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1733,7 +1733,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1743,7 +1743,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1753,14 +1753,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1828,7 +1828,7 @@
       "$uuid": "4f8a6c91-8a9d-49b0-9f2c-3e67d2b18b8d"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Evaluar una expresión matemática",
       "CAT": "Títol en català",
       "EN": "Evaluate mathematical expression."
     },
@@ -1838,7 +1838,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Dada una expresión matemática como un string, debes devolver el resultado como un número",
         "CAT": "Descripció en català",
         "EN": "Given a mathematical expression as a string you must return the result as a number."
       },
@@ -1848,7 +1848,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1858,7 +1858,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1868,7 +1868,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1878,14 +1878,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -1941,7 +1941,7 @@
       "$uuid": "d7a9c4b2-6e8d-4f8c-8a13-94c5e16d2f9a"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Comprimir String",
       "CAT": "Títol en català",
       "EN": "Compress String"
     },
@@ -1951,7 +1951,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Escribe un programa que tome un String de caracteres y la comprima eliminando las repeticiones consecutivas de caracteres. Por ejemplo, \"aaabbbccc\"  se comprimiría como \"a3b3c3\".",
         "CAT": "Descripció en català",
         "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
       },
@@ -1961,7 +1961,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1971,7 +1971,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1981,7 +1981,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -1991,14 +1991,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -2050,7 +2050,7 @@
       "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Subsecuencia común más larga",
       "CAT": "Títol en català",
       "EN": "Longest Common Subsequence"
     },
@@ -2060,7 +2060,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Implementa un programa que encuentre la subsecuencia común más larga entre dos strings dadas. Una subsecuencia es una secuencia de caracteres que aparece en el mismo orden relativo en ambos strings.",
         "CAT": "Descripció en català",
         "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
       },
@@ -2070,7 +2070,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2080,7 +2080,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2090,7 +2090,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2100,14 +2100,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -2169,7 +2169,7 @@
       "$uuid": "8c7e3a9d-6b2d-43e4-9d1f-4e7a8c9d3e1b"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Encontrar el Punto de Equilibrio en un Array",
       "CAT": "Títol en català",
       "EN": "Find the Equilibrium Point in an Array"
     },
@@ -2179,7 +2179,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Escribe un programa que encuentre el punto de equilibrio en un array, el cual es un índice donde la suma de los elementos a la izquierda es igual a la suma de los elementos a la derecha.",
         "CAT": "Descripció en català",
         "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
       },
@@ -2189,7 +2189,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2199,7 +2199,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2209,7 +2209,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2219,14 +2219,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -2284,7 +2284,7 @@
       "$uuid": "a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Validar Expresiones Matemáticas",
       "CAT": "Títol en català",
       "EN": "Validate Mathematical Expressions"
     },
@@ -2294,7 +2294,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Crea un programa que valide si una expresión matemática dada es válida, teniendo en cuenta paréntesis equilibrados y operadores matemáticos válidos.",
         "CAT": "Descripció en català",
         "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
       },
@@ -2304,7 +2304,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2314,7 +2314,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2324,7 +2324,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2334,14 +2334,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -2393,7 +2393,7 @@
       "$uuid": "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Encontrar la Subcadena Contigua más Grande",
       "CAT": "Títol en català",
       "EN": "Find the Largest Contiguous Subarray"
     },
@@ -2403,7 +2403,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Implementa un algoritmo para encontrar la subarray contigua más grande en un array de enteros.",
         "CAT": "Descripció en català",
         "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
       },
@@ -2413,7 +2413,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2423,7 +2423,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2433,7 +2433,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2443,14 +2443,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }
@@ -2517,7 +2517,7 @@
       "$uuid": "ec52b7f1-2f78-4a83-aef0-3b9b6f34a763"
     },
     "challenge_title": {
-      "ES": "Titulo en español",
+      "ES": "Contar inversiones en un array",
       "CAT": "Títol en català",
       "EN": "Count Inversions in an Array"
     },
@@ -2527,7 +2527,7 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
+        "ES": "Escribe un programa que cuente el número de inversiones en un array. Una inversión ocurre cuando un par de elementos en el array está en el orden incorrecto",
         "CAT": "Descripció en català",
         "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
       },
@@ -2537,7 +2537,7 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2547,7 +2547,7 @@
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2557,7 +2557,7 @@
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
@@ -2567,14 +2567,14 @@
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+            "ES": "Orden descendente",
             "CAT": "Títol en català",
             "EN": "Descending Order"
           }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
+        "ES": "Orden descendente",
         "CAT": "Títol en català",
         "EN": "Descending Order"
       }

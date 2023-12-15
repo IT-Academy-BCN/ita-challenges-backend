@@ -42,7 +42,7 @@
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
-----------------------------------------------------------------
+<hr/>
 
 # 1. PROJECT LINKS
 ## 1.1 Project links
@@ -55,12 +55,12 @@
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
 <img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
-----------------------------------------------------------------
+<hr/>
 
 # 2. WORK PROCEDURES
 
 ## 2.1 First things to do in the project
-### 1. Add your name and GitHub to the  contributors.md file
+### 2.1.1. Add your name and GitHub to the  contributors.md file
 
 1. Clone the ita-challenges-backend repository from GitHub to your local system:
 
@@ -89,9 +89,9 @@
 8. Open the GitHub repository in GitHub and you should see a message that allows you to create a "pull request" from yout newly created branch to the "develop" branch. Click the link to create the pull request.
 
 
-----------------------------------------------------------------
-----------------------------------------------------------------
-### 2. Import data into MongoDB (Example for micro itachallenge-challenge data)
+<hr/>
+
+### 2.1.2. Import data into MongoDB (Example for micro itachallenge-challenge data)
 
 1. Make sure you have the MongoDB Tools installed. If you don't already have them, go the "Required programs" section and folow the instructions provided to download them to your operting system.
 
@@ -99,12 +99,11 @@
 
          mongosh
 
-3. Use the following command to create the data base "challenges":
+3. Use the following command to change to the "admin" database:
 
+         use admin
 
-         use challenges
-
-4. Once inside the "challenge" database, paste the following code block:
+4. Once inside the "admin" database, paste the following code block:
 
          db.createUser({
          user: "admin_challenge",
@@ -117,36 +116,28 @@
 5. Execute the following command to see if the user has been created successfully:
 
          show users
+
 6. Exit the MongoDB terminal by typing the following command:
 
          exit
 
-7. Move the "load-data" file from folder mongodb.init to folder "mongodb-test-data".
-   If you are use Windows, use the '.bat' file, while if you are using Mac or Linux, the file '.sh'.
-   
-8. In the normal terminal, navigate to the mongodb-test-data folder using the 'cd' command.
+7. Connect to Mongo (maybe with MongoDB Compass) with user created at point 4
 
-9. To import the document, execut the following command:
+8. Create the collections "challenges", "languages" and "solutions" at "challenges" database. Use the following command to create the database "challenges":
 
-   · Windows:
+         use challenges
 
-         load-data.bat
+9. Import the data from each collection, following option "Add Data" at Compass. Or, if you prefer, you can use the terminal with the following command:
 
-   · Mac o Linux:
-
-         ./load-data.sh
-
-   if you receive a permission denied message, grant execute permission to the file with the following command:
-
-         chmod +x load-data.sh
-
-10. Then, move the "load-data.bat" or "load-data.sh" file back to its original folder, "mongodb.init".
+         mongoimport --db challenges --collection challenges --file challenges.json --jsonArray --username admin_challenge --password BYBcMJEEWw5egRUo
+         mongoimport --db challenges --collection languages --file languages.json --jsonArray --username admin_challenge --password BYBcMJEEWw5egRUo
+         mongoimport --db challenges --collection solutions --file solutions.json --jsonArray --username admin_challenge --password BYBcMJEEWw5egRUo 
 
 
-11. Open Mongodb Compass, do a "Reload data" and will see the data base correctly imported.
+10. Start MongoDB Compass, click on "Reload Data" and you should see the database correctly imported.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.2 Git configurations
 
 Necessary Git configurations to prevent problems
@@ -167,8 +158,8 @@ If you have a problem with a PR that modify a lot of files, >100, you need do ne
 2. Run the command: 'git config --global core.autocrlf true'
 
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.3 Daily Procedure
 1. Connect to Teams at 9h15
 2. Make pull the "develop" branch
@@ -177,8 +168,9 @@ If you have a problem with a PR that modify a lot of files, >100, you need do ne
 
 IMPORTANT: It's expected that in the project we will be online with the camera on from 9h15 to 13h15, to work as a team (execpt for circumstance that justify it).
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 2.4 Work with cards Procedure
 ### How to assign a card
 1. Sign in, on the your Github account.
@@ -209,8 +201,9 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 
 5. Finally, go to GitHub where your repository is located and create a pull request from your "feature#123" branch to the "develop" branch.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 2.5 Points to consider when doing a PR
 1. On the pull request creation page, select the base branch and the compared branch:
    - The base branch is the branch you want to merge your changes to. In this case it is the "develop" branch.
@@ -222,15 +215,15 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 6. In case you need to review and fix some problems, update your local branch with the changes and push back to the corresponding remote branch.
 7. The pull request will be automatically updated with the new changes made to your branch.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.6 Scrum metodology
 https://scrumguides.org/
 
 
 <img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
 
-----------------------------------------------------------------
+<hr/>
 
 # 3. URL NORMALIZATION
 In this project, it is important to follow certain conventions when establishing the structure and nomenclature of the URL's used in the backend.
@@ -269,7 +262,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
 - `/challenges/{challengeId}/update` - Edit challenge details with ID 550e8400-e29b-41d4-a716-446655440000.
 
 
-----------------------------------------------------------------
+<hr/>
 
 # 4. DEFINITIONS OF METHOD, CLASS, ETC...
 
@@ -287,8 +280,9 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.1 package names](https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 4.2 Class names
 #### RULES
     - UpperCamelCase
@@ -321,8 +315,8 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - UpperCamelCase
     - Only letters & digits
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.3 Method names
 #### RULES
     - lowerCamelCase 
@@ -350,8 +344,9 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 4.4 Constant names
 #### RULES
     - Uppercase letters
@@ -366,8 +361,8 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.4 constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.5 Local variable names
 #### RULES
     - lowerCamelCase
@@ -394,8 +389,9 @@ Here are example of how URL's should be strucutrued according to esablished conv
 #### LINKS
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 4.6 Type variable names
 #### RULES
     - A single capital letter, optionally followed by a single numeral
@@ -408,8 +404,8 @@ Here are example of how URL's should be strucutrued according to esablished conv
 #### LINKS
 [Google Java Style Guide: 5.2.8 Type variable names](https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.7 Camel case: defined
 #### RULES
     - only letters & digits
@@ -430,7 +426,8 @@ Here are example of how URL's should be strucutrued according to esablished conv
 #### LINKS
 [Google Java Style Guide: 5.3 Camel case defined](https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)
 
-----------------------------------------------------------------
+<hr/>
+
 # 5. LIBRARIES USED
 
 ## 5.1 Main Plugins
@@ -528,7 +525,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
      - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
    - 
 
-----------------------------------------------------------------
+<hr/>
 
 # 6. REQUIRED PROGRAMS
 
@@ -550,7 +547,8 @@ The following programs are required to work on the project:
 
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
-----------------------------------------------------------------
+<hr/>
+
 # 7 RECOMMENDED PROGRAMS
 
 The following programs are recommended to failitate the work on the project::

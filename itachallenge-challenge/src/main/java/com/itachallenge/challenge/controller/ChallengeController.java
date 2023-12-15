@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -163,6 +166,31 @@ public class ChallengeController {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
+
+
+
+    @PostMapping("/solution")
+    @Operation(
+            operationId = "Add solution to a chosen chosen challenge.",
+            summary = "Update the Challenge level, add accepted solution to the challenge.",
+            description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
+        return challengeService.addSolution(solutionDto)
+                .map(solution -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("uuid_challenge", solution.getIdChallenge());
+                    response.put("uuid_language", solution.getIdLanguage());
+                    response.put("solution_text", solution.getSolutionText());
+                    return response;
+                });
+    }
+
 
     @GetMapping("challenges/{idChallenge}/related")
     @Operation(

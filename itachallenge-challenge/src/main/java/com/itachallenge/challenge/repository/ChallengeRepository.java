@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -16,7 +15,7 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Mono<ChallengeDocument> findByUuid(UUID uuid);
     Flux<ChallengeDocument> findByLevel(String level);
     Mono<ChallengeDocument> findByTitle(String title);
-    Flux<ChallengeDocument> findAllByUuidNotNull(Pageable pageable);
+    Flux<ChallengeDocument> findAllByUuidNotNull();
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
     Mono<Void> deleteByUuid(UUID uuid);
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
