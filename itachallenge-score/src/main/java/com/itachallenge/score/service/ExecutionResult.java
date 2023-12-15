@@ -2,6 +2,7 @@ package com.itachallenge.score.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 
 public class ExecutionResult {
     private final boolean success;
@@ -26,7 +27,7 @@ public class ExecutionResult {
             return objectMapper.readTree(output);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new TextNode(output);
         }
     }
 }
