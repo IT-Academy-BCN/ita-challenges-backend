@@ -1,2 +1,3 @@
+.env.d* filter=git-crypt diff=git-crypt
 .env.p* filter=git-crypt diff=git-crypt
 .gitattributes !filter !diff

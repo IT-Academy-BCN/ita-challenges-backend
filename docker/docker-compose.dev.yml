@@ -1,18 +1,18 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.3
-  last-updated: 2021-11-13
+  version: 1.0.5
+  last-updated: 2021-12-11
 
 services:
   consul-server1:
     image: consul:1.15.2
-    container_name: consul-server1
+    container_name: consul-server1-dev
     restart: always
     volumes:
       - ./server1.json:/consul/config/server1.json:ro
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.2
     ports:
       - '8500:8500'
@@ -22,52 +22,52 @@ services:
 
   consul-server2:
     image: consul:1.15.2
-    container_name: consul-server2
+    container_name: consul-server2-dev
     restart: always
     volumes:
       - ./server2.json:/consul/config/server2.json:ro
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.3
     command: "agent -bootstrap-expect=3"
 
   consul-server3:
     image: consul:1.15.2
-    container_name: consul-server3
+    container_name: consul-server3-dev
     restart: always
     volumes:
       - ./server3.json:/consul/config/server3.json:ro
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.4
     command: "agent -bootstrap-expect=3"
 
   itachallenge-mongodb:
-    container_name: mongodb-itachallenge
+    container_name: mongodb-itachallenge-dev
     image: mongo:5.0.9
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_USERNAME}'
-      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_PASSWORD}'
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_CHALLENGE_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_CHALLENGE_PASSWORD}'
       MONGO_INITDB_DATABASE: '${MONGODB_CHALLENGE_DATABASE}'
     volumes:
-      - itachallenge_mongodb_data:/var/lib/mongodb
-      - ${MONGODB_CHALLENGE_DATABASE_SCRIPTS_DIR}:/docker-entrypoint-initdb.d
+      - itachallenge_mongodb_data-dev:/var/lib/mongodb
+      #- ${MONGODB_CHALLENGE_DATABASE_SCRIPTS_DIR}:/docker-entrypoint-initdb.d
       - ${MONGODB_CHALLENGE_DATABASE_TEST_SCRIPTS_DIR}:/tmp/data/
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.5
 
   itachallenge-challenge:
     image: '${REGISTRY_NAME}:itachallenge-challenge-${CHALLENGE_TAG}'
-    container_name: 'itachallenge-${CHALLENGE_TAG}'
+    container_name: 'itachallenge-${CHALLENGE_TAG}-dev'
     restart: always
     depends_on:
       -  itachallenge-mongodb
     environment:
-      - 'spring.data.mongodb.uri=mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}'
+      - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}?authSource=admin'
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.6
 
 
@@ -76,15 +76,15 @@ services:
     image: '${REGISTRY_NAME}:nginx-frontend2-${NGINX_FRONTEND_TAG}'
     restart: always
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.7
 
   apisix-gateway:
-    container_name: apisix-gateway
+    container_name: apisix-gateway-dev
     image: apache/apisix:3.7.0-redhat
     restart: always
     volumes:
-      - ./apisix_conf/apisix_standalone.yaml:/usr/local/apisix/conf/apisix.yaml:ro
+      - ./apisix_conf/apisix_standalone_dev.yaml:/usr/local/apisix/conf/apisix.yaml:ro
     environment:
       APISIX_STAND_ALONE: true
     ports:
@@ -92,24 +92,25 @@ services:
       - "9091:9091/tcp"
       - "9443:9443/tcp"
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.8
 
   itachallenge-mock:
     image: '${REGISTRY_NAME}:itachallenge-mock-${MOCK_TAG}'
-    container_name: 'itachallenge-mock-${MOCK_TAG}'
+    container_name: 'itachallenge-mock-${MOCK_TAG}-dev'
     restart: always
     networks:
-      apisix:
+      apisix-dev:
         ipv4_address: 172.18.0.9
 
 volumes:
-  itachallenge_mongodb_data:
+  itachallenge_mongodb_data-dev:
 
 networks:
-    apisix:
+    apisix-dev:
       driver: bridge
       ipam:
         driver: default
         config:
           - subnet: 172.18.0.0/24
+
