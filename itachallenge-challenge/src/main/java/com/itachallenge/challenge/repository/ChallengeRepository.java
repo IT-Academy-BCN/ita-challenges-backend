@@ -1,8 +1,6 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
-
-import org.springdoc.core.converters.models.Pageable;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -22,7 +20,7 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Mono<Void> deleteByUuid(UUID uuid);
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
     Flux<ChallengeDocument> saveAll(Flux<ChallengeDocument> challengeDocumentFlux);
-    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String level, UUID idLanguage, Pageable pageable);
+    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
 

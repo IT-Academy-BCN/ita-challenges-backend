@@ -29,8 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class ChallengeServiceImp implements IChallengeService {
 
-    private static final Pattern UUID_FORM = Pattern
-            .compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
@@ -101,14 +100,14 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage,
             String difficulty) {
         UUID uuidLanguage = UUID.fromString(idLanguage);
-        Pageable pageable = new Pageable(0, 10, null);
+       
         Flux<ChallengeDto> challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
-                challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage, pageable),
+                challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage ),
                 ChallengeDto.class);
         return challengesDto.collectList()
                 .map(challenges -> {
                     GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                    resultDto.setInfo(pageable.getSize(), pageable.getSize(), challenges.size(),
+                    resultDto.setInfo(0, challenges.size(), challenges.size(),
                             challenges.toArray(new ChallengeDto[0]));
                     return resultDto;
                 });
@@ -188,5 +187,11 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
+
+@Override
+public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addSolution'");
+}
 
 }
