@@ -55,7 +55,7 @@ class ChallengeControllerTest {
     @Test
     void getOneChallenge_ValidId_ChallengeReturned() {
         // Arrange
-        String challengeId = "valid-challenge-id";
+        String challengeId = "460e6a5a-162a-4c55-bb9d-e26662d05663";
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(0, 1, 1, new ChallengeDto[]{new ChallengeDto()});
 
