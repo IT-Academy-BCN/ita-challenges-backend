@@ -38,7 +38,7 @@ jobs:
         name: Build
         run:  |
           ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build
-          cp build/libs/itachallenge-mock-1.0.1-RELEASE.jar ${GITHUB_WORKSPACE}/${{ env.MICROSERVICE_DEPLOY }}/itachallenge-mock-1.0.1-RELEASE.jar
+          cp ${{ env.MICROSERVICE_DEPLOY }}/build/libs/itachallenge-mock-1.0.1-RELEASE.jar ${GITHUB_WORKSPACE}/${{ env.MICROSERVICE_DEPLOY }}/itachallenge-mock-1.0.1-RELEASE.jar
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
