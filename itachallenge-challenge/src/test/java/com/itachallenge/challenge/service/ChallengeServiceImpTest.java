@@ -168,7 +168,11 @@ class ChallengeServiceImpTest {
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
         int offset = 1;
-        int limit = 2;
+        int offset10 = 10;
+        int offset0 = 0;
+        int limit2 = 2;
+        int limit6 = 6;
+        int limit0 = 0;
 
         // Simulate a set of ChallengeDocument with non-null UUID
         ChallengeDocument challenge1 = new ChallengeDocument();
@@ -191,7 +195,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit2);
 
         // Assert
         verify(challengeRepository).findAllByUuidNotNull();
@@ -203,13 +207,45 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(result.skip(offset).take(limit))
+        StepVerifier.create(result.skip(offset).take(limit2))
                 .expectSubscription()
                 .expectNext(challengeDto2, challengeDto3)
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit))
+        StepVerifier.create(result.skip(offset).take(limit6))
+                .expectSubscription()
+                .expectNext(challengeDto2, challengeDto3, challengeDto4)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset).take(limit0))
+                .expectSubscription()
+                .expectNext()
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset10).take(limit0))
+                .expectSubscription()
+                .expectNext()
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset10).take(limit6))
+                .expectSubscription()
+                .expectNext()
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset0).take(limit6))
+                .expectSubscription()
+                .expectNext(challengeDto1, challengeDto2, challengeDto3, challengeDto4)
+                .expectComplete()
+                .verify();
+
+
+
+        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit2))
                 .expectSubscription()
                 .expectNextCount(2)
                 .expectComplete()
@@ -242,7 +278,7 @@ class ChallengeServiceImpTest {
         verify(languageRepository).findAll();
         verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
-    
+
     @Test
     void testGetSolutions() {
         // Arrange
