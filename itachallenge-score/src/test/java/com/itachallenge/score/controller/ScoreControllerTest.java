@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @WebFluxTest(ScoreController.class)
@@ -13,6 +16,8 @@ class ScoreControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
 
     //test para probar el endpoint test
     @Test
@@ -23,7 +28,7 @@ class ScoreControllerTest {
                 "texto de ejemplo"
         );
 
-        webTestClient.post().uri("/itachallenge/api/v1/score/score")
+        webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(scoreRequest)
                 .exchange()
@@ -34,7 +39,7 @@ class ScoreControllerTest {
                 .jsonPath("$.solution_text").isEqualTo("texto de ejemplo")
                 .jsonPath("$.score").isEqualTo(99);
 
-
     }
+
 }
 
