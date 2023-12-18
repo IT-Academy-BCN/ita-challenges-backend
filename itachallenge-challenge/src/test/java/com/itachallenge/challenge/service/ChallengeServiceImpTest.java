@@ -29,6 +29,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
@@ -442,6 +443,26 @@ class ChallengeServiceImpTest {
         verify(solutionRepository).save(any(SolutionDocument.class));
         verify(solutionConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
+@Test
+    void getChallengesByLanguageAndDifficultyTest() {
+        // Arrange
+        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        String difficulty = "EASY";
+        UUID uuidLanguage = UUID.fromString(idLanguage);
 
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage)).thenReturn(Flux.empty()); // Mock empty Flux, as it's not relevant for this test
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class))).thenReturn(Flux.just(expectedResult.getResults())); // Mock the conversion
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
+
+        // Assert
+        StepVerifier.create(resultMono)
+        .expectNextMatches(result -> result.getCount() == 2 && result.getResults() != null && result.getResults().length == 2)
+        .verifyComplete();        
+    }
 
 }
