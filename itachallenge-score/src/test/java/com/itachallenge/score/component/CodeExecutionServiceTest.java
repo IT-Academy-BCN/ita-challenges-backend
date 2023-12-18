@@ -3,20 +3,28 @@ package com.itachallenge.score.component;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 public class CodeExecutionServiceTest {
+    @Autowired
+    CodeExecutionService codeExecutionService;
     @Test
     public void testCompileAndRunCode() {
-        CodeExecutionService codeExecutionService = new CodeExecutionService();
 
         String sourceCode =
                 "public class Main {\n" +
                         "    public static void main(String[] args) {\n" +
                         "        System.out.println(\"Hello, World!\");\n" +
+                        "         int i = 1;"+
+                        "         int j = 2;"+
+                        "         int k = i + j;"+
+                        "         System.out.println(k);"+
                         "    }\n" +
                         "}";
 
-        String codeResult = "Hello, World!\n";
+        String codeResult = "Hello, World!\n" + "3\n";
 
         ExecutionResultDto resultDto =  codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
@@ -29,7 +37,6 @@ public class CodeExecutionServiceTest {
 
     @Test
     public void testCompileAndRunCodeResultNotMatch() {
-        CodeExecutionService codeExecutionService = new CodeExecutionService();
 
         String sourceCode =
                 "public class Main {\n" +
@@ -50,7 +57,6 @@ public class CodeExecutionServiceTest {
 
     @Test
     public void testCompileAndRunCodeCompilationError() {
-        CodeExecutionService codeExecutionService = new CodeExecutionService();
 
         String sourceCode =
                 "public class Main {\n" +
@@ -70,7 +76,6 @@ public class CodeExecutionServiceTest {
 
     @Test
     public void testCompileAndRunCodeExecutionError() {
-        CodeExecutionService codeExecutionService = new CodeExecutionService();
 
         String sourceCode = "public class Main {\n" +
                 "    public static void main(String[] args) {\n" +

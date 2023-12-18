@@ -24,7 +24,6 @@ public class CodeExecutionService {
             executionResultDto.setCompile(true);
         } catch (CompileException e) {
             // Si la compilación falla, actualizar y devolver ExecutionResultDto
-            executionResultDto.setCompile(false);
             executionResultDto.setMessage("Compilation failed: " + e.getMessage());
             return executionResultDto;
         }
