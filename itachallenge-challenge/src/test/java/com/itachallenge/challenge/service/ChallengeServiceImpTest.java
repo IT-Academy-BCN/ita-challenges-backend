@@ -7,7 +7,6 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -19,19 +18,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
 import java.util.*;
 
-import static org.junit.Assert.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 
 class ChallengeServiceImpTest {
@@ -49,8 +44,6 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
     @Mock
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
-    @Mock
-    private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -352,27 +345,7 @@ class ChallengeServiceImpTest {
         related2.setUuid(relatedId2);
         ChallengeDocument related3 = new ChallengeDocument();
         related3.setUuid(relatedId3);
-        /*RelatedDto relatedDto1 = RelatedDto.builder()
-                .relatedChallengeId(relatedId)
-                .challengeTitle("Example")
-                .level("Apprentice")
-                .creationDate("01-01-2020")
-                .popularity(5)
-                .languages(relatedLanguages).build();
-        RelatedDto relatedDto2 = RelatedDto.builder()
-                .relatedChallengeId(relatedId2)
-                .challengeTitle("Example2")
-                .level("Apprentice2")
-                .creationDate("01-01-2020")
-                .popularity(5)
-                .languages(relatedLanguages).build();
-        RelatedDto relatedDto3 = RelatedDto.builder()
-                .relatedChallengeId(relatedId3)
-                .challengeTitle("Example3")
-                .level("Apprentice3")
-                .creationDate("01-01-2020")
-                .popularity(5)
-                .languages(relatedLanguages).build();*/
+
         ChallengeDto relatedDto1 = new ChallengeDto();
         relatedDto1.setChallengeId(relatedId);
         ChallengeDto relatedDto2 = new ChallengeDto();
