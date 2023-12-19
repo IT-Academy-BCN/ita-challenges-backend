@@ -27,6 +27,8 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -98,9 +100,21 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        // TODO: Get challenges by languange and difficulty
-        return null;
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String level) {
+        validateUUID(idLanguage);
+        validationLevel(level);
+        UUID idLanguageUUID = UUID.fromString(idLanguage);
+
+        Flux<ChallengeDocument> filteredChallengesDoc = challengeRepository.findByLevelAndLanguages_IdLanguage(level, idLanguageUUID);
+
+        return filteredChallengesDoc
+                .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenges not found")))
+                .flatMap(challengeDoc -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challengeDoc), ChallengeDto.class)))
+                .collectList().map(challenge -> {
+                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                    resultDto.setInfo(0, challenge.size(), challenge.size(), challenge.toArray(new ChallengeDto[0]));
+                    return resultDto;
+                });
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
@@ -205,15 +219,24 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    //VALIDATION METHODS
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
         if (!validUUID) {
-            log.warn("Invalid ID format: {}", id);
+            log.info("Invalid ID format: {}", id);
             return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
         }
 
         return Mono.just(UUID.fromString(id));
+    }
+
+    private void validationLevel(String level) {
+        Set<String> validLevels = Set.of("EASY", "MEDIUM", "HARD");
+
+        if(validLevels.stream().noneMatch(s -> s.equalsIgnoreCase(level))) {
+            throw new ChallengeNotFoundException("Invalid level name. Please indicate the correct level.");
+        }
     }
 
 }

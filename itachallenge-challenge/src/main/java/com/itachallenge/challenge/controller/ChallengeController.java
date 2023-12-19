@@ -125,7 +125,7 @@ public class ChallengeController {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/")
+    @GetMapping("/challenges/{idLanguage}/{level}")
     @Operation(
             operationId = "Get only the challenges on a page.",
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
@@ -137,6 +137,7 @@ public class ChallengeController {
                                                                                      @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
+
 
     @GetMapping("/language")
     @Operation(
