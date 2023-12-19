@@ -464,5 +464,93 @@ class ChallengeServiceImpTest {
         .expectNextMatches(result -> result.getCount() == 2 && result.getResults() != null && result.getResults().length == 2)
         .verifyComplete();        
     }
+    @Test
+    void getAllChallenges_ChallengesExist_ChallengesReturned_b() {
+        // Arrange
+        int offset = 1;
+        int offset10 = 10;
+        int offset0 = 0;
+        int limit2 = 2;
+        int limit6 = 6;
+        int limit0 = 0;
 
+        // Simulate a set of ChallengeDocument with non-null UUID
+        ChallengeDocument challenge1 = new ChallengeDocument();
+        challenge1.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge2 = new ChallengeDocument();
+        challenge2.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge3 = new ChallengeDocument();
+        challenge3.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge4 = new ChallengeDocument();
+        challenge4.setUuid(UUID.randomUUID());
+
+        // Simulate a set of ChallengeDto
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto challengeDto4 = new ChallengeDto();
+
+        when(challengeRepository.findAllByUuidNotNull())
+                .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
+
+        // Act
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit2);
+
+        // Assert
+        verify(challengeRepository).findAllByUuidNotNull();
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
+
+        StepVerifier.create(result)
+                .expectSubscription()
+                .expectNextCount(4)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset).take(limit2))
+                .expectSubscription()
+                .expectNext(challengeDto2, challengeDto3)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset).take(limit6))
+                .expectSubscription()
+                .expectNext(challengeDto2, challengeDto3, challengeDto4)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset).take(limit0))
+                .expectSubscription()
+                .expectNext()
+                .expectComplete()
+                .verify();
+
+        //test
+
+        StepVerifier.create(result.skip(offset10).take(limit0))
+                .expectSubscription()
+                .expectNext()
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset10).take(limit6))
+                .expectSubscription()
+                .expectNext()
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset0).take(limit6))
+                .expectSubscription()
+                .expectNext(challengeDto1, challengeDto2, challengeDto3, challengeDto4)
+                .expectComplete()
+                .verify();
+
+
+
+        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit2))
+                .expectSubscription()
+                .expectNextCount(2)
+                .expectComplete()
+                .verify();
+    }
 }
