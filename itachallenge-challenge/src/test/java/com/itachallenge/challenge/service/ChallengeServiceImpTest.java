@@ -224,6 +224,8 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
+        //test
+
         StepVerifier.create(result.skip(offset10).take(limit0))
                 .expectSubscription()
                 .expectNext()
