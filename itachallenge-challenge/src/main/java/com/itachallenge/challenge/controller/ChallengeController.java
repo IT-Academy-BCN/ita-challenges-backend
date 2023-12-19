@@ -189,5 +189,20 @@ public class ChallengeController {
                 });
     }
 
+    @GetMapping("/challenges/{idLanguage}/{level}/")
+    @Operation(
+            operationId = "Get only the challenges with pagination.",
+            summary = "Get to see challenges with pagination and their levels, details and their available languages.",
+            description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+            })
+    public Flux<ChallengeDto> getChallengesByLanguageAndDifficultyPaginated(@PathVariable @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
+                                                                                     @PathVariable @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String level,
+                                                                                     @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                                                                     @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit){
+        return challengeService.getChallengesByLanguageAndDifficultyPaginated(idLanguage, level, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
+
 
 }

@@ -344,4 +344,34 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
+
+    @Test
+    void getChallengesByLanguageAndDifficultyPaginated_ValidatePages_Test() {
+        //Arrange
+        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f"; // Test idLanguage with mongoId structure
+        String level = "EASY";
+
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        ChallengeDto challengeDto4 = new ChallengeDto();
+        ChallengeDto challengeDto5 = new ChallengeDto();
+        ChallengeDto challengeDto6 = new ChallengeDto();
+        ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3, challengeDto4, challengeDto5, challengeDto6};
+        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+
+        String offset= "0";
+        String limit = "3";
+
+        when(challengeService.getChallengesByLanguageAndDifficultyPaginated(idLanguage, level, Integer.parseInt(offset), Integer.parseInt(limit)))
+                .thenReturn(expectedChallengesFlux);
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + idLanguage + "/" + level + "/?offset=0&limit=2")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+
+    }
 }

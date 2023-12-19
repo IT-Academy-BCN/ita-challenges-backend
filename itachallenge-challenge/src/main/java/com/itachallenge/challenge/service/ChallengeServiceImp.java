@@ -219,6 +219,13 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    public Flux<ChallengeDto> getChallengesByLanguageAndDifficultyPaginated(String idLanguage, String level, int offset, int limit) {
+        validateUUID(idLanguage);
+        UUID idLanguageUUID = UUID.fromString(idLanguage);
+
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findByLevelAndLanguages_IdLanguage(level, idLanguageUUID).skip(offset).take(limit) , ChallengeDto.class);
+    }
+
     //VALIDATION METHODS
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

@@ -504,6 +504,66 @@ class ChallengeServiceImpTest {
                 .verify();
     }
 
+    @Test
+    void testGetChallengeByLevelAndLanguage_Paginated() {
+        // Arrange
+        int offset = 1;
+        int limit = 2;
+
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String level = "EASY";
+
+        // Simulate a set of ChallengeDocument with non-null UUID
+        ChallengeDocument challenge1 = new ChallengeDocument();
+        challenge1.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge2 = new ChallengeDocument();
+        challenge2.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge3 = new ChallengeDocument();
+        challenge3.setUuid(UUID.randomUUID());
+        ChallengeDocument challenge4 = new ChallengeDocument();
+        challenge4.setUuid(UUID.randomUUID());
+
+        // Simulate a set of ChallengeDto
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        challengeDto1.setLevel(level);
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        challengeDto2.setLevel(level);
+        ChallengeDto challengeDto3 = new ChallengeDto();
+        challengeDto3.setLevel(level);
+        ChallengeDto challengeDto4 = new ChallengeDto();
+        challengeDto4.setLevel(level);
+
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(any(), any()))
+                .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
+
+        // Act
+
+        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageAndDifficultyPaginated(challengeStringId, level, offset, limit);
+
+        // Assert
+        verify(challengeRepository).findByLevelAndLanguages_IdLanguage(level,UUID.fromString(challengeStringId));
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
+
+        StepVerifier.create(result)
+                .expectSubscription()
+                .expectNextCount(4)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result.skip(offset).take(limit))
+                .expectSubscription()
+                .expectNext(challengeDto2, challengeDto3)
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(challengeRepository.findByLevelAndLanguages_IdLanguage(level,UUID.fromString(challengeStringId)).skip(offset).take(limit))
+                .expectSubscription()
+                .expectNextCount(2)
+                .expectComplete()
+                .verify();
+
+    }
 
 
 }

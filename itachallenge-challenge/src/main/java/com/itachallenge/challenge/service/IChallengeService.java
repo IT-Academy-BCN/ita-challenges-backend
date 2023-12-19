@@ -8,8 +8,6 @@ import com.itachallenge.challenge.dto.RelatedDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.UUID;
-
 public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id);
@@ -20,4 +18,5 @@ public interface IChallengeService {
     Flux<ChallengeDto> getAllChallenges(int offset, int limit);
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty);
     Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id);
+    Flux<ChallengeDto> getChallengesByLanguageAndDifficultyPaginated(String idLanguage, String level, int offset, int limit) ;
 }
