@@ -37,7 +37,7 @@ jobs:
       -
         name: Build
         run:  |
-          ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build
+          ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build -PMICROSERVICE_VERSION=${{ env.MICROSERVICE_VERSION }}
           cp ${{ env.MICROSERVICE_DEPLOY }}/build/libs/${{ env.MICROSERVICE_DEPLOY}}-${{ env.MICROSERVICE_VERSION }}.jar ${GITHUB_WORKSPACE}/${{ env.MICROSERVICE_DEPLOY }}
       -
         name: Set up QEMU
