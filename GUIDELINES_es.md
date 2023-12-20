@@ -40,7 +40,7 @@
 7. [**PROGRAMAS RECOMENDADOS**](#7-programas-recomendados)\
    7.1 [Programas recomendados](#71-programas-recomendados)
 
-----------------------------------------------------------------
+<hr/>
 
 # 1. ENLACES DEL PROYECTO
 ## 1.1 Enlaces del proyecto
@@ -53,12 +53,12 @@
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
   <img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
-----------------------------------------------------------------
+<hr/>
 
 # 2. PROCEDIMIENTOS DE TRABAJO
 
 ## 2.1 Primeras tareas del proyecto
-### 1. Añadir tu nombre y GitHub al archivo contributors.md
+### 2.1.1 Añadir tu nombre y GitHub al archivo contributors.md
 
 1. Clona el repositorio ita-challenges-backend de GitHub en tu sistema local:
 
@@ -86,9 +86,9 @@
          git push origin nombre-de-su-rama
 8. Abra el repositorio en GitHub y debería ver un mensaje que le permite crear un "pull request" desde su rama recién creada a la rama "develop". Haga clic en el enlace para crear el pull request.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
-### 2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
+<hr/>
+
+### 2.1.2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
 
 1. Asegúrate de tener las MongoDB Tools instaladas. Si aún no las tienes, ve al apartado de “Programas necesarios” y sigue las instrucciones proporcionadas para descargarlas en tu sistema operativo.
 
@@ -97,11 +97,11 @@
 
          mongosh
 
-3. Usa el siguiente comando para crear la base de datos "challenges":
+3. Usa el siguiente comando para cambiar a la base de datos "admin":
 
-         use challenges
+         use admin
 
-4. Una vez dentro de la base de datos "challenges", pega el siguiente bloque de código:
+4. Una vez dentro, pega el siguiente bloque de código:
 
          db.createUser({
          user: "admin_challenge",
@@ -114,38 +114,31 @@
 5. Ejecuta el siguiente comando para ver si el usuario se ha creado correctamente:
 
          show users
+
 6. Sal de la terminal de MongoDB escribiendo el siguiente comando:
 
          exit
 
-7. Mueve el archivo load-data de la carpeta monogdb.init a la carpeta mongodb-test-data.
-   Si estás utilizando Windows, utiliza el archivo .bat, en cambio, si estás utilizando Mac o Linux, el archivo es .sh.
+7. Conecta a Mongo (quizás con MongoDB Compass) con el usuario que has creado en el paso 4.
+
+8. Crea las colecciones "challenges", "languages" y "solutions" en la base de datos "challenges". Usa el siguiente comando para crear la base de datos "challenges":
+
+         use challenges
+
+9. Importa los datos de cada collection en la opción "Add Data" de Compass. O, si lo prefieres, puedes importar los datos desde la terminal con
+el comando (modifica las rutas para que se encuentren los ficheros de carga):
 
 
-8. En la terminal normal, navega a la carpeta mongodb-test-data utilizando el comando cd.
+```
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=challenges --jsonArray --file=./mongodb-test-data/challenges.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=languages --jsonArray --file=./mongodb-test-data/languages.json
+mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=solutions --jsonArray --file=./mongodb-test-data/solutions.json
+```
 
+10. Abre MongoDB Compass, haz un "Reload Data" y ya verás la base de datos correctamente importada.
 
-9. Para importar el documento, ejecuta el siguiente comando:
+<hr/>
 
-   · En Windows:
-
-         load-data.bat
-
-   · En Mac o Linux:
-
-         ./load-data.sh
-
-   Si recibes un mensaje de permiso denegado, otorga permisos de ejecución al archivo con el siguiente comando:
-
-         chmod +x load-data.sh
-
-10. Luego, mueve el archivo load-data.bat o load-data.sh de vuelta a su carpeta original, mongodb.init.
-
-
-11. Abre MongoDB Compass, haz un "Reload Data" y ya verás la base de datos correctamente importada.
-
-----------------------------------------------------------------
-----------------------------------------------------------------
 ## 2.2 Configuraciones Git
 
 Configuraciones Git necesarias para evitar problemas
@@ -166,8 +159,8 @@ Si tiene un problema con una PR que modifica muchos archivos, >100, debe hacer l
 2. Ejecute el comando: 'git config --global core.autocrlf true'
 
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.3 Procedimiento diario
 1. Conectarse a Teams a las 9:15h
 2. Hacer pull de la rama "develop"
@@ -176,8 +169,8 @@ Si tiene un problema con una PR que modifica muchos archivos, >100, debe hacer l
 
 IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.4 Procedimiento de trabajo con tarjeta
 ### Como asignarse una tarjeta
 1. En el tablero de Spring Backlog, localiza la tarjeta que deseas asignarte.
@@ -207,8 +200,9 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature#123" hacia la rama "develop".
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+
+<hr/>
+
 ## 2.5 Aspectos a tener en cuenta al hacer una PR
 1. En la página de creación de a pull request, selecciona la rama base y la rama comparada:
     - La rama base es la rama a la que deseas fusionar tus cambios. En este caso es la rama "develop".
@@ -220,15 +214,15 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
 7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 2.6 Metodología Scrum
 https://scrumguides.org/
 
 
 <img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
 
-----------------------------------------------------------------
+<hr/>
 
 # 3. NORMALIZACIÓN DE URL
 En este proyecto, es importante seguir ciertas convenciones al establecer la estructura y nomenclatura de las URL's utilizadas en el backend.
@@ -267,7 +261,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 - `/challenges/{challengeId}/update` - Editar los detalles del challenge con ID 550e8400-e29b-41d4-a716-446655440000.
 
 
-----------------------------------------------------------------
+<hr/>
 
 # 4. DEFINICIONES DE MÉTODO, CLASES, ETC...
 
@@ -285,8 +279,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.1 package names](https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.2 Nombre de las clases
 #### NORMAS
     - UpperCamelCase
@@ -319,8 +313,9 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
     - UpperCamelCase
     - Sólo letras y dígitos
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
+
 ## 4.3 Nombre de los métodos
 #### NORMAS
     - lowerCamelCase 
@@ -348,8 +343,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.4 Nombre de constantes
 #### NORMAS
     - Mayúsculas
@@ -364,8 +359,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.4 constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.5 Nombre de variables locales
 #### NORMAS
     - lowerCamelCase
@@ -392,8 +387,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 #### LINKS
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.6 Nombres de variables de tipo
 #### NORMAS
     - Una sola letra mayúscula, opcionalmente seguida de un solo número
@@ -406,8 +401,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 #### LINKS
 [Google Java Style Guide: 5.2.8 Type variable names](https://google.github.io/styleguide/javaguide.html#s5.2.8-type-variable-names)
 
-----------------------------------------------------------------
-----------------------------------------------------------------
+<hr/>
+
 ## 4.7 Camel case: definido
 #### NORMAS
     - Sólo letras y dígitos
@@ -428,7 +423,8 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 #### LINKS
 [Google Java Style Guide: 5.3 Camel case defined](https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)
 
-----------------------------------------------------------------
+<hr/>
+
 # 5. LIBRERÍAS USADAS
 
 ## 5.1 Plugins principales
@@ -524,7 +520,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
     - Versión 3.06
     - 'org.springframework.boot:spring-boot-starter-test:3.0.6'
 
-----------------------------------------------------------------
+<hr/>
 
 # 6. PROGRAMAS REQUERIDOS
 Los siguientes programas son requeridos para poder trabajar en el proyecto:
@@ -545,7 +541,8 @@ Los siguientes programas son requeridos para poder trabajar en el proyecto:
 
 Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
 
-----------------------------------------------------------------
+<hr/>
+
 # 7 PROGRAMAS RECOMENDADOS
 
 Los siguientes programas son recomendables para facilitar el trabajo en el proyecto:

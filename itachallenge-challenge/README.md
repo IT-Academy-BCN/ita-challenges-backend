@@ -3,6 +3,10 @@
 
 * Para habilitar / deshabilitar el registro Consul, modificar el valor de la propiedad `spring.cloud.consul.enabled` en el fichero `bootstrap.yml` (true/false)
 
+##### Swagger
+
+- http://localhost:8762/swagger-ui/index.html
+- http://localhost:8762/api-docs
 
 ##### Spring Boot Actuator
 

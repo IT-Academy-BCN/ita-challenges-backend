@@ -33,8 +33,8 @@ public class HttpProxy {
 
     private final PropertiesConfig config;
 
-    private final WebClient client;
 
+    private final WebClient client;
     protected static final String MALFORMED_URL_MSG = "Proxy: provided url is not valid: ";
 
     @Autowired
