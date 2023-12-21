@@ -91,7 +91,7 @@
 
 <hr/>
 
-### 2.2.2. Import data into MongoDB (Example for micro itachallenge-challenge data)
+### 2.1.2. Import data into MongoDB (Example for micro itachallenge-challenge data)
 
 1. Make sure you have the MongoDB Tools installed. If you don't already have them, go the "Required programs" section and folow the instructions provided to download them to your operting system.
 
@@ -99,12 +99,11 @@
 
          mongosh
 
-3. Use the following command to create the data base "challenges":
+3. Use the following command to change to the "admin" database:
 
+         use admin
 
-         use challenges
-
-4. Once inside the "challenge" database, paste the following code block:
+4. Once inside the "admin" database, paste the following code block:
 
          db.createUser({
          user: "admin_challenge",
@@ -124,7 +123,9 @@
 
 7. Connect to Mongo (maybe with MongoDB Compass) with user created at point 4
 
-8. Create the collections "challenges", "languages" and "solutions" at "challenges" database.
+8. Create the collections "challenges", "languages" and "solutions" at "challenges" database. Use the following command to create the database "challenges":
+
+         use challenges
 
 9. Import the data from each collection, following option "Add Data" at Compass. Or, if you prefer, you can use the terminal with the following command:
 

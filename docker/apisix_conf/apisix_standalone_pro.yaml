@@ -1,5 +1,7 @@
 
 apisix:
+  node_listen:
+    - ${{APISIX_NODE_LISTEN:=9081}}
   enable_admin: true
   config_center: yaml
 
@@ -30,12 +32,12 @@ upstreams:
   -
     id: 1
     nodes:
-      "172.18.0.9:8762": 1
+      "172.20.0.9:8762": 1
     type: roundrobin
   -
     id: 2
     nodes:
-      "172.18.0.6:8762": 1
+      "172.20.0.6:8762": 1
     type: roundrobin
 
 #END

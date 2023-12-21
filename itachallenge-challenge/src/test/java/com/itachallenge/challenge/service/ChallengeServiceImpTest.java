@@ -19,20 +19,19 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-import java.util.Set;
-import java.util.HashSet;
+import java.time.Duration;
+import java.util.*;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 
 class ChallengeServiceImpTest {
@@ -242,7 +241,7 @@ class ChallengeServiceImpTest {
         verify(languageRepository).findAll();
         verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
-    
+
     @Test
     void testGetSolutions() {
         // Arrange
@@ -405,4 +404,44 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
         verify(relatedChallengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
     }
+
+    @Test
+    void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
+        // Arrange
+        String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+        String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        UUID challengeId = UUID.fromString(challengeStringId);
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId = UUID.randomUUID();
+
+        SolutionDocument solution = new SolutionDocument(solutionId, "Solution 1", languageId);
+        SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId, challengeId);
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(challengeId);
+
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solution));
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(solutionDto));
+
+
+        // Act
+        Mono<SolutionDto> resultMono = challengeService.addSolution(solutionDto);
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getUuid()).isEqualTo(solutionId);
+                    assertThat(resultDto.getSolutionText()).isEqualTo("Solution 1");
+                    assertThat(resultDto.getIdLanguage()).isEqualTo(languageId);
+                    assertThat(resultDto.getIdChallenge()).isEqualTo(challengeId);
+                    return true;
+                })
+                .verifyComplete();
+
+        verify(challengeRepository).findByUuid(challengeId);
+        verify(solutionRepository).save(any(SolutionDocument.class));
+        verify(solutionConverter).convertDocumentFluxToDtoFlux(any(), any());
+    }
+
+
 }
