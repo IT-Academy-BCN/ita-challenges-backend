@@ -33,18 +33,27 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
-    @Autowired
-    private ChallengeRepository challengeRepository;
-    @Autowired
-    private LanguageRepository languageRepository;
-    @Autowired
-    private SolutionRepository solutionRepository;
-    @Autowired
+
+    private final ChallengeRepository challengeRepository;
+
+    private final LanguageRepository languageRepository;
+
+    private final SolutionRepository solutionRepository;
+
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
-    @Autowired
+
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
-    @Autowired
+
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    public ChallengeServiceImp(ChallengeRepository challengeRepository, LanguageRepository languageRepository, SolutionRepository solutionRepository, DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter, DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter, DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter) {
+        this.challengeRepository = challengeRepository;
+        this.languageRepository = languageRepository;
+        this.solutionRepository = solutionRepository;
+        this.challengeConverter = challengeConverter;
+        this.languageConverter = languageConverter;
+        this.solutionConverter = solutionConverter;
+    }
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
         return validateUUID(id)

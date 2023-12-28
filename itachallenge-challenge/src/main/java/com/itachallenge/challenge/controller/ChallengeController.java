@@ -40,17 +40,19 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
-    @Autowired
+
     private final PropertiesConfig config;
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
+    private final DiscoveryClient discoveryClient;
+
+    private final IChallengeService challengeService;
 
     @Autowired
-    IChallengeService challengeService;
+    public ChallengeController(PropertiesConfig config, DiscoveryClient discoveryClient, IChallengeService challengeService) {
 
-    public ChallengeController(PropertiesConfig config) {
         this.config = config;
+        this.discoveryClient = discoveryClient;
+        this.challengeService = challengeService;
     }
 
     @GetMapping(value = "/test")
@@ -165,7 +167,6 @@ public class ChallengeController {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
-
 
 
     @PostMapping("/solution")

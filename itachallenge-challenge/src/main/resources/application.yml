@@ -28,7 +28,16 @@ management:
       exposure:
         include: "*"
   security:
-    enabled: false
+    datasource:
+      signUpUrl: /itachallenge/api/v1/login
+      secret: SgVkYp3s6v9y$B&E)H+MbQeThWmZq4t7
+      headerString: Authorization
+      # Mind the trailing white space below!
+      tokenPrefix: Bearer
+      # 10 hours, expressed in milliseconds
+      expiresIn: 36_000_000
+      authoritiesClaim: authorities
+      err: Auth Error, Token Unavailable
 
 logging:
   level:
@@ -50,3 +59,5 @@ validation:
 
 messages:
   errorMessage: "Invalid values."
+
+
