@@ -30,3 +30,4 @@
 * Natalia Fara - https://github.com/nfaraDev
 * Kirill Dolgopolov - https://github.com/KirillDolgopolov
 * Pau Franco Toda - https://github.com/Parapau
+* Jordi Mons  - https://github.com/rokysf
