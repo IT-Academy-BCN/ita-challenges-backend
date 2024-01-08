@@ -2,10 +2,10 @@ package com.itachallenge.auth.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
@@ -19,4 +19,21 @@ public class AuthController {
     public String test() {
         return "Hello from ITA ChallengeAuth!!!";
     }
+
+
+    @PostMapping("/validate")
+    public ResponseEntity<String> validateToken(@RequestBody String token) {
+
+        return validateWithSSO(token) ?
+                new ResponseEntity<>("Token is valid", HttpStatus.OK) :
+                new ResponseEntity<>("Token is not valid", HttpStatus.UNAUTHORIZED);
+    }
+
+    private boolean validateWithSSO(String token) {
+        // Lógica de validación SSO (TODO Proxy)
+        return false;
+    }
+}
+
+
 }
