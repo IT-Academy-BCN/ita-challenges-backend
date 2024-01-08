@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/itachallenge/api/v1/auth")
 public class AuthController {
 
-
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
     @GetMapping(value = "/test")
@@ -35,5 +34,3 @@ public class AuthController {
     }
 }
 
-
-}
