@@ -1,4 +1,6 @@
-
+spring:
+  application:
+    name: itachallenge-mock
 
 
 springdoc:
