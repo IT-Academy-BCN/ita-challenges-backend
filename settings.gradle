@@ -3,4 +3,5 @@ include 'itachallenge-challenge'
 include 'itachallenge-score'
 include 'itachallenge-user'
 include 'itachallenge-mock'
+include 'itachallenge-auth'
 
