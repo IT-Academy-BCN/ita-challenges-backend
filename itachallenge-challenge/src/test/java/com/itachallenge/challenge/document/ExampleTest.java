@@ -21,7 +21,9 @@ class ExampleTest {
     @Test
     void getExampleText() {
         Map<Locale, String> exampleMap = new HashMap<>();
-        exampleMap.put(Locale.ENGLISH, "Example Text");
+            exampleMap.put(Locale.forLanguageTag("ES"), "Ejemplo de prueba");
+            exampleMap.put(Locale.forLanguageTag("CA"), "Exemple de prova");
+            exampleMap.put(Locale.ENGLISH, "Example Text");
         ExampleDocument example = new ExampleDocument(null, exampleMap);
         assertEquals(exampleMap, example.getExampleText());
     }

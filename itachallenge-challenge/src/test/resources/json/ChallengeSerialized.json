@@ -1,6 +1,10 @@
 {
   "id_challenge" : "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-  "challenge_title" : "Sociis Industries",
+  "challenge_title" : {
+    "es":"Industrias Sociis",
+    "ca":"Industries Sociis",
+    "en":"Sociis Industries"
+  },
   "level" : "EASY",
   "creation_date" : "2023-06-05T12:30:00+02:00",
   "popularity" : 105,

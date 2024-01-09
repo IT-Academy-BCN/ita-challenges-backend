@@ -45,7 +45,9 @@ class ChallengeDtoTest {
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
         Map<Locale, String> titleMap = new HashMap<>();
-        titleMap.put(Locale.ENGLISH, "Sociis Industries");
+            titleMap.put(Locale.forLanguageTag("ES"), "Sociis Industries");
+            titleMap.put(Locale.forLanguageTag("CA"), "Sociis Industries");
+            titleMap.put(Locale.ENGLISH, "Sociis Industries");
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
                 , titleMap, "EASY", "2023-06-05T12:30:00+02:00",
@@ -64,7 +66,6 @@ class ChallengeDtoTest {
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(challengeDtoToSerialize);
         String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
-        //Assertions.assertEquals(jsonExpectedV2, jsonResult);
         assertEquals(jsonExpected, jsonResult);
     }
 

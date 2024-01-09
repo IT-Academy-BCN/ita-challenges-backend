@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.Locale;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -21,7 +23,7 @@ public class RelatedDto {
     private UUID relatedChallengeId;
 
     @JsonProperty(value = "related_title", index = 1)
-    private String challengeTitle;
+    private Map<Locale, String> challengeTitle;
 
     @JsonProperty(value = "related_creation_date", index = 2)
     private String creationDate;

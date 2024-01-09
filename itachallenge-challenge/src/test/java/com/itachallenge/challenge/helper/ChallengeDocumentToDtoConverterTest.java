@@ -45,20 +45,30 @@ class ChallengeDocumentToDtoConverterTest {
 
         String[] languageNames = new String[]{"name1", "name2"};
         Map<Locale, String> title = new HashMap<>();
-        title.put(Locale.ENGLISH, "Java");
+            title.put(Locale.forLanguageTag("ES"), "Título");
+            title.put(Locale.forLanguageTag("CA"), "Títol");
+            title.put(Locale.ENGLISH, "Title");
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
         Map<Locale, String> exampleMap1 = new HashMap<>();
-        exampleMap1.put(Locale.ENGLISH, "Example text");
+            exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
+            exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
+            exampleMap1.put(Locale.ENGLISH, "Example text");
         Map<Locale, String> exampleMap2 = new HashMap<>();
-        exampleMap2.put(Locale.ENGLISH, "Random example");
+            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo random");
+            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple random");
+            exampleMap2.put(Locale.ENGLISH, "Random example");
         List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap1),
                 new ExampleDocument(exampleRandomId, exampleMap2));
         Map<Locale, String> descriptionMap = new HashMap<>();
-        descriptionMap.put(Locale.ENGLISH, "Some detail");
+            descriptionMap.put(Locale.forLanguageTag("ES"), "Detalle");
+            descriptionMap.put(Locale.forLanguageTag("CA"), "Detall");
+            descriptionMap.put(Locale.ENGLISH, "Some detail");
         Map<Locale, String> notesMap = new HashMap<>();
-        notesMap.put(Locale.ENGLISH, "Notes");
+            notesMap.put(Locale.forLanguageTag("ES"), "Notas");
+            notesMap.put(Locale.forLanguageTag("CA"), "Notes");
+            notesMap.put(Locale.ENGLISH, "Notes");
         DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
         Integer popularity = 0;
         Float percentage = 0.0f;

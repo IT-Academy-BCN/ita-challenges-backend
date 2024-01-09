@@ -5,8 +5,8 @@
     },
     "challenge_title": {
       "ES": "Titulo en español",
-      "CAT": "Títol en català",
-      "EN": "Descending Order"
+      "CA": "Titol en català",
+      "EN": "Title in english"
     },
     "level": "EASY",
     "creation_date": {
@@ -14,9 +14,9 @@
     },
     "detail": {
       "description": {
-        "ES": "Descripcion en español",
-        "CAT": "Descripció en català",
-        "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
+        "ES": "Descripción en español",
+        "CA": "Descripció en català",
+        "EN": "Description in english"
       },
       "examples": [
         {
@@ -24,9 +24,9 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus u",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
           }
         },
         {
@@ -35,9 +35,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -46,16 +46,16 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         }
       ],
       "notes": {
-        "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
+        "ES": "Nota en español",
+        "CA": "Nota en català",
+        "EN": "Note in english"
       }
     },
     "languages": [
@@ -114,8 +114,8 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
+        "CA": "Titol en català",
+        "EN": "Title in english"
       },
     "level": "EASY",
     "creation_date": {
@@ -124,8 +124,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
         },
       "examples": [
@@ -135,9 +135,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT":"Phasellus vel velit malesuada, fe",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -146,9 +146,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -157,16 +157,16 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         }
       ],
       "notes": {
-        "ES":"Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur vitae sem elementum, tincidunt quam in, aliquet ipsum.",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
+        "ES": "Nota en español",
+        "CA": "Nota en català",
+        "EN": "Note in english"
       }
     },
     "languages": [
@@ -238,7 +238,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "You're a square!"
       },
     "level": "EASY",
@@ -247,8 +247,8 @@
     },
     "detail": {
       "description": {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n       In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n       The tests will always use some integral number, so don't worry about that in dynamic typed languages."
       },
       "examples": [
@@ -258,9 +258,9 @@
           },
           "example_text": 
             {
-              "ES": "Vestibulum ullamcorper elit ut lacus suscipit, in efficitur nunc ullamcorper.",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -269,9 +269,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -280,9 +280,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -291,17 +291,17 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-          "CAT": "Títol en català",
-          "EN":  "Descending Order"
+          "ES":  "Nota en español",
+          "CA":  "Nota en català",
+          "EN":  "Note in english"
         }
     },
     "languages": [
@@ -346,7 +346,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "List Filtering"
       },
     "level": "EASY",
@@ -355,8 +355,8 @@
     },
     "detail": {
       "description": {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
         },
       "examples": [
@@ -366,9 +366,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -377,9 +377,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -388,9 +388,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -399,16 +399,16 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         }
       ],
       "notes": {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Nota en español",
+              "CA":  "Nota en català",
+              "EN":  "Note in english"
             }
     },
     "languages": [
@@ -486,7 +486,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Isograms"
       },
     "level": "EASY",
@@ -495,8 +495,8 @@
     },
     "detail": {
       "description": {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
         },
       "examples": [
@@ -506,9 +506,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -517,9 +517,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -528,9 +528,9 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         },
         {
@@ -539,16 +539,16 @@
           },
           "example_text": 
             {
-              "ES":  "Phasellus vel velit malesuada, fermentum lectus u",
-              "CAT": "Títol en català",
-              "EN":  "Descending Order"
+              "ES":  "Texto de ejemplo en español",
+              "CA":  "Texte d'exemple en català",
+              "EN":  "Example text in english"
             }
         }
       ],
       "notes": {
-          "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
-          "CAT": "Títol en català",
-          "EN":  "Descending Order"
+          "ES":  "Nota en español",
+          "CA":  "Nota en català",
+          "EN":  "Note in english"
       }
     },
     "languages": [
@@ -593,7 +593,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Exes and Ohs"
       },
     "level": "EASY",
@@ -602,8 +602,8 @@
     },
     "detail": {
       "description": {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
         },
       "examples": [
@@ -613,9 +613,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -624,9 +624,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -635,9 +635,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -646,17 +646,17 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -701,7 +701,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Get the Middle Character"
       },
     "level": "EASY",
@@ -710,8 +710,8 @@
     },
     "detail": {
       "description": {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
       },
       "examples": [
@@ -721,9 +721,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -732,9 +732,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -743,9 +743,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -754,17 +754,17 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA":  "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -809,7 +809,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Simple Pig Latin"
       },
     "level": "MEDIUM",
@@ -818,8 +818,8 @@
     },
     "detail": {
       "description": {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
         },
       "examples": [
@@ -829,9 +829,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -840,9 +840,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -851,9 +851,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -862,17 +862,17 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut, tristique enim.",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -913,7 +913,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "RGB To Hex Conversion"
       },
     "level": "MEDIUM",
@@ -923,8 +923,8 @@
     "detail": {
       "description":
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
         }
       ,
@@ -935,9 +935,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -946,9 +946,9 @@
           },
           "example_text": 
             {
-            "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
+            "ES": "Texto de ejemplo en español",
+            "CA": "Texte d'exemple en català",
+            "EN": "Example text in english"
             }
         },
         {
@@ -957,9 +957,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -968,16 +968,16 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": {
-        "ES": "Quisque libero lacus, varius et, euismod et, commodo at, libero. Morbi accumsan laoreet ipsum. Curabitur consequat, lectus sit amet luctus vulputate, nisi sem semper erat, in consectetuer ipsum",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
+        "ES": "Nota en español",
+        "CA": "Nota en català",
+        "EN": "Note in english"
       }
     },
     "languages": [
@@ -1034,7 +1034,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Scramblies"
       },
     "level": "MEDIUM",
@@ -1044,8 +1044,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notess:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
         }
       ,
@@ -1056,9 +1056,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1067,9 +1067,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1078,9 +1078,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1089,17 +1089,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1153,7 +1153,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Number of trailing zeros of N!"
       },
     "level": "MEDIUM",
@@ -1163,8 +1163,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
         },
       "examples": [
@@ -1174,9 +1174,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1185,9 +1185,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1196,9 +1196,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1207,17 +1207,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1258,7 +1258,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Exes and Ohs"
       },
     "level": "MEDIUM",
@@ -1268,8 +1268,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
         },
       "examples": [
@@ -1279,9 +1279,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1290,9 +1290,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1301,9 +1301,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1312,17 +1312,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1367,7 +1367,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Going to zero or to infinity?"
       },
     "level": "MEDIUM",
@@ -1377,8 +1377,8 @@
     "detail": {
       "description":
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
         },
       "examples": [
@@ -1388,9 +1388,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1399,9 +1399,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1410,9 +1410,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1421,17 +1421,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1472,7 +1472,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Find the smallest"
       },
     "level": "MEDIUM",
@@ -1482,8 +1482,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
         },
       "examples": [
@@ -1493,9 +1493,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1504,9 +1504,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1515,9 +1515,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1526,17 +1526,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1593,7 +1593,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Land perimeter"
       },
     "level": "MEDIUM",
@@ -1603,8 +1603,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
         },
       "examples": [
@@ -1614,9 +1614,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1625,9 +1625,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1636,9 +1636,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1647,17 +1647,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1710,7 +1710,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Evaluate mathematical expression."
       },
     "level": "HARD",
@@ -1720,8 +1720,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Given a mathematical expression as a string you must return the result as a number."
         },
       "examples": [
@@ -1731,9 +1731,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1742,9 +1742,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1753,9 +1753,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1764,17 +1764,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1815,7 +1815,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Compress String"
       },
     "level": "HARD",
@@ -1825,8 +1825,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
         },
       "examples": [
@@ -1836,9 +1836,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1847,9 +1847,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1858,9 +1858,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1869,17 +1869,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -1916,7 +1916,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Longest Common Subsequence"
       },
     "level": "HARD",
@@ -1926,8 +1926,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
         },
       "examples": [
@@ -1937,9 +1937,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1948,9 +1948,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1959,9 +1959,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -1970,17 +1970,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -2027,7 +2027,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Find the Equilibrium Point in an Array"
       },
     "level": "HARD",
@@ -2037,8 +2037,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
         },
       "examples": [
@@ -2048,9 +2048,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2059,9 +2059,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2070,9 +2070,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2081,17 +2081,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -2134,7 +2134,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Validate Mathematical Expressions"
       },
     "level": "HARD",
@@ -2144,8 +2144,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
         }
       ,
@@ -2156,9 +2156,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2167,9 +2167,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2178,9 +2178,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2189,17 +2189,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -2236,7 +2236,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Find the Largest Contiguous Subarray"
       },
     "level": "HARD",
@@ -2246,8 +2246,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
         }
       ,
@@ -2258,9 +2258,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2269,9 +2269,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2280,9 +2280,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2291,17 +2291,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [
@@ -2353,7 +2353,7 @@
     },
     "challenge_title": {
         "ES": "Titulo en español",
-        "CAT": "Títol en català",
+        "CA": "Titol en català",
         "EN": "Count Inversions in an Array"
       },
     "level": "HARD",
@@ -2363,8 +2363,8 @@
     "detail": {
       "description": 
         {
-          "ES": "Descripcion en español",
-          "CAT": "Descripció en català",
+          "ES": "Descripción en español",
+          "CA": "Descripció en català",
           "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
         }
       ,
@@ -2375,9 +2375,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2386,9 +2386,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2397,9 +2397,9 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         },
         {
@@ -2408,17 +2408,17 @@
           },
           "example_text": 
             {
-              "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-              "CAT": "Títol en català",
-              "EN": "Descending Order"
+              "ES": "Texto de ejemplo en español",
+              "CA": "Texte d'exemple en català",
+              "EN": "Example text in english"
             }
         }
       ],
       "notes": 
         {
-          "ES": "Phasellus vel velit malesuada, fermentum lectus ut",
-          "CAT": "Títol en català",
-          "EN": "Descending Order"
+          "ES": "Nota en español",
+          "CA": "Nota en català",
+          "EN": "Note in english"
         }
     },
     "languages": [

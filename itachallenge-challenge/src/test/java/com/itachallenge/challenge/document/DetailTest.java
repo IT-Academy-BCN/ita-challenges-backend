@@ -14,7 +14,9 @@ class DetailTest {
     @Test
     void getDescription() {
         Map<Locale, String> descriptionMap = new HashMap<>();
-        descriptionMap.put(Locale.ENGLISH, "Test Description");
+            descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción del Test");
+            descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció del Test");
+            descriptionMap.put(Locale.ENGLISH, "Test Description");
         DetailDocument detail = new DetailDocument(descriptionMap, null, null);
         assertEquals(descriptionMap, detail.getDescription());
     }
@@ -23,9 +25,13 @@ class DetailTest {
     void getExamples() {
         List<ExampleDocument> examples = new ArrayList<>();
         Map<Locale, String> exampleMap1 = new HashMap<>();
+            exampleMap1.put(Locale.forLanguageTag("ES"), "Ejemplo 1");
+            exampleMap1.put(Locale.forLanguageTag("CA"), "Exemple 1");
+            exampleMap1.put(Locale.ENGLISH, "Example 1");
         Map<Locale, String> exampleMap2 = new HashMap<>();
-        exampleMap1.put(Locale.ENGLISH, "Example 1");
-        exampleMap2.put(Locale.ENGLISH, "Example 2");
+            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo 2");
+            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple 2");
+            exampleMap2.put(Locale.ENGLISH, "Example 2");
         examples.add(new ExampleDocument(uuid_1,exampleMap1));
         examples.add(new ExampleDocument(uuid_2,exampleMap2));
         DetailDocument detail = new DetailDocument(null, examples, null);
@@ -35,7 +41,9 @@ class DetailTest {
     @Test
     void getNote() {
         Map<Locale, String> noteMap = new HashMap<>();
-        noteMap.put(Locale.ENGLISH, "Test Note");
+            noteMap.put(Locale.forLanguageTag("ES"), "Nota de prueba");
+            noteMap.put(Locale.forLanguageTag("CA"), "Nota de prova");
+            noteMap.put(Locale.ENGLISH, "Test Note");
         DetailDocument detail = new DetailDocument(null, null, noteMap);
         assertEquals(noteMap, detail.getNote());
     }
