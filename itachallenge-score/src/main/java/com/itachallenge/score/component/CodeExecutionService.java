@@ -3,6 +3,7 @@ package com.itachallenge.score.component;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -12,6 +13,7 @@ import java.io.PrintStream;
 public class CodeExecutionService {
 
     public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult) {
+
         ExecutionResultDto executionResultDto = new ExecutionResultDto(false, false, false, "");
         SimpleCompiler compiler = null;
         String result = null;
