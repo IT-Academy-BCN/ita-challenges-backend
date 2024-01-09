@@ -34,51 +34,39 @@ public class CodeExecutionService {
         }
 
         // Ejecutar el código
-/*        try {*/
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PrintStream printStream = new PrintStream(outputStream);
-            PrintStream old = System.out;
-            System.setOut(printStream);
+        /*        try {*/
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(outputStream);
+        PrintStream old = System.out;
+        System.setOut(printStream);
 
-                 Class<?> compiledClass = null;
-                 Method method = null;
-            try {
-                compiledClass = compiler.getClassLoader().loadClass("Main");
-            }catch(ClassNotFoundException cnfe){
+        try {
+            compiler.getClassLoader().loadClass("Main")
+                    .getMethod("main", String[].class)
+                    .invoke(null, (Object) new String[]{});
+        }catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
 //TODO
-            }
-
-            try{
-                method = compiledClass.getMethod("main", String[].class);
-            }catch (NoSuchMethodException nsme){
-//TODO
-            }
-
-            try {
-                method.invoke(null, (Object) new String[]{});
-            }catch(IllegalAccessException | InvocationTargetException ite){
-//TODO
-            }catch (Exception e){
-                executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Execution failed: " + e.getCause());
-                return executionResultDto;
-            }
+        }catch (Exception e){
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Execution failed: " + e.getCause());
+            return executionResultDto;
+        }
 
 
-            System.out.flush();
-            System.setOut(old);
+        System.out.flush();
+        System.setOut(old);
 
-            // Ejecución correcta
-            executionResultDto.setExecution(true);
+        // Ejecución correcta
+        executionResultDto.setExecution(true);
 
-            // Comparar el resultado
-            result = outputStream.toString();
-            if (result.equals(codeResult)) {
-                executionResultDto.setResultCodeMatch(true);
-                executionResultDto.setMessage("Code executed successfully, result matches expected result. Execution result: " + result);
-            } else {
-                executionResultDto.setResultCodeMatch(false);
-                executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);            }
+        // Comparar el resultado
+        result = outputStream.toString();
+        if (result.equals(codeResult)) {
+            executionResultDto.setResultCodeMatch(true);
+            executionResultDto.setMessage("Code executed successfully, result matches expected result. Execution result: " + result);
+        } else {
+            executionResultDto.setResultCodeMatch(false);
+            executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);            }
 
       /*  } catch (Exception e) {
             // Error en la ejecución
