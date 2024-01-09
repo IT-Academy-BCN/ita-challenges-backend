@@ -7,9 +7,13 @@ import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 @Component
 public class CodeExecutionService {
+
+    //TODO - Añadir logger
 
     public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult) {
 
@@ -30,14 +34,36 @@ public class CodeExecutionService {
         }
 
         // Ejecutar el código
-        try {
+/*        try {*/
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PrintStream printStream = new PrintStream(outputStream);
             PrintStream old = System.out;
             System.setOut(printStream);
 
-            Class<?> compiledClass = compiler.getClassLoader().loadClass("Main");
-            compiledClass.getMethod("main", String[].class).invoke(null, (Object) new String[]{});
+                 Class<?> compiledClass = null;
+                 Method method = null;
+            try {
+                compiledClass = compiler.getClassLoader().loadClass("Main");
+            }catch(ClassNotFoundException cnfe){
+//TODO
+            }
+
+            try{
+                method = compiledClass.getMethod("main", String[].class);
+            }catch (NoSuchMethodException nsme){
+//TODO
+            }
+
+            try {
+                method.invoke(null, (Object) new String[]{});
+            }catch(IllegalAccessException | InvocationTargetException ite){
+//TODO
+            }catch (Exception e){
+                executionResultDto.setExecution(false);
+                executionResultDto.setMessage("Execution failed: " + e.getCause());
+                return executionResultDto;
+            }
+
 
             System.out.flush();
             System.setOut(old);
@@ -54,12 +80,12 @@ public class CodeExecutionService {
                 executionResultDto.setResultCodeMatch(false);
                 executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);            }
 
-        } catch (Exception e) {
+      /*  } catch (Exception e) {
             // Error en la ejecución
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Execution failed: " + e.getCause());
             return executionResultDto;
-        }
+        }*/
 
         return executionResultDto;
     }
