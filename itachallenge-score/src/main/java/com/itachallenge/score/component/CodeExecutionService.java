@@ -3,7 +3,6 @@ package com.itachallenge.score.component;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -43,7 +42,7 @@ public class CodeExecutionService {
             System.out.flush();
             System.setOut(old);
 
-            // Ejecucion correctoa
+            // Ejecución correcta
             executionResultDto.setExecution(true);
 
             // Comparar el resultado
@@ -56,7 +55,7 @@ public class CodeExecutionService {
                 executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);            }
 
         } catch (Exception e) {
-            // Error en la ejecucion
+            // Error en la ejecución
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Execution failed: " + e.getCause());
             return executionResultDto;
