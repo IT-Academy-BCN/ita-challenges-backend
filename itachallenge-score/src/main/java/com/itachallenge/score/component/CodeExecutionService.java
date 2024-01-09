@@ -3,6 +3,8 @@ package com.itachallenge.score.component;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -13,7 +15,7 @@ import java.lang.reflect.Method;
 @Component
 public class CodeExecutionService {
 
-    //TODO - Añadir logger
+    private static final Logger log = LoggerFactory.getLogger(CodeExecutionService.class);
 
     public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult) {
 
