@@ -94,4 +94,25 @@ public class CodeExecutionServiceTest {
         Assertions.assertFalse(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: "));
     }
+
+    @Test
+public void testCompileAndRunCodeNoMainClass() {
+
+    String sourceCode = "public class NoMain {\n" +//main mal escrito
+            "    public static void main(String[] args) {\n" +
+            "        int num = 10;\n" +
+            "        int div = 0;\n" +
+            "        System.out.println(num / div);\n" +
+            "    }\n" +
+            "};";
+    String codeResult = "Hello, World!";
+
+    ExecutionResultDto resultDto =  codeExecutionService.compileAndRunCode(sourceCode, codeResult);
+
+    //verificar que resultDto tenga los valores esperados
+    Assertions.assertTrue(resultDto.isCompile());
+    Assertions.assertFalse(resultDto.isExecution());
+    Assertions.assertFalse(resultDto.isResultCodeMatch());
+    Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: "));
+    }
 }

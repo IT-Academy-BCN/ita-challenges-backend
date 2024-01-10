@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 @Component
 public class CodeExecutionService {
@@ -32,11 +31,11 @@ public class CodeExecutionService {
         } catch (CompileException e) {
             // Si la compilación falla, actualizar y devolver ExecutionResultDto
             executionResultDto.setMessage("Compilation failed: " + e.getMessage());
+            log.error(e.getMessage());
             return executionResultDto;
         }
 
         // Ejecutar el código
-        /*        try {*/
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
         PrintStream old = System.out;
@@ -46,14 +45,31 @@ public class CodeExecutionService {
             compiler.getClassLoader().loadClass("Main")
                     .getMethod("main", String[].class)
                     .invoke(null, (Object) new String[]{});
-        }catch(ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e){
-//TODO
-        }catch (Exception e){
+        } catch (ClassNotFoundException e) {
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: " + e.getCause());
+            executionResultDto.setMessage("Execution failed: Class not found - " + e.getMessage());
+            log.error(e.getMessage());
+            return executionResultDto;
+        } catch (NoSuchMethodException e) {
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Execution failed: No Main method - " + e.getMessage());
+            log.error(e.getMessage());
+            return executionResultDto;
+        } catch (IllegalAccessException e) {
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Execution failed: Illegal access - " + e.getMessage());
+            log.error(e.getMessage());
+            return executionResultDto;
+        } catch (InvocationTargetException e) {
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Execution failed: Invocation target exception - " + e.getMessage());
+            log.error(e.getMessage());
+            return executionResultDto;
+        } catch (Throwable e) {
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Execution failed: " + e.getMessage());
             return executionResultDto;
         }
-
 
         System.out.flush();
         System.setOut(old);
@@ -68,14 +84,8 @@ public class CodeExecutionService {
             executionResultDto.setMessage("Code executed successfully, result matches expected result. Execution result: " + result);
         } else {
             executionResultDto.setResultCodeMatch(false);
-            executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);            }
-
-      /*  } catch (Exception e) {
-            // Error en la ejecución
-            executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: " + e.getCause());
-            return executionResultDto;
-        }*/
+            executionResultDto.setMessage("Code executed successfully, result does not match expected result. Execution result: " + result);
+        }
 
         return executionResultDto;
     }
