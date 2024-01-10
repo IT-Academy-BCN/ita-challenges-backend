@@ -49,8 +49,9 @@ Librería Janino para compilation y ejecución dinámica
     - https://docs.docker.com/engine/api/sdk/
     - implementation 'com.github.docker-java:docker-java:3.2.11' - para el build.gradle
 
-
-**Explicación de la ejecución del código - CodeExecutionService línea 38:**
+\
+**Explicación de la ejecución del método:** \
+**public ExecutionResult execute(CompilationResult compilationResult, String codeResult):**
 - `ByteArrayOutputStream outputStream = new ByteArrayOutputStream();` Esta línea crea un nuevo objeto `ByteArrayOutputStream`. Este objeto se utiliza para capturar la salida del código que se va a ejecutar.
 - `PrintStream printStream = new PrintStream(outputStream);` Aquí se crea un nuevo objeto `PrintStream` que utiliza el `ByteArrayOutputStream` creado en el paso anterior. `PrintStream` es una clase que proporciona métodos para escribir datos de salida de varias maneras.
 - `PrintStream old = System.out;` Esta línea guarda la salida estándar actual (normalmente la consola) en la variable `old`. Esto se hace para que pueda ser restaurada más tarde.

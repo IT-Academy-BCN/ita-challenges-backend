@@ -18,11 +18,35 @@ public class CodeExecutionService {
 
     public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult) {
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto(false, false, false, "");
+        sourceCode = "public class Main {\n" +
+                "    public static void main(String[] args) {\n" +
+                sourceCode +
+                "    }\n" +
+                "}";
+
+        //ExecutionResultDto executionResultDto = new ExecutionResultDto(false, false, false, "");
         SimpleCompiler compiler = null;
         String result = null;
 
-        // Compilar el código
+        //Compilar el código
+        CompilationResult compilationResult = compile(sourceCode);
+        ExecutionResultDto executionResultDto = compilationResult.getExecutionResultDto();
+
+        if (executionResultDto.isCompile()) {
+            //Ejecutar el código
+            ExecutionResult executionResult = execute(compilationResult, codeResult);
+            if (executionResultDto.isExecution()) {
+                //Comparar el resultado
+                executionResultDto = compareResults(executionResult.getExecutionResult(), codeResult, executionResultDto);
+            }
+        }
+        return executionResultDto;
+    }
+
+    public CompilationResult compile(String sourceCode) {
+        ExecutionResultDto executionResultDto = new ExecutionResultDto(false, false, false, "");
+        SimpleCompiler compiler = null;
+
         try {
             compiler = new SimpleCompiler();
             compiler.cook(sourceCode);
@@ -32,43 +56,30 @@ public class CodeExecutionService {
             // Si la compilación falla, actualizar y devolver ExecutionResultDto
             executionResultDto.setMessage("Compilation failed: " + e.getMessage());
             log.error(e.getMessage());
-            return executionResultDto;
+            return new CompilationResult(executionResultDto, null);
         }
 
-        // Ejecutar el código
+        return new CompilationResult(executionResultDto, compiler);
+    }
+
+    public ExecutionResult execute(CompilationResult compilationResult, String codeResult) {
+        ExecutionResult executionResult = new ExecutionResult(compilationResult.getExecutionResultDto(), "");
+        ExecutionResultDto executionResultDto = compilationResult.getExecutionResultDto();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
         PrintStream old = System.out;
         System.setOut(printStream);
 
         try {
-            compiler.getClassLoader().loadClass("Main")
+            compilationResult.getCompiler().getClassLoader().loadClass("Main")
                     .getMethod("main", String[].class)
                     .invoke(null, (Object) new String[]{});
-        } catch (ClassNotFoundException e) {
-            executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: Class not found - " + e.getMessage());
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException /*invocationtargetexception*/e) {
             log.error(e.getMessage());
-            return executionResultDto;
-        } catch (NoSuchMethodException e) {
-            executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: No Main method - " + e.getMessage());
-            log.error(e.getMessage());
-            return executionResultDto;
-        } catch (IllegalAccessException e) {
-            executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: Illegal access - " + e.getMessage());
-            log.error(e.getMessage());
-            return executionResultDto;
-        } catch (InvocationTargetException e) {
-            executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: Invocation target exception - " + e.getMessage());
-            log.error(e.getMessage());
-            return executionResultDto;
         } catch (Throwable e) {
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Execution failed: " + e.getMessage());
-            return executionResultDto;
+            return executionResult;
         }
 
         System.out.flush();
@@ -76,9 +87,12 @@ public class CodeExecutionService {
 
         // Ejecución correcta
         executionResultDto.setExecution(true);
+        executionResult.setExecutionResult(outputStream.toString());
 
-        // Comparar el resultado
-        result = outputStream.toString();
+        return executionResult;
+    }
+
+    public ExecutionResultDto compareResults(String result, String codeResult, ExecutionResultDto executionResultDto) {
         if (result.equals(codeResult)) {
             executionResultDto.setResultCodeMatch(true);
             executionResultDto.setMessage("Code executed successfully, result matches expected result. Execution result: " + result);
