@@ -45,6 +45,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge,
                                                   String idLanguage, String solutionText) {
 
+        /*
+        TODO - JVR
+           Necesario modificar: un usuario puede enviar varias veces la solución para el challenge hasta que esté en estado "ended"
+           aunque no podrá enviar varias soluciones para el mismo challenge
+       */
+
         if (Boolean.TRUE.equals(userSolutionRepository.findByUserId(UUID.fromString(idUser))
                 .filter(userScore -> userScore.getChallengeId().equals(UUID.fromString(idChallenge)))
                 .hasElements().block())) {
