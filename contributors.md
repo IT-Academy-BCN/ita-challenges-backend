@@ -31,3 +31,4 @@
 * Kirill Dolgopolov - https://github.com/KirillDolgopolov
 * Pau Franco Toda - https://github.com/Parapau
 * Arnau Burguera Calles - https://github.com/ArnauBurguera
+* Fethi Abdellaoui - https://github.com/pounct
