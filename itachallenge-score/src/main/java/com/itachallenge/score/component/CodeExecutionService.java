@@ -14,9 +14,14 @@ import java.lang.reflect.InvocationTargetException;
 @Component
 public class CodeExecutionService {
 
+    /*RECEPCIÓN DEL CÓDIGO DEL USUARIO
+    La cabecera -- public class Main{ public static void main(String[] args){ }}"; --
+    ya viene por defecto, el usuario solo debe agregar el código que se le pide en el enunciado.
+     */
+
     private static final Logger log = LoggerFactory.getLogger(CodeExecutionService.class);
 
-    public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult) {
+    public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult, String[] args) {
 
         sourceCode = "public class Main {\n" +
                 "    public static void main(String[] args) {\n" +
@@ -34,7 +39,7 @@ public class CodeExecutionService {
 
         if (executionResultDto.isCompile()) {
             //Ejecutar el código
-            ExecutionResult executionResult = execute(compilationResult, codeResult);
+            ExecutionResult executionResult = execute(compilationResult, codeResult, args);
             if (executionResultDto.isExecution()) {
                 //Comparar el resultado
                 executionResultDto = compareResults(executionResult.getExecutionResult(), codeResult, executionResultDto);
@@ -62,7 +67,7 @@ public class CodeExecutionService {
         return new CompilationResult(executionResultDto, compiler);
     }
 
-    public ExecutionResult execute(CompilationResult compilationResult, String codeResult) {
+    public ExecutionResult execute(CompilationResult compilationResult, String codeResult, String[] args) {
         ExecutionResult executionResult = new ExecutionResult(compilationResult.getExecutionResultDto(), "");
         ExecutionResultDto executionResultDto = compilationResult.getExecutionResultDto();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -73,7 +78,7 @@ public class CodeExecutionService {
         try {
             compilationResult.getCompiler().getClassLoader().loadClass("Main")
                     .getMethod("main", String[].class)
-                    .invoke(null, (Object) new String[]{});
+                    .invoke(null, (Object) args);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException /*invocationtargetexception*/e) {
             log.error(e.getMessage());
         } catch (Throwable e) {

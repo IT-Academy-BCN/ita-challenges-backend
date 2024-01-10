@@ -6,8 +6,11 @@ es el encargado de compilar y ejecutar el código. Hay que modificar el proceso 
 esto genera problemas graves de seguridad al permitir la entrada de código por parte del
 usuario, esto permite que el usuario ejecute código malicioso en el servidor.
 
+La cabecera `public class Main{ public static void main(String[] args){ }}";`
+ya viene por defecto, el usuario solo debe agregar el código que se le pide en el enunciado.
 
-##### Proceso para compilar con seguridad
+
+### Proceso para compilar con seguridad
 
 Es necesario verificar la seguridad para evitar la inyección de código malicioso
 por parte del usuario
