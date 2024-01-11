@@ -21,6 +21,13 @@ public class GenericUUIDValidator implements ConstraintValidator<GenericUUIDVali
     public boolean isValid(String value, ConstraintValidatorContext context) {
         String customMessage = context.getDefaultConstraintMessageTemplate();
 
+        if (value == null) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(customMessage + ": value is null")
+                    .addConstraintViolation();
+            return false;
+        }
+
         if (!UUID_PATTERN.matcher(value).matches()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(customMessage + ": " + value)

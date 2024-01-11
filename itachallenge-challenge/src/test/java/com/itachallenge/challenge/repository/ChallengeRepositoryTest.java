@@ -280,4 +280,70 @@ class ChallengeRepositoryTest {
                 .verifyComplete();
     }
 
+    @DisplayName("Add solution to challenge Test")
+    @Test
+    void addSolutionToChallengeTest() {
+        // Arrange
+        UUID uuidLang1 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID uuidLang2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> challengeFiltered1 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang1);
+        Flux<ChallengeDocument> challengeFiltered2 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang2);
+
+        StepVerifier.create(challengeFiltered1)
+                .expectNextCount(2)
+                .verifyComplete();
+        StepVerifier.create(challengeFiltered2)
+                .expectNextCount(3)
+                .verifyComplete();
+
+        // Act
+        Mono<ChallengeDocument> challengeMono = challengeRepository.findByUuid(uuid_1);
+        ChallengeDocument challengeDocument = challengeMono.block();
+        List<UUID> solutions = challengeDocument.getSolutions();
+        solutions.add(UUID.randomUUID());
+        challengeDocument.setSolutions(solutions);
+        Mono<ChallengeDocument> challengeDocumentMono = challengeRepository.save(challengeDocument);
+        ChallengeDocument challengeDocumentSaved = challengeDocumentMono.block();
+
+        // Assert
+        Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
+    }
+
+    @DisplayName("Add solution to solutions Test")
+    @Test
+    void addSolutionToSolutionsTest() {
+        // Arrange
+        UUID uuidLang1 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID uuidLang2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+
+        Flux<ChallengeDocument> challengeFiltered1 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang1);
+        Flux<ChallengeDocument> challengeFiltered2 = challengeRepository
+                .findByLanguages_IdLanguage(uuidLang2);
+
+        StepVerifier.create(challengeFiltered1)
+                .expectNextCount(2)
+                .verifyComplete();
+        StepVerifier.create(challengeFiltered2)
+                .expectNextCount(3)
+                .verifyComplete();
+
+        // Act
+        Mono<ChallengeDocument> challengeMono = challengeRepository.findByUuid(uuid_1);
+        ChallengeDocument challengeDocument = challengeMono.block();
+        assert challengeDocument != null;
+        List<UUID> solutions = challengeDocument.getSolutions();
+        solutions.add(UUID.randomUUID());
+        challengeDocument.setSolutions(solutions);
+        Mono<ChallengeDocument> challengeDocumentMono = challengeRepository.save(challengeDocument);
+        ChallengeDocument challengeDocumentSaved = challengeDocumentMono.block();
+
+        // Assert
+        assert challengeDocumentSaved != null;
+        Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
+    }
+
 }

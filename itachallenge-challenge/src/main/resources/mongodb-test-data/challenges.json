@@ -20,7 +20,6 @@
         "ES": "Su tarea es crear una función que pueda tomar cualquier número entero no negativo como argumento y devolverlo con sus dígitos en orden descendente. Básicamente, reorganice los dígitos para crear el número más alto posible.",
         "CA": "La teva tasca es fer una funció que pugui prendre qualsevol nombre no negatiu com a argument i retornar-lo amb tots els seus digits reordenats de forma descendent. Basicament, reordenar els digits per crear el nombre mes alt possible.",
         "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
-
       },
       "examples": [
         {
@@ -32,7 +31,6 @@
             "ES": "Orden descendente",
             "CA": "Ordre descendent",
             "EN": "Descending Order"
-
           }
         },
         {
@@ -67,7 +65,6 @@
         "ES": "Orden descendente",
         "CA": "Ordre descendent",
         "EN": "Descending Order"
-
       }
     },
     "languages": [
@@ -189,7 +186,6 @@
         "ES":"Orden descendente",
         "CA": "Ordre descendent",
         "EN": "Descending Order"
-
       }
     },
     "languages": [

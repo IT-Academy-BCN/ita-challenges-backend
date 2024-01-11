@@ -45,7 +45,7 @@
     "challenge_id": { "$uuid": "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"},
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
-    "status": "medium",
+    "status": "empty",
     "score": 60,
     "solution": [
       {
