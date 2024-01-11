@@ -2,10 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -188,5 +185,19 @@ public class ChallengeController {
                 });
     }
 
-
+    @GetMapping("challenges/{idChallenge}/related")
+    @Operation(
+            operationId = "Get the related challenges from a chosen challenge.",
+            summary = "Get to see the challenge title, creation date, level, popularity and languages.",
+            description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<GenericResultDto<RelatedDto>> getRelated(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
+                                                         @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                                         @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
 }

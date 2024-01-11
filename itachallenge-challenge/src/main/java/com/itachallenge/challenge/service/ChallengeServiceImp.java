@@ -18,14 +18,11 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -187,7 +184,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
+    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id, int offset, int limit) {
 
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -196,6 +193,8 @@ public class ChallengeServiceImp implements IChallengeService {
                                 .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
                                 .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class)))
                         )
+                        .skip(offset)
+                        .take(limit)
                         .collectList()
                         .map(relatedChallenges -> {
                             GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();

@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -344,4 +341,39 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
+
+    @Test
+    void getAllRelatedChallenges_ChallengesReturned() {
+        //Arrange
+        String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        GenericResultDto<RelatedDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new RelatedDto[]{new RelatedDto(), new RelatedDto()});
+
+        when(challengeService.getRelatedChallenges(challengeStringId, 0, 0)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeStringId + "/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getAllRelatedChallenges_ChallengesReturnedPaginated() {
+        //Arrange
+        String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        GenericResultDto<RelatedDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new RelatedDto[]{new RelatedDto(), new RelatedDto()});
+
+        when(challengeService.getRelatedChallenges(challengeStringId, 1, 1)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeStringId + "/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
 }
