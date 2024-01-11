@@ -81,6 +81,11 @@ public class CodeExecutionService {
                     .invoke(null, (Object) args);
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException /*invocationtargetexception*/e) {
             log.error(e.getMessage());
+        } catch (InvocationTargetException e) {
+            log.error(e.getMessage() + " " + e.getTargetException());
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Execution failed: " + e.getTargetException());
+            return executionResult;
         } catch (Throwable e) {
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Execution failed: " + e.getMessage());
