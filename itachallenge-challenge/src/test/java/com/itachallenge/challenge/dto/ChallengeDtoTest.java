@@ -45,8 +45,8 @@ class ChallengeDtoTest {
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
         Map<Locale, String> titleMap = new HashMap<>();
-            titleMap.put(Locale.forLanguageTag("ES"), "Sociis Industries");
-            titleMap.put(Locale.forLanguageTag("CA"), "Sociis Industries");
+            titleMap.put(Locale.forLanguageTag("ES"), "Industrias Sociis");
+            titleMap.put(Locale.forLanguageTag("CA"), "Industries Sociis");
             titleMap.put(Locale.ENGLISH, "Sociis Industries");
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")

@@ -116,17 +116,17 @@ class ChallengeDocumentToDtoConverterTest {
 
         Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeDoc1, challengeDoc2), ChallengeDto.class);
 
-        ChallengeDto expectedDto1 = challengeDto1;
-        ChallengeDto expectedDto2 = challengeDto2;
+/*        ChallengeDto expectedDto1 = challengeDto1;
+        ChallengeDto expectedDto2 = challengeDto2;*/
 
         assertThat(resultDto.count().block()).isEqualTo(Long.valueOf(2));
 
         assertThat(resultDto.blockFirst()).usingRecursiveComparison()
                 .ignoringFields("percentage", "popularity")
-                .isEqualTo(expectedDto1);
+                .isEqualTo(challengeDto1);
         assertThat(resultDto.blockLast()).usingRecursiveComparison()
                 .ignoringFields("percentage", "popularity")
-                .isEqualTo(expectedDto2);
+                .isEqualTo(challengeDto2);
     }
 
 
@@ -138,6 +138,8 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
         when(challengeDocMocked.getLevel()).thenReturn(level);
+        //TODO -  Pendiente añadir objeto DetailDto
+        //when(challengeDocMocked.getDetail()).thenReturn()
         when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
         when(challengeDocMocked.getLanguages()).thenReturn(languages);
         when(challengeDocMocked.getSolutions()).thenReturn(solutions);
