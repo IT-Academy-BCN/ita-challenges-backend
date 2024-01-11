@@ -68,6 +68,7 @@ class UserDocumentControllerTest {
         when(userSolutionService.addSolution(userSolutionDto.getUserId(),
                         userSolutionDto.getChallengeId(),
                         userSolutionDto.getLanguageId(),
+                        userSolutionDto.getStatus(),
                         userSolutionDto.getSolutionText()))
                 .thenReturn(Mono.just(expectedResponse));
 
@@ -89,6 +90,7 @@ class UserDocumentControllerTest {
                             userSolutionDto.getUserId(),
                             userSolutionDto.getChallengeId(),
                             userSolutionDto.getLanguageId(),
+                            userSolutionDto.getStatus(),
                             userSolutionDto.getSolutionText()
                     );
                 });
@@ -98,12 +100,32 @@ class UserDocumentControllerTest {
     void addSolution_InvalidValues_BadRequest() {
         String URI_TEST = "/solution";
 
-        List<UserSolutionDto> testCases = Arrays.asList(
-                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "")
-        );
+        List<UserSolutionDto> testCases = List.of(
+                UserSolutionDto.builder()
+                        .userId("invalid_uuid")
+                        .challengeId("550e8400-e29b-41d4-a716-446655440002")
+                        .languageId("550e8400-e29b-41d4-a716-446655440003")
+                        .solutionText("This is a test solution").build(),
+                UserSolutionDto.builder()
+                        .userId("550e8400-e29b-41d4-a716-446655440001")
+                        .challengeId("invalid_uuid")
+                        .languageId("550e8400-e29b-41d4-a716-446655440003")
+                        .solutionText("This is a test solution").build(),
+                UserSolutionDto.builder()
+                        .userId("550e8400-e29b-41d4-a716-446655440001")
+                        .challengeId("550e8400-e29b-41d4-a716-446655440002")
+                        .languageId("invalid_uuid")
+                        .solutionText("This is a test solution").build(),
+                UserSolutionDto.builder()
+                        .userId("550e8400-e29b-41d4-a716-446655440001")
+                        .challengeId("550e8400-e29b-41d4-a716-446655440002")
+                        .languageId("550e8400-e29b-41d4-a716-446655440003")
+                        .solutionText("").build()
+//                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "This is a test solution"),
+//                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", "This is a test solution"),
+//                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", "This is a test solution"),
+//                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "")
+                );
 
         for (UserSolutionDto testCase : testCases) {
             webTestClient.put()
@@ -137,7 +159,7 @@ class UserDocumentControllerTest {
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
         userSolutionDto.setSolutionText("This is a test solution");
 
-        when(userSolutionService.addSolution(any(), any(), any(), any()))
+        when(userSolutionService.addSolution(any(), any(), any(),any(), any()))
                 .thenReturn(Mono.error(new RuntimeException("Test exception")));
 
         webTestClient.put()

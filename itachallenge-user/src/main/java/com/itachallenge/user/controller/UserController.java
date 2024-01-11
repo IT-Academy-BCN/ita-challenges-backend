@@ -104,6 +104,7 @@ public class UserController {
                         userSolutionDto.getUserId(),
                         userSolutionDto.getChallengeId(),
                         userSolutionDto.getLanguageId(),
+                        userSolutionDto.getStatus(),
                         userSolutionDto.getSolutionText())
                 .map(savedScoreDto ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)

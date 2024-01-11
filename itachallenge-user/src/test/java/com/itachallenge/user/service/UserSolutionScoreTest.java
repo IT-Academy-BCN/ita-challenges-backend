@@ -44,7 +44,8 @@ class UserSolutionScoreTest {
         when(userSolutionRepository.findByUserId(UUID.fromString(userSolutionDocument.getUserId().toString())))
                 .thenReturn(Flux.empty());
 
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage, solutionText);
+
+        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage,null, solutionText);
 
         UUID userUuid = UUID.fromString(idUser);
         UUID challengeUuid = UUID.fromString(idChallenge);

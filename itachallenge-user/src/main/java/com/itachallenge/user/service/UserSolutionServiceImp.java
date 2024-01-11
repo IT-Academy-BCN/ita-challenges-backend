@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge,
-                                                  String idLanguage, String solutionText) {
+                                                  String idLanguage, ChallengeStatus challengeStatus, String solutionText) {
 
         if (Boolean.TRUE.equals(userSolutionRepository.findByUserId(UUID.fromString(idUser))
                 .filter(userScore -> userScore.getChallengeId().equals(UUID.fromString(idChallenge)))
@@ -60,35 +61,41 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         solutionDoc.setUuid(UUID.randomUUID());
         solutionDoc.setSolutionText(solutionText);
 
-        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status("PENDING")
-                .score(13)
-                .solutionDocument(solutionDocuments)
-                .build();
+        // si el status del challenge no esta ENDED
+        if (challengeStatus != ChallengeStatus.ENDED){
+            UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                    .uuid(UUID.randomUUID())
+                    .userId(userUuid)
+                    .challengeId(challengeUuid)
+                    .languageId(languageUuid)
+                    .status(challengeStatus)
+                    .score(13)
+                    .solutionDocument(solutionDocuments)
+                    .build();
+            userSolutionDocument.getSolutionDocument().add(solutionDoc);
 
-        userSolutionDocument.getSolutionDocument().add(solutionDoc);
+            if (userSolutionDocument.getUuid() == null) {
+                userSolutionDocument.setUuid(UUID.randomUUID());
+            }
 
-        if (userSolutionDocument.getUuid() == null) {
-            userSolutionDocument.setUuid(UUID.randomUUID());
+            return userSolutionRepository.save(userSolutionDocument)
+                    .flatMap(savedDocument -> {
+                        UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
+                                .userId(idUser)
+                                .languageId(idLanguage)
+                                .challengeId(idChallenge)
+                                .solutionText(solutionText)
+                                .score(savedDocument.getScore())
+                                .build();
+
+                        return Mono.just(userSolutionScoreDto);
+                    });
+        }
+        else {
+            return Mono.error(new Exception("Sorry this challenge is ended"));
+        }
         }
 
-        return userSolutionRepository.save(userSolutionDocument)
-                .flatMap(savedDocument -> {
-                    UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
-                            .userId(idUser)
-                            .languageId(idLanguage)
-                            .challengeId(idChallenge)
-                            .solutionText(solutionText)
-                            .score(savedDocument.getScore())
-                            .build();
-
-                    return Mono.just(userSolutionScoreDto);
-                });
-    }
 
 }
 
