@@ -9,6 +9,8 @@ usuario, esto permite que el usuario ejecute código malicioso en el servidor.
 La cabecera `public class Main{ public static void main(String[] args){ }}";`
 ya viene por defecto, el usuario solo debe agregar el código que se le pide en el enunciado.
 
+El control de la correcta inyección de argumentos (que sean de tipo String[]) se tiene que hacer en el controller
+
 
 ### Proceso para compilar con seguridad
 

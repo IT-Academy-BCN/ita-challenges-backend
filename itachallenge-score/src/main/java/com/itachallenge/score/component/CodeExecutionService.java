@@ -79,7 +79,7 @@ public class CodeExecutionService {
             compilationResult.getCompiler().getClassLoader().loadClass("Main")
                     .getMethod("main", String[].class)
                     .invoke(null, (Object) args);
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException /*invocationtargetexception*/e) {
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
             log.error(e.getMessage());
         } catch (InvocationTargetException e) {
             log.error(e.getMessage() + " " + e.getTargetException());
