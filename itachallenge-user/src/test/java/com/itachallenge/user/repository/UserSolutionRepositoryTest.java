@@ -2,6 +2,7 @@ package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.enums.ChallengeStatus;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -51,7 +52,7 @@ public class UserSolutionRepositoryTest {
     private static UUID testUserUuid;
     private static UUID testChallengeUuid;
     private static UUID testLanguageUuid;
-    private static int allMedium;
+    private static ChallengeStatus testStatus;
     private static int allBookmarked;
     private static int score;
     private static int all;
@@ -78,7 +79,7 @@ public class UserSolutionRepositoryTest {
             testChallengeUuid = UUID.fromString(field.get("challenge_id").get("$uuid").asText());
             testLanguageUuid = UUID.fromString(field.get("language_id").get("$uuid").asText());
             allBookmarked = field.get("bookmarked").asBoolean() ? allBookmarked + 1 : allBookmarked;
-            allMedium = field.get("status").asText().equals("medium") ? allMedium + 1 : allMedium;
+            testStatus = ChallengeStatus.valueOf(field.get("status").asText().toUpperCase());
             score = field.get("score").asInt();
             all++;
 
@@ -90,7 +91,7 @@ public class UserSolutionRepositoryTest {
                     .languageId(UUID.fromString(field.get("language_id").get("$uuid").asText()))
                     .bookmarked(field.get("bookmarked").asBoolean())
                     .score(field.get("score").asInt())
-                    .status(field.get("status").asText())
+                    .status(ChallengeStatus.valueOf(field.get("status").asText().toUpperCase()))
                     .build();
 
             JsonNode solutionNode = field.get("solution");
@@ -191,9 +192,10 @@ public class UserSolutionRepositoryTest {
     @Test
     void testFindByStatus(){
 
-        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByStatus("medium");
+        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByStatus(testStatus);
         StepVerifier.create(solutionsFound)
-                .expectNextCount(allMedium)
+                .expectNextMatches(userSolutionDocument -> userSolutionDocument.getStatus().equals(testStatus))
+                //.expectNextCount()
                 .verifyComplete();
     }
 

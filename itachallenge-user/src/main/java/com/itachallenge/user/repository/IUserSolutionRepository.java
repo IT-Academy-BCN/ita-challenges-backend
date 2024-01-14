@@ -1,6 +1,7 @@
 package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.enums.ChallengeStatus;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -18,7 +19,7 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByLanguageId(UUID languageId);
     Flux<UserSolutionDocument> findByBookmarked(Boolean bookmarked);
     Flux<UserSolutionDocument> findByScore(int score);
-    Flux<UserSolutionDocument> findByStatus(String status);
+    Flux<UserSolutionDocument> findByStatus(ChallengeStatus status);
     Mono<Boolean> existsByUuid(UUID uuid);
 
 

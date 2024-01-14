@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -59,6 +60,7 @@ class UserDocumentControllerTest {
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setStatus("STARTED");
         userSolutionDto.setSolutionText("This is a test solution");
 
         UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
@@ -68,6 +70,7 @@ class UserDocumentControllerTest {
         when(userSolutionService.addSolution(userSolutionDto.getUserId(),
                         userSolutionDto.getChallengeId(),
                         userSolutionDto.getLanguageId(),
+                        userSolutionDto.getStatus(),
                         userSolutionDto.getSolutionText()))
                 .thenReturn(Mono.just(expectedResponse));
 
@@ -89,6 +92,7 @@ class UserDocumentControllerTest {
                             userSolutionDto.getUserId(),
                             userSolutionDto.getChallengeId(),
                             userSolutionDto.getLanguageId(),
+                            userSolutionDto.getStatus(),
                             userSolutionDto.getSolutionText()
                     );
                 });
@@ -99,10 +103,12 @@ class UserDocumentControllerTest {
         String URI_TEST = "/solution";
 
         List<UserSolutionDto> testCases = Arrays.asList(
-                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "")
+                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "STARTED", "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", "STARTED", "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", "STARTED", "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "", "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "STARTED", "")
+
         );
 
         for (UserSolutionDto testCase : testCases) {
@@ -135,9 +141,10 @@ class UserDocumentControllerTest {
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setStatus("STARTED");
         userSolutionDto.setSolutionText("This is a test solution");
 
-        when(userSolutionService.addSolution(any(), any(), any(), any()))
+        when(userSolutionService.addSolution(any(), any(), any(),any(), any()))
                 .thenReturn(Mono.error(new RuntimeException("Test exception")));
 
         webTestClient.put()

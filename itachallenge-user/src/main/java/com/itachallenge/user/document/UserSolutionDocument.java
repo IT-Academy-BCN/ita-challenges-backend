@@ -1,11 +1,12 @@
 package com.itachallenge.user.document;
 
+import com.itachallenge.user.enums.ChallengeStatus;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @AllArgsConstructor
@@ -32,12 +33,13 @@ public class UserSolutionDocument {
     private boolean bookmarked;
 
     @Field("status")
-    private String status;
+    private ChallengeStatus status;
 
     @Field("score")
     private int score;
 
     @Field("solution")
     private List<SolutionDocument> solutionDocument;
+    //private SolutionDocument solutionDocument;
 
 }

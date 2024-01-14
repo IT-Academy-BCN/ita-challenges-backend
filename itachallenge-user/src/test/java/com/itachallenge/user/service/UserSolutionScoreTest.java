@@ -1,6 +1,7 @@
 package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,19 +25,20 @@ class UserSolutionScoreTest {
 
     @InjectMocks
     private UserSolutionServiceImp userSolutionService;
-    ;
     @Test
     void testAddSolution() {
 
         String idUser = "550e8400-e29b-41d4-a716-446655440001";
         String idChallenge = "550e8400-e29b-41d4-a716-446655440002";
         String idLanguage = "550e8400-e29b-41d4-a716-446655440003";
+        String status = ChallengeStatus.STARTED.toString();// getChallengeStatusByIdChallenge();
         String solutionText = "This is a test solution";
 
         UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
         userSolutionDocument.setUserId(UUID.fromString(idUser));
         userSolutionDocument.setChallengeId(UUID.fromString(idChallenge));
         userSolutionDocument.setLanguageId(UUID.fromString(idLanguage));
+        userSolutionDocument.setStatus(ChallengeStatus.STARTED);
         userSolutionDocument.setScore(13);
 
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
@@ -44,7 +46,7 @@ class UserSolutionScoreTest {
         when(userSolutionRepository.findByUserId(UUID.fromString(userSolutionDocument.getUserId().toString())))
                 .thenReturn(Flux.empty());
 
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage, solutionText);
+        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(idUser, idChallenge, idLanguage, status, solutionText);
 
         UUID userUuid = UUID.fromString(idUser);
         UUID challengeUuid = UUID.fromString(idChallenge);

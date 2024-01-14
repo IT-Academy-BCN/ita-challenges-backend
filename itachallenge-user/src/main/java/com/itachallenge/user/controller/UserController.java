@@ -89,7 +89,7 @@ public class UserController {
 
     @PutMapping(path = "/solution")
     @Operation(
-            summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
+            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
                             mediaType = "application/json")}),
@@ -104,9 +104,10 @@ public class UserController {
                         userSolutionDto.getUserId(),
                         userSolutionDto.getChallengeId(),
                         userSolutionDto.getLanguageId(),
+                        userSolutionDto.getStatus(),
                         userSolutionDto.getSolutionText())
-                .map(savedScoreDto ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
+                .map(savedUserSolutionScoreDto ->
+                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedUserSolutionScoreDto)
                 );
     }
 
