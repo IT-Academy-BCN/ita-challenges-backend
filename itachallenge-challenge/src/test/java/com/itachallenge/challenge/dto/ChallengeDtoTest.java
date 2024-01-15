@@ -34,23 +34,17 @@ class ChallengeDtoTest {
 
     private ChallengeDto challengeDtoFromDeserialization;
 
-    /**
-     * Para el test, es necesario pasar como parámetro a creationDate el
-     * String equivalente al tipo de formato que devuelve LocalDateTime,
-     * ya que en el test lo mapea de nuevo y no coincide formato.
-     * Fijarse en archivo BasicInfoChallengeV1.json, ahí tenemos el expected format.
-     */
     @BeforeEach
     void setUp(){
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        UUID exampleRandomId1 = uuid.randomUUID();
-        UUID exampleRandomId2 = uuid2.randomUUID();
+        UUID exampleRandomId1 = uuid.fromString("2dab6eaa-fdf4-4a93-8088-810a956e2bf8");
+        UUID exampleRandomId2 = uuid2.fromString("6c02025e-b06f-420a-bafb-28c737b18473");
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
         Map<Locale, String> titleMap = new HashMap<>();
-            titleMap.put(Locale.forLanguageTag("ES"), "Sociis Industries");
-            titleMap.put(Locale.forLanguageTag("CA"), "Sociis Industries");
+            titleMap.put(Locale.forLanguageTag("ES"), "Industrias Sociis");
+            titleMap.put(Locale.forLanguageTag("CA"), "Industries Sociis");
             titleMap.put(Locale.ENGLISH, "Sociis Industries");
         Map<Locale, String> descriptionMap = new HashMap<>();
             descriptionMap.put(Locale.forLanguageTag("ES"), "Descripcíón de prueba");
