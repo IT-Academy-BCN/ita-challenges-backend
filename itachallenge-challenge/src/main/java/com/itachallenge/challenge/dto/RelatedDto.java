@@ -36,6 +36,4 @@ public class RelatedDto {
 
     @JsonProperty(value = "related_languages", index = 5)
     private Set<LanguageDto> languages;
-
-
 }

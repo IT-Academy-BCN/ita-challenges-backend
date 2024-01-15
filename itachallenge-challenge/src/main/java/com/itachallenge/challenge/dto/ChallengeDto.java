@@ -2,6 +2,7 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.challenge.document.DetailDocument;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,7 @@ public class ChallengeDto {
     private String creationDate;
 
     @JsonProperty(value = "detail", index = 4)
-    private DetailDto detail;
+    private DetailDocument detail;
 
     @JsonProperty(index = 5)
     private Integer popularity;

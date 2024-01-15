@@ -70,6 +70,7 @@ class ChallengeDocumentToDtoConverterTest {
             notesMap.put(Locale.forLanguageTag("CA"), "Notes");
             notesMap.put(Locale.ENGLISH, "Notes");
         DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+
         Integer popularity = 0;
         Float percentage = 0.0f;
 
@@ -85,12 +86,12 @@ class ChallengeDocumentToDtoConverterTest {
                 Set.of(languageDoc1, languageDoc2),
                 List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
 
-        challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate,
+        challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
                 popularity, percentage);
 
-        challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate,
+        challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
                 popularity, percentage);
@@ -116,8 +117,7 @@ class ChallengeDocumentToDtoConverterTest {
 
         Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeDoc1, challengeDoc2), ChallengeDto.class);
 
-/*        ChallengeDto expectedDto1 = challengeDto1;
-        ChallengeDto expectedDto2 = challengeDto2;*/
+
 
         assertThat(resultDto.count().block()).isEqualTo(Long.valueOf(2));
 
@@ -131,15 +131,14 @@ class ChallengeDocumentToDtoConverterTest {
 
 
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
         when(challengeDocMocked.getLevel()).thenReturn(level);
-        //TODO -  Pendiente añadir objeto DetailDto
-        //when(challengeDocMocked.getDetail()).thenReturn()
+        when(challengeDocMocked.getDetail()).thenReturn(detail);
         when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
         when(challengeDocMocked.getLanguages()).thenReturn(languages);
         when(challengeDocMocked.getSolutions()).thenReturn(solutions);
