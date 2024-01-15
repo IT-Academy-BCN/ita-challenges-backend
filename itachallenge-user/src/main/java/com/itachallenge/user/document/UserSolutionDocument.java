@@ -5,13 +5,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @AllArgsConstructor
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
-@Getter
 @Document(collection="solutions")
 public class UserSolutionDocument {
 
@@ -37,6 +37,7 @@ public class UserSolutionDocument {
     @Field("score")
     private int score;
 
-     @Field("solution")
-     private List<SolutionDocument> solutionDocument;
+    @Field("solution")
+    private List<SolutionDocument> solutionDocument;
+
 }

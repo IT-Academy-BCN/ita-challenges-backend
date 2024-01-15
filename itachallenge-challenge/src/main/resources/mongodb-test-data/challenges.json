@@ -4,9 +4,9 @@
       "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
     },
     "challenge_title": {
-      "ES": "Orden descendente",
-      "CAT": "Títol en català",
-      "EN": "Descending Order"
+      "ES": "Reordena para crecer",
+      "CAT": "Reordena per creixer",
+      "EN": "Rearrenge to grow"
     },
     "level": "EASY",
     "creation_date": {
@@ -15,7 +15,7 @@
     "detail": {
       "description": {
         "ES": "Su tarea es crear una función que pueda tomar cualquier número entero no negativo como argumento y devolverlo con sus dígitos en orden descendente. Básicamente, reorganice los dígitos para crear el número más alto posible.",
-        "CAT": "Descripció en català",
+        "CAT": "La teva tasca es fer una funció que pugui prendre qualsevol nombre no negatiu com a argument i retornar-lo amb tots els seus digits reordenats de forma descendent. Basicament, reordenar els digits per crear el nombre mes alt possible.",
         "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
       },
       "examples": [
@@ -25,7 +25,7 @@
           },
           "example_text": {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
           }
         },
@@ -33,26 +33,28 @@
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         }
       ],
       "notes": {
         "ES": "Orden descendente",
-        "CAT": "Títol en català",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       }
     },
@@ -111,55 +113,59 @@
       "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
     },
     "challenge_title": {
-      "ES": "Orden descendente",
-      "CAT": "Títol en català",
-      "EN": "Descending Order"
-    },
+        "ES": "Buscando los extremos",
+        "CAT": "Buscant els extrems",
+        "EN": "Searching for extremes"
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "En esta pequeña tarea, se te proporciona una cadena de números separados por espacios, y debes devolver el número más alto y el más bajo.",
-        "CAT": "Descripció en català",
-        "EN": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
-      },
+      "description": 
+        {
+          "ES": "En esta pequeña tarea, se te proporciona una cadena de números separados por espacios, y debes devolver el número más alto y el más bajo.",
+          "CAT": "En aquesta petita tasca set donara una string de nombre separats per espais, hauras de retornar el major i menor d'aquests nombres.",
+          "EN": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "aef3ebe5-1a11-4b32-9f6e-98d27e2be22d"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Phasellus vel velit malesuada, fe",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "8398539e-7b48-4a1e-9b8b-136f711c3dc9"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "1e6af8d0-ccbf-4ebf-90ae-8e9b098a7a15"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
+        "ES":"Orden descendentet quam in, aliquet ipsum.",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       }
     },
@@ -172,31 +178,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
-      }
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
-      {
-        "$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"
-      },
-      {
-        "$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"
-      },
-      {
-        "$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"
-      }
+      {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
+      {"$uuid": "0dcad56d-dd92-476d-92cc-eb89dd0e528f"},
+      {"$uuid": "86963564-5df6-417a-84e8-e52a98c9cd3d"}
     ],
     "related": [
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
-      }
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"}
     ],
     "testing_values": [
       {
@@ -245,67 +237,72 @@
       "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
     },
     "challenge_title": {
-      "ES": "Eres muy cuadrado",
-      "CAT": "Títol en català",
-      "EN": "You're a square!"
-    },
+        "ES": "Eres muy cuadriculado!",
+        "CAT": "Ets molt quadriculat!",
+        "EN": "You're a square!"
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
-        "ES": "Te gustan los bloques de construcción. Especialmente te gusta construir bloques que son cuadrados. Y lo que más te gusta es organizarlos en un cuadrado de bloques de construcción cuadrados. Sin embargo, a veces no puedes organizarlos en un cuadrado. ¡En cambio, terminas con un simple rectángulo! ¡Esas cosas malditas! Si tan solo tuvieras una manera de saber si estás trabajando en vano... ¡Espera! ¡Eso es! Solo tienes que verificar si tu número de bloques de construcción es un cuadrado perfecto. Tarea\n    Dado un número entero, determina si es un número cuadrado:\n    \n       En matemáticas, un número cuadrado o cuadrado perfecto es un número entero que es el cuadrado de otro número entero; en otras palabras, es el producto de algún número entero consigo mismo.\n    \n       Las pruebas siempre usarán algún número entero, así que no te preocupes por eso en lenguajes de tipado dinámico.",
-        "CAT": "Descripció en català",
-        "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n       In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n       The tests will always use some integral number, so don't worry about that in dynamic typed languages."
+          "ES": "Te gustan los bloques de construcción. Especialmente te gusta construir bloques que son cuadrados. Y lo que más te gusta es organizarlos en un cuadrado de bloques de construcción cuadrados. Sin embargo, a veces no puedes organizarlos en un cuadrado. ¡En cambio, terminas con un simple rectángulo! ¡Esas cosas malditas! Si tan solo tuvieras una manera de saber si estás trabajando en vano... ¡Espera! ¡Eso es! Solo tienes que verificar si tu número de bloques de construcción es un cuadrado perfecto. Tarea\n    Dado un número entero, determina si es un número cuadrado:\n    \n       En matemáticas, un número cuadrado o cuadrado perfecto es un número entero que es el cuadrado de otro número entero; en otras palabras, es el producto de algún número entero consigo mismo.\n    \n       Las pruebas siempre usarán algún número entero, así que no te preocupes por eso en lenguajes de tipado dinámico.",
+          "CAT": "T'agraden els blocs de construcció. T'agraden especialment els blocs quadrats. I el que encara t'agrada més, és colocar-los de forma que creïn un quadrat de blocs de construcció!	Però, de vegades no els pots ordenar en un quadrat. En canvi, acabes amb un simple rectangle! Maleíts rectangles! Tant de bó tinguessis una manera de saber si estas treballant en va... Espera! Ja ho tinc! Nomes has de comprovar si el teu nombre de quadrats es un quadrat. Tasca\n	Donat un nombre natural(int), deterimna si es tracta d'un nombre quadrat:\n	\n	En les matemàtiques. un nombre quadrat o quadrat perfecte es un nombre natural que es el quadrat de un altre nombre natural. Dit d'una altre manera, és el producte d'un nombre amb ell mateix.\n	\n	Els tests sempre fan servir nombres naturals ossigui que no et preocupis sobre aquesta dinamica en llenguatges tipats.",
+          "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n       In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n       The tests will always use some integral number, so don't worry about that in dynamic typed languages."
       },
       "examples": [
         {
           "_id": {
             "$uuid": "843273ea-0ebe-4284-aa3b-4bce6909db0b"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "f61d3345-248d-4f3f-a0e4-2e4b64f37183"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "7a5c6e49-784d-4504-88b5-0d4a2618e9f5"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "26ae1f8e-5b8a-4e5d-9a0a-b44ff2356f9b"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES":  "Orden descendente",
+          "CAT": "Ordre descendent",
+          "EN":  "Descending Order"
+        }
     },
     "languages": [
       {
@@ -316,31 +313,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
-      }
+      {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"}
     ],
     "resources": [
-      {
-        "$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"
-      },
-      {
-        "$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
-      },
-      {
-        "$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"
-      }
+      {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
+      {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid": "8b7ff36f-5110-4450-96ed-72f6f6cc8a5f"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      },
-      {
-        "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"},
+      {"$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"}
     ],
     "testing_values": [
       {
@@ -362,67 +345,71 @@
       "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
     },
     "challenge_title": {
-      "ES": "Filtrado de Listas",
-      "CAT": "Títol en català",
-      "EN": "List Filtering"
-    },
+        "ES": "Filtrado de Listas",
+        "CAT": "Filtratge de Llistes",
+        "EN": "List Filtering"
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
-        "ES": "En esta kata, crearás una función que tome una lista de integers no negativos y strings, y devuelva una nueva lista con las strings filtradas.",
-        "CAT": "Descripció en català",
-        "EN": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
-      },
+          "ES": "En esta kata, crearás una función que tome una lista de integers no negativos y strings, y devuelva una nueva lista con las strings filtradas.",
+          "CAT": "En aquesta kata hauràs de crear una funcio que prengui una llista de nombres no negatius i strings i retorni una nova llista amb les string filtrades i eliminades.",
+          "EN": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "5aeaf1f1-11bc-462a-8620-23d4f2efcc30"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "9e1ab3b0-0d1e-495b-bb33-4db6efc4f9f3"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "d33fdef1-1f92-4fb7-8e8f-0e42f9dcd1d4"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "0bdf4c7b-c6e2-4a37-a8fb-8cbf72c8648a"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
     },
     "languages": [
       {
@@ -433,31 +420,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"
-      },
-      {
-        "$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"
-      },
-      {
-        "$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"
-      }
+      {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
+      {"$uuid": "960fb136-3bec-4f3d-a326-ccda2b92bbee"},
+      {"$uuid": "4dc55815-ef11-4824-8b85-e57d4dd8659d"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -512,66 +485,70 @@
       "$uuid": "6099f6e8-39b2-4c72-9ae1-21fdd3c9010a"
     },
     "challenge_title": {
-      "ES": "Isogramas",
-      "CAT": "Títol en català",
-      "EN": "Isograms"
-    },
+        "ES": "Isogramas",
+        "CAT": "Isogrames",
+        "EN": "Isograms"
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
-        "ES": "Un isograma es una palabra que no tiene letras repetidas, ya sea consecutiva o no consecutiva. Implementa una función que determine si una cadena que contiene solo letras es un isograma. Supón que la cadena vacía es un isograma. Ignora la distinción entre mayúsculas y minúsculas.\\n       Ejemplo: (Entrada --> Salida)\\n       \\\"Dermatoglyphics\\\" --> true \\\"aba\\\" --> false \\\"moOse\\\" --> false (ignorar mayúsculas y minúsculas)",
-        "CAT": "Descripció en català",
-        "EN": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
-      },
+          "ES": "Un isograma es una palabra que no tiene letras repetidas, ya sea consecutiva o no consecutiva. Implementa una función que determine si una cadena que contiene solo letras es un isograma. Supón que la cadena vacía es un isograma. Ignora la distinción entre mayúsculas y minúsculas.\\n       Ejemplo: (Entrada --> Salida)\\n       \\\"Dermatoglyphics\\\" --> true \\\"aba\\\" --> false \\\"moOse\\\" --> false (ignorar mayúsculas y minúsculas)",
+          "CAT": "Un isograma es una paraula que no te cap lleta repetida, sigui consecutiva o no consecutiva. Implementa una funció que determini si una string que només conté lletres es un isograma. Assumeix que una string buida es un isgorama. Ignora la capitalització.\n	Exemple: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ingorar capitalització)",
+          "EN": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES":  "Orden descendente",
+              "CAT": "Ordre descendent",
+              "EN":  "Descending Order"
+            }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
+          "ES": "Orden descendente",
+          "CAT": "Ordre descendent",
+          "EN":  "Descending Order"
       }
     },
     "languages": [
@@ -583,31 +560,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -629,67 +592,72 @@
       "$uuid": "7c8f6d12-8c2f-4b7f-9e94-6d5f5c3e02e3"
     },
     "challenge_title": {
-      "ES": "Tres en raya",
-      "CAT": "Títol en català",
-      "EN": "Exes and Ohs"
-    },
+        "ES": "Xs y Os",
+        "CAT": "Xs i Os",
+        "EN": "Exes and Ohs"
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
-        "ES": "Verifica si una cadena tiene la misma cantidad de 'x' y 'o'. El método debe devolver un booleano y ser insensible a mayúsculas y minúsculas. La cadena puede contener cualquier carácter.",
-        "CAT": "Descripció en català",
-        "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
-      },
+          "ES": "Verifica si una cadena tiene la misma cantidad de 'x' y 'o'. El método debe devolver un booleano y ser insensible a mayúsculas y minúsculas. La cadena puede contener cualquier carácter.",
+          "CAT": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha de retornar un boleà i ignorar la capitalització. la string pot contenir qualsevol char.",
+          "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendente",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -700,31 +668,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -746,67 +700,72 @@
       "$uuid": "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"
     },
     "challenge_title": {
-      "ES": "Obtén el carácter del medio",
-      "CAT": "Títol en català",
-      "EN": "Get the Middle Character"
-    },
+        "ES": "Obten el caracter del medio",
+        "CAT": "Consegueix el caracter del mig.",
+        "EN": "Get the Middle Character"
+      },
     "level": "EASY",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
-        "ES": "Se te proporcionará una palabra. Tu tarea es devolver el carácter medio de la palabra. Si la longitud de la palabra es impar, devuelve el carácter medio. Si la longitud de la palabra es par, devuelve los dos caracteres del medio.",
-        "CAT": "Descripció en català",
-        "EN": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
+          "ES": "Se te proporcionará una palabra. Tu tarea es devolver el carácter medio de la palabra. Si la longitud de la palabra es impar, devuelve el carácter medio. Si la longitud de la palabra es par, devuelve los dos caracteres del medio.",
+          "CAT": "Set donarà una paraula. La teva feina i retorna la lletra que es troba al mig. Si la llargada de la paraula es una nombre senar, retorna el caracter del mig. si la llargada es un nombre parell, retorna els dos caracters del mig.",
+          "EN": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
       },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendente",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -817,31 +776,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -863,67 +808,72 @@
       "$uuid": "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"
     },
     "challenge_title": {
-      "ES": "Simple Pig Latin",
-      "CAT": "Títol en català",
-      "EN": "Simple Pig Latin"
-    },
+        "ES": "Reordenando palabras",
+        "CAT": "Reordenant paraules",
+        "EN": "Reorganizing words"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
-        "ES": "Mueve la primera letra de cada palabra al final y luego agrega 'ay' al final de la palabra. Deja los signos de puntuación sin cambios.",
-        "CAT": "Descripció en català",
-        "EN": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
-      },
+          "ES": "Mueve la primera letra de cada palabra al final y luego agrega 'ay' al final de la palabra. Deja los signos de puntuación sin cambios.",
+          "CAT": "Mou la primera lletra de cada paraula que set doni al seu final, despres afegeix 'ay' al final de la paraula. No toquis els simbols de puntuacio.",
+          "EN": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
+          "example_text": 
+            {
             "ES": "Orden descendente",
-            "CAT": "Títol en català",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendente",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -934,31 +884,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -976,65 +912,71 @@
       "$uuid": "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"
     },
     "challenge_title": {
-      "ES": "RGB To Hex Conversión",
-      "CAT": "Títol en català",
-      "EN": "RGB To Hex Conversion"
-    },
+        "ES": "Conversion de RGB a Hex",
+        "CAT": "Conversió de RGB a Hex",
+        "EN": "RGB To Hex Conversion"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "La función RGB está incompleta. Complétala de manera que al pasar valores decimales RGB, se devuelva su representación hexadecimal. Los valores decimales válidos para RGB son 0 - 255. Cualquier valor que caiga fuera de ese rango debe redondearse al valor válido más cercano.\n    Notas: Tu respuesta siempre debe tener 6 caracteres, la abreviatura con 3 no funcionará aquí.",
-        "CAT": "Descripció en català",
-        "EN": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
-      },
+      "description":
+        {
+          "ES": "La función RGB está incompleta. Complétala de manera que al pasar valores decimales RGB, se devuelva su representación hexadecimal. Los valores decimales válidos para RGB son 0 - 255. Cualquier valor que caiga fuera de ese rango debe redondearse al valor válido más cercano.\n    Notas: Tu respuesta siempre debe tener 6 caracteres, la abreviatura con 3 no funcionará aquí.",
+          "CAT": "La funcio rgb està incompleta. Completala de manera que passant-li RGB en valors decimals ho retorni en una representació haxadecimal. Els valors valids de RGB son 0 - 255. Qualsevol valor que estigui fora d'aquesta ran s'haurà d'arrodonir al valor valid més proper.\n	notes: La teva resposta sempre hauria de tenir una llargada de 6 caracters, la versió reduida amb 3 no no és correcte aqui.",
+          "EN": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
+        }
+      ,
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
+          "example_text": 
+            {
+            "ES": "Orden descendentet",
+            "CAT": "Ordre descendent",
             "EN": "Descending Order"
-          }
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
       "notes": {
         "ES": "Orden descendente",
-        "CAT": "Títol en català",
+        "CAT": "Ordre descendent",
         "EN": "Descending Order"
       }
     },
@@ -1047,31 +989,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1105,67 +1033,74 @@
       "$uuid": "9d248e74-731f-4782-af2c-7ae9b53c9d5c"
     },
     "challenge_title": {
-      "ES": "Scramblies",
-      "CAT": "Títol en català",
-      "EN": "Scramblies"
-    },
+        "ES": "Scramblies",
+        "CAT": "Scramblies",
+        "EN": "Scramblies"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Completa la función scramble(str1, str2) que devuelve true si una porción de los caracteres de str1 se puede reorganizar para que coincida con str2, de lo contrario, devuelve false.\n       Notas:\n           Solo se utilizarán letras minúsculas (a-z). No se incluirán signos de puntuación ni dígitos.\n           Se debe tener en cuenta el rendimiento.",
-        "CAT": "Descripció en català",
-        "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notess:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
-      },
+      "description": 
+        {
+          "ES": "Completa la función scramble(str1, str2) que devuelve true si una porción de los caracteres de str1 se puede reorganizar para que coincida con str2, de lo contrario, devuelve false.\n       Notas:\n           Solo se utilizarán letras minúsculas (a-z). No se incluirán signos de puntuación ni dígitos.\n           Se debe tener en cuenta el rendimiento.",
+          "CAT": "Completa la funció scramble(str1, str2) que retorna true si una part dels caracters de str1 es poden reodenar per ser igual que str2, en cas contrari retorna false.\n	notes:\n	Només es faran servir lletres minuscules (a-z). No hi hauran ni signes de puntuació ni digits.\n	El rendiment s'ha de tenir en consideració.",
+          "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       notes:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n           Performance needs to be considered."
+        }
+      ,
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "POrden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1176,31 +1111,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1231,67 +1152,73 @@
       "$uuid": "5a72d6cb-3217-4d75-9368-689ed48cb9ec"
     },
     "challenge_title": {
-      "ES": "El número de ceros finales de N! ",
-      "CAT": "Títol en català",
-      "EN": "Number of trailing zeros of N!"
-    },
+        "ES": "Numero de zeros finales de N!",
+        "CAT": "Nombre de zeros finals de N!",
+        "EN": "Number of trailing zeros of N!"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Escribe un programa que calcule la cantidad de ceros finales en el factorial de un número dado.\n    N! = 1 * 2 * 3 *  ... * N\n    Ten cuidado, 1000! tiene 2568 dígitos...",
-        "CAT": "Descripció en català",
-        "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
-      },
+      "description": 
+        {
+          "ES": "Escribe un programa que calcule la cantidad de ceros finales en el factorial de un número dado.\n    N! = 1 * 2 * 3 *  ... * N\n    Ten cuidado, 1000! tiene 2568 dígitos...",
+          "CAT": "Escriu un programa que calculi el nombre de zeros finals en el factorial de un nombre.\n	N! = 1 * 2 * 3 * ... * N\n	Vigila, 1000! te 2568 digits...",
+          "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1302,31 +1229,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1344,67 +1257,73 @@
       "$uuid": "c3946e8d-e7b4-4e3c-aacf-e8d6c5e9d0b6"
     },
     "challenge_title": {
-      "ES": "Tres en raya",
-      "CAT": "Títol en català",
-      "EN": "Exes and Ohs"
-    },
+        "ES": "Orden descendente",
+        "CAT": "X i O",
+        "EN": "Exes and Ohs"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Verifica si una cadena tiene la misma cantidad de 'x' y 'o'. El método debe devolver un booleano y ser insensible a mayúsculas y minúsculas. La cadena puede contener cualquier carácter",
-        "CAT": "Descripció en català",
-        "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
-      },
+      "description": 
+        {
+          "ES": "Descripcion en español",
+          "CAT": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha de retornar un boleà i ignorar la capitalització. La string pot contenir qualsevol char.",
+          "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1415,31 +1334,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1461,67 +1366,73 @@
       "$uuid": "862f5d91-8394-4db1-b188-1ac2e68d73a8"
     },
     "challenge_title": {
-      "ES": "Dirigiéndose hacia cero o hacia el infinito?",
-      "CAT": "Títol en català",
-      "EN": "Going to zero or to infinity?"
-    },
+        "ES": "Hacia el zero o al infinto?",
+        "CAT": "Anant a zero o a l'infinit?",
+        "EN": "Going to zero or to infinity?"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) para un valor dado de n, donde n es un entero mayor o igual a 1.",
-        "CAT": "Descripció en català",
-        "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
-      },
+      "description":
+        {
+          "ES": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) para un valor dado de n, donde n es un entero mayor o igual a 1.",",
+          "CAT": "Calcual (1 / n!) * (1! + 2! + 3! + ... + n!) per n donada, on n es un int mes gran o igual a 1.",
+          "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1532,31 +1443,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1574,67 +1471,73 @@
       "$uuid": "f1e2a8d6-64b9-4b86-b6a4-9e8c4d27f3a3"
     },
     "challenge_title": {
-      "ES": "Encuentra el más pequeño",
-      "CAT": "Títol en català",
-      "EN": "Find the smallest"
-    },
+        "ES": "Encuentra el mas pequeño",
+        "CAT": "Troba el més petit",
+        "EN": "Find the smallest"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Tienes un número positivo n que consiste en dígitos. Puedes realizar como máximo una operación: elegir el índice de un dígito en el número, quitar este dígito en ese índice e insertarlo nuevamente en otro lugar o en el mismo lugar en el número para encontrar el número más pequeño que puedas obtener.\n\nTarea:\nDevuelve un array o una tupla o una cadena, dependiendo del lenguaje (mira \"Sample Tests\") con\n\nel número más pequeño que obtuviste\nel índice i del dígito d que tomaste, con i tan pequeño como sea posible\nel índice j (tan pequeño como sea posible) donde insertas este dígito d para obtener el número más pequeño.",
-        "CAT": "Descripció en català",
-        "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
-      },
+      "description": 
+        {
+          "ES": "Tienes un número positivo n que consiste en dígitos. Puedes realizar como máximo una operación: elegir el índice de un dígito en el número, quitar este dígito en ese índice e insertarlo nuevamente en otro lugar o en el mismo lugar en el número para encontrar el número más pequeño que puedas obtener.\n\nTarea:\nDevuelve un array o una tupla o una cadena, dependiendo del lenguaje (mira \"Sample Tests\") con\n\nel número más pequeño que obtuviste\nel índice i del dígito d que tomaste, con i tan pequeño como sea posible\nel índice j (tan pequeño como sea posible) donde insertas este dígito d para obtener el número más pequeño.",
+          "CAT": "Tens un nombre positiu n que consistex de digits. Com a molt pots realitzar una operacio com a maxim: Escull l'index d'un digit del nombre, treu el digit que es troba en aquest index i insertal un altre cop al mateix o un altre lloc per aconseguir el nombre més petit que puguis.\n\nTasca:\nRetorna un array, un tuple o una string depenen del teu llenguatge (veure \"Sample Tests"\) with\namb el nombre mes petit que puguis trobar\nl'index i del digit que hsa pres que sigui tan petit petit com sigui possible\nl'index j (tan petit com sigui possible) corresponent a on insertis el nombre perque sigui el mes petit possible.",
+          "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1645,31 +1548,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1703,67 +1592,73 @@
       "$uuid": "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
     },
     "challenge_title": {
-      "ES": "Perímetro de la Tierra",
-      "CAT": "Títol en català",
-      "EN": "Land perimeter"
-    },
+        "ES": "Perimetro terrestre",
+        "CAT": "Perimetre terrestre",
+        "EN": "Land perimeter"
+      },
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Dado un array arr de strings, completa la función calculando el perímetro total de todas las islas. Cada pieza de tierra estará marcada con 'X', mientras que los campos de agua se representarán como 'O'. Considera que cada pieza es una pieza de tierra perfecta de 1 x 1.",
-        "CAT": "Descripció en català",
-        "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
-      },
+      "description": 
+        {
+          "ES": "Dado un array arr de strings, completa la función calculando el perímetro total de todas las islas. Cada pieza de tierra estará marcada con 'X', mientras que los campos de agua se representarán como 'O'. Considera que cada pieza es una pieza de tierra perfecta de 1 x 1.",
+          "CAT": "Donat un array d'strings, completa la funcio calculant el perimetre total de totes les illes. Cada peça de terra estarà marcada amb un 'X' mentre que l'aigua esta representada com a 'O'. Assumeix que cada casella es un quadrat de terra perfecte 1x1.",
+          "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1774,31 +1669,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1828,67 +1709,73 @@
       "$uuid": "4f8a6c91-8a9d-49b0-9f2c-3e67d2b18b8d"
     },
     "challenge_title": {
-      "ES": "Evaluar una expresión matemática",
-      "CAT": "Títol en català",
-      "EN": "Evaluate mathematical expression."
-    },
+        "ES": "Evalua la expresion matemática",
+        "CAT": "Evalua l'expresió matemàtica.",
+        "EN": "Evaluate mathematical expression."
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Dada una expresión matemática como un string, debes devolver el resultado como un número",
-        "CAT": "Descripció en català",
-        "EN": "Given a mathematical expression as a string you must return the result as a number."
-      },
+      "description": 
+        {
+          "ES": "Dada una expresión matemática como un string, debes devolver el resultado como un número",
+          "CAT": "Donada una expresió matemàtica en forma d'string has de retornar el resultat en forma de numero.",
+          "EN": "Given a mathematical expression as a string you must return the result as a number."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -1899,31 +1786,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -1941,67 +1814,73 @@
       "$uuid": "d7a9c4b2-6e8d-4f8c-8a13-94c5e16d2f9a"
     },
     "challenge_title": {
-      "ES": "Comprimir String",
-      "CAT": "Títol en català",
-      "EN": "Compress String"
-    },
+        "ES": "Comprimir una String
+        "CAT": "Comprimir una String",
+        "EN": "Compress String"
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Escribe un programa que tome un String de caracteres y la comprima eliminando las repeticiones consecutivas de caracteres. Por ejemplo, \"aaabbbccc\"  se comprimiría como \"a3b3c3\".",
-        "CAT": "Descripció en català",
-        "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
-      },
+      "description": 
+        {
+          "ES": "Escribe un programa que tome un String de caracteres y la comprima eliminando las repeticiones consecutivas de caracteres. Por ejemplo, \"aaabbbccc\"  se comprimiría como \"a3b3c3\".",
+          "CAT": "Escriu un programa que pren una cadena de caracters i la comprimeix treient caracters que es repeteixin consecutivament. Per exemple, \"aaabbbccc\" seria comprimit com \"a3b3c3\".",
+          "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -2012,31 +1891,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -2050,67 +1915,73 @@
       "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"
     },
     "challenge_title": {
-      "ES": "Subsecuencia común más larga",
-      "CAT": "Títol en català",
-      "EN": "Longest Common Subsequence"
-    },
+        "ES": "Subsequencia Comun más Larga",
+        "CAT": "Subseqëncia Comú més Llarga.",
+        "EN": "Longest Common Subsequence"
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Implementa un programa que encuentre la subsecuencia común más larga entre dos strings dadas. Una subsecuencia es una secuencia de caracteres que aparece en el mismo orden relativo en ambos strings.",
-        "CAT": "Descripció en català",
-        "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
-      },
+      "description": 
+        {
+          "ES": "Implementa un programa que encuentre la subsecuencia común más larga entre dos strings dadas. Una subsecuencia es una secuencia de caracteres que aparece en el mismo orden relativo en ambos strings.",
+          "CAT": "Implementa un programa que trobi la subseqüencia comú mes llarga possible entre dos strings. Una subseqüencia es una seqüencia de caracters que es troba amb el mateix ordre relatiu en ambdues strings.",
+          "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -2121,31 +1992,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -2169,67 +2026,73 @@
       "$uuid": "8c7e3a9d-6b2d-43e4-9d1f-4e7a8c9d3e1b"
     },
     "challenge_title": {
-      "ES": "Encontrar el Punto de Equilibrio en un Array",
-      "CAT": "Títol en català",
-      "EN": "Find the Equilibrium Point in an Array"
-    },
+        "ES": "Encuentra el Punto de Equilibri de un Array",
+        "CAT": "Troba el Punt d'Equilibri d'un Array.",
+        "EN": "Find the Equilibrium Point in an Array"
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Escribe un programa que encuentre el punto de equilibrio en un array, el cual es un índice donde la suma de los elementos a la izquierda es igual a la suma de los elementos a la derecha.",
-        "CAT": "Descripció en català",
-        "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
-      },
+      "description": 
+        {
+          "ES": "Escribe un programa que encuentre el punto de equilibrio en un array, el cual es un índice donde la suma de los elementos a la izquierda es igual a la suma de los elementos a la derecha.",
+          "CAT": "Escriu un programa que trobi el punt d'esquilibre en un array, el qual és un index on la suma dels elements a l'esquerra es igual que la suma dels elements a la dreta.",
+          "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
+        },
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -2240,31 +2103,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -2284,67 +2133,74 @@
       "$uuid": "a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"
     },
     "challenge_title": {
-      "ES": "Validar Expresiones Matemáticas",
-      "CAT": "Títol en català",
-      "EN": "Validate Mathematical Expressions"
-    },
+        "ES": "Valida Expresiones Matemáticas",
+        "CAT": "Valida Expressions Matemàtiques.",
+        "EN": "Validate Mathematical Expressions"
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Crea un programa que valide si una expresión matemática dada es válida, teniendo en cuenta paréntesis equilibrados y operadores matemáticos válidos.",
-        "CAT": "Descripció en català",
-        "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
-      },
+      "description": 
+        {
+          "ES": "Crea un programa que valide si una expresión matemática dada es válida, teniendo en cuenta paréntesis equilibrados y operadores matemáticos válidos.",
+          "CAT": "Crea un programa que validi si una expresió matemàtica es valida, considerant parentesis equilibrats i operadors matemàtics valids.",
+          "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
+        }
+      ,
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -2355,31 +2211,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -2393,67 +2235,74 @@
       "$uuid": "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"
     },
     "challenge_title": {
-      "ES": "Encontrar la Subcadena Contigua más Grande",
-      "CAT": "Títol en català",
-      "EN": "Find the Largest Contiguous Subarray"
-    },
+        "ES": "Encuentra el Subarray Contiguo de mayor tamaño",
+        "CAT": "Troba el Subarray Contigu més Gran",
+        "EN": "Find the Largest Contiguous Subarray"
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Implementa un algoritmo para encontrar la subarray contigua más grande en un array de enteros.",
-        "CAT": "Descripció en català",
-        "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
-      },
+      "description": 
+        {
+          "ES": "Implementa un algoritmo para encontrar la subarray contigua más grande en un array de enteros.",
+          "CAT": "Implementa un algoritme per trobar el subarray contigu més gran possible en un array d'integers.",
+          "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
+        }
+      ,
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -2464,31 +2313,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
@@ -2517,67 +2352,74 @@
       "$uuid": "ec52b7f1-2f78-4a83-aef0-3b9b6f34a763"
     },
     "challenge_title": {
-      "ES": "Contar inversiones en un array",
-      "CAT": "Títol en català",
-      "EN": "Count Inversions in an Array"
-    },
+        "ES": "Cuenta inversiones en un Array",
+        "CAT": "Compta inversions en un Array",
+        "EN": "Count Inversions in an Array"
+      },
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "ES": "Escribe un programa que cuente el número de inversiones en un array. Una inversión ocurre cuando un par de elementos en el array está en el orden incorrecto",
-        "CAT": "Descripció en català",
-        "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
-      },
+      "description": 
+        {
+          "ES": "Escribe un programa que cuente el número de inversiones en un array. Una inversión ocurre cuando un par de elementos en el array está en el orden incorrecto",º
+          "CAT": "Esctriu un programa que compti el nombre d'inversions en un array. Una inversió és quan una parella d'elements en l'array es troba en l'ordre equivocat",
+          "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
+        }
+      ,
       "examples": [
         {
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         },
         {
           "_id": {
             "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
           },
-          "example_text": {
-            "ES": "Orden descendente",
-            "CAT": "Títol en català",
-            "EN": "Descending Order"
-          }
+          "example_text": 
+            {
+              "ES": "Orden descendentet",
+              "CAT": "Ordre descendent",
+              "EN": "Descending Order"
+            }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CAT": "Títol en català",
-        "EN": "Descending Order"
-      }
+      "notes": 
+        {
+          "ES": "Orden descendentet",
+          "CAT": "Ordre descendent",
+          "EN": "Descending Order"
+        }
     },
     "languages": [
       {
@@ -2588,31 +2430,17 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
-      {
-        "$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"
-      },
-      {
-        "$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"
-      },
-      {
-        "$uuid": "527bad10-d689-4a10-a787-72507fafe415"
-      }
+      {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
+      {"$uuid": "301c74dd-27b6-4be4-9a38-0c7ada2969cf"},
+      {"$uuid": "527bad10-d689-4a10-a787-72507fafe415"}
     ],
     "related": [
-      {
-        "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
-      },
-      {
-        "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
-      },
-      {
-        "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
-      }
+      {"$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+      {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+      {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
     "testing_values": [
       {
