@@ -432,14 +432,6 @@
       {"$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
       {"$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"}
     ],
-    "solution_definition": [
-      {
-        "method_definition": {
-          "params_required": "undefined",
-          "param_types": [
-            "String"
-          ]
-        },
         "testing_values": [
           {
             "in_param": [
