@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
@@ -21,6 +22,8 @@ import org.springdoc.core.converters.models.Pageable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -100,7 +103,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                     error.getMessage()));
                 });
     }
-
+/*
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage,
             String difficulty) {
@@ -117,6 +120,76 @@ public class ChallengeServiceImp implements IChallengeService {
                     return resultDto;
                 });
     }
+*/
+public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty,
+                int offset, int limit) {      
+
+        try {
+                UUID uuidLanguage = null;
+                if (idLanguage != null) {
+                        uuidLanguage = validateUUID(idLanguage).block();                      
+                }
+
+                if(difficulty != null){
+                          validateDifficulty(difficulty);
+                }
+                
+                Flux<ChallengeDto> challengesDto;
+
+                if (difficulty != null && idLanguage != null) {
+                        challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+                                        challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage)
+                                                        .skip(offset)
+                                                        .take(limit),
+                                        ChallengeDto.class);
+                                        return challengesDto.collectList()
+                                .map(challenges -> {
+                                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                        resultDto.setInfo(0, challenges.size(), challenges.size(),
+                                                        challenges.toArray(new ChallengeDto[0]));
+                                        return resultDto;
+                                });
+                } else if (difficulty != null) {                       
+                        challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+                                        challengeRepository.findByLevel(difficulty)
+                                                        .skip(offset)
+                                                        .take(limit),
+                                        ChallengeDto.class);
+                                        return challengesDto.collectList()
+                                .map(challenges -> {
+                                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                        resultDto.setInfo(0, challenges.size(), challenges.size(),
+                                                        challenges.toArray(new ChallengeDto[0]));
+                                        return resultDto;
+                                });
+                } else if (idLanguage != null) {
+                        challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+                                        challengeRepository.findByLanguages_IdLanguage(uuidLanguage)
+                                                        .skip(offset)
+                                                        .take(limit),
+                                        ChallengeDto.class);
+                                        return challengesDto.collectList()
+                                .map(challenges -> {
+                                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                        resultDto.setInfo(0, challenges.size(), challenges.size(),
+                                                        challenges.toArray(new ChallengeDto[0]));
+                                        return resultDto;
+                                });
+                } else if (difficulty == null && idLanguage == null) {
+                        // Handle the case when neither difficulty nor language is specified 
+                        log.warn("difficulty and idLanguege value NULL - {}", difficulty, idLanguage);
+                        throw new BadUUIDException("difficulty and idLanguege value NULL ");                
+                                 
+                      //  return null;
+                } 
+
+                return null;
+                        
+        } catch (BadUUIDException e) {
+                return null;
+        }
+       
+}
 
     @Override
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
@@ -225,13 +298,22 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     private Mono<UUID> validateUUID(String id) {
-        boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
+            boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
-        if (!validUUID) {
-            log.warn("Invalid ID format: {}", id);
-            return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
-        }
+            if (!validUUID) {
+                    log.warn("Invalid ID format: {}", id);
+                    return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
+            }
 
-        return Mono.just(UUID.fromString(id));
+            return Mono.just(UUID.fromString(id));
     }
+
+    private void validateDifficulty(String difficulty) throws BadUUIDException {
+            if (!("EASY".equals(difficulty) || "MEDIUM".equals(difficulty) || "HARD".equals(difficulty))) {
+                    // Log de advertencia
+                    log.warn("Advertencia: formato de dificultad no válido - {}", difficulty);
+                    throw new BadUUIDException("Formato de dificultad no válido");
+            }
+    }
+
 }

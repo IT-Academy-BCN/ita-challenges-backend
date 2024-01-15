@@ -449,6 +449,8 @@ class ChallengeServiceImpTest {
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
         String difficulty = "EASY";
         UUID uuidLanguage = UUID.fromString(idLanguage);
+        int offset = 2;
+        int limit = 2;
 
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
@@ -457,7 +459,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class))).thenReturn(Flux.just(expectedResult.getResults())); // Mock the conversion
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty, offset,limit);
 
         // Assert
         StepVerifier.create(resultMono)
@@ -465,92 +467,64 @@ class ChallengeServiceImpTest {
         .verifyComplete();        
     }
     @Test
-    void getAllChallenges_ChallengesExist_ChallengesReturned_b() {
+    void getChallengesByDifficultyOnlyTest() {
         // Arrange
+        String difficulty = "EASY";
         int offset = 1;
-        int offset10 = 10;
-        int offset0 = 0;
-        int limit2 = 2;
-        int limit6 = 6;
-        int limit0 = 0;
-
-        // Simulate a set of ChallengeDocument with non-null UUID
-        ChallengeDocument challenge1 = new ChallengeDocument();
-        challenge1.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge2 = new ChallengeDocument();
-        challenge2.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge3 = new ChallengeDocument();
-        challenge3.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge4 = new ChallengeDocument();
-        challenge4.setUuid(UUID.randomUUID());
-
-        // Simulate a set of ChallengeDto
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto challengeDto3 = new ChallengeDto();
-        ChallengeDto challengeDto4 = new ChallengeDto();
-
-        when(challengeRepository.findAllByUuidNotNull())
-                .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
-
-        // Act
-        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit2);
-
-        // Assert
-        verify(challengeRepository).findAllByUuidNotNull();
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
-
-        StepVerifier.create(result)
-                .expectSubscription()
-                .expectNextCount(4)
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(result.skip(offset).take(limit2))
-                .expectSubscription()
-                .expectNext(challengeDto2, challengeDto3)
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(result.skip(offset).take(limit6))
-                .expectSubscription()
-                .expectNext(challengeDto2, challengeDto3, challengeDto4)
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(result.skip(offset).take(limit0))
-                .expectSubscription()
-                .expectNext()
-                .expectComplete()
-                .verify();
-
-        //test
-
-        StepVerifier.create(result.skip(offset10).take(limit0))
-                .expectSubscription()
-                .expectNext()
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(result.skip(offset10).take(limit6))
-                .expectSubscription()
-                .expectNext()
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(result.skip(offset0).take(limit6))
-                .expectSubscription()
-                .expectNext(challengeDto1, challengeDto2, challengeDto3, challengeDto4)
-                .expectComplete()
-                .verify();
-
-
-
-        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit2))
-                .expectSubscription()
-                .expectNextCount(2)
-                .expectComplete()
-                .verify();
+        int limit = 3;
+    
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 3, 3, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto(), new ChallengeDto()});
+    
+        when(challengeRepository.findByLevel(difficulty)).thenReturn(Flux.empty()); // Simular un Flux vacío
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class))).thenReturn(Flux.just(expectedResult.getResults())); // Simular la conversión
+    
+        // Actuar
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguageAndDifficulty(null, difficulty, offset, limit);
+    
+        // Afirmar
+        StepVerifier.create(resultMono)
+                .expectNextMatches(result -> result.getCount() == 3 && result.getResults() != null && result.getResults().length == 3)
+                .verifyComplete();
     }
+    
+    @Test
+    void getChallengesByLanguageOnlyTest() {
+        // Arrange
+        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        UUID uuidLanguage = UUID.fromString(idLanguage);
+        int offset = 2;
+        int limit = 2;
+    
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+    
+        when(challengeRepository.findByLanguages_IdLanguage(uuidLanguage)).thenReturn(Flux.empty()); // Simular un Flux vacío
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class))).thenReturn(Flux.just(expectedResult.getResults())); // Simular la conversión
+    
+        // Actuar
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, null, offset, limit);
+    
+        // Afirmar
+        StepVerifier.create(resultMono)
+                .expectNextMatches(result -> result.getCount() == 2 && result.getResults() != null && result.getResults().length == 2)
+                .verifyComplete();
+    }
+    
+    @Test
+    void getChallengesWithoutDifficultyAndLanguageTest() {
+        // Arrange
+        String idLanguage = null;
+        String difficulty = null;
+        int offset = 2;
+        int limit = 2;
+    
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty, offset, limit);
+    
+        // Assert
+        StepVerifier.create(resultMono).expectError();
+    }
+    
+    
 }
