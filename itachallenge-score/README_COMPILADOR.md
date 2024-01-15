@@ -27,7 +27,8 @@ por parte del usuario
 ### Librerías útiles
 
 Librería Janino para compilation y ejecución dinámica
-Útil para la compilación, ejecución y análisis del código introducido por el usuario. Al usar esta librería no tenemos que crear un archivo temporal, al compilar el código janino se encarga de guardar el archivo a compilar en memoria y ejecutarlo.
+Útil para la compilación, ejecución y análisis del código introducido por el usuario. Al usar esta librería no tenemos que crear un archivo temporal, 
+al compilar el código janino se encarga de guardar el archivo a compilar en memoria y ejecutarlo.
 
 
 - *All these considerations lead to compilation of Java code at run-time, like some engines (e.g. JSP engines)
@@ -47,6 +48,13 @@ Librería Janino para compilation y ejecución dinámica
 - **Janino as a Script Evaluator**
   *Analogously to the expression evaluator, a ScriptEvaluator API exists that compiles and processes a Java "block", i.e. the body of a method.
   If a return value other than "void" is defined, then the block must return a value of that type.*
+
+
+- **Janino as a Source Code Class Loader**
+  *The JavaSourceClassLoader extends Java's java.lang.ClassLoader class with the ability to load classes directly from source code.
+To be precise, if a class is loaded through this class loader, it searches for a matching ".java" file in any of the directories specified by a 
+given "source path", reads, scans, parses and compiles it and defines the resulting classes in the JVM. As necessary, more classes are loaded through 
+the parent class loader and/or through the source path. No intermediate files are created in the file system.*
 
 
 - **Librería Docker-Java para gestión docker dinámico**

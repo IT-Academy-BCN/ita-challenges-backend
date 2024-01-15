@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 @Component
 public class CodeExecutionService {
@@ -17,11 +18,17 @@ public class CodeExecutionService {
     /*RECEPCIÓN DEL CÓDIGO DEL USUARIO
     La cabecera -- public class Main{ public static void main(String[] args){ }}"; --
     ya viene por defecto, el usuario solo debe agregar el código que se le pide en el enunciado.
+
+    La inyección de parámetros al código del cliente se hace mediante el uso varargs, el método castArgs,
+    nos permite llamar al método pasando un array de objetos o pasando los objetos directamente, por ejemplo:
+    Object[] args = new Object[]{"hola", 1, 2.0};
+    compileAndRunCode(sourceCode, codeResult, args);
+    compileAndRunCode(sourceCode, codeResult, "hola", 1, 2.0);
      */
 
     private static final Logger log = LoggerFactory.getLogger(CodeExecutionService.class);
 
-    public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult, String[] args) {
+    public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult, Object... args) {
 
         sourceCode = "public class Main {\n" +
                 "    public static void main(String[] args) {\n" +
@@ -29,7 +36,6 @@ public class CodeExecutionService {
                 "    }\n" +
                 "}";
 
-        //ExecutionResultDto executionResultDto = new ExecutionResultDto(false, false, false, "");
         SimpleCompiler compiler = null;
         String result = null;
 
@@ -37,9 +43,12 @@ public class CodeExecutionService {
         CompilationResult compilationResult = compile(sourceCode);
         ExecutionResultDto executionResultDto = compilationResult.getExecutionResultDto();
 
+        //Descomposición y tipado de parámetros de entrada
+        String[] argsString = castArgs(args);
+
         if (executionResultDto.isCompile()) {
             //Ejecutar el código
-            ExecutionResult executionResult = execute(compilationResult, codeResult, args);
+            ExecutionResult executionResult = execute(compilationResult, codeResult, argsString);
             if (executionResultDto.isExecution()) {
                 //Comparar el resultado
                 executionResultDto = compareResults(executionResult.getExecutionResult(), codeResult, executionResultDto);
@@ -113,4 +122,25 @@ public class CodeExecutionService {
 
         return executionResultDto;
     }
+
+    public String[] castArgs(Object... args) {
+        // Comprobar si el primer elemento es un array
+        if (args.length == 1 && args[0] instanceof Object[] innerArgs) {
+            // Si es un array, tratarlo como tal
+            String[] argsString = new String[innerArgs.length];
+            for (int i = 0; i < innerArgs.length; i++) {
+                argsString[i] = innerArgs[i].toString();
+            }
+            return argsString;
+        } else {
+            // Si no es un array, tratarlo como antes
+            String[] argsString = new String[args.length];
+            for (int i = 0; i < args.length; i++) {
+                argsString[i] = args[i].toString();
+            }
+            return argsString;
+        }
+    }
+
+
 }
