@@ -16,14 +16,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpStatusCodeException;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.net.ssl.SSLEngineResult.Status;
 
 @RestController
 @Validated
@@ -125,18 +132,34 @@ public class ChallengeController {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/")
-    @Operation(
-            operationId = "Get only the challenges on a page.",
-            summary = "Get to see challenges on a page and their levels, details and their available languages.",
-            description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
-            })
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-                                                                                     @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
-    }
+
+@GetMapping("/challenges/")
+@Operation(
+        operationId = "Get challenges based on difficulty and/or language",
+        summary = "Get challenges based on difficulty and/or language, specifying page number and items per page.",
+        description = "Retrieve challenges from the database based on difficulty and/or language, along with page number and items per page.",
+        responses = {
+                @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                @ApiResponse(responseCode = "412", description = "La solicitud del cliente es incorrecta o mal formada")
+        })
+public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(
+        @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+        @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit,
+        @RequestParam(required = false) String difficulty,
+        @RequestParam(required = false) String idLanguage) {
+
+    Mono<GenericResultDto<ChallengeDto>> responseMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty, Integer.parseInt(offset), Integer.parseInt(limit));
+
+        if (responseMono != null){
+                return responseMono;
+        }
+        else{
+               
+                return null;
+        }
+          
+}
+
 
     @GetMapping("/language")
     @Operation(
