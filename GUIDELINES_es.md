@@ -154,9 +154,9 @@ Configuraciones Git necesarias para evitar problemas
    ¡Nota! Esta configuración no solo te servirá para el proyecto actual, sino también para todos los proyectos que hagas con GIT.
 
 ### 2.2.2 Autocrlf
-Si tiene un problema con una PR que modifica muchos archivos, >100, debe hacer lo siguiente ...
-1. En Git Bash...
-2. Ejecute el comando: 'git config --global core.autocrlf true'
+
+Antes de nada, por favor revisa Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+Es importante.
 
 
 <hr/>
