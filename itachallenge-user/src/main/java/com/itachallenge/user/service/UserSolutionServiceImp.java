@@ -22,10 +22,10 @@ import java.util.UUID;
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
 
-    private IUserSolutionRepository userSolutionRepository;
+    private final IUserSolutionRepository userSolutionRepository;
 
 
-    private ConverterDocumentToDto converter;
+    private final ConverterDocumentToDto converter;
 
     public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
@@ -57,17 +57,32 @@ public class UserSolutionServiceImp implements IUserSolutionService {
            aunque no podrá enviar varias soluciones para el mismo challenge
        */
 
+        boolean validChallengeStatus = validateChallengeStatus(status);
+
+        if (!validChallengeStatus){
+            if (status.equalsIgnoreCase("ended")){
+                return Mono.error(new Exception("Challenge ended!!!"));
+            }
+            return Mono.error(new IllegalArgumentException("Invalid challenge status: "+status));
+        }
+
         if (Boolean.TRUE.equals(userSolutionRepository.findByUserId(UUID.fromString(idUser))
-                .filter(userScore -> userScore.getChallengeId().equals(UUID.fromString(idChallenge)))
+                .filter(userSolutionDocument -> userSolutionDocument.getChallengeId().equals(UUID.fromString(idChallenge)))
                 .hasElements().block())) {
+            //
             return Mono.error(new IllegalArgumentException("User already has a solution for this challenge"));
         }
 
         UUID userUuid = UUID.fromString(idUser);
         UUID challengeUuid = UUID.fromString(idChallenge);
         UUID languageUuid = UUID.fromString(idLanguage);
-        ChallengeStatus challengeStatus = ChallengeStatus.valueOf(status);
+        ChallengeStatus challengeStatus = ChallengeStatus.valueOf(status.toUpperCase());
 
+        //
+//        userSolutionRepository.findByUserIdAndChallengeIdAndByLanguageId(
+//                UUID.fromString(idUser),
+//                UUID.fromString(idChallenge),
+//                UUID.fromString(idLanguage)).hasElements();
         List<SolutionDocument> solutionDocuments = List.of(
                 SolutionDocument.builder()
                         .uuid(UUID.randomUUID())
@@ -106,6 +121,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
                     return Mono.just(userSolutionScoreDto);
                 });
+    }
+
+    private boolean validateChallengeStatus(String status) {
+        return (
+                List.of(ChallengeStatus.values()).contains(ChallengeStatus.valueOf(status.toUpperCase()))
+                && !status.equalsIgnoreCase("ended")
+        ) ;
     }
 
     /*public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge,
