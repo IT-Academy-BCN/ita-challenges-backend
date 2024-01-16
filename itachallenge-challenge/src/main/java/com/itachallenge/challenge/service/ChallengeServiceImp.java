@@ -103,101 +103,75 @@ public class ChallengeServiceImp implements IChallengeService {
                                     error.getMessage()));
                 });
     }
-<<<<<<< HEAD
-/*
-    @Override
+
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage,
-            String difficulty) {
-        UUID uuidLanguage = UUID.fromString(idLanguage);
-       
-        Flux<ChallengeDto> challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
-                challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage ),
-                ChallengeDto.class);
-        return challengesDto.collectList()
-                .map(challenges -> {
-                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                    resultDto.setInfo(0, challenges.size(), challenges.size(),
-                            challenges.toArray(new ChallengeDto[0]));
-                    return resultDto;
-                });
-=======
+                    String difficulty,
+                    int offset, int limit) {
 
+            try {
+                    UUID uuidLanguage = null;
+                    if (idLanguage != null || difficulty != null) {
+                            if (idLanguage != null) {
+                                    uuidLanguage = validateUUID(idLanguage).block();
+                            }
+                            if (difficulty != null) {
+                                    validateDifficulty(difficulty);
+                            }
+                    }
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        // TODO: Get challenges by language and difficulty
-        return null;
->>>>>>> 6fc37afc9be9017406f2e1d2a0ded5bcfabf0212
+                    Flux<ChallengeDto> challengesDto;
+
+                    if (difficulty != null && idLanguage != null) {
+                            challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+                                            challengeRepository
+                                                            .findByLevelAndLanguages_IdLanguage(difficulty,
+                                                                            uuidLanguage)
+                                                            .skip(offset)
+                                                            .take(limit),
+                                            ChallengeDto.class);
+                            return challengesDto.collectList()
+                                            .map(challenges -> {
+                                                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                                    resultDto.setInfo(0, challenges.size(), challenges.size(),
+                                                                    challenges.toArray(new ChallengeDto[0]));
+                                                    return resultDto;
+                                            });
+                    } else if (difficulty != null) {
+                            challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+                                            challengeRepository.findByLevel(difficulty)
+                                                            .skip(offset)
+                                                            .take(limit),
+                                            ChallengeDto.class);
+                            return challengesDto.collectList()
+                                            .map(challenges -> {
+                                                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                                    resultDto.setInfo(0, challenges.size(), challenges.size(),
+                                                                    challenges.toArray(new ChallengeDto[0]));
+                                                    return resultDto;
+                                            });
+                    } else if (idLanguage != null) {
+                            challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
+                                            challengeRepository.findByLanguages_IdLanguage(uuidLanguage)
+                                                            .skip(offset)
+                                                            .take(limit),
+                                            ChallengeDto.class);
+                            return challengesDto.collectList()
+                                            .map(challenges -> {
+                                                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                                    resultDto.setInfo(0, challenges.size(), challenges.size(),
+                                                                    challenges.toArray(new ChallengeDto[0]));
+                                                    return resultDto;
+                                            });
+                    } else {
+                            log.warn("difficulty and idLanguege value NULL - {}", difficulty, idLanguage);
+                            throw new BadUUIDException("difficulty and idLanguege value NULL ");
+                    }
+
+            } catch (BadUUIDException e) {
+                    return null;
+            }
+
     }
-*/
-public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty,
-                int offset, int limit) {      
-
-        try {
-                UUID uuidLanguage = null;
-                if (idLanguage != null) {
-                        uuidLanguage = validateUUID(idLanguage).block();                      
-                }
-
-                if(difficulty != null){
-                          validateDifficulty(difficulty);
-                }
-                
-                Flux<ChallengeDto> challengesDto;
-
-                if (difficulty != null && idLanguage != null) {
-                        challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
-                                        challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, uuidLanguage)
-                                                        .skip(offset)
-                                                        .take(limit),
-                                        ChallengeDto.class);
-                                        return challengesDto.collectList()
-                                .map(challenges -> {
-                                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                                        resultDto.setInfo(0, challenges.size(), challenges.size(),
-                                                        challenges.toArray(new ChallengeDto[0]));
-                                        return resultDto;
-                                });
-                } else if (difficulty != null) {                       
-                        challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
-                                        challengeRepository.findByLevel(difficulty)
-                                                        .skip(offset)
-                                                        .take(limit),
-                                        ChallengeDto.class);
-                                        return challengesDto.collectList()
-                                .map(challenges -> {
-                                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                                        resultDto.setInfo(0, challenges.size(), challenges.size(),
-                                                        challenges.toArray(new ChallengeDto[0]));
-                                        return resultDto;
-                                });
-                } else if (idLanguage != null) {
-                        challengesDto = challengeConverter.convertDocumentFluxToDtoFlux(
-                                        challengeRepository.findByLanguages_IdLanguage(uuidLanguage)
-                                                        .skip(offset)
-                                                        .take(limit),
-                                        ChallengeDto.class);
-                                        return challengesDto.collectList()
-                                .map(challenges -> {
-                                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                                        resultDto.setInfo(0, challenges.size(), challenges.size(),
-                                                        challenges.toArray(new ChallengeDto[0]));
-                                        return resultDto;
-                                });
-                } else if (difficulty == null && idLanguage == null) {
-                        // Handle the case when neither difficulty nor language is specified 
-                        log.warn("difficulty and idLanguege value NULL - {}", difficulty, idLanguage);
-                        throw new BadUUIDException("difficulty and idLanguege value NULL ");                
-                                 
-                      //  return null;
-                } 
-
-                return null;
-                        
-        } catch (BadUUIDException e) {
-                return null;
-        }
-       
-}
 
     @Override
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
@@ -288,23 +262,7 @@ public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
     @Override
     public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
         return validateUUID(id)
-<<<<<<< HEAD
-                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(
-                                new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
-                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
-                                .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter
-                                        .convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class))))
-                        .collectList()
-                        .map(relatedChallenges -> {
-                            GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
-                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(),
-                                    relatedChallenges.toArray(new RelatedDto[0]));
-                            return resultDto;
-                        }));
-=======
-                .flatMap(challengeId ->
+        .flatMap(challengeId ->
                         challengeRepository.findByUuid(challengeId)
                                 .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                                 .flatMapMany(challenge ->
@@ -323,8 +281,7 @@ public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
                                     return resultDto;
                                 })
                 );
->>>>>>> 6fc37afc9be9017406f2e1d2a0ded5bcfabf0212
-    }
+        }
 
 
 
