@@ -36,7 +36,6 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-
         MockitoAnnotations.openMocks(this);
 
         validToken = UUID.randomUUID().toString();
@@ -50,12 +49,11 @@ class AuthControllerTest {
         WebClient.RequestBodySpec requestBodySpec = mock(WebClient.RequestBodySpec.class);
         WebClient.ResponseSpec responseSpec = mock(WebClient.ResponseSpec.class);
 
-        doReturn(requestHeadersUriSpec).when(webClientMock).post();
-        doReturn(requestBodySpec).when(requestHeadersUriSpec).uri(any(String.class));
-        doReturn(requestBodySpec).when(requestBodySpec).bodyValue(validToken);
-        doReturn(responseSpec).when(requestBodySpec).retrieve();
-        doReturn(Mono.just(true)).when(responseSpec).bodyToMono(Boolean.class);
-
+        when(webClientMock.post()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.bodyValue(validToken)).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
 
         // Configurar el comportamiento del WebClient mock para el caso de error
         WebClientResponseException errorResponseException = mock(WebClientResponseException.class);
