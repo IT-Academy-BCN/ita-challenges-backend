@@ -1,5 +1,7 @@
 package com.itachallenge.score.component;
 
+import java.util.concurrent.*;
+
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
@@ -24,6 +26,8 @@ public class CodeExecutionService {
     Object[] args = new Object[]{"hola", 1, 2.0};
     compileAndRunCode(sourceCode, codeResult, args);
     compileAndRunCode(sourceCode, codeResult, "hola", 1, 2.0);
+
+    La salida del compilador es a traves del Sistem.out.println
      */
 
     private static final Logger log = LoggerFactory.getLogger(CodeExecutionService.class);
@@ -84,21 +88,43 @@ public class CodeExecutionService {
         PrintStream old = System.out;
         System.setOut(printStream);
 
+        // Ejecutar el código en un hilo separado para poder cancelarlo si se queda en un bucle infinito
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<?> future = executor.submit(() -> {
+            try {
+                compilationResult.getCompiler().getClassLoader().loadClass("Main")
+                        .getMethod("main", String[].class)
+                        .invoke(null, (Object) args);
+            } catch (ClassNotFoundException | NoSuchMethodException e) {
+                log.error(e.getMessage());
+                executionResultDto.setExecution(false);
+                executionResultDto.setMessage("Execution failed: " + e.getMessage());
+                throw new RuntimeException(e);
+            } catch (InvocationTargetException e) {
+                log.error(e.getMessage() + " " + e.getTargetException());
+                executionResultDto.setExecution(false);
+                executionResultDto.setMessage("Execution failed: " + e.getTargetException());
+                throw new RuntimeException(e.getTargetException());
+            } catch (Throwable e) {
+                executionResultDto.setExecution(false);
+                executionResultDto.setMessage("Execution failed: " + e.getMessage());
+                throw new RuntimeException(e);
+            }
+        });
+
         try {
-            compilationResult.getCompiler().getClassLoader().loadClass("Main")
-                    .getMethod("main", String[].class)
-                    .invoke(null, (Object) args);
-        } catch (ClassNotFoundException | NoSuchMethodException e) {
-            log.error(e.getMessage());
-        } catch (InvocationTargetException e) {
-            log.error(e.getMessage() + " " + e.getTargetException());
+            future.get(5, TimeUnit.SECONDS); // Esperar 10 segundos
+        } catch (InterruptedException | TimeoutException e) {
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: " + e.getTargetException());
+            executionResultDto.setMessage("Execution failed: Code execution timed out");
             return executionResult;
-        } catch (Throwable e) {
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: " + e.getMessage());
+            executionResultDto.setMessage("Execution failed: " + cause.getMessage());
             return executionResult;
+        } finally {
+            executor.shutdownNow();
         }
 
         System.out.flush();

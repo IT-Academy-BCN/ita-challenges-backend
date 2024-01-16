@@ -14,8 +14,6 @@ public class CodeExecutionServiceTest {
     @Autowired
     CodeExecutionService codeExecutionService;
 
-    //Object args = new Object[]{};
-
     //Test for client code result match
     @Test
     public void testCompileAndRunCode() {
