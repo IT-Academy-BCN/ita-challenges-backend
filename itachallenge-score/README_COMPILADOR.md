@@ -3,11 +3,14 @@
 En el proyecto actual se ha utilizado la librería **Janino** para compilar y ejecutar
 código de manera dinámica. El método compileAndRunCode en la clase CodeExecutionService
 es el encargado de compilar y ejecutar el código. Hay que modificar el proceso porque
-esto genera problemas graves de seguridad al permitir la entrada de código por parte del
-usuario, esto permite que el usuario ejecute código malicioso en el servidor.
+esto genera problemas graves de seguridad al permitir la entrada de código malicioso por
+parte del usuario, el control de bucles infinitos está gestionado con la creación de un
+hilo, que se encarga de parar la ejecución del código si se excede el tiempo límite de ejecución.
 
 La cabecera `public class Main{ public static void main(String[] args){ }}";`
 ya viene por defecto, el usuario solo debe agregar el código que se le pide en el enunciado.
+En el front end se debe de mostrar esta cabecera y las llaves de apertura y cierre para evitar confusiones,
+especialmente cuando los usuarios quieran añadir métodos en su código.
 
 El componente tiene que aceptar cualquier tipo de parámetros de entrada del estilo Oject...args,
 será el código del cliente el que tiene que hacer el casting correctamente entendiendo que el método main
