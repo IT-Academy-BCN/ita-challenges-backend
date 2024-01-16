@@ -149,24 +149,35 @@ public class CodeExecutionService {
         return executionResultDto;
     }
 
-    public String[] castArgs(Object... args) {
-        // Comprobar si el primer elemento es un array
-        if (args.length == 1 && args[0] instanceof Object[] innerArgs) {
-            // Si es un array, tratarlo como tal
-            String[] argsString = new String[innerArgs.length];
-            for (int i = 0; i < innerArgs.length; i++) {
-                argsString[i] = innerArgs[i].toString();
-            }
-            return argsString;
-        } else {
-            // Si no es un array, tratarlo como antes
-            String[] argsString = new String[args.length];
-            for (int i = 0; i < args.length; i++) {
-                argsString[i] = args[i].toString();
-            }
-            return argsString;
-        }
+   public String[] castArgs(Object... args) {
+    // Comprobar si args es nulo o vacío
+    if (args == null || args.length == 0) {
+        return new String[0];
     }
+
+    // Comprobar si el primer elemento es un array
+    if (args.length == 1 && args[0] instanceof Object[] innerArgs) {
+        // Si es un array, tratarlo como tal
+        String[] argsString = new String[innerArgs.length];
+        for (int i = 0; i < innerArgs.length; i++) {
+            if (innerArgs[i] == null) {
+                throw new IllegalArgumentException("Args cannot contain null");
+            }
+            argsString[i] = innerArgs[i].toString();
+        }
+        return argsString;
+    } else {
+        // Si no es un array, tratarlo como antes
+        String[] argsString = new String[args.length];
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] == null) {
+                throw new IllegalArgumentException("Args cannot contain null");
+            }
+            argsString[i] = args[i].toString();
+        }
+        return argsString;
+    }
+}
 
 
 }

@@ -114,6 +114,18 @@ public class CodeExecutionServiceTest {
         Assertions.assertFalse(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: java.lang.NumberFormatException: "));
     }
+    @Test
+    public void testCompileAndRunCodeWithNullTypeParameterInjection() {
+        String sourceCode =
+                "int num = Integer.parseInt(args[0]);\n" +
+                        "System.out.println(num / 2);\n";
+        String codeResult = "5\n";  // Esperamos que 10 / 2 sea 5
+        Object nullObject = null;
+
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            codeExecutionService.compileAndRunCode(sourceCode, codeResult, nullObject);
+        });
+    }
 
     //Test for ClassNotFoundException
     @Test
