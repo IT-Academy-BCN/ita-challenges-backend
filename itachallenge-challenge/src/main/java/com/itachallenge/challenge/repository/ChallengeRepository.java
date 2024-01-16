@@ -20,7 +20,7 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Mono<Void> deleteByUuid(UUID uuid);
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
     Flux<ChallengeDocument> saveAll(Flux<ChallengeDocument> challengeDocumentFlux);
-    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String Level, UUID idLanguage);
+    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String level, UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
 

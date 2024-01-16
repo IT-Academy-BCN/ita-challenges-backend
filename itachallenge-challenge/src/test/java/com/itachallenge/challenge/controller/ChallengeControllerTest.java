@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,7 +232,7 @@ class ChallengeControllerTest {
 
         // Utilizar ParameterizedTypeReference para obtener información sobre el tipo genérico
         ParameterizedTypeReference<GenericResultDto<ChallengeDto>> responseType =
-                new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {};
+                new ParameterizedTypeReference<>() {};
 
         when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty, offset, limit))
                 .thenReturn(Mono.just(expectedResult));
@@ -253,6 +250,19 @@ class ChallengeControllerTest {
                     assert dto.getResults() != null;
                     assert dto.getResults().length == 2;
                 });
+    }
+
+    @Test
+    void getChallengesByLanguageAndDifficultyTest_NullIdLanguageAndNullDifficulty_ReturnsNull() {
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody().isEmpty();
+
     }
 
     @Test
