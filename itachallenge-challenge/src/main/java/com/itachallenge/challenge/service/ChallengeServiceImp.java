@@ -103,6 +103,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                     error.getMessage()));
                 });
     }
+<<<<<<< HEAD
 /*
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage,
@@ -119,6 +120,13 @@ public class ChallengeServiceImp implements IChallengeService {
                             challenges.toArray(new ChallengeDto[0]));
                     return resultDto;
                 });
+=======
+
+
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
+        // TODO: Get challenges by language and difficulty
+        return null;
+>>>>>>> 6fc37afc9be9017406f2e1d2a0ded5bcfabf0212
     }
 */
 public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty,
@@ -279,8 +287,8 @@ public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
 
     @Override
     public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
-
         return validateUUID(id)
+<<<<<<< HEAD
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
                         .switchIfEmpty(Mono.error(
                                 new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -295,7 +303,30 @@ public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
                                     relatedChallenges.toArray(new RelatedDto[0]));
                             return resultDto;
                         }));
+=======
+                .flatMap(challengeId ->
+                        challengeRepository.findByUuid(challengeId)
+                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                                .flatMapMany(challenge ->
+                                        Flux.fromIterable(challenge.getRelatedChallenges())
+                                                .flatMap(relatedChallengeId ->
+                                                        challengeRepository.findByUuid(relatedChallengeId)
+                                                                .flatMap(relatedChallenge ->
+                                                                        Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class))
+                                                                )
+                                                )
+                                )
+                                .collectList()
+                                .map(relatedChallenges -> {
+                                    GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
+                                    resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new RelatedDto[0]));
+                                    return resultDto;
+                                })
+                );
+>>>>>>> 6fc37afc9be9017406f2e1d2a0ded5bcfabf0212
     }
+
+
 
     private Mono<UUID> validateUUID(String id) {
             boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

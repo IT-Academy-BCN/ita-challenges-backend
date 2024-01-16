@@ -14,7 +14,7 @@ class ResourceHelperTest {
     void readResourceAsStringTest (){
         ResourceHelper resourceHelper = new ResourceHelper("json/random.json");
         String expected = "{\"name\": \"RandomName\", \"num\": [1,2,3], \"happy\": true}";
-        assertEquals(expected, resourceHelper.readResourceAsString().get());
+        assertEquals(Optional.of(expected), resourceHelper.readResourceAsString());
     }
 
     @Test
