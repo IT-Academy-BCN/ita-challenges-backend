@@ -141,17 +141,10 @@ public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
         @RequestParam(required = false) String difficulty,
         @RequestParam(required = false) String idLanguage) {
 
-    Mono<GenericResultDto<ChallengeDto>> responseMono = challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty, Integer.parseInt(offset), Integer.parseInt(limit));
+    return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty, Integer.parseInt(offset), Integer.parseInt(limit));
 
-        if (responseMono != null){
-                return responseMono;
-        }
-        else{
-               
-                return null;
-        }
-          
 }
+
 
 
     @GetMapping("/language")
