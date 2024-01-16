@@ -96,7 +96,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        // TODO: Get challenges by languange and difficulty
+        // TODO: Get challenges by language and difficulty
         return null;
     }
 
@@ -203,6 +203,8 @@ public class ChallengeServiceImp implements IChallengeService {
                         })
                 );
     }
+
+
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

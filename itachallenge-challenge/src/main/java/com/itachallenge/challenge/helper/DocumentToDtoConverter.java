@@ -33,14 +33,14 @@ public class DocumentToDtoConverter<S,D> {
                 }
             };
             mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class)
-                .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
-                .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle);
+                    .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
+                    .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle);
             mapper.addConverter(converterFromLocalDateTimeToString);
         }
 
         if(dtoClass.isAssignableFrom(LanguageDto.class)) {
             mapper.createTypeMap(LanguageDocument.class, LanguageDto.class)
-                .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
+                    .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
         }
 
         return mapper.map(document, dtoClass);

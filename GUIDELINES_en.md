@@ -153,9 +153,8 @@ Where...\
 Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
 
 ### 2.2.2 Autocrlf
-If you have a problem with a PR that modify a lot of files, >100, you need do next...
-1. In Git Bash...
-2. Run the command: 'git config --global core.autocrlf true'
+
+Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
 
 
 <hr/>
