@@ -46,7 +46,6 @@ public class AuthController {
     private Mono<Boolean> validateWithSSO(String token) {
         String validationUrl = "https://dev.sso.itawiki.eurecatacademy.org/api/v1/tokens/validate";
         WebClient webClient = webClientBuilder.build();
-
         return webClient
                 .post()
                 .uri(validationUrl)
