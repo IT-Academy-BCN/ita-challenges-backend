@@ -96,5 +96,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
+    @Override
+    public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
+        return this.userSolutionRepository.countBookmarkedTrueByChallengeId(idChallenge);
+    }
+
 }
 
