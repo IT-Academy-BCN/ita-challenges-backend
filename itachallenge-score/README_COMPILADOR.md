@@ -12,6 +12,9 @@ ya viene por defecto, el usuario solo debe agregar el código que se le pide en 
 En el front end se debe de mostrar esta cabecera y las llaves de apertura y cierre para evitar confusiones,
 especialmente cuando los usuarios quieran añadir métodos en su código.
 
+Falta hacer la gestión de los imports, ya que el usuario no puede añadirlos en el código.
+Se puede modificar el método compileAndRundCode().
+
 El componente tiene que aceptar cualquier tipo de parámetros de entrada del estilo Oject...args,
 será el código del cliente el que tiene que hacer el casting correctamente entendiendo que el método main
 solo acepta un array de String.

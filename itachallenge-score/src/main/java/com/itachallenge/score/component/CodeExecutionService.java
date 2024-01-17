@@ -35,7 +35,11 @@ public class CodeExecutionService {
     public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult, Object... args) {
 
         //TODO: falta implementar la gestión de los imports
-        sourceCode = "public class Main {\n" +
+        //ahora todas las ejecuciones incluyen java.util.* por defecto
+        String imports = "import java.util.*;\n";
+
+        sourceCode = imports +
+                "public class Main {\n" +
                 "    public static void main(String[] args) {\n" +
                 sourceCode +
                 "    }\n" +
@@ -133,7 +137,7 @@ public class CodeExecutionService {
 
         // Ejecución correcta
         executionResultDto.setExecution(true);
-        executionResult.setExecutionResult(outputStream.toString());
+        executionResult.setExecutionResult(removeTrailingNewline(outputStream.toString()));
 
         return executionResult;
     }
@@ -180,5 +184,12 @@ public class CodeExecutionService {
         }
     }
 
+    public static String removeTrailingNewline(String input) {
+        //elimina el salto de línea al final del resultado si existe
+        if (input.lastIndexOf("\n") == input.length() - 1) {
+            return input.substring(0, input.length() - 1);
+        }
+        return input;
+    }
 
 }

@@ -19,7 +19,7 @@ public class CodeExecutionServiceTest {
     public void testCompileAndRunCode() {
 
         String sourceCode = "System.out.println(\"Hello, World!\");\n";
-        String codeResult = "Hello, World!\n";
+        String codeResult = "Hello, World!";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
@@ -36,7 +36,7 @@ public class CodeExecutionServiceTest {
 
         String sourceCode = "System.out.println(\"Bad Hello, World!\");\n";
 
-        String codeResult = "Hello, World!\n";
+        String codeResult = "Hello, World!";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
@@ -87,7 +87,7 @@ public class CodeExecutionServiceTest {
         String sourceCode =
                 "int num = Integer.parseInt(args[0]);\n" +
                         "System.out.println(num / 2);\n";
-        String codeResult = "5\n";  // Esperamos que 10 / 2 sea 5
+        String codeResult = "5";  // Esperamos que 10 / 2 sea 5
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult,10);// Pasamos 10 como argumento al método main
 
@@ -104,7 +104,7 @@ public class CodeExecutionServiceTest {
         String sourceCode =
                 "int num = Integer.parseInt(args[0]);\n" +
                         "System.out.println(num / 2);\n";
-        String codeResult = "5\n";  // Esperamos que 10 / 2 sea 5
+        String codeResult = "5";  // Esperamos que 10 / 2 sea 5
         Object args = new String[]{"a, bce"};  // Pasamos tipo erróneo para int como argumento al método main
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, args);
 
@@ -119,7 +119,7 @@ public class CodeExecutionServiceTest {
         String sourceCode =
                 "int num = Integer.parseInt(args[0]);\n" +
                         "System.out.println(num / 2);\n";
-        String codeResult = "5\n";  // Esperamos que 10 / 2 sea 5
+        String codeResult = "5";  // Esperamos que 10 / 2 sea 5
         Object nullObject = null;
 
         Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -135,7 +135,7 @@ public class CodeExecutionServiceTest {
                 "        System.out.println(\"Hello, World!\");\n" +
                 "    }\n" +
                 "}";
-        String codeResult = "Hello, World!\n";
+        String codeResult = "Hello, World!";
 
         String[] args = new String[]{};
 
@@ -156,7 +156,7 @@ public class CodeExecutionServiceTest {
                 "        System.out.println(\"Hello, World!\");\n" +
                 "    }\n" +
                 "}";
-        String codeResult = "Hello, World!\n";
+        String codeResult = "Hello, World!";
 
         String[] args = new String[]{};
 
@@ -178,7 +178,7 @@ public class CodeExecutionServiceTest {
                 "        throw new RuntimeException(\"Hello, World!\");\n" +
                 "    }\n" +
                 "}";
-        String codeResult = "Hello, World!\n";
+        String codeResult = "Hello, World!";
 
         String[] args = new String[]{};
 

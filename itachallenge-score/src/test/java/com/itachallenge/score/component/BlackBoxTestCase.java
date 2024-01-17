@@ -91,5 +91,34 @@ public class BlackBoxTestCase {
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: Code execution timed out"));
     }
 
+    String sortingCode =
+                    "        int number = Integer.parseInt(args[0]);\n" +
+                    "        String sortedNumber = sortNumber(number);\n" +
+                    "        System.out.println(sortedNumber);\n" +
+                    "    }\n" +
+                    "    public static String sortNumber(int number) {\n" +
+                    "        String numberStr = Integer.toString(number);\n" +
+                    "        List<Character> chars = new ArrayList<>();\n" +
+                    "        for (char c : numberStr.toCharArray()) {\n" +
+                    "            chars.add(c);\n" +
+                    "        }\n" +
+                    "        Collections.sort(chars);\n" +
+                    "        StringBuilder sortedNumberStr = new StringBuilder(chars.size());\n" +
+                    "        for (Character c : chars) {\n" +
+                    "            sortedNumberStr.append(c);\n" +
+                    "        }\n" +
+                    "        return sortedNumberStr.toString();\n";
+    @Test
+    public void sortingCodeTest(){
+        String sourceCode = sortingCode;
+        String codeResult = "1234";
+
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 4321);
+        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isExecution());
+        Assertions.assertTrue(resultDto.isResultCodeMatch());
+        Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
+    }
+
 
 }
