@@ -5,9 +5,9 @@ spring:
     gateway:
       routes:
       - id: documentation-service
-      uri: lb://documentation-service/
-      predicates:
-      - Path=/swagger-ui/**
+        uri: lb://documentation-service/
+        predicates:
+        - Path=/swagger-ui/**
     consul:
       enabled: false #habilitar / deshabilitar el uso de consul
       #host: 172.24.2.0 #IP del agente consul (Docker)
