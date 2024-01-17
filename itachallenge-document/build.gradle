@@ -8,7 +8,7 @@ plugins {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'com.itachallenge.challenge.App'
+                'Main-Class': 'com.itachallenge.document.App'
         )
     }
 }
@@ -18,7 +18,7 @@ jacoco{
 }
 
 group = 'ita.challenges'
-version = '1.1.0-RELEASE'
+version = '1.0.0-RELEASE'
 
 repositories {
     mavenCentral()
@@ -26,13 +26,9 @@ repositories {
 
 dependencies {
 
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
-    testCompileOnly 'org.projectlombok:lombok:1.18.26'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
-
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
@@ -42,8 +38,7 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-gateway:4.0.2'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
@@ -52,14 +47,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation 'org.mockito:mockito-core:5.3.1'
-    testImplementation 'org.hamcrest:hamcrest:2.2'
-    testImplementation 'org.assertj:assertj-core:3.24.2'
-    testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
-    testImplementation 'org.testcontainers:mongodb:1.17.6'
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
-    testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
-    testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
 
 
 

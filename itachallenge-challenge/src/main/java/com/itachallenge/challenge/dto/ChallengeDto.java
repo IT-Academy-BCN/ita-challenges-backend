@@ -2,12 +2,11 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.challenge.document.DetailDocument;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -22,7 +21,7 @@ public class ChallengeDto {
     private UUID challengeId;
 
     @JsonProperty(value = "challenge_title", index = 1)
-    private String title;
+    private Map<Locale, String> title;
 
     @JsonProperty(index = 2)
     private String level;
@@ -37,16 +36,19 @@ public class ChallengeDto {
     @JsonProperty(value = "creation_date", index = 3)
     private String creationDate;
 
-    @JsonProperty(index = 4)
-    private Integer popularity;
+    @JsonProperty(value = "detail", index = 4)
+    private DetailDocument detail;
 
     @JsonProperty(index = 5)
-    private Float percentage;
+    private Integer popularity;
 
     @JsonProperty(index = 6)
-    private Set<LanguageDto> languages;
+    private Float percentage;
 
     @JsonProperty(index = 7)
+    private Set<LanguageDto> languages;
+
+    @JsonProperty(index = 8)
     private List<UUID> solutions;
 
 }
