@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
-    @Autowired
+
     private final WebClient.Builder webClientBuilder;
 
     @Autowired
@@ -50,15 +50,14 @@ public class AuthController {
         return webClient
                 .post()
                 .uri(validationUrl)
-                .contentType(MediaType.APPLICATION_JSON)  // Установка Content-Type на application/json
-                .bodyValue("{\"authToken\": \"" + token + "\"}")  // Отправка JSON-строки с токеном
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(token)
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMap(response -> {
                     try {
                         ObjectMapper objectMapper = new ObjectMapper();
                         JsonNode jsonNode = objectMapper.readTree(response);
-
                         if (jsonNode.has("id")) {
                             log.info("Token is valid");
                             return Mono.just(true);
