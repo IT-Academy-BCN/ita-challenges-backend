@@ -95,4 +95,23 @@ public class UserController {
                 );
     }
 
+    @GetMapping(value = "/bookmarks/{idChallenge}")
+    @Operation(
+            summary = "Get the count of bookmarks for a specific challenge.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Long.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "Challenge not found", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<Long>> getBookmarkCountByIdChallenge(
+            @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
+        return userScoreService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build())
+                .onErrorResume(throwable ->
+                        Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build())
+                );
+    }
+
 }
