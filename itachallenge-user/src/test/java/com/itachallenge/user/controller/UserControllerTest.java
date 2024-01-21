@@ -193,25 +193,19 @@ class UserControllerTest {
 
     @Test
     void testGetBookmarkCountByIdChallenge() {
-        //region VARIABLES
         final UUID VALID_MONGO_UUID = UUID.fromString("5c1a97e5-1cca-4144-9981-2de1fb73b178");
         String URI_TEST = "/bookmarks/{idChallenge}";
         Long testCount = 42L;
-        //endregion VARIABLES
 
-        //region MOCK SETUP
         when(userScoreService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
                 .thenReturn(Mono.just(testCount));
-        //endregion MOCK SETUP
 
-        //region TEST
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, VALID_MONGO_UUID)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Long.class)
                 .consumeWith(response -> assertEquals(testCount, response.getResponseBody()));
-        //endregion TEST
     }
 
     //endregion TEST METHODS: ChallengeStatics
