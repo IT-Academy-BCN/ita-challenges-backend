@@ -1,6 +1,7 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IUserSolutionService;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -113,5 +115,4 @@ public class UserController {
                         Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build())
                 );
     }
-
 }
