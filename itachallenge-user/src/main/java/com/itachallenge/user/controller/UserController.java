@@ -110,4 +110,22 @@ public class UserController {
                 );
     }
 
+    @GetMapping(path = "/statistics/percent/{idChallenge}")
+    @Operation(
+            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<Float> challengeUserPercentageStatistic(
+            @PathVariable("idChallenge")
+            @GenericUUIDValid(message = "Invalid UUID for challenge")
+            String idChallenge) {
+
+        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge));
+    }
+
 }
