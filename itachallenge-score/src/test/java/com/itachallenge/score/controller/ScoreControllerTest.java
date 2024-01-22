@@ -19,7 +19,6 @@ class ScoreControllerTest {
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
 
-    //test para probar el endpoint test
     @Test
     void testCreateScore() {
         ScoreRequest scoreRequest = new ScoreRequest(

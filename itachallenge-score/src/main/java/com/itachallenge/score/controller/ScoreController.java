@@ -21,7 +21,6 @@ public class ScoreController {
         log.info("** Saludos desde el logger **");
         return "Hello from ITA Score!!!";
     }
-    //post para crear el score
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)
@@ -30,11 +29,7 @@ public class ScoreController {
                     scoreResponse.setUuidChallenge(req.getUuidChallenge());
                     scoreResponse.setUuidLanguage(req.getUuidLanguage());
                     scoreResponse.setSolutionText(req.getSolutionText());
-
-                    // Lógica de ejemplo para calcular el score
-                    int score = 99;
-                    scoreResponse.setScore(score);
-
+                    scoreResponse.setScore(99);//TODO
                     return ResponseEntity.ok(scoreResponse);
                 });
     }
