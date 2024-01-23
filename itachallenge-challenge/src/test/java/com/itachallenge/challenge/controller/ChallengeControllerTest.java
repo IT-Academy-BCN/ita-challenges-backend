@@ -58,23 +58,21 @@ class ChallengeControllerTest {
     @Test
     void getOneChallenge_ValidId_ChallengeReturned() {
         // Arrange
-        String challengeId = "valid-challenge-id";
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 1, 1, new ChallengeDto[]{new ChallengeDto()});
+        UUID challengeId = UUID.randomUUID();
+        ChallengeDto expectedResult = new ChallengeDto();
+        expectedResult.setChallengeId(challengeId);
 
-        when(challengeService.getChallengeById(challengeId)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getChallengeById(challengeId.toString())).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}", challengeId)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
+                .expectBody(ChallengeDto.class)
                 .value(dto -> {
                     assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 1;
+                    assert dto.getChallengeId().equals(challengeId);
                 });
     }
 
