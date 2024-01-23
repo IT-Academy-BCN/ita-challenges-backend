@@ -377,7 +377,7 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
-        verify(relatedChallengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
+        verify(challengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
