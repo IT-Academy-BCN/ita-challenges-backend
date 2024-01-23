@@ -1,15 +1,11 @@
 spring:
   application:
-    name: itachallenge-user
+    name: itachallenge-challenge
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
-  data:
-    mongodb:
-      uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
-      uuid-representation: standard
 
 springdoc:
   swagger-ui:
@@ -20,7 +16,7 @@ springdoc:
     path: "/api-docs"
 
 server:
-  port: 8764
+  port: 8762
 
 management:
   endpoints:
@@ -30,19 +26,18 @@ management:
   security:
     enabled: false
 
-url:
-  max_length: 2048
-
 logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-user.log
+#    name: itachallenge-challenge.log
 
-validation:
-  mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+url:
+  connection_timeout: 30000
+  maxBytesInMemory: 30000000
+
