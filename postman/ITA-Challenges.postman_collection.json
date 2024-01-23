@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "9ae0e0c7-909a-41ca-9a88-5676d1f3552c",
+		"name": "ITA-Challenges",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1005741"
+	},
+	"item": [
+		{
+			"name": "SSO",
+			"item": [
+				{
+					"name": "SSO - Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dni\": \"84003585H\",\n  \"password\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{dns}}/api/v1/auth/login",
+							"protocol": "https",
+							"host": [
+								"{{dns}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SSO - Get Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{dns}}/api/v1/users",
+							"protocol": "https",
+							"host": [
+								"{{dns}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SSO - Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"jonatan@outlok.es\",\n  \"dni\": \"84003585H\",\n  \"specialization\": \"cln1fjzif000008mdcsfq64c2\",\n  \"name\": \"Jonatan\",\n  \"accept\": true,\n  \"role\": \"ADMIN\",\n  \"status\": \"ACTIVE\",\n  \"password\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\",\n  \"confirmPassword\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{dns}}api/v1/auth/register",
+							"protocol": "https",
+							"host": [
+								"{{dns}}api"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ITA-Wiki",
+			"item": [
+				{
+					"name": "Types",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://{{dns}}/api/v1/types",
+							"protocol": "https",
+							"host": [
+								"{{dns}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"types"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "External Network Container",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{port}}/test",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Internal Network Container",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://172.18.0.9:8762/test",
+					"protocol": "http",
+					"host": [
+						"172",
+						"18",
+						"0",
+						"9"
+					],
+					"port": "8762",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gateway External Network",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{port}}/test",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gateway External Network DNS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{dns}}:{{port}}/test",
+					"protocol": "http",
+					"host": [
+						"{{dns}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Gateway Internal Network",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://172.18.0.8:9080/test",
+					"protocol": "http",
+					"host": [
+						"172",
+						"18",
+						"0",
+						"8"
+					],
+					"port": "9080",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Challentes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8762/itachallenge/api/v1/challenge/challenges?offset=1&limit=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8762",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"challenge",
+						"challenges"
+					],
+					"query": [
+						{
+							"key": "offset",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Challenges/{idChallenge}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8762/itachallenge/api/v1/challenge/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8762",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"challenge",
+						"challenges",
+						"2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Challenges/{idChallenge}/related",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8762/itachallenge/api/v1/challenge/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4/related",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8762",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"challenge",
+						"challenges",
+						"2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
+						"related"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Languages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/language",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"challenge",
+						"language"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "User/solution",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"uuid_challenge\": \"1e8f64e2-6d68-4ae1-9425-8102d0ab61d3\",\n\"uuid_language\": \"09fabe32-7362-4bfb-ac05-b7bf854c6e0f\",\n\"uuid_user\": \"76f906d8-8d02-4a61-892e-83744b685fd2\",\n\"status\": \"ENsssDED\",\n\"solution_text\": \"Mi solutionssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/user/solution",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"user",
+						"solution"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Score",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"uuid_challenge\": \"123e4567-e89b-12d3-a456-426614174000\",\n\"uuid_language\": \"12e4567-e89b-12d3-a456-426614174000\",\n\"solution_text\": \"\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{ip}}:{{port}}/itachallenge/api/v1/score/score",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"score",
+						"score"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
