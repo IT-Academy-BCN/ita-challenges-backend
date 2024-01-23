@@ -60,31 +60,6 @@ class ChallengeServiceImpTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    /*@Test
-    void getChallengeById_ValidId_ChallengeFound() {
-        // Arrange
-        UUID challengeId = UUID.randomUUID();
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-        GenericResultDto<ChallengeDto> expectedDto = new GenericResultDto<>();
-        expectedDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
-
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto));
-
-        // Act
-        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
-
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 1 && Arrays.equals(dto.getResults(), expectedDto.getResults()))
-                .expectComplete()
-                .verify();
-
-        verify(challengeRepository).findByUuid(challengeId);
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
-    }*/
-
     @Test
     void getChallengeById_ValidId_ChallengeFound() {
         // Arrange
