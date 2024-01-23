@@ -1,63 +1,70 @@
 package com.itachallenge.auth.service;
 
-import org.junit.Before;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import java.io.IOException;
 
-@ExtendWith(MockitoExtension.class)
-public class AuthServiceTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    @Mock
-    private WebClient webClient;
+class AuthServiceTest {
 
-    @Mock
-    private WebClient.Builder webClientBuilder;
-
-    @Mock
-    private WebClient.RequestBodyUriSpec RequestBodyUriSpec;
-
-    @Mock
-    private WebClient.RequestBodySpec requestBodySpec;
-
-    @Mock
-    private WebClient.ResponseSpec responseSpec;
-
-    @InjectMocks
+    private MockWebServer mockWebServer;
     private AuthService authService;
 
-    @Before
-    public void setUp() {
-        /*
-            TODO: Mockear la url de Service para que invoque mock y preparar la respuesta
-         */
-        // Configura el WebClient para devolver el mock de RequestHeadersUriSpec cuando se llama a post()
-        when(webClient.post()).thenReturn(RequestBodyUriSpec);
+    @BeforeEach
+    void setUp() throws IOException {
+        mockWebServer = new MockWebServer();
+        mockWebServer.start();
 
-        // Configura el RequestHeadersUriSpec para devolver el mock de RequestBodySpec cuando se llama a uri()
-        when(RequestBodyUriSpec.uri(any(String.class))).thenReturn(requestBodySpec);
+        String baseUrl = mockWebServer.url("/api/v1/tokens/validate").toString();
+        authService = new AuthService(WebClient.builder().baseUrl(baseUrl));
+    }
 
-        // Configura el RequestBodySpec para devolver el mock de ResponseSpec cuando se llama a retrieve()
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+    @AfterEach
+    void tearDown() throws IOException {
+        mockWebServer.shutdown();
+    }
 
-        // Configura el ResponseSpec para devolver un Mono cuando se llama a bodyToMono()
-        when(responseSpec.bodyToMono(Boolean.class)).thenReturn(Mono.just(true));
+
+    @Test
+    void validateWithSSO_Successful() throws InterruptedException {
+        String responseBody = "{\"id\": \"some_id\"}";
+        mockWebServer.enqueue(new MockResponse().setBody(responseBody));
+
+        Mono<Boolean> result = authService.validateWithSSO("validToken");
+
+        assertEquals(true, result.block());
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("/api/v1/tokens/validate", request.getPath());
+        assertEquals("POST", request.getMethod());
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("validToken", request.getBody().readUtf8());
     }
 
     @Test
-    public void testWebClientMock() {
+    void validateWithSSO_Failure() throws InterruptedException {
 
-        // Ahora, cuando llames a authService.validateWithSSO(), debería devolver "response"
-        Mono<Boolean> response = authService.validateWithSSO("token");
-        assertEquals(true, response.block());
+        String responseBody = "{\"message\":\"Token is not valid\"}";
+        mockWebServer.enqueue(new MockResponse().setBody(responseBody));
+
+        Mono<Boolean> result = authService.validateWithSSO("invalidToken");
+
+        assertEquals(false, result.block());
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("/api/v1/tokens/validate", request.getPath());
+        assertEquals("POST", request.getMethod());
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("invalidToken", request.getBody().readUtf8());
     }
 
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,18 +16,18 @@ import reactor.core.publisher.Mono;
 @Service
 public class AuthService implements IAuthService {
 
+
+
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final WebClient.Builder webClientBuilder;
-
     @Autowired
     public AuthService(WebClient.Builder webClientBuilder) {
         this.webClientBuilder = webClientBuilder;
     }
-
-
+    @Value("${uri_validate_token}")
+    private String validationUrl;
     public Mono<Boolean> validateWithSSO(String token) {
-        //TODO - externalizar a properties
-        String validationUrl = "https://dev.sso.itawiki.eurecatacademy.org/api/v1/tokens/validate";
+
         WebClient webClient = webClientBuilder.build();
         return webClient
                 .post()
