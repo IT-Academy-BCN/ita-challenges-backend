@@ -1,8 +1,42 @@
 {
   "id_challenge" : "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-  "challenge_title" : "Sociis Industries",
+  "challenge_title" : {
+    "es" : "Industrias Sociis",
+    "en" : "Sociis Industries",
+    "ca" : "Industries Sociis"
+  },
   "level" : "EASY",
   "creation_date" : "2023-06-05T12:30:00+02:00",
+  "detail" : {
+    "description" : {
+      "es" : "Descripcíón de prueba",
+      "en" : "Test Description",
+      "ca" : "Descripció de prova"
+    },
+    "examples" : [
+      {
+        "idExample" : "2dab6eaa-fdf4-4a93-8088-810a956e2bf8",
+        "exampleText" : {
+          "es" : "Texto de ejemplo",
+          "en" : "Example text",
+          "ca" : "Texte d'exemple"
+        }
+      },
+      {
+        "idExample" : "6c02025e-b06f-420a-bafb-28c737b18473",
+        "exampleText" : {
+          "es" : "Ejemplo random",
+          "en" : "Random example",
+          "ca" : "Exemple random"
+        }
+      }
+    ],
+    "note" : {
+      "es" : "Notas",
+      "en" : "Notes",
+      "ca" : "Notes"
+    }
+  },
   "popularity" : 105,
   "percentage" : 23.58,
   "languages" : [

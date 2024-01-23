@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Map;
+import java.util.Locale;
 import java.util.UUID;
 
 @Getter
@@ -15,6 +17,5 @@ public class ExampleDocument {
     private UUID idExample;
 
     @Field(name="example_text")
-    private String exampleText;
-
+    private Map<Locale, String> exampleText;
 }

@@ -33,7 +33,6 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
@@ -43,7 +42,8 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-gateway:4.0.2'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
@@ -95,6 +95,6 @@ jacocoTestCoverageVerification {
 
 sonar {
     properties {
-        property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+        //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
 }

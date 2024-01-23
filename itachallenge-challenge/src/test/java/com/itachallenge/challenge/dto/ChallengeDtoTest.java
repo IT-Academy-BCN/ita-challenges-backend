@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.document.ExampleDocument;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,25 +34,45 @@ class ChallengeDtoTest {
 
     private ChallengeDto challengeDtoFromDeserialization;
 
-    /**
-     * Para el test, es necesario pasar como parámetro a creationDate el
-     * String equivalente al tipo de formato que devuelve LocalDateTime,
-     * ya que en el test lo mapea de nuevo y no coincide formato.
-     * Fijarse en archivo BasicInfoChallengeV1.json, ahí tenemos el expected format.
-     */
     @BeforeEach
     void setUp(){
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID exampleRandomId1 = uuid.fromString("2dab6eaa-fdf4-4a93-8088-810a956e2bf8");
+        UUID exampleRandomId2 = uuid2.fromString("6c02025e-b06f-420a-bafb-28c737b18473");
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
+        Map<Locale, String> titleMap = new HashMap<>();
+            titleMap.put(Locale.forLanguageTag("ES"), "Industrias Sociis");
+            titleMap.put(Locale.forLanguageTag("CA"), "Industries Sociis");
+            titleMap.put(Locale.ENGLISH, "Sociis Industries");
+        Map<Locale, String> descriptionMap = new HashMap<>();
+            descriptionMap.put(Locale.forLanguageTag("ES"), "Descripcíón de prueba");
+            descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció de prova");
+            descriptionMap.put(Locale.ENGLISH, "Test Description");
+        Map<Locale, String> exampleMap1 = new HashMap<>();
+            exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
+            exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
+            exampleMap1.put(Locale.ENGLISH, "Example text");
+        Map<Locale, String> exampleMap2 = new HashMap<>();
+            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo random");
+            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple random");
+            exampleMap2.put(Locale.ENGLISH, "Random example");
+        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId1, exampleMap1),
+                new ExampleDocument(exampleRandomId2, exampleMap2));
+        Map<Locale, String> notesMap = new HashMap<>();
+            notesMap.put(Locale.forLanguageTag("ES"), "Notas");
+            notesMap.put(Locale.forLanguageTag("CA"), "Notes");
+            notesMap.put(Locale.ENGLISH, "Notes");
+        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",
+                , titleMap, "EASY", "2023-06-05T12:30:00+02:00", detail,
                 105, 23.58f,buildLanguagesSorted(firstLanguage, secondLanguage));
 
         challengeDtoFromDeserialization = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                , "Sociis Industries", "EASY", "2023-06-05T12:30:00+02:00",
+                , titleMap, "EASY", "2023-06-05T12:30:00+02:00", detail,
                 105, 23.58f,buildLanguages(firstLanguage, secondLanguage));
     }
 
@@ -65,7 +84,6 @@ class ChallengeDtoTest {
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(challengeDtoToSerialize);
         String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
-        //Assertions.assertEquals(jsonExpectedV2, jsonResult);
         assertEquals(jsonExpected, jsonResult);
     }
 
@@ -90,13 +108,14 @@ class ChallengeDtoTest {
     }
 
     static ChallengeDto buildChallengeWithBasicInfoDto
-            (UUID id, String title, String level, String creationDate,
+            (UUID id, Map<Locale, String> titleMap, String level, String creationDate, DetailDocument detail,
              Integer popularity, Float percentage, Set<LanguageDto> languages){
         return ChallengeDto.builder()
                 .challengeId(id)
-                .title(title)
+                .title(titleMap)
                 .level(level)
                 .creationDate(creationDate)
+                .detail(detail)
                 .popularity(popularity)
                 .percentage(percentage)
                 .languages(languages)
