@@ -346,8 +346,8 @@ class ChallengeControllerTest {
     void getAllRelatedChallenges_ChallengesReturned() {
         //Arrange
         String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
-        GenericResultDto<RelatedDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new RelatedDto[]{new RelatedDto(), new RelatedDto()});
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
 
         when(challengeService.getRelatedChallenges(challengeStringId, 0, 0)).thenReturn(Mono.just(expectedResult));
 
@@ -363,8 +363,8 @@ class ChallengeControllerTest {
     void getAllRelatedChallenges_ChallengesReturnedPaginated() {
         //Arrange
         String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
-        GenericResultDto<RelatedDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new RelatedDto[]{new RelatedDto(), new RelatedDto()});
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
 
         when(challengeService.getRelatedChallenges(challengeStringId, 1, 1)).thenReturn(Mono.just(expectedResult));
 

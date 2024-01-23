@@ -184,21 +184,21 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id, int offset, int limit) {
+    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
 
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                         .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
                                 .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
-                                .flatMap(relatedChallenge -> Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class)))
+                                .flatMap(relatedChallenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), ChallengeDto.class)))
                         )
                         .skip(offset)
                         .take(limit)
                         .collectList()
                         .map(relatedChallenges -> {
-                            GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
-                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new RelatedDto[0]));
+                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new ChallengeDto[0]));
                             return resultDto;
                         })
                 );

@@ -195,7 +195,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<RelatedDto>> getRelated(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
+    public Mono<GenericResultDto<ChallengeDto>> getRelated(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
                                                          @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
                                                          @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
