@@ -60,7 +60,7 @@ class ChallengeServiceImpTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
+    /*@Test
     void getChallengeById_ValidId_ChallengeFound() {
         // Arrange
         UUID challengeId = UUID.randomUUID();
@@ -73,7 +73,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto));
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
+        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
 
         // Assert
         StepVerifier.create(result)
@@ -83,6 +83,33 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(challengeId);
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
+    }*/
+
+    @Test
+    void getChallengeById_ValidId_ChallengeFound() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDto.setChallengeId(challengeId);
+        challengeDto.setLevel("EASY");
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+
+        // Act
+        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
+                        dto.getLevel().equals(challengeDto.getLevel())
+                )
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository).findByUuid(challengeId);
+        verify(challengeConverter).convertDocumentToDto(any(), any());
     }
 
     @Test
@@ -91,7 +118,7 @@ class ChallengeServiceImpTest {
         String invalidId = "invalid-id";
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(invalidId);
+        Mono<ChallengeDto> result = challengeService.getChallengeById(invalidId);
 
         // Assert
         StepVerifier.create(result)
@@ -110,7 +137,7 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.empty());
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengeById(challengeId.toString());
+        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
 
         // Assert
         StepVerifier.create(result)

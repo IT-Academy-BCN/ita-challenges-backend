@@ -94,7 +94,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
+    public Mono<ChallengeDto> getOneChallenge(@PathVariable("challengeId") String id) {
         return challengeService.getChallengeById(id);
     }
 

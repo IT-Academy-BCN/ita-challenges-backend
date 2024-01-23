@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface IChallengeService {
 
-    Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id);
+    Mono<ChallengeDto> getChallengeById(String id);
     Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
     Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage);

@@ -55,17 +55,12 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
 
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
+    public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge), ChallengeDto.class)))
-                        .map(challengeDto -> {
-                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                            resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
-                            return resultDto;
-                        })
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
-                        .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
+                        .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                        .doOnSuccess(challengeDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
                 );
     }
