@@ -88,6 +88,6 @@ jacocoTestCoverageVerification {
 
 sonar {
     properties {
-        property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+        //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
 }
