@@ -9,7 +9,7 @@ spring:
 
 springdoc:
   swagger-ui:
-    path: "/swagger-ui-custom.html"
+    path: "/swagger"
     operationsSorted: method
   api-docs:
     enable: true
