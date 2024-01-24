@@ -1,6 +1,6 @@
 package com.itachallenge.auth.controller;
 
-import com.itachallenge.auth.service.AuthService;
+
 import com.itachallenge.auth.service.IAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
