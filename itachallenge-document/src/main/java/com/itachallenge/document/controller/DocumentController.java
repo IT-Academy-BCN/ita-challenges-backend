@@ -1,5 +1,9 @@
 package com.itachallenge.document.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
@@ -18,9 +22,13 @@ public class DocumentController {
 
 
     @GetMapping(value = "/test")
+    @Operation(
+            operationId = "Test",
+            summary = "Only for testing purposes",
+            description = "Test",
+            responses = {@ApiResponse(responseCode = "200")})
     public String test() {
         log.info("** Saludos desde el logger **");
-
         return "Hello from ITA Challenge Document!!!";
     }
 
