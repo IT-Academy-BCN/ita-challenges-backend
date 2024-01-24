@@ -28,6 +28,16 @@ public class DocumentController {
     private DocumentService documentService;
 
     @GetMapping(value = "/api-docs")
+    @Operation(operationId = "Get API docs",
+            summary = "Get API docs"//,
+/*    responses = {
+            @ApiResponse(responseCode = "200", description = "API docs",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = JsonNode.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = String.class)))
+    }*/)
     public JsonNode getApiDocs() {
         return documentService.getSwaggerDocs();
     }
