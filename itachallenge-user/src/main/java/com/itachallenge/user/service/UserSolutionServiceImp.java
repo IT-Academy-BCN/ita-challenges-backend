@@ -95,10 +95,5 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     return Mono.just(userSolutionScoreDto);
                 });
     }
-
-    @Override
-    public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
-        return userSolutionRepository.countBookmarkedTrueByChallengeId(idChallenge);
-    }
 }
 

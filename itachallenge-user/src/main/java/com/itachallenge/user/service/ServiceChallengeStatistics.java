@@ -1,6 +1,8 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.repository.IUserSolutionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -11,6 +13,8 @@ import java.util.UUID;
 
 @Service
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
+    @Autowired
+    private IUserSolutionRepository userSolutionRepository;
     //region ATTRIBUTES
     SecureRandom random = new SecureRandom();
 
@@ -47,6 +51,11 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
         // OUT
         return Mono.just(challengesList);
 
+    }
+
+    @Override
+    public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
+        return userSolutionRepository.countBookmarkedTrueByChallengeId(idChallenge);
     }
 
     //endregion METHODS

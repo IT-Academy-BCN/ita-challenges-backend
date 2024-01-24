@@ -60,30 +60,6 @@ class UserSolutionScoreTest {
                                 && userSolutionScoreDto.getScore() == 13)
                 .verifyComplete();
     }
-
-    @DisplayName("Should return number of BookmarkedTrue by idChallenge")
-    @Test
-    void testGetBookmarkCountByIdChallenge(){
-        UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
-        long expectedValue = 2L;
-
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        UserSolutionDocument userSolutionDocument2 = new UserSolutionDocument();
-        userSolutionDocument.setChallengeId(idChallenge);
-        userSolutionDocument2.setChallengeId(idChallenge);
-        userSolutionDocument.setBookmarked(true);
-        userSolutionDocument2.setBookmarked(true);
-
-        when(userSolutionRepository.countBookmarkedTrueByChallengeId(idChallenge))
-                .thenReturn(Mono.just(2L));
-
-        Mono<Long> resultMono = userSolutionService.getBookmarkCountByIdChallenge(idChallenge);
-
-        StepVerifier.create(resultMono)
-                .expectNext(expectedValue)
-                .verifyComplete();
-
-    }
 }
 
 

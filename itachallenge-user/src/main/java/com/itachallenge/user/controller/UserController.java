@@ -108,7 +108,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<Long>> getBookmarkCountByIdChallenge(
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
-        return userScoreService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
+        return serviceChallengeStatistics.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build())
                 .onErrorResume(throwable ->

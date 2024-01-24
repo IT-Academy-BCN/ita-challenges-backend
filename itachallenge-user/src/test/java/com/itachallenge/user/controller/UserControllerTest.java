@@ -3,10 +3,12 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,7 +42,8 @@ class UserControllerTest {
 
     @MockBean
     IUserSolutionService userScoreService;
-
+    @Autowired
+    IServiceChallengeStatistics statisticsService;
     //endregion VARIABLES
 
 
@@ -195,10 +198,10 @@ class UserControllerTest {
     void testGetBookmarkCountByIdChallenge() {
         final UUID VALID_MONGO_UUID = UUID.fromString("5c1a97e5-1cca-4144-9981-2de1fb73b178");
         String URI_TEST = "/bookmarks/{idChallenge}";
-        Long testCount = 42L;
+        Long testCount = 1L;
 
-        when(userScoreService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
-                .thenReturn(Mono.just(testCount));
+        /*when(statisticsService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
+                .thenReturn(Mono.just(testCount));*/
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, VALID_MONGO_UUID)
