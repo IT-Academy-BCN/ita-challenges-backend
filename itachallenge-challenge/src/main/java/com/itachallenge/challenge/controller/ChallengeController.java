@@ -133,7 +133,7 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
                                                                                      @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
