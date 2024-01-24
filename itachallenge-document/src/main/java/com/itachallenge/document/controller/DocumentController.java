@@ -1,5 +1,6 @@
 package com.itachallenge.document.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.itachallenge.document.service.DocumentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,21 +27,8 @@ public class DocumentController {
     @Autowired
     private DocumentService documentService;
 
-/*    @GetMapping(value = "/test")
-    @Operation(
-            operationId = "Test",
-            summary = "Only for testing purposes",
-            description = "Test",
-            responses = {@ApiResponse(responseCode = "200")})
-    public String test() {
-        log.info("** Saludos desde el logger **");
-        return "Hello from ITA Challenge Document!!!";
-    }*/
-
-
     @GetMapping(value = "/api-docs")
-    public Mono<String> getApiDocs() {
+    public JsonNode getApiDocs() {
         return documentService.getSwaggerDocs();
     }
-
 }

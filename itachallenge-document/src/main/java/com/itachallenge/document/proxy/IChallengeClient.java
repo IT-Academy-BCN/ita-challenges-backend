@@ -1,9 +1,8 @@
 package com.itachallenge.document.proxy;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import reactor.core.publisher.Mono;
 
 //TODO - Pte añadir Docker config
 //@FeignClient(name = "itachallenge-challenge", url = "${MICRO_CHALLENGE_URL}")
@@ -11,5 +10,5 @@ import reactor.core.publisher.Mono;
 public interface IChallengeClient {
 
     @GetMapping("/api-docs")
-    Mono<String> getSwaggerDocs();
+    String getSwaggerDocs();
 }
