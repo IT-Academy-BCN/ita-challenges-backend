@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
@@ -66,5 +67,19 @@ class AuthServiceTest {
         assertEquals("application/json", request.getHeader("Content-Type"));
         assertEquals("invalidToken", request.getBody().readUtf8());
     }
+
+    @Test
+    void validateWithSSO_Unexpected_Response() throws InterruptedException {
+
+        String responseBody = "Invalid JSON format";
+        mockWebServer.enqueue(new MockResponse().setBody(responseBody));
+
+        Mono<Boolean> result = authService.validateWithSSO("someToken");
+
+        StepVerifier.create(result)
+                .expectNext(false)
+                .verifyComplete();
+    }
+
 
 }
