@@ -9,6 +9,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
+      #uri: mongodb://localhost:27017/users?authSource=admin
       uuid-representation: standard
 
 redis:

@@ -80,7 +80,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
+    public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
@@ -93,7 +93,9 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
                             mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                    @ApiResponse(responseCode = "400", description = "bad request",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "challenge status ended",
                             content = {@Content(schema = @Schema())})
             }
     )
