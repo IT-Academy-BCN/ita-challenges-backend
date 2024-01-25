@@ -6,6 +6,9 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.zmq.ChallengeInputDto;
+import com.itachallenge.challenge.dto.zmq.StatisticsOutputDto;
+import com.itachallenge.challenge.helper.ObjectSerializer;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +28,7 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @Validated
@@ -50,8 +54,14 @@ public class ChallengeController {
     @Autowired
     IChallengeService challengeService;
 
+    //TODO - pending externalize to service layer (internal comms)
     @Autowired
     ZMQClient zmqClient;
+    @Autowired
+    ChallengeInputDto challengeInputDto;
+
+
+
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -86,9 +96,8 @@ public class ChallengeController {
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
-
-        zmqClient.sendMessage("Hoooooooooooola!!!!!");
-
+        challengeInputDto.setChallengeId(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"));
+        zmqClient.sendMessage(challengeInputDto, StatisticsOutputDto.class);
 
         return "Hello from ITA Challenge!!!";
     }

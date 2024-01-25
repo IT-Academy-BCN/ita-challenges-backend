@@ -1,34 +1,55 @@
 package com.itachallenge.challenge.mqclient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itachallenge.challenge.controller.ChallengeController;
+import com.itachallenge.challenge.helper.ObjectSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
+
+import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class ZMQClient {
 
     private final ZContext context;
     private final String SOCKET_ADDRESS;
+    private static final Logger log = LoggerFactory.getLogger(ZMQClient.class);
+
+    @Autowired
+    ObjectSerializer objectSerializer;
 
     public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(Object message, Class clazz){
         new Thread(() -> {
             try (ZContext context = new ZContext()) {
-                // Socket to talk to server
                 ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
                 socket.connect(SOCKET_ADDRESS);
 
-                // Send a message
-                socket.send(message.getBytes(ZMQ.CHARSET), 0);
+                Optional<byte[]> request = Optional.empty();
+                try {
+                    request = Optional.of(objectSerializer.serialize(message));
+                }catch (JsonProcessingException jpe){
+                    log.error(jpe.getMessage());
+                }
+                socket.send(request.orElse(new byte[0]), 0);
 
-                // Receive a response
                 byte[] reply = socket.recv(0);
-                // Print the message
+                Optional<Object> response = Optional.empty();
+                try {
+                    response = Optional.of(objectSerializer.deserialize(reply, clazz));
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
                 System.out.println("Received: [" + new String(reply, ZMQ.CHARSET) + "]");
             }
         }).start();
