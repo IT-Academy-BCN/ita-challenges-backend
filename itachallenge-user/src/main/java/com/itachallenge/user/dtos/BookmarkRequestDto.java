@@ -8,7 +8,6 @@ import lombok.Setter;
 
 public class BookmarkRequestDto {
     private String uuidChallenge;
-    private String uuidLanguage;
-    private String uuidUser;
+    private String uuidLanguage    private String uuidUser;
     private boolean bookmarked;
 }
