@@ -1,5 +1,8 @@
 package com.itachallenge.user.mqserver;
 
+import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZMQ;
@@ -10,10 +13,17 @@ public class ZMQServer {
 
     private final ZContext context;
     private final String SOCKET_ADDRESS;
+    private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+    }
+
+    @PostConstruct
+    public void init() {
+        log.info("Starting ZMQ Server");
+        new Thread(this::run).start();
     }
 
     public void run(){
