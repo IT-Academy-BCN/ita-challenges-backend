@@ -209,7 +209,7 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Long.class)
-                .consumeWith(response -> assertEquals(testCount, response.getResponseBody()));
+                .isEqualTo(testCount);
     }
 
     //endregion TEST METHODS: ChallengeStatics
