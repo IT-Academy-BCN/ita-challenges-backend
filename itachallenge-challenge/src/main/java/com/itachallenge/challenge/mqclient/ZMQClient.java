@@ -13,10 +13,7 @@ import org.zeromq.ZContext;
 
 import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
 @Component
 public class ZMQClient {
@@ -35,9 +32,11 @@ public class ZMQClient {
         this.SOCKET_ADDRESS = socketAddress;
     }
 
-    public Future<Object> sendMessage(Object message, Class clazz){
-        Callable<Object> task = () -> {
-            try (ZContext context = new ZContext()) {
+    public CompletableFuture<Object> sendMessage(Object message, Class clazz){
+
+        CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
+
+            ZContext context = new ZContext();
                 ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
                 socket.connect(SOCKET_ADDRESS);
 
@@ -57,8 +56,8 @@ public class ZMQClient {
                     log.error(e.getMessage());
                 }
                 return response.orElse(null);
-            }
-        };
-        return executorService.submit(task);
+
+        }, executorService);
+        return future;
     }
 }

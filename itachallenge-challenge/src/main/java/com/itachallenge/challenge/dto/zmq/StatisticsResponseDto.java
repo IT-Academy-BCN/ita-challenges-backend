@@ -1,11 +1,10 @@
 package com.itachallenge.challenge.dto.zmq;
 
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -14,9 +13,11 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class ChallengeInputDto {
+public class StatisticsResponseDto {
 
-    @JsonProperty(value="id_challenge", index = 0)
-    private UUID challengeId;
+    @JsonProperty(value="percent", index = 0)
+    private Integer percent;
 
+    @JsonProperty (value="bookmarks", index = 1)
+    private Integer bookmarks;
 }

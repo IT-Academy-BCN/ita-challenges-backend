@@ -6,9 +6,8 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.zmq.ChallengeInputDto;
-import com.itachallenge.challenge.dto.zmq.StatisticsOutputDto;
-import com.itachallenge.challenge.helper.ObjectSerializer;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,10 +59,7 @@ public class ChallengeController {
     @Autowired
     ZMQClient zmqClient;
     @Autowired
-    ChallengeInputDto challengeInputDto;
-
-
-
+    ChallengeRequestDto challengeInputDto;
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -99,15 +95,15 @@ public class ChallengeController {
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
         challengeInputDto.setChallengeId(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"));
-        Future<Object> future = zmqClient.sendMessage(challengeInputDto, StatisticsOutputDto.class);
-        Optional<Object> response = Optional.empty();
-        try {
-            response = future.isDone() ? Optional.of(future.get()) : null;
-        } catch (InterruptedException | ExecutionException e) {
-            log.error(e.getMessage());
-        }
-        log.info("~~~~~~~~~~~~~"+response.orElse(null));
-        log.info("~~~~~~~~~~~~~~~~~~~~~~");
+
+        zmqClient.sendMessage(challengeInputDto, StatisticsResponseDto.class)
+                .thenAccept(response ->
+                        log.info("[ Response: " + ((StatisticsResponseDto)response).getPercent() + " ]"))
+                .exceptionally(e -> {
+                    log.error(e.getMessage());
+                    return null;
+                });
+
         return "Hello from ITA Challenge!!!";
     }
 
