@@ -35,10 +35,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguageId().equals(languageUuid))
                 .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
                 .collectList()
-                    .map(userScoreDtos -> {
-                        SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                        solutionUserDto.setInfo(0, 1, 0, userScoreDtos.toArray(new UserScoreDto[0]));
-                        return solutionUserDto;
+                .map(userScoreDtos -> {
+                    SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
+                    solutionUserDto.setInfo(0, 1, 0, userScoreDtos.toArray(new UserScoreDto[0]));
+                    return solutionUserDto;
                 });
     }
 
@@ -96,5 +96,29 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-}
+    public Mono<Boolean> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
+        UUID challengeId = UUID.fromString(uuidChallenge);
+        UUID languageId = UUID.fromString(uuidLanguage);
+        UUID userId = UUID.fromString(uuidUser);
 
+        return userSolutionRepository
+                .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
+                .flatMap(userSolutionDocument -> {
+                    userSolutionDocument.setBookmarked(bookmarked);
+                    return userSolutionRepository.save(userSolutionDocument).thenReturn(true);
+                })
+                .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
+    }
+    private Mono<Boolean> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
+        UserSolutionDocument newDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .bookmarked(bookmarked)
+                .build();
+
+        return userSolutionRepository.save(newDocument).thenReturn(true);
+    }
+
+}
