@@ -13,6 +13,10 @@ import org.zeromq.ZContext;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Component
 public class ZMQClient {
@@ -24,13 +28,15 @@ public class ZMQClient {
     @Autowired
     ObjectSerializer objectSerializer;
 
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
     public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }
 
-    public void sendMessage(Object message, Class clazz){
-        new Thread(() -> {
+    public Future<Object> sendMessage(Object message, Class clazz){
+        Callable<Object> task = () -> {
             try (ZContext context = new ZContext()) {
                 ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
                 socket.connect(SOCKET_ADDRESS);
@@ -50,8 +56,9 @@ public class ZMQClient {
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
-                System.out.println("Received: [" + new String(reply, ZMQ.CHARSET) + "]");
+                return response.orElse(null);
             }
-        }).start();
+        };
+        return executorService.submit(task);
     }
 }

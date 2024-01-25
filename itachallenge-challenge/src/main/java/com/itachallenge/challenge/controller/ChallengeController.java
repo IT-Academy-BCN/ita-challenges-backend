@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @RestController
 @Validated
@@ -97,8 +99,15 @@ public class ChallengeController {
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
         challengeInputDto.setChallengeId(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"));
-        zmqClient.sendMessage(challengeInputDto, StatisticsOutputDto.class);
-
+        Future<Object> future = zmqClient.sendMessage(challengeInputDto, StatisticsOutputDto.class);
+        Optional<Object> response = Optional.empty();
+        try {
+            response = future.isDone() ? Optional.of(future.get()) : null;
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage());
+        }
+        log.info("~~~~~~~~~~~~~"+response.orElse(null));
+        log.info("~~~~~~~~~~~~~~~~~~~~~~");
         return "Hello from ITA Challenge!!!";
     }
 
