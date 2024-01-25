@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -49,6 +50,9 @@ public class ChallengeController {
     @Autowired
     IChallengeService challengeService;
 
+    @Autowired
+    ZMQClient zmqClient;
+
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
     }
@@ -81,6 +85,11 @@ public class ChallengeController {
                 .concat(scoreService.isPresent() ? scoreService.get() : NO_SERVICE));
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
+
+
+        zmqClient.sendMessage("Hoooooooooooola!!!!!");
+
+
         return "Hello from ITA Challenge!!!";
     }
 
