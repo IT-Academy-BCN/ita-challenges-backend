@@ -42,8 +42,9 @@ class UserControllerTest {
 
     @MockBean
     IUserSolutionService userScoreService;
-    @Autowired
+    @Mock
     IServiceChallengeStatistics statisticsService;
+
     //endregion VARIABLES
 
 
@@ -200,8 +201,8 @@ class UserControllerTest {
         String URI_TEST = "/bookmarks/{idChallenge}";
         Long testCount = 1L;
 
-        /*when(statisticsService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
-                .thenReturn(Mono.just(testCount));*/
+        when(statisticsService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
+                .thenReturn(Mono.just(testCount));
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, VALID_MONGO_UUID)
