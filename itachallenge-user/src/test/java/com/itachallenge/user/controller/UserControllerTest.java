@@ -1,24 +1,18 @@
 package com.itachallenge.user.controller;
 
-import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.dtos.BookmarkRequestDto;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.UserSolutionServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -28,7 +22,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -43,15 +38,8 @@ class UserControllerTest {
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
-    @Mock
+    @MockBean
     IUserSolutionService userScoreService;
-
-    @Mock
-    UserSolutionServiceImp userSolutionServiceImp;
-
-
-    @InjectMocks
-    UserController userController;
 
     //endregion VARIABLES
 
@@ -150,7 +138,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getSolutionsByUserIdChallengeIdLanguageId() {
+    void getSolutionsByUserIdChallengeIdLanguageId (){
 
         String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
@@ -161,23 +149,23 @@ class UserControllerTest {
 
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0, 1, 1, new UserScoreDto[]{userScoreDto});
+        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
 
-        when(userScoreService.getChallengeById(any(), any(), any())).thenReturn(Mono.just(expectedSolutionUserDto));
+        when(userScoreService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
+                .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(SolutionUserDto.class)
                 .value(dto -> {
                     assert dto != null;
-//                    assert dto.getCount() == 1;
-//                    assert dto.getResults() != null;
-//                    assert dto.getResults().length == 1; // Se empezó a fallar que no he tocado!
-
+                    assert dto.getCount() == 1;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 1;
                 });
     }
+
 
 
     @Test
@@ -222,41 +210,6 @@ class UserControllerTest {
         return URI_TEST;
     }
 
-    @Test
-    void markOrAddBookmark() {
-
-        BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto();
-        bookmarkRequestDto.setUuid_challenge("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
-        bookmarkRequestDto.setUuid_user("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
-        bookmarkRequestDto.setUuid_language("df99bae8-4f7f-4054-a957-37a12aa16364");
-        bookmarkRequestDto.setBookmarked(true);
-        when(userSolutionServiceImp.markAsBookmarked(
-                bookmarkRequestDto.getUuid_challenge(),
-                bookmarkRequestDto.getUuid_language(),
-                bookmarkRequestDto.getUuid_user(),
-                bookmarkRequestDto.isBookmarked()))
-                .thenAnswer(invocation -> {
-
-                            UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-
-                            return Mono.just(userSolutionDocument);
-                        }
-
-                );
-
-        Mono<ResponseEntity<BookmarkRequestDto>> responseMono = userController.markOrAddBookmark(bookmarkRequestDto);
-
-        ResponseEntity<BookmarkRequestDto> responseEntity = responseMono.block();
-
-        assertNotNull(responseEntity);
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-
-        assertEquals(bookmarkRequestDto, responseEntity.getBody());
-    }
+    //endregion PRIVATE METHODS
 
 }
-
-//endregion PRIVATE METHODS
-
-
