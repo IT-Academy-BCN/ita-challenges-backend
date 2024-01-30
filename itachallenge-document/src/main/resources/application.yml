@@ -9,14 +9,14 @@ spring:
 
 springdoc:
   swagger-ui:
-    path: "/swagger-ui-custom.html"
+    path: "/swagger"
     operationsSorted: method
   api-docs:
     enable: true
     path: "/api-docs"
 
 server:
-  port: 8762
+  port: 8764
 
 management:
   endpoints:

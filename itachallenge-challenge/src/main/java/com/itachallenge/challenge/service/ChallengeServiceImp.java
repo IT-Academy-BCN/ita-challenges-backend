@@ -19,12 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -55,17 +53,12 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
 
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengeById(String id) {
+    public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .flatMap(challenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(challenge), ChallengeDto.class)))
-                        .map(challengeDto -> {
-                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                            resultDto.setInfo(0, 1, 1, new ChallengeDto[]{challengeDto});
-                            return resultDto;
-                        })
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge with id " + challengeId + " not found")))
-                        .doOnSuccess(resultDto -> log.info("Challenge found with ID: {}", challengeId))
+                        .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                        .doOnSuccess(challengeDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
                 );
     }
@@ -208,26 +201,23 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id) {
+    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
+
         return validateUUID(id)
-                .flatMap(challengeId ->
-                        challengeRepository.findByUuid(challengeId)
-                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                                .flatMapMany(challenge ->
-                                        Flux.fromIterable(challenge.getRelatedChallenges())
-                                                .flatMap(relatedChallengeId ->
-                                                        challengeRepository.findByUuid(relatedChallengeId)
-                                                                .flatMap(relatedChallenge ->
-                                                                        Mono.from(relatedChallengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), RelatedDto.class))
-                                                                )
-                                                )
-                                )
-                                .collectList()
-                                .map(relatedChallenges -> {
-                                    GenericResultDto<RelatedDto> resultDto = new GenericResultDto<>();
-                                    resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new RelatedDto[0]));
-                                    return resultDto;
-                                })
+                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
+                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
+                                .flatMap(relatedChallenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), ChallengeDto.class)))
+                        )
+                        .skip(offset)
+                        .take(limit)
+                        .collectList()
+                        .map(relatedChallenges -> {
+                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new ChallengeDto[0]));
+                            return resultDto;
+                        })
                 );
     }
 

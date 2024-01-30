@@ -155,11 +155,9 @@ class ChallengeIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
+                .expectBody(ChallengeDto.class)
                 .value(dto -> {
                     assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
                 });
     }
 
