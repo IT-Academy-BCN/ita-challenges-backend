@@ -2,10 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
-import com.itachallenge.user.service.UserSolutionServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,6 +32,7 @@ public class UserController {
     @Autowired
     private IUserSolutionService userScoreService;
 
+
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
@@ -47,8 +46,6 @@ public class UserController {
     @GetMapping(value = "/statistics")
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds) {
         Mono<List<ChallengeStatisticsDto>> elements = null;
-
-
 
         if (!challengeIds.isEmpty()) {
             elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
@@ -105,14 +102,15 @@ public class UserController {
             }
     )
     public Mono<ResponseEntity<BookmarkRequestDto>> markOrAddBookmark(
+
             @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
 
         return userScoreService.markAsBookmarked(
+
                         bookmarkRequestDto.getUuid_challenge(),
                         bookmarkRequestDto.getUuid_language(),
                         bookmarkRequestDto.getUuid_user(),
                         bookmarkRequestDto.isBookmarked())
                 .map(result -> ResponseEntity.ok(bookmarkRequestDto));
     }
-
 }

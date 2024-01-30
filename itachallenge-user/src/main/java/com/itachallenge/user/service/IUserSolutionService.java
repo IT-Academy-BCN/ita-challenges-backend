@@ -17,5 +17,7 @@ public interface IUserSolutionService {
 
     Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String id, String idChallenge, String idLanguage);
     Mono<UserSolutionScoreDto> addSolution(String id, String idChallenge, String idLanguage, String solution);
+
     Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked);
+
 }

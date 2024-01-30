@@ -143,33 +143,33 @@ class UserControllerTest {
     }
 
     @Test
-   void getSolutionsByUserIdChallengeIdLanguageId (){
+    void getSolutionsByUserIdChallengeIdLanguageId (){
 
-       String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
+        String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
-       final String VALID_MONGO_UUID = "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c";
-       String userId = VALID_MONGO_UUID;
-       String idLanguage = VALID_MONGO_UUID;
-       String idChallenge = VALID_MONGO_UUID;
+        final String VALID_MONGO_UUID = "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c";
+        String userId = VALID_MONGO_UUID;
+        String idLanguage = VALID_MONGO_UUID;
+        String idChallenge = VALID_MONGO_UUID;
 
-       UserScoreDto userScoreDto = new UserScoreDto();
-       SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-       expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
+        UserScoreDto userScoreDto = new UserScoreDto();
+        SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
+        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
 
-       when(userScoreService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
+        when(userScoreService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
-              .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
-              .exchange()
-              .expectStatus().isOk()
-              .expectBody(SolutionUserDto.class)
-              .value(dto -> {
-                   assert dto != null;
-                   assert dto.getCount() == 1;
-                   assert dto.getResults() != null;
-                   assert dto.getResults().length == 1;
-              });
-   }
+                .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(SolutionUserDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 1;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 1;
+                });
+    }
 
 
 
@@ -217,6 +217,7 @@ class UserControllerTest {
 
     //endregion PRIVATE METHODS
 
+
     @Test
     void markOrAddBookmark() {
 
@@ -253,3 +254,6 @@ class UserControllerTest {
 
 
 }
+
+
+

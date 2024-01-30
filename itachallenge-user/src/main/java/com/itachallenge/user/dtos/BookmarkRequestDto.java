@@ -1,6 +1,7 @@
 package com.itachallenge.user.dtos;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
+
 import lombok.Getter;
 import lombok.Setter;
 
