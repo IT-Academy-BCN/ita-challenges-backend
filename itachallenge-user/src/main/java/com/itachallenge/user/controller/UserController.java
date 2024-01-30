@@ -5,6 +5,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
+import com.itachallenge.user.service.UserSolutionServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -93,6 +94,25 @@ public class UserController {
                 .map(savedScoreDto ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
                 );
+    }
+
+    @PutMapping("/bookmark")
+    @Operation(
+            summary = "Mark or create a bookmark",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Bookmark marked or created successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkRequestDto>> markOrAddBookmark(
+            @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
+
+        return userScoreService.markAsBookmarked(
+                        bookmarkRequestDto.getUuid_challenge(),
+                        bookmarkRequestDto.getUuid_language(),
+                        bookmarkRequestDto.getUuid_user(),
+                        bookmarkRequestDto.isBookmarked())
+                .map(result -> ResponseEntity.ok(bookmarkRequestDto));
     }
 
 }

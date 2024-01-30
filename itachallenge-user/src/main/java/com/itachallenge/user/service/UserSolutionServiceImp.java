@@ -96,5 +96,30 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
+    public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
+        UUID challengeId = UUID.fromString(uuidChallenge);
+        UUID languageId = UUID.fromString(uuidLanguage);
+        UUID userId = UUID.fromString(uuidUser);
+
+        return userSolutionRepository
+                .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
+                .flatMap(userSolutionDocument -> {
+                    userSolutionDocument.setBookmarked(bookmarked);
+                    return userSolutionRepository.save(userSolutionDocument).thenReturn(userSolutionDocument);
+                })
+                .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
+    }
+    private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
+        UserSolutionDocument newDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .bookmarked(bookmarked)
+                .build();
+
+        return userSolutionRepository.save(newDocument).thenReturn(newDocument);
+    }
+
 }
 
