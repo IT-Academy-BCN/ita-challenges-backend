@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @PropertySource("classpath:application-test.yml")
 class MaxLengthURIFilterTest {
-    //region VARIABLES
     @InjectMocks
     private MaxLengthURIFilter mMaxLengthURIFilter;
     @Autowired()
@@ -40,82 +39,48 @@ class MaxLengthURIFilterTest {
     @Mock
     private FilterChain filterChain;
 
-    //endregion VARIABLES
 
 
-    //region TESTS
     @Test
     void doFilter_ToLong_Test() throws IOException, ServletException {
-        //region VARIABLES
         int maxLength;
         String urlEndpoint="/itachallenge/api/v1/user/statistics";
         String uriQuery;
-
-        //endregion VARIABLES
-
-
-        //region TEST INITIALIZATION
-        // Get URI maxLength
         maxLength = prpsConfig.getUrlMaxLength();
 
-        // Create query
         uriQuery = queryCreation(100);
         // Config mokito behavior
         when(propertiesConfig.getUrlMaxLength()).thenReturn(maxLength);
         when(request.getRequestURL()).thenReturn(new StringBuffer(urlEndpoint));
         when(request.getQueryString()).thenReturn(uriQuery);
 
-        //endregion TEST INITIALIZATION
-
-
-        //region TEST
         // Execute filter
         mMaxLengthURIFilter.doFilter(request, response, filterChain);
         // Check results
         verify(response).setStatus(HttpStatus.URI_TOO_LONG.value());
 
-        //endregion TEST
-
     }
 
     @Test
     void doFilter_OK_Test() throws IOException, ServletException {
-        //region VARIABLES
         int maxLength;
         String urlEndpoint="/itachallenge/api/v1/user/statistics";
         String uriQuery;
 
-        //endregion VARIABLES
-
-
-        //region INITIALIZATION
-        // Get URI maxLength
         maxLength = prpsConfig.getUrlMaxLength();
-
-        // Create query
         uriQuery = queryCreation(10);
         // Config behavior
         when(propertiesConfig.getUrlMaxLength()).thenReturn(maxLength);
         when(request.getRequestURL()).thenReturn(new StringBuffer(urlEndpoint));
         when(request.getQueryString()).thenReturn(uriQuery);
 
-        //endregion INITIALIZATION
-
-
-        //region TEST
         // Execute filter
         mMaxLengthURIFilter.doFilter(request, response, filterChain);
         // Check results
         verify(filterChain).doFilter(request, response);
 
-        //endregion TEST
-
     }
 
-    //endregion TESTS
-
-
-    //region PRIVATE METHODS
     /**
      * Method to create a query string link "challenge=UUID&", repeat 'numberUUID' times.
      * @param numberUUID Number of tiems that repeat.
@@ -123,12 +88,8 @@ class MaxLengthURIFilterTest {
      */
     private String queryCreation(int numberUUID){
         String URI_TEST = String.format("challenge=%s", UUID.randomUUID());
-
         for (int i = 1; i < numberUUID; i++) URI_TEST += String.format("&challenge=%s", UUID.randomUUID());
-
         return URI_TEST;
     }
-
-    //region PRIVATE METHODS
 
 }

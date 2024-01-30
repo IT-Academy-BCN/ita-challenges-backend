@@ -165,6 +165,20 @@ class GlobalExceptionHandlerTest {
         Assertions.assertTrue(responseBody.contains("Challenge not found"));
     }
 
+    @Test
+    void test_HandleBadUUIDException() {
+        // Arrange
+        BadUUIDException badUUIDException = new BadUUIDException("Invalid Id format");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleBadUUIDException(badUUIDException);
+
+        // Assert
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Invalid Id format"));
+    }
+
 
 
 }

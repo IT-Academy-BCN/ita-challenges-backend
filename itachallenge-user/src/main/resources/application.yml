@@ -8,16 +8,8 @@ spring:
     enabled: true
   data:
     mongodb:
-      uri: mongodb://localhost:27017/users?authSource=admin #admin_user:yxRG4sYBDjPFzbh5@
+      uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
       uuid-representation: standard
-
-redis:
-  port: 6379
-  host: 127.0.0.1
-  password: PwSxkcnmaqUQN3FvESjh1eD0UEGx5shz
-  user:
-    key: USER
-
 
 springdoc:
   swagger-ui:
@@ -37,6 +29,10 @@ management:
         include: "*"
   security:
     enabled: false
+
+zeromq:
+  socket:
+    address: tcp://*:5555
 
 url:
   max_length: 2048

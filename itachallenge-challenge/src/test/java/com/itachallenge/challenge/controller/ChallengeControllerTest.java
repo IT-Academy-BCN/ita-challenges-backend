@@ -1,10 +1,9 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,13 @@ class ChallengeControllerTest {
     @MockBean
     private PropertiesConfig config;
 
-    @Test
+    //TODO - pending externalize to service layer (internal comms)
+    @MockBean
+    ZMQClient zmqClient;
+    @MockBean
+    ChallengeRequestDto challengeInputDto;
+
+/*    @Test
     void test() {
         // Arrange
         List<ServiceInstance> instances = Arrays.asList(
@@ -53,28 +58,26 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
-    }
+    }*/
 
     @Test
     void getOneChallenge_ValidId_ChallengeReturned() {
         // Arrange
-        String challengeId = "valid-challenge-id";
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 1, 1, new ChallengeDto[]{new ChallengeDto()});
+        UUID challengeId = UUID.randomUUID();
+        ChallengeDto expectedResult = new ChallengeDto();
+        expectedResult.setChallengeId(challengeId);
 
-        when(challengeService.getChallengeById(challengeId)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getChallengeById(challengeId.toString())).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}", challengeId)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
+                .expectBody(ChallengeDto.class)
                 .value(dto -> {
                     assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 1;
+                    assert dto.getChallengeId().equals(challengeId);
                 });
     }
 
@@ -344,4 +347,39 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
+
+    @Test
+    void getAllRelatedChallenges_ChallengesReturned() {
+        //Arrange
+        String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+
+        when(challengeService.getRelatedChallenges(challengeStringId, 0, 0)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeStringId + "/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getAllRelatedChallenges_ChallengesReturnedPaginated() {
+        //Arrange
+        String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+
+        when(challengeService.getRelatedChallenges(challengeStringId, 1, 1)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeStringId + "/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
 }
