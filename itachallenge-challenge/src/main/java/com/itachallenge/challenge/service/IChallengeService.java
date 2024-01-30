@@ -4,11 +4,8 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.RelatedDto;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 public interface IChallengeService {
 
@@ -19,5 +16,5 @@ public interface IChallengeService {
     Mono<SolutionDto> addSolution(SolutionDto solutionDto);
     Flux<ChallengeDto> getAllChallenges(int offset, int limit);
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty);
-    Mono<GenericResultDto<RelatedDto>> getRelatedChallenges(String id);
+    Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit);
 }
