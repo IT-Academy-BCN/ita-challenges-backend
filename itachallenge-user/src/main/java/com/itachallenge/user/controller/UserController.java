@@ -3,7 +3,6 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
@@ -36,6 +35,7 @@ public class UserController {
     @Autowired
     private IUserSolutionService userScoreService;
 
+
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
@@ -49,8 +49,6 @@ public class UserController {
     @GetMapping(value = "/statistics")
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds) {
         Mono<List<ChallengeStatisticsDto>> elements = null;
-
-
 
         if (!challengeIds.isEmpty()) {
             elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
@@ -115,5 +113,26 @@ public class UserController {
                 .onErrorResume(throwable ->
                         Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build())
                 );
+    }
+
+    @PutMapping("/bookmark")
+    @Operation(
+            summary = "Mark or create a bookmark",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Bookmark marked or created successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkRequestDto>> markOrAddBookmark(
+
+            @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
+
+        return userScoreService.markAsBookmarked(
+
+                        bookmarkRequestDto.getUuid_challenge(),
+                        bookmarkRequestDto.getUuid_language(),
+                        bookmarkRequestDto.getUuid_user(),
+                        bookmarkRequestDto.isBookmarked())
+                .map(result -> ResponseEntity.ok(bookmarkRequestDto));
     }
 }

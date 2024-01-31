@@ -117,7 +117,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
+    public Mono<ChallengeDto> getOneChallenge(@PathVariable("challengeId") String id) {
         return challengeService.getChallengeById(id);
     }
 
@@ -211,5 +211,19 @@ public class ChallengeController {
                 });
     }
 
-
+    @GetMapping("challenges/{idChallenge}/related")
+    @Operation(
+            operationId = "Get the related challenges from a chosen challenge.",
+            summary = "Get to see the challenge title, creation date, level, popularity and languages.",
+            description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<GenericResultDto<ChallengeDto>> getRelated(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
+                                                         @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                                         @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
 }

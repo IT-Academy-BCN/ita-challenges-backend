@@ -26,6 +26,9 @@ management:
   security:
     enabled: false
 
+uri_validate_token : https://dev.sso.itawiki.eurecatacademy.org/api/v1/tokens/validate
+
+
 logging:
   level:
     root: INFO
