@@ -1,8 +1,8 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.5
-  last-updated: 2021-12-11
+  version: 1.0.6
+  last-updated: 2024-01-31
 
 services:
   consul-server1:
