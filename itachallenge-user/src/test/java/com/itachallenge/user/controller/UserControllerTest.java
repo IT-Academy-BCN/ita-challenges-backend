@@ -143,11 +143,7 @@ class UserControllerTest {
     }
 
     @Test
-<<<<<<< HEAD
     void getSolutionsByUserIdChallengeIdLanguageId() {
-=======
-    void getSolutionsByUserIdChallengeIdLanguageId (){
->>>>>>> 14b815ef35cb5c3ddf5dc1bcf9c59bd591ebe391
 
         String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
@@ -158,21 +154,13 @@ class UserControllerTest {
 
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-<<<<<<< HEAD
         expectedSolutionUserDto.setInfo(0, 1, 1, new UserScoreDto[]{userScoreDto});
 
         when(userScoreService.getChallengeById(any(), any(), any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
-=======
-        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
 
-        when(userScoreService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
-
-        webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
->>>>>>> 14b815ef35cb5c3ddf5dc1bcf9c59bd591ebe391
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(SolutionUserDto.class)
@@ -183,11 +171,6 @@ class UserControllerTest {
                     assert dto.getResults().length == 1;
                 });
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> 14b815ef35cb5c3ddf5dc1bcf9c59bd591ebe391
-
 
     @Test
     void getChallengeStatistics_EmptyUUIDList() {
@@ -235,7 +218,6 @@ class UserControllerTest {
     @Test
     void getChallengeUserPercentageTest() {
 
-<<<<<<< HEAD
         String URI_TEST = "/statistics/percent/{idChallenge}";
         UUID idLanguage = UUID.fromString("866853b8-ae7d-4daf-8c82-5e6f653e0fc1");
 
@@ -246,7 +228,6 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(Float.class);
     }
-=======
 
     @Test
     void markOrAddBookmark() {
@@ -280,10 +261,6 @@ class UserControllerTest {
 
         assertEquals(bookmarkRequestDto, responseEntity.getBody());
     }
-
-
-
->>>>>>> 14b815ef35cb5c3ddf5dc1bcf9c59bd591ebe391
 }
 
 

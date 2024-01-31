@@ -62,7 +62,7 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
         // List of all UserSolution with all status started and ended and empty
         List<UserSolutionDocument> userSolutionsV1 = getUserSolutions();
 
-
+        // // List of all UserSolution of challenge with id challengeId
         List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutionsV1, challengeId);
 
         percentage = ((float) userSolutionsChallenge.size()*100 / userSolutionsV1.size());

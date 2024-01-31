@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ import java.util.UUID;
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    ServiceChallengeStatistics serviceChallengeStatistics;
+    IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
 
@@ -61,7 +62,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
+    public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
