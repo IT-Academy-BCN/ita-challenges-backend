@@ -156,9 +156,11 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Flux<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-                                                                                     @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
+    public Flux<ChallengeDto> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
+                                                                                     @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty,
+                                                                                     @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                                                                     @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty,(Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
     @GetMapping("/language")
