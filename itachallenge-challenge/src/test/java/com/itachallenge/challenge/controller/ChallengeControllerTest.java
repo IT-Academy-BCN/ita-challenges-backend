@@ -201,11 +201,13 @@ class ChallengeControllerTest {
         // Arrange
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f"; // Test idLanguage with mongoId structure
         String difficulty = "EASY";
+        int offset = 0;
+        int limit = 2;
 
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
 
-        when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty,offset,limit)).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
         webTestClient.get()
