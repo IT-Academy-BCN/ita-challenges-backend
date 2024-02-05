@@ -4,17 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.document.service.DocumentService;
 import io.swagger.v3.core.util.Yaml;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springdoc.core.SpringDocUtils;
-import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 @Configuration
@@ -59,14 +55,5 @@ public class OpenApiConfig {
             throw new RuntimeException("Error parsing OpenAPI spec: " + e.getMessage(), e);
         }
     }
-
-//    @Bean
-//    public List<GroupedOpenApi> groupedOpenApis() {
-//        return Arrays.asList(
-//                GroupedOpenApi.builder().group("users").pathsToMatch("/api/users/**").build(),
-//                GroupedOpenApi.builder().group("orders").pathsToMatch("/api/orders/**").build()
-//                // Agrega más GroupedOpenApi para otros microservicios
-//        );
-//    }
 }
 

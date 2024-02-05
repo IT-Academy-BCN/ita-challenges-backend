@@ -1,10 +1,8 @@
 package com.itachallenge.document.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.document.controller.DocumentController;
 import com.itachallenge.document.proxy.IChallengeClient;
 import com.itachallenge.document.proxy.IUserClient;
 import org.slf4j.Logger;
