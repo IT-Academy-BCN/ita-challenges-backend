@@ -21,7 +21,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -101,14 +103,13 @@ public class UserController {
             summary = "Get the count of bookmarks for a specific challenge.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Long.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "Challenge not found", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "404", description = "Challenge not found", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<ResponseEntity<Long>> getBookmarkCountByIdChallenge(
+    public Mono<ResponseEntity<Map<String, Long>>> getBookmarkCountByIdChallenge(
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
         return serviceChallengeStatistics.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
-                .map(ResponseEntity::ok);
+                .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
 
     @PutMapping("/bookmark")

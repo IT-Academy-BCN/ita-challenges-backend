@@ -158,8 +158,8 @@ class UserControllerTest {
                 .uri(CONTROLLER_URL + URI_TEST, VALID_MONGO_UUID)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Long.class)
-                .isEqualTo(testCount);
+                .expectBody()
+                .jsonPath("$.bookmarked").isEqualTo(testCount.intValue());
     }
 
     /**
