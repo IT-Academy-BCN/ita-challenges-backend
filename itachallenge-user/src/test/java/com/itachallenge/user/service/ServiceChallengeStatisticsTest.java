@@ -3,7 +3,12 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.repository.IUserSolutionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
@@ -18,33 +23,28 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ServiceChallengeStatisticsTest {
 
 
-    ServiceChallengeStatistics serviceChallengeStatistics = new ServiceChallengeStatistics();
+    @InjectMocks
+    ServiceChallengeStatistics statisticsService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     void getChallengeStatistics() {
-        //region VARIABLES
+
         List<UUID> challengeIds;
         List<ChallengeStatisticsDto> challengeList;
         Mono<List<ChallengeStatisticsDto>> result;
 
-
-        //endregion VARIABLES
-
-
-        //region TEST INITIALIZATION
         challengeIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
 
-        //endregion TEST INITIALIZATION
-
-
-        //region TESTS
-        result = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
+        result = statisticsService.getChallengeStatistics(challengeIds);
         challengeList = result.block();
 
         assertNotNull(challengeList);
         assertEquals(challengeIds.size(), challengeList.size());
-
-        //endregion TESTS
 
     }
 
@@ -88,7 +88,7 @@ class ServiceChallengeStatisticsTest {
         assertEquals(4, userSolutionDocuments.size());
 
         UUID challengeId = userSolutionDocuments.get(2).getChallengeId();
-        List<UserSolutionDocument> userSolutionDocumentsChallenge = serviceChallengeStatistics.getUserSolutionsChallenge(userSolutionDocuments, challengeId);
+        List<UserSolutionDocument> userSolutionDocumentsChallenge = statisticsService.getUserSolutionsChallenge(userSolutionDocuments, challengeId);
 
         assertEquals(1, userSolutionDocumentsChallenge.size());
 
