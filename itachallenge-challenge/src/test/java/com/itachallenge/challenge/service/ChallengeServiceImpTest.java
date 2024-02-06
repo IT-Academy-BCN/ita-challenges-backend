@@ -514,4 +514,39 @@ class ChallengeServiceImpTest {
 
     }
 
+    @Test
+    void getChallengesByLanguageAndDifficulty_ValidInput_ChallengesReturned() {
+        // Arrange
+        String languageId = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
+        String difficulty = "EASY";
+        int offset = 0;
+        int limit = 2;
+
+        UUID validLanguageId = UUID.fromString(languageId);
+        ChallengeDocument challenge1 = new ChallengeDocument();
+        ChallengeDocument challenge2 = new ChallengeDocument();
+        List<ChallengeDocument> challengeDocuments = List.of(challenge1, challenge2);
+
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        List<ChallengeDto> expectedChallenges = List.of(challengeDto1, challengeDto2);
+
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(eq(difficulty), eq(validLanguageId)))
+                .thenReturn(Flux.fromIterable(challengeDocuments));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class)))
+                .thenReturn(Flux.fromIterable(expectedChallenges));
+
+        // Act
+        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageAndDifficulty(languageId, difficulty, offset, limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextCount(2)
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository).findByLevelAndLanguages_IdLanguage(difficulty, validLanguageId);
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class));
+    }
+
 }
