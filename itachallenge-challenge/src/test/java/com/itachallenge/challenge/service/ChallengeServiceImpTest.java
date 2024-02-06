@@ -531,9 +531,9 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto2 = new ChallengeDto();
         List<ChallengeDto> expectedChallenges = List.of(challengeDto1, challengeDto2);
 
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty,validLanguageId))
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(eq(difficulty),eq(validLanguageId)))
                 .thenReturn(Flux.fromIterable(challengeDocuments));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), ChallengeDto.class))
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class)))
                 .thenReturn(Flux.fromIterable(expectedChallenges));
 
         // Act
@@ -546,7 +546,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findByLevelAndLanguages_IdLanguage(difficulty, validLanguageId);
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), ChallengeDto.class);
+        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class));
     }
 
 }
