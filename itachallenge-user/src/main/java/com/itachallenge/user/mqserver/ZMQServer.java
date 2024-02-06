@@ -31,6 +31,7 @@ public class ZMQServer {
         this.SOCKET_ADDRESS = socketAddress;
     }
 
+    //testPR
     @PostConstruct
     public void init() {
         log.info("Starting ZMQ Server");
