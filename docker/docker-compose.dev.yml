@@ -1,8 +1,8 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.5
-  last-updated: 2021-12-11
+  version: 1.0.6
+  last-updated: 2024-01-31
 
 services:
   consul-server1:
@@ -73,8 +73,10 @@ services:
 
   itachallenge-nginx:
     container_name: nginx-itachallenge
-    image: '${REGISTRY_NAME}:nginx-frontend2-${NGINX_FRONTEND_TAG}'
+    image: '${REGISTRY_NAME}:nginx-itachallenge-${NGINX_FRONTEND_TAG}'
     restart: always
+    ports:
+      - "80:80"
     networks:
       apisix-dev:
         ipv4_address: 172.18.0.7

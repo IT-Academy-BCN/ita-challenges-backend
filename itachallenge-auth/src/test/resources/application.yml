@@ -15,9 +15,7 @@ management:
   security:
     enabled: false
 
-zeromq:
-  socket:
-    address: tcp://*:5555
+    uri_validate_token : https://dev.sso.itawiki.eurecatacademy.org/api/v1/tokens/validate
 
 logging:
   level:
@@ -36,6 +34,8 @@ url:
   maxBytesInMemory: 30000000
   ds_test: https://swapi.py4e.com/api/vehicles/
 
+
+
 validation:
   number: "^\\d{1,9}$"                           # Integers up to 9 digits
   maxLimit200: "^-1$|^([1-9]\\d?|1\\d{2}|200)$"  # Integer in range [1, 200] or -1 for all.
@@ -43,3 +43,5 @@ validation:
 
 messages:
   errorMessage: "Invalid values."
+
+

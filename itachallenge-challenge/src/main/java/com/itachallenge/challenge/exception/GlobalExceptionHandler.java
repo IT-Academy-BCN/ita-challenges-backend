@@ -54,4 +54,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
+
+    @ExceptionHandler(BadUUIDException.class)
+    public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    }
 }
