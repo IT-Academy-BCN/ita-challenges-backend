@@ -210,7 +210,6 @@ class ChallengeControllerTest {
         ChallengeDto[] challengeDtos = new ChallengeDto[]{challengeDto1, challengeDto2};
 
         Flux<ChallengeDto> expectedResult = Flux.just(challengeDtos);
-        /*expectedResult.setInfo(0, 2, 2, challengeDtos);*/
 
         when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty,offset,limit)).thenReturn(expectedResult);
 
@@ -221,10 +220,11 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ChallengeDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert Objects.equals(dto.getLevel(), difficulty);
+                .expectBodyList(ChallengeDto.class)
+                .value(Dtos  -> {
+                    assert Dtos  != null;
+                    assert Dtos.get(0).getLevel().equals(difficulty);
+                    assert Dtos.get(1).getLevel().equals(difficulty);
                 });
     }
 
