@@ -55,8 +55,7 @@ public class OpenApiConfig {
         try {
             return objectMapper.readValue(spec, OpenAPI.class);
         } catch (Exception e) {
-            // Handle the exception (e.g., log it or throw a custom exception)
-            throw new RuntimeException("Error parsing OpenAPI spec: " + e.getMessage(), e);
+            throw new RuntimeException("Error parsing OpenAPI spec: " + e.getMessage());
         }
     }
 }
