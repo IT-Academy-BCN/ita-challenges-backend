@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @Configuration
-//@OpenAPIDefinition(info = @Info(title = "Ita Backend Challenges", version = "1.1.0-RELEASE", description = "Documentation API"))
 public class OpenApiConfig {
     static {
         SpringDocUtils.getConfig().addAnnotationsToIgnore(RestController.class);
@@ -29,18 +28,23 @@ public class OpenApiConfig {
 
         String jsonApiSpecChallenge = documentService.getSwaggerChallengeDocsStr();
         String jsonApiSpecUser = documentService.getSwaggerUserDocsStr();
+        String jsonApiSpecScore = documentService.getSwaggerScoreDocsStr();
+        String jsonApiSpecAuth = documentService.getSwaggerAuthDocsStr();
+
         OpenAPI challengeApi = parseOpenApiSpec(jsonApiSpecChallenge);
         OpenAPI userApi = parseOpenApiSpec(jsonApiSpecUser);
+        OpenAPI scoreApi = parseOpenApiSpec(jsonApiSpecScore);
+        OpenAPI authApi = parseOpenApiSpec(jsonApiSpecAuth);
 
         OpenAPI allApi = new OpenAPI();
 
         allApi.setInfo(new Info()
-                .title("itachallenge-document API Documentation")
+                .title("ITA Challenge: Documentació APIs del projecte")
                 .version("1.0")
-                .description("API documentation for itachallenge-document."));
+                .description("**Selecciona la funcionalitat desitjada en el desplegable superior dret**"));
 
         allApi.setExtensions(Map.of("itachallenge-challenge-api", challengeApi,
-                "itachallenge-user-api", userApi));
+                "itachallenge-user-api", userApi, "itachallenge-score-api", scoreApi, "itachallenge-auth-api", authApi));
 
         return allApi;
     }
@@ -51,8 +55,7 @@ public class OpenApiConfig {
         try {
             return objectMapper.readValue(spec, OpenAPI.class);
         } catch (Exception e) {
-            // Handle the exception (e.g., log it or throw a custom exception)
-            throw new RuntimeException("Error parsing OpenAPI spec: " + e.getMessage(), e);
+            throw new RuntimeException("Error parsing OpenAPI spec: " + e.getMessage());
         }
     }
 }
