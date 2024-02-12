@@ -1,8 +1,8 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.6
-  last-updated: 2024-01-31
+  version: 1.0.7
+  last-updated: 2024-02-08
 
 services:
   consul-server1:
@@ -72,8 +72,8 @@ services:
 
 
   itachallenge-nginx:
-    container_name: nginx-itachallenge
-    image: '${REGISTRY_NAME}:nginx-itachallenge-${NGINX_FRONTEND_TAG}'
+    image: '${REGISTRY_NAME}:itachallenge-nginx-${NGINX_FRONTEND_TAG}'
+    container_name: 'itachallenge-nginx-${NGINX_FRONTEND_TAG}-dev'
     restart: always
     ports:
       - "80:80"
