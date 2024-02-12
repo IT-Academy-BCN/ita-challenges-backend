@@ -1,20 +1,10 @@
 package com.itachallenge.user.mqserver;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.*;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import com.itachallenge.user.dtos.zmq.ChallengeRequestDto;
 import com.itachallenge.user.dtos.zmq.StatisticsResponseDto;
 import com.itachallenge.user.helper.ObjectSerializer;
 import org.junit.jupiter.api.Test;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.zeromq.ZContext;
@@ -26,54 +16,50 @@ import java.util.UUID;
 
 
 
-    @ExtendWith(MockitoExtension.class)
-    public class ZMQServerTest {
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.zeromq.ZContext;
+import org.zeromq.ZMQ;
 
-        @Mock
-        private ZContext context;
+import static org.mockito.Mockito.*;
 
-        @Mock
-        private ZMQ.Socket socket;
+@ExtendWith(MockitoExtension.class)
+class ZMQServerTest {
 
-        @Mock
-        private ObjectSerializer objectSerializer;
+    @Mock
+    private ZContext context;
 
-        @InjectMocks
-        private ZMQServer zmqServer;
+    @Mock
+    private ObjectSerializer objectSerializer;
 
-        @BeforeEach
-        public void setUp() throws Exception {
-            when(context.createSocket(ZMQ.PAIR)).thenReturn(socket);
-            when(socket.bind(anyString())).thenReturn(true);
-        }
+    @Mock
+    private ZMQ.Socket socket;
 
-        @Test
-        public void testRun() throws Exception {
+    @InjectMocks
+    private ZMQServer zmqServer = new ZMQServer(context, "socketAddress");
 
-            assertTrue(true);
-//            byte[] reply = new byte[]{1, 2, 3, 4};
-//            ChallengeRequestDto requestDto = new ChallengeRequestDto();
-//            requestDto.setChallengeId(UUID.fromString("123"));
-//
-//            when(socket.recv(0)).thenReturn(reply);
-//            when(objectSerializer.deserialize(reply, ChallengeRequestDto.class)).thenReturn(requestDto);
-//
-//            byte[] response = new byte[]{5, 6, 7, 8};
-//            StatisticsResponseDto responseDto = new StatisticsResponseDto();
-//            responseDto.setPercent(99);
-//
-//            when(objectSerializer.serialize(responseDto)).thenReturn(response);
-//
-//            zmqServer.run();
-//
-//            verify(socket, times(1)).bind("tcp://*:5555");
-//            verify(socket, atLeastOnce()).recv(0);
-//            verify(socket, times(1)).send(response, 0);
-//            verify(objectSerializer, times(1)).deserialize(reply, ChallengeRequestDto.class);
-//            verify(objectSerializer, times(1)).serialize(responseDto);
-        }
+    @Test
+    void run() throws Exception {
+        // Arrange
+        byte[] receivedMessage = new byte[0];
+        byte[] serializedMessage = new byte[0];
 
+        when(context.createSocket(ZMQ.REP)).thenReturn(socket);
+        when(socket.recv(0)).thenReturn(receivedMessage);
+        when(objectSerializer.deserialize(receivedMessage, ChallengeRequestDto.class)).thenReturn(new ChallengeRequestDto());
+        when(objectSerializer.serialize(any(StatisticsResponseDto.class))).thenReturn(serializedMessage);
+
+        // Act
+        zmqServer.run();
+
+        // Assert
+        verify(socket, times(1)).bind(anyString());
+        verify(socket, times(1)).recv(0);
+        verify(objectSerializer, times(1)).deserialize(receivedMessage, ChallengeRequestDto.class);
+        verify(objectSerializer, times(1)).serialize(any(StatisticsResponseDto.class));
+        verify(socket, times(1)).send(serializedMessage, 0);
     }
-
-
+}
 
