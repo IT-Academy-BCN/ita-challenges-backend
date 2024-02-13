@@ -25,7 +25,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-/*@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)*/
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ChallengeRepositoryTest {
 
     @Container
@@ -36,7 +36,7 @@ class ChallengeRepositoryTest {
     static void initMongoProperties(DynamicPropertyRegistry registry) {
         System.out.println("container url: {}" + container.getReplicaSetUrl("challenges"));
         System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges")); //Conflicting line
+        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
     }
 
     @Autowired
