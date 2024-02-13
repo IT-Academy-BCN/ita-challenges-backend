@@ -4,6 +4,7 @@ import com.itachallenge.challenge.document.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -24,6 +25,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+/*@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)*/
 class ChallengeRepositoryTest {
 
     @Container
@@ -34,8 +36,7 @@ class ChallengeRepositoryTest {
     static void initMongoProperties(DynamicPropertyRegistry registry) {
         System.out.println("container url: {}" + container.getReplicaSetUrl("challenges"));
         System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-
-        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
+        registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges")); //Conflicting line
     }
 
     @Autowired
