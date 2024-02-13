@@ -23,12 +23,18 @@ public class ZMQServer {
     private final String SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
+    private volatile boolean isRunning = true;
+
     @Autowired
     ObjectSerializer objectSerializer;
 
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+    }
+
+    public void stop() {
+        isRunning = false;
     }
 
     @PostConstruct
@@ -38,11 +44,12 @@ public class ZMQServer {
     }
 
     public void run(){
+        //tonto commit
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
             socket.bind("tcp://*:5555");
 
-            while (!Thread.currentThread().isInterrupted()) {
+            while (isRunning) {
                 byte[] reply = socket.recv(0);
 
                 Optional<Object> request = Optional.empty();
