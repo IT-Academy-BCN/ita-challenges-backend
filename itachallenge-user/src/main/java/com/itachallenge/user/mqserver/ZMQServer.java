@@ -44,12 +44,12 @@ public class ZMQServer {
     }
 
     public void run(){
-        //tonto commit
+
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
             socket.bind("tcp://*:5555");
 
-            while (isRunning) {
+            while ((!Thread.currentThread().isInterrupted())&&isRunning) {
                 byte[] reply = socket.recv(0);
 
                 Optional<Object> request = Optional.empty();
