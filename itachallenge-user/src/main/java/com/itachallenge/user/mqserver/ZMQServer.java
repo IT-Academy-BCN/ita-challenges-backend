@@ -49,7 +49,7 @@ public class ZMQServer {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
             socket.bind("tcp://*:5555");
 
-            while (isRunning) {
+            while ((!Thread.currentThread().isInterrupted())&&isRunning) {
                 byte[] reply = socket.recv(0);
 
                 Optional<Object> request = Optional.empty();
