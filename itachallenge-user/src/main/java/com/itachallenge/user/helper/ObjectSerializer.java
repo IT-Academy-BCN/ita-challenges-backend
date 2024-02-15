@@ -11,11 +11,11 @@ public class ObjectSerializer {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static byte[] serialize(Object obj) throws JsonProcessingException {
+    public byte[] serialize(Object obj) throws JsonProcessingException {
         return objectMapper.writeValueAsBytes(obj);
     }
 
-    public static <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
         return objectMapper.readValue(bytes, clazz);
     }
 }
