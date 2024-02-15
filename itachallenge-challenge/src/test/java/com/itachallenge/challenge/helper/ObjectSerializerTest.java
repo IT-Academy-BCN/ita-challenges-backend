@@ -33,6 +33,9 @@ class ObjectSerializerTest {
             this.value = value;
         }
 
+        public TestObject() {
+        }
+
         public String getName() {
             return name;
         }

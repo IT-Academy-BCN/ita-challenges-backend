@@ -31,7 +31,6 @@ class ZMQClientTest {
 
     @Test
     void sendMessage() throws Exception {
-
         Object message = new Object();
         Class clazz = Object.class;
         byte[] serializedMessage = new byte[0];

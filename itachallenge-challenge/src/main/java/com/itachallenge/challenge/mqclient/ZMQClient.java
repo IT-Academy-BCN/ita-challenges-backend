@@ -30,6 +30,8 @@ public class ZMQClient {
     public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+        // Agregar este registro para verificar la dirección del socket
+        System.out.println("Socket Address: " + socketAddress);
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
