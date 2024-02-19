@@ -3,7 +3,6 @@ package com.itachallenge.document.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.document.service.DocumentService;
 import io.swagger.v3.core.util.Json;
-import io.swagger.v3.oas.models.ExternalDocumentation;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
@@ -47,14 +46,14 @@ public class OpenApiConfig {
         allApi.setInfo(new Info()
                 .title("ITA Challenges APIs Documentation")
                 .version("1.0")
-                .description("Centralized documentation for ITA Challenges APIs. Explore and understand the available services for authentication, challenges, user management, scoring, and more."));
-        allApi.setExtensions(Map.of("itachallenge-challenge-api", challengeApi,
-                "itachallenge-user-api", userApi, "itachallenge-score-api", scoreApi, "itachallenge-auth-api", authApi));
-
-        ExternalDocumentation WIKIExternalDocs = new ExternalDocumentation()
-                .description("IT Academy Wiki")
-                .url("https://dev.api.itawiki.eurecatacademy.org/api/v1/api-docs");
-        allApi.setExternalDocs(WIKIExternalDocs);
+                .description("Centralized documentation for ITA Challenges APIs. Explore and understand the available services for authentication, challenges, user management, scoring, and more.")
+        );
+        allApi.setExtensions(Map.of(
+                "itachallenge-challenge-api", challengeApi,
+                "itachallenge-user-api", userApi,
+                "itachallenge-score-api", scoreApi,
+                "itachallenge-auth-api", authApi
+        ));
 
         return allApi;
     }
