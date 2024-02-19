@@ -5,4 +5,6 @@ public interface IDocumentService {
     String getSwaggerChallengeDocsStr();
     String getSwaggerAuthDocsStr();
     String getSwaggerScoreDocsStr();
+
+    String getSwaggerDefaultDocsStr(String apiName);
 }

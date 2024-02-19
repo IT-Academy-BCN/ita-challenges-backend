@@ -1,9 +1,6 @@
 package com.itachallenge.document.service;
 
-import com.itachallenge.document.proxy.IAuthClient;
-import com.itachallenge.document.proxy.IChallengeClient;
-import com.itachallenge.document.proxy.IScoreClient;
-import com.itachallenge.document.proxy.IUserClient;
+import com.itachallenge.document.proxy.*;
 import org.springframework.stereotype.Service;
 
 
@@ -40,4 +37,6 @@ public class DocumentService implements IDocumentService{
     public String getSwaggerScoreDocsStr() {
         return scoreClient.getSwaggerDocs();
     }
+    @Override
+    public String getSwaggerDefaultDocsStr(String apiName) { return DefaultApi.getDefaultApi(apiName);}
 }

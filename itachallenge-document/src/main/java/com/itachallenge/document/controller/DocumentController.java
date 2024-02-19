@@ -26,12 +26,13 @@ public class DocumentController {
     public String getSelectedOpenAPI(@PathVariable String apiname) {
         OpenAPI openAPI = openApiConfig.allOpenAPI();
         return switch (apiname) {
-            case "all" ->openAPI.toString();
+            case "all" -> openAPI.toString();
             case "auth" -> documentService.getSwaggerAuthDocsStr();
             case "challenge" -> documentService.getSwaggerChallengeDocsStr();
             case "score" -> documentService.getSwaggerScoreDocsStr();
             case "user" -> documentService.getSwaggerUserDocsStr();
-            default -> openAPI != null ? openAPI.toString() : "";
+
+            default -> documentService.getSwaggerDefaultDocsStr(apiname);
         };
     }
 }
