@@ -33,3 +33,4 @@
 * Arnau Burguera Calles - https://github.com/ArnauBurguera
 * Fethi Abdellaoui - https://github.com/pounct
 * Gabriela Bustamante - https://github.com/GabyB73
+* Alicia Gómez - https://github.com/Alicia-gy
