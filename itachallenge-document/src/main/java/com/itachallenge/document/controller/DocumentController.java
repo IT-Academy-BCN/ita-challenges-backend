@@ -1,15 +1,12 @@
 package com.itachallenge.document.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.itachallenge.document.config.OpenApiConfig;
 import com.itachallenge.document.service.DocumentService;
 import io.swagger.v3.oas.models.OpenAPI;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,15 +14,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 public class DocumentController {
 
-
     private final OpenApiConfig openApiConfig;
-    public DocumentController(OpenApiConfig openApiConfig) {
+    private final DocumentService documentService;
+
+    public DocumentController(OpenApiConfig openApiConfig, DocumentService documentService) {
         this.openApiConfig = openApiConfig;
-    }
-    @GetMapping(value = "/api-docs/all",produces = {"application/json"})
-    @ResponseBody
-    public OpenAPI getAllOpenAPI() throws JsonProcessingException {
-        return openApiConfig.allOpenAPI();
+        this.documentService = documentService;
     }
 
+    @GetMapping(value = "/api-docs/{apiname}", produces = {"application/json"})
+    public String getSelectedOpenAPI(@PathVariable String apiname) {
+        OpenAPI openAPI = openApiConfig.allOpenAPI();
+        return switch (apiname) {
+            case "auth" -> documentService.getSwaggerAuthDocsStr();
+            case "challenge" -> documentService.getSwaggerChallengeDocsStr();
+            case "score" -> documentService.getSwaggerScoreDocsStr();
+            case "user" -> documentService.getSwaggerUserDocsStr();
+            default -> openAPI != null ? openAPI.toString() : "";
+        };
+    }
 }

@@ -3,24 +3,31 @@ package com.itachallenge.document.proxy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
-import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import io.swagger.v3.oas.models.OpenAPI;
+import org.springframework.stereotype.Component;
 
-@FeignClient(name = "itachallenge-score", url = "http://localhost:8763")
-public interface IScoreClient {
+@Component
+public class ScoreClientImpl implements IScoreClient {
 
-    @GetMapping("/api-docs")
+    @Override
     @CircuitBreaker(name = "itachallenge-score", fallbackMethod = "getDefaultScoreApi")
-    String getSwaggerDocs();
+    public String getSwaggerDocs() {
+        // Simulate fetching Swagger documentation from an external service
+        // In a real scenario, you might use Feign or some other mechanism to call an external API
+        return "Actual Swagger Docs from Score Service";
+    }
 
-    default String getDefaultScoreApi(Exception exception) throws JsonProcessingException {
+    @Override
+    public String getDefaultScoreApi(Exception exception) throws JsonProcessingException {
+        // Fallback method for getSwaggerDocs
+        // You can customize the fallback behavior as needed
         OpenAPI openAPIDefaultScore = new OpenAPI();
         openAPIDefaultScore.setInfo(new Info()
                 .title("itachallenge-Score API Documentation")
                 .version("1.0")
                 .description("API documentation for itachallenge-score is currently unavailable!."));
+
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.writeValueAsString(openAPIDefaultScore);
     }

@@ -10,19 +10,20 @@ spring:
 springdoc:
   swagger-ui:
     path: "/swagger"
-    configUrl: /api-docs/swagger-config
-    operationsSorted: method
     urls:
       - name: Auth OpenAPI Definition
-        url: "http://localhost:8761/api-docs"
+        url: "/api-docs/auth"
       - name: Challenge OpenAPI Definition
-        url: "http://localhost:8762/api-docs"
+        url: "/api-docs/challenge"
       - name: User OpenAPI Definition
-        url: "http://localhost:8764/api-docs"
+        url: "/api-docs/user"
       - name: Score OpenAPI Definition
-        url: "http://localhost:8763/api-docs"
+        url: "/api-docs/score"
       - name: All OpenAPI Definition
-        url: "http://localhost:8769/api-docs/all"
+        url: "/api-docs" # or /api-docs/all  (redirect link)
+    show-request-headers: true
+    show-extensions: true
+    disable-swagger-default-url: true
   api-docs:
     enable: true
     path: "/api-docs"
@@ -54,6 +55,5 @@ logging:
 url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
-
 
 
