@@ -19,15 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -133,6 +131,22 @@ public class ChallengeController {
     )
     public Mono<GenericResultDto<String>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource);
+    }
+
+    //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
+    @PatchMapping("/resources/{idResource}")
+    @Operation(
+            operationId = "Remove resource from all Challenges from Resource Id.",
+            summary = "Remove resource from all Challenges from Resource Id.",
+            description = "Sending the ID Resource through the URI to patch the challenges.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
+        return challengeService.patchResourcesByUuid(idResource)
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
     }
 
     @GetMapping("/challenges")

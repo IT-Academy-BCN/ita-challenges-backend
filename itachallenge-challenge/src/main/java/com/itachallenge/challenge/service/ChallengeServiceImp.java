@@ -89,6 +89,10 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
+    public Mono<String> patchResourcesByUuid(String id) {
+        return null;
+    }
+
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
         // TODO: Get challenges by language and difficulty
