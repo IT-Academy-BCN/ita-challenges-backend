@@ -52,4 +52,5 @@ class ZMQClientTest {
         verify(socket, times(1)).recv(0);
         assertEquals(deserializedMessage, result);
     }
+
 }
