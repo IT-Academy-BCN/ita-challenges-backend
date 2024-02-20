@@ -129,8 +129,9 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<String>> removeResourcesById(@PathVariable String idResource) {
-        return challengeService.removeResourcesByUuid(idResource);
+    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
+        return challengeService.removeResourcesByUuid(idResource)
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
     }
 
     //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
@@ -145,7 +146,7 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
-        return challengeService.patchResourcesByUuid(idResource)
+        return challengeService.removeResourcesByUuid(idResource)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
     }
 

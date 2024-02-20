@@ -63,7 +63,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-    public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
+    public Mono<String> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
                     Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(resourceId);
@@ -77,9 +77,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .hasElements()
                             .flatMap(result -> {
                                 if (Boolean.TRUE.equals(result)) {
-                                    GenericResultDto<String> resultDto = new GenericResultDto<>();
-                                    resultDto.setInfo(0, 1, 1, new String[]{"resource deleted correctly"});
-                                    return Mono.just(resultDto);
+                                    return Mono.just("resource deleted correctly");
                                 } else {
                                     return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
                                 }
@@ -88,11 +86,6 @@ public class ChallengeServiceImp implements IChallengeService {
                             .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
                 });
     }
-
-    public Mono<String> patchResourcesByUuid(String id) {
-        return null;
-    }
-
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
         // TODO: Get challenges by language and difficulty
