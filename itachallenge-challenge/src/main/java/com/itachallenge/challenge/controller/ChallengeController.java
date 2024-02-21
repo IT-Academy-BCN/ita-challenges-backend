@@ -2,10 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
@@ -246,4 +243,23 @@ public class ChallengeController {
                      limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
     }
+
+
+    @GetMapping("/test/params/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Get the testing parameters for the chosen challenge & language.",
+            summary = "Get the arrays of the testing values in & out parameters",
+            description = "Sending the ID Challenge & ID Language returns the relevant challenge's testing values.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The Challenge Id & Language Id can't be null or empty.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<GenericResultDto<TestingValueDto>> getChallengesTestingValues(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
+                                                                              @PathVariable("idLanguage") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage) {
+        return challengeService.getTestingParamsByChallengeIdAndLanguageId(idChallenge,idLanguage);
+    }
+
+
 }
