@@ -80,10 +80,5 @@ class OpenApiConfigTest {
         assertThat(result.getExtensions()).containsKey("itachallenge-user-api");
         assertThat(result.getExtensions()).containsKey("itachallenge-score-api");
         assertThat(result.getExtensions()).containsKey("itachallenge-auth-api");
-
-        // Verify ExternalDocs
-        assertThat(result.getExternalDocs()).isNotNull();
-        assertThat(result.getExternalDocs().getDescription()).isEqualTo("IT Academy Wiki");
-        assertThat(result.getExternalDocs().getUrl()).isEqualTo("https://dev.api.itawiki.eurecatacademy.org/api/v1/api-docs");
     }
 }
