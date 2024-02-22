@@ -62,6 +62,7 @@ class ServiceChallengeStatisticsTest {
     @Test
     void testGetBookmarkCountByIdChallenge(){
         UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
+        boolean isBookmarked = true;
         long expectedValue = 2L;
 
         UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
@@ -71,7 +72,7 @@ class ServiceChallengeStatisticsTest {
         userSolutionDocument.setBookmarked(true);
         userSolutionDocument2.setBookmarked(true);
 
-        when(userSolutionRepository.countBookmarkedTrueByChallengeId(idChallenge))
+        when(userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, isBookmarked))
                 .thenReturn(Mono.just(2L));
 
         Mono<Long> resultMono = statisticsService.getBookmarkCountByIdChallenge(idChallenge);

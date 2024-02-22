@@ -236,7 +236,8 @@ public class UserSolutionRepositoryTest {
     @DisplayName("Count number of BookmarkedTrue by idChallenge")
     @Test
     void testCountBookmarkedTrueByChallengeId(){
-        Mono<Long> numberOfBookmarks = userSolutionRepository.countBookmarkedTrueByChallengeId(testChallengeUuid);
+        boolean isBookmarked = true;
+        Mono<Long> numberOfBookmarks = userSolutionRepository.countByChallengeIdAndBookmarked(testChallengeUuid, isBookmarked);
         long expectedValue = 1L;
         StepVerifier.create(numberOfBookmarks)
                 .expectNextCount(expectedValue)
