@@ -8,6 +8,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @PropertySource("classpath:persistence-test.properties")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class IScoreRepositoryTest {
 
     @Container
@@ -37,7 +39,6 @@ class IScoreRepositoryTest {
     static void initMongoProperties(DynamicPropertyRegistry registry) {
         System.out.println("container url: {}" + container.getReplicaSetUrl("itac-scores"));
         System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-
         registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("itac-scores"));
     }
 
