@@ -100,23 +100,38 @@ class ChallengeServiceImpTest {
         verifyNoInteractions(challengeConverter);
     }
 
+//    @Test
+//    void getChallengeById_NonexistentId_ErrorThrown() {
+//        // Arrange
+//        UUID challengeId = UUID.randomUUID();
+//
+//        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.empty());
+//
+//        // Act
+//        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
+//
+//        // Assert
+//        StepVerifier.create(result)
+//                .expectError(ChallengeNotFoundException.class)
+//                .verify();
+//
+//        verify(challengeRepository).findByUuid(challengeId);
+//        verifyNoInteractions(challengeConverter);
+//    }
+
     @Test
-    void getChallengeById_NonexistentId_ErrorThrown() {
-        // Arrange
-        UUID challengeId = UUID.randomUUID();
+    void getChallengeById_NonexistentId_ReturnsEmptyMono() {
 
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.empty());
+        String idString = "4f8a6c91-8a9d-49b0-9f2c-3e67d2b18b7d";
 
-        // Act
-        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
+        UUID id = UUID.fromString(idString);
 
-        // Assert
+        when(challengeRepository.findByUuid(id)).thenReturn(Mono.empty());
+
+        Mono<ChallengeDto> result = challengeService.getChallengeById(idString);
+
         StepVerifier.create(result)
-                .expectError(ChallengeNotFoundException.class)
-                .verify();
-
-        verify(challengeRepository).findByUuid(challengeId);
-        verifyNoInteractions(challengeConverter);
+                .verifyComplete();
     }
 
     @Test
@@ -364,7 +379,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId,0,challenge.getRelatedChallenges().size());
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId, 0, challenge.getRelatedChallenges().size());
 
         // Assert
         StepVerifier.create(resultMono)

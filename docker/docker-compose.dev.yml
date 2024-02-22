@@ -72,8 +72,8 @@ services:
 
 
   itachallenge-nginx:
-    image: '${REGISTRY_NAME}:itachallenge-nginx-${NGINX_FRONTEND_TAG}'
-    container_name: 'itachallenge-nginx-${NGINX_FRONTEND_TAG}-dev'
+    container_name: nginx-itachallenge
+    image: '${REGISTRY_NAME}:nginx-itachallenge-${NGINX_FRONTEND_TAG}'
     restart: always
     ports:
       - "80:80"
