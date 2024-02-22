@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
@@ -84,25 +85,59 @@ class ChallengeControllerTest {
     @Test
     void removeResourcesById_ValidId_ResourceDeleted() {
         // Arrange
-        String resourceId = "valid-resource-id";
-        GenericResultDto<String> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 1, 1, new String[]{"resource deleted correctly"});
+        String resourceId = "validResourceId";
 
-        when(challengeService.removeResourcesByUuid(resourceId)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.removeResourcesByUuid(resourceId))
+                .thenReturn(Mono.just("Resource removed successfully"));
 
         // Act & Assert
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 1;
+                .expectBody(Map.class)
+                .value(responseMap -> {
+                    String response = (String) responseMap.get("response");
+                    assert response.equals("Resource removed successfully");
                 });
     }
+
+    @Test
+    void patchResourcesById_ValidResourceId_ResourceRemovedSuccessfully() {
+        // Arrange
+        String resourceId = "validResourceId";
+
+        when(challengeService.removeResourcesByUuid(resourceId))
+                .thenReturn(Mono.just("Resource removed successfully"));
+
+        // Act & Assert
+        webTestClient.patch()
+                .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .value(responseMap -> {
+                    String response = (String) responseMap.get("response");
+                    assert response.equals("Resource removed successfully");
+                });
+    }
+
+    @Test
+    void patchResourcesById_InvalidResourceId_ResourceNotFound() {
+        // Arrange
+        String resourceId = "invalidResourceId";
+
+        when(challengeService.removeResourcesByUuid(resourceId))
+                .thenReturn(Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found")));
+
+        // Act & Assert
+        webTestClient.patch()
+                .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(Void.class);
+    }
+
 
     @Test
     void getAllChallenges_ValidPageParameters_ChallengesReturned() {

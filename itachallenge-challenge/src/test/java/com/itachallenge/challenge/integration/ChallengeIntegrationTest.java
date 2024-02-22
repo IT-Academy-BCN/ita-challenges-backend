@@ -192,12 +192,10 @@ class ChallengeIntegrationTest {
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", UUID_VALID)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 1;
+                .expectBody(Map.class)
+                .value(responseMap -> {
+                    String response = (String) responseMap.get("response");
+                    assert response.equals("Resource removed successfully");
                 });
     }
 

@@ -22,9 +22,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -64,27 +62,33 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<String> removeResourcesByUuid(String id) {
-        return validateUUID(id)
-                .flatMap(resourceId -> {
-                    Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(resourceId);
-                    return challengeFlux
+        UUID resourceId = validateUUID(id).block();
+        Flux<ChallengeDocument> challengesToUpdate = challengeRepository.findAllByResourcesContaining(resourceId);
+
+        return challengesToUpdate
+                .hasElements()
+                .flatMap(result -> {
+                    if(Boolean.FALSE.equals(result)){
+                        return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
+                    }
+                    return challengesToUpdate
                             .flatMap(challenge -> {
-                                challenge.setResources(challenge.getResources().stream()
-                                        .filter(s -> !s.equals(resourceId))
-                                        .collect(Collectors.toSet()));
+                                Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
+                                updatedResources.remove(resourceId);
+                                challenge.setResources(updatedResources);
                                 return challengeRepository.save(challenge);
                             })
-                            .hasElements()
-                            .flatMap(result -> {
-                                if (Boolean.TRUE.equals(result)) {
-                                    return Mono.just("resource deleted correctly");
-                                } else {
-                                    return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
-                                }
-                            })
-                            .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", resourceId))
-                            .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
-                });
+                            .then(Mono.just("Resource removed successfully"));
+                })
+                .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", resourceId))
+                .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
+    }
+
+    private Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge,UUID resourceId) {
+        challenge.setResources(challenge.getResources().stream()
+                .filter(s -> !s.equals(resourceId))
+                .collect(Collectors.toSet()));
+        return challengeRepository.save(challenge);
     }
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {

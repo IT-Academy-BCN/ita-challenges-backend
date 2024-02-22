@@ -8,6 +8,7 @@ import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -147,7 +149,10 @@ public class ChallengeController {
     )
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
+                .onErrorResume(ChallengeNotFoundException.class, e -> {
+                    return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error", e.getMessage())));
+                });
     }
 
     @GetMapping("/challenges")
