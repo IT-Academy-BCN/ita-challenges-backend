@@ -55,7 +55,7 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
     @Override
     public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
-        return userSolutionRepository.countBookmarkedTrueByChallengeId(idChallenge);
+        return userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, true);
     }
 
     //endregion METHODS

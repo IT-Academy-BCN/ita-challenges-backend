@@ -20,6 +20,6 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByScore(int score);
     Flux<UserSolutionDocument> findByStatus(String status);
     Mono<Boolean> existsByUuid(UUID uuid);
-    Mono<Long> countBookmarkedTrueByChallengeId(UUID challengeId);
+    Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
     Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID challangeID, UUID languageID, UUID userId);
 }
