@@ -46,9 +46,6 @@ services:
     container_name: mongodb-itachallenge-dev
     image: mongo:5.0.9
     restart: always
-    env_file:
-      - ./conf/.env.local  # link to .env.local
-
     environment:
       MONGO_INITDB_ROOT_USERNAME: '${MONGODB_CHALLENGE_USERNAME}'
       MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_CHALLENGE_PASSWORD}'
@@ -118,4 +115,3 @@ networks:
         driver: default
         config:
           - subnet: 172.18.0.0/24
-
