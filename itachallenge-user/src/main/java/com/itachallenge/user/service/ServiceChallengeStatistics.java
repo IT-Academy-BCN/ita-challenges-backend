@@ -3,82 +3,108 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+
+import static com.itachallenge.user.validators.UUIDValidator.isValidUUID;
 
 @Service
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
-    //region ATTRIBUTES
-    SecureRandom random = new SecureRandom();
-    @Autowired
-    private IUserSolutionRepository userSolutionRepository;
 
-    //endregion ATTRIBUTES
+    //@Autowired
+    private final IUserSolutionRepository userSolutionRepository;
+
+    //SecureRandom random = new SecureRandom();
+
+    public ServiceChallengeStatistics(IUserSolutionRepository userSolutionRepository) {
+        this.userSolutionRepository = userSolutionRepository;
+    }
 
 
-    //region METHODS
     @Override
-    public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
-        //region VARIABLES
-        List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
+    public Mono<ChallengeStatisticsDto> getChallengeStatistics(UUID challengeId) {
 
-        //endregion VARIABLES
-
-
-        //region ACTIONS
-        try {
-            for (UUID id : challengeIds) {
-                //TODO: missing check if UUID is correctly constructed.
-
-                //TODO: missing call repository for get statistics of challenge.
-
-                //TODO: delete below code when uppers todo are implemented.
-                challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat(100)));
-
-            }
-        } catch (Exception ex) {
-            //TODO: missing error control
+        if (!isValidUUID(String.valueOf(challengeId))) {
+            return Mono.error(new IllegalArgumentException("Invalid UUID for challengeId"));
         }
 
-        //endregion ACTIONS
+        Mono<Integer> getPopularity = getChallengePopularity(challengeId);
+        Mono<Float> getPercentage = getChallengeUsersPercentage(challengeId);
 
-
-        // OUT
-        return Mono.just(challengesList);
-
+        return Mono.zip(getPopularity, getPercentage)
+                .map(tuple -> {
+                    Integer popularity = tuple.getT1();
+                    Float percentage = tuple.getT2();
+                    return new ChallengeStatisticsDto(challengeId, popularity, percentage);
+                });
     }
 
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID challengeId) {
+        if (!isValidUUID(String.valueOf(challengeId))) {
+            return Mono.error(new IllegalArgumentException("Invalid UUID for challengeId"));
+        }
+        return getUserSolutions()
+                .map(userSolutions -> {
+                    if (userSolutions == null || userSolutions.isEmpty()) {
+                        //Mono.error(new NullException("No userSolution found corresponding to this challenge...."));
+                        return 0.0f;
+                    } else {
+                        List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutions, challengeId);
+                        return calculatePercentage(userSolutionsChallenge.size(), userSolutions.size());
+                    }
 
-        float percentage;
-
-        // List of all UserSolution with all status started and ended and empty
-        List<UserSolutionDocument> userSolutionsV1 = getUserSolutions();
-
-        // // List of all UserSolution of challenge with id challengeId
-        List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutionsV1, challengeId);
-
-        percentage = ((float) userSolutionsChallenge.size()*100 / userSolutionsV1.size());
-        return Mono.just(percentage);
+                });
     }
 
-    List<UserSolutionDocument> getUserSolutions() {
-        return userSolutionRepository
-                .findAll()
-                .collectList().block();
+    private float calculatePercentage(int numerator, int denominator) {
+        if (denominator == 0) {
+            return 0;
+        }
+        return ((float) numerator * 100 / denominator);
+    }
+
+
+    @Override
+    public Mono<Integer> getChallengePopularity(UUID challengeId) {
+        if (!isValidUUID(String.valueOf(challengeId))) {
+            return Mono.error(new IllegalArgumentException("Invalid UUID for challengeId"));
+        }
+        return getUserSolutions()
+                .map(userSolutions ->
+                        (int) userSolutions.stream()
+                                .filter(userSolution -> isBookmarkedChallenge(userSolution, challengeId))
+                                .count()
+                );
+    }
+
+    private boolean isBookmarkedChallenge(UserSolutionDocument userSolution, UUID challengeId) {
+        return challengeId.equals(userSolution.getChallengeId()) && userSolution.isBookmarked();
+    }
+
+    public Mono<List<UUID>> getGlobalChallengesIds() {
+        return userSolutionRepository.findAll()
+                .map(UserSolutionDocument::getChallengeId)
+                .collectList();
+    }
+
+    Mono<List<UserSolutionDocument>> getUserSolutions() {
+        return userSolutionRepository.findAll().collectList();
     }
 
     List<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
+        if (userSolutions == null || challengeId == null) {
+            // Handle null input gracefully, throw an exception, or return an empty list based on your requirements
+            return Collections.emptyList();
+        }
+
         return userSolutions.stream()
-                .filter(
-                        us -> challengeId.equals(us.getChallengeId())
-                ).toList();
+                .filter(us -> Objects.equals(challengeId, us.getChallengeId()))
+                .toList();
     }
 }

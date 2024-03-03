@@ -4,7 +4,6 @@ import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,14 +11,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,10 +27,18 @@ import java.util.UUID;
 @RequestMapping(value = "/itachallenge/api/v1/user")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private final IServiceChallengeStatistics serviceChallengeStatistics;
+    private final IUserSolutionService userSolutionService;
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
-    IServiceChallengeStatistics serviceChallengeStatistics;
-    @Autowired
-    private IUserSolutionService userScoreService;
+    public UserController(
+            IServiceChallengeStatistics serviceChallengeStatistics,
+            IUserSolutionService userSolutionService) {
+        this.serviceChallengeStatistics = serviceChallengeStatistics;
+        this.userSolutionService = userSolutionService;
+    }
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
@@ -39,18 +47,54 @@ public class UserController {
         return "Hello from ITA User!!!";
     }
 
+//    @ApiResponse(responseCode = "404", description = "Not Found")
+//    @ApiResponse(responseCode = "414", description = "URI too long")
+//    @Operation(summary = "Get Basic Info of Challenge")
+//    @GetMapping(value = "/statistics")
+//    public Mono<ResponseEntity<List<ChallengeStatisticsDto>>> getChallengesStatistics(
+//            @RequestParam("challenge") List<UUID> challengeIds,
+//            @RequestHeader HttpHeaders headers) {
+//
+//        headers.setContentType(MediaType.APPLICATION_JSON);
+//        if (!challengeIds.isEmpty()) {
+//            return serviceChallengeStatistics.getChallengesStatistics(challengeIds)
+//                    .map(response -> new ResponseEntity<>(response, headers, HttpStatus.OK));
+//        } else {
+//            return Mono.just(new ResponseEntity<>(Collections.emptyList(),headers,HttpStatus.OK));
+//        }
+//    }
     @ApiResponse(responseCode = "404", description = "Not Found")
     @ApiResponse(responseCode = "414", description = "URI too long")
     @Operation(summary = "Get Basic Info of Challenge")
-    @GetMapping(value = "/statistics")
-    public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds) {
-        Mono<List<ChallengeStatisticsDto>> elements = null;
+    @GetMapping(value = "/statistics/{challengeId}")
+    public Mono<ResponseEntity<?>> getChallengeStatistics(
+            @PathVariable("challengeId") UUID challengeId,
+            @RequestHeader HttpHeaders headers) {
 
-        if (!challengeIds.isEmpty()) {
-            elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
+        // Check if challengeId is null
+        if (challengeId == null) {
+            logger.error("ChallengeId is null");
+            return Mono.just(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
         }
 
-        return elements;
+        // Set the content type of the response
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // Call the service to get challenge statistics
+        return serviceChallengeStatistics.getChallengeStatistics(challengeId)
+                .flatMap(challengeStatisticsDto -> {
+                    // Check if the response entity is not null
+                    if (challengeStatisticsDto != null) {
+                        // If not null, return it as is
+                        return Mono.just(new ResponseEntity<>(challengeStatisticsDto, HttpStatus.OK));
+                    } else {
+                        // If null, log an error and return a 404 response entity
+                        logger.error("Response entity is null for challengeId: {}", challengeId);
+                        return Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                    }
+                })
+                // If the mono is empty, use Mono.defer to create a new ResponseEntity with 404 status
+                .switchIfEmpty(Mono.defer(() -> Mono.just(new ResponseEntity<>(HttpStatus.NOT_FOUND))));
     }
 
 
@@ -66,7 +110,7 @@ public class UserController {
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
-        return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
+        return userSolutionService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 
     @PutMapping(path = "/solution")
@@ -82,7 +126,7 @@ public class UserController {
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
-        return userScoreService.addSolution(
+        return userSolutionService.addSolution(
                         userSolutionDto.getUserId(),
                         userSolutionDto.getChallengeId(),
                         userSolutionDto.getLanguageId(),
@@ -124,7 +168,7 @@ public class UserController {
 
             @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
 
-        return userScoreService.markAsBookmarked(
+        return userSolutionService.markAsBookmarked(
 
                         bookmarkRequestDto.getUuid_challenge(),
                         bookmarkRequestDto.getUuid_language(),

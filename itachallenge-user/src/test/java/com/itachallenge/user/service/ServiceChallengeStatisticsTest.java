@@ -1,6 +1,5 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -9,90 +8,120 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class ServiceChallengeStatisticsTest {
 
-
     @InjectMocks
-    ServiceChallengeStatistics statisticsService;
+    ServiceChallengeStatistics serviceChallengeStatistics;
+
+    @Mock
+    IUserSolutionRepository userSolutionRepository;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
+//
+//    @Test
+//    void testGetChallengesStatistics() {
+//        UUID challengeId1 = UUID.randomUUID();
+//        UUID challengeId2 = UUID.randomUUID();
+//        List<UUID> challengeIds = Arrays.asList(challengeId1, challengeId2);
+//
+//        UUID userSolutionId1 = UUID.randomUUID();
+//        UUID userSolutionId2 = UUID.randomUUID();
+//        UserSolutionDocument userSolution1 = UserSolutionDocument
+//                .builder()
+//                .uuid(userSolutionId1)
+//                .challengeId(challengeId1)
+//                .bookmarked(true)
+//                .build();
+//        UserSolutionDocument userSolution2 = UserSolutionDocument
+//                .builder()
+//                .uuid(userSolutionId2)
+//                .challengeId(challengeId2)
+//                .bookmarked(false)
+//                .build();
+//        List<UserSolutionDocument> userSolutions = Arrays.asList(userSolution1, userSolution2);
+//
+//        when(userSolutionRepository.findAll()).thenReturn(Flux.fromIterable(userSolutions));
+//
+//        List<ChallengeStatisticsDto> result = service.getChallengesStatistics(challengeIds).block();
+//
+//        assertNotNull(result);
+//        assertEquals(2, result.size());
+//
+//        // Example assertion: Check if the result contains the expected ChallengeStatisticsDto
+//        ChallengeStatisticsDto resultDto = result.get(0);
+//        assertEquals(challengeId1, resultDto.getChallengeId());
+//        // Add more assertions based on your implementation
+//    }
 
     @Test
-    void getChallengeStatistics() {
+    void testGetChallengeUsersPercentage() {
+        UUID challengeId = UUID.randomUUID();
+        List<UserSolutionDocument> userSolutions = Arrays.asList(
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId).bookmarked(true).build(),
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId).bookmarked(false).build(),
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(UUID.randomUUID()).bookmarked(true).build()
+        );
 
-        List<UUID> challengeIds;
-        List<ChallengeStatisticsDto> challengeList;
-        Mono<List<ChallengeStatisticsDto>> result;
+        when(userSolutionRepository.findAll()).thenReturn(Flux.fromIterable(userSolutions));
 
-        challengeIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        Mono<Float> result = serviceChallengeStatistics.getChallengeUsersPercentage(challengeId);
 
-        result = statisticsService.getChallengeStatistics(challengeIds);
-        challengeList = result.block();
-
-        assertNotNull(challengeList);
-        assertEquals(challengeIds.size(), challengeList.size());
-
+        assertNotNull(result);
+        assertEquals(66.67f, result.block(), 0.01f);  // 2 out of 3 user solutions have the specified challenge
     }
 
     @Test
-    void getChallengeUserPercentageTest() {
+    void testGetChallengePopularity() {
+        UUID challengeId = UUID.randomUUID();
+        List<UserSolutionDocument> userSolutions = Arrays.asList(
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId).bookmarked(true).build(),    // ok
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId).bookmarked(false).build(),   //
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId).bookmarked(true).build(),    // ok
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(UUID.randomUUID()).bookmarked(true).build()
 
-        List<UUID> challengeIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-        List<UUID> userIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-        List<UserSolutionDocument> userSolutionDocuments = new ArrayList<>();
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(0))
-                .userId(userIds.get(0))
-                .status("started")
-                .bookmarked(true)
-                .languageId(UUID.randomUUID())
-                .build());
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(1))
-                .userId(userIds.get(1))
-                .status("started")
-                .bookmarked(true)
-                .languageId(UUID.randomUUID())
-                .build());
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(2))
-                .userId(userIds.get(2))
-                .status("ended")
-                .bookmarked(false)
-                .languageId(UUID.randomUUID())
-                .solutionDocument(List.of(new SolutionDocument()))
-                .build());
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(3))
-                .userId(userIds.get(3))
-                .status("empty")
-                .bookmarked(true)
-                .languageId(UUID.randomUUID())
-                .build());
+        );
 
-        assertNotNull(userSolutionDocuments);
-        assertEquals(4, userSolutionDocuments.size());
+        when(userSolutionRepository.findAll()).thenReturn(Flux.fromIterable(userSolutions));
 
-        UUID challengeId = userSolutionDocuments.get(2).getChallengeId();
-        List<UserSolutionDocument> userSolutionDocumentsChallenge = statisticsService.getUserSolutionsChallenge(userSolutionDocuments, challengeId);
+        Mono<Integer> result = serviceChallengeStatistics.getChallengePopularity(challengeId);
 
-        assertEquals(1, userSolutionDocumentsChallenge.size());
-
-        float percentage = (float) userSolutionDocumentsChallenge.size()*100 / userSolutionDocuments.size();
-        assertEquals(25.00, percentage, 0.01);
+        assertNotNull(result);
+        assertEquals(2, result.block());  // 2 out of 4 user solutions have the specified challenge and are bookmarked
     }
+
+    @Test
+    void testGetGlobalChallengesIds() {
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+        List<UserSolutionDocument> userSolutions = Arrays.asList(
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId1).bookmarked(true).build(),
+                UserSolutionDocument.builder().uuid(UUID.randomUUID()).challengeId(challengeId2).bookmarked(false).build()
+        );
+
+        when(userSolutionRepository.findAll()).thenReturn(Flux.fromIterable(userSolutions));
+
+        Mono<List<UUID>> result = serviceChallengeStatistics.getGlobalChallengesIds();
+
+        assertNotNull(result);
+        List<UUID> globalChallengeIds = result.block();
+        assertEquals(2, globalChallengeIds.size());
+        assertTrue(globalChallengeIds.contains(challengeId1));
+        assertTrue(globalChallengeIds.contains(challengeId2));
+    }
+
+    @Test
+    void getUserSolutionsChallenge() {
+    }
+
+    // Add more tests based on requirements
 }
+
