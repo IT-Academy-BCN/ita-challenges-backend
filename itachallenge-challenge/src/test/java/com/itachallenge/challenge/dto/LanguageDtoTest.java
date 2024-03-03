@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import lombok.SneakyThrows;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -41,7 +43,7 @@ class LanguageDtoTest {
         LanguageDto dtoSerializable = languageDto;
         String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dtoSerializable);
         String jsonExpected = new ResourceHelper(languageJsonPath).readResourceAsString().orElse(null);
-        assertEquals(jsonExpected,jsonResult);
+        assertEquals(normalizeLineEndings(jsonExpected), normalizeLineEndings(jsonResult));
     }
 
     @Test
@@ -56,5 +58,18 @@ class LanguageDtoTest {
 
     static LanguageDto buildLanguageDto(UUID languageId, String languageName){
         return new LanguageDto(languageId,languageName);
+    }
+
+    private static String normalizeLineEndings(String json) {
+        try {
+            // Parse JSON string
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(json);
+
+            // Convert back to JSON string with consistent formatting
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error normalizing line endings", e);
+        }
     }
 }
