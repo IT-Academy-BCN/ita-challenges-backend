@@ -9,7 +9,7 @@ public class DefaultApi {
     public static String getDefaultApi(String apiName) {
         OpenAPI openAPIDefaultAuth = new OpenAPI();
         openAPIDefaultAuth.setInfo(new Info()
-                .title("itachallenge-Auth API Documentation")
+                .title("itachallenge-"+apiName.toUpperCase()+" API Documentation")
                 .version("1.0")
                 .description("API documentation for itachallenge-"+apiName+" is currently unavailable!."));
         ObjectMapper objectMapper = new ObjectMapper();
