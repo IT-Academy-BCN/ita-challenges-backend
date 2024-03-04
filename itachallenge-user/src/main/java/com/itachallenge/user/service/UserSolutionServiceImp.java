@@ -22,10 +22,8 @@ import java.util.UUID;
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
 
-    private final IUserSolutionRepository userSolutionRepository;
-
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
-
+    private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
 
     public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
@@ -49,25 +47,19 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-    @Override
-    public Mono<UserSolutionScoreDto> addSolution(String idUser,
-                                                  String idChallenge,
-                                                  String idLanguage,
-                                                  String status,
-                                                  String solutionText) {
-        /*
-        TODO - JVR
-           Necesario modificar: un usuario puede enviar varias veces la solución para el challenge hasta que esté en estado "ended"
-           aunque no podrá enviar varias soluciones para el mismo challenge
-       */
-
+    /*  addSolution and saveSolution
+       Un usuario puede enviar varias veces la solución para el challenge hasta que esté en estado "ended"
+       aunque no podrá enviar varias soluciones para el mismo challenge.
+    */
+    private Mono<UserSolutionScoreDto> processSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText, ChallengeStatus challengeStatus) {
         try {
             ChallengeStatus.valueOf(status.toUpperCase());
         } catch (Exception e) {
             return Mono.error(new IllegalArgumentException("Invalid challenge status: " + status));
         }
+
         if (status.equalsIgnoreCase("ended")) {
-            return Mono.error(new InternalServerErrorException("Internal Server Error Challenge ended!!!"));
+            return Mono.error(new InternalServerErrorException("Internal Server Error : Challenge ended!!!"));
         }
 
         log.info("Valid Status");
@@ -76,6 +68,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID challengeUuid = UUID.fromString(idChallenge);
         UUID languageUuid = UUID.fromString(idLanguage);
 
+        // IS A LIST OF ONE ELEMENT FOR THIS CASE
+        // BUT WE CAN CHANGE TO A LIMITED NUMBER OF SOLUTIONS
         List<SolutionDocument> solutionDocuments = List.of(
                 SolutionDocument.builder()
                         .uuid(UUID.randomUUID())
@@ -88,8 +82,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(ChallengeStatus.ENDED)
-                .score(13)
+                .status(challengeStatus)
+                .score(13)    // GET SCORE FROM SCORE SERVICE
                 .solutionDocument(solutionDocuments)
                 .build();
 
@@ -110,6 +104,17 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     return Mono.just(userSolutionScoreDto);
                 });
     }
+
+    //    IF  SEND-KEY PRESSED CHANGE A SOLUTION AND ChallengeStatus TO ENDED
+    @Override
+    public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText) {
+        return processSolution(idUser, idChallenge, idLanguage, status, solutionText, ChallengeStatus.ENDED);
+    }
+//    IF  SAVE-KEY PRESSED JUST CHANGE A SOLUTION BUT ChallengeStatus IS NOT ENDED
+//    @Override
+//    public Mono<UserSolutionScoreDto> saveSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText) {
+//        return processSolution(idUser, idChallenge, idLanguage, status, solutionText, ChallengeStatus.STARTED);
+//    }
 
     // Custom exception for internal server error
     static class InternalServerErrorException extends RuntimeException {
