@@ -47,24 +47,7 @@ public class UserController {
         return "Hello from ITA User!!!";
     }
 
-//    @ApiResponse(responseCode = "404", description = "Not Found")
-//    @ApiResponse(responseCode = "414", description = "URI too long")
-//    @Operation(summary = "Get Basic Info of Challenge")
-//    @GetMapping(value = "/statistics")
-//    public Mono<ResponseEntity<List<ChallengeStatisticsDto>>> getChallengesStatistics(
-//            @RequestParam("challenge") List<UUID> challengeIds,
-//            @RequestHeader HttpHeaders headers) {
-//
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        if (!challengeIds.isEmpty()) {
-//            return serviceChallengeStatistics.getChallengesStatistics(challengeIds)
-//                    .map(response -> new ResponseEntity<>(response, headers, HttpStatus.OK));
-//        } else {
-//            return Mono.just(new ResponseEntity<>(Collections.emptyList(),headers,HttpStatus.OK));
-//        }
-//    }
     @ApiResponse(responseCode = "404", description = "Not Found")
-    @ApiResponse(responseCode = "414", description = "URI too long")
     @Operation(summary = "Get Basic Info of Challenge")
     @GetMapping(value = "/statistics/{challengeId}")
     public Mono<ResponseEntity<?>> getChallengeStatistics(
