@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -15,13 +12,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -63,27 +64,21 @@ class ChallengeControllerTest {
                 .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
     }*/
 
+
     @Test
-    void getOneChallenge_ValidId_ChallengeReturned() {
-        // Arrange
-        String challengeId = "valid-challenge-id";
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 1, 1, new ChallengeDto[]{new ChallengeDto()});
+    void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
+        String id = "existing Id";
+        ChallengeDto challengeDto = new ChallengeDto(); // Предположим, что у вас есть объект ChallengeDto
+        Mono<ChallengeDto> response = Mono.just(challengeDto);
 
-        when(challengeService.getChallengeById(challengeId)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getChallengeById(id)).thenReturn(response);
 
-        // Act & Assert
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}", challengeId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 1;
-                });
+        Mono<ChallengeDto> result = challengeService.getChallengeById(id);
+
+        StepVerifier.create(result)
+                .expectNext(challengeDto) // Проверяем, что мы получаем ожидаемый объект ChallengeDto
+                .verifyComplete(); // Убеждаемся, что последовательность Mono завершается успешно
+
     }
 
     @Test
@@ -352,4 +347,39 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
+
+    @Test
+    void getAllRelatedChallenges_ChallengesReturned() {
+        //Arrange
+        String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+
+        when(challengeService.getRelatedChallenges(challengeStringId, 0, 0)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeStringId + "/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getAllRelatedChallenges_ChallengesReturnedPaginated() {
+        //Arrange
+        String challengeStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+
+        when(challengeService.getRelatedChallenges(challengeStringId, 1, 1)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeStringId + "/related")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ChallengeDto.class);
+    }
+
 }

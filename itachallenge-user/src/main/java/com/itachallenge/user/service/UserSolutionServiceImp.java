@@ -2,6 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.dtos.BookmarkRequestDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
@@ -105,6 +106,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
+
     //    IF  SEND-KEY PRESSED CHANGE A SOLUTION AND ChallengeStatus TO ENDED
     @Override
     public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText) {
@@ -122,5 +124,32 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             super(message);
         }
     }
-}
 
+
+    public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
+        UUID challengeId = UUID.fromString(uuidChallenge);
+        UUID languageId = UUID.fromString(uuidLanguage);
+        UUID userId = UUID.fromString(uuidUser);
+
+
+        return userSolutionRepository
+                .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
+                .flatMap(userSolutionDocument -> {
+                    userSolutionDocument.setBookmarked(bookmarked);
+                    return userSolutionRepository.save(userSolutionDocument).thenReturn(userSolutionDocument);
+                })
+                .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
+    }
+    private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
+        UserSolutionDocument newDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .bookmarked(bookmarked)
+                .build();
+
+        return userSolutionRepository.save(newDocument).thenReturn(newDocument);
+    }
+
+}

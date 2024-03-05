@@ -6,6 +6,7 @@ import com.itachallenge.user.enums.ChallengeStatus;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -23,6 +24,7 @@ import static org.junit.Assert.assertNotNull;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class UserScoreRepositoryTest {
 
     @Container

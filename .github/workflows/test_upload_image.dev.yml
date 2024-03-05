@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       -
+        name: Checkout code
+        uses: actions/checkout@v3
+      -
         name: Load env from file
         run: |
           echo "Loading env vars from .env file"
@@ -17,7 +20,26 @@ jobs:
           do
             key=$(echo $key | tr '.' '_')
             echo "$key=$value" >> $GITHUB_ENV
-          done < .github/workflows/env.CI.dev
+          done < conf/.env.CI.dev
+          echo "Done"
+      -
+        name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      -
+        name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+      -
+        name: Build
+        run:  |
+          ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build -PMICROSERVICE_VERSION=${{ env.MICROSERVICE_VERSION }}
+          cp ${{ env.MICROSERVICE_DEPLOY }}/build/libs/${{ env.MICROSERVICE_DEPLOY}}-${{ env.MICROSERVICE_VERSION }}.jar ${GITHUB_WORKSPACE}/${{ env.MICROSERVICE_DEPLOY }}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3

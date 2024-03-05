@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
@@ -20,5 +21,7 @@ public interface IUserSolutionService {
 //                                                   String idLanguage,
 //                                                   String status,
 //                                                   String solutionText);
+
+    Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked);
 
 }
