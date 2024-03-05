@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,11 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
+    @Value("${version}")
+    private String version;
+    @Value("${spring.application.name}")
+    private String appName;
+
     @Autowired
     private final PropertiesConfig config;
 
@@ -63,6 +69,7 @@ public class ChallengeController {
     ZMQClient zmqClient;
     @Autowired
     ChallengeRequestDto challengeInputDto;
+
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -106,6 +113,12 @@ public class ChallengeController {
                     log.error(e.getMessage());
                     return null;
                 });
+
+        log.info("~~~~~~~~~~~~~~~~~~~~~~");
+        log.info("Name: "+appName);
+        log.info("Version: "+version);
+
+
 
         return "Hello from ITA Challenge!!!";
     }
