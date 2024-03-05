@@ -114,7 +114,7 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
 
@@ -124,7 +124,7 @@ public class ChallengeController {
         return ResponseEntity.ok()
                 .body(response
                         .map(challengeDto -> (Object) challengeDto)
-                        .defaultIfEmpty(Collections.singletonMap("error", "Challenge with id " + id + " not found"))
+                        .defaultIfEmpty(Collections.singletonMap("message", "Challenge with id " + id + " not found."))
                 );
     }
 
