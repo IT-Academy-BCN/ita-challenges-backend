@@ -84,12 +84,11 @@ class ServiceChallengeStatisticsTest {
         StepVerifier.create(resultMono)
                 .expectNext(expectedValue)
                 .verifyComplete();
-
     }
 
     @Test
     void getChallengeUserPercentageTest() {
-
+        ServiceChallengeStatistics serviceChallengeStatistics = new ServiceChallengeStatistics(); //TODO Temporary fix
         List<UUID> challengeIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
         List<UUID> userIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
         List<UserSolutionDocument> userSolutionDocuments = new ArrayList<>();
