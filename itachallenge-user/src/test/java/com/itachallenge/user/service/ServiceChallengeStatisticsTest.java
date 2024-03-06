@@ -2,17 +2,13 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.SolutionDocument;
-import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -68,13 +64,6 @@ class ServiceChallengeStatisticsTest {
         UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
         boolean isBookmarked = true;
         long expectedValue = 2L;
-
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        UserSolutionDocument userSolutionDocument2 = new UserSolutionDocument();
-        userSolutionDocument.setChallengeId(idChallenge);
-        userSolutionDocument2.setChallengeId(idChallenge);
-        userSolutionDocument.setBookmarked(true);
-        userSolutionDocument2.setBookmarked(true);
 
         when(userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, isBookmarked))
                 .thenReturn(Mono.just(2L));
