@@ -259,4 +259,20 @@ public class ChallengeController {
                      limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
     }
+
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version.",
+                            content = @Content(schema = @Schema(implementation = String.class))
+                    )
+            }
+    )
+    public ResponseEntity<String> getVersion() {
+        return ResponseEntity.ok("Application version: "+version);
+    }
 }

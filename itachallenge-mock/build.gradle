@@ -17,7 +17,6 @@ jacoco{
 }
 
 group = 'ita.challenges'
-version = project.findProperty('MICROSERVICE_VERSION') ?: '1.0.1-RELEASE'
 
 repositories {
     mavenCentral()

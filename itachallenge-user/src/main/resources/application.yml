@@ -19,6 +19,8 @@ springdoc:
     enable: true
     path: "/api-docs"
 
+version: 1.0-SNAPSHOT
+
 server:
   port: 8764
 

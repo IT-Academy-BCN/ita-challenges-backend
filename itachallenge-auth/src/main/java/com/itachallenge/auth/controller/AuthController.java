@@ -5,6 +5,7 @@ import com.itachallenge.auth.service.IAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,9 @@ public class AuthController {
     @Autowired
     public IAuthService authService;
 
+    @Value("${spring.application.version}")
+    private String version;
+
     public AuthController() {
     }
 
@@ -36,6 +40,11 @@ public class AuthController {
                 .map(isValid -> isValid ?
                         new ResponseEntity<>("Token is valid", HttpStatus.OK) :
                         new ResponseEntity<>("Token is not valid", HttpStatus.UNAUTHORIZED));
+    }
+
+    @GetMapping("/version")
+    public ResponseEntity<String> getVersion() {
+        return ResponseEntity.ok("Application version: "+version);
     }
 
 }

@@ -3,6 +3,8 @@ package com.itachallenge.document.controller;
 import com.itachallenge.document.config.OpenApiConfig;
 import com.itachallenge.document.service.DocumentService;
 import io.swagger.v3.oas.models.OpenAPI;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RequestMapping
 public class DocumentController {
+
+    @Value("${version}")
+    private String version;
 
     private final OpenApiConfig openApiConfig;
     private final DocumentService documentService;
@@ -33,4 +38,10 @@ public class DocumentController {
             default -> openAPI != null ? openAPI.toString() : "";
         };
     }
+
+    @GetMapping("/version")
+    public ResponseEntity<String> getVersion() {
+        return ResponseEntity.ok("Application version: "+version);
+    }
+
 }

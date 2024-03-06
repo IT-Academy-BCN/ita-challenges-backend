@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;;
 import reactor.core.publisher.Mono;
@@ -12,6 +13,9 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/score")
 public class ScoreController {
+
+    @Value("${version}")
+    private String version;
 
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
 
@@ -34,6 +38,11 @@ public class ScoreController {
                 });
     }
 
+    @GetMapping("/version")
+    @Operation(summary = "Get Application Version")
+    public ResponseEntity<String> getVersion() {
+        return ResponseEntity.ok("Application version: "+version);
+    }
 
 }
 

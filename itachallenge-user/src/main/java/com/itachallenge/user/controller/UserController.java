@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +27,9 @@ import java.util.UUID;
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/user")
 public class UserController {
+
+    @Value("${version}")
+    private String version;
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     IServiceChallengeStatistics serviceChallengeStatistics;
@@ -131,5 +135,21 @@ public class UserController {
                         bookmarkRequestDto.getUuid_user(),
                         bookmarkRequestDto.isBookmarked())
                 .map(result -> ResponseEntity.ok(bookmarkRequestDto));
+    }
+
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version.",
+                            content = @Content(schema = @Schema(implementation = String.class))
+                    )
+            }
+    )
+    public ResponseEntity<String> getVersion() {
+        return ResponseEntity.ok("Application version: "+version);
     }
 }

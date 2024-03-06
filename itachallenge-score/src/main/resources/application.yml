@@ -16,6 +16,8 @@ springdoc:
 server:
   port: 8763
 
+version: 1.0-SNAPSHOT
+
 management:
   endpoints:
     web:
