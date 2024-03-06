@@ -37,7 +37,6 @@ public class UserController {
     @Autowired
     private IUserSolutionService userScoreService;
 
-
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
@@ -68,7 +67,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
+    public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
@@ -111,6 +110,26 @@ public class UserController {
         return serviceChallengeStatistics.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
                 .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
+
+
+    @GetMapping(path = "/statistics/percent/{idChallenge}")
+    @Operation(
+            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<Float> challengeUserPercentageStatistic(
+            @PathVariable("idChallenge")
+            @GenericUUIDValid(message = "Invalid UUID for challenge")
+            String idChallenge) {
+
+        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge));
+    }
+
 
     @PutMapping("/bookmark")
     @Operation(

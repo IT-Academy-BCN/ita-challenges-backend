@@ -10,6 +10,8 @@
 - [itachallenge-challenge](itachallenge-challenge/README.md).
 - [itachallenge-score](itachallenge-score/README.md). 
 - [itachallenge-user](itachallenge-user/README.md).
+- [itachallenge-document](itachallenge-document/README.md).
+- [itachallenge-auth](itachallenge-auth/README.md).
 - [Consul](docker/README.md). Gestión de microservicios.
 
 ### Guidelines de desarrollo

@@ -1,6 +1,8 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.document.SolutionDocument;
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +12,11 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -81,5 +85,53 @@ class ServiceChallengeStatisticsTest {
                 .expectNext(expectedValue)
                 .verifyComplete();
 
+    }
+
+    @Test
+    void getChallengeUserPercentageTest() {
+
+        List<UUID> challengeIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        List<UUID> userIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+        List<UserSolutionDocument> userSolutionDocuments = new ArrayList<>();
+        userSolutionDocuments.add(UserSolutionDocument.builder()
+                .challengeId(challengeIds.get(0))
+                .userId(userIds.get(0))
+                .status("started")
+                .bookmarked(true)
+                .languageId(UUID.randomUUID())
+                .build());
+        userSolutionDocuments.add(UserSolutionDocument.builder()
+                .challengeId(challengeIds.get(1))
+                .userId(userIds.get(1))
+                .status("started")
+                .bookmarked(true)
+                .languageId(UUID.randomUUID())
+                .build());
+        userSolutionDocuments.add(UserSolutionDocument.builder()
+                .challengeId(challengeIds.get(2))
+                .userId(userIds.get(2))
+                .status("ended")
+                .bookmarked(false)
+                .languageId(UUID.randomUUID())
+                .solutionDocument(List.of(new SolutionDocument()))
+                .build());
+        userSolutionDocuments.add(UserSolutionDocument.builder()
+                .challengeId(challengeIds.get(3))
+                .userId(userIds.get(3))
+                .status("empty")
+                .bookmarked(true)
+                .languageId(UUID.randomUUID())
+                .build());
+
+        assertNotNull(userSolutionDocuments);
+        assertEquals(4, userSolutionDocuments.size());
+
+        UUID challengeId = userSolutionDocuments.get(2).getChallengeId();
+        List<UserSolutionDocument> userSolutionDocumentsChallenge = serviceChallengeStatistics.getUserSolutionsChallenge(userSolutionDocuments, challengeId);
+
+        assertEquals(1, userSolutionDocumentsChallenge.size());
+
+        float percentage = (float) userSolutionDocumentsChallenge.size()*100 / userSolutionDocuments.size();
+        assertEquals(25.00, percentage, 0.01);
     }
 }
