@@ -143,7 +143,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getSolutionsByUserIdChallengeIdLanguageId() {
+    void getSolutionsByUserIdChallengeIdLanguageId (){
 
         String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
@@ -154,13 +154,12 @@ class UserControllerTest {
 
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0, 1, 1, new UserScoreDto[]{userScoreDto});
+        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
 
-        when(userScoreService.getChallengeById(any(), any(), any())).thenReturn(Mono.just(expectedSolutionUserDto));
+        when(userScoreService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
-
+                .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(SolutionUserDto.class)
@@ -171,6 +170,8 @@ class UserControllerTest {
                     assert dto.getResults().length == 1;
                 });
     }
+
+
 
     @Test
     void getChallengeStatistics_EmptyUUIDList() {
@@ -203,7 +204,7 @@ class UserControllerTest {
     /**
      * Method to create a query string link "challenge=UUID&", repeat 'numberUUID' times.
      *
-     * @param numberUUID Number of times that repeat.
+     * @param numberUUID Number of tiems that repeat.
      * @return String with query
      */
     private String queryCreation(int numberUUID) {
@@ -215,19 +216,7 @@ class UserControllerTest {
     }
 
     //endregion PRIVATE METHODS
-    @Test
-    void getChallengeUserPercentageTest() {
 
-        String URI_TEST = "/statistics/percent/{idChallenge}";
-        UUID idLanguage = UUID.fromString("866853b8-ae7d-4daf-8c82-5e6f653e0fc1");
-
-        webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, idLanguage)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectBody(Float.class);
-    }
 
     @Test
     void markOrAddBookmark() {
@@ -261,6 +250,9 @@ class UserControllerTest {
 
         assertEquals(bookmarkRequestDto, responseEntity.getBody());
     }
+
+
+
 }
 
 

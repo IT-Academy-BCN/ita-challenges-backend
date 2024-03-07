@@ -44,13 +44,7 @@ dependencies {
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
     implementation 'org.springdoc:springdoc-openapi-ui:1.5.13'
-    implementation 'io.swagger.core.v3:swagger-core:2.1.11'
-    implementation 'io.swagger.core.v3:swagger-models:2.1.11'
-    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
-
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-circuitbreaker-resilience4j', version: '3.1.0'
-
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
@@ -63,9 +57,6 @@ dependencies {
 }
 
 test {
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
     jvmArgs "-Xshare:off"
     useJUnitPlatform()
     finalizedBy jacocoTestReport

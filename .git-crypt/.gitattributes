@@ -2,6 +2,3 @@
 # .gitattributes file in the directory where your files are.
 * !filter !diff
 *.gpg binary
-# Set the default behavior for line endings
-* text=crlf
-

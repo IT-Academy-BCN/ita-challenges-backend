@@ -1,62 +1,25 @@
 package com.itachallenge.document.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.document.service.DocumentService;
-import io.swagger.v3.core.util.Json;
-import io.swagger.v3.oas.models.ExternalDocumentation;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
+@OpenAPIDefinition(info = @Info(title = "Ita Backend Challenges", version = "1.1.0-RELEASE", description = "Documentation API"))
 public class OpenApiConfig {
-    private final DocumentService documentService;
-
-    public OpenApiConfig(DocumentService documentService) {
-        this.documentService = documentService;
-    }
-
-    public static OpenAPI parseOpenApiSpec(String spec) {
-
-        ObjectMapper objectMapper = Json.mapper();
-        try {
-            return objectMapper.readValue(spec, OpenAPI.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Error parsing OpenAPI spec: " + e.getMessage());
-        }
-    }
 
     @Bean
-    public OpenAPI allOpenAPI() {
-
-        String jsonApiSpecChallenge = documentService.getSwaggerChallengeDocsStr();
-        String jsonApiSpecUser = documentService.getSwaggerUserDocsStr();
-        String jsonApiSpecScore = documentService.getSwaggerScoreDocsStr();
-        String jsonApiSpecAuth = documentService.getSwaggerAuthDocsStr();
-
-        OpenAPI challengeApi = parseOpenApiSpec(jsonApiSpecChallenge);
-        OpenAPI userApi = parseOpenApiSpec(jsonApiSpecUser);
-        OpenAPI scoreApi = parseOpenApiSpec(jsonApiSpecScore);
-        OpenAPI authApi = parseOpenApiSpec(jsonApiSpecAuth);
-
-        OpenAPI allApi = new OpenAPI();
-
-        allApi.setInfo(new Info()
-                .title("ITA Challenges APIs Documentation")
-                .version("1.0")
-                .description("Centralized documentation for ITA Challenges APIs. Explore and understand the available services for authentication, challenges, user management, scoring, and more."));
-        allApi.setExtensions(Map.of("itachallenge-challenge-api", challengeApi,
-                "itachallenge-user-api", userApi, "itachallenge-score-api", scoreApi, "itachallenge-auth-api", authApi));
-
-        ExternalDocumentation WIKIExternalDocs = new ExternalDocumentation()
-                .description("IT Academy Wiki")
-                .url("https://dev.api.itawiki.eurecatacademy.org/api/v1/api-docs");
-        allApi.setExternalDocs(WIKIExternalDocs);
-
-        return allApi;
+    public List<GroupedOpenApi> groupedOpenApis() {
+        return Arrays.asList(
+                GroupedOpenApi.builder().group("users").pathsToMatch("/api/users/**").build(),
+                GroupedOpenApi.builder().group("orders").pathsToMatch("/api/orders/**").build()
+                // Agrega más GroupedOpenApi para otros microservicios
+        );
     }
 }
 
