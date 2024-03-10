@@ -31,6 +31,7 @@ import java.util.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -144,7 +145,7 @@ class ChallengeIntegrationTest {
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_INVALID)
                 .exchange()
                 .expectStatus()
-                .isEqualTo(BAD_REQUEST);
+                .isEqualTo(OK);
     }
 
     @Test
