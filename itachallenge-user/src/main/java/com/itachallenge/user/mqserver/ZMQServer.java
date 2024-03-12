@@ -31,8 +31,7 @@ public class ZMQServer {
         this.SOCKET_ADDRESS = socketAddress;
     }
 
-    // TODO - Start automático. OJO rompe tests en sonarqube
-   // @PostConstruct
+    @PostConstruct
     public void init() {
         log.info("Starting ZMQ Server");
         new Thread(this::run).start();
@@ -41,7 +40,7 @@ public class ZMQServer {
     public void run(){
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind(SOCKET_ADDRESS);
+            socket.bind("tcp://*:5555");
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
