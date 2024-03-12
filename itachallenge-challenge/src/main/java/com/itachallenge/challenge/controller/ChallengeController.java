@@ -158,9 +158,9 @@ public class ChallengeController {
     )
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("message", response)))
                 .onErrorResume(ChallengeNotFoundException.class, e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error", e.getMessage())));
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
                 });
     }
 
