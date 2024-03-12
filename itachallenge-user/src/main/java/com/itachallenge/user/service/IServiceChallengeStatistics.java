@@ -8,6 +8,4 @@ import java.util.UUID;
 
 public interface IServiceChallengeStatistics {
     Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds);
-
-    Mono<Float> getChallengeUsersPercentage(UUID challengeId);
 }
