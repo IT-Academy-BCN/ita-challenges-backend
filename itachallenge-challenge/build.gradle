@@ -55,6 +55,9 @@ dependencies {
 
     testImplementation group: 'io.mongock', name: 'mongock-test-util', version: '5.4.0'
     testImplementation group: 'io.mongock', name: 'mongodb-springdata-v3-driver', version: '5.4.0'
+    implementation group: 'io.mongock', name: 'mongodb-reactive-driver', version: '5.4.0'
+
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
     testImplementation 'org.junit.jupiter:junit-jupiter'
