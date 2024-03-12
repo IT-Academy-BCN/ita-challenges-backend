@@ -2,7 +2,6 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
