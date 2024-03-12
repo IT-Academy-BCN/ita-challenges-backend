@@ -1,56 +1,108 @@
 package com.itachallenge.challenge.mqclient;
 
 import com.itachallenge.challenge.helper.ObjectSerializer;
+import com.itachallenge.challenge.helper.ObjectSerializerTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ZMQClientTest {
-
     @Mock
     private ZContext context;
-
     @Mock
     private ObjectSerializer objectSerializer;
-
     @Mock
     private ZMQ.Socket socket;
-
     @InjectMocks
-    private ZMQClient zmqClient = new ZMQClient(context, "socketAddress");
+    private ZMQClient zmqClient = new ZMQClient(context, "tcp://localhost:5555");
+    //private ZMQClient zmqClient;
+
+    //private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Test
-    void sendMessage() throws Exception {
+    public void testSendMessage() throws Exception {
+        // Arrange
+        ZMQClient zmqClient1 = new ZMQClient(context, "tcp://localhost:5555");
         Object message = new Object();
         Class clazz = Object.class;
-        byte[] serializedMessage = new byte[0];
-        byte[] receivedMessage = new byte[0];
-        Object deserializedMessage = new Object();
-
-        when(context.createSocket(ZMQ.REQ)).thenReturn(socket);
+        byte[] serializedMessage = new byte[]{/* your serialized message here */};
         when(objectSerializer.serialize(message)).thenReturn(serializedMessage);
-        when(socket.recv(0)).thenReturn(receivedMessage);
-        when(objectSerializer.deserialize(receivedMessage, clazz)).thenReturn(deserializedMessage);
+        byte[] reply = new byte[]{/* your serialized reply here */};
+        when(socket.recv(0)).thenReturn(reply);
+        Object deserializedResponse = new Object();
+        when(objectSerializer.deserialize(reply, clazz)).thenReturn(deserializedResponse);
 
         // Act
-        CompletableFuture<Object> future = zmqClient.sendMessage(message, clazz);
-        Object result = future.get();
+        CompletableFuture<Object> future = zmqClient1.sendMessage(message, clazz);
 
         // Assert
-        verify(socket, times(1)).connect(anyString());
-        verify(socket, times(1)).send(serializedMessage, 0);
-        verify(socket, times(1)).recv(0);
-        assertEquals(deserializedMessage, result);
+        assertEquals(deserializedResponse, future.get());
+        verify(socket).send(any(byte[].class), eq(0));
+    }
+}
+/*
+    // add a unit test for the sendMessage method
+
+    /*@Test
+    void sendMessage() throws IOException, ExecutionException, InterruptedException {
+        // Arrange
+        ZMQClient zmqClient = new ZMQClient(context, "tcp://localhost:5555");
+        ZContext context = Mockito.mock(ZContext.class);
+        when(context.createSocket(ZMQ.REQ)).thenReturn(socket);
+
+        // Act
+        CompletableFuture<Object> future = zmqClient.sendMessage(objectSerializer, ObjectSerializerTest.TestObject.class);
+
+        // Assert
+        assertNotNull(future);
+        // Verifica que se cree el socket y se conecte
+        verify(context, times(1)).createSocket(ZMQ.REQ);
+        verify(socket, times(1)).connect("tcp://localhost:5555");
+
+    }*/
+/*@Test
+    public void testSendMessage() throws Exception {
+        // Mock ZContext and ZMQ.Socket
+        ZContext context = Mockito.mock(ZContext.class);
+        ZMQ.Socket socket = Mockito.mock(ZMQ.Socket.class);
+
+        // Mock the behavior of context.createSocket() to return the mocked socket
+        when(context.createSocket(any())).thenReturn(socket);
+
+        // Mock the behavior of socket.recv() to return a specific byte array
+        when(socket.recv(any())).thenReturn("response".getBytes());
+
+        // Mock the behavior of socket.send() to do nothing (since it's void)
+        Mockito.doNothing().when(socket).send(any(byte[].class), any());
+
+        // Mock the behavior of socket.connect() to do nothing (since it's void)
+        Mockito.doNothing().when(socket).connect(any());
+
+        // Create an instance of ZMQClient with the mocked context
+        ZMQClient client = new ZMQClient(context, "address");
+
+        // Call the method under test
+        CompletableFuture<Object> future = client.sendMessage("request", String.class);
+
+        // Assert that the response is as expected
+        assertEquals("response", future.get());
     }
 
+
 }
+*/

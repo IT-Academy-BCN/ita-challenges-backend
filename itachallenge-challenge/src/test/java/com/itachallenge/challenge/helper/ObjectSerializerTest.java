@@ -6,7 +6,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Objects;
 
-class ObjectSerializerTest {
+public class ObjectSerializerTest {
 
     @Test
     void serializeAndDeserialize() throws IOException {
@@ -22,7 +22,7 @@ class ObjectSerializerTest {
         assertEquals(originalObject, deserializedObject);
     }
 
-    private static class TestObject {
+    public static class TestObject {
         private String name;
         private int value;
 

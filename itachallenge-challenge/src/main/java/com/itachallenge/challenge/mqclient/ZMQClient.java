@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.mqclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +18,7 @@ import java.util.concurrent.*;
 public class ZMQClient {
 
     private final ZContext context;
-    //private final String SOCKET_ADDRESS;
-    private final String socketAddress;
+    private final String SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQClient.class);
 
     @Autowired
@@ -30,10 +28,12 @@ public class ZMQClient {
 
     public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
-        this.socketAddress = socketAddress;
+        this.SOCKET_ADDRESS= socketAddress;
+
+        //luego borrar este log (ahora es para verificar que se inyecta la dirección del socket)
         log.info("Socket Address: {}", socketAddress);
-        // Agregar este registro para verificar la dirección del socket
-        //System.out.println("Socket Address: " + socketAddress);
+
+
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
@@ -42,7 +42,7 @@ public class ZMQClient {
 
             ZContext context = new ZContext();
                 ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
-                socket.connect(socketAddress);
+                socket.connect(SOCKET_ADDRESS);
 
                 Optional<byte[]> request = Optional.empty();
                 try {
@@ -64,7 +64,5 @@ public class ZMQClient {
         }, executorService);
         return future;
     }
-
-
 
 }

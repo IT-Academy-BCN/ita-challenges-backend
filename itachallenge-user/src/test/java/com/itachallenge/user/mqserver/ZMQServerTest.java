@@ -61,3 +61,4 @@ class ZMQServerTest {
         zmqServer.stop();
     }
 }
+
