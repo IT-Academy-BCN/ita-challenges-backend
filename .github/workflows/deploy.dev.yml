@@ -29,18 +29,18 @@ jobs:
           done < conf/.env.CI.dev
           echo "Done"
 
-      - name: Setup git-crypt
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git-crypt
+      #- name: Setup git-crypt
+        #run: |
+          #sudo apt-get update
+          #sudo apt-get install -y git-crypt
 
-      - name: Decrypt secrets
-        env:
-          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
-        run: |
-          echo "$GIT_CRYPT_KEY" | base64 --decode > git_crypt.key
-          git-crypt unlock git_crypt.key
-          rm git_crypt.key
+      #- name: Decrypt secrets
+        #env:
+          #GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+        #run: |
+          #echo "$GIT_CRYPT_KEY" | base64 --decode > git_crypt.key
+          #git-crypt unlock git_crypt.key
+          #rm git_crypt.key
 
       -
         name: Set up JDK 17
