@@ -2,4 +2,3 @@
 # .gitattributes file in the directory where your files are.
 * !filter !diff
 *.gpg binary
-
