@@ -176,6 +176,23 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void removeResourcesByUuid_InvalidFormatId_ReturnsBadUUIDException() {
+        // Arrange
+        String invalidId = "invalid_uuid";
+
+        // Act
+        Mono<String> result = challengeService.removeResourcesByUuid(invalidId);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(BadUUIDException.class)
+                .verify();
+
+        verifyNoInteractions(challengeRepository);
+        verifyNoInteractions(challengeConverter);
+    }
+
+    @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
         // Arrange
         int offset = 1;
