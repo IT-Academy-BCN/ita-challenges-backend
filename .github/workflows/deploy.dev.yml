@@ -12,6 +12,7 @@ on:
 
 jobs:
   docker:
+    if: (github.event_name == 'push' ) || (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
       -
@@ -27,6 +28,20 @@ jobs:
             echo "$key=$value" >> $GITHUB_ENV
           done < conf/.env.CI.dev
           echo "Done"
+
+      - name: Setup git-crypt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git-crypt
+
+      - name: Decrypt secrets
+        env:
+          GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
+        run: |
+          echo "$GIT_CRYPT_KEY" | base64 --decode > git_crypt.key
+          git-crypt unlock git_crypt.key
+          rm git_crypt.key
+
       -
         name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -84,6 +99,7 @@ jobs:
             echo "$key=$value"
           done < conf/.env.CI.dev
           echo "Done"
+
       -
         name: Execute SSH
         uses: appleboy/ssh-action@master
@@ -92,4 +108,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            ./deploy_frontend_dev.sh itachallenge-nginx ${{ env.MICROSERVICE_VERSION }}
+            ./deploy_backend_dev.sh ${{ env.MICROSERVICE_DEPLOY }} ${{ env.MICROSERVICE_VERSION }}
