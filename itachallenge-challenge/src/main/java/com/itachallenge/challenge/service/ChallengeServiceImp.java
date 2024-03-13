@@ -62,28 +62,30 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<String> removeResourcesByUuid(String id) {
-        UUID resourceId = validateUUID(id).block();
-        Flux<ChallengeDocument> challengesToUpdate = challengeRepository.findAllByResourcesContaining(resourceId);
+        return validateUUID(id)
+                .flatMap(resourceId -> {
+                    Flux<ChallengeDocument> challengesToUpdate = challengeRepository.findAllByResourcesContaining(resourceId);
 
-        return challengesToUpdate
-                .hasElements()
-                .flatMap(result -> {
-                    if(Boolean.FALSE.equals(result)){
-                        return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
-                    }
                     return challengesToUpdate
-                            .flatMap(challenge -> {
-                                Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
-                                updatedResources.remove(resourceId);
-                                challenge.setResources(updatedResources);
-                                return challengeRepository.save(challenge);
-                            })
-                            .then(Mono.just("Resource removed successfully"));
+                            .hasElements()
+                            .flatMap(result -> {
+                                if (Boolean.FALSE.equals(result)) {
+                                    return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
+                                }
+
+                                return challengesToUpdate
+                                        .flatMap(challenge -> {
+                                            Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
+                                            updatedResources.remove(resourceId);
+                                            challenge.setResources(updatedResources);
+                                            return challengeRepository.save(challenge);
+                                        })
+                                        .then(Mono.just("Resource removed successfully"));
+                            });
                 })
-                .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", resourceId))
+                .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", id))
                 .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
     }
-
     private Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge,UUID resourceId) {
         challenge.setResources(challenge.getResources().stream()
                 .filter(s -> !s.equals(resourceId))
