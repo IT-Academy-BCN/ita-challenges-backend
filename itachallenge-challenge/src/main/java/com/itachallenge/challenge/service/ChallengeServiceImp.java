@@ -89,15 +89,14 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-
     public Flux<ChallengeDto> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty, int offset, int limit) {
-        UUID languageIdMono = validateUUID(idLanguage).block();
-
-        return challengeConverter
-                .convertDocumentFluxToDtoFlux(
-                        challengeRepository
-                                .findByLevelAndLanguages_IdLanguage(difficulty, languageIdMono).skip(offset).take(limit)
-                        , ChallengeDto.class
+        return validateUUID(idLanguage)
+                .flatMapMany(languageId -> languageRepository.findByIdLanguage(languageId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage + " not found")))
+                        .flatMapMany(lang -> challengeConverter.convertDocumentFluxToDtoFlux(
+                                challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, languageId).skip(offset).take(limit),
+                                ChallengeDto.class
+                        ))
                 );
     }
 

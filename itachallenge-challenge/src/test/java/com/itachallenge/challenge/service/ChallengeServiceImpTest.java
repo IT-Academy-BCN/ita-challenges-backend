@@ -523,6 +523,10 @@ class ChallengeServiceImpTest {
         int limit = 2;
 
         UUID validLanguageId = UUID.fromString(languageId);
+
+        LanguageDocument foundLanguage = new LanguageDocument();
+        when(languageRepository.findByIdLanguage(validLanguageId)).thenReturn(Mono.just(foundLanguage));
+
         ChallengeDocument challenge1 = new ChallengeDocument();
         ChallengeDocument challenge2 = new ChallengeDocument();
         List<ChallengeDocument> challengeDocuments = List.of(challenge1, challenge2);
