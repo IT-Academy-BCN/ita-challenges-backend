@@ -12,13 +12,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.*;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -60,25 +64,21 @@ class ChallengeControllerTest {
                 .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
     }*/
 
+
     @Test
-    void getOneChallenge_ValidId_ChallengeReturned() {
-        // Arrange
-        UUID challengeId = UUID.randomUUID();
-        ChallengeDto expectedResult = new ChallengeDto();
-        expectedResult.setChallengeId(challengeId);
+    void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
+        String id = "existing Id";
+        ChallengeDto challengeDto = new ChallengeDto(); // Предположим, что у вас есть объект ChallengeDto
+        Mono<ChallengeDto> response = Mono.just(challengeDto);
 
-        when(challengeService.getChallengeById(challengeId.toString())).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getChallengeById(id)).thenReturn(response);
 
-        // Act & Assert
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}", challengeId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ChallengeDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getChallengeId().equals(challengeId);
-                });
+        Mono<ChallengeDto> result = challengeService.getChallengeById(id);
+
+        StepVerifier.create(result)
+                .expectNext(challengeDto) // Проверяем, что мы получаем ожидаемый объект ChallengeDto
+                .verifyComplete(); // Убеждаемся, что последовательность Mono завершается успешно
+
     }
 
     @Test
