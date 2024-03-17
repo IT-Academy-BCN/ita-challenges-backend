@@ -10,6 +10,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -70,7 +71,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .hasElements()
                             .flatMap(result -> {
                                 if (Boolean.FALSE.equals(result)) {
-                                    return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
+                                    return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found"));
                                 }
 
                                 return challengesToUpdate

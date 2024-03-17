@@ -9,6 +9,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -159,7 +160,7 @@ public class ChallengeController {
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap("message", response)))
-                .onErrorResume(ChallengeNotFoundException.class, e -> {
+                .onErrorResume(ResourceNotFoundException.class, e -> {
                     return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
                 });
     }
