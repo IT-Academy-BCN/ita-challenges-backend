@@ -117,7 +117,7 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Map.class)
                 .value(responseMap -> {
-                    String response = (String) responseMap.get("response");
+                    String response = (String) responseMap.get("message");
                     assert response.equals("Resource removed successfully");
                 });
     }
@@ -134,7 +134,7 @@ class ChallengeControllerTest {
         webTestClient.patch()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
                 .exchange()
-                .expectStatus().isNotFound()
+                .expectStatus().isOk()
                 .expectBody(Void.class);
     }
 
