@@ -2,7 +2,6 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.repository.IUserSolutionRepository;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,18 +25,14 @@ import java.util.UUID;
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/user")
 public class UserController {
-    //region ATTRIBUTES
+
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
     ServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
-    @Autowired
-    private IUserSolutionRepository userScoreRepository;
-    //endregion ATTRIBUTES
 
 
-    //region ENDPOINTS
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
@@ -50,27 +45,15 @@ public class UserController {
     @Operation(summary = "Get Basic Info of Challenge")
     @GetMapping(value = "/statistics")
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(@RequestParam("challenge") List<UUID> challengeIds) {
-        //region VARIABLES
         Mono<List<ChallengeStatisticsDto>> elements = null;
 
-        //endregion VARIABLES
-
-
-        //region ACTIONS
-        // INITIAL CHECKS
         if (!challengeIds.isEmpty()) {
-            // CALL SERVICE METHOD
             elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
         }
 
-        //endregion ACTIONS
-
-        // OUT
         return elements;
-
     }
 
-    //endregion ENDPOINTS
 
     @GetMapping(path = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
@@ -110,4 +93,24 @@ public class UserController {
                 );
     }
 
+    @PutMapping("/bookmark")
+    @Operation(
+            summary = "Mark or create a bookmark",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Bookmark marked or created successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkRequestDto>> markOrAddBookmark(
+
+            @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
+
+        return userScoreService.markAsBookmarked(
+
+                        bookmarkRequestDto.getUuid_challenge(),
+                        bookmarkRequestDto.getUuid_language(),
+                        bookmarkRequestDto.getUuid_user(),
+                        bookmarkRequestDto.isBookmarked())
+                .map(result -> ResponseEntity.ok(bookmarkRequestDto));
+    }
 }

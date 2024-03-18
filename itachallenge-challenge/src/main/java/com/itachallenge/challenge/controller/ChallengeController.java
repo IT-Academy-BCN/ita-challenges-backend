@@ -6,6 +6,10 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -16,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -24,6 +30,9 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @RestController
 @Validated
@@ -48,6 +57,12 @@ public class ChallengeController {
 
     @Autowired
     IChallengeService challengeService;
+
+    //TODO - pending externalize to service layer (internal comms)
+    @Autowired
+    ZMQClient zmqClient;
+    @Autowired
+    ChallengeRequestDto challengeInputDto;
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -81,6 +96,17 @@ public class ChallengeController {
                 .concat(scoreService.isPresent() ? scoreService.get() : NO_SERVICE));
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
+
+        challengeInputDto.setChallengeId(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"));
+
+        zmqClient.sendMessage(challengeInputDto, StatisticsResponseDto.class)
+                .thenAccept(response ->
+                        log.info("[ Response: " + ((StatisticsResponseDto) response).getPercent() + " ]"))
+                .exceptionally(e -> {
+                    log.error(e.getMessage());
+                    return null;
+                });
+
         return "Hello from ITA Challenge!!!";
     }
 
@@ -94,9 +120,18 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
-        return challengeService.getChallengeById(id);
+    public ResponseEntity<Mono<?>> getOneChallenge(@PathVariable("challengeId") String id) {
+        Mono<ChallengeDto> response = challengeService.getChallengeById(id);
+        boolean hasElement = response.hasElement().blockOptional().orElse(false);
+
+        if (!hasElement) {
+            Mono<String> monoString = Mono.just("Challenge with id " + id + " not found");
+            return ResponseEntity.ok().body(monoString);
+        } else {
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     }
+
 
     @DeleteMapping("/resources/{idResource}")
     @Operation(
@@ -120,8 +155,10 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Flux<ChallengeDto> getAllChallenges(@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
-                                               @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+    public Flux<ChallengeDto> getAllChallenges
+            (@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+             @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
+                     limit) {
         return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
     }
 
@@ -133,8 +170,9 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-                                                                                     @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
+            (@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
+             @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
     }
 
@@ -161,7 +199,8 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge, @PathVariable("idLanguage") String idLanguage) {
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
+                                                                    idChallenge, @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
@@ -188,5 +227,23 @@ public class ChallengeController {
                 });
     }
 
-
+    @GetMapping("challenges/{idChallenge}/related")
+    @Operation(
+            operationId = "Get the related challenges from a chosen challenge.",
+            summary = "Get to see the challenge title, creation date, level, popularity and languages.",
+            description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<GenericResultDto<ChallengeDto>> getRelated
+            (@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String
+                     idChallenge,
+             @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String
+                     offset,
+             @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
+                     limit) {
+        return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
 }

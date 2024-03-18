@@ -2,12 +2,9 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -20,6 +17,7 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
@@ -27,6 +25,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @DataMongoTest
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ChallengeRepositoryTest {
 
     @Container
@@ -37,7 +36,6 @@ class ChallengeRepositoryTest {
     static void initMongoProperties(DynamicPropertyRegistry registry) {
         System.out.println("container url: {}" + container.getReplicaSetUrl("challenges"));
         System.out.println("container host/port: {}/{}" + container.getHost() + " - " + container.getFirstMappedPort());
-
         registry.add("spring.data.mongodb.uri", () -> container.getReplicaSetUrl("challenges"));
     }
 
@@ -56,8 +54,20 @@ class ChallengeRepositoryTest {
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
 
-        ExampleDocument example = new ExampleDocument(uuid_1, "Example Text 1");
-        ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
+        Map<Locale, String> titleMap1 = new HashMap<>();
+            titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
+            titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
+            titleMap1.put(Locale.ENGLISH, "Loops");
+        Map<Locale, String> titleMap2 = new HashMap<>();
+            titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
+            titleMap2.put(Locale.forLanguageTag("CA"), "Selector");
+            titleMap2.put(Locale.ENGLISH, "Selector");
+        Map<Locale, String> titleMap3 = new HashMap<>();
+            titleMap3.put(Locale.forLanguageTag("ES"), "Coleccion");
+            titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
+            titleMap3.put(Locale.ENGLISH, "Collection");
+        ExampleDocument example = new ExampleDocument(uuid_1, titleMap1);
+        ExampleDocument example2 = new ExampleDocument(uuid_2, titleMap2);
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
@@ -69,16 +79,26 @@ class ChallengeRepositoryTest {
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
         Set<LanguageDocument> languageSet3 = Set.of(language1);
 
+        Map<Locale, String> description = new HashMap<>();
+            description.put(Locale.forLanguageTag("ES"), "Descripcion");
+            description.put(Locale.forLanguageTag("CA"), "Descripcio");
+            description.put(Locale.ENGLISH, "Description");
+
+        Map<Locale, String> note = new HashMap<>();
+            note.put(Locale.forLanguageTag("ES"), "Detalle nota");
+            note.put(Locale.forLanguageTag("CA"), "Detall nota");
+            note.put(Locale.ENGLISH, "Detail note");
+
         List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
-        DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
+        DetailDocument detail = new DetailDocument(description, exampleList, note);
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Loops", "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, titleMap1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "Switch", "EASY", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, titleMap2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, "If", "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2);
+                (uuid_3, titleMap3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
     }
@@ -163,21 +183,37 @@ class ChallengeRepositoryTest {
         );
     }
 
+/*  ***************************************************************************************
+    This test is no longer needed because the Title is no longer being considered as a searchable field
+    ***************************************************************************************
 
-    @DisplayName("Find by Title Test")
+    @DisplayName("Find by Title Test in different languages")
     @Test
     void findByChallengeTitleTest() {
 
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle("Loops");
-        firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTitle(), "Loops"),
-                () -> fail("Challenge with name Loops  not found."));
+        Map<Locale, String> titleMap1 = new HashMap<>();
+            titleMap1.put(Locale.forLanguageTag("ES"), "Titulo1 en español");
+            titleMap1.put(Locale.forLanguageTag("CA"), "Titol1 en catala");
+            titleMap1.put(Locale.ENGLISH, "Title1 in english");
+        Map<Locale, String> titleMap2 = new HashMap<>();
+            titleMap2.put(Locale.forLanguageTag("ES"), "Titulo2 en español");
+            titleMap2.put(Locale.forLanguageTag("CA"), "Titol2 en catala");
+            titleMap2.put(Locale.ENGLISH, "Title2 in english");
 
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle("If");
+
+        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle(titleMap1);
+        firstChallenge.blockOptional().ifPresentOrElse(
+                u -> assertEquals("Titol1 en catala", u.getTitle().get("CA")),
+                () -> fail("Challenge with name 'Titol1 en catala' in catalan not found."));
+
+        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle(titleMap2);
         secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTitle(), "If"),
-                () -> fail("Challenge with name If not found."));
+                u -> assertEquals("Titulo2 en español", u.getTitle().get("ES")),
+                () -> fail("Challenge with name 'Titulo2 en español' in spanish not found."));
     }
+
+
+ */
 
     @DisplayName("Find by Level and LanguagesId - Get one Test")
     @Test

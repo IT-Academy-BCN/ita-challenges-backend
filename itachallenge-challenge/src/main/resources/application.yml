@@ -30,6 +30,10 @@ management:
   security:
     enabled: false
 
+zeromq:
+  socket:
+    address: tcp://*:5555
+
 logging:
   level:
     root: INFO

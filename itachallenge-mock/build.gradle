@@ -17,7 +17,7 @@ jacoco{
 }
 
 group = 'ita.challenges'
-version = '1.0.0-RELEASE'
+version = project.findProperty('MICROSERVICE_VERSION') ?: '1.0.1-RELEASE'
 
 repositories {
     mavenCentral()
@@ -63,6 +63,6 @@ jacocoTestCoverageVerification {
 
 sonarqube {
     properties {
-        property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+        //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
 }

@@ -32,3 +32,6 @@
 * Pau Franco Toda - https://github.com/Parapau
 * Arnau Burguera Calles - https://github.com/ArnauBurguera
 * Fethi Abdellaoui - https://github.com/pounct
+* Gabriela Bustamante - https://github.com/GabyB73
+* Ana García - https://github.com/anagarcialainez
+* Alicia Gómez - https://github.com/Alicia-gy

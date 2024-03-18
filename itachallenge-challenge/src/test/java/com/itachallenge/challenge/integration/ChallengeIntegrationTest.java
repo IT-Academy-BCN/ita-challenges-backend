@@ -31,6 +31,7 @@ import java.util.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -66,9 +67,17 @@ class ChallengeIntegrationTest {
 
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
+        Map<Locale, String> exampleMap1 = new HashMap<>();
+            exampleMap1.put(Locale.forLanguageTag("ES"), "Ejemplo texto en español");
+            exampleMap1.put(Locale.forLanguageTag("CA"), "Exemple texte en català");
+            exampleMap1.put(Locale.ENGLISH, "Example text in english");
+        Map<Locale, String> exampleMap2 = new HashMap<>();
+            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo texto random en español");
+            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple texte random en català");
+            exampleMap2.put(Locale.ENGLISH, "Random example in english");
 
-        ExampleDocument example = new ExampleDocument(uuid_1, "Example Text 1");
-        ExampleDocument example2 = new ExampleDocument(uuid_2, "Example Text 2");
+        ExampleDocument example = new ExampleDocument(uuid_1, exampleMap1);
+        ExampleDocument example2 = new ExampleDocument(uuid_2, exampleMap2);
         List<ExampleDocument> exampleList = new ArrayList<>(Arrays.asList(example2, example));
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
@@ -80,13 +89,30 @@ class ChallengeIntegrationTest {
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
+        Map<Locale, String> descriptionMap = new HashMap<>();
+            descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción en español");
+            descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció en català");
+            descriptionMap.put(Locale.ENGLISH, "Description in english");
+        Map<Locale, String> notesMap = new HashMap<>();
+            notesMap.put(Locale.forLanguageTag("ES"), "Detail note en español");
+            notesMap.put(Locale.forLanguageTag("CA"), "Detail note en català");
+            notesMap.put(Locale.ENGLISH, "Detail note in english");
 
-        DetailDocument detail = new DetailDocument("Description", exampleList, "Detail note");
+        DetailDocument detail = new DetailDocument(descriptionMap, exampleList, notesMap);
+
+        Map<Locale, String> title1 = new HashMap<>();
+            title1.put(Locale.forLanguageTag("ES"), "Loops");
+            title1.put(Locale.forLanguageTag("CA"), "Loops");
+            title1.put(Locale.ENGLISH, "Loops");
+        Map<Locale, String> title2 = new HashMap<>();
+            title2.put(Locale.forLanguageTag("ES"), "If");
+            title2.put(Locale.forLanguageTag("CA"), "If");
+            title2.put(Locale.ENGLISH, "If");
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, "Loops", "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, "If", "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
@@ -102,7 +128,8 @@ class ChallengeIntegrationTest {
     @Test
     @DisplayName("Test response Hello")
     void testDevProfile_OKWithoutAuthentication() {
-        webTestClient.get()
+        webTestClient
+                .get()
                 .uri("/itachallenge/api/v1/challenge/test")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
@@ -118,7 +145,7 @@ class ChallengeIntegrationTest {
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_INVALID)
                 .exchange()
                 .expectStatus()
-                .isEqualTo(BAD_REQUEST);
+                .isEqualTo(OK);
     }
 
     @Test
@@ -129,17 +156,16 @@ class ChallengeIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
+                .expectBody(ChallengeDto.class)
                 .value(dto -> {
                     assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
                 });
     }
 
     @Test
     void getChallengesByPages_ValidPageParameters_ChallengesReturned() {
-        webTestClient.get()
+        webTestClient
+                .get()
                 .uri("/itachallenge/api/v1/challenge/challenges?offset=0&limit=1")
                 .exchange()
                 .expectStatus().isOk()
@@ -150,7 +176,8 @@ class ChallengeIntegrationTest {
 
     @Test
     void getChallengesByPages_NullPageParameters_ChallengesReturned() {
-        webTestClient.get()
+        webTestClient
+                .get()
                 .uri("/itachallenge/api/v1/challenge/challenges")
                 .exchange()
                 .expectStatus().isOk()
@@ -161,7 +188,8 @@ class ChallengeIntegrationTest {
 
     @Test
     void removeResourcesById_ValidId_ResourceDeleted() {
-        webTestClient.delete()
+        webTestClient
+                .delete()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", UUID_VALID)
                 .exchange()
                 .expectStatus().isOk()

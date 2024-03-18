@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -46,13 +44,33 @@ class ChallengeDocumentToDtoConverterTest {
         UUID relatedChallengesRandomId = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        String title = "Java";
+        Map<Locale, String> title = new HashMap<>();
+            title.put(Locale.forLanguageTag("ES"), "Título");
+            title.put(Locale.forLanguageTag("CA"), "Títol");
+            title.put(Locale.ENGLISH, "Title");
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, "Example text"),
-                new ExampleDocument(exampleRandomId, "Random example"));
-        DetailDocument detail = new DetailDocument("Some detail", exampleDocumentList, "Notes");
+        Map<Locale, String> exampleMap1 = new HashMap<>();
+            exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
+            exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
+            exampleMap1.put(Locale.ENGLISH, "Example text");
+        Map<Locale, String> exampleMap2 = new HashMap<>();
+            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo random");
+            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple random");
+            exampleMap2.put(Locale.ENGLISH, "Random example");
+        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap1),
+                new ExampleDocument(exampleRandomId, exampleMap2));
+        Map<Locale, String> descriptionMap = new HashMap<>();
+            descriptionMap.put(Locale.forLanguageTag("ES"), "Detalle");
+            descriptionMap.put(Locale.forLanguageTag("CA"), "Detall");
+            descriptionMap.put(Locale.ENGLISH, "Some detail");
+        Map<Locale, String> notesMap = new HashMap<>();
+            notesMap.put(Locale.forLanguageTag("ES"), "Notas");
+            notesMap.put(Locale.forLanguageTag("CA"), "Notes");
+            notesMap.put(Locale.ENGLISH, "Notes");
+        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+
         Integer popularity = 0;
         Float percentage = 0.0f;
 
@@ -68,12 +86,12 @@ class ChallengeDocumentToDtoConverterTest {
                 Set.of(languageDoc1, languageDoc2),
                 List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
 
-        challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate,
+        challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
                 popularity, percentage);
 
-        challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate,
+        challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
                 popularity, percentage);
@@ -99,28 +117,28 @@ class ChallengeDocumentToDtoConverterTest {
 
         Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeDoc1, challengeDoc2), ChallengeDto.class);
 
-        ChallengeDto expectedDto1 = challengeDto1;
-        ChallengeDto expectedDto2 = challengeDto2;
+
 
         assertThat(resultDto.count().block()).isEqualTo(Long.valueOf(2));
 
         assertThat(resultDto.blockFirst()).usingRecursiveComparison()
                 .ignoringFields("percentage", "popularity")
-                .isEqualTo(expectedDto1);
+                .isEqualTo(challengeDto1);
         assertThat(resultDto.blockLast()).usingRecursiveComparison()
                 .ignoringFields("percentage", "popularity")
-                .isEqualTo(expectedDto2);
+                .isEqualTo(challengeDto2);
     }
 
 
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
         when(challengeDocMocked.getLevel()).thenReturn(level);
+        when(challengeDocMocked.getDetail()).thenReturn(detail);
         when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
         when(challengeDocMocked.getLanguages()).thenReturn(languages);
         when(challengeDocMocked.getSolutions()).thenReturn(solutions);
