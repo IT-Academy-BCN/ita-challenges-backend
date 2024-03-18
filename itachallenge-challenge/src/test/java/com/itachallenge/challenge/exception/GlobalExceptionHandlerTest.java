@@ -166,6 +166,20 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    void testHandleResourceNotFoundException() {
+        // Arrange
+        ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
+
+        // Assert
+        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Resource not found"));
+    }
+
+    @Test
     void test_HandleBadUUIDException() {
         // Arrange
         BadUUIDException badUUIDException = new BadUUIDException("Invalid Id format");
