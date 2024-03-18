@@ -2,10 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.dtos.BookmarkRequestDto;
-import com.itachallenge.user.dtos.SolutionUserDto;
-import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -106,11 +103,15 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-
     //    IF  SEND-KEY PRESSED CHANGE A SOLUTION AND ChallengeStatus TO ENDED
     @Override
-    public Mono<UserSolutionScoreDto> addSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText) {
-        return processSolution(idUser, idChallenge, idLanguage, status, solutionText, ChallengeStatus.ENDED);
+    public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
+        return processSolution(userSolutionDto.getUserId(),
+                userSolutionDto.getChallengeId(),
+                userSolutionDto.getLanguageId(),
+                userSolutionDto.getStatus(),
+                userSolutionDto.getSolutionText(),
+                ChallengeStatus.ENDED);
     }
 //    IF  SAVE-KEY PRESSED JUST CHANGE A SOLUTION BUT ChallengeStatus IS NOT ENDED
 //    @Override

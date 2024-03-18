@@ -80,17 +80,12 @@ public class UserController {
                             content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "500", description = "challenge status ended",
                             content = {@Content(schema = @Schema())})
-            }
+            } //TODO review
     )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
-        return userScoreService.addSolution(
-                        userSolutionDto.getUserId(),
-                        userSolutionDto.getChallengeId(),
-                        userSolutionDto.getLanguageId(),
-                        userSolutionDto.getStatus(),
-                        userSolutionDto.getSolutionText())
+        return userScoreService.addSolution(userSolutionDto)
                 .map(savedUserSolutionScoreDto ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(savedUserSolutionScoreDto)
                 );

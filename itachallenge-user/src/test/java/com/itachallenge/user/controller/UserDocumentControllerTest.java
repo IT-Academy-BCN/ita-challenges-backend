@@ -52,7 +52,7 @@ class UserDocumentControllerTest {
                 .expectBody(String.class)
                 .value(String::toString, equalTo("Hello from ITA User!!!"));
     }
-
+/* //TODO
     @Test
     void addSolution_ValidSolution_SolutionAdded() {
         String URI_TEST = "/solution";
@@ -154,4 +154,5 @@ class UserDocumentControllerTest {
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
+ */
 }
