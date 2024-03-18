@@ -177,11 +177,6 @@ public class ChallengeController {
                                                                    @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
         return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty,(Integer.parseInt(offset)), Integer.parseInt(limit));
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
-            (@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-             @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
-      
     }
 
     @GetMapping("/language")
