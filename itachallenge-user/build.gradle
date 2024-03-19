@@ -33,6 +33,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.projectlombok:lombok:1.18.20'
+    implementation project(path: ':itachallenge-challenge')
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
     implementation 'javax.validation:validation-api:2.0.1.Final'
