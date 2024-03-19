@@ -80,7 +80,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error(new IllegalArgumentException("Invalid challenge status: status was already ENDED")); //TODO CHANGE EXCEPTION TYPE
+                        return Mono.error(new EndedChallengeException("Invalid challenge status: status was already ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
                     existingSolution.setStatus(challengeStatus);
@@ -111,10 +111,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return challengeStatus;
     }
 
-
-    // Custom exception for internal server error
-    static class InternalServerErrorException extends RuntimeException {
-        public InternalServerErrorException(String message) {
+    static class EndedChallengeException extends RuntimeException {
+        public EndedChallengeException(String message) {
             super(message);
         }
     }
