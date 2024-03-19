@@ -45,79 +45,73 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-    /*  addSolution and saveSolution
-       Un usuario puede enviar varias veces la solución para el challenge hasta que esté en estado "ended"
-       aunque no podrá enviar varias soluciones para el mismo challenge.
-    */
-    private Mono<UserSolutionScoreDto> processSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText, ChallengeStatus challengeStatus) {
-        try {
-            ChallengeStatus.valueOf(status.toUpperCase());
-        } catch (Exception e) {
-            return Mono.error(new IllegalArgumentException("Invalid challenge status: " + status));
-        }
+    private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
+        return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
+                .flatMap(existingSolution -> {
+                    if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
+                        return Mono.error((new IllegalArgumentException("Invalid challenge status: "))); //TODO CHANGE EXCEPTION TYPE
+                    }
+                    existingSolution.setSolutionDocument(solutionDocuments);
+                    existingSolution.setStatus(challengeStatus);
+                    return userSolutionRepository.save(existingSolution);
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                            .uuid(UUID.randomUUID())
+                            .userId(userUuid)
+                            .challengeId(challengeUuid)
+                            .languageId(languageUuid)
+                            .status(challengeStatus)
+                            .score(13)    // TODO GET SCORE FROM SCORE SERVICE
+                            .solutionDocument(solutionDocuments)
+                            .build();
+                    return userSolutionRepository.save(userSolutionDocument);
+                }));
+    }
 
-        if (status.equalsIgnoreCase("ended")) {
-            return Mono.error(new InternalServerErrorException("Internal Server Error : Challenge ended!!!"));
-        }
+    private ChallengeStatus validateChallengeStatus(String status) {
+        ChallengeStatus challengeStatus;
 
+        if(status == null || status.isEmpty()) {
+            challengeStatus = ChallengeStatus.STARTED;
+        } else if (status.equalsIgnoreCase("ENDED")){
+            challengeStatus = ChallengeStatus.ENDED;
+        } else {
+            throw new IllegalArgumentException("Invalid challenge status: " + status);
+        }
         log.info("Valid Status");
 
-        UUID userUuid = UUID.fromString(idUser);
-        UUID challengeUuid = UUID.fromString(idChallenge);
-        UUID languageUuid = UUID.fromString(idLanguage);
+        return challengeStatus;
+    }
 
-        // IS A LIST OF ONE ELEMENT FOR THIS CASE
-        // BUT WE CAN CHANGE TO A LIMITED NUMBER OF SOLUTIONS
-        List<SolutionDocument> solutionDocuments = List.of(
+    @Override
+    public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
+        UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
+        UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
+        UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
+        ChallengeStatus challengeStatus;
+        List<SolutionDocument> solutionDocuments;
+
+        challengeStatus = validateChallengeStatus(userSolutionDto.getStatus());
+        solutionDocuments = List.of(
                 SolutionDocument.builder()
                         .uuid(UUID.randomUUID())
-                        .solutionText(solutionText)
+                        .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
 
-        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(challengeStatus)
-                .score(13)    // GET SCORE FROM SCORE SERVICE
-                .solutionDocument(solutionDocuments)
-                .build();
-
-        if (userSolutionDocument.getUuid() == null) {
-            userSolutionDocument.setUuid(UUID.randomUUID());
-        }
-
-        return userSolutionRepository.save(userSolutionDocument)
-                .flatMap(savedDocument -> {
-                    UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
-                            .userId(idUser)
-                            .languageId(idLanguage)
-                            .challengeId(idChallenge)
-                            .solutionText(solutionText)
-                            .score(savedDocument.getScore())
-                            .build();
-
-                    return Mono.just(userSolutionScoreDto);
-                });
+        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
+            .flatMap(savedDocument -> {
+                UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
+                    .userId(String.valueOf(savedDocument.getUserId()))
+                    .languageId(String.valueOf(savedDocument.getLanguageId()))
+                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                    .score(savedDocument.getScore())
+                    .build();
+            return Mono.just(userSolutionScoreDto);
+        });
     }
-
-    //    IF  SEND-KEY PRESSED CHANGE A SOLUTION AND ChallengeStatus TO ENDED
-    @Override
-    public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
-        return processSolution(userSolutionDto.getUserId(),
-                userSolutionDto.getChallengeId(),
-                userSolutionDto.getLanguageId(),
-                userSolutionDto.getStatus(),
-                userSolutionDto.getSolutionText(),
-                ChallengeStatus.ENDED);
-    }
-//    IF  SAVE-KEY PRESSED JUST CHANGE A SOLUTION BUT ChallengeStatus IS NOT ENDED
-//    @Override
-//    public Mono<UserSolutionScoreDto> saveSolution(String idUser, String idChallenge, String idLanguage, String status, String solutionText) {
-//        return processSolution(idUser, idChallenge, idLanguage, status, solutionText, ChallengeStatus.STARTED);
-//    }
 
     // Custom exception for internal server error
     static class InternalServerErrorException extends RuntimeException {
