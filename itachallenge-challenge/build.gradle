@@ -49,13 +49,12 @@ dependencies {
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
-    compileOnly group: 'io.mongock', name: 'mongock-springboot', version: '5.4.0'
-    implementation group: 'io.mongock', name: 'mongock-springboot-base', version: '5.4.0'
-    implementation group: 'io.mongock', name: 'mongock-utils', version: '5.4.0'
+    //implementation "io.mongock:mongock:5.0.32"
+    implementation "io.mongock:mongock-springboot:5.0.32"
 
-    testImplementation group: 'io.mongock', name: 'mongock-test-util', version: '5.4.0'
-    testImplementation group: 'io.mongock', name: 'mongodb-springdata-v3-driver', version: '5.4.0'
-    implementation group: 'io.mongock', name: 'mongodb-reactive-driver', version: '5.4.0'
+    implementation "io.mongock:mongock:mongock-bom:5.0.32"
+    implementation 'io.mongock:mongodb-reactive-driver:5.0.39'
+
 
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
