@@ -52,26 +52,20 @@ class UserDocumentControllerTest {
                 .expectBody(String.class)
                 .value(String::toString, equalTo("Hello from ITA User!!!"));
     }
-/* //TODO
     @Test
-    void addSolution_ValidSolution_SolutionAdded() {
+    void addSolutionIfValidSolutionThenSolutionAdded_test() {
         String URI_TEST = "/solution";
         UserSolutionDto userSolutionDto = new UserSolutionDto();
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setStatus("STARTED");
         userSolutionDto.setSolutionText("This is a test solution");
 
         UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
                 userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
                 userSolutionDto.getSolutionText(), 13);
 
-        when(userSolutionService.addSolution(userSolutionDto.getUserId(),
-                        userSolutionDto.getChallengeId(),
-                        userSolutionDto.getLanguageId(),
-                        userSolutionDto.getStatus(),
-                        userSolutionDto.getSolutionText()))
+        when(userSolutionService.addSolution(userSolutionDto))
                 .thenReturn(Mono.just(expectedResponse));
 
         webTestClient.put()
@@ -88,27 +82,20 @@ class UserDocumentControllerTest {
                     assert dto.getLanguageId() != null;
                     assert dto.getScore() >= 0;
 
-                    verify(userSolutionService, times(1)).addSolution(
-                            userSolutionDto.getUserId(),
-                            userSolutionDto.getChallengeId(),
-                            userSolutionDto.getLanguageId(),
-                            userSolutionDto.getStatus(),
-                            userSolutionDto.getSolutionText()
-                    );
+                    verify(userSolutionService).addSolution(userSolutionDto);
                 });
     }
 
     @Test
-    void addSolution_InvalidValues_BadRequest() {
+    void addSolutionIfInvalidValuesThenBadRequest_test() {
         String URI_TEST = "/solution";
 
         List<UserSolutionDto> testCases = Arrays.asList(
-                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "STARTED", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", "STARTED", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", "STARTED", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "", "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", "STARTED", "")
-
+                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, ""),
+                new UserSolutionDto()
         );
 
         for (UserSolutionDto testCase : testCases) {
@@ -118,22 +105,12 @@ class UserDocumentControllerTest {
                     .bodyValue(testCase)
                     .exchange()
                     .expectStatus().isBadRequest();
+
+            verifyNoInteractions(userSolutionService);
         }
     }
 
-    @Test
-    void addSolution_EmptyRequestBody_BadRequest() {
-        String URI_TEST = "/solution";
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-
-        webTestClient.put()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(userSolutionDto)
-                .exchange()
-                .expectStatus().isBadRequest();
-    }
-
+/*
     @Test
     void addSolution_ServiceThrowsException_InternalServerError() {
         String URI_TEST = "/solution";
@@ -154,5 +131,6 @@ class UserDocumentControllerTest {
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
+    +
  */
 }
