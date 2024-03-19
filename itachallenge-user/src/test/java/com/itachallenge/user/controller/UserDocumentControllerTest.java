@@ -5,6 +5,7 @@ import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ class UserDocumentControllerTest {
                 .expectBody(String.class)
                 .value(String::toString, equalTo("Hello from ITA User!!!"));
     }
+    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 202 ACCEPTED")
     @Test
     void addSolutionIfValidSolutionThenSolutionAdded_test() {
         String URI_TEST = "/solution";
@@ -85,7 +87,7 @@ class UserDocumentControllerTest {
                     verify(userSolutionService).addSolution(userSolutionDto);
                 });
     }
-
+    @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
     @Test
     void addSolutionIfInvalidValuesThenBadRequest_test() {
         String URI_TEST = "/solution";
@@ -109,10 +111,9 @@ class UserDocumentControllerTest {
             verifyNoInteractions(userSolutionService);
         }
     }
-
-/*
+    @DisplayName("UserDocumentControllerTest - addSolution - return 500 Internal Server Error if Service returns runtime exception")
     @Test
-    void addSolution_ServiceThrowsException_InternalServerError() {
+    void addSolutionServiceThrowsExceptionInternalServerError_test() {
         String URI_TEST = "/solution";
         UserSolutionDto userSolutionDto = new UserSolutionDto();
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
@@ -121,8 +122,8 @@ class UserDocumentControllerTest {
         userSolutionDto.setStatus("STARTED");
         userSolutionDto.setSolutionText("This is a test solution");
 
-        when(userSolutionService.addSolution(any(), any(), any(),any(), any()))
-                .thenReturn(Mono.error(new RuntimeException("Test exception")));
+        when(userSolutionService.addSolution(userSolutionDto))
+                .thenReturn(Mono.error(new RuntimeException("Invalid challenge status: status was already ENDED")));
 
         webTestClient.put()
                 .uri(CONTROLLER_URL + URI_TEST)
@@ -131,6 +132,4 @@ class UserDocumentControllerTest {
                 .exchange()
                 .expectStatus().is5xxServerError();
     }
-    +
- */
 }

@@ -168,7 +168,7 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
 
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns IllegalArgumentException when solution's status was previously set to ENDED")
+    @DisplayName("UserSolutionServiceImpTest - addSolution returns EndedChallengeException when solution's status was previously set to ENDED")
     @Test
     void addSolutionWithEndedStatusWhenInvalid_test() {
         UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
@@ -179,7 +179,7 @@ class UserSolutionServiceImpTest {
 
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
-                        throwable -> throwable instanceof IllegalArgumentException
+                        throwable -> throwable instanceof UserSolutionServiceImp.EndedChallengeException
                         && throwable.getMessage().equals("Invalid challenge status: status was already ENDED")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
