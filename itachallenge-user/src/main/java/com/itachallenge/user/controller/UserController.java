@@ -2,8 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,7 +28,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    ServiceChallengeStatistics serviceChallengeStatistics;
+    IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
 
@@ -91,6 +91,24 @@ public class UserController {
                 .map(savedScoreDto ->
                         ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
                 );
+    }
+
+    @GetMapping(path = "/statistics/percent/{idChallenge}")
+    @Operation(
+            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<Float> challengeUserPercentageStatistic(
+            @PathVariable("idChallenge")
+            @GenericUUIDValid(message = "Invalid UUID for challenge")
+            String idChallenge) {
+
+        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge));
     }
 
     @PutMapping("/bookmark")

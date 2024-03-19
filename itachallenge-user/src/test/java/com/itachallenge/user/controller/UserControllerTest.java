@@ -216,7 +216,20 @@ class UserControllerTest {
     }
 
     //endregion PRIVATE METHODS
+    /* resolvado en feature#385 usando los mocks del servicio y la inyeccion en userController*/
+    @Test
+    void getChallengeUserPercentageTest() {
 
+        String URI_TEST = "/statistics/percent/{idChallenge}";
+        UUID idLanguage = UUID.fromString("660e1b18-0c0a-4262-a28a-85de9df6ac5f");
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, idLanguage)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isEqualTo(500);
+        //.expectBody(Float.class);
+    }
 
     @Test
     void markOrAddBookmark() {

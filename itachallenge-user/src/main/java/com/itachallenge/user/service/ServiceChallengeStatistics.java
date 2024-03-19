@@ -1,6 +1,9 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.repository.IUserSolutionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -13,6 +16,8 @@ import java.util.UUID;
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     //region ATTRIBUTES
     SecureRandom random = new SecureRandom();
+    @Autowired
+    private IUserSolutionRepository userSolutionRepository;
 
     //endregion ATTRIBUTES
 
@@ -49,6 +54,31 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
     }
 
-    //endregion METHODS
+    @Override
+    public Mono<Float> getChallengeUsersPercentage(UUID challengeId) {
 
+        float percentage;
+
+        // List of all UserSolution with all status started and ended and empty
+        List<UserSolutionDocument> userSolutionsV1 = getUserSolutions();
+
+        // // List of all UserSolution of challenge with id challengeId
+        List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutionsV1, challengeId);
+
+        percentage = ((float) userSolutionsChallenge.size()*100 / userSolutionsV1.size());
+        return Mono.just(percentage);
+    }
+
+    List<UserSolutionDocument> getUserSolutions() {
+        return userSolutionRepository
+                .findAll()
+                .collectList().block();
+    }
+
+    List<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
+        return userSolutions.stream()
+                .filter(
+                        us -> challengeId.equals(us.getChallengeId())
+                ).toList();
+    }
 }
