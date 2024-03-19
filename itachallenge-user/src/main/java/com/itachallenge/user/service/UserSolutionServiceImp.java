@@ -45,11 +45,42 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
+
+    @Override
+    public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
+        UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
+        UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
+        UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
+        String status = userSolutionDto.getStatus();
+        ChallengeStatus challengeStatus;
+        List<SolutionDocument> solutionDocuments;
+
+        solutionDocuments = List.of(
+                SolutionDocument.builder()
+                        .uuid(UUID.randomUUID())
+                        .solutionText(userSolutionDto.getSolutionText())
+                        .build()
+        );
+        challengeStatus = determineChallengeStatus(status);
+
+        if (challengeStatus == null) {
+            return Mono.error(new IllegalArgumentException("Invalid challenge status: " + status));
+        }
+        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
+            .map(savedDocument -> UserSolutionScoreDto.builder()
+                    .userId(String.valueOf(savedDocument.getUserId()))
+                    .languageId(String.valueOf(savedDocument.getLanguageId()))
+                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                    .score(savedDocument.getScore())
+                    .build());
+    }
+
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error((new IllegalArgumentException("Invalid challenge status: "))); //TODO CHANGE EXCEPTION TYPE
+                        return Mono.error(new IllegalArgumentException("Invalid challenge status: status was already ENDED")); //TODO CHANGE EXCEPTION TYPE
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
                     existingSolution.setStatus(challengeStatus);
@@ -69,49 +100,17 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 }));
     }
 
-    private ChallengeStatus validateChallengeStatus(String status) {
-        ChallengeStatus challengeStatus;
+    private ChallengeStatus determineChallengeStatus(String status) {
+        ChallengeStatus challengeStatus = null;
 
         if(status == null || status.isEmpty()) {
             challengeStatus = ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase("ENDED")){
+        } else if (status.equalsIgnoreCase("ENDED")) {
             challengeStatus = ChallengeStatus.ENDED;
-        } else {
-            throw new IllegalArgumentException("Invalid challenge status: " + status);
         }
-        log.info("Valid Status");
-
         return challengeStatus;
     }
 
-    @Override
-    public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
-        UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
-        UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
-        UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
-        ChallengeStatus challengeStatus;
-        List<SolutionDocument> solutionDocuments;
-
-        challengeStatus = validateChallengeStatus(userSolutionDto.getStatus());
-        solutionDocuments = List.of(
-                SolutionDocument.builder()
-                        .uuid(UUID.randomUUID())
-                        .solutionText(userSolutionDto.getSolutionText())
-                        .build()
-        );
-
-        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-            .flatMap(savedDocument -> {
-                UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
-                    .userId(String.valueOf(savedDocument.getUserId()))
-                    .languageId(String.valueOf(savedDocument.getLanguageId()))
-                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                    .score(savedDocument.getScore())
-                    .build();
-            return Mono.just(userSolutionScoreDto);
-        });
-    }
 
     // Custom exception for internal server error
     static class InternalServerErrorException extends RuntimeException {
