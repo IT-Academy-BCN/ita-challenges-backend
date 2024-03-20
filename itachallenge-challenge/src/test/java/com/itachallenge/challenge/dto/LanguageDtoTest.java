@@ -58,6 +58,7 @@ class LanguageDtoTest {
     static LanguageDto buildLanguageDto(UUID languageId, String languageName){
         return new LanguageDto(languageId,languageName);
     }
+
     private static String normalizeLineEndings(String json) {
         try {
             // Parse JSON string

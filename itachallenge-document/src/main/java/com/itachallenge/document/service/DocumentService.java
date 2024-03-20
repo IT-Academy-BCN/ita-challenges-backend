@@ -3,7 +3,6 @@ package com.itachallenge.document.service;
 import com.itachallenge.document.proxy.*;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class DocumentService implements IDocumentService{
     private final IChallengeClient challengeClient;

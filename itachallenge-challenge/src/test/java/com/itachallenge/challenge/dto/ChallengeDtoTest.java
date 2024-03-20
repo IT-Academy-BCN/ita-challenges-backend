@@ -85,7 +85,6 @@ class ChallengeDtoTest {
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(challengeDtoToSerialize);
         String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
-
         assertEquals(normalizeLineEndings(jsonExpected), normalizeLineEndings(jsonResult));
     }
 
@@ -123,6 +122,7 @@ class ChallengeDtoTest {
                 .languages(languages)
                 .build();
     }
+
     private static String normalizeLineEndings(String json) {
         try {
             // Parse JSON string
