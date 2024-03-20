@@ -10,15 +10,7 @@ import reactor.core.publisher.Mono;
 public interface IUserSolutionService {
 
     Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String id, String idChallenge, String idLanguage);
-
     Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto);
-
-//    public Mono<UserSolutionScoreDto> saveSolution(String idUser,
-//                                                   String idChallenge,
-//                                                   String idLanguage,
-//                                                   String status,
-//                                                   String solutionText);
-
     Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked);
 
 }
