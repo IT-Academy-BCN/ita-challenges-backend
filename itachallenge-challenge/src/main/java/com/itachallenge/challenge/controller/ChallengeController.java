@@ -9,6 +9,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -139,8 +140,28 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<String>> removeResourcesById(@PathVariable String idResource) {
-        return challengeService.removeResourcesByUuid(idResource);
+    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
+        return challengeService.removeResourcesByUuid(idResource)
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
+    }
+
+    //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
+    @PatchMapping("/resources/{idResource}")
+    @Operation(
+            operationId = "Remove resource from all Challenges from Resource Id.",
+            summary = "Remove resource from all Challenges from Resource Id.",
+            description = "Sending the ID Resource through the URI to patch the challenges.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
+        return challengeService.removeResourcesByUuid(idResource)
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("message", response)))
+                .onErrorResume(ResourceNotFoundException.class, e -> {
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
+                });
     }
 
     @GetMapping("/challenges")
