@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnmodifiableSolutionException.class)
-    public ResponseEntity<String> handleUnmodifiableSolutionException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodifiableSolutionException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
 }

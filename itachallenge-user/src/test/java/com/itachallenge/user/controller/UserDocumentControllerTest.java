@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -109,7 +110,7 @@ class UserDocumentControllerTest {
             verifyNoInteractions(userSolutionService);
         }
     }
-    @DisplayName("UserDocumentControllerTest - addSolution - return 500 Internal Server Error if Service returns runtime exception")
+    @DisplayName("UserDocumentControllerTest - addSolution - return 409 CONFLICT if Service returns UnmodifiableSolutionException")
     @Test
     void addSolutionServiceThrowsExceptionInternalServerError_test() {
         String URI_TEST = "/solution";
@@ -117,17 +118,17 @@ class UserDocumentControllerTest {
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setStatus("STARTED");
+        userSolutionDto.setStatus("ENDED");
         userSolutionDto.setSolutionText("This is a test solution");
 
         when(userSolutionService.addSolution(userSolutionDto))
-                .thenReturn(Mono.error(new RuntimeException("Invalid challenge status: status was already ENDED")));
+                .thenReturn(Mono.error(new UnmodifiableSolutionException("Invalid challenge status: status was already ENDED")));
 
         webTestClient.put()
                 .uri(CONTROLLER_URL + URI_TEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(userSolutionDto)
                 .exchange()
-                .expectStatus().is5xxServerError();
+                .expectStatus().isEqualTo(HttpStatus.CONFLICT);
     }
 }
