@@ -64,6 +64,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         challengeStatus = determineChallengeStatus(status);
 
         if (challengeStatus == null) {
+            log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Invalid challenge status: " + status));
         }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
@@ -73,7 +74,9 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     .challengeId(String.valueOf(savedDocument.getChallengeId()))
                     .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
                     .score(savedDocument.getScore())
-                    .build());
+                    .build())
+            .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
+            .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
