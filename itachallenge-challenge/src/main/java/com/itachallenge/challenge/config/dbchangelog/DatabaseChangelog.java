@@ -1,50 +1,66 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
-import com.github.cloudyrock.mongock.ChangeLog;
-import com.github.cloudyrock.mongock.ChangeSet;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Updates;
+import com.itachallenge.challenge.document.ChallengeDocument;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
-import com.mongodb.reactivestreams.client.ClientSession;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import reactor.core.publisher.Mono;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
-//@ChangeLog(order = "001")
-@ChangeUnit(id = "client-initializer", order = "1", author = "mongock")
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import io.mongock.api.annotations.RollbackExecution;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+
+@ChangeUnit(id="FirstChangelog", order = "1", author = "author")
 public class DatabaseChangelog {
 
-    //see https://github.com/mongock/mongock-examples/tree/master/mongodb/springboot3-reactive-jdk17/src/main/java/io/mongock/examples/mongodb/springboot/reactive/migration
+    Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
+    AtomicInteger successfulUpdatesCounter = new AtomicInteger();
 
     @Execution
-    public void execution(ClientSession clientSession, MongoDatabase mongoDatabase) {
+    public void setFirstAndLastNameToUsers(MongoTemplate mongoTemplate) {
+        Query query = new Query(
+                where("_id").ne(null)
+/*                        .andOperator(where("firstName").is(null),
+                                where("lastName").is(null))*/
+        );
 
-        System.out.println("*****"+mongoDatabase.getName());
+        query.fields().include("_id", "challenge_title");
+        long countChallenges = mongoTemplate.count(query, ChallengeDocument.class);
+        query.limit(100);
+
+        List<ChallengeDocument> challenges = mongoTemplate.find(query, ChallengeDocument.class);
+
+
+        if(challenges != null || challenges.size() != 0){
+            challenges.forEach(challenge -> {
+                try {
+                    logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                    logger.info(challenge.getUuid() + " - " + challenge.getTitle());
+
+/*                    Criteria criteria = where("_id").is(challenge.getUuid());
+                    Update update = new Update()
+                            .set("level", "EASY");
+                            //.set("lastName", lastName);
+
+                    mongoTemplate.findAndModify(new Query(criteria), update, ChallengeDocument.class);
+                    successfulUserUpdatesCounter.getAndIncrement();*/
+                } catch (Exception ex) {
+                    logger.error(String.format("Faield to set firstName & lastName for user with id %s", challenge.getUuid()), ex);
+                }
+            });
+        }
+        logger.info("Updated {} challenges out of {} total.", successfulUpdatesCounter,  countChallenges);
 
     }
 
-
-/*    @Execution
-    public Mono<Void> initialSetup(ReactiveMongoTemplate reactiveMongoTemplate) {
-        System.out.println("*****"+reactiveMongoTemplate.collectionExists("challenges"));
-        //non-reactive TODO change it
-        //db.getCollection("yourCollectionName").updateMany(new org.bson.Document(), Updates.set("newFieldName", "defaultValue"));
-    return Mono.empty();
-    }*/
-
-/*    //@ChangeSet(order = "002", id = "addNewField", author = "developer")
-    public void addNewField(MongoDatabase db) {
-        MongoCollection<Document> collection = db.getCollection("yourCollectionName");
-        Bson updateOperation = Updates.set("newFieldName", "defaultValue");
-        collection.updateMany(new Document(), updateOperation);
+    @RollbackExecution
+    public void rollback() {
+        // Our change is backward-compatible; we don't need to implement a rollback mechanism.
     }
-
-    //WARNING: Mongock do not provides an automatic mechanism to rollback changes.
-    //It's necessary manually invoke it to do it
-    public void undo(MongoDatabase db) {
-        db.getCollection("yourCollectionName").updateMany(new Document(), Updates.unset("newFieldName"));
-    }*/
 }
+

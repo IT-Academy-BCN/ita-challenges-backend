@@ -13,8 +13,7 @@ spring:
 
 mongock:
   enabled: true
-  change-logs-scan-packages:
-    - com.businessassistantbcn.itachallenge.challenge.config.dbchangelog
+  migration-scan-package: com.itachallenge.challenge.config.dbchangelog
   lock:
     collectionName: "mongockLocks" # Name of the collection used to lock the execution of the migration
     maxWaitingForLockMinutes: 5
