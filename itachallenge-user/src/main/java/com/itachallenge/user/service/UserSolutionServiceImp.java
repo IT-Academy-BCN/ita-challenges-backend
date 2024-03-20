@@ -66,7 +66,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         if (challengeStatus == null) {
             log.error("POST operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Invalid challenge status: " + status));
+            return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
             .map(savedDocument -> UserSolutionScoreDto.builder()
@@ -110,7 +110,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error(new UnmodifiableSolutionException("Invalid challenge status: status was already ENDED"));
+                        return Mono.error(new UnmodifiableSolutionException("Existing solution has status ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
                     existingSolution.setStatus(challengeStatus);
