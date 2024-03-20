@@ -31,17 +31,17 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
 
         //region ACTIONS
-        try {
+        try{
             for (UUID id : challengeIds) {
                 //TODO: missing check if UUID is correctly constructed.
 
                 //TODO: missing call repository for get statistics of challenge.
 
                 //TODO: delete below code when uppers todo are implemented.
-                challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat(100)));
+                challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat (100)));
 
             }
-        } catch (Exception ex) {
+        }catch(Exception ex){
             //TODO: missing error control
         }
 
@@ -52,8 +52,6 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
         return Mono.just(challengesList);
 
     }
-
-    //endregion METHODS
 
     @Override
     public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
