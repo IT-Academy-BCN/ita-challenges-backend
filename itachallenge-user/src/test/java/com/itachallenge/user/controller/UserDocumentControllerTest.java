@@ -53,7 +53,7 @@ class UserDocumentControllerTest {
                 .expectBody(String.class)
                 .value(String::toString, equalTo("Hello from ITA User!!!"));
     }
-    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 202 ACCEPTED")
+    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 200 OK")
     @Test
     void addSolutionIfValidSolutionThenSolutionAdded_test() {
         String URI_TEST = "/solution";
@@ -75,7 +75,7 @@ class UserDocumentControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(userSolutionDto)
                 .exchange()
-                .expectStatus().isEqualTo(HttpStatus.ACCEPTED)
+                .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(UserSolutionScoreDto.class)
                 .value(dto -> {
                     assert dto != null;

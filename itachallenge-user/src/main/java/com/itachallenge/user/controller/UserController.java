@@ -87,7 +87,7 @@ public class UserController {
 
         return userScoreService.addSolution(userSolutionDto)
                 .map(savedUserSolutionScoreDto ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedUserSolutionScoreDto)
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
                 );
     }
 
