@@ -1,5 +1,8 @@
 package com.itachallenge.challenge.service;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
@@ -8,9 +11,12 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
+import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -20,12 +26,17 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.zeromq.ZContext;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,11 +61,54 @@ class ChallengeServiceImpTest {
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
+    @Mock
+    private ZContext mockZContex;
+    @InjectMocks
+    private ZMQClient zmqClient;
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+
+
+    @Test
+    public void testRequestUserData() {
+
+        // Arrange
+        ChallengeRequestDto expectedRequest = ChallengeRequestDto.builder()
+                .challengeId(UUID.randomUUID())
+                .build();
+        StatisticsResponseDto expectedResponse = StatisticsResponseDto.builder()
+                .bookmarks(1)
+                .percent(1)
+                .build();
+
+        when(zmqClient.sendMessage(any(), eq(StatisticsResponseDto.class)))
+                .thenReturn(CompletableFuture.completedFuture(expectedResponse));
+
+        // Capture logs
+        Logger logger = LoggerFactory.getLogger(ZMQClient.class);
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        lc.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(listAppender);
+
+        // Act
+        challengeService.requestUserData();
+
+        // Assert
+        verify(zmqClient).sendMessage(any(), eq(StatisticsResponseDto.class));
+
+        // Check logs
+        List<ILoggingEvent> logsList = listAppender.list;
+        assertEquals(2, logsList.size());
+        assertEquals("Percentage: 1", logsList.get(0).getFormattedMessage());
+        assertEquals("Bookmarks: 1", logsList.get(1).getFormattedMessage());
+    }
+
 
     @Test
     void getChallengeById_ValidId_ChallengeFound() {

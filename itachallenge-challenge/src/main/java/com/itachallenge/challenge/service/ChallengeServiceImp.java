@@ -8,9 +8,12 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
+import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
@@ -25,6 +28,7 @@ import reactor.core.publisher.Mono;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -51,6 +55,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private ZMQClient zmqClient;
 
 
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -210,6 +216,27 @@ public class ChallengeServiceImp implements IChallengeService {
         }
 
         return Mono.just(UUID.fromString(id));
+    }
+
+    @Override
+    public void requestUserData() {
+        ChallengeRequestDto challengeRequestDto = new ChallengeRequestDto();
+
+        CompletableFuture<Object> future = zmqClient.sendMessage(challengeRequestDto, StatisticsResponseDto.class);
+
+        // Trabajar en otras tareas mientras se espera la respuesta
+        future.thenAccept(response -> {
+            // Aquí maneja la respuesta recibida
+            if (response instanceof StatisticsResponseDto) {
+                StatisticsResponseDto statisticsResponseDto = (StatisticsResponseDto) response;
+                // Haz algo con la respuesta recibida, por ejemplo:
+                log.info("Percentage: {}", statisticsResponseDto.getPercent());
+                log.info("Bookmarks: {}", statisticsResponseDto.getBookmarks());
+            } else {
+                log.error("Received unexpected response: {}", response);
+            }
+        });
+
     }
 
 }

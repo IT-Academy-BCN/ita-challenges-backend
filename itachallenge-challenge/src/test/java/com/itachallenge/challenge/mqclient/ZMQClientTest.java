@@ -40,9 +40,9 @@ class ZMQClientTest {
         ZMQClient zmqClient1 = new ZMQClient(context, "tcp://localhost:5555");
         Object message = new Object();
         Class clazz = Object.class;
-        byte[] serializedMessage = new byte[]{/* your serialized message here */};
+        byte[] serializedMessage = new byte[]{};
         when(objectSerializer.serialize(message)).thenReturn(serializedMessage);
-        byte[] reply = new byte[]{/* your serialized reply here */};
+        byte[] reply = new byte[]{};
         when(socket.recv(0)).thenReturn(reply);
         Object deserializedResponse = new Object();
         when(objectSerializer.deserialize(reply, clazz)).thenReturn(deserializedResponse);
