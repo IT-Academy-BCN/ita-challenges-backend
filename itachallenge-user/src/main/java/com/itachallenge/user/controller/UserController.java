@@ -76,11 +76,11 @@ public class UserController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
                             mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "bad request",
+                    @ApiResponse(responseCode = "400", description = "Bad request",
                             content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "500", description = "challenge status ended",
+                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
                             content = {@Content(schema = @Schema())})
-            } //TODO review
+            }
     )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
