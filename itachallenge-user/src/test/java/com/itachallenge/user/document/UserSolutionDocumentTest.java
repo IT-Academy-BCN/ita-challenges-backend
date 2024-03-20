@@ -1,5 +1,6 @@
 package com.itachallenge.user.document;
 
+import com.itachallenge.user.enums.ChallengeStatus;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     private final UUID challengeId = UUID.randomUUID();
     private final UUID languageId  = UUID.randomUUID();
     private final boolean bookmarked = true;
-    private final String status = "medium";
+    private final ChallengeStatus challengeStatus = ChallengeStatus.STARTED;
     private final int score = 90;
     UUID solutionId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
     UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
     SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
-    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, status,score, solutionDocumentList);
+    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus,score, solutionDocumentList);
 
     @Test
     void getUuid(){
@@ -44,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     }
     @Test
     void getStatus(){
-        assertEquals(status, userScoreDocument.getStatus());
+        assertEquals(challengeStatus, userScoreDocument.getStatus());
     }
     @Test
     void getScore(){

@@ -14,6 +14,7 @@ class UserSolutionDtoTest {
                 .userId("validUserId")
                 .challengeId("validChallengeId")
                 .languageId("validLanguageId")
+                .status("validChallengeStatus")
                 .solutionText("Valid solution text")
                 .build();
     }
@@ -24,6 +25,7 @@ class UserSolutionDtoTest {
         assertEquals("validUserId", userSolutionDto.getUserId());
         assertEquals("validChallengeId", userSolutionDto.getChallengeId());
         assertEquals("validLanguageId", userSolutionDto.getLanguageId());
+        assertEquals("validChallengeStatus", userSolutionDto.getStatus());
         assertEquals("Valid solution text", userSolutionDto.getSolutionText());
     }
 

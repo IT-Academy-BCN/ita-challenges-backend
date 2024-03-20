@@ -2,6 +2,7 @@ package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.enums.ChallengeStatus;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -68,9 +69,9 @@ class UserScoreRepositoryTest {
 
         List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
 
-        UserSolutionDocument userScoreDocument1 = new UserSolutionDocument(uuid_1, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
-        UserSolutionDocument userScoreDocument2 = new UserSolutionDocument(uuid_2, userId2, challengeId2, languageId2, true, "medium", 90, solutionDocumentList);
-        UserSolutionDocument userScoreDocument3 = new UserSolutionDocument(uuid_3, userId1, challengeId1, languageId1, true, "medium", 90, solutionDocumentList);
+        UserSolutionDocument userScoreDocument1 = new UserSolutionDocument(uuid_1, userId1, challengeId1, languageId1, true, ChallengeStatus.STARTED, 90, solutionDocumentList);
+        UserSolutionDocument userScoreDocument2 = new UserSolutionDocument(uuid_2, userId2, challengeId2, languageId2, true, ChallengeStatus.STARTED, 90, solutionDocumentList);
+        UserSolutionDocument userScoreDocument3 = new UserSolutionDocument(uuid_3, userId1, challengeId1, languageId1, true, ChallengeStatus.STARTED, 90, solutionDocumentList);
 
         userScoreRepository.saveAll(Flux.just(userScoreDocument1, userScoreDocument2, userScoreDocument3)).blockLast();
     }
