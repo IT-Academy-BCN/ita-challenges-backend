@@ -67,6 +67,9 @@ dependencies {
 }
 
 test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
     jvmArgs "-Xshare:off"
     useJUnitPlatform()
     finalizedBy jacocoTestReport

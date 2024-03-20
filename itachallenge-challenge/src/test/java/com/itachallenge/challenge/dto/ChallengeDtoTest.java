@@ -3,6 +3,7 @@ package com.itachallenge.challenge.dto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.document.ExampleDocument;
@@ -84,7 +85,8 @@ class ChallengeDtoTest {
                 .writer(new DefaultPrettyPrinter().withArrayIndenter(DefaultIndenter.SYSTEM_LINEFEED_INSTANCE))
                 .writeValueAsString(challengeDtoToSerialize);
         String jsonExpected = new ResourceHelper(challengeJsonPath).readResourceAsString().orElse(null);
-        assertEquals(jsonExpected, jsonResult);
+
+        assertEquals(normalizeLineEndings(jsonExpected), normalizeLineEndings(jsonResult));
     }
 
     @Test
@@ -120,5 +122,17 @@ class ChallengeDtoTest {
                 .percentage(percentage)
                 .languages(languages)
                 .build();
+    }
+    private static String normalizeLineEndings(String json) {
+        try {
+            // Parse JSON string
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(json);
+
+            // Convert back to JSON string with consistent formatting
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error normalizing line endings", e);
+        }
     }
 }

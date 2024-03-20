@@ -1,6 +1,6 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-document
   cloud:
     consul:
       enabled: false #habilitar / deshabilitar el uso de consul
@@ -17,7 +17,7 @@ spring:
         register: true
         register-health-check: true
         deregister: true
-        port: 8764 #puerto del servicio
+        port: 8769 #puerto del servicio
         prefer-ip-address: true
         healthCheckPath: /actuator/health
         healthCheckInterval: 10s
