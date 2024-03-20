@@ -26,7 +26,6 @@ public class UserSolutionDto {
     private String languageId;
 
     @JsonProperty(value ="status")
-    //@NotBlank(message = "Status is required")
     private String status;
 
     @JsonProperty(value ="solution_text")

@@ -76,6 +76,32 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     .build());
     }
 
+    public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
+        UUID challengeId = UUID.fromString(uuidChallenge);
+        UUID languageId = UUID.fromString(uuidLanguage);
+        UUID userId = UUID.fromString(uuidUser);
+
+
+        return userSolutionRepository
+                .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
+                .flatMap(userSolutionDocument -> {
+                    userSolutionDocument.setBookmarked(bookmarked);
+                    return userSolutionRepository.save(userSolutionDocument).thenReturn(userSolutionDocument);
+                })
+                .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
+    }
+    private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
+        UserSolutionDocument newDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .bookmarked(bookmarked)
+                .build();
+
+        return userSolutionRepository.save(newDocument).thenReturn(newDocument);
+    }
+
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
@@ -115,33 +141,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         public EndedChallengeException(String message) {
             super(message);
         }
-    }
-
-
-    public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
-        UUID challengeId = UUID.fromString(uuidChallenge);
-        UUID languageId = UUID.fromString(uuidLanguage);
-        UUID userId = UUID.fromString(uuidUser);
-
-
-        return userSolutionRepository
-                .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
-                .flatMap(userSolutionDocument -> {
-                    userSolutionDocument.setBookmarked(bookmarked);
-                    return userSolutionRepository.save(userSolutionDocument).thenReturn(userSolutionDocument);
-                })
-                .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
-    }
-    private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
-        UserSolutionDocument newDocument = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userId)
-                .challengeId(challengeId)
-                .languageId(languageId)
-                .bookmarked(bookmarked)
-                .build();
-
-        return userSolutionRepository.save(newDocument).thenReturn(newDocument);
     }
 
 }
