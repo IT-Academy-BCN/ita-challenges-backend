@@ -27,10 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -117,19 +114,18 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
+
     public ResponseEntity<Mono<?>> getOneChallenge(@PathVariable("challengeId") String id) {
         Mono<ChallengeDto> response = challengeService.getChallengeById(id);
-        boolean hasElement = response.hasElement().blockOptional().orElse(false);
 
-        if (!hasElement) {
-            Mono<String> monoString = Mono.just("Challenge with id " + id + " not found");
-            return ResponseEntity.ok().body(monoString);
-        } else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
+        return ResponseEntity.ok()
+                .body(response
+                        .map(challengeDto -> (Object) challengeDto)
+                        .defaultIfEmpty(Collections.singletonMap("message", "Challenge with id " + id + " not found."))
+                );
     }
 
 

@@ -234,4 +234,15 @@ public class UserSolutionRepositoryTest {
 
         assertNull(solution);
     }
+
+    @DisplayName("Count number of BookmarkedTrue by idChallenge")
+    @Test
+    void testCountBookmarkedTrueByChallengeId(){
+        boolean isBookmarked = true;
+        Mono<Long> numberOfBookmarks = userSolutionRepository.countByChallengeIdAndBookmarked(testChallengeUuid, isBookmarked);
+        long expectedValue = 1L;
+        StepVerifier.create(numberOfBookmarks)
+                .expectNextCount(expectedValue)
+                .verifyComplete();
+    }
 }

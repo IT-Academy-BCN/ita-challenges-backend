@@ -2,8 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.ServiceChallengeStatistics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -28,7 +30,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     @Autowired
-    ServiceChallengeStatistics serviceChallengeStatistics;
+    IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
 
@@ -89,6 +91,20 @@ public class UserController {
                 .map(savedUserSolutionScoreDto ->
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
                 );
+    }
+
+    @GetMapping(value = "/bookmarks/{idChallenge}")
+    @Operation(
+            summary = "Get the count of bookmarks for a specific challenge.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Long.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "Challenge not found", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<Map<String, Long>>> getBookmarkCountByIdChallenge(
+            @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
+        return serviceChallengeStatistics.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
+                .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
 
     @PutMapping("/bookmark")

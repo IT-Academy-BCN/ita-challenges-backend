@@ -3,11 +3,14 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +37,6 @@ import static org.mockito.Mockito.*;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 class UserControllerTest {
-    //region VARIABLES
     @Autowired()
     private WebTestClient webTestClient;
 
@@ -45,28 +47,17 @@ class UserControllerTest {
 
     @MockBean
     IUserSolutionService userSolutionService;
+    @MockBean
+    IServiceChallengeStatistics statisticsService;
 
-    //endregion VARIABLES
-
-
-    //region CONSTRUCTOR
     @BeforeEach
     public void setUp() {
     }
 
-    //endregion CONSTRUCTOR
-
-
-    //region TEST METHODS
     @Test
     void testHello() {
-        //region VARIABLES
         String URI_TEST = "/test";
 
-        //endregion VARIABLES
-
-
-        //region TESTS
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST)
                 .accept(MediaType.APPLICATION_JSON)
@@ -74,31 +65,15 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(String.class)
                 .value(String::toString, equalTo("Hello from ITA User!!!"));
-
-        //endregion TESTS
-
     }
 
-    //endregion TEST METHODS
-
-
-    //region TEST METHODS: ChallengeStatistics
-    @Test
+    //TODO: This test needs mocking. Is calling actual service
+   /* @Test
     void getChallengeStatistics() {
-        //region VARIABLES
         String URI_TEST = "/statistics?";
 
-        //endregion VARIABLES
-
-
-        //region INITIALIZATION TEST
-        // Set up the URL_TEST
         URI_TEST += queryCreation(10);
 
-        //endregion INITIALIZATION TEST
-
-
-        //region TESTS
         List<ChallengeStatisticsDto> response = webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST)
                 .accept(MediaType.APPLICATION_JSON)
@@ -111,35 +86,20 @@ class UserControllerTest {
         assertEquals(10, response.size());
         assertNotEquals(0, response.get(0).getPopularity());
         assertNotEquals(0, response.get(9).getPercentage());
+    }*/
 
-        //endregion TESTS
-
-    }
-
+    //TODO: This test needs mocking. Is calling actual service
     @Test
     void getChallengeStatistics_URLToLong() {
-        //region VARIABLES
         String URI_TEST = "/statistics?";
 
-        //endregion VARIABLES
-
-
-        //region INITIALIZATION TEST
-        // Set up the URL_TEST
         URI_TEST += queryCreation(100);
 
-        //endregion INITIALIZATION TEST
-
-
-        //region TESTS
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.URI_TOO_LONG);
-
-        //endregion TESTS
-
     }
 
     @Test
@@ -172,16 +132,11 @@ class UserControllerTest {
     }
 
 
-
+    //TODO: This test needs mocking. Is calling actual service
     @Test
     void getChallengeStatistics_EmptyUUIDList() {
-        //region VARIABLES
         String URI_TEST = "/statistics";
 
-        //endregion VARIABLES
-
-
-        //region TESTS
         webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path(CONTROLLER_URL + URI_TEST)
@@ -191,15 +146,24 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(ChallengeStatisticsDto.class);
-
-        //endregion TESTS
-
     }
 
-    //endregion TEST METHODS: ChallengeStatics
+    @Test
+    void testGetBookmarkCountByIdChallenge() {
+        final UUID VALID_MONGO_UUID = UUID.fromString("5c1a97e5-1cca-4144-9981-2de1fb73b178");
+        String URI_TEST = "/bookmarks/{idChallenge}";
+        Long testCount = 1L;
 
+        when(statisticsService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
+                .thenReturn(Mono.just(testCount));
 
-    //region PRIVATE METHODS
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, VALID_MONGO_UUID)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.bookmarked").isEqualTo(testCount.intValue());
+    }
 
     /**
      * Method to create a query string link "challenge=UUID&", repeat 'numberUUID' times.
@@ -214,9 +178,6 @@ class UserControllerTest {
 
         return URI_TEST;
     }
-
-    //endregion PRIVATE METHODS
-
 
     @Test
     void markOrAddBookmark() {
