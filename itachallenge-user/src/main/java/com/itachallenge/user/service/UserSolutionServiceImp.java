@@ -4,6 +4,7 @@ import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -109,7 +110,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error(new EndedChallengeException("Invalid challenge status: status was already ENDED"));
+                        return Mono.error(new UnmodifiableSolutionException("Invalid challenge status: status was already ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
                     existingSolution.setStatus(challengeStatus);
@@ -138,12 +139,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             challengeStatus = ChallengeStatus.ENDED;
         }
         return challengeStatus;
-    }
-
-    static class EndedChallengeException extends RuntimeException {
-        public EndedChallengeException(String message) {
-            super(message);
-        }
     }
 
 }

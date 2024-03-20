@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -179,7 +180,7 @@ class UserSolutionServiceImpTest {
 
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
-                        throwable -> throwable instanceof UserSolutionServiceImp.EndedChallengeException
+                        throwable -> throwable instanceof UnmodifiableSolutionException
                         && throwable.getMessage().equals("Invalid challenge status: status was already ENDED")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
