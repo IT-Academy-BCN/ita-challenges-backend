@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<ErrorResponseDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto(e.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -40,8 +40,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnmodifiableSolutionException.class)
-    public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodifiableSolutionException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<ErrorResponseDto> handleUnmodifiableSolutionException(UnmodifiableSolutionException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDto(e.getMessage()));
     }
 
 }
