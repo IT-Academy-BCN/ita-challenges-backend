@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +62,12 @@ public class ChallengeController {
     ZMQClient zmqClient;
     @Autowired
     ChallengeRequestDto challengeInputDto;
+
+    @Value("${spring.application.version}")
+    private String version;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -262,5 +269,24 @@ public class ChallengeController {
              @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
                      limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
+
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version and name.",
+                            content = @Content(schema = @Schema(implementation = Map.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> getVersion() {
+        Map<String, String> response = new HashMap<>();
+        response.put("application_name", appName);
+        response.put("version", version);
+        return Mono.just(ResponseEntity.ok(response));
     }
 }
