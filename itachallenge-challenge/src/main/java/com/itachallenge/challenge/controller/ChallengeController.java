@@ -118,15 +118,10 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
+    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
 
-    public ResponseEntity<Mono<?>> getOneChallenge(@PathVariable("challengeId") String id) {
-        Mono<ChallengeDto> response = challengeService.getChallengeById(id);
-
-        return ResponseEntity.ok()
-                .body(response
-                        .map(challengeDto -> (Object) challengeDto)
-                        .defaultIfEmpty(Collections.singletonMap("message", "Challenge with id " + id + " not found."))
-                );
+        return challengeService.getChallengeById(id)
+                .map(dto -> ResponseEntity.ok().body(dto));
     }
 
 
