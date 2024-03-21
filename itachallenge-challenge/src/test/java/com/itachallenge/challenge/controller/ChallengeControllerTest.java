@@ -237,24 +237,30 @@ class ChallengeControllerTest {
         // Arrange
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f"; // Test idLanguage with mongoId structure
         String difficulty = "EASY";
+        int offset = 0;
+        int limit = 2;
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        challengeDto1.setLevel(difficulty);
+        ChallengeDto challengeDto2 = new ChallengeDto();
+        challengeDto2.setLevel(difficulty);
+        ChallengeDto[] challengeDtos = new ChallengeDto[]{challengeDto1, challengeDto2};
 
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+        Flux<ChallengeDto> expectedResult = Flux.just(challengeDtos);
 
-        when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty,offset,limit)).thenReturn(expectedResult);
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&difficulty=" + difficulty)
+                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&difficulty=" +
+                        difficulty + "&offset=" + offset + "&limit=" + limit)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
+                .expectBodyList(ChallengeDto.class)
+                .value(Dtos  -> {
+                    assert Dtos  != null;
+                    assert Dtos.get(0).getLevel().equals(difficulty);
+                    assert Dtos.get(1).getLevel().equals(difficulty);
                 });
     }
 

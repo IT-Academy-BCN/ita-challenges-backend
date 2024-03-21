@@ -181,16 +181,19 @@ public class ChallengeController {
 
     @GetMapping("/challenges/")
     @Operation(
-            operationId = "Get only the challenges on a page.",
-            summary = "Get to see challenges on a page and their levels, details and their available languages.",
+            operationId = "Get challenges on a page by language and difficulty.",
+            summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
-            (@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-             @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
+  
+    public Flux<ChallengeDto> getChallengesByLanguageAndDifficulty(@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
+                                                                   @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty,
+                                                                   @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+                                                                   @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty,(Integer.parseInt(offset)), Integer.parseInt(limit));
+
     }
 
     @GetMapping("/language")

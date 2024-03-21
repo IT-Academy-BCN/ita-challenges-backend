@@ -73,7 +73,6 @@ public class ChallengeServiceImp implements IChallengeService {
                                 if (Boolean.FALSE.equals(result)) {
                                     return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found"));
                                 }
-
                                 return challengesToUpdate
                                         .flatMap(challenge -> {
                                             Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
@@ -94,9 +93,16 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeRepository.save(challenge);
     }
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        // TODO: Get challenges by language and difficulty
-        return null;
+
+    public Flux<ChallengeDto> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty, int offset, int limit) {
+        return validateUUID(idLanguage)
+                .flatMapMany(languageId -> languageRepository.findByIdLanguage(languageId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage + " not found")))
+                        .flatMapMany(lang -> challengeConverter.convertDocumentFluxToDtoFlux(
+                                challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, languageId).skip(offset).take(limit),
+                                ChallengeDto.class
+                        ))
+                );
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
