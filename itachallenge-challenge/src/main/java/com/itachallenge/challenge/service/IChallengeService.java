@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public interface IChallengeService {
 
     Mono<ChallengeDto> getChallengeById(String id);
-    Mono<GenericResultDto<String>> removeResourcesByUuid(String id);
+    Mono<String> removeResourcesByUuid(String id);
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
     Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage);
     Mono<SolutionDto> addSolution(SolutionDto solutionDto);
