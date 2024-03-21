@@ -55,17 +55,17 @@ class ChallengeRepositoryTest {
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
 
         Map<Locale, String> titleMap1 = new HashMap<>();
-        titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
-        titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
-        titleMap1.put(Locale.ENGLISH, "Loops");
+            titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
+            titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
+            titleMap1.put(Locale.ENGLISH, "Loops");
         Map<Locale, String> titleMap2 = new HashMap<>();
-        titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
-        titleMap2.put(Locale.forLanguageTag("CA"), "Selector");
-        titleMap2.put(Locale.ENGLISH, "Selector");
+            titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
+            titleMap2.put(Locale.forLanguageTag("CA"), "Selector");
+            titleMap2.put(Locale.ENGLISH, "Selector");
         Map<Locale, String> titleMap3 = new HashMap<>();
-        titleMap3.put(Locale.forLanguageTag("ES"), "Coleccion");
-        titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
-        titleMap3.put(Locale.ENGLISH, "Collection");
+            titleMap3.put(Locale.forLanguageTag("ES"), "Coleccion");
+            titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
+            titleMap3.put(Locale.ENGLISH, "Collection");
         ExampleDocument example = new ExampleDocument(uuid_1, titleMap1);
         ExampleDocument example2 = new ExampleDocument(uuid_2, titleMap2);
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
@@ -80,16 +80,16 @@ class ChallengeRepositoryTest {
         Set<LanguageDocument> languageSet3 = Set.of(language1);
 
         Map<Locale, String> description = new HashMap<>();
-        description.put(Locale.forLanguageTag("ES"), "Descripcion");
-        description.put(Locale.forLanguageTag("CA"), "Descripcio");
-        description.put(Locale.ENGLISH, "Description");
+            description.put(Locale.forLanguageTag("ES"), "Descripcion");
+            description.put(Locale.forLanguageTag("CA"), "Descripcio");
+            description.put(Locale.ENGLISH, "Description");
 
         Map<Locale, String> note = new HashMap<>();
-        note.put(Locale.forLanguageTag("ES"), "Detalle nota");
-        note.put(Locale.forLanguageTag("CA"), "Detall nota");
-        note.put(Locale.ENGLISH, "Detail note");
+            note.put(Locale.forLanguageTag("ES"), "Detalle nota");
+            note.put(Locale.forLanguageTag("CA"), "Detall nota");
+            note.put(Locale.ENGLISH, "Detail note");
 
-        List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
+        List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
         DetailDocument detail = new DetailDocument(description, exampleList, note);
         List<TestingValueDocument> testingValues = Arrays.asList(
@@ -107,7 +107,7 @@ class ChallengeRepositoryTest {
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
     }
 
-        @DisplayName("Repository not null Test")
+    @DisplayName("Repository not null Test")
     @Test
     void testDB() {
         assertNotNull(challengeRepository);

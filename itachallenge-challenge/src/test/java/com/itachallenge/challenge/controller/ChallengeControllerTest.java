@@ -26,6 +26,7 @@ import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
@@ -416,6 +417,35 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getChallengesTestingValues_ValidIds_ReturnsTestingValues() {
+        String challengeId = UUID.randomUUID().toString();
+        String languageId = UUID.randomUUID().toString();
+
+        List<TestingValueDto> testingValuesDto = List.of(
+                TestingValueDto.builder().inParam(List.of("input1")).outParam(List.of("output1")).build(),
+                TestingValueDto.builder().inParam(List.of("input2")).outParam(List.of("output2")).build()
+        );
+
+        GenericResultDto<TestingValueDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, testingValuesDto.size(), testingValuesDto.size(), testingValuesDto.toArray(new TestingValueDto[0]));
+
+        when(challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId))
+                .thenReturn(Mono.just(expectedResult));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/test/params/{idChallenge}/language/{idLanguage}", challengeId, languageId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.results[0].in_param[0]").isEqualTo("input1")
+                .jsonPath("$.results[0].out_param[0]").isEqualTo("output1")
+                .jsonPath("$.results[1].in_param[0]").isEqualTo("input2")
+                .jsonPath("$.results[1].out_param[0]").isEqualTo("output2");
+
+        verify(challengeService).getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId);
     }
 
 }
