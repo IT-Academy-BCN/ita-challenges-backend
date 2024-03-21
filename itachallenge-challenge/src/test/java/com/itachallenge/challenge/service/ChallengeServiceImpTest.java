@@ -29,6 +29,7 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeromq.ZContext;
+import org.zeromq.ZMQ;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -66,7 +67,8 @@ class ChallengeServiceImpTest {
     @InjectMocks
     private ZMQClient zmqClient;
 
-
+    @Mock
+    private ZMQ.Socket socket;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -78,6 +80,7 @@ class ChallengeServiceImpTest {
     public void testRequestUserData() {
 
         // Arrange
+        UUID challengeId = UUID.randomUUID();
         ChallengeRequestDto expectedRequest = ChallengeRequestDto.builder()
                 .challengeId(UUID.randomUUID())
                 .build();
@@ -85,8 +88,12 @@ class ChallengeServiceImpTest {
                 .bookmarks(1)
                 .percent(1)
                 .build();
+        // Configurar el comportamiento esperado para el mock de ZContext
+        when(mockZContex.createSocket(anyInt())).thenReturn(socket);
+        when(mockZContex.createSocket(any())).thenReturn(socket);
 
-        when(zmqClient.sendMessage(any(), eq(StatisticsResponseDto.class)))
+        // Configurar el comportamiento esperado para el mock de ZMQClient
+        when(zmqClient.sendMessage(eq(expectedRequest), eq(StatisticsResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(expectedResponse));
 
         // Capture logs
@@ -101,6 +108,9 @@ class ChallengeServiceImpTest {
 
         // Assert
         verify(zmqClient).sendMessage(any(), eq(StatisticsResponseDto.class));
+
+        // Verificar que se haya creado el socket
+        verify(mockZContex, times(1)).createSocket(anyInt());
 
         // Check logs
         List<ILoggingEvent> logsList = listAppender.list;
