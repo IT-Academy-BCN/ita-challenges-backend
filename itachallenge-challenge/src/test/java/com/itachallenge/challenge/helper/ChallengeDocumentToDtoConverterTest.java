@@ -1,9 +1,6 @@
 package com.itachallenge.challenge.helper;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.DetailDocument;
-import com.itachallenge.challenge.document.ExampleDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,12 +76,19 @@ class ChallengeDocumentToDtoConverterTest {
         LanguageDto languageDto1 = new LanguageDto(languageRandomId1, languageNames[0]);
         LanguageDto languageDto2 = new LanguageDto(languageRandomId2, languageNames[1]);
 
+        List<TestingValueDocument> testingValues = Arrays.asList(
+                new TestingValueDocument(Arrays.asList("input1", "input2"), Arrays.asList("output1")),
+                new TestingValueDocument(Arrays.asList("input3", "input4"), Arrays.asList("output2"))
+        );
+
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
-                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
+                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId), testingValues);
+
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
-                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId));
+                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId), testingValues);
+
 
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),

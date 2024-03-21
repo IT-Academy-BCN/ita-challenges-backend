@@ -1,9 +1,6 @@
 package com.itachallenge.challenge.integration;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.DetailDocument;
-import com.itachallenge.challenge.document.ExampleDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -68,13 +65,13 @@ class ChallengeIntegrationTest {
         Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Map<Locale, String> exampleMap1 = new HashMap<>();
-            exampleMap1.put(Locale.forLanguageTag("ES"), "Ejemplo texto en español");
-            exampleMap1.put(Locale.forLanguageTag("CA"), "Exemple texte en català");
-            exampleMap1.put(Locale.ENGLISH, "Example text in english");
+        exampleMap1.put(Locale.forLanguageTag("ES"), "Ejemplo texto en español");
+        exampleMap1.put(Locale.forLanguageTag("CA"), "Exemple texte en català");
+        exampleMap1.put(Locale.ENGLISH, "Example text in english");
         Map<Locale, String> exampleMap2 = new HashMap<>();
-            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo texto random en español");
-            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple texte random en català");
-            exampleMap2.put(Locale.ENGLISH, "Random example in english");
+        exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo texto random en español");
+        exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple texte random en català");
+        exampleMap2.put(Locale.ENGLISH, "Random example in english");
 
         ExampleDocument example = new ExampleDocument(uuid_1, exampleMap1);
         ExampleDocument example2 = new ExampleDocument(uuid_2, exampleMap2);
@@ -90,34 +87,39 @@ class ChallengeIntegrationTest {
 
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
         Map<Locale, String> descriptionMap = new HashMap<>();
-            descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción en español");
-            descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció en català");
-            descriptionMap.put(Locale.ENGLISH, "Description in english");
+        descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción en español");
+        descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció en català");
+        descriptionMap.put(Locale.ENGLISH, "Description in english");
         Map<Locale, String> notesMap = new HashMap<>();
-            notesMap.put(Locale.forLanguageTag("ES"), "Detail note en español");
-            notesMap.put(Locale.forLanguageTag("CA"), "Detail note en català");
-            notesMap.put(Locale.ENGLISH, "Detail note in english");
+        notesMap.put(Locale.forLanguageTag("ES"), "Detail note en español");
+        notesMap.put(Locale.forLanguageTag("CA"), "Detail note en català");
+        notesMap.put(Locale.ENGLISH, "Detail note in english");
 
         DetailDocument detail = new DetailDocument(descriptionMap, exampleList, notesMap);
 
         Map<Locale, String> title1 = new HashMap<>();
-            title1.put(Locale.forLanguageTag("ES"), "Loops");
-            title1.put(Locale.forLanguageTag("CA"), "Loops");
-            title1.put(Locale.ENGLISH, "Loops");
+        title1.put(Locale.forLanguageTag("ES"), "Loops");
+        title1.put(Locale.forLanguageTag("CA"), "Loops");
+        title1.put(Locale.ENGLISH, "Loops");
         Map<Locale, String> title2 = new HashMap<>();
-            title2.put(Locale.forLanguageTag("ES"), "If");
-            title2.put(Locale.forLanguageTag("CA"), "If");
-            title2.put(Locale.ENGLISH, "If");
+        title2.put(Locale.forLanguageTag("ES"), "If");
+        title2.put(Locale.forLanguageTag("CA"), "If");
+        title2.put(Locale.ENGLISH, "If");
+
+        List<TestingValueDocument> testingValues = Arrays.asList(
+                new TestingValueDocument(Arrays.asList("input1", "input2"), Arrays.asList("output1")),
+                new TestingValueDocument(Arrays.asList("input3", "input4"), Arrays.asList("output2"))
+        );
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
 
-    //TODO - Refactor this method, getLanguages endpoint already available
+        //TODO - Refactor this method, getLanguages endpoint already available
     private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName) {
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
