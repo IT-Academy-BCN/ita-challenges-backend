@@ -15,6 +15,7 @@ import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -209,13 +210,12 @@ class ChallengeServiceImpTest {
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
 
         // Act
-        Mono<GenericResultDto<String>> result = challengeService.removeResourcesByUuid(resourceId.toString());
+        Mono<String> result = challengeService.removeResourcesByUuid(resourceId.toString());
 
         // Assert
         StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 1 && dto.getResults()[0].equals("resource deleted correctly"))
-                .expectComplete()
-                .verify();
+                .expectNext("Resource removed successfully")
+                .verifyComplete();
 
         verify(challengeRepository).findAllByResourcesContaining(resourceId);
         verify(challengeRepository).save(any(ChallengeDocument.class));
@@ -229,15 +229,32 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findAllByResourcesContaining(resourceId)).thenReturn(Flux.empty());
 
         // Act
-        Mono<GenericResultDto<String>> result = challengeService.removeResourcesByUuid(resourceId.toString());
+        Mono<String> result = challengeService.removeResourcesByUuid(resourceId.toString());
 
         // Assert
         StepVerifier.create(result)
-                .expectError(ChallengeNotFoundException.class)
+                .expectError(ResourceNotFoundException.class)
                 .verify();
 
         verify(challengeRepository).findAllByResourcesContaining(resourceId);
         verifyNoMoreInteractions(challengeRepository);
+    }
+
+    @Test
+    void removeResourcesByUuid_InvalidFormatId_ReturnsBadUUIDException() {
+        // Arrange
+        String invalidId = "invalid_uuid";
+
+        // Act
+        Mono<String> result = challengeService.removeResourcesByUuid(invalidId);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(BadUUIDException.class)
+                .verify();
+
+        verifyNoInteractions(challengeRepository);
+        verifyNoInteractions(challengeConverter);
     }
 
     @Test
