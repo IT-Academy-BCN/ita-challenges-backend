@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 class UserControllerTest {
-    @Autowired()
+    @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
