@@ -17,7 +17,6 @@ jacoco{
 }
 
 group = 'ita.challenges'
-version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
