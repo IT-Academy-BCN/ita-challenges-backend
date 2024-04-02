@@ -10,6 +10,7 @@ import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -22,9 +23,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -63,32 +62,37 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-    public Mono<GenericResultDto<String>> removeResourcesByUuid(String id) {
+    public Mono<String> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
-                    Flux<ChallengeDocument> challengeFlux = challengeRepository.findAllByResourcesContaining(resourceId);
-                    return challengeFlux
-                            .flatMap(challenge -> {
-                                challenge.setResources(challenge.getResources().stream()
-                                        .filter(s -> !s.equals(resourceId))
-                                        .collect(Collectors.toSet()));
-                                return challengeRepository.save(challenge);
-                            })
+                    Flux<ChallengeDocument> challengesToUpdate = challengeRepository.findAllByResourcesContaining(resourceId);
+
+                    return challengesToUpdate
                             .hasElements()
                             .flatMap(result -> {
-                                if (Boolean.TRUE.equals(result)) {
-                                    GenericResultDto<String> resultDto = new GenericResultDto<>();
-                                    resultDto.setInfo(0, 1, 1, new String[]{"resource deleted correctly"});
-                                    return Mono.just(resultDto);
-                                } else {
-                                    return Mono.error(new ChallengeNotFoundException("Resource with id " + resourceId + " not found"));
+                                if (Boolean.FALSE.equals(result)) {
+                                    return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found"));
                                 }
-                            })
-                            .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", resourceId))
-                            .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
-                });
-    }
 
+                                return challengesToUpdate
+                                        .flatMap(challenge -> {
+                                            Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
+                                            updatedResources.remove(resourceId);
+                                            challenge.setResources(updatedResources);
+                                            return challengeRepository.save(challenge);
+                                        })
+                                        .then(Mono.just("Resource removed successfully"));
+                            });
+                })
+                .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", id))
+                .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
+    }
+    private Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge,UUID resourceId) {
+        challenge.setResources(challenge.getResources().stream()
+                .filter(s -> !s.equals(resourceId))
+                .collect(Collectors.toSet()));
+        return challengeRepository.save(challenge);
+    }
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
         // TODO: Get challenges by language and difficulty
