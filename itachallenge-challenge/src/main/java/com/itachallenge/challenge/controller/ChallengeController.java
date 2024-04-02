@@ -263,4 +263,6 @@ public class ChallengeController {
                      limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
     }
+
+
 }

@@ -417,5 +417,4 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
     }
-
 }
