@@ -48,12 +48,6 @@ class UserControllerTest {
     @MockBean
     IServiceChallengeStatistics statisticsService;
 
-    @Value("${spring.application.version}")
-    private String version;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
     @BeforeEach
     public void setUp() {
     }
@@ -223,8 +217,8 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.application_name").isEqualTo(appName)
-                .jsonPath("$.version").isEqualTo(version);
+                .jsonPath("$.application_name").isEqualTo("itachallenge-user")
+                .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
     }
 
 }

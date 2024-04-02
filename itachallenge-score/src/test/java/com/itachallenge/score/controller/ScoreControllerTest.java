@@ -18,12 +18,6 @@ class ScoreControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
-    @Value("${spring.application.version}")
-    private String version;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
 
     @Test
@@ -54,8 +48,8 @@ class ScoreControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.application_name").isEqualTo(appName)
-                .jsonPath("$.version").isEqualTo(version);
+                .jsonPath("$.application_name").isEqualTo("itachallenge-score")
+                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
     }
 
 }
