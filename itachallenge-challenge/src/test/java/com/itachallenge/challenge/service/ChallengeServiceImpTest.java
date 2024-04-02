@@ -3,11 +3,8 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.document.TestingValueDocument;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
@@ -48,6 +45,8 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @Mock
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
+    @Mock
+    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -546,4 +545,47 @@ class ChallengeServiceImpTest {
 
     }
 
+    @Test
+    void getTestingParamsByChallengeIdAndLanguageId_validId_ChallengeFound() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(challengeId);
+        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
+        TestingValueDocument testingValueDocument = new TestingValueDocument(Collections.singletonList("input"), Collections.singletonList("output"));
+        challengeDocument.setTestingValues(Collections.singletonList(testingValueDocument));
+
+        TestingValueDto testingValueDto = TestingValueDto.builder()
+                .inParam(Collections.singletonList("input"))
+                .outParam(Collections.singletonList("output"))
+                .build();
+
+        List<TestingValueDto> expectedTestingValues = Collections.singletonList(
+                TestingValueDto.builder()
+                        .inParam(Collections.singletonList("input"))
+                        .outParam(Collections.singletonList("output"))
+                        .build()
+        );
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class)).thenReturn(testingValueDto);
+
+        // Act
+        Mono<GenericResultDto<TestingValueDto>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    assertThat(response.getOffset()).isZero();
+                    assertThat(response.getLimit()).isEqualTo(expectedTestingValues.size());
+                    assertThat(response.getCount()).isEqualTo(expectedTestingValues.size());
+                    assertThat(response.getResults()).isEqualTo(expectedTestingValues.toArray());
+                })
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository).findByUuid(challengeId);
+        verify(testingValueConverter).convertDocumentToDto(testingValueDocument, TestingValueDto.class);
+    }
 }

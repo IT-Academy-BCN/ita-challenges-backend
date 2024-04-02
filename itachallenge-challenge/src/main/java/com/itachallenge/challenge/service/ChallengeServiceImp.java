@@ -215,21 +215,24 @@ public class ChallengeServiceImp implements IChallengeService {
 
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getLanguages())
-                                    .flatMap(language -> challengeRepository.findByLanguages_IdLanguage(languageId)
-                                            .filter(specificChallenge -> specificChallenge.getUuid().equals(challengeId))
-                                            .flatMap(challengeDoc -> Mono.from(Flux.fromIterable(challengeDoc.getTestingValues()))))
-                                    .collectList()
-                                    .flatMap(testingDto -> Mono.from(testingValueConverter.convertDocumentFluxToDtoFlux(Flux.fromIterable(testingDto), TestingValueDto.class)))
-                            )
-                            .collectList()
-                            .map(testingValues -> {
-                                GenericResultDto<TestingValueDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, testingValues.size(), testingValues.size(), testingValues.toArray(new TestingValueDto[0]));
-                                return resultDto;
+                            .flatMap(challenge -> {
+                                Optional<LanguageDocument> languageOptional = challenge.getLanguages()
+                                        .stream()
+                                        .filter(lang -> lang.getIdLanguage().equals(languageId))
+                                        .findFirst();
+                                if (languageOptional.isPresent()) {
+                                    List<TestingValueDto> testingValues = challenge.getTestingValues()
+                                            .stream()
+                                            .map(testingValueDocument -> testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class))
+                                            .toList();
+                                    GenericResultDto<TestingValueDto> resultDto = new GenericResultDto<>();
+                                    resultDto.setInfo(0, testingValues.size(), testingValues.size(), testingValues.toArray(new TestingValueDto[0]));
+                                    return Mono.just(resultDto);
+                                } else {
+                                    return Mono.error(new ChallengeNotFoundException("Language " + idLanguage + " not found in Challenge " + idChallenge));
+                                }
                             });
                 });
-
     }
 
 

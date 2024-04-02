@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -21,4 +22,17 @@ public class TestingValueDto {
 
     @JsonProperty(value = "out_param", index = 1)
     private List<?> outParam;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TestingValueDto that = (TestingValueDto) o;
+        return Objects.equals(inParam, that.inParam) &&
+                Objects.equals(outParam, that.outParam);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(inParam, outParam);
+    }
 }
