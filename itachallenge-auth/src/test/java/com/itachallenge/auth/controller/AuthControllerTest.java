@@ -30,12 +30,6 @@ class AuthControllerTest {
     @InjectMocks
     private AuthController authController;
 
-    @Value("${spring.application.version}")
-    private String version;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
     @Test
     void validateTokenOK() {
         String validToken = "validToken";
@@ -68,7 +62,7 @@ class AuthControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.application_name").isEqualTo(appName)
-                .jsonPath("$.version").isEqualTo(version);
+                .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
+                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
     }
 }

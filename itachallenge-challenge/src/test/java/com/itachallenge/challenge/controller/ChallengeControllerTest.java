@@ -50,12 +50,6 @@ class ChallengeControllerTest {
     @MockBean
     ChallengeRequestDto challengeInputDto;
 
-    @Value("${spring.application.version}")
-    private String version;
-
-    @Value("${spring.application.name}")
-    private String appName;
-
 /*    @Test
     void test() {
         // Arrange
@@ -432,8 +426,8 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.application_name").isEqualTo(appName)
-                .jsonPath("$.version").isEqualTo(version);
+                .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
+                .jsonPath("$.version").isEqualTo("1.2.0-RELEASE");
     }
 
 }
