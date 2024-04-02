@@ -45,7 +45,7 @@ class ZMQClientTest {
 
         //mock the behavior of socket.recv() to return a specific byte array
         when(socket.recv(any())).thenReturn("response".getBytes());
-        
+
 
 
 
