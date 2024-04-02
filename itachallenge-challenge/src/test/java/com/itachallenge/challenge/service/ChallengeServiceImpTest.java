@@ -64,15 +64,22 @@ class ChallengeServiceImpTest {
     @InjectMocks
     private ChallengeServiceImp challengeService;
     @Mock
-    private ZContext mockZContex;
-    @InjectMocks
-    private ZMQClient zmqClient;
+    private ZContext mockContext;
+    @Mock
+    private ZMQClient zmqClient = new ZMQClient(mockContext, "tcp://localhost:5555");
+    //private ZMQClient zmqClient;
 
     @Mock
     private ZMQ.Socket socket;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        // Configurar el comportamiento esperado para el mock de ZContext
+        when(mockContext.createSocket(anyInt())).thenReturn(socket);
+        when(mockContext.createSocket(any())).thenReturn(socket);
+
+        //zmqClient = new ZMQClient(mockContext, "tcp://localhost:5555");
     }
 
 
@@ -83,20 +90,19 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID challengeId = UUID.randomUUID();
         ChallengeRequestDto expectedRequest = ChallengeRequestDto.builder()
-                .challengeId(UUID.randomUUID())
+                .challengeId(challengeId)
                 .build();
         StatisticsResponseDto expectedResponse = StatisticsResponseDto.builder()
                 .bookmarks(1)
                 .percent(1)
                 .build();
         // Configurar el comportamiento esperado para el mock de ZContext
-        when(mockZContex.createSocket(anyInt())).thenReturn(socket);
-        when(mockZContex.createSocket(any())).thenReturn(socket);
+        when(mockContext.createSocket(anyInt())).thenReturn(socket);
+        when(mockContext.createSocket(any())).thenReturn(socket);
 
         // Configurar el comportamiento esperado para el mock de ZMQClient
-        when(zmqClient.sendMessage(eq(expectedRequest), eq(StatisticsResponseDto.class)))
+        when(zmqClient.sendMessage(expectedRequest, StatisticsResponseDto.class))
                 .thenReturn(CompletableFuture.completedFuture(expectedResponse));
-
         // Capture logs
         Logger logger = LoggerFactory.getLogger(ZMQClient.class);
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -108,10 +114,9 @@ class ChallengeServiceImpTest {
         challengeService.requestUserData();
 
         // Assert
-        verify(zmqClient).sendMessage(any(), eq(StatisticsResponseDto.class));
-
+        verify(zmqClient).sendMessage(expectedRequest, StatisticsResponseDto.class);
         // Verificar que se haya creado el socket
-        verify(mockZContex, times(1)).createSocket(anyInt());
+        verify(mockContext, times(1)).createSocket(anyInt());
 
         // Check logs
         List<ILoggingEvent> logsList = listAppender.list;

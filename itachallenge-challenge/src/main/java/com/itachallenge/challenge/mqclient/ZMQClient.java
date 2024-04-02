@@ -37,7 +37,6 @@ public class ZMQClient {
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
-
         CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
 
             ZContext context = new ZContext();
@@ -64,5 +63,23 @@ public class ZMQClient {
         }, executorService);
         return future;
     }
+/*CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
+            try (ZContext context = new ZContext()) {
+                ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+                socket.connect(SOCKET_ADDRESS);
+
+                byte[] serializedMessage = objectSerializer.serialize(message);
+                socket.send(serializedMessage, 0);
+
+                byte[] reply = socket.recv(0);
+                Object deserializedResponse = objectSerializer.deserialize(reply, clazz);
+                return deserializedResponse;
+            } catch (Exception e) {
+                log.error("Error sending message: {}", e.getMessage());
+                return null;
+            }
+        }, executorService);
+
+        return future;*/
 
 }

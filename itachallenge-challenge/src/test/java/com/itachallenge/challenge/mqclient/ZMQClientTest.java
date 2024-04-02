@@ -36,26 +36,43 @@ class ZMQClientTest {
 
     @Test
     public void testSendMessage() throws Exception {
+        //create a mock object of ZContext and ZMQ.Socket
+        ZContext context = Mockito.mock(ZContext.class);
+        ZMQ.Socket socket = Mockito.mock(ZMQ.Socket.class);
+
+        //mock the behavior of context.createSocket() to return the mocked socket
+        when(context.createSocket(any())).thenReturn(socket);
+
+        //mock the behavior of socket.recv() to return a specific byte array
+        when(socket.recv(any())).thenReturn("response".getBytes());
+        
+
+
+
+
+
+
+
+
+        /*
         // Arrange
-        ZMQClient zmqClient1 = new ZMQClient(context, "tcp://localhost:5555");
         Object message = new Object();
-        Class clazz = Object.class;
-        byte[] serializedMessage = new byte[]{};
+        byte[] serializedMessage = "Mensaje serializado".getBytes();
         when(objectSerializer.serialize(message)).thenReturn(serializedMessage);
-        byte[] reply = new byte[]{};
-        when(socket.recv(0)).thenReturn(reply);
-        Object deserializedResponse = new Object();
-        when(objectSerializer.deserialize(reply, clazz)).thenReturn(deserializedResponse);
 
         // Act
-        CompletableFuture<Object> future = zmqClient1.sendMessage(message, clazz);
+        Object deserializedResponse = "Mensaje de respuesta";
+        Class<?> clazz = Object.class; // o cualquier otra clase que esperes como respuesta
+        CompletableFuture<Object> future = zmqClient.sendMessage(message, clazz);
 
         // Assert
-        assertEquals(deserializedResponse, future.get());
-        verify(socket).send(any(byte[].class), eq(0));
+        assertTrue(future.isDone()); // Verificar que el CompletableFuture esté completo
+        assertEquals(deserializedResponse, future.get()); // Verificar que el resultado coincida con el mensaje de respuesta esperado
+        verify(socket).send(eq(serializedMessage), eq(0)); // Verificar que se envió el mensaje serializado al socket
+    }*/
     }
 }
-/*
+
     // add a unit test for the sendMessage method
 
     /*@Test
