@@ -14,10 +14,10 @@ import java.util.UUID;
 
 @Service
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
-    //region ATTRIBUTES
-    SecureRandom random = new SecureRandom();
     @Autowired
     private IUserSolutionRepository userSolutionRepository;
+    //region ATTRIBUTES
+    SecureRandom random = new SecureRandom();
 
     //endregion ATTRIBUTES
 
@@ -54,6 +54,12 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
     }
 
+    @Override
+    public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
+        return userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, true);
+    }
+
+    //endregion METHODS
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID challengeId) {
 
