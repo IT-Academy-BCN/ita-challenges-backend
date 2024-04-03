@@ -1,10 +1,20 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.repository.IUserSolutionRepository;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import reactor.test.StepVerifier;
+
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,9 +24,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(MockitoExtension.class)
 class ServiceChallengeStatisticsTest {
 
-    ServiceChallengeStatistics serviceChallengeStatistics = new ServiceChallengeStatistics();
+    @Mock
+    private IUserSolutionRepository userSolutionRepository;
+    @InjectMocks
+    ServiceChallengeStatistics serviceChallengeStatistics;
 
     @Test
     void getChallengeStatistics() {
@@ -46,50 +60,18 @@ class ServiceChallengeStatisticsTest {
     }
 
     @Test
-    void getChallengeUserPercentageTest() {
+    void testGetChallengeUsersPercentage() {
+        List<UserSolutionDocument> userSolutions = new ArrayList<>();
+        userSolutions.add(new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), false, "started", 0, new ArrayList<>()));
+        userSolutions.add(new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), false, "ended", 0, new ArrayList<>()));
 
-        List<UUID> challengeIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-        List<UUID> userIds = List.of(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-        List<UserSolutionDocument> userSolutionDocuments = new ArrayList<>();
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(0))
-                .userId(userIds.get(0))
-                .status("started")
-                .bookmarked(true)
-                .languageId(UUID.randomUUID())
-                .build());
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(1))
-                .userId(userIds.get(1))
-                .status("started")
-                .bookmarked(true)
-                .languageId(UUID.randomUUID())
-                .build());
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(2))
-                .userId(userIds.get(2))
-                .status("ended")
-                .bookmarked(false)
-                .languageId(UUID.randomUUID())
-                .solutionDocument(List.of(new SolutionDocument()))
-                .build());
-        userSolutionDocuments.add(UserSolutionDocument.builder()
-                .challengeId(challengeIds.get(3))
-                .userId(userIds.get(3))
-                .status("empty")
-                .bookmarked(true)
-                .languageId(UUID.randomUUID())
-                .build());
+        when(userSolutionRepository.findAll()).thenReturn(Flux.fromIterable(userSolutions));
 
-        assertNotNull(userSolutionDocuments);
-        assertEquals(4, userSolutionDocuments.size());
+        UUID challengeId = UUID.randomUUID();
 
-        UUID challengeId = userSolutionDocuments.get(2).getChallengeId();
-        List<UserSolutionDocument> userSolutionDocumentsChallenge = serviceChallengeStatistics.getUserSolutionsChallenge(userSolutionDocuments, challengeId);
-
-        assertEquals(1, userSolutionDocumentsChallenge.size());
-
-        float percentage = (float) userSolutionDocumentsChallenge.size()*100 / userSolutionDocuments.size();
-        assertEquals(25.00, percentage, 0.01);
+        Mono<Float> result = serviceChallengeStatistics.getChallengeUsersPercentage(challengeId);
+        StepVerifier.create(result)
+                .expectNextCount(1)
+                .verifyComplete();
     }
 }

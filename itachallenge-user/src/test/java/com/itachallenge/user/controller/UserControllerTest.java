@@ -6,9 +6,11 @@ import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.service.IUserSolutionService;
+import com.itachallenge.user.service.ServiceChallengeStatistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,6 +42,9 @@ class UserControllerTest {
 
     @Autowired
     UserController userController;
+
+    @MockBean
+    ServiceChallengeStatistics serviceChallengeStatistics;
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
@@ -219,16 +224,18 @@ class UserControllerTest {
     /* resolvado en feature#385 usando los mocks del servicio y la inyeccion en userController*/
     @Test
     void getChallengeUserPercentageTest() {
+        // Mock service response if needed
+        UUID challengeId = UUID.randomUUID();
+        float percentage = 75.0f;
+        when(serviceChallengeStatistics.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
 
-        String URI_TEST = "/statistics/percent/{idChallenge}";
-        UUID idLanguage = UUID.fromString("660e1b18-0c0a-4262-a28a-85de9df6ac5f");
-
+        // Make request and verify response
         webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, idLanguage)
-                .accept(MediaType.APPLICATION_JSON)
+                .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
                 .exchange()
-                .expectStatus().isEqualTo(500);
-        //.expectBody(Float.class);
+                .expectStatus().isOk()
+                .expectBody(Float.class)
+                .isEqualTo(percentage);
     }
 
     @Test
