@@ -4,12 +4,9 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.ServiceChallengeStatistics;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,9 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -41,9 +36,6 @@ class UserControllerTest {
 
     @Autowired
     UserController userController;
-
-    @MockBean
-    ServiceChallengeStatistics serviceChallengeStatistics;
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
@@ -188,7 +180,7 @@ class UserControllerTest {
         // Mock service response if needed
         UUID challengeId = UUID.randomUUID();
         float percentage = 75.0f;
-        when(serviceChallengeStatistics.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
+        when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
 
         // Make request and verify response
         webTestClient.get()
