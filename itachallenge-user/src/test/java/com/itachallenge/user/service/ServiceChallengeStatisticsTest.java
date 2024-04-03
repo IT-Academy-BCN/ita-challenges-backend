@@ -60,7 +60,7 @@ class ServiceChallengeStatisticsTest {
     }
 
     @Test
-    void testGetChallengeUsersPercentage() {
+    void getChallengeUsersPercentageTest() {
         List<UserSolutionDocument> userSolutions = new ArrayList<>();
         userSolutions.add(new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), false, "started", 0, new ArrayList<>()));
         userSolutions.add(new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), false, "ended", 0, new ArrayList<>()));
