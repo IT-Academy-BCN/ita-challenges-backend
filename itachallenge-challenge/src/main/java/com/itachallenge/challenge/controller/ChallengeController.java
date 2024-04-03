@@ -8,7 +8,6 @@ import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -115,7 +114,7 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "400", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {

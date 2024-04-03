@@ -133,7 +133,7 @@ class ChallengeServiceImpTest {
 
         StepVerifier.create(result)
                 .expectErrorMatches(error ->
-                        error instanceof ResourceNotFoundException
+                        error instanceof ChallengeNotFoundException
                         && error.getMessage().equals("Challenge with id " + id + " not found.")
                 );
     }
