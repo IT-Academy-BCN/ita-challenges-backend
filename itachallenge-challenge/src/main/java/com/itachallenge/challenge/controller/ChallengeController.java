@@ -261,7 +261,6 @@ public class ChallengeController {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-
     @GetMapping("/test/params/{idChallenge}/language/{idLanguage}")
     @Operation(
             operationId = "Get the testing parameters for the chosen challenge & language.",
@@ -277,6 +276,4 @@ public class ChallengeController {
                                                                               @PathVariable("idLanguage") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage) {
         return challengeService.getTestingParamsByChallengeIdAndLanguageId(idChallenge,idLanguage);
     }
-
-
 }

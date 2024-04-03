@@ -1,14 +1,12 @@
 package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.challenge.dto.TestingValueDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 class TestingValueDtoTest {
 
@@ -54,15 +52,14 @@ class TestingValueDtoTest {
     @Test
     void testDeserialization() throws Exception {
         String json = """
-            {
-                "in_param": ["input1", "input2"],
-                "out_param": ["output1", "output2"]
-            }
-            """;
+                {
+                    "in_param": ["input1", "input2"],
+                    "out_param": ["output1", "output2"]
+                }
+                """;
 
         TestingValueDto dto = objectMapper.readValue(json, TestingValueDto.class);
 
-        // Verifica cada elemento individualmente
         Assertions.assertEquals("input1", dto.getInParam().get(0).toString());
         Assertions.assertEquals("input2", dto.getInParam().get(1).toString());
         Assertions.assertEquals("output1", dto.getOutParam().get(0).toString());
