@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@ChangeUnit(id="FirstChangelog", order = "1", author = "Jonatan Vicente")
+//@ChangeUnit(id="FirstChangelog", order = "1", author = "Jonatan Vicente")
 public class DatabaseChangelog {
 
     Logger logger = LoggerFactory.getLogger(DatabaseChangelog.class);
