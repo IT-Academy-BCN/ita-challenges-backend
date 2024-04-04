@@ -5,6 +5,7 @@ import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.SecureRandom;
@@ -61,30 +62,26 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
     //endregion METHODS
     @Override
-    public Mono<Float> getChallengeUsersPercentage(UUID challengeId) {
-
-        float percentage;
-
-        // List of all UserSolution with all status started and ended and empty
-        List<UserSolutionDocument> userSolutionsV1 = getUserSolutions();
-
-        // // List of all UserSolution of challenge with id challengeId
-        List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutionsV1, challengeId);
-
-        percentage = ((float) userSolutionsChallenge.size()*100 / userSolutionsV1.size());
-        return Mono.just(percentage);
+    public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
+        return getUserSolutions()
+                .flatMapMany(Flux::fromIterable)
+                .collectList()
+                .flatMap(userSolutions -> {
+                    List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutions, idChallenge);
+                    float percentage = ((float) userSolutionsChallenge.size() * 100 / userSolutions.size());
+                    return Mono.just(percentage);
+                });
     }
 
-    List<UserSolutionDocument> getUserSolutions() {
+    private Mono<List<UserSolutionDocument>> getUserSolutions() {
         return userSolutionRepository
                 .findAll()
-                .collectList().block();
+                .collectList();
     }
 
-    List<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
+    private List<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
         return userSolutions.stream()
-                .filter(
-                        us -> challengeId.equals(us.getChallengeId())
-                ).toList();
+                .filter(us -> challengeId.equals(us.getChallengeId()))
+                .toList();
     }
 }
