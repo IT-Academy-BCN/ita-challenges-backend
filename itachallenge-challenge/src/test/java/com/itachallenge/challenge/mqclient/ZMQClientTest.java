@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.mqclient;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import com.itachallenge.challenge.helper.ObjectSerializerTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,10 +15,7 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -31,26 +29,34 @@ class ZMQClientTest {
     @Mock
     private ZMQ.Socket socket;
     @InjectMocks
-    private ZMQClient zmqClient = new ZMQClient(context, "tcp://localhost:5555");
-    //private ZMQClient zmqClient;
-
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private ZMQClient zmqClient;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        zmqClient = new ZMQClient(context, "tcp://localhost:5555");
+        when(context.createSocket(ZMQ.REQ)).thenReturn(socket);
+        objectSerializer = mock(ObjectSerializer.class); // Asegurarse de que objectSerializer no sea null
     }
+
+
     @Test
-    public void testSendMessage() throws Exception {
+    void testSendMessage() throws IOException, ExecutionException, InterruptedException {
+        // Arrange
+        Object message = new Object();
+        Class<Object> clazz = Object.class;
+        byte[] serializedMessage = new byte[]{1, 2, 3};
+        Object deserializedMessage = new Object();
 
-        // Arrange: Crear el mensaje y preparar el entorno
-        byte[] message = "Message".getBytes(); // Crear el mensaje que deseas probar
-        when(objectSerializer.serialize(any())).thenReturn(new byte[0]); // Configurar el comportamiento del mock
+        when(objectSerializer.serialize(message)).thenReturn(serializedMessage);
+        when(objectSerializer.deserialize(serializedMessage, clazz)).thenReturn(deserializedMessage);
+        when(socket.recv(0)).thenReturn(serializedMessage);
 
-        // Act: Ejecutar el método bajo prueba
-        CompletableFuture<Object> future = zmqClient.sendMessage(message, Object.class);
+        // Act
+        CompletableFuture<Object> future = zmqClient.sendMessage(message, clazz);
 
-        // Assert: Verificar el comportamiento y resultado
-        assertEquals("Response", future.join()); // Comprobar el resultado esperado
-
+        // Assert
+        assertEquals(deserializedMessage, future.get());
+        verify(socket).send(serializedMessage, 0);
+        verify(socket).recv(0);
     }
 }

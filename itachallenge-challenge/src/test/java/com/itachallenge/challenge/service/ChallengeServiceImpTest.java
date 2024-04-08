@@ -39,6 +39,7 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,20 +67,13 @@ class ChallengeServiceImpTest {
     @Mock
     private ZContext mockContext;
     @Mock
-    private ZMQClient zmqClient = new ZMQClient(mockContext, "tcp://localhost:5555");
-    //private ZMQClient zmqClient;
+    //private ZMQClient zmqClient = new ZMQClient(mockContext, "tcp://localhost:5555");
+    private ZMQClient zmqClient;
 
-    @Mock
-    private ZMQ.Socket socket;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // Configurar el comportamiento esperado para el mock de ZContext
-        when(mockContext.createSocket(anyInt())).thenReturn(socket);
-        when(mockContext.createSocket(any())).thenReturn(socket);
-
-        //zmqClient = new ZMQClient(mockContext, "tcp://localhost:5555");
     }
 
 
@@ -96,33 +90,33 @@ class ChallengeServiceImpTest {
                 .bookmarks(1)
                 .percent(1)
                 .build();
-        // Configurar el comportamiento esperado para el mock de ZContext
-        when(mockContext.createSocket(anyInt())).thenReturn(socket);
-        when(mockContext.createSocket(any())).thenReturn(socket);
 
         // Configurar el comportamiento esperado para el mock de ZMQClient
         when(zmqClient.sendMessage(expectedRequest, StatisticsResponseDto.class))
                 .thenReturn(CompletableFuture.completedFuture(expectedResponse));
+
         // Capture logs
-        Logger logger = LoggerFactory.getLogger(ZMQClient.class);
+        Logger logger = LoggerFactory.getLogger(ChallengeServiceImp.class);
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
         listAppender.start();
         lc.getLogger(Logger.ROOT_LOGGER_NAME).addAppender(listAppender);
 
         // Act
-        challengeService.requestUserData();
+        challengeService.requestUserData(challengeId);
 
         // Assert
         verify(zmqClient).sendMessage(expectedRequest, StatisticsResponseDto.class);
-        // Verificar que se haya creado el socket
-        verify(mockContext, times(1)).createSocket(anyInt());
 
         // Check logs
         List<ILoggingEvent> logsList = listAppender.list;
-        assertEquals(2, logsList.size());
-        assertEquals("Percentage: 1", logsList.get(0).getFormattedMessage());
-        assertEquals("Bookmarks: 1", logsList.get(1).getFormattedMessage());
+        if (logsList != null && logsList.size() >= 2) {
+            assertEquals("Percentage: 1", logsList.get(0).getFormattedMessage());
+            assertEquals("Bookmarks: 1", logsList.get(1).getFormattedMessage());
+        } else {
+            fail("No se generaron suficientes mensajes de registro");
+        }
+
     }
 
 

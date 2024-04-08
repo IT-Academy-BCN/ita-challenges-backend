@@ -223,11 +223,15 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public void requestUserData() {
-        ChallengeRequestDto challengeRequestDto = new ChallengeRequestDto();
+    public void requestUserData(UUID challengeId) {
+        ChallengeRequestDto challengeRequestDto = ChallengeRequestDto.builder()
+                .challengeId(challengeId)
+                .build();
 
         CompletableFuture<Object> future = zmqClient.sendMessage(challengeRequestDto, StatisticsResponseDto.class);
-
+        if (future == null) {
+            throw new IllegalStateException("Failed to send message");
+        }
         // Trabajar en otras tareas mientras se espera la respuesta
         future.thenAccept(response -> {
             // Aquí maneja la respuesta recibida
@@ -240,7 +244,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 log.error("Received unexpected response: {}", response);
             }
         });
-
     }
 
 }
