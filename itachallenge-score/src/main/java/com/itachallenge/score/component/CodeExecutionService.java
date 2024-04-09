@@ -143,6 +143,13 @@ public class CodeExecutionService {
     }
 
     public ExecutionResultDto compareResults(String result, String codeResult, ExecutionResultDto executionResultDto) {
+
+        result = result.trim(); // Eliminar espacios en blanco alrededor del resultado, a veces aparecía "/r" al final del resultado y eso hace que la comparación falle.
+        codeResult = codeResult.trim();
+
+        log.info("Result: " + result);
+        log.info("CodeResult: " + codeResult);
+
         if (result.equals(codeResult)) {
             executionResultDto.setResultCodeMatch(true);
             executionResultDto.setMessage("Code executed successfully, result matches expected result. Execution result: " + result);
