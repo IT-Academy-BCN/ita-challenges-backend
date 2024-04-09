@@ -2,7 +2,7 @@ package com.itachallenge.document.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.itachallenge.document.config.OpenApiConfig;
-import com.itachallenge.document.service.DocumentService;
+import com.itachallenge.document.service.IDocumentService;
 import io.swagger.v3.oas.models.OpenAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +23,7 @@ import java.util.Map;
 public class DocumentController {
 
     private final OpenApiConfig openApiConfig;
-    private final DocumentService documentService;
+    private final IDocumentService documentService;
 
     @Value("${spring.application.version}")
     private String version;
@@ -32,7 +32,7 @@ public class DocumentController {
     private String appName;
 
     @Autowired
-    public DocumentController(OpenApiConfig openApiConfig, DocumentService documentService) {
+    public DocumentController(OpenApiConfig openApiConfig, IDocumentService documentService) {
         this.openApiConfig = openApiConfig;
         this.documentService = documentService;
     }
@@ -50,11 +50,11 @@ public class DocumentController {
         };
     }
 
-    @GetMapping(value = "/api-docs")
+    /*@GetMapping(value = "/api-docs")
     public JsonNode getApiDocs() {
         System.out.println(documentService.getSwaggerDocs());
         return documentService.getSwaggerDocs();
-    }
+    }*/
 
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
