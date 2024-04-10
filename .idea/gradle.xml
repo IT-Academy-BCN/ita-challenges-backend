@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/itachallenge-auth" />
+            <option value="$PROJECT_DIR$/itachallenge-challenge" />
+            <option value="$PROJECT_DIR$/itachallenge-document" />
+            <option value="$PROJECT_DIR$/itachallenge-mock" />
+            <option value="$PROJECT_DIR$/itachallenge-score" />
+            <option value="$PROJECT_DIR$/itachallenge-user" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

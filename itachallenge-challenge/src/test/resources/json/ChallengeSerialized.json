@@ -15,16 +15,16 @@
     },
     "examples" : [
       {
-        "idExample" : "2dab6eaa-fdf4-4a93-8088-810a956e2bf8",
-        "exampleText" : {
+        "id_example": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8",
+        "example_text" : {
           "es" : "Texto de ejemplo",
           "en" : "Example text",
           "ca" : "Texte d'exemple"
         }
       },
       {
-        "idExample" : "6c02025e-b06f-420a-bafb-28c737b18473",
-        "exampleText" : {
+        "id_example": "6c02025e-b06f-420a-bafb-28c737b18473",
+        "example_text": {
           "es" : "Ejemplo random",
           "en" : "Random example",
           "ca" : "Exemple random"

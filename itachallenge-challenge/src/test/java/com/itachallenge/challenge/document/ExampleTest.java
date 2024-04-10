@@ -15,7 +15,7 @@ class ExampleTest {
     void getIdExample() {
     UUID idExample = UUID.randomUUID();
     ExampleDocument example = new ExampleDocument(idExample, null);
-    assertEquals(idExample, example.getIdExample());
+    assertEquals(idExample, example.getId_example());
 }
 
     @Test
@@ -25,7 +25,7 @@ class ExampleTest {
             exampleMap.put(Locale.forLanguageTag("CA"), "Exemple de prova");
             exampleMap.put(Locale.ENGLISH, "Example Text");
         ExampleDocument example = new ExampleDocument(null, exampleMap);
-        assertEquals(exampleMap, example.getExampleText());
+        assertEquals(exampleMap, example.getExample_text());
     }
 }
 
