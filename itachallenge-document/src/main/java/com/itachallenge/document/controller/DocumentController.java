@@ -60,4 +60,5 @@ public class DocumentController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
+
 }
