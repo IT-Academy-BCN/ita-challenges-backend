@@ -1,6 +1,6 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-document
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -10,13 +10,28 @@ spring:
 springdoc:
   swagger-ui:
     path: "/swagger"
-    operationsSorted: method
+    urls:
+      - name: Auth OpenAPI Definition
+        url: "/api-docs/auth"
+      - name: Challenge OpenAPI Definition
+        url: "/api-docs/challenge"
+      - name: User OpenAPI Definition
+        url: "/api-docs/user"
+      - name: Score OpenAPI Definition
+        url: "/api-docs/score"
+      - name: All OpenAPI Definition
+        url: "/api-docs" # or /api-docs/all  (redirect link)
+    show-request-headers: true
+    show-extensions: true
+    disable-swagger-default-url: true
   api-docs:
     enable: true
     path: "/api-docs"
+  cache:
+    disabled: true
 
 server:
-  port: 8764
+  port: 8769
 
 management:
   endpoints:
@@ -40,4 +55,5 @@ logging:
 url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
+
 
