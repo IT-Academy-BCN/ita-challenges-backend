@@ -21,10 +21,7 @@ public class DatabaseUpdater {
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
 
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "name")))
-                .doOnSuccess(updateResult -> {
-                    logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                    logger.info("UpdaterExecution");
-                })
+                .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterExecution"))
                 .subscribe();
     }
 
@@ -33,10 +30,7 @@ public class DatabaseUpdater {
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
 
         Mono.from(mongockTest.updateOne(new Document(), rename("name", "language_name")))
-                .doOnSuccess(updateResult -> {
-                    logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                    logger.info("UpdaterRollbackExecution");
-                })
+                .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution"))
                 .subscribe();
     }
 }
