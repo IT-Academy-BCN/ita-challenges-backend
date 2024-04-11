@@ -51,7 +51,7 @@ dependencies {
 
     implementation "io.mongock:mongock:5.0.32"
     implementation "io.mongock:mongock-springboot-v3:5.2.4"
-    implementation "io.mongock:mongodb-springdata-v4-driver:5.2.4"
+    implementation "io.mongock:mongodb-reactive-driver:5.2.4"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
