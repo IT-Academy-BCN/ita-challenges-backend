@@ -39,7 +39,6 @@ logging:
     root: INFO
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
-    org.springframework.cache: DEBUG
   pattern:
     # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
