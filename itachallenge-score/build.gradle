@@ -40,6 +40,7 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
+    implementation 'org.zeromq:jeromq:0.5.4'
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
