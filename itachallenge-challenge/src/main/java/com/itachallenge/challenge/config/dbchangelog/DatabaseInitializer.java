@@ -14,7 +14,7 @@ import java.util.UUID;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@ChangeUnit(id = "DatabaseInitalizerDemo", order = "1", author = "Ernesto Arcos")
+@ChangeUnit(id = "DatabaseInitalizerDemo", order = "1", author = "Ernesto Arcos / Pedro López")
 public class DatabaseInitializer {
     Query query = new Query(where("_id").ne(null));
     private final Logger logger = LoggerFactory.getLogger(DatabaseInitializer.class);

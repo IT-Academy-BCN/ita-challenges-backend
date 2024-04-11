@@ -39,13 +39,11 @@ public class SpringMongoDBConfig {
         return mappingConverter;
     }
 
-    //Todo to check alternatives
     @Bean
     public ConnectionDriver mongockConnection(MongoClient mongoClient) {
         return MongoReactiveDriver.withDefaultLock(mongoClient, "challenges");
     }
 
-    //Todo to check alternatives
     @Bean
     MongoClient mongoClient() {
         CodecRegistry codecRegistry = fromRegistries(
