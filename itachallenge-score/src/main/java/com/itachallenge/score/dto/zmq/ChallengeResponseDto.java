@@ -1,4 +1,4 @@
-package com.itachallenge.score.dto;
+package com.itachallenge.score.dto.zmq;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
