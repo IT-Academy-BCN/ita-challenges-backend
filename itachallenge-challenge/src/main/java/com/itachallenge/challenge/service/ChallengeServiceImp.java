@@ -19,6 +19,7 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -51,7 +52,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
 
-
+    @Cacheable (value = "challenge", key="#id", unless="#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -93,12 +94,13 @@ public class ChallengeServiceImp implements IChallengeService {
                 .collect(Collectors.toSet()));
         return challengeRepository.save(challenge);
     }
-
+    @Cacheable (value = "challengesByLanguageAndDifficulty", key="{#idLanguage, #difficulty}", unless="#result==null")
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
         // TODO: Get challenges by language and difficulty
         return null;
     }
 
+    @Cacheable (value = "allLanguages")
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
@@ -108,12 +110,14 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
 
         return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
     }
 
+    @Cacheable (value="solutions", key="{#idChallene, #idLanguage}", unless="#result==null") // Falta aplicar durabilidad de caché
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -181,7 +185,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
 
     }
-
+    @Cacheable (value="relatedChallenges", key="{#id, #offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
 
