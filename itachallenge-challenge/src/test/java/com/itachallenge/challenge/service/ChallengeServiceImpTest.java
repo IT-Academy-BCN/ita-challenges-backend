@@ -27,6 +27,8 @@ import reactor.test.StepVerifier;
 
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -545,5 +547,40 @@ class ChallengeServiceImpTest {
                 .verify();
 
     }
+
+    @Test
+    public void testCache() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDto.setChallengeId(challengeId);
+        challengeDto.setLevel("EASY");
+
+        // Mocking behavior of challengeRepository.findByUuid
+        when(challengeRepository.findByUuid(challengeId))
+                .thenReturn(Mono.just(challengeDocument));
+
+        // Mocking behavior of challengeConverter.convertDocumentToDto
+        when(challengeConverter.convertDocumentToDto(any(), any()))
+                .thenReturn(challengeDto);
+
+        // Act
+        Mono<ChallengeDto> result1 = challengeService.getChallengeById(challengeId.toString());
+        Mono<ChallengeDto> result2 = challengeService.getChallengeById(challengeId.toString());
+
+        // Assert
+        StepVerifier.create(result1)
+                .expectNext(challengeDto)
+                .verifyComplete();
+
+        StepVerifier.create(result2)
+                .expectNext(challengeDto)
+                .verifyComplete();
+
+        // Verify that findByUuid was called only once
+        verify(challengeRepository, times(1)).findByUuid(challengeId);
+    }
+
 
 }
