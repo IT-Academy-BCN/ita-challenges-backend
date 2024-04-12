@@ -551,7 +551,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    public void testCache() {
+    public void testCache() { // No pasamos el test, algo en el caché no esta bien.
         UUID challengeId = UUID.randomUUID();
         ChallengeDocument challengeDocument = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
@@ -559,7 +559,8 @@ class ChallengeServiceImpTest {
         challengeDto.setLevel("EASY");
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+        when(challengeConverter.convertDocumentToDto(eq(challengeDocument), eq(ChallengeDto.class)))
+                .thenReturn(challengeDto);
 
         // Act
         Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
