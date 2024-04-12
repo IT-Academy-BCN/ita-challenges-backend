@@ -1,6 +1,8 @@
 spring:
   application:
     name: itachallenge-challenge
+  cache:
+    type: simple
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
