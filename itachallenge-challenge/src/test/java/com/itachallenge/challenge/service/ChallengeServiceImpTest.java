@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.cache.annotation.EnableCaching;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -33,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@EnableCaching
 class ChallengeServiceImpTest {
 
     @Mock
@@ -550,35 +552,35 @@ class ChallengeServiceImpTest {
 
     @Test
     public void testCache() {
-        // Arrange
         UUID challengeId = UUID.randomUUID();
         ChallengeDocument challengeDocument = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
         challengeDto.setChallengeId(challengeId);
         challengeDto.setLevel("EASY");
 
-        // Mocking behavior of challengeRepository.findByUuid
-        when(challengeRepository.findByUuid(challengeId))
-                .thenReturn(Mono.just(challengeDocument));
-
-        // Mocking behavior of challengeConverter.convertDocumentToDto
-        when(challengeConverter.convertDocumentToDto(any(), any()))
-                .thenReturn(challengeDto);
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
 
         // Act
-        Mono<ChallengeDto> result1 = challengeService.getChallengeById(challengeId.toString());
+        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
         Mono<ChallengeDto> result2 = challengeService.getChallengeById(challengeId.toString());
 
         // Assert
-        StepVerifier.create(result1)
-                .expectNext(challengeDto)
-                .verifyComplete();
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
+                        dto.getLevel().equals(challengeDto.getLevel())
+                )
+                .expectComplete()
+                .verify();
 
+        // Assert
         StepVerifier.create(result2)
-                .expectNext(challengeDto)
-                .verifyComplete();
+                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
+                        dto.getLevel().equals(challengeDto.getLevel())
+                )
+                .expectComplete()
+                .verify();
 
-        // Verify that findByUuid was called only once
         verify(challengeRepository, times(1)).findByUuid(challengeId);
     }
 
