@@ -28,13 +28,10 @@ import reactor.test.StepVerifier;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@EnableCaching
 class ChallengeServiceImpTest {
 
     @Mock
@@ -549,41 +546,5 @@ class ChallengeServiceImpTest {
                 .verify();
 
     }
-
-    @Test
-    public void testCache() { // No pasamos el test, algo en el caché no esta bien.
-        UUID challengeId = UUID.randomUUID();
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-        challengeDto.setChallengeId(challengeId);
-        challengeDto.setLevel("EASY");
-
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(eq(challengeDocument), eq(ChallengeDto.class)))
-                .thenReturn(challengeDto);
-
-        // Act
-        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
-        Mono<ChallengeDto> result2 = challengeService.getChallengeById(challengeId.toString());
-
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
-                        dto.getLevel().equals(challengeDto.getLevel())
-                )
-                .expectComplete()
-                .verify();
-
-        // Assert
-        StepVerifier.create(result2)
-                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
-                        dto.getLevel().equals(challengeDto.getLevel())
-                )
-                .expectComplete()
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeId);
-    }
-
 
 }

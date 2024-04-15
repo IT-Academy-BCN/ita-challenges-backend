@@ -113,7 +113,6 @@ public class ChallengeServiceImp implements IChallengeService {
     @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-
         return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
     }
 
