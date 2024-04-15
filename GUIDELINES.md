@@ -42,14 +42,18 @@
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
---
+<hr/>
 
 # 1. PROJECT LINKS
 ## 1.1 Project links
-- [Github](https://github.com/IT-Academy-BCN/ita-challenges-backend)
-- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)
-- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)
-- [Figma](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)
+- GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
+<img src="img/GitHub.jpg" alt="isolated" width="400"/>
+- Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
+<img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
+- Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
+<img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
+- Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
+<img src="img/Figma.jpg" alt="Figma image" width="400"/>
 
 <hr/>
 
@@ -139,7 +143,8 @@
 Necessary Git configurations to prevent problems
 
 ### 2.2.1 Git ignore
-1. Copy file ".gitignore" from root project
+1. Copy file ".gitignore" from root project\
+   <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
 2. Paste it in the PC directory (outside of project folder)
 3. In Git Bash...
 4. Run the command: 'git config --global core.excludesfile C:\\temp\\.gitignore'\
@@ -148,7 +153,9 @@ Where...\
 Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
 
 ### 2.2.2 Autocrlf
+
 Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
 
 <hr/>
 
@@ -195,6 +202,7 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 
 <hr/>
 
+
 ## 2.5 Points to consider when doing a PR
 1. On the pull request creation page, select the base branch and the compared branch:
    - The base branch is the branch you want to merge your changes to. In this case it is the "develop" branch.
@@ -206,11 +214,13 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 6. In case you need to review and fix some problems, update your local branch with the changes and push back to the corresponding remote branch.
 7. The pull request will be automatically updated with the new changes made to your branch.
 
-
 <hr/>
 
 ## 2.6 Scrum metodology
-See https://scrumguides.org/
+https://scrumguides.org/
+
+
+<img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
 
 <hr/>
 
@@ -269,8 +279,8 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.1 package names](https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names)
 
-
 <hr/>
+
 
 ## 4.2 Class names
 #### RULES
@@ -306,7 +316,6 @@ Here are example of how URL's should be strucutrued according to esablished conv
 
 <hr/>
 
-
 ## 4.3 Method names
 #### RULES
     - lowerCamelCase 
@@ -334,7 +343,6 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
 
-
 <hr/>
 
 
@@ -353,7 +361,6 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Google Java Style Guide: 5.2.4 constant names](https://google.github.io/styleguide/javaguide.html#s5.2.4-constant-names)
 
 <hr/>
-
 
 ## 4.5 Local variable names
 #### RULES
