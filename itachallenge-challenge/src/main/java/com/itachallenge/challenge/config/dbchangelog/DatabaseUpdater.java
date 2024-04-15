@@ -1,17 +1,23 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
+import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoCollection;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
+
+import static com.mongodb.client.model.Updates.rename;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@ChangeUnit(id = "DatabaseUpdaterDemo", order = "2", author = "Ernesto Arcos")
+@ChangeUnit(id="DatabaseUpdaterDemo", order = "2", author = "Ernesto Arcos")
 public class DatabaseUpdater {
     private final Logger logger = LoggerFactory.getLogger(DatabaseUpdater.class);
     private ReactiveMongoTemplate reactiveMongoTemplate;
@@ -22,6 +28,7 @@ public class DatabaseUpdater {
 
     @Execution
     public void execution() {
+        updateFieldInCollection(client);
         addFieldToAllDocuments(reactiveMongoTemplate);
         removeFieldToAllDocuments(reactiveMongoTemplate);
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
@@ -30,6 +37,23 @@ public class DatabaseUpdater {
     }
 
     @RollbackExecution
+    public void rollBackExecution(MongoClient client) {
+        rollbackUpdateFieldInCollection(client);
+    }
+
+    private void updateFieldInCollection(MongoClient client){
+        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
+        Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "name")))
+                .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterExecution"))
+                .subscribe();
+    }
+
+    private void rollbackUpdateFieldInCollection(MongoClient client){
+        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
+
+        Mono.from(mongockTest.updateOne(new Document(), rename("name", "language_name")))
+                .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution"))
+                .subscribe();
     public void rollBackExecution() {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         logger.info("UpdaterRollbackExecution");
