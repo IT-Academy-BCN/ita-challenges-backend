@@ -1,40 +1,53 @@
-# ita-challenges-backend
+## ITA-challenges-backend
 
-### Versiones necesarias
+### Table of contents
 
-- Gradle 8.1.1
-- Java 17.0.1
+### Description
 
-### Módulos del proyecto
+### Usage
 
-- [itachallenge-challenge](itachallenge-challenge/README.md).
-- [itachallenge-score](itachallenge-score/README.md). 
-- [itachallenge-user](itachallenge-user/README.md).
-- [Consul](docker/README.md). Gestión de microservicios.
+### Installation
 
-### Guidelines de desarrollo
+### Newcomers
 
-See [GUIDELINES.md](GUIDELINES.md) for more details.
+(extract from GUIDELINES.md)
 
-<hr/>
+#### Git configuration
+
+
+#### Daily working flow
+
+#### Kanban Boards
+
+[Kanban board from project](https://github.com/orgs/IT-Academy-BCN/projects/15)
+
+Guidelines 2.4
+
+#### Pull Requests
+
+
+#### Code conventions
+
+See [GUIDELINES.md](GUIDELINES.md)
+
+### FAQ's
+
+* **May I use AI on this project? How can I use it the best way?**
+    - You must do it.
+
+* **Is there any diagram of architecture, a technical description or similar?**
+    - Yes, you can find it in the [wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki)
+
+* **To contribute to this project, do I need make a fork?**
+    - No, you don't need to fork the project. We work with a single repository, adding branches for each feature and requesting pull requests to merge them.
+
+* **Do I need start up the project fully on my pc to start coding?**
+    - Of course not.
 
 ### Contributors
 
-See [contributors.md](contributors.md) for more details.
-
-### Instrucciones para subir la versión
-
-* Asegúrese de tener Docker instalado en su máquina
-* Modifique el archivo **build.gradle** del microservicio que quiera subir de versión (atributo 'version')
-* Modifique el archivo **Dockerfile** del microservicio para renombrar la versión 
-* Modifique la tag correspondiente a la versión del microservicio en el fichero **conf/.env.dev**
-* Solicite credenciales al Administrador para subir la imagen a DockerHub
-* Desde el directorio raíz del proyecto, **ejecute el siguiente comando** para subir la imagen a DockerHub (**Linux Bash**) 
-```
-./itachallenge-[nombreDelMicroservicio]/build_Docker.sh conf/.env.dev
-```
-
 This project exists thanks to all the people who contribute.
+
 <a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=IT-Academy-BCN/ita-challenges-backend" /></a>
 
