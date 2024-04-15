@@ -1,6 +1,18 @@
 ## ITA-challenges-backend
 
+<hr>
+
 ### Table of contents
+
+1. [Description](#description)
+2. [Usage](#usage)
+3. [Installation](#installation)
+4. [Newcomers](#newcomers)
+5. [Guidelines and Code Conventions](#guidelines-and-code-conventions)
+6. [FAQ's](#faqs)
+7. [Contributors](#contributors)
+
+<hr>
 
 ### Description
 
@@ -8,12 +20,16 @@
 
 ### Installation
 
+####  Versions used
+
+#### Project links
+
+#### Procedure
+
+
 ### Newcomers
 
-(extract from GUIDELINES.md)
-
 #### Git configuration
-
 
 #### Daily working flow
 
@@ -25,8 +41,7 @@ Guidelines 2.4
 
 #### Pull Requests
 
-
-#### Code conventions
+### Guidelines and Code Conventions
 
 See [GUIDELINES.md](GUIDELINES.md)
 
@@ -50,6 +65,9 @@ This project exists thanks to all the people who contribute.
 
 <a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=IT-Academy-BCN/ita-challenges-backend" /></a>
+
+<hr>
+
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_EN.md)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_ES.md)
