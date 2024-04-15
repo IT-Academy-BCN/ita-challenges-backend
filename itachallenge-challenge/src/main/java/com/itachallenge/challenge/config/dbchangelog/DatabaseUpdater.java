@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.query.Update;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@ChangeUnit(id="DatabaseUpdaterDemo", order = "2", author = "Ernesto Arcos")
+@ChangeUnit(id="DatabaseUpdaterDemo", order = "2", author = "Ernesto Arcos / Pedro López")
 public class DatabaseUpdater {
     private final Logger logger = LoggerFactory.getLogger(DatabaseUpdater.class);
     private ReactiveMongoTemplate reactiveMongoTemplate;
@@ -27,7 +27,7 @@ public class DatabaseUpdater {
     }
 
     @Execution
-    public void execution() {
+    public void execution(MongoClient client) {
         updateFieldInCollection(client);
         addFieldToAllDocuments(reactiveMongoTemplate);
         removeFieldToAllDocuments(reactiveMongoTemplate);
@@ -39,11 +39,14 @@ public class DatabaseUpdater {
     @RollbackExecution
     public void rollBackExecution(MongoClient client) {
         rollbackUpdateFieldInCollection(client);
+        removeFieldToAllDocuments(reactiveMongoTemplate);
+        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        logger.info("UpdaterRollbackExecution");
     }
 
     private void updateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
-        Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "name")))
+        Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "language_name_updated")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterExecution"))
                 .subscribe();
     }
@@ -51,12 +54,9 @@ public class DatabaseUpdater {
     private void rollbackUpdateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
 
-        Mono.from(mongockTest.updateOne(new Document(), rename("name", "language_name")))
+        Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution"))
                 .subscribe();
-    public void rollBackExecution() {
-        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        logger.info("UpdaterRollbackExecution");
     }
 
     public void addFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {
