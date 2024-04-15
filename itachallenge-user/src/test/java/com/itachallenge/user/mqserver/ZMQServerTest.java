@@ -1,64 +1,55 @@
 package com.itachallenge.user.mqserver;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.user.dtos.zmq.ChallengeRequestDto;
 import com.itachallenge.user.dtos.zmq.StatisticsResponseDto;
 import com.itachallenge.user.helper.ObjectSerializer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.zeromq.ZMQ;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
+import org.zeromq.ZMQ;
 
-import java.nio.charset.StandardCharsets;
+import java.lang.reflect.Field;
 import java.util.UUID;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static org.mockito.Mockito.*;
-
-@ExtendWith(MockitoExtension.class)
 class ZMQServerTest {
 
-    @Mock
     private ZContext context;
-
-    @Mock
     private ObjectSerializer objectSerializer;
+    private ZMQServer zmqServer;
 
-    @Mock
-    private ZMQ.Socket socketMock;
+    @BeforeEach
+    void setUp() throws Exception {
+        context = new ZContext();
+        objectSerializer = new ObjectSerializer();
+        zmqServer = new ZMQServer(context, "tcp://*:5555");
 
-    @InjectMocks
-    private ZMQServer zmqServer = new ZMQServer(context, "socketAddress");
+        // Use reflection to set objectSerializer field
+        Field field = ZMQServer.class.getDeclaredField("objectSerializer");
+        field.setAccessible(true);
+        field.set(zmqServer, objectSerializer);
+    }
 
     @Test
     void run() throws Exception {
-
         ChallengeRequestDto challengeRequestDto = new ChallengeRequestDto();
         UUID testID = UUID.randomUUID();
         challengeRequestDto.setChallengeId(testID);
 
-        String validJson = new ObjectMapper().writeValueAsString(challengeRequestDto);
-        byte[] receivedMessage = validJson.getBytes(StandardCharsets.UTF_8);
-        byte[] serializedMessage = new byte[]{1, 2, 3};
+        new Thread(() -> zmqServer.run()).start();
 
-        when(context.createSocket(anyInt())).thenReturn(socketMock);
-        when(socketMock.recv(0)).thenReturn(receivedMessage, (byte[]) null);
+        ZMQ.Socket client = context.createSocket(SocketType.REQ);
+        client.connect("tcp://localhost:5555");
 
-        when(objectSerializer.deserialize(receivedMessage, ChallengeRequestDto.class)).thenReturn(challengeRequestDto);
-        when(objectSerializer.serialize(any(StatisticsResponseDto.class))).thenReturn(serializedMessage);
+        client.send(objectSerializer.serialize(challengeRequestDto));
 
+        byte[] reply = client.recv(0);
+        StatisticsResponseDto response = objectSerializer.deserialize(reply, StatisticsResponseDto.class);
 
-        zmqServer.run();
-
-        verify(socketMock, times(1)).bind(anyString());
-        verify(socketMock, times(1)).recv(0);
-        verify(socketMock, times(1)).send(serializedMessage, 0);
+        assertEquals(99, response.getPercent());
 
         zmqServer.stop();
     }
 }
-

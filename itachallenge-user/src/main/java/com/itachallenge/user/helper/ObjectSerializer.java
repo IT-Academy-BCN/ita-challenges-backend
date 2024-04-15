@@ -19,4 +19,3 @@ public class ObjectSerializer {
         return objectMapper.readValue(bytes, clazz);
     }
 }
-// un comentario tonto

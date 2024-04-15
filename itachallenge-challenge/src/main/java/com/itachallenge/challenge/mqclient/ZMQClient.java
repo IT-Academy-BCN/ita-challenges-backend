@@ -28,7 +28,7 @@ public class ZMQClient {
 
     public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
-        this.SOCKET_ADDRESS= socketAddress;
+        this.SOCKET_ADDRESS = socketAddress;
 
         //luego borrar este log (ahora es para verificar que se inyecta la dirección del socket)
         log.info("Socket Address: {}", socketAddress);
@@ -38,29 +38,28 @@ public class ZMQClient {
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
 
-
         CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
 
             ZContext context = new ZContext();
-            ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
-            socket.connect(SOCKET_ADDRESS);
+                ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+                socket.connect(SOCKET_ADDRESS);
 
-            Optional<byte[]> request = Optional.empty();
-            try {
-                request = Optional.of(objectSerializer.serialize(message));
-            }catch (JsonProcessingException jpe){
-                log.error(jpe.getMessage());
-            }
-            socket.send(request.orElse(new byte[0]), 0);
+                Optional<byte[]> request = Optional.empty();
+                try {
+                    request = Optional.of(objectSerializer.serialize(message));
+                }catch (JsonProcessingException jpe){
+                    log.error(jpe.getMessage());
+                }
+                socket.send(request.orElse(new byte[0]), 0);
 
-            byte[] reply = socket.recv(0);
-            Optional<Object> response = Optional.empty();
-            try {
-                response = Optional.of(objectSerializer.deserialize(reply, clazz));
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-            return response.orElse(null);
+                byte[] reply = socket.recv(0);
+                Optional<Object> response = Optional.empty();
+                try {
+                    response = Optional.of(objectSerializer.deserialize(reply, clazz));
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+                return response.orElse(null);
 
         }, executorService);
         return future;

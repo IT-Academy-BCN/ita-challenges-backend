@@ -1,62 +1,75 @@
 package com.itachallenge.challenge.mqclient;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.helper.ObjectSerializer;
-import com.itachallenge.challenge.helper.ObjectSerializerTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+import org.zeromq.ZContext;
 
-import java.io.IOException;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Fail.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class ZMQClientTest {
+
     @Mock
     private ZContext context;
-    @Mock
-    private ObjectSerializer objectSerializer;
+
     @Mock
     private ZMQ.Socket socket;
+
+    @Mock
+    private ObjectSerializer objectSerializer;
+
     @InjectMocks
     private ZMQClient zmqClient;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        zmqClient = new ZMQClient(context, "tcp://localhost:5555");
         when(context.createSocket(ZMQ.REQ)).thenReturn(socket);
-        objectSerializer = mock(ObjectSerializer.class); // Asegurarse de que objectSerializer no sea null
     }
 
-
     @Test
-    void testSendMessage() throws IOException, ExecutionException, InterruptedException {
-        // Arrange
-        Object message = new Object();
-        Class<Object> clazz = Object.class;
-        byte[] serializedMessage = new byte[]{1, 2, 3};
-        Object deserializedMessage = new Object();
+    void testSendMessage() throws ExecutionException, InterruptedException {
+        // Initialize requestMessage and response
+        ChallengeRequestDto requestMessage = ChallengeRequestDto.builder()
+                .challengeId(UUID.randomUUID())
+                .build();
 
-        when(objectSerializer.serialize(message)).thenReturn(serializedMessage);
-        when(objectSerializer.deserialize(serializedMessage, clazz)).thenReturn(deserializedMessage);
-        when(socket.recv(0)).thenReturn(serializedMessage);
+        StatisticsResponseDto response = StatisticsResponseDto.builder()
+                .percent(50)
+                .bookmarks(10)
+                .build();
 
-        // Act
-        CompletableFuture<Object> future = zmqClient.sendMessage(message, clazz);
+        byte[] message = new byte[0];
+        byte[] responseMessage = new byte[0];
 
-        // Assert
-        assertEquals(deserializedMessage, future.get());
-        verify(socket).send(serializedMessage, 0);
-        verify(socket).recv(0);
+        try {
+            when(objectSerializer.serialize(any(ChallengeRequestDto.class))).thenReturn(message);
+            when(objectSerializer.deserialize(any(byte[].class), eq(StatisticsResponseDto.class))).thenReturn(response);
+        } catch (Exception e) {
+            fail("Serialization or deserialization failed", e);
+        }
+
+        when(socket.send(message, 0)).thenReturn(true);
+        when(socket.recv(0)).thenReturn(responseMessage);
+
+        CompletableFuture<Object> future = zmqClient.sendMessage(requestMessage, StatisticsResponseDto.class);
+        StatisticsResponseDto responseResult = (StatisticsResponseDto) future.get();
+
+        verify(socket, times(1)).send(message, 0);
+        verify(socket, times(1)).recv(0);
+        assertThat(responseResult, is(response));
     }
 }
