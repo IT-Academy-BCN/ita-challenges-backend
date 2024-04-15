@@ -18,15 +18,22 @@ public class DatabaseUpdater {
 
     @Execution
     public void execution(MongoClient client) {
-        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
+        updateFieldInCollection(client);
+    }
 
+    @RollbackExecution
+    public void rollBackExecution(MongoClient client) {
+        rollbackUpdateFieldInCollection(client);
+    }
+
+    private void updateFieldInCollection(MongoClient client){
+        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "name")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterExecution"))
                 .subscribe();
     }
 
-    @RollbackExecution
-    public void rollBackExecution(MongoClient client) {
+    private void rollbackUpdateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
 
         Mono.from(mongockTest.updateOne(new Document(), rename("name", "language_name")))
