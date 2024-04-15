@@ -178,7 +178,7 @@ class ChallengeIntegrationTest {
     void getChallengesByPages_NullPageParameters_ChallengesReturned() {
         webTestClient
                 .get()
-                .uri("/itachallenge/api/v1/challenge/challenges")
+                .uri("/itachallenge/api/v1/challenge/challenges?limit=2")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
