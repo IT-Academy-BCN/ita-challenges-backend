@@ -34,6 +34,9 @@ See [contributors.md](contributors.md) for more details.
 ./itachallenge-[nombreDelMicroservicio]/build_Docker.sh conf/.env.dev
 ```
 
+This project exists thanks to all the people who contribute.
+<a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=IT-Academy-BCN/ita-challenges-backend" /></a>
 
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_EN.md)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_ES.md)
