@@ -1,22 +1,28 @@
 [
   {
-    "_id" : {
-      "$uuid" : "a75fa943-6bc9-4e62-b1db-d43d15b149c7"
+    "_id": {
+      "$uuid": "a75fa943-6bc9-4e62-b1db-d43d15b149c7"
     },
-    "user_id": { "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"},
-    "challenge_id": { "$uuid":"5c1a97e5-1cca-4144-9981-2de1fb73b178"},
-    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "user_id": {
+      "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"
+    },
+    "challenge_id": {
+      "$uuid": "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+    },
+    "language_id": {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    },
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 95,
-     "solution":[ 
-       {
-          "_id" :  {
-              "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
-          },
-          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+    "solution": [
+      {
+        "_id": {
+          "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+        },
+        "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
       }
-  	]
+    ]
   },
   {
     "_id" : {
@@ -26,7 +32,7 @@
     "challenge_id": { "$uuid": "7fc6a737-dc36-4e1b-87f3-120d81c548aa"},
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 95,
     "solution":[
       {
@@ -45,7 +51,7 @@
     "challenge_id": { "$uuid": "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"},
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
-    "status": "medium",
+    "status": "STARTED",
     "score": 60,
     "solution": [
       {
@@ -54,7 +60,7 @@
         },
         "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
       }
-	]
+    ]
   },
   {
     "_id": { "$uuid": "c3c9e174-3b1f-472b-a6b5-af662619847b" },
@@ -62,7 +68,7 @@
     "challenge_id": { "$uuid": "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": false,
-    "status": "started",
+    "status": "STARTED",
     "score": 67,
     "solution": [
       {
@@ -77,7 +83,7 @@
     "challenge_id": { "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 63,
     "solution": [
       {
@@ -92,7 +98,7 @@
     "challenge_id": { "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": false,
-    "status": "in progress",
+    "status": "STARTED",
     "score": 66,
     "solution": [
       {
@@ -107,7 +113,7 @@
     "challenge_id": { "$uuid": "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": false,
-    "status": "started",
+    "status": "STARTED",
     "score": 69,
     "solution": [
       {
@@ -122,7 +128,7 @@
     "challenge_id": { "$uuid": "6099f6e8-39b2-4c72-9ae1-21fdd3c9010a" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "started",
+    "status": "STARTED",
     "score": 66,
     "solution": [
       {
@@ -137,7 +143,7 @@
     "challenge_id": { "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 74,
     "solution": [
       {
@@ -151,8 +157,8 @@
     "user_id": { "$uuid": "b599bb79-9870-4de5-b13a-e9b2a7605390" },
     "challenge_id": { "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
-    "bookmarked": false,
-    "status": "started",
+    "bookmarked": true,
+    "status": "STARTED",
     "score": 63,
     "solution": [
       {
@@ -167,7 +173,7 @@
     "challenge_id": { "$uuid": "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "started",
+    "status": "STARTED",
     "score": 92,
     "solution": [
       {
@@ -182,7 +188,7 @@
     "challenge_id": { "$uuid": "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 94,
     "solution": [
       {
@@ -197,7 +203,7 @@
     "challenge_id": { "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7" },
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909" },
     "bookmarked": true,
-    "status": "started",
+    "status": "STARTED",
     "score": 74,
     "solution": [
       {
@@ -212,7 +218,7 @@
     "challenge_id": { "$uuid": "c3946e8d-e7b4-4e3c-aacf-e8d6c5e9d0b6" },
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f" },
     "bookmarked": false,
-    "status": "started",
+    "status": "STARTED",
     "score": 81,
     "solution": [
       {
@@ -227,7 +233,7 @@
     "challenge_id": { "$uuid": "a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f" },
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef" },
     "bookmarked": false,
-    "status": "in progress",
+    "status": "STARTED",
     "score": 88,
     "solution": [
       {
@@ -242,7 +248,7 @@
     "challenge_id": { "$uuid": "a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "started",
+    "status": "STARTED",
     "score": 97,
     "solution": [
       {
@@ -257,7 +263,7 @@
     "challenge_id": { "$uuid": "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121" },
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f" },
     "bookmarked": true,
-    "status": "in progress",
+    "status": "STARTED",
     "score": 76,
     "solution": [
       {
@@ -272,7 +278,7 @@
     "challenge_id": { "$uuid": "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "in progress",
+    "status": "STARTED",
     "score": 79,
     "solution": [
       {
@@ -286,8 +292,8 @@
     "user_id": { "$uuid": "5f7b85fa-2a83-470a-9c6b-3270790cc592" },
     "challenge_id": { "$uuid": "ec52b7f1-2f78-4a83-aef0-3b9b6f34a763" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
-    "bookmarked": false,
-    "status": "ended",
+    "bookmarked": true,
+    "status": "EMPTY",
     "score": 73,
     "solution": [
       {
@@ -301,8 +307,8 @@
     "user_id": { "$uuid": "afe603bf-07a5-4e8e-845c-6062375cb0e1" },
     "challenge_id": { "$uuid": "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
-    "bookmarked": false,
-    "status": "started",
+    "bookmarked": true,
+    "status": "EMPTY",
     "score": 71,
     "solution": [
       {
@@ -317,7 +323,7 @@
     "challenge_id": { "$uuid": "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4" },
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909" },
     "bookmarked": false,
-    "status": "in progress",
+    "status": "STARTED",
     "score": 85,
     "solution": [
       {
@@ -332,7 +338,7 @@
     "challenge_id": { "$uuid": "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4" },
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f" },
     "bookmarked": true,
-    "status": "started",
+    "status": "STARTED",
     "score": 86,
     "solution": [
       {
@@ -347,7 +353,7 @@
     "challenge_id": { "$uuid": "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121" },
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef" },
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 67,
     "solution": [
       {
@@ -362,7 +368,7 @@
     "challenge_id": { "$uuid": "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "in progress",
+    "status": "STARTED ",
     "score": 91,
     "solution": [
       {
