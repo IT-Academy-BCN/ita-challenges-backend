@@ -19,7 +19,7 @@ public class ChallengeByIdAndLangRequestDto {
     @JsonProperty(value="id_challenge", index = 0)
     private UUID challengeId;
 
-    @JsonProperty(value = "id_language", index = 0)
+    @JsonProperty(value = "id_language", index = 1)
     private UUID languageId;
 
 }
