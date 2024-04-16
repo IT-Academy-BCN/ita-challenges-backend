@@ -7,7 +7,7 @@ import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
-import com.itachallenge.user.repository.IUserSolutionRepository;
+import com.itachallenge.user.repository.IUserSolutionRepository;;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
