@@ -38,3 +38,4 @@
 * Luisa Sans - https://github.com/Lsans80
 * Pedro Lopez - https://github.com/plopezgit
 * Manel Solé Reina - https://github.com/Msoler92
+* Christian Amor - https://github.com/christianamor3
