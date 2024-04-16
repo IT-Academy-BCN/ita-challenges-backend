@@ -9,6 +9,7 @@ import io.mongock.runner.springboot.MongockSpringboot;
 import io.mongock.runner.springboot.base.MongockInitializingBeanRunner;
 import org.bson.UuidRepresentation;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,8 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @Configuration
 public class SpringMongoDBConfig {
 
-    private static final String mongoConnectionString= "mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin";
+    @Value("${spring.data.mongodb.uri}")
+    private String mongoConnectionString;
 
 
     //to avoid _class attribute in mongoDB
