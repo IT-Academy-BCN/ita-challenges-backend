@@ -21,6 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.annotation.EnableCaching;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -32,6 +33,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SpringBootTest 
 class ChallengeServiceImpTest {
 
     @Mock
@@ -546,5 +548,46 @@ class ChallengeServiceImpTest {
                 .verify();
 
     }
+    @Test
+    void getChallengeById_cachéTest() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDto.setChallengeId(challengeId);
+        challengeDto.setLevel("EASY");
+
+        // Configura el comportamiento del repositorio mock
+        when(challengeRepository.findByUuid(challengeId))
+                .thenReturn(Mono.just(challengeDocument))  // Primera llamada devuelve el documento del desafío
+                .thenReturn(Mono.empty());  // Segunda llamada devuelve un valor nulo, indicando que el desafío está en caché
+
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+
+        // Act - Realiza la primera llamada al método
+        Mono<ChallengeDto> result1 = challengeService.getChallengeById(challengeId.toString());
+
+        // Act - Realiza la segunda llamada al método
+        Mono<ChallengeDto> result2 = challengeService.getChallengeById(challengeId.toString());
+
+        // Assert - Verifica que los desafíos sean iguales y que la segunda llamada no llame al repositorio
+        StepVerifier.create(result1)
+                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
+                        dto.getLevel().equals(challengeDto.getLevel())
+                )
+                .expectComplete()
+                .verify();
+
+        StepVerifier.create(result2)
+                .expectNextMatches(dto -> dto.getChallengeId().equals(challengeId) &&
+                        dto.getLevel().equals(challengeDto.getLevel())
+                )
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeId); // Verifica que findByUuid solo se llame una vez
+        verify(challengeConverter, times(2)).convertDocumentToDto(any(), any()); // Verifica que convertDocumentToDto se llame dos veces
+    }
+
 
 }
