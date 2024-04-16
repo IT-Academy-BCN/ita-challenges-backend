@@ -29,6 +29,9 @@ public class SpringMongoDBConfig {
     @Value("${mongock.migration-scan-package}")
     private String migrationScanPackage;
 
+    @Value("${mongock.transactionEnabled}")
+    private boolean transactionEnabled;
+
     //to avoid _class attribute in mongoDB
     @Bean
     public MappingMongoConverter mappingMongoConverter(MongoDatabaseFactory factory,
@@ -47,7 +50,7 @@ public class SpringMongoDBConfig {
                 .setDriver(MongoReactiveDriver.withDefaultLock(mongoClient, "challenges"))
                 .addMigrationScanPackage(migrationScanPackage)
                 .setSpringContext(context)
-                .setTransactionEnabled(false)
+                .setTransactionEnabled(transactionEnabled)
                 .buildInitializingBeanRunner();
     }
 
