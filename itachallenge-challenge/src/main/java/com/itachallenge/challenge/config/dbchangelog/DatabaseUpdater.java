@@ -31,17 +31,14 @@ public class DatabaseUpdater {
         updateFieldInCollection(client);
         addFieldToAllDocuments(reactiveMongoTemplate);
         removeFieldToAllDocuments(reactiveMongoTemplate);
-        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        logger.info("UpdaterExecution");
-
+        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nupdaterExecution");
     }
 
     @RollbackExecution
     public void rollBackExecution(MongoClient client) {
         rollbackUpdateFieldInCollection(client);
         removeFieldToAllDocuments(reactiveMongoTemplate);
-        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        logger.info("UpdaterRollbackExecution");
+        logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution");
     }
 
     private void updateFieldInCollection(MongoClient client){
@@ -64,10 +61,7 @@ public class DatabaseUpdater {
         Query query = new Query(where("_id").ne(null));
 
         reactiveMongoTemplate.updateMulti(query, update, "mongockTest")
-                .doOnSuccess(success -> {
-                    logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                    logger.info("addFieldToAllDocuments");
-                })
+                .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\naddFieldToAllDocuments"))
                 .subscribe();
     }
 
@@ -76,10 +70,7 @@ public class DatabaseUpdater {
         Query query = new Query(where("_id").ne(null));
 
         reactiveMongoTemplate.updateMulti(query, update, "mongockTest")
-                .doOnSuccess(success -> {
-                    logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                    logger.info("removeFieldFromAllDocuments");
-                })
+                .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nremoveFieldFromAllDocuments"))
                 .subscribe();
     }
 

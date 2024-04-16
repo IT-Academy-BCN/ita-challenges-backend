@@ -46,10 +46,7 @@ public class DatabaseInitializer {
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
         LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "LanguageDemo");
         reactiveMongoTemplate.save(languageDocument, COLLECTION_NAME)
-                .doOnSuccess(success -> {
-                    logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-                    logger.info("execution");
-                })
+                .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nexecution"))
                 .subscribe();
     }
 
