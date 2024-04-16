@@ -26,6 +26,8 @@ public class SpringMongoDBConfig {
     @Value("${spring.data.mongodb.uri}")
     private String mongoConnectionString;
 
+    @Value("${mongock.migration-scan-package}")
+    private String migrationScanPackage;
 
     //to avoid _class attribute in mongoDB
     @Bean
@@ -43,7 +45,7 @@ public class SpringMongoDBConfig {
                                                     ApplicationContext context) {
         return MongockSpringboot.builder()
                 .setDriver(MongoReactiveDriver.withDefaultLock(mongoClient, "challenges"))
-                .addMigrationScanPackage("com.itachallenge.challenge.config.dbchangelog")
+                .addMigrationScanPackage(migrationScanPackage)
                 .setSpringContext(context)
                 .setTransactionEnabled(false)
                 .buildInitializingBeanRunner();
