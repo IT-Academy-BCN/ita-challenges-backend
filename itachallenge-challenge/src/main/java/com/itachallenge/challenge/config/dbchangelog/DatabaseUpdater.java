@@ -21,6 +21,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class DatabaseUpdater {
     private final Logger logger = LoggerFactory.getLogger(DatabaseUpdater.class);
     private ReactiveMongoTemplate reactiveMongoTemplate;
+    private static final String COLLECTION_NAME = "mongockTest";
 
     public DatabaseUpdater(ReactiveMongoTemplate reactiveMongoTemplate) {
         this.reactiveMongoTemplate = reactiveMongoTemplate;
@@ -42,14 +43,14 @@ public class DatabaseUpdater {
     }
 
     private void updateFieldInCollection(MongoClient client){
-        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
+        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "language_name_updated")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterExecution"))
                 .subscribe();
     }
 
     private void rollbackUpdateFieldInCollection(MongoClient client){
-        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection("mongockTest");
+        MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
 
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution"))
@@ -60,7 +61,7 @@ public class DatabaseUpdater {
         Update update = new Update().set("newField", "newValue");
         Query query = new Query(where("_id").ne(null));
 
-        reactiveMongoTemplate.updateMulti(query, update, "mongockTest")
+        reactiveMongoTemplate.updateMulti(query, update, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\naddFieldToAllDocuments"))
                 .subscribe();
     }
@@ -69,7 +70,7 @@ public class DatabaseUpdater {
         Update update = new Update().unset("newField");
         Query query = new Query(where("_id").ne(null));
 
-        reactiveMongoTemplate.updateMulti(query, update, "mongockTest")
+        reactiveMongoTemplate.updateMulti(query, update, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nremoveFieldFromAllDocuments"))
                 .subscribe();
     }
