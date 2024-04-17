@@ -3,10 +3,6 @@ spring:
     name: itachallenge-challenge
   jmx:
     enabled: true
-  data:
-    mongodb:
-      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin
-      uuid-representation: standard
 
 mongock:
   enabled: true
@@ -17,7 +13,6 @@ mongock:
     maxWaitingForLockMinutes: 5
     maxTries: 3 # Number of times to try to acquire a lock
     maxTriesInterval: 1000 # Interval in milliseconds between tries to acquire a lock
-
 
 server:
   port: 8762
