@@ -3,6 +3,10 @@ spring:
     name: itachallenge-challenge
   jmx:
     enabled: true
+  data:
+    mongodb:
+      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin
+      uuid-representation: standard
 
 mongock:
   enabled: true
