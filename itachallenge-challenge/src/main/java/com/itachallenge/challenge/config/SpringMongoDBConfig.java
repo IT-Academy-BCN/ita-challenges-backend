@@ -1,9 +1,13 @@
 package com.itachallenge.challenge.config;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
 import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
 import io.mongock.driver.mongodb.reactive.driver.MongoReactiveDriver;
 import io.mongock.runner.springboot.MongockSpringboot;
 import io.mongock.runner.springboot.base.MongockInitializingBeanRunner;
+import org.bson.UuidRepresentation;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -46,5 +50,16 @@ public class SpringMongoDBConfig {
                 .setTransactionEnabled(transactionEnabled)
                 .buildInitializingBeanRunner();
     }
+
+    //Todo: encapsulation is required
+    @Bean
+    MongoClient mongoClient() {
+
+        return MongoClients.create(MongoClientSettings.builder()
+                .applyConnectionString(new ConnectionString("mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin"))
+                .uuidRepresentation(UuidRepresentation.STANDARD)
+                .build());
+    }
+
 
 }
