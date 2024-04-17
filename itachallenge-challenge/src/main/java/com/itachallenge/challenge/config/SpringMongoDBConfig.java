@@ -23,8 +23,8 @@ import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 @Configuration
 public class SpringMongoDBConfig {
 
-    @Value("${spring.data.mongodb.uri}")
-    private String mongoConnectionString;
+    //@Value("${spring.data.mongodb.uri}")
+   // private String mongoConnectionString;
 
     @Value("${mongock.migration-scan-package}")
     private String migrationScanPackage;
@@ -58,7 +58,7 @@ public class SpringMongoDBConfig {
     MongoClient mongoClient() {
 
         return MongoClients.create(MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString(mongoConnectionString))
+                .applyConnectionString(new ConnectionString("mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin"))
                 .uuidRepresentation(UuidRepresentation.STANDARD)
                 .build());
     }
