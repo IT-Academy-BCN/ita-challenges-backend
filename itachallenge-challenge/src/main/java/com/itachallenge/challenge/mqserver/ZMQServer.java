@@ -2,7 +2,7 @@ package com.itachallenge.challenge.mqserver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.challenge.dto.TestingValueDto;
-import com.itachallenge.challenge.dto.zmq.ChallengeByIdAndLangRequestDto;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.TestingValuesResponseDto;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import jakarta.annotation.PostConstruct;
@@ -49,12 +49,12 @@ public class ZMQServer {
 
                 Optional<Object> request = Optional.empty();
                 try {
-                    request = Optional.of(objectSerializer.deserialize(reply, ChallengeByIdAndLangRequestDto.class));
+                    request = Optional.of(objectSerializer.deserialize(reply, ChallengeRequestDto.class));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
 
-                log.info("Received: [" + ((ChallengeByIdAndLangRequestDto)request.get()).getChallengeId() + "]");
+                log.info("Received: [" + ((ChallengeRequestDto)request.get()).getChallengeId() + "]");
 
                 //TODO Hook to ChallengeService
                 TestingValuesResponseDto dto = new TestingValuesResponseDto();
