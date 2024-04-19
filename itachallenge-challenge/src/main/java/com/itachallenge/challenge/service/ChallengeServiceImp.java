@@ -93,17 +93,32 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeRepository.save(challenge);
     }
 
+    @Override
+    public Flux<ChallengeDto> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> difficulty, int offset, int limit) {
+        Flux<ChallengeDocument> challenges;
 
-    public Flux<ChallengeDto> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty, int offset, int limit) {
-        return validateUUID(idLanguage)
-                .flatMapMany(languageId -> languageRepository.findByIdLanguage(languageId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage + " not found")))
-                        .flatMapMany(lang -> challengeConverter.convertDocumentFluxToDtoFlux(
-                                challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty, languageId).skip(offset).take(limit),
-                                ChallengeDto.class
-                        ))
-                );
+        if (idLanguage.isPresent() && difficulty.isPresent()) {
+            challenges = validateUUID(idLanguage.get())
+                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage.get() + " not found")))
+                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty.get(), uuid)));
+        } else if (idLanguage.isPresent()) {
+            challenges = validateUUID(idLanguage.get())
+                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage.get() + " not found")))
+                            .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
+        } else if (difficulty.isPresent()) {
+            challenges = challengeRepository.findByLevel(difficulty.get());
+        } else {
+            return Flux.error(new IllegalArgumentException("At least one of idLanguage or difficulty must be provided"));
+        }
+
+        return challenges
+                .skip(offset)
+                .take(limit)
+                .flatMap(challenge -> Mono.fromCallable(() -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))); // Convertir de forma reactiva
     }
+
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);

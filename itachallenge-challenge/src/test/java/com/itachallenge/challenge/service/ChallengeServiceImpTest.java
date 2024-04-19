@@ -548,13 +548,11 @@ class ChallengeServiceImpTest {
 
     @Test
     void getChallengesByLanguageAndDifficulty_ValidInput_ChallengesReturned() {
-        // Arrange
-        String languageId = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
+        // Asumiendo que todos los UUIDs son válidos y que los datos dependientes se configuran correctamente.
+        UUID validLanguageId = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         String difficulty = "EASY";
         int offset = 0;
         int limit = 2;
-
-        UUID validLanguageId = UUID.fromString(languageId);
 
         LanguageDocument foundLanguage = new LanguageDocument();
         when(languageRepository.findByIdLanguage(validLanguageId)).thenReturn(Mono.just(foundLanguage));
@@ -565,24 +563,27 @@ class ChallengeServiceImpTest {
 
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
-        List<ChallengeDto> expectedChallenges = List.of(challengeDto1, challengeDto2);
 
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(eq(difficulty),eq(validLanguageId)))
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(eq(difficulty), eq(validLanguageId)))
                 .thenReturn(Flux.fromIterable(challengeDocuments));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class)))
-                .thenReturn(Flux.fromIterable(expectedChallenges));
+
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
+                .thenAnswer(invocation -> {
+                    ChallengeDocument doc = invocation.getArgument(0);
+                    return doc == challenge1 ? challengeDto1 : challengeDto2; // Direct return without Mono
+                });
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageAndDifficulty(languageId, difficulty, offset, limit);
+        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(validLanguageId.toString()), Optional.of(difficulty), offset, limit);
 
         // Assert
         StepVerifier.create(result)
-                .expectNextCount(2)
+                .expectNext(challengeDto1)
+                .expectNext(challengeDto2)
                 .expectComplete()
                 .verify();
 
         verify(challengeRepository).findByLevelAndLanguages_IdLanguage(difficulty, validLanguageId);
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), eq(ChallengeDto.class));
+        verify(challengeConverter, times(2)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
-
 }
