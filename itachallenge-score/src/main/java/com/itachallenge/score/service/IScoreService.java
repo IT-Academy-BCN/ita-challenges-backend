@@ -1,7 +1,8 @@
 package com.itachallenge.score.service;
 
 import com.itachallenge.score.dto.zmq.TestingValuesResponseDto;
+import reactor.core.publisher.Mono;
 
 public interface IScoreService {
-    TestingValuesResponseDto getTestParams(String challengeId);
+    Mono<TestingValuesResponseDto> getTestParams(String challengeId);
 }

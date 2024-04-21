@@ -37,10 +37,11 @@ public class ScoreController {
                     return ResponseEntity.ok(scoreResponse);
                 });
     }
-
+    //TODO For early testing purposes only. Needs to be removed
     @GetMapping("/zmq")
     public Mono<ResponseEntity<TestingValuesResponseDto>> getTestParams() {
-        return Mono.just(ResponseEntity.ok(scoreService.getTestParams("dcacb291-b4aa-4029-8e9b-284c8ca80296")));
+        return scoreService.getTestParams("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                .map(response -> ResponseEntity.ok(response));
     }
 
 
