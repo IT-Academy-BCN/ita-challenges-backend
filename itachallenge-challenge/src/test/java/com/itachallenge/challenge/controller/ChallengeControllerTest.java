@@ -9,6 +9,7 @@ import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.DefaultServiceInstance;
@@ -416,6 +417,17 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
+    }
+
+    @Test
+    void getVersionTest() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/version")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
+                .jsonPath("$.version").isEqualTo("1.2.0-RELEASE");
     }
 
 }

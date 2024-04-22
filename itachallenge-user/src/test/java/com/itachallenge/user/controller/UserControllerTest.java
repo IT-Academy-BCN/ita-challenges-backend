@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.*;
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
 class UserControllerTest {
-    @Autowired()
+    @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
@@ -292,6 +293,16 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.CONFLICT);
     }
 
+    @Test
+    void getVersionTest() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/version")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.application_name").isEqualTo("itachallenge-user")
+                .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
+    }
 
 }
 
