@@ -1,6 +1,7 @@
 spring:
   application:
     name: itachallenge-mock
+    version: 1.0.1-RELEASE
 
 
 springdoc:
