@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping(value = "/itachallenge/api/v1/mock")
 public class MockController {
     @Value("${spring.application.version}")
     private String version;
@@ -22,7 +23,7 @@ public class MockController {
         return "Hello ITAchallenge-Mock  ;) !!!";
     }
 
-    @GetMapping("/version")
+    @GetMapping(value="/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
         Map<String, String> response = new HashMap<>();
         response.put("application_name", appName);
