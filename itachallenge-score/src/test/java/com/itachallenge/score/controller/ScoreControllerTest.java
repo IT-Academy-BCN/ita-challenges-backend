@@ -3,6 +3,7 @@ package com.itachallenge.score.controller;
 import com.itachallenge.score.document.ScoreRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -38,6 +39,17 @@ class ScoreControllerTest {
                 .jsonPath("$.solution_text").isEqualTo("texto de ejemplo")
                 .jsonPath("$.score").isEqualTo(99);
 
+    }
+
+    @Test
+    void getVersionTest() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/score/version")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.application_name").isEqualTo("itachallenge-score")
+                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
     }
 
 }

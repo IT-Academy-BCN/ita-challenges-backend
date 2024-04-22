@@ -37,4 +37,5 @@
 * Alicia Gómez - https://github.com/Alicia-gy
 * Luisa Sans - https://github.com/Lsans80
 * Pedro Lopez - https://github.com/plopezgit
+* Ernesto Arcos - https://github.com/ArcosErnesto
 * Christian Amor - https://github.com/christianamor3

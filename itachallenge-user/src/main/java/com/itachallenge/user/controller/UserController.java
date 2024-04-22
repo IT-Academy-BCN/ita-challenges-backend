@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @Validated
@@ -33,6 +31,12 @@ public class UserController {
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
+
+    @Value("${spring.application.version}")
+    private String version;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
 
     @Operation(summary = "Testing the App")
@@ -128,5 +132,24 @@ public class UserController {
                         bookmarkRequestDto.getUuid_user(),
                         bookmarkRequestDto.isBookmarked())
                 .map(result -> ResponseEntity.ok(bookmarkRequestDto));
+    }
+
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version and name.",
+                            content = @Content(schema = @Schema(implementation = Map.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> getVersion() {
+        Map<String, String> response = new HashMap<>();
+        response.put("application_name", appName);
+        response.put("version", version);
+        return Mono.just(ResponseEntity.ok(response));
     }
 }
