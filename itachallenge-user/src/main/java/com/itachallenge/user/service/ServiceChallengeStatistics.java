@@ -67,6 +67,9 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
                 .flatMapMany(Flux::fromIterable)
                 .collectList()
                 .flatMap(userSolutions -> {
+                    if (userSolutions.isEmpty()) {
+                        return Mono.just(0f);
+                    }
                     List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutions, idChallenge);
                     float percentage = ((float) userSolutionsChallenge.size() * 100 / userSolutions.size());
                     return Mono.just(percentage);

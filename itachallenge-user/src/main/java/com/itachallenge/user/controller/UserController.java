@@ -121,12 +121,15 @@ public class UserController {
                             content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<Float> challengeUserPercentageStatistic(
+    public Mono<ResponseEntity<ChallengeUserPercentageStatisticDto>> challengeUserPercentageStatistic(
             @PathVariable("idChallenge")
             @GenericUUIDValid(message = "Invalid UUID for challenge")
             String idChallenge) {
 
-        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge));
+        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge))
+                .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/bookmark")

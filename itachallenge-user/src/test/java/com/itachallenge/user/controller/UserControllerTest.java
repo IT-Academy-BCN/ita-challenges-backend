@@ -22,7 +22,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -177,22 +179,23 @@ class UserControllerTest {
         return URI_TEST;
     }
 
-    //endregion PRIVATE METHODS
-    /* resolvado en feature#385 usando los mocks del servicio y la inyeccion en userController*/
     @Test
     void getChallengeUserPercentageTest() {
-        // Mock service response if needed
         UUID challengeId = UUID.randomUUID();
         float percentage = 75.0f;
+        ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
+
         when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
 
-        // Make request and verify response
         webTestClient.get()
                 .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Float.class)
-                .isEqualTo(percentage);
+                .expectBody(ChallengeUserPercentageStatisticDto.class)
+                .value(responseDto -> {
+                    assertEquals(expectedDto.getChallengeId(), responseDto.getChallengeId());
+                    assertEquals(expectedDto.getPercentage(), responseDto.getPercentage());
+                });
     }
 
     @Test
