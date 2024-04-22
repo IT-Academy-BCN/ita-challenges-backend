@@ -42,14 +42,14 @@ public class DatabaseUpdater {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution");
     }
 
-    private void updateFieldInCollection(MongoClient client){
+    public void updateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "language_name_updated")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterExecution"))
                 .subscribe();
     }
 
-    private void rollbackUpdateFieldInCollection(MongoClient client){
+    public void rollbackUpdateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
 
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name")))
