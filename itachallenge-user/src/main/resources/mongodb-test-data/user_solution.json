@@ -7,7 +7,7 @@
     "challenge_id": { "$uuid":"5c1a97e5-1cca-4144-9981-2de1fb73b178"},
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 95,
      "solution":[ 
        {
@@ -26,7 +26,7 @@
     "challenge_id": { "$uuid": "7fc6a737-dc36-4e1b-87f3-120d81c548aa"},
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
-    "status": "ended",
+    "status": "ENDED",
     "score": 95,
     "solution":[
       {
@@ -45,7 +45,7 @@
     "challenge_id": { "$uuid": "866853b8-ae7d-4daf-8c82-5e6f653e0fc1"},
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
-    "status": "empty",
+    "status": "EMPTY",
     "score": 60,
     "solution": [
       {
