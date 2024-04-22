@@ -23,10 +23,12 @@ public class DatabaseUpdater {
     private ReactiveMongoTemplate reactiveMongoTemplate;
     private static final String COLLECTION_NAME = "mongockTest";
 
+    // Constructor to initialize the ReactiveMongoTemplate
     public DatabaseUpdater(ReactiveMongoTemplate reactiveMongoTemplate) {
         this.reactiveMongoTemplate = reactiveMongoTemplate;
     }
 
+    // Execution method that is called to perform the database update operations
     @Execution
     public void execution(MongoClient client) {
         updateFieldInCollection(client);
@@ -35,6 +37,7 @@ public class DatabaseUpdater {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nupdaterExecution");
     }
 
+    // Rollback method that is called to revert the database update operations in case of any failure
     @RollbackExecution
     public void rollBackExecution(MongoClient client) {
         rollbackUpdateFieldInCollection(client);
@@ -42,6 +45,7 @@ public class DatabaseUpdater {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution");
     }
 
+    // Method to update a field in a collection
     public void updateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
         Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "language_name_updated")))
@@ -49,6 +53,7 @@ public class DatabaseUpdater {
                 .subscribe();
     }
 
+    // Method to roll back the update operation performed on a field in a collection
     public void rollbackUpdateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
 
@@ -57,6 +62,7 @@ public class DatabaseUpdater {
                 .subscribe();
     }
 
+    // Method to add a new field to all documents in a collection
     public void addFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {
         Update update = new Update().set("newField", "newValue");
         Query query = new Query(where("_id").ne(null));
@@ -66,6 +72,7 @@ public class DatabaseUpdater {
                 .subscribe();
     }
 
+    // Method to remove a field from all documents in a collection
     public void removeFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {
         Update update = new Update().unset("newField");
         Query query = new Query(where("_id").ne(null));
