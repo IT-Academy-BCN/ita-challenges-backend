@@ -75,6 +75,12 @@ class DatabaseUpdaterTest {
 
             when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockTest"))).thenReturn(Mono.empty());
 
+        DatabaseUpdater databaseUpdater = new DatabaseUpdater(reactiveMongoTemplateMock);
+
+        databaseUpdater.rollBackExecution(mongoClient);
+
+        verify(mongoCollection).updateOne((Bson) any(), (Bson) any());
+
     }
 
     @Test
