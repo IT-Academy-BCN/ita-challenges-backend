@@ -14,8 +14,8 @@ public class ExampleDocument {
 
     @Id
     @Field(name="id_example")
-    private UUID idExample;
+    private UUID id_example;
 
     @Field(name="example_text")
-    private Map<Locale, String> exampleText;
+    private Map<Locale, String> example_text;
 }
