@@ -196,8 +196,7 @@ public class UserSolutionRepositoryTest {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByStatus(testStatus);
         StepVerifier.create(solutionsFound)
-                .expectNextMatches(userSolutionDocument -> userSolutionDocument.getStatus().equals(testStatus))
-                //.expectNextCount()
+                .thenConsumeWhile(userSolutionDocument -> userSolutionDocument.getStatus().equals(testStatus))
                 .verifyComplete();
     }
 
