@@ -20,6 +20,7 @@ public class DatabaseInitializer {
     private final Logger logger = LoggerFactory.getLogger(DatabaseInitializer.class);
     private static final String COLLECTION_NAME = "mongockTest";
 
+    // Method to create a new collection before the execution of the change unit
     @BeforeExecution
     public void createCollection(MongoDatabase mongoDatabase) {
         SubscriberSync<Void> subscriber = new MongoSubscriberSync<>();
@@ -31,6 +32,7 @@ public class DatabaseInitializer {
         logger.info("mongockTest collection created");
     }
 
+    // Method to rollback the changes before the execution of the change unit, in case of any failure
     @RollbackBeforeExecution
     public void rollbackBeforeExecution(MongoDatabase mongoDatabase) {
         SubscriberSync<Void> subscriber = new MongoSubscriberSync<>();
@@ -42,6 +44,7 @@ public class DatabaseInitializer {
         logger.info("mongockTest collection droped");
     }
 
+    // Method to execute the changes in the database
     @Execution
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
         LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "LanguageDemo");
@@ -50,6 +53,7 @@ public class DatabaseInitializer {
                 .subscribe();
     }
 
+    // Method to rollback the changes in case of any failure during the execution
     @RollbackExecution
     public void rollback(ReactiveMongoTemplate reactiveMongoTemplate) {
         reactiveMongoTemplate.remove(query, COLLECTION_NAME)
