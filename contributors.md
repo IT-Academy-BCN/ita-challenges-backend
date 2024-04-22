@@ -38,3 +38,4 @@
 * Luisa Sans - https://github.com/Lsans80
 * Pedro Lopez - https://github.com/plopezgit
 * Christian Amor - https://github.com/christianamor3
+* Marc Sánchez Moreno - https://github.com/marcsanchez95
