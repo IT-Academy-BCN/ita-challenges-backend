@@ -39,6 +39,8 @@
 * Pedro Lopez - https://github.com/plopezgit
 * Manel Solé Reina - https://github.com/Msoler92
 * Ernesto Arcos - https://github.com/ArcosErnesto
+* Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
 * Christian Amor - https://github.com/christianamor3
 * Marc Santasusana Berch - https://github.com/MarcSantasusana
-* Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
+* Gerard Benages - https://github.com/OZu16
+
