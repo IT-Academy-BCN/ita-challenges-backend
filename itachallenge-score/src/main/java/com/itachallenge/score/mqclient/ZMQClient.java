@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
@@ -35,10 +36,8 @@ public class ZMQClient {
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
 
-        CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
-
-            ZContext context = new ZContext();
-            ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+        return CompletableFuture.supplyAsync(() -> {
+            ZMQ.Socket socket = context.createSocket(SocketType.REQ);
             socket.connect(SOCKET_ADDRESS);
 
             Optional<byte[]> request = Optional.empty();
@@ -59,6 +58,5 @@ public class ZMQClient {
             return response.orElse(null);
 
         }, executorService);
-        return future;
     }
 }

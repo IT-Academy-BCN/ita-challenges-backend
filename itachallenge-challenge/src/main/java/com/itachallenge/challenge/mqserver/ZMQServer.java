@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
@@ -40,8 +41,7 @@ public class ZMQServer {
     }
 
     public void run(){
-        try (ZContext context = new ZContext()) {
-            ZMQ.Socket socket = context.createSocket(ZMQ.REP);
+        try (ZMQ.Socket socket = context.createSocket(SocketType.REP)) {
             socket.bind(SOCKET_ADDRESS);
 
             while (!Thread.currentThread().isInterrupted()) {
