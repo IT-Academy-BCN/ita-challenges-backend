@@ -121,7 +121,7 @@ class ChallengeServiceImpTest {
 //    }
 
     @Test
-    void getChallengeById_NonexistentId_ReturnsEmptyMono() {
+    void getChallengeByIdWhenNonexistentIdThenReturnsError_test() {
 
         String idString = "4f8a6c91-8a9d-49b0-9f2c-3e67d2b18b7d";
 
@@ -132,7 +132,10 @@ class ChallengeServiceImpTest {
         Mono<ChallengeDto> result = challengeService.getChallengeById(idString);
 
         StepVerifier.create(result)
-                .verifyComplete();
+                .expectErrorMatches(error ->
+                        error instanceof ChallengeNotFoundException
+                        && error.getMessage().equals("Challenge with id " + id + " not found.")
+                );
     }
 
     @Test
