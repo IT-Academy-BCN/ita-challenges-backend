@@ -421,33 +421,37 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallengesTestingValues_ValidIds_ReturnsTestingValues() {
-        String challengeId = UUID.randomUUID().toString();
-        String languageId = UUID.randomUUID().toString();
+void getChallengesTestingValues_ValidIds_ReturnsTestingValues() {
+    String challengeId = UUID.randomUUID().toString();
+    String languageId = UUID.randomUUID().toString();
 
-        List<TestingValueDto> testingValuesDto = List.of(
-                TestingValueDto.builder().inParam(List.of("input1")).outParam(List.of("output1")).build(),
-                TestingValueDto.builder().inParam(List.of("input2")).outParam(List.of("output2")).build()
-        );
+    List<Map<String, Object>> testingValues = List.of(
+            Map.of("in_params", List.of("input1"), "out_params", List.of("output1")),
+            Map.of("in_params", List.of("input2"), "out_params", List.of("output2"))
+    );
 
-        GenericResultDto<TestingValueDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, testingValuesDto.size(), testingValuesDto.size(), testingValuesDto.toArray(new TestingValueDto[0]));
+    Map<String, Object> expectedResult = new HashMap<>();
+    expectedResult.put("uuid_challenge", challengeId);
+    expectedResult.put("uuid_language", languageId);
+    expectedResult.put("test_params", testingValues);
 
-        when(challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId))
-                .thenReturn(Mono.just(expectedResult));
+    when(challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId))
+            .thenReturn(Mono.just(expectedResult));
 
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/test/params/{idChallenge}/language/{idLanguage}", challengeId, languageId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.results[0].in_param[0]").isEqualTo("input1")
-                .jsonPath("$.results[0].out_param[0]").isEqualTo("output1")
-                .jsonPath("$.results[1].in_param[0]").isEqualTo("input2")
-                .jsonPath("$.results[1].out_param[0]").isEqualTo("output2");
+    webTestClient.get()
+            .uri("/itachallenge/api/v1/challenge/test/params/{idChallenge}/language/{idLanguage}", challengeId, languageId)
+            .exchange()
+            .expectStatus().isOk()
+            .expectBody()
+            .jsonPath("$.uuid_challenge").isEqualTo(challengeId)
+            .jsonPath("$.uuid_language").isEqualTo(languageId)
+            .jsonPath("$.test_params[0].in_params[0]").isEqualTo("input1")
+            .jsonPath("$.test_params[0].out_params[0]").isEqualTo("output1")
+            .jsonPath("$.test_params[1].in_params[0]").isEqualTo("input2")
+            .jsonPath("$.test_params[1].out_params[0]").isEqualTo("output2");
 
-        verify(challengeService).getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId);
-    }
+    verify(challengeService).getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId);
+}
 
     @Test
     void getVersionTest() {

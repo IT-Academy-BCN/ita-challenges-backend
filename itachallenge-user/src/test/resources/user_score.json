@@ -368,7 +368,7 @@
     "challenge_id": { "$uuid": "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6" },
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f" },
     "bookmarked": true,
-    "status": "STARTED ",
+    "status": "STARTED",
     "score": 91,
     "solution": [
       {

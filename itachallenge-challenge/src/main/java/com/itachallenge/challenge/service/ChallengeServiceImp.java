@@ -201,9 +201,8 @@ public class ChallengeServiceImp implements IChallengeService {
                         })
                 );
     }
-
     @Override
-    public Mono<GenericResultDto<TestingValueDto>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage) {
+    public Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage) {
 
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -221,13 +220,16 @@ public class ChallengeServiceImp implements IChallengeService {
                                         .filter(lang -> lang.getIdLanguage().equals(languageId))
                                         .findFirst();
                                 if (languageOptional.isPresent()) {
-                                    List<TestingValueDto> testingValues = challenge.getTestingValues()
-                                            .stream()
+                                    return Flux.fromIterable(challenge.getTestingValues())
                                             .map(testingValueDocument -> testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class))
-                                            .toList();
-                                    GenericResultDto<TestingValueDto> resultDto = new GenericResultDto<>();
-                                    resultDto.setInfo(0, testingValues.size(), testingValues.size(), testingValues.toArray(new TestingValueDto[0]));
-                                    return Mono.just(resultDto);
+                                            .collectList()
+                                            .map(testingValues -> {
+                                                Map<String, Object> response = new LinkedHashMap<>();
+                                                response.put("uuid_challenge", idChallenge);  // Changed from "challengeId" to "uuid_challenge"
+                                                response.put("uuid_language", idLanguage);  // Changed from "languageId" to "uuid_language"
+                                                response.put("test_params", testingValues);
+                                                return response;
+                                            });
                                 } else {
                                     return Mono.error(new ChallengeNotFoundException("Language " + idLanguage + " not found in Challenge " + idChallenge));
                                 }

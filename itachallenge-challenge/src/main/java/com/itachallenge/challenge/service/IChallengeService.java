@@ -4,6 +4,8 @@ import com.itachallenge.challenge.dto.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 public interface IChallengeService {
 
     Mono<ChallengeDto> getChallengeById(String id);
@@ -14,5 +16,5 @@ public interface IChallengeService {
     Flux<ChallengeDto> getAllChallenges(int offset, int limit);
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty);
     Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit);
-    Mono<GenericResultDto<TestingValueDto>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage);
+    Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage);
 }

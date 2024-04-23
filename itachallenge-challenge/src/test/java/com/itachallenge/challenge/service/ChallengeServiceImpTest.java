@@ -564,26 +564,26 @@ class ChallengeServiceImpTest {
                 .outParam(Collections.singletonList("output"))
                 .build();
 
-        List<TestingValueDto> expectedTestingValues = Collections.singletonList(
-                TestingValueDto.builder()
-                        .inParam(Collections.singletonList("input"))
-                        .outParam(Collections.singletonList("output"))
-                        .build()
-        );
+        List<TestingValueDto> expectedTestingValues = Collections.singletonList(testingValueDto);
+
+        Map<String, Object> expectedResult = new LinkedHashMap<>();
+        expectedResult.put("uuid_challenge", challengeId.toString());
+        expectedResult.put("uuid_language", languageId.toString());
+        expectedResult.put("test_params", expectedTestingValues);
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
         when(testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class)).thenReturn(testingValueDto);
 
         // Act
-        Mono<GenericResultDto<TestingValueDto>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
+        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
 
         // Assert
         StepVerifier.create(result)
                 .assertNext(response -> {
-                    assertThat(response.getOffset()).isZero();
-                    assertThat(response.getLimit()).isEqualTo(expectedTestingValues.size());
-                    assertThat(response.getCount()).isEqualTo(expectedTestingValues.size());
-                    assertThat(response.getResults()).isEqualTo(expectedTestingValues.toArray());
+                    assertThat(response.get("uuid_challenge")).isEqualTo(challengeId.toString());
+                    assertThat(response.get("uuid_language")).isEqualTo(languageId.toString());
+                    assertThat(((List<TestingValueDto>)response.get("test_params")).get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
+                    assertThat(((List<TestingValueDto>)response.get("test_params")).get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
                 })
                 .expectComplete()
                 .verify();
