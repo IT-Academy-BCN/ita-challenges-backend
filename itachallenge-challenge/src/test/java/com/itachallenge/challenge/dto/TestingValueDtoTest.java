@@ -66,4 +66,38 @@ class TestingValueDtoTest {
         Assertions.assertEquals("output2", dto.getOutParam().get(1).toString());
     }
 
+    @Test
+    void testEqualsAndHashCode() {
+        // Arrange
+        List<?> inParams1 = List.of("input1", "input2");
+        List<?> outParams1 = List.of("output1", "output2");
+        TestingValueDto dto1 = TestingValueDto.builder()
+                .inParam(inParams1)
+                .outParam(outParams1)
+                .build();
+
+        List<?> inParams2 = List.of("input1", "input2");
+        List<?> outParams2 = List.of("output1", "output2");
+        TestingValueDto dto2 = TestingValueDto.builder()
+                .inParam(inParams2)
+                .outParam(outParams2)
+                .build();
+
+        // Act & Assert
+        assertThat(dto1).isEqualTo(dto2);
+        assertThat(dto1).hasSameHashCodeAs(dto2);
+
+        // Arrange
+        List<?> inParams3 = List.of("input3", "input4");
+        List<?> outParams3 = List.of("output3", "output4");
+        TestingValueDto dto3 = TestingValueDto.builder()
+                .inParam(inParams3)
+                .outParam(outParams3)
+                .build();
+
+        // Act & Assert
+        assertThat(dto1).isNotEqualTo(dto3);
+        assertThat(dto1.hashCode()).isNotEqualTo(dto3.hashCode());
+    }
+
 }
