@@ -76,12 +76,8 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      },
-      {
-        "$uuid" : "7e181ec8-3f9a-4e43-a75c-8319e245ccee"
-      }
+      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
       {
