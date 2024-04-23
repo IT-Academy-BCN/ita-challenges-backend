@@ -40,3 +40,4 @@
 * Manel Solé Reina - https://github.com/Msoler92
 * Ernesto Arcos - https://github.com/ArcosErnesto
 * Christian Amor - https://github.com/christianamor3
+* Gerard Benages - https://github.com/OZu16
