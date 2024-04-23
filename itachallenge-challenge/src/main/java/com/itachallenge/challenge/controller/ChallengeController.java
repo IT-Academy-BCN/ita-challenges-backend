@@ -120,8 +120,10 @@ public class ChallengeController {
             summary = "Get to see the Challenge level, its details and the available languages.",
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID"),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {

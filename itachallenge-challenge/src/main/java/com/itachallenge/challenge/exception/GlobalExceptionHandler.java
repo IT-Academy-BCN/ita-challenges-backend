@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public Mono<ResponseEntity<MessageDto>> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        MessageDto messageDto = new MessageDto("Challenge Id not found");
+        MessageDto messageDto = new MessageDto(ex.getMessage());
         return Mono.just(ResponseEntity.ok().body(messageDto));
     }
 

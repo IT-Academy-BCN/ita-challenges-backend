@@ -34,7 +34,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
-    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge id not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
@@ -55,7 +55,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(CHALLENGE_NOT_FOUND_ERROR)))
                         .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
                         .doOnSuccess(challengeDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
