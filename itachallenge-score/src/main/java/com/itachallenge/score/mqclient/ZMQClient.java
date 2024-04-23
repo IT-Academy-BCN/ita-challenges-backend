@@ -2,6 +2,7 @@ package com.itachallenge.score.mqclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.helper.ObjectSerializer;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +22,25 @@ import java.util.concurrent.Executors;
 public class ZMQClient {
 
     private final ZContext context;
+    private final ZMQ.Socket socket;
     private final String SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQClient.class);
 
     @Autowired
-    ObjectSerializer objectSerializer;
+    private ObjectSerializer objectSerializer;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+        this.socket = context.createSocket(SocketType.REQ);
+        socket.connect(SOCKET_ADDRESS);
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
 
         return CompletableFuture.supplyAsync(() -> {
-            ZMQ.Socket socket = context.createSocket(SocketType.REQ);
-            socket.connect(SOCKET_ADDRESS);
 
             Optional<byte[]> request = Optional.empty();
             try {
@@ -58,5 +60,10 @@ public class ZMQClient {
             return response.orElse(null);
 
         }, executorService);
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        context.close();
     }
 }

@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.TestingValuesResponseDto;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class ZMQServer {
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
     @Autowired
-    ObjectSerializer objectSerializer;
+    private ObjectSerializer objectSerializer;
 
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
@@ -74,6 +75,11 @@ public class ZMQServer {
                 socket.send(response.orElse(new byte[0]), 0);
             }
         }
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        context.close();
     }
 }
 
