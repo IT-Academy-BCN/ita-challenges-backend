@@ -4,6 +4,8 @@ spring:
     version: 1.2.0-RELEASE
   jmx:
     enabled: true
+  profiles:
+    active: test
 
 mongock:
   enabled: true
