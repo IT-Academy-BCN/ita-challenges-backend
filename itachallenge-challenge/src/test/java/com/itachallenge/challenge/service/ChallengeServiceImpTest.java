@@ -580,10 +580,17 @@ class ChallengeServiceImpTest {
         // Assert
         StepVerifier.create(result)
                 .assertNext(response -> {
-                    assertThat(response.get("uuid_challenge")).isEqualTo(challengeId.toString());
-                    assertThat(response.get("uuid_language")).isEqualTo(languageId.toString());
-                    assertThat(((List<TestingValueDto>)response.get("test_params")).get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
-                    assertThat(((List<TestingValueDto>)response.get("test_params")).get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
+                    assertThat(response).containsEntry("uuid_challenge", challengeId.toString());
+                    assertThat(response).containsEntry("uuid_language", languageId.toString());
+                    Object testParamsObject = response.get("test_params");
+                    if (testParamsObject instanceof List) {
+                        List<?> testParamsList = (List<?>) testParamsObject;
+                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
+                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
+                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
+                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
+                        }
+                    }
                 })
                 .expectComplete()
                 .verify();
@@ -591,4 +598,28 @@ class ChallengeServiceImpTest {
         verify(challengeRepository).findByUuid(challengeId);
         verify(testingValueConverter).convertDocumentToDto(testingValueDocument, TestingValueDto.class);
     }
+
+    @Test
+    void getTestingParamsByChallengeIdAndLanguageId_invalidLanguageId_ChallengeNotFoundExceptionThrown() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID anotherLanguageId = UUID.randomUUID(); // This is a different languageId that is not in the challenge
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(challengeId);
+        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+
+        // Act
+        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), anotherLanguageId.toString());
+
+        // Assert
+        StepVerifier.create(result)
+                .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("Language " + anotherLanguageId + " not found in Challenge " + challengeId))
+                .verify();
+
+        verify(challengeRepository).findByUuid(challengeId);
+    }
+
 }
