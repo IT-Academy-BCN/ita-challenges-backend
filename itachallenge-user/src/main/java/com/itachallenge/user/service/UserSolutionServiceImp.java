@@ -69,15 +69,15 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-            .map(savedDocument -> UserSolutionScoreDto.builder()
-                    .userId(String.valueOf(savedDocument.getUserId()))
-                    .languageId(String.valueOf(savedDocument.getLanguageId()))
-                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                    .score(savedDocument.getScore())
-                    .build())
-            .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
-            .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
+                .map(savedDocument -> UserSolutionScoreDto.builder()
+                        .userId(String.valueOf(savedDocument.getUserId()))
+                        .languageId(String.valueOf(savedDocument.getLanguageId()))
+                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                        .score(savedDocument.getScore())
+                        .build())
+                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
+                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
@@ -94,6 +94,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 })
                 .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
     }
+
     private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
         UserSolutionDocument newDocument = UserSolutionDocument.builder()
                 .uuid(UUID.randomUUID())
@@ -109,7 +110,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
-                    if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
+                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
                         return Mono.error(new UnmodifiableSolutionException("Existing solution has status ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
@@ -133,12 +134,18 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private ChallengeStatus determineChallengeStatus(String status) {
         ChallengeStatus challengeStatus = null;
 
-        if(status == null || status.isEmpty()) {
+        if (status.equalsIgnoreCase("STARTED")) {
             challengeStatus = ChallengeStatus.STARTED;
+            return challengeStatus;
         } else if (status.equalsIgnoreCase("ENDED")) {
             challengeStatus = ChallengeStatus.ENDED;
+            return challengeStatus;
+        } else if (status.equalsIgnoreCase("EMPTY")) {
+            challengeStatus = ChallengeStatus.EMPTY;
+            return challengeStatus;
         }
         return challengeStatus;
     }
 
 }
+
