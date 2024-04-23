@@ -8,6 +8,14 @@ mongock:
     maxTries: 3 # Number of times to try to acquire a lock
     maxTriesInterval: 1000 # Interval in milliseconds between tries to acquire a lock
 
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui-custom.html"
+    operationsSorted: method
+  api-docs:
+    enable: true
+    path: "/api-docs"
+
 server:
   port: 8762
 
@@ -27,7 +35,7 @@ logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
-    "[com.itachallenge]": INFO
+    "[com.businessassistantbcn]": INFO
   pattern:
     # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
@@ -36,14 +44,10 @@ logging:
 
 url:
   connection_timeout: 30000
-  fake_connection_timeout: 1
   maxBytesInMemory: 30000000
-  ds_test: https://swapi.py4e.com/api/vehicles/
 
 validation:
-  number: "^\\d{1,9}$"                           # Integers up to 9 digits
-  maxLimit200: "^-1$|^([1-9]\\d?|1\\d{2}|200)$"  # Integer in range [1, 200] or -1 for all.
-  defaultLimit: 200
+  number: "^\\d{1,9}$"                             # Integers up to 9 digits
 
 messages:
   errorMessage: "Invalid values."
