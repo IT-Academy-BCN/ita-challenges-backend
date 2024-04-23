@@ -8,9 +8,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.RelatedDto;
-import com.itachallenge.challenge.exception.BadUUIDException;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -94,21 +92,22 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<ChallengeDto> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> difficulty, int offset, int limit) {
+    public Flux<ChallengeDto> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
         Flux<ChallengeDocument> challenges;
 
-        if (idLanguage.isPresent() && difficulty.isPresent()) {
+        if (idLanguage.isPresent() && level.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage.get() + " not found")))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(difficulty.get(), uuid)));
+                            .switchIfEmpty(Mono.error(new NotFoundException("Language with id " + idLanguage.get() + " not found")))
+                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
         } else if (idLanguage.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Language with id " + idLanguage.get() + " not found")))
+                            .switchIfEmpty(Mono.error(new NotFoundException("Language with id " + idLanguage.get() + " not found")))
                             .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
-        } else if (difficulty.isPresent()) {
-            challenges = challengeRepository.findByLevel(difficulty.get());
+        } else if (level.isPresent()) {
+            challenges = challengeRepository.findByLevel(level.get())
+                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
         } else {
             return Flux.error(new IllegalArgumentException("At least one of idLanguage or difficulty must be provided"));
         }
