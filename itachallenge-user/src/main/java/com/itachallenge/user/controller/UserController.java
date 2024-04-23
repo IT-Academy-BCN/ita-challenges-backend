@@ -69,7 +69,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
+    public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
@@ -78,24 +78,22 @@ public class UserController {
 
     @PutMapping(path = "/solution")
     @Operation(
-            summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
+            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
                             mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
                             content = {@Content(schema = @Schema())})
             }
     )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
-        return userScoreService.addSolution(
-                        userSolutionDto.getUserId(),
-                        userSolutionDto.getChallengeId(),
-                        userSolutionDto.getLanguageId(),
-                        userSolutionDto.getSolutionText())
-                .map(savedScoreDto ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
+        return userScoreService.addSolution(userSolutionDto)
+                .map(savedUserSolutionScoreDto ->
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
                 );
     }
 
