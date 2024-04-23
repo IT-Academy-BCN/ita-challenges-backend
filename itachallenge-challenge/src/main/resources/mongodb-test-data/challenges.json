@@ -78,6 +78,9 @@
     "solutions": [
       {
         "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
+      },
+      {
+        "$uuid" : "7e181ec8-3f9a-4e43-a75c-8319e245ccee"
       }
     ],
     "resources": [
