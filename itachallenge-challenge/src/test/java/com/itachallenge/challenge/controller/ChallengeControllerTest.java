@@ -3,7 +3,6 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -11,12 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.client.DefaultServiceInstance;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -236,32 +231,32 @@ class ChallengeControllerTest {
     void getChallengesByLanguageAndDifficultyTest() {
         // Arrange
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
-        String difficulty = "EASY";
+        String level = "EASY";
         int offset = 0;
         int limit = 2;
         ChallengeDto challengeDto1 = new ChallengeDto();
-        challengeDto1.setLevel(difficulty);
+        challengeDto1.setLevel(level);
         ChallengeDto challengeDto2 = new ChallengeDto();
-        challengeDto2.setLevel(difficulty);
+        challengeDto2.setLevel(level);
         List<ChallengeDto> challengeDtos = List.of(challengeDto1, challengeDto2);
 
         Flux<ChallengeDto> expectedResult = Flux.fromIterable(challengeDtos);
 
         // Mock del servicio con los parámetros correctos
-        when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(difficulty), offset, limit))
+        when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit))
                 .thenReturn(expectedResult);
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&difficulty=" + difficulty + "&offset=" + offset + "&limit=" + limit)
+                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&level=" + level + "&offset=" + offset + "&limit=" + limit)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
                 .value(challenges -> {
                     assert challenges != null;
-                    assert challenges.get(0).getLevel().equals(difficulty);
-                    assert challenges.get(1).getLevel().equals(difficulty);
+                    assert challenges.get(0).getLevel().equals(level);
+                    assert challenges.get(1).getLevel().equals(level);
                 });
     }
 
