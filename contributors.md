@@ -41,3 +41,5 @@
 * Ernesto Arcos - https://github.com/ArcosErnesto
 * Christian Amor - https://github.com/christianamor3
 * Marc Santasusana Berch - https://github.com/MarcSantasusana
+* Gerard Benages - https://github.com/OZu16
+
