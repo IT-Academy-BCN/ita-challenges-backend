@@ -34,6 +34,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
+    private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
+
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
@@ -98,12 +100,12 @@ public class ChallengeServiceImp implements IChallengeService {
         if (idLanguage.isPresent() && level.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException("Language with id " + idLanguage.get() + " not found")))
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
                             .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
         } else if (idLanguage.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException("Language with id " + idLanguage.get() + " not found")))
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
                             .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
         } else if (level.isPresent()) {
             challenges = challengeRepository.findByLevel(level.get())
