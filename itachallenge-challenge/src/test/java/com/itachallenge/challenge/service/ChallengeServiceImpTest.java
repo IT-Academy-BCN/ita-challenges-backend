@@ -589,4 +589,57 @@ class ChallengeServiceImpTest {
         verify(challengeRepository).findByLevelAndLanguages_IdLanguage(difficulty, validLanguageId);
         verify(challengeConverter, times(2)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
+
+    @Test
+    void getChallengesByLanguageOrDifficulty_NeitherPresent_ExceptionThrown() {
+        // Act
+        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.empty(), 0, 1);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectErrorMatches(error -> error instanceof IllegalArgumentException
+                        && error.getMessage().equals("At least one of idLanguage or difficulty must be provided"))
+                .verify();
+    }
+
+    @Test
+    void getChallengesByLanguageOrDifficulty_OnlyIdLanguagePresent_ChallengesReturned() {
+        // Arrange
+        String languageId = UUID.randomUUID().toString();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        when(languageRepository.findByIdLanguage(UUID.fromString(languageId))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLanguages_IdLanguage(UUID.fromString(languageId))).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+
+        // Act
+        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNext(challengeDto)
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengesByLanguageOrDifficulty_OnlyLevelPresent_ChallengesReturned() {
+        // Arrange
+        String level = "EASY";
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        when(challengeRepository.findByLevel(level)).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+
+        // Act
+        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(level), 0, 1);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNext(challengeDto)
+                .verifyComplete();
+    }
+
+
 }
