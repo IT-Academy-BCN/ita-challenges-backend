@@ -181,19 +181,21 @@ public class ChallengeController {
 
     @GetMapping("/challenges/")
     @Operation(
-            operationId = "Get challenges on a page by language and difficulty.",
-            summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty.",
+            operationId = "Get challenges on a page by language and difficulty, language or difficulty.",
+            summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "Level not found.", content = {@Content(schema = @Schema())})
             })
 
     public Flux<ChallengeDto> getChallengesByLanguageOrDifficulty(
             @RequestParam Optional<String> idLanguage,
-            @RequestParam Optional<String> difficulty,
+            @RequestParam Optional<String> level,
             @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
             @RequestParam(defaultValue = DEFAULT_LIMIT) int limit) {
-        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, difficulty, offset, limit);
+        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
     }
 
 
