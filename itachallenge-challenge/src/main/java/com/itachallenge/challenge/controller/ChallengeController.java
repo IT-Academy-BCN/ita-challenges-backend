@@ -2,10 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
@@ -172,7 +169,9 @@ public class ChallengeController {
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
+
             })
     public Flux<ChallengeDto> getAllChallenges
             (@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
@@ -187,7 +186,10 @@ public class ChallengeController {
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The language with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters"),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
             (@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
@@ -266,6 +268,22 @@ public class ChallengeController {
              @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
                      limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
+
+    @GetMapping("/test/params/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Get the testing parameters for the chosen challenge & language.",
+            summary = "Get the arrays of the testing values in & out parameters",
+            description = "Sending the ID Challenge & ID Language returns the relevant challenge's testing values.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The Challenge Id & Language Id can't be null or empty.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<Map<String, Object>> getChallengesTestingValues(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
+                                                                @PathVariable("idLanguage") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage) {
+        return challengeService.getTestingParamsByChallengeIdAndLanguageId(idChallenge, idLanguage);
     }
 
     @GetMapping("/version")
