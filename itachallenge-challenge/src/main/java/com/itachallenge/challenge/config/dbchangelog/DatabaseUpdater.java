@@ -21,7 +21,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class DatabaseUpdater {
     private final Logger logger = LoggerFactory.getLogger(DatabaseUpdater.class);
     private ReactiveMongoTemplate reactiveMongoTemplate;
-    private static final String COLLECTION_NAME = "mongockTest";
+    private static final String COLLECTION_NAME = "mongockDemo";
 
     // Constructor to initialize the ReactiveMongoTemplate
     public DatabaseUpdater(ReactiveMongoTemplate reactiveMongoTemplate) {

@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-class DatabaseUpdaterTest {
+class DatabaseUpdaterUnitTest {
     @Mock
     private MongoDatabase mongoDatabase;
 
@@ -47,17 +47,17 @@ class DatabaseUpdaterTest {
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
             when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-            when(mongoDatabase.getCollection("mongockTest")).thenReturn(mongoCollection);
+            when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
             when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
 
-        when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockTest"))).thenReturn(Mono.empty());
+        when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockDemo"))).thenReturn(Mono.empty());
 
         DatabaseUpdater databaseUpdater = new DatabaseUpdater(reactiveMongoTemplateMock);
 
         databaseUpdater.execution(mongoClient);
 
         verify(mongoCollection).updateOne((Bson) any(), (Bson) any());
-        verify(reactiveMongoTemplateMock, times(2)).updateMulti(any(), any(), eq("mongockTest"));
+        verify(reactiveMongoTemplateMock, times(2)).updateMulti(any(), any(), eq("mongockDemo"));
     }
 
     @Test
@@ -70,10 +70,10 @@ class DatabaseUpdaterTest {
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
         when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection("mongockTest")).thenReturn(mongoCollection);
+        when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
         when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
 
-            when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockTest"))).thenReturn(Mono.empty());
+            when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockDemo"))).thenReturn(Mono.empty());
 
         DatabaseUpdater databaseUpdater = new DatabaseUpdater(reactiveMongoTemplateMock);
 
@@ -92,7 +92,7 @@ class DatabaseUpdaterTest {
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
         when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection("mongockTest")).thenReturn(mongoCollection);
+        when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
         when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
 
         databaseUpdater.updateFieldInCollection(mongoClient);
@@ -109,7 +109,7 @@ class DatabaseUpdaterTest {
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
         when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection("mongockTest")).thenReturn(mongoCollection);
+        when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
         when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
 
         databaseUpdater.rollbackUpdateFieldInCollection(mongoClient);
@@ -123,12 +123,12 @@ class DatabaseUpdaterTest {
         Query query = new Query(where("_id").ne(null));
         Update update = new Update().set("newField", "newValue");
 
-        when(reactiveMongoTemplate.updateMulti(query, update, "mongockTest"))
+        when(reactiveMongoTemplate.updateMulti(query, update, "mongockDemo"))
                 .thenReturn(Mono.just(UpdateResult.acknowledged(1, 1L, null)));
 
         databaseUpdater.addFieldToAllDocuments(reactiveMongoTemplate);
 
-        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, "mongockTest");
+        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, "mongockDemo");
     }
 
     @Test
@@ -136,11 +136,11 @@ class DatabaseUpdaterTest {
         Update update = new Update().unset("newField");
         Query query = new Query(where("_id").ne(null));
 
-        when(reactiveMongoTemplate.updateMulti(query, update, "mongockTest"))
+        when(reactiveMongoTemplate.updateMulti(query, update, "mongockDemo"))
                 .thenReturn(Mono.just(UpdateResult.acknowledged(1, 1L, null)));
 
         databaseUpdater.removeFieldToAllDocuments(reactiveMongoTemplate);
 
-        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, "mongockTest");
+        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, "mongockDemo");
     }
 }

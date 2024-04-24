@@ -1,10 +1,11 @@
 package com.itachallenge.challenge.integration;
 
-import com.itachallenge.challenge.config.dbchangelog.DatabaseInitializer;
-import com.mongodb.reactivestreams.client.MongoClients;
+import com.itachallenge.challenge.config.dbchangelog.TestDatabaseInitializer;
 import com.mongodb.reactivestreams.client.MongoClient;
+import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -28,17 +29,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @Testcontainers
 @ActiveProfiles("mongockTest")
-public class DatabaseInitializerIntegrationTest {
+class MongockIntegrationTest {
+    @Mock
+    MongoDatabase mongoDatabase;
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")
-            .waitingFor(Wait.forListeningPort());;
+            .waitingFor(Wait.forListeningPort());
+    ;
 
-    private final DatabaseInitializer databaseInitializer;
+    private final TestDatabaseInitializer testDatabaseInitializer;
 
     @Autowired
-    public DatabaseInitializerIntegrationTest(DatabaseInitializer databaseInitializer) {
-        this.databaseInitializer = databaseInitializer;
+    public MongockIntegrationTest(TestDatabaseInitializer testDatabaseInitializer) {
+        this.testDatabaseInitializer = testDatabaseInitializer;
     }
 
     @DynamicPropertySource
@@ -47,18 +51,18 @@ public class DatabaseInitializerIntegrationTest {
     }
 
     @Test
-    public void testExecutionAndRollback() throws InterruptedException {
+    void testExecutionAndRollback() throws InterruptedException {
         MongoClient mongoClient = MongoClients.create(mongoDBContainer.getReplicaSetUrl());
         MongoDatabase mongoDatabase = mongoClient.getDatabase("test");
 
         // Test execution
-        databaseInitializer.createCollection(mongoDatabase);
+        testDatabaseInitializer.createCollection(mongoDatabase);
         Thread.sleep(1000); // wait for 1 second
         List<String> collectionNames = getCollectionNames(mongoDatabase.listCollectionNames());
-        assertTrue(collectionNames.contains("mongockTest"));
+        assertTrue(collectionNames.contains("MongockTest"));
 
         // Test rollback
-        databaseInitializer.rollbackBeforeExecution(mongoDatabase);
+        testDatabaseInitializer.rollbackBeforeExecution(mongoDatabase);
         Thread.sleep(1000); // wait for 1 second
         collectionNames = getCollectionNames(mongoDatabase.listCollectionNames());
         assertFalse(collectionNames.contains("mongockTest"));
@@ -91,4 +95,6 @@ public class DatabaseInitializerIntegrationTest {
         latch.await(); // wait for the operation to complete
         return result;
     }
+
+
 }

@@ -11,6 +11,8 @@ spring:
     mongodb:
       uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin
       uuid-representation: standard
+  profiles:
+    active: mongock
 
 springdoc:
   swagger-ui:
