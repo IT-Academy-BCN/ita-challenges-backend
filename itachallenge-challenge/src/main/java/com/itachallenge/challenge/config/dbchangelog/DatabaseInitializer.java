@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
+@Component
 @ChangeUnit(id = "DatabaseInitalizerDemo", order = "1", author = "Ernesto Arcos / Pedro López")
 public class DatabaseInitializer {
     Query query = new Query(where("_id").ne(null));
