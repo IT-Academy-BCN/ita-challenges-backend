@@ -16,13 +16,12 @@ import java.util.UUID;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 @Component
-@ChangeUnit(id = "DatabaseInitalizerDemo", order = "1", author = "Ernesto Arcos / Pedro López")
-public class DatabaseInitializer {
+@ChangeUnit(id = "DatabaseInitalizerTest", order = "1", author = "Ernesto Arcos / Pedro López")
+public class TestDatabaseInitializer {
     Query query = new Query(where("_id").ne(null));
     private final Logger logger = LoggerFactory.getLogger(DatabaseInitializer.class);
-    private static final String COLLECTION_NAME = "mongockDemo";
+    private static final String COLLECTION_NAME = "MongockTest";
 
-    // Method to create a new collection before the execution of the change unit
     @BeforeExecution
     public void createCollection(MongoDatabase mongoDatabase) {
         SubscriberSync<Void> subscriber = new MongoSubscriberSync<>();
@@ -31,10 +30,9 @@ public class DatabaseInitializer {
         subscriber.await();
 
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        logger.info("mongockDemo collection created");
+        logger.info("mongockTest collection created");
     }
 
-    // Method to rollback the changes before the execution of the change unit, in case of any failure
     @RollbackBeforeExecution
     public void rollbackBeforeExecution(MongoDatabase mongoDatabase) {
         SubscriberSync<Void> subscriber = new MongoSubscriberSync<>();
@@ -43,10 +41,9 @@ public class DatabaseInitializer {
         subscriber.await();
 
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        logger.info("mongockDemo collection droped");
+        logger.info("mongockTest collection droped");
     }
 
-    // Method to execute the changes in the database
     @Execution
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
         LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "LanguageDemo");
@@ -55,11 +52,11 @@ public class DatabaseInitializer {
                 .subscribe();
     }
 
-    // Method to rollback the changes in case of any failure during the execution
     @RollbackExecution
     public void rollback(ReactiveMongoTemplate reactiveMongoTemplate) {
         reactiveMongoTemplate.remove(query, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nrollback"))
                 .then();
     }
+
 }

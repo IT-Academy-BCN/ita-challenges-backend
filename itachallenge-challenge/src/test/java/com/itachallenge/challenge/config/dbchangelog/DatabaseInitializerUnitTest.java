@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.*;
 
-class DatabaseInitializerTest {
+class DatabaseInitializerUnitTest {
 
     @Mock
     private MongoDatabase mongoDatabase;
