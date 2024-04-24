@@ -44,4 +44,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDto(e.getMessage()));
     }
 
+    @ExceptionHandler(ChallengeNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleChallengeNotFoundException(ChallengeNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(e.getMessage()));
+    }
+
 }

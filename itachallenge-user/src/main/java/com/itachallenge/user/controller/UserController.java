@@ -128,8 +128,7 @@ public class UserController {
 
         return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge))
                 .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok);
     }
 
     @PutMapping("/bookmark")

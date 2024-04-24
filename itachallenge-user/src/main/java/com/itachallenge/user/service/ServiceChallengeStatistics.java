@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
+import com.itachallenge.user.exception.ChallengeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -12,6 +13,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
@@ -19,6 +21,8 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     private IUserSolutionRepository userSolutionRepository;
     //region ATTRIBUTES
     SecureRandom random = new SecureRandom();
+
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
     //endregion ATTRIBUTES
 
@@ -83,8 +87,14 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     }
 
     private List<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
-        return userSolutions.stream()
+        List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
                 .filter(us -> challengeId.equals(us.getChallengeId()))
-                .toList();
+                .collect(Collectors.toList());
+
+        if (userSolutionsChallenge.isEmpty()) {
+            throw new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId));
+        }
+
+        return userSolutionsChallenge;
     }
 }
