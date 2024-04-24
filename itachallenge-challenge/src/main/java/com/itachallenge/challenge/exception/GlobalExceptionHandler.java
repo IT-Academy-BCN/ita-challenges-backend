@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
