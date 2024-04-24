@@ -2,9 +2,12 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -44,7 +47,7 @@ class UserControllerTest {
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
     @MockBean
-    IUserSolutionService userScoreService;
+    IUserSolutionService userSolutionService;
     @MockBean
     IServiceChallengeStatistics statisticsService;
 
@@ -114,7 +117,7 @@ class UserControllerTest {
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
         expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
 
-        when(userScoreService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
+        when(userSolutionService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
@@ -185,7 +188,7 @@ class UserControllerTest {
         bookmarkRequestDto.setUuid_user("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
         bookmarkRequestDto.setUuid_language("df99bae8-4f7f-4054-a957-37a12aa16364");
         bookmarkRequestDto.setBookmarked(true);
-        when(userScoreService.markAsBookmarked(
+        when(userSolutionService.markAsBookmarked(
                 bookmarkRequestDto.getUuid_challenge(),
                 bookmarkRequestDto.getUuid_language(),
                 bookmarkRequestDto.getUuid_user(),
@@ -208,6 +211,86 @@ class UserControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         assertEquals(bookmarkRequestDto, responseEntity.getBody());
+    }
+
+    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 200 OK")
+    @Test
+    void addSolutionIfValidSolutionThenSolutionAdded_test() {
+        String URI_TEST = "/solution";
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
+        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
+        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setSolutionText("This is a test solution");
+
+        UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
+                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
+                userSolutionDto.getSolutionText(), 13);
+
+        when(userSolutionService.addSolution(userSolutionDto))
+                .thenReturn(Mono.just(expectedResponse));
+
+        webTestClient.put()
+                .uri(CONTROLLER_URL + URI_TEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userSolutionDto)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectBody(UserSolutionScoreDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getUserId() != null;
+                    assert dto.getChallengeId() != null;
+                    assert dto.getLanguageId() != null;
+                    assert dto.getScore() >= 0;
+
+                    verify(userSolutionService).addSolution(userSolutionDto);
+                });
+    }
+    @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
+    @Test
+    void addSolutionIfInvalidValuesThenBadRequest_test() {
+        String URI_TEST = "/solution";
+
+        List<UserSolutionDto> testCases = Arrays.asList(
+                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, ""),
+                new UserSolutionDto()
+        );
+
+        for (UserSolutionDto testCase : testCases) {
+            webTestClient.put()
+                    .uri(CONTROLLER_URL + URI_TEST)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(testCase)
+                    .exchange()
+                    .expectStatus().isBadRequest();
+
+            verifyNoInteractions(userSolutionService);
+        }
+    }
+    @DisplayName("UserDocumentControllerTest - addSolution - return 409 CONFLICT if Service returns UnmodifiableSolutionException")
+    @Test
+    void addSolutionServiceThrowsExceptionInternalServerError_test() {
+        String URI_TEST = "/solution";
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
+        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
+        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setStatus("ENDED");
+        userSolutionDto.setSolutionText("This is a test solution");
+
+        when(userSolutionService.addSolution(userSolutionDto))
+                .thenReturn(Mono.error(new UnmodifiableSolutionException("Invalid challenge status: status was already ENDED")));
+
+        webTestClient.put()
+                .uri(CONTROLLER_URL + URI_TEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userSolutionDto)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CONFLICT);
     }
 
     @Test
