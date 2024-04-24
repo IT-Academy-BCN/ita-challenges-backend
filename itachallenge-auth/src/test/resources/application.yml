@@ -1,6 +1,7 @@
 spring:
   application:
     name: itachallenge-challenge
+    version: 1.0.0-RELEASE
   jmx:
     enabled: true
 
