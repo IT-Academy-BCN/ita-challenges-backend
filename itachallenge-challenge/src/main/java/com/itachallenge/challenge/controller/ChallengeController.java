@@ -173,7 +173,9 @@ public class ChallengeController {
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
+
             })
     public Flux<ChallengeDto> getAllChallenges
             (@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
@@ -188,7 +190,10 @@ public class ChallengeController {
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The language with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters"),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
             (@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
@@ -216,7 +221,11 @@ public class ChallengeController {
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "The language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID"),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
+
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
@@ -254,7 +263,9 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID"),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
             }
     )
     public Mono<GenericResultDto<ChallengeDto>> getRelated
