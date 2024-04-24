@@ -17,6 +17,6 @@ public interface IChallengeService {
     Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage);
     Mono<SolutionDto> addSolution(SolutionDto solutionDto);
     Flux<ChallengeDto> getAllChallenges(int offset, int limit);
-    Flux<ChallengeDto> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> difficulty, int offset, int limit);
+    Flux<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit);
     Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit);
 }

@@ -29,8 +29,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 @RestController
 @Validated
@@ -191,7 +189,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", description = "Level not found.", content = {@Content(schema = @Schema())})
             })
 
-    public Flux<ChallengeDto> getChallengesByLanguageOrDifficulty(
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
             @RequestParam Optional<String> idLanguage,
             @RequestParam Optional<String> level,
             @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
