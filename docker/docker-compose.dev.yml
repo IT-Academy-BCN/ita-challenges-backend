@@ -1,8 +1,8 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.8
-  last-updated: 2024-03-13
+  version: 1.0.9
+  last-updated: 2024-04-25
 
 services:
   consul-server1:
@@ -59,8 +59,8 @@ services:
         ipv4_address: 172.18.0.5
 
   itachallenge-challenge:
-    image: '${REGISTRY_NAME}:itachallenge-challenge-${itachallenge-challenge_TAG}'
-    container_name: 'itachallenge-${itachallenge-challenge_TAG}-dev'
+    image: '${REGISTRY_NAME}:itachallenge-challenge-${MICROSERVICE_TAG}'
+    container_name: 'itachallenge-${MICROSERVICE_TAG}-dev'
     restart: always
     depends_on:
       -  itachallenge-mongodb
