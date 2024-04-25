@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleConstraintViolation(ConstraintViolationException ex) {
         String constraintMessage = ex.getConstraintViolations()
                 .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
-        return ResponseEntity.ok().body(new MessageDto(constraintMessage));
+        return ResponseEntity.badRequest().body(new MessageDto(constraintMessage));
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)

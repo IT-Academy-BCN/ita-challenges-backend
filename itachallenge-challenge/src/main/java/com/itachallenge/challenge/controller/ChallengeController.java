@@ -136,7 +136,8 @@ public class ChallengeController {
             description = "Sending the ID Resource through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
             }
     )
     public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
@@ -152,7 +153,8 @@ public class ChallengeController {
             description = "Sending the ID Resource through the URI to patch the challenges.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
             }
     )
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
