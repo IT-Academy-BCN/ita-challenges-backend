@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/score")
@@ -48,10 +49,10 @@ public class ScoreController {
                 });
     }
     //TODO For early testing purposes only. Needs to be removed
-    @GetMapping("/zmq")
-    public Mono<ResponseEntity<TestingValuesResponseDto>> getTestParams() {
-        return scoreService.getTestParams("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                .map(response -> ResponseEntity.ok(response));
+    @GetMapping("/zmq/{idChallenge}")
+    public Mono<ResponseEntity<TestingValuesResponseDto>> getTestParams(@PathVariable("idChallenge") String idChallenge) {
+        return scoreService.getTestParams(idChallenge)
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/version")

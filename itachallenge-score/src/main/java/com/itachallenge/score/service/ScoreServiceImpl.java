@@ -15,22 +15,12 @@ public class ScoreServiceImpl implements IScoreService{
     ZMQClient zmqClient;
 
     public Mono<TestingValuesResponseDto> getTestParams(String challengeId) {
-        ChallengeRequestDto challengeRequestDto = ChallengeRequestDto.builder()
-                .challengeId(UUID.fromString(challengeId))
-                .build();
+        //TODO Pending UUID validation
+            ChallengeRequestDto challengeRequestDto = ChallengeRequestDto.builder()
+                    .challengeId(UUID.fromString(challengeId))
+                    .build();
         return Mono.fromFuture(zmqClient
                 .sendMessage(challengeRequestDto, TestingValuesResponseDto.class)
                 .thenApply(TestingValuesResponseDto.class::cast));
-
-        /*
-        //TODO fix try-catch
-        try {
-            return (TestingValuesResponseDto) zmqClient.sendMessage(challengeRequestDto, TestingValuesResponseDto.class).get();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-        */
     }
 }
