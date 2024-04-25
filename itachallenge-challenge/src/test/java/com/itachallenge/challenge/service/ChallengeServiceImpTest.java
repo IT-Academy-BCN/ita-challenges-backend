@@ -278,52 +278,69 @@ class ChallengeServiceImpTest {
     @Test
     void testGetSolutions() {
         // Arrange
+        int offset = 1;
+        int limit = 2;
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
         UUID languageId = UUID.fromString(languageStringId);
         UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
         UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
+        UUID solutionId3 = UUID.fromString("818648e1-c292-497d-a0a2-f5b44d6517fa");
+        UUID solutionId4 = UUID.fromString("99a7ed19-e806-4154-9ce1-aeabde43fa45");
+
 
         ChallengeDocument challenge = new ChallengeDocument();
         challenge.setUuid(UUID.fromString(challengeStringId));
         SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
         SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
-        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
+        SolutionDocument solution3 = new SolutionDocument(solutionId3, "Solution 3", languageId);
+        SolutionDocument solution4 = new SolutionDocument(solutionId4, "Solution 4", languageId);
+
+        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid(), solution3.getUuid(), solution4.getUuid()));
         SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
         SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
-        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+        SolutionDto solutionDto3 = new SolutionDto(solution3.getUuid(), solution3.getSolutionText(), solution3.getIdLanguage());
+        SolutionDto solutionDto4 = new SolutionDto(solution4.getUuid(), solution4.getSolutionText(), solution4.getIdLanguage());
+
+        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2, solutionDto3, solutionDto4);
 
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
-        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
+        when(solutionRepository.findById(solutionId3)).thenReturn(Mono.just(solution3));
+        when(solutionRepository.findById(solutionId4)).thenReturn(Mono.just(solution4));
+
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(Flux.class), eq(SolutionDto.class))).thenReturn(Flux.fromIterable(expectedSolutions));
 
         // Act
-        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId, offset, limit);
 
         // Assert
         StepVerifier.create(resultMono)
                 .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isZero();
-                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
-                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
+                    assertThat(resultDto.getOffset()).isEqualTo(1);
+                    assertThat(resultDto.getLimit()).isEqualTo(2);
+                    assertThat(resultDto.getCount()).isEqualTo(2);
                     return true;
                 })
                 .verifyComplete();
 
+
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
-        verify(solutionRepository, times(2)).findById(any(UUID.class));
-        verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
+        verify(solutionRepository, times(4)).findById(any(UUID.class));
+        verify(solutionConverter, times(4)).convertDocumentFluxToDtoFlux(any(Flux.class), eq(SolutionDto.class));
     }
 
     @Test
     void testGetSolutions_InvalidChallengeId() {
         // Arrange
+        int offset = 1;
+        int limit = 2;
         String invalidChallengeStringId = "invalid_challenge_id";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
 
         // Act & Assert
-        StepVerifier.create(challengeService.getSolutions(invalidChallengeStringId, languageStringId))
+        StepVerifier.create(challengeService.getSolutions(invalidChallengeStringId, languageStringId, offset, limit))
                 .expectError(BadUUIDException.class)
                 .verify();
 
@@ -335,11 +352,13 @@ class ChallengeServiceImpTest {
     @Test
     void testGetSolutions_InvalidLanguageId() {
         // Arrange
+        int offset = 1;
+        int limit = 2;
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
         String invalidLanguageStringId = "invalid_language_id";
 
         // Act & Assert
-        StepVerifier.create(challengeService.getSolutions(challengeStringId, invalidLanguageStringId))
+        StepVerifier.create(challengeService.getSolutions(challengeStringId, invalidLanguageStringId, offset, limit))
                 .expectError(BadUUIDException.class)
                 .verify();
 
@@ -351,6 +370,8 @@ class ChallengeServiceImpTest {
     @Test
     void testGetSolutions_ChallengeNotFound() {
         // Arrange
+        int offset = 1;
+        int limit = 2;
         String nonExistentChallengeStringId = "2f948de0-6f0c-4089-90b9-7f70a0812322";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
 
@@ -358,7 +379,7 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.empty());
 
         // Act & Assert
-        StepVerifier.create(challengeService.getSolutions(nonExistentChallengeStringId, languageStringId))
+        StepVerifier.create(challengeService.getSolutions(nonExistentChallengeStringId, languageStringId, offset, limit))
                 .expectError(ChallengeNotFoundException.class)
                 .verify();
 

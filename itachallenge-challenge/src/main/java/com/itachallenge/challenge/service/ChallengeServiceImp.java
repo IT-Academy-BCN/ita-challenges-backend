@@ -51,11 +51,10 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
 
-
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                        .switchIfEmpty(Mono.empty())
                         .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
                         .doOnSuccess(challengeDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
@@ -93,7 +92,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 .collect(Collectors.toSet()));
         return challengeRepository.save(challenge);
     }
-
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
         // TODO: Get challenges by language and difficulty
         return null;
@@ -110,11 +108,10 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-
         return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
     }
 
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
@@ -130,6 +127,8 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .filter(solution -> solution.getIdLanguage().equals(languageId))
                                     .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
                             )
+                            .skip(offset)
+                            .take(limit)
                             .collectList()
                             .map(solutions -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
@@ -181,7 +180,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
 
     }
-
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
 

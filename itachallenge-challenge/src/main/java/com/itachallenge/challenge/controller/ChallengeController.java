@@ -217,9 +217,12 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
-                                                                    idChallenge, @PathVariable("idLanguage") String idLanguage) {
-        return challengeService.getSolutions(idChallenge, idLanguage);
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(
+            @PathVariable("idChallenge") String idChallenge,
+            @PathVariable("idLanguage") String idLanguage,
+            @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+            @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getSolutions(idChallenge, idLanguage, Integer.parseInt(offset), Integer.parseInt(limit));
 
     }
 

@@ -213,11 +213,13 @@ class ChallengeControllerTest {
         // Arrange
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
+        int offset = 1;
+        int limit = 2;
 
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        expectedResult.setInfo(1, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
-        when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getSolutions(idChallenge, idLanguage, offset, limit)).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
         webTestClient.get()
