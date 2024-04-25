@@ -217,7 +217,7 @@ public class ChallengeController {
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found."),
                     @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
