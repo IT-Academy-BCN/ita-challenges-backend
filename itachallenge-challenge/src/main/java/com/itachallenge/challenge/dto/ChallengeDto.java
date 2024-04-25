@@ -17,7 +17,7 @@ import java.util.*;
 @Setter
 public class ChallengeDto {
 
-    @JsonProperty(value = "id_challenge", index = 0)
+    @JsonProperty(value = "uuid_challenge", index = 0)
     private UUID challengeId;
 
     @JsonProperty(value = "challenge_title", index = 1)
@@ -48,10 +48,15 @@ public class ChallengeDto {
     @JsonProperty(index = 7)
     private Set<LanguageDto> languages;
 
-    @JsonProperty(index = 7)
+    @JsonProperty(value = "uuid_language", index = 8)
     private UUID language;
 
-    @JsonProperty(index = 8)
+    @JsonProperty(index = 9)
     private List<UUID> solutions;
+
+    @JsonProperty(value = "solutions", index = 10)
+    private List<SolutionDto> solutionsDto;
+
+
 
 }

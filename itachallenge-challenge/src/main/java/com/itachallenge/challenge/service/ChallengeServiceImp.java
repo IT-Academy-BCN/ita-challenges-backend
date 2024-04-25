@@ -151,7 +151,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMap(challenge -> {
                                 // Obtener las soluciones del desafío para el idioma especificado
-                                return solutionRepository.findByChallengeIdAndLanguageId(challengeId, languageId)
+                                return solutionRepository.findByChallengeIdAndIdLanguage(challengeId, languageId)
                                         .map(solution -> {
                                             SolutionDto solutionDto = new SolutionDto();
                                             solutionDto.setUuid(solution.getUuid());
@@ -170,16 +170,17 @@ public class ChallengeServiceImp implements IChallengeService {
                                             challengeDto.setChallengeId(challengeId);
                                             challengeDto.setLanguage(languageId);
                                             challengeDto.setSolutions(solutionUuids);
+
+                                            // Establecer las soluciones en el ChallengeDto
+                                            challengeDto.setSolutionsDto(solutionDtos);
+
                                             return challengeDto;
                                         });
                             })
                             .map(challengeDto -> {
                                 // Crear un objeto GenericResultDto con la información del desafío y las soluciones
                                 GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                                resultDto.setCount(challengeDto.getSolutions().size()); // Solo hay un desafío en este resultado
-                                resultDto.setOffset(offset);
-                                resultDto.setLimit(limit);
-                                resultDto.setResults(new ChallengeDto[]{challengeDto});
+                                resultDto.setInfo(offset, limit, challengeDto.getSolutions().size(), new ChallengeDto[]{challengeDto});
                                 return resultDto;
                             });
                 });
