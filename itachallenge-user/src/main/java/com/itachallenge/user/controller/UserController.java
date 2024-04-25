@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,10 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @Validated
@@ -33,6 +31,12 @@ public class UserController {
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
+
+    @Value("${spring.application.version}")
+    private String version;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
 
     @Operation(summary = "Testing the App")
@@ -65,7 +69,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<SolutionUserDto<UserScoreDto>> GetSolutionsByUserIdChallengeIdLanguageId(
+    public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
@@ -74,24 +78,22 @@ public class UserController {
 
     @PutMapping(path = "/solution")
     @Operation(
-            summary = "perform a solution, adding challenge,language,user and the corresponding solution text.",
+            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
                             mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
                             content = {@Content(schema = @Schema())})
             }
     )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
-        return userScoreService.addSolution(
-                        userSolutionDto.getUserId(),
-                        userSolutionDto.getChallengeId(),
-                        userSolutionDto.getLanguageId(),
-                        userSolutionDto.getSolutionText())
-                .map(savedScoreDto ->
-                        ResponseEntity.status(HttpStatus.ACCEPTED).body(savedScoreDto)
+        return userScoreService.addSolution(userSolutionDto)
+                .map(savedUserSolutionScoreDto ->
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
                 );
     }
 
@@ -128,5 +130,24 @@ public class UserController {
                         bookmarkRequestDto.getUuid_user(),
                         bookmarkRequestDto.isBookmarked())
                 .map(result -> ResponseEntity.ok(bookmarkRequestDto));
+    }
+
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version and name.",
+                            content = @Content(schema = @Schema(implementation = Map.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> getVersion() {
+        Map<String, String> response = new HashMap<>();
+        response.put("application_name", appName);
+        response.put("version", version);
+        return Mono.just(ResponseEntity.ok(response));
     }
 }
