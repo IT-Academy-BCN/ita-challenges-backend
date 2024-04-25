@@ -600,6 +600,19 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void getChallengesByLanguageOrDifficulty_NoChallengesFound_ExceptionThrown() {
+        // Arrange
+        when(challengeRepository.findAllByUuidNotNull()).thenReturn(Flux.empty());
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.empty(), 0, 1))
+                .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("No challenges found"))
+                .verify();
+
+        verify(challengeRepository).findAllByUuidNotNull();
+    }
+
+    @Test
     void getTestingParamsByChallengeIdAndLanguageId_invalidLanguageId_ChallengeNotFoundExceptionThrown() {
         // Arrange
         UUID challengeId = UUID.randomUUID();
