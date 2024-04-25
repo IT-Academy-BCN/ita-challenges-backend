@@ -81,6 +81,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                 if (Boolean.FALSE.equals(result)) {
                                     return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found"));
                                 }
+
                                 return challengesToUpdate
                                         .flatMap(challenge -> {
                                             Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
@@ -119,8 +120,8 @@ public class ChallengeServiceImp implements IChallengeService {
             challenges = challengeRepository.findByLevel(level.get())
                     .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
         } else {
-            challenges = challengeRepository.findAll(Sort.sort(ChallengeDocument.class));
-            challenges = challenges.switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
+            challenges = challengeRepository.findAllByUuidNotNull()
+                    .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
         }
 
         Flux<ChallengeDocument> finalChallenges = challenges;
