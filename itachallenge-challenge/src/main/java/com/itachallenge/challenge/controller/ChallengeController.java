@@ -226,7 +226,12 @@ public class ChallengeController {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
-
+/*TODO Fix issues
+   Sending proper Bad Request message on bad argument (UUID)
+   Confirming LanguageID exists
+   QUESTION!! Do we deal with HttpMessageNotReadableException or change SolutionDto?
+   Currently, UUID validation through @Valid does nothing, since SolutionDTO's fields are UUIDs that already can't accept non-UUID Strings by default
+ */
     @PostMapping("/solution")
     @Operation(
             operationId = "Add solution to a chosen chosen challenge.",

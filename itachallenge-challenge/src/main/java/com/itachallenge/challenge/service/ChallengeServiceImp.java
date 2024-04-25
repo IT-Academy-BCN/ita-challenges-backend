@@ -149,6 +149,9 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID challengeId = tuple.getT1();
                     UUID languageId = tuple.getT2();
 
+                    //Mono<LanguageDocument> language = languageRepository.findByIdLanguage(languageId)
+                     //       .switchIfEmpty(Mono.error(new ))
+
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
 
