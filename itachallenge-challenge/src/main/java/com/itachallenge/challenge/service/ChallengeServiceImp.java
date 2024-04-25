@@ -132,7 +132,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .collectList()
                             .map(solutions -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                resultDto.setInfo(offset, limit, solutions.size(), solutions.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });

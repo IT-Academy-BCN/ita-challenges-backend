@@ -217,7 +217,7 @@ class ChallengeControllerTest {
         int limit = 2;
 
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(1, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        expectedResult.setInfo(offset, limit, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
         when(challengeService.getSolutions(idChallenge, idLanguage, offset, limit)).thenReturn(Mono.just(expectedResult));
 

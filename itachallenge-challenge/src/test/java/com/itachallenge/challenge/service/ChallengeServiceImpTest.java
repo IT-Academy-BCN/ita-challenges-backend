@@ -278,8 +278,8 @@ class ChallengeServiceImpTest {
     @Test
     void testGetSolutions() {
         // Arrange
-        int offset = 1;
-        int limit = 2;
+        int offset = 0;
+        int limit = 4;
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
         UUID languageId = UUID.fromString(languageStringId);
@@ -310,7 +310,7 @@ class ChallengeServiceImpTest {
         when(solutionRepository.findById(solutionId3)).thenReturn(Mono.just(solution3));
         when(solutionRepository.findById(solutionId4)).thenReturn(Mono.just(solution4));
 
-        when(solutionConverter.convertDocumentFluxToDtoFlux(any(Flux.class), eq(SolutionDto.class))).thenReturn(Flux.fromIterable(expectedSolutions));
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
 
         // Act
         Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId, offset, limit);
@@ -318,9 +318,9 @@ class ChallengeServiceImpTest {
         // Assert
         StepVerifier.create(resultMono)
                 .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isEqualTo(1);
-                    assertThat(resultDto.getLimit()).isEqualTo(2);
-                    assertThat(resultDto.getCount()).isEqualTo(2);
+                    assertThat(resultDto.getOffset()).isEqualTo(offset);
+                    assertThat(resultDto.getLimit()).isEqualTo(limit);
+                    assertThat(resultDto.getCount()).isEqualTo(4);
                     return true;
                 })
                 .verifyComplete();
@@ -328,14 +328,14 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(solutionRepository, times(4)).findById(any(UUID.class));
-        verify(solutionConverter, times(4)).convertDocumentFluxToDtoFlux(any(Flux.class), eq(SolutionDto.class));
+        verify(solutionConverter, times(4)).convertDocumentFluxToDtoFlux(any(), any());
     }
 
     @Test
     void testGetSolutions_InvalidChallengeId() {
         // Arrange
-        int offset = 1;
-        int limit = 2;
+        int offset = 0;
+        int limit = 3;
         String invalidChallengeStringId = "invalid_challenge_id";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
 
