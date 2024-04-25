@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -21,6 +22,8 @@ import reactor.test.StepVerifier;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -231,18 +234,19 @@ class ChallengeControllerTest {
 
     @Test
     void getChallengesByLanguageAndDifficultyTest() {
-        // Arrange
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
         String level = "EASY";
         int offset = 0;
-        int limit = 2;
+        int limit = 1;
         ChallengeDto challengeDto1 = new ChallengeDto();
         challengeDto1.setLevel(level);
-        ChallengeDto challengeDto2 = new ChallengeDto();
-        challengeDto2.setLevel(level);
-        List<ChallengeDto> challengeDtos = List.of(challengeDto1, challengeDto2);
 
-        Flux<ChallengeDto> expectedResult = Flux.fromIterable(challengeDtos);
+        List<ChallengeDto> challengeDtos = List.of(challengeDto1);
+
+        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+        genericResultDto.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+
+        Flux<GenericResultDto<ChallengeDto>> expectedResult = Flux.just(genericResultDto);
 
         // Mock del servicio con los parámetros correctos
         when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit))
@@ -250,15 +254,20 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&level=" + level + "&offset=" + offset + "&limit=" + limit)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/challenge/challenges/")
+                        .queryParam("idLanguage", idLanguage)
+                        .queryParam("level", level)
+                        .queryParam("offset", offset)
+                        .queryParam("limit", limit)
+                        .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ChallengeDto.class)
-                .value(challenges -> {
-                    assert challenges != null;
-                    assert challenges.get(0).getLevel().equals(level);
-                    assert challenges.get(1).getLevel().equals(level);
+                .expectBody(new ParameterizedTypeReference<List<GenericResultDto<ChallengeDto>>>() {})
+                .value(result -> {
+                    assertNotNull(result);
+                    assertEquals(level, result.get(0).getResults()[0].getLevel());
                 });
     }
 
