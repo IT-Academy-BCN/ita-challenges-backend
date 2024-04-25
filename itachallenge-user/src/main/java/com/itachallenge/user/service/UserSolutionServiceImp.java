@@ -137,11 +137,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return null;
         }
 
-        if (status.equalsIgnoreCase("STARTED")) {
+        if (status.equalsIgnoreCase(ChallengeStatus.STARTED.getValue())) {
             return ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase("ENDED")) {
+        } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
             return ChallengeStatus.ENDED;
-        } else if (status.equalsIgnoreCase("EMPTY")) {
+        } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
             return ChallengeStatus.EMPTY;
         } else {
             return null;
