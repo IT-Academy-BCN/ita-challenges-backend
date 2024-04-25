@@ -13,6 +13,7 @@ public interface IChallengeService {
     Mono<String> removeResourcesByUuid(String id);
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
     Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit);
+    Mono<GenericResultDto<ChallengeDto>> getSolutionsFromChallenge(String idChallenge, String idLanguage, int offset, int limit)
     Mono<SolutionDto> addSolution(SolutionDto solutionDto);
     Flux<ChallengeDto> getAllChallenges(int offset, int limit);
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty);
