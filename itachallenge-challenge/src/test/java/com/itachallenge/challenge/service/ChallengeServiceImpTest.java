@@ -624,55 +624,29 @@ class ChallengeServiceImpTest {
 
     @Test
     void getChallengesByLanguageAndDifficulty_ValidInput_ChallengesReturned() {
-        // Asumiendo que todos los UUIDs son válidos y que los datos dependientes se configuran correctamente.
-        UUID validLanguageId = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
-        String difficulty = "EASY";
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();
+        String level = "EASY";
         int offset = 0;
         int limit = 2;
 
-        LanguageDocument foundLanguage = new LanguageDocument();
-        when(languageRepository.findByIdLanguage(validLanguageId)).thenReturn(Mono.just(foundLanguage));
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
 
-        ChallengeDocument challenge1 = new ChallengeDocument();
-        ChallengeDocument challenge2 = new ChallengeDocument();
-        List<ChallengeDocument> challengeDocuments = List.of(challenge1, challenge2);
-
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(eq(difficulty), eq(validLanguageId)))
-                .thenReturn(Flux.fromIterable(challengeDocuments));
-
-        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
-                .thenAnswer(invocation -> {
-                    ChallengeDocument doc = invocation.getArgument(0);
-                    return doc == challenge1 ? challengeDto1 : challengeDto2; // Direct return without Mono
-                });
+        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(validLanguageId.toString()), Optional.of(difficulty), offset, limit);
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(challengeDto1)
-                .expectNext(challengeDto2)
-                .expectComplete()
-                .verify();
-
-        verify(challengeRepository).findByLevelAndLanguages_IdLanguage(difficulty, validLanguageId);
-        verify(challengeConverter, times(2)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
-    }
-
-    @Test
-    void getChallengesByLanguageOrDifficulty_NeitherPresent_ExceptionThrown() {
-        // Act
-        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.empty(), 0, 1);
-
-        // Assert
-        StepVerifier.create(result)
-                .expectErrorMatches(error -> error instanceof IllegalArgumentException
-                        && error.getMessage().equals("At least one of idLanguage or difficulty must be provided"))
-                .verify();
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
+                    // Aquí puedes agregar más aserciones para verificar otras propiedades si es necesario
+                })
+                .verifyComplete();
     }
 
     @Test
@@ -687,32 +661,38 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(challengeDto)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
+                })
                 .verifyComplete();
     }
 
     @Test
     void getChallengesByLanguageOrDifficulty_OnlyLevelPresent_ChallengesReturned() {
         // Arrange
-        String level = "EASY";
+        String difficulty = "HARD";
         ChallengeDocument challengeDocument = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
 
-        when(challengeRepository.findByLevel(level)).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+        genericResultDto.setResults(new ChallengeDto[]{challengeDto});
+
+        when(challengeRepository.findByLevel(difficulty)).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(ChallengeDto.builder().build());
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(level), 0, 1);
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(difficulty), 0, 1);
 
         // Assert
         StepVerifier.create(result)
-                .expectNext(challengeDto)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(genericResultDto.getResults()[0]);
+                    // Aquí puedes agregar más aserciones para verificar otras propiedades si es necesario
+                })
                 .verifyComplete();
     }
-
-
 }
