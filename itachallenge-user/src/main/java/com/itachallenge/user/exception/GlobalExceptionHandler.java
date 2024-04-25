@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<ErrorResponseDto> handleChallengeNotFoundException(ChallengeNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponseDto(e.getMessage()));
     }
 
 }
