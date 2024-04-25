@@ -1,10 +1,13 @@
 package com.itachallenge.challenge.mqserver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.TestingValueDto;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.TestingValuesResponseDto;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.helper.ObjectSerializer;
+import com.itachallenge.challenge.repository.ChallengeRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import org.slf4j.Logger;
@@ -15,10 +18,13 @@ import org.springframework.stereotype.Component;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+import reactor.core.publisher.Flux;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class ZMQServer {
@@ -29,6 +35,12 @@ public class ZMQServer {
 
     @Autowired
     private ObjectSerializer objectSerializer;
+
+    @Autowired
+    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> converter;
+
+    @Autowired
+    private ChallengeRepository challengeRepository;
 
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
         this.context = context;
@@ -57,13 +69,7 @@ public class ZMQServer {
 
                 log.info("Received: [" + ((ChallengeRequestDto)request.get()).getChallengeId() + "]");
 
-                //TODO Hook to ChallengeService
-                TestingValuesResponseDto dto = new TestingValuesResponseDto();
-                dto.setTestingValues(List.of(
-                        TestingValueDto.builder()
-                        .inParam(List.of("InParam1", "InParam2"))
-                                .outParam(List.of("OutParam1", "OutParam2"))
-                                .build()));
+                TestingValuesResponseDto dto = prepareResponse((ChallengeRequestDto)request.get());
 
                 Optional<byte[]> response = Optional.empty();
                 try {
@@ -80,6 +86,23 @@ public class ZMQServer {
     @PreDestroy
     public void cleanup() {
         context.close();
+    }
+
+    private TestingValuesResponseDto prepareResponse(ChallengeRequestDto request) {
+        UUID id = request.getChallengeId();
+
+        List<TestingValueDto> testParams = converter.convertDocumentFluxToDtoFlux(
+                    challengeRepository.findByUuid(id)
+                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getTestingValues())), TestingValueDto.class
+                )
+                .collectList()
+                .blockOptional()
+                .orElse(new ArrayList<>());
+
+        return TestingValuesResponseDto.builder()
+                .testingValues(testParams)
+                .build();
+
     }
 }
 
