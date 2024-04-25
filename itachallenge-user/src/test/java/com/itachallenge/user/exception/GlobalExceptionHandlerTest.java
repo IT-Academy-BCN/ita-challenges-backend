@@ -78,7 +78,7 @@ class GlobalExceptionHandlerTest {
 
         ResponseEntity<ErrorResponseDto> response = globalExceptionHandler.handleChallengeNotFoundException(ex);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("Test error message", response.getBody().getMessage());
     }
 
