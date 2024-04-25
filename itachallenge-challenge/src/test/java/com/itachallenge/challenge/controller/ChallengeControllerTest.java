@@ -213,7 +213,7 @@ class ChallengeControllerTest {
         // Arrange
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
-        int offset = 1;
+        int offset = 0;
         int limit = 2;
 
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
@@ -223,7 +223,7 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}?offset={offset}&limit={limit}", idChallenge, idLanguage, offset, limit)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)
