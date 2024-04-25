@@ -7,6 +7,7 @@ import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -31,7 +32,9 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
-    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge id not found";
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
+
+    private static final String LANGUAGE_NOT_FOUND_ERROR = "Language with id: %s not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
@@ -54,7 +57,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(CHALLENGE_NOT_FOUND_ERROR)))
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                         .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
                         .doOnSuccess(challengeDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
@@ -149,12 +152,11 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID challengeId = tuple.getT1();
                     UUID languageId = tuple.getT2();
 
-                    //Mono<LanguageDocument> language = languageRepository.findByIdLanguage(languageId)
-                     //       .switchIfEmpty(Mono.error(new ))
 
-                    return challengeRepository.findByUuid(challengeId)
+                    return languageRepository.findByIdLanguage(languageId)
+                            .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
+                            .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-
                             .flatMap(challenge -> {
                                 SolutionDocument solutionDocument = new SolutionDocument();
                                 solutionDocument.setSolutionText(solutionDto.getSolutionText());

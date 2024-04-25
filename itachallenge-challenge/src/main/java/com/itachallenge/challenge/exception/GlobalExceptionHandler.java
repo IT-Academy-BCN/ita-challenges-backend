@@ -57,6 +57,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
+    @ExceptionHandler(LanguageNotFoundException.class)
+    public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
+        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
@@ -64,11 +69,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<MessageDto> handleException(HttpMessageNotReadableException  ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 }

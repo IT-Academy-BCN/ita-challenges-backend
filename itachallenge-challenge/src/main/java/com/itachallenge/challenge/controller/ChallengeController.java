@@ -226,12 +226,6 @@ public class ChallengeController {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
-/*TODO Fix issues
-   Sending proper Bad Request message on bad argument (UUID)
-   Confirming LanguageID exists
-   QUESTION!! Do we deal with HttpMessageNotReadableException or change SolutionDto?
-   Currently, UUID validation through @Valid does nothing, since SolutionDTO's fields are UUIDs that already can't accept non-UUID Strings by default
- */
     @PostMapping("/solution")
     @Operation(
             operationId = "Add solution to a chosen chosen challenge.",
@@ -240,7 +234,8 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
     public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
