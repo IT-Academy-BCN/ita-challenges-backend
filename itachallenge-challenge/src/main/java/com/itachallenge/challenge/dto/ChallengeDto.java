@@ -51,4 +51,7 @@ public class ChallengeDto {
     @JsonProperty(index = 8)
     private List<UUID> solutions;
 
+    @JsonProperty(index = 9)
+    private List<TestingValueDto> testingValues;
+
 }
