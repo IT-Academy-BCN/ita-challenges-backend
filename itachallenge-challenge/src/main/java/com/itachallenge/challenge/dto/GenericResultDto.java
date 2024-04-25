@@ -22,4 +22,12 @@ public class GenericResultDto<T> {
         this.count = count;
         this.results = results;
     }
+
+    public void setInfov2(int count, int offset, int limit, T[] results) {
+        this.offset = offset;
+        this.limit = limit;
+        this.count = count;
+        this.results = results;
+    }
+
 }
