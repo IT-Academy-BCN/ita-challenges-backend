@@ -44,7 +44,6 @@ public class ZMQServer {
     }
 
     public void run(){
-
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
             socket.bind("tcp://*:5555");

@@ -1,9 +1,6 @@
 package com.itachallenge.challenge.integration;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.DetailDocument;
-import com.itachallenge.challenge.document.ExampleDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -109,10 +106,15 @@ class ChallengeIntegrationTest {
             title2.put(Locale.forLanguageTag("CA"), "If");
             title2.put(Locale.ENGLISH, "If");
 
+        List<TestingValueDocument> testingValues = Arrays.asList(
+                new TestingValueDocument(Arrays.asList("input1", "input2"), Arrays.asList("output1")),
+                new TestingValueDocument(Arrays.asList("input3", "input4"), Arrays.asList("output2"))
+        );
+
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }

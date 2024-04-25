@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.mqclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

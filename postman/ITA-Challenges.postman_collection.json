@@ -472,17 +472,97 @@
 			"name": "Challenge",
 			"item": [
 				{
+					"name": "Challentes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/challenges",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Challentes/testParams",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/test/params/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/409c9fe8-74de-4db3-81a1-a55280cf92ef",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"test",
+								"params",
+								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
+								"language",
+								"409c9fe8-74de-4db3-81a1-a55280cf92ef"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Challentes/filtered",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/challenges/?idLanguage=409c9fe8-74de-4db3-81a1-a55280cf92ef",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges",
+								""
+							],
+							"query": [
+								{
+									"key": "idLanguage",
+									"value": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Challenges/{idChallenge}",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8762/itachallenge/api/v1/challenge/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
+							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
 							"protocol": "http",
 							"host": [
-								"localhost"
+								"{{ip}}"
 							],
-							"port": "8762",
+							"port": "{{port}}",
 							"path": [
 								"itachallenge",
 								"api",
@@ -623,7 +703,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/language",
+							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/language?offset=2",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -635,18 +715,24 @@
 								"v1",
 								"challenge",
 								"language"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "2"
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Challentes",
+					"name": "Challentes/solutions",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/challenges",
+							"raw": "http://{{ip}}:{{port}}/itachallenge/api/v1/challenge/solution/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/409c9fe8-74de-4db3-81a1-a55280cf92ef?limit=1",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -657,7 +743,16 @@
 								"api",
 								"v1",
 								"challenge",
-								"challenges"
+								"solution",
+								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
+								"language",
+								"409c9fe8-74de-4db3-81a1-a55280cf92ef"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -675,7 +770,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"uuid_challenge\": \"5c1a97e5-1cca-4144-9981-2de1fb73b178\",\n\"uuid_language\": \"09fabe32-7362-4bfb-ac05-b7bf854c6e0f\",\n\"uuid_user\": \"442b8e6e-5d57-4d12-9be2-3ff4f26e7d79\",\n\"solution_text\": \"PPPPPPPP\"\n}",
+							"raw": "{\n\"uuid_challenge\": \"5c1a97e5-1cca-4144-9981-2de1fb73b178\",\n\"uuid_language\": \"09fabe32-7362-4bfb-ac05-b7bf854c6e0f\",\n\"uuid_user\": \"442b8e6e-5d57-4d12-9be2-3ff4f26e7d79\",\n\"status\": \"\",\n\"solution_text\": \"PPPPPPPP\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -808,7 +903,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:8764/itachallenge/api/v1/user/statistics/percent/a75fa943-6bc9-4e62-b1db-d43d15b149c7",
+							"raw": "http://{{ip}}:8764/itachallenge/api/v1/user/statistics/percent/b2c9c18d-1483-4a2a-a4cb-12f8dbff1a18",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -821,7 +916,7 @@
 								"user",
 								"statistics",
 								"percent",
-								"a75fa943-6bc9-4e62-b1db-d43d15b149c7"
+								"b2c9c18d-1483-4a2a-a4cb-12f8dbff1a18"
 							]
 						}
 					},
