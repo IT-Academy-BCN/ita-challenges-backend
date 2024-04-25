@@ -9,6 +9,11 @@ import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.*;
+import com.itachallenge.challenge.document.TestingValueDocument;
+import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.exception.BadUUIDException;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -51,6 +56,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
 
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -130,7 +137,6 @@ public class ChallengeServiceImp implements IChallengeService {
             });
         });
     }
-
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
@@ -235,7 +241,41 @@ public class ChallengeServiceImp implements IChallengeService {
                         })
                 );
     }
+    @Override
+    public Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage) {
 
+        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
+        Mono<UUID> languageIdMono = validateUUID(idLanguage);
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeId = tuple.getT1();
+                    UUID languageId = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeId)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                            .flatMap(challenge -> {
+                                Optional<LanguageDocument> languageOptional = challenge.getLanguages()
+                                        .stream()
+                                        .filter(lang -> lang.getIdLanguage().equals(languageId))
+                                        .findFirst();
+                                if (languageOptional.isPresent()) {
+                                    return Flux.fromIterable(challenge.getTestingValues())
+                                            .map(testingValueDocument -> testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class))
+                                            .collectList()
+                                            .map(testingValues -> {
+                                                Map<String, Object> response = new LinkedHashMap<>();
+                                                response.put("uuid_challenge", idChallenge);  // Changed from "challengeId" to "uuid_challenge"
+                                                response.put("uuid_language", idLanguage);  // Changed from "languageId" to "uuid_language"
+                                                response.put("test_params", testingValues);
+                                                return response;
+                                            });
+                                } else {
+                                    return Mono.error(new ChallengeNotFoundException("Language " + idLanguage + " not found in Challenge " + idChallenge));
+                                }
+                            });
+                });
+    }
 
 
     private Mono<UUID> validateUUID(String id) {
