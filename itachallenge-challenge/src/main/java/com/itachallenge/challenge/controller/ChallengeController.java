@@ -223,12 +223,11 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
-                                                                    idChallenge, @PathVariable("idLanguage") String idLanguage) {
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge,
+                                                            @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
-
     @PostMapping("/solution")
     @Operation(
             operationId = "Add solution to a chosen chosen challenge.",
@@ -236,8 +235,9 @@ public class ChallengeController {
             description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
     public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
@@ -279,7 +279,7 @@ public class ChallengeController {
             description = "Sending the ID Challenge & ID Language returns the relevant challenge's testing values.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "400", description = "The Challenge Id & Language Id can't be null or empty.", content = {@Content(schema = @Schema())})
             }
     )

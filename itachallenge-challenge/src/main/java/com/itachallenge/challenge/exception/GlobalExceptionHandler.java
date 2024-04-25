@@ -5,8 +5,10 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,6 +54,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<MessageDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(LanguageNotFoundException.class)
+    public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
         return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
