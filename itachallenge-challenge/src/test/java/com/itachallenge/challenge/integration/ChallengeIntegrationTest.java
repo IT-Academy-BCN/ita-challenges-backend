@@ -141,13 +141,13 @@ class ChallengeIntegrationTest {
     }
 
     @Test
-    void shouldReturnBadRequestForUnknownUserId() { //TODO Change to proper HTTP status once controller has been normalized
+    void shouldReturnOkForUnknownUserId() {
         webTestClient
                 .get()
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_INVALID)
                 .exchange()
                 .expectStatus()
-                .isEqualTo(BAD_REQUEST);
+                .isEqualTo(OK);
     }
 
     @Test
