@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.challenge.document.DetailDocument;
@@ -23,7 +24,7 @@ public class ChallengeDto {
     @JsonProperty(value = "challenge_title", index = 1)
     private Map<Locale, String> title;
 
-    @JsonProperty(index = 2)
+    @JsonProperty(value = "level", index = 2)
     private String level;
 
     /**
@@ -48,15 +49,18 @@ public class ChallengeDto {
     @JsonProperty(index = 7)
     private Set<LanguageDto> languages;
 
-    @JsonProperty(value = "uuid_language", index = 8)
+    @JsonProperty(value = "solutions_uuid", index = 8)
+    private List<UUID> solutionsUuid;
+
+
+
+
+
+
+    @JsonProperty(value = "uuid_language", index = 10)
     private UUID language;
 
-    @JsonProperty(index = 9)
-    private List<UUID> solutions;
-
-    @JsonProperty(value = "solutions", index = 10)
-    private List<SolutionDto> solutionsDto;
-
-
+    @JsonProperty(value = "solutions", index = 11)
+    private List<SolutionDto> solutions;
 
 }

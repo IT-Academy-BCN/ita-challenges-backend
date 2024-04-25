@@ -16,5 +16,4 @@ public interface SolutionRepository extends ReactiveMongoRepository<SolutionDocu
 
     Mono<Void> deleteByUuid(UUID uuid);
 
-    Flux<SolutionDocument> findByChallengeIdAndIdLanguage(UUID challengeId, UUID languageId);
 }

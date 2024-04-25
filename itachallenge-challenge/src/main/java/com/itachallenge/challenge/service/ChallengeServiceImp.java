@@ -149,42 +149,33 @@ public class ChallengeServiceImp implements IChallengeService {
 
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                            .flatMap(challenge -> {
-                                // Obtener las soluciones del desafío para el idioma especificado
-                                return solutionRepository.findByChallengeIdAndIdLanguage(challengeId, languageId)
-                                        .map(solution -> {
-                                            SolutionDto solutionDto = new SolutionDto();
-                                            solutionDto.setUuid(solution.getUuid());
-                                            solutionDto.setSolutionText(solution.getSolutionText());
-                                            return solutionDto;
-                                        })
-                                        .collectList()
-                                        .map(solutionDtos -> {
-                                            // Convertir los objetos SolutionDto a UUIDs
-                                            List<UUID> solutionUuids = solutionDtos.stream()
-                                                    .map(SolutionDto::getUuid)
-                                                    .collect(Collectors.toList());
-
-                                            // Crear un objeto ChallengeDto con la información del desafío y las soluciones
-                                            ChallengeDto challengeDto = new ChallengeDto();
-                                            challengeDto.setChallengeId(challengeId);
-                                            challengeDto.setLanguage(languageId);
-                                            challengeDto.setSolutions(solutionUuids);
-
-                                            // Establecer las soluciones en el ChallengeDto
-                                            challengeDto.setSolutionsDto(solutionDtos);
-
-                                            return challengeDto;
-                                        });
-                            })
+                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
+                                    .flatMap(solutionId -> solutionRepository.findById(solutionId))
+                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
+                                    .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
+                            
+                            )
+                            .skip(offset)
+                            .take(limit)
+                            .collectList()
+                            .map(solutionDtos -> {
+                                // Crear un objeto ChallengeDto con la información del desafío y las soluciones
+                                ChallengeDto challengeDto = new ChallengeDto();
+                                challengeDto.setChallengeId(challengeId);
+                                challengeDto.setLanguage(languageId);
+                                challengeDto.setSolutions(solutionDtos);
+                                System.out.println(challengeDto.getSolutions().size());
+                                return challengeDto;
+                            });
+                        })
                             .map(challengeDto -> {
                                 // Crear un objeto GenericResultDto con la información del desafío y las soluciones
                                 GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
                                 resultDto.setInfo(offset, limit, challengeDto.getSolutions().size(), new ChallengeDto[]{challengeDto});
                                 return resultDto;
                             });
-                });
-    }
+                };
+
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));
