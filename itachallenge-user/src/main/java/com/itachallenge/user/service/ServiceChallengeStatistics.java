@@ -68,33 +68,33 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
         return getUserSolutions()
-                .flatMapMany(Flux::fromIterable)
                 .collectList()
                 .flatMap(userSolutions -> {
                     if (userSolutions.isEmpty()) {
                         return Mono.just(0f);
                     }
-                    List<UserSolutionDocument> userSolutionsChallenge = getUserSolutionsChallenge(userSolutions, idChallenge);
-                    float percentage = ((float) userSolutionsChallenge.size() * 100 / userSolutions.size());
-                    return Mono.just(percentage);
+                    return getUserSolutionsChallenge(userSolutions, idChallenge)
+                            .collectList()
+                            .map(userSolutionsChallenge -> {
+                                float percentage = ((float) userSolutionsChallenge.size() * 100 / userSolutions.size());
+                                return percentage;
+                            });
                 });
     }
 
-    private Mono<List<UserSolutionDocument>> getUserSolutions() {
-        return userSolutionRepository
-                .findAll()
-                .collectList();
+    private Flux<UserSolutionDocument> getUserSolutions() {
+        return userSolutionRepository.findAll();
     }
 
-    private List<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
+    private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
         List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
                 .filter(us -> challengeId.equals(us.getChallengeId()))
                 .collect(Collectors.toList());
 
         if (userSolutionsChallenge.isEmpty()) {
-            throw new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId));
+            return Flux.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)));
         }
 
-        return userSolutionsChallenge;
+        return Flux.fromIterable(userSolutionsChallenge);
     }
 }
