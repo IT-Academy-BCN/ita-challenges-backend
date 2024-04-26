@@ -61,6 +61,6 @@ public class ChallengeDto {
     private UUID language;
 
     @JsonProperty(value = "solutions", index = 11)
-    private List<SolutionDto> solutions;
+    private List<TrimmedSolutionDto> solutions;
 
 }

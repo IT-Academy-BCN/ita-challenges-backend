@@ -153,17 +153,17 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
                                     .filter(solution -> solution.getIdLanguage().equals(languageId))
                                     .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
-                            
+                                    .flatMap(solutionDto -> Mono.from(solutionConverter.convertFullSolutionDtoToTrimmedSolutionDtoFlux(Flux.just(solutionDto))))
                             )
                             .skip(offset)
                             .take(limit)
                             .collectList()
-                            .map(solutionDtos -> {
+                            .map(trimmedSolutionDto -> {
                                 // Crear un objeto ChallengeDto con la información del desafío y las soluciones
                                 ChallengeDto challengeDto = new ChallengeDto();
                                 challengeDto.setChallengeId(challengeId);
                                 challengeDto.setLanguage(languageId);
-                                challengeDto.setSolutions(solutionDtos);
+                                challengeDto.setSolutions(trimmedSolutionDto);
                                 System.out.println(challengeDto.getSolutions().size());
                                 return challengeDto;
                             });

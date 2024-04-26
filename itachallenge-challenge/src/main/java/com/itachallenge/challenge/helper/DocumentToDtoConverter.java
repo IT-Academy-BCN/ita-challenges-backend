@@ -6,6 +6,7 @@ import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.TrimmedSolutionDto;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -45,18 +46,23 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
         }
 
+        if (dtoClass.isAssignableFrom(SolutionDto.class)) {
+            mapper.createTypeMap(SolutionDocument.class, SolutionDto.class)
+                    .addMapping(SolutionDocument::getUuid, SolutionDto::setUuid)
+                    .addMapping(SolutionDocument::getSolutionText, SolutionDto::setSolutionText)
+                    .addMapping(SolutionDocument::getIdLanguage, SolutionDto::setIdLanguage);
+        }
+
         return mapper.map(document, dtoClass);
     }
 
-    public Flux<SolutionDto> convertFullSolutionDtoToTrimmedSolutionDtoFlux(Flux<SolutionDto> dtoFlux) {
-        return dtoFlux.map(this::createDtoWithSelectedAttributes);
+    public Flux<TrimmedSolutionDto> convertFullSolutionDtoToTrimmedSolutionDtoFlux(Flux<SolutionDto> dtoFlux) {
+        return dtoFlux.map(this::createTrimmedSolutionDto); // Para cada elemento del flujo llamamos al metodo pasandole ele elemento como argumento.
     }
-    public SolutionDto createDtoWithSelectedAttributes(SolutionDto fullDto) {
-        // Crear un nuevo DTO con solo los atributos deseados
-        SolutionDto selectedDto = new SolutionDto();
+    public TrimmedSolutionDto createTrimmedSolutionDto(SolutionDto fullDto) {
+        TrimmedSolutionDto selectedDto = new TrimmedSolutionDto();
         selectedDto.setUuid(fullDto.getUuid());
         selectedDto.setSolutionText(fullDto.getSolutionText());
-        // No se llenan otros atributos aquí
 
         return selectedDto;
     }
