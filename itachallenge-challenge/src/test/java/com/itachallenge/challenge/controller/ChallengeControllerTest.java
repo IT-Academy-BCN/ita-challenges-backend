@@ -237,6 +237,35 @@ class ChallengeControllerTest {
     }
 
     @Test
+    void getSolutionsFromChallenges_ValidIds_SolutionsReturned() {
+        // Arrange
+        String idChallenge = "valid-challenge-id";
+        String idLanguage = "valid-language-id";
+        ChallengeDto challengeDto = new ChallengeDto();
+        int offset = 0;
+        int limit = 2;
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
+
+        when(challengeService.getSolutionsFromChallenge(idChallenge, idLanguage, offset, limit)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}?offset={offset}&limit={limit}", idChallenge, idLanguage, offset, limit)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 1;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 1;
+                });
+    }
+
+
+    @Test
     void getChallengesByLanguageAndDifficultyTest() {
         // Arrange
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f"; // Test idLanguage with mongoId structure
