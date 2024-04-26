@@ -2,8 +2,10 @@ package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -44,6 +46,19 @@ public class DocumentToDtoConverter<S,D> {
         }
 
         return mapper.map(document, dtoClass);
+    }
+
+    public Flux<SolutionDto> convertFullSolutionDtoToTrimmedSolutionDtoFlux(Flux<SolutionDto> dtoFlux) {
+        return dtoFlux.map(this::createDtoWithSelectedAttributes);
+    }
+    public SolutionDto createDtoWithSelectedAttributes(SolutionDto fullDto) {
+        // Crear un nuevo DTO con solo los atributos deseados
+        SolutionDto selectedDto = new SolutionDto();
+        selectedDto.setUuid(fullDto.getUuid());
+        selectedDto.setSolutionText(fullDto.getSolutionText());
+        // No se llenan otros atributos aquí
+
+        return selectedDto;
     }
 
 }
