@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.challenge.document.DetailDocument;
@@ -52,10 +51,8 @@ public class ChallengeDto {
     @JsonProperty(value = "solutions_uuid", index = 8)
     private List<UUID> solutionsUuid;
 
-
-
-
-
+    @JsonProperty(index = 9)
+    private List<TestingValueDto> testingValues;
 
     @JsonProperty(value = "uuid_language", index = 10)
     private UUID language;
