@@ -331,6 +331,59 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void testGetSolutionsFromChallenge() {
+        // Arrange
+        int offset = 1;
+        int limit = 1;
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
+
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(UUID.fromString(challengeStringId));
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
+        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+
+        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
+        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
+        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
+
+        TrimmedSolutionDto trimmedSolutionDto1 = new TrimmedSolutionDto(solution1.getUuid(), solution1.getSolutionText());
+        TrimmedSolutionDto trimmedSolutionDto2 = new TrimmedSolutionDto(solution2.getUuid(), solution2.getSolutionText());
+
+        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+        List<TrimmedSolutionDto> expectedTrimmedSolutions = List.of(trimmedSolutionDto1, trimmedSolutionDto2);
+
+
+        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
+        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
+        when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
+
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
+        when(solutionConverter.convertFullSolutionDtoToTrimmedSolutionDtoFlux(any())).thenReturn(Flux.fromIterable(expectedTrimmedSolutions));
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getSolutionsFromChallenge(challengeStringId, languageStringId, offset, limit);
+
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getOffset()).isEqualTo(offset);
+                    assertThat(resultDto.getLimit()).isEqualTo(limit);
+                    assertThat(resultDto.getCount()).isEqualTo(1);
+                    return true;
+                })
+                .verifyComplete();
+
+        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
+        verify(solutionRepository, times(2)).findById(any(UUID.class));
+        verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
+        verify(solutionConverter, times(2)).convertFullSolutionDtoToTrimmedSolutionDtoFlux(any());
+
+    }
+
+    @Test
     void testGetSolutions_InvalidChallengeId() {
         // Arrange
         int offset = 0;

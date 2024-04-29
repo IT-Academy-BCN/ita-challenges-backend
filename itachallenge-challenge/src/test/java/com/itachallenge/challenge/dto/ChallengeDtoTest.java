@@ -44,6 +44,10 @@ class ChallengeDtoTest {
         UUID exampleRandomId2 = uuid2.fromString("6c02025e-b06f-420a-bafb-28c737b18473");
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
+
+        TrimmedSolutionDto trimmedSolutionDto1 = new TrimmedSolutionDto(uuid, "solution1");
+        TrimmedSolutionDto trimmedSolutionDto2 = new TrimmedSolutionDto(uuid2, "solution2");
+
         Map<Locale, String> titleMap = new HashMap<>();
             titleMap.put(Locale.forLanguageTag("ES"), "Industrias Sociis");
             titleMap.put(Locale.forLanguageTag("CA"), "Industries Sociis");
@@ -71,11 +75,11 @@ class ChallengeDtoTest {
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
                 , titleMap, "EASY", "2023-06-05T12:30:00+02:00", detail,
-                105, 23.58f,buildLanguagesSorted(firstLanguage, secondLanguage));
+                105, 23.58f,buildLanguagesSorted(firstLanguage, secondLanguage), List.of(trimmedSolutionDto1, trimmedSolutionDto2));
 
         challengeDtoFromDeserialization = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
                 , titleMap, "EASY", "2023-06-05T12:30:00+02:00", detail,
-                105, 23.58f,buildLanguages(firstLanguage, secondLanguage));
+                105, 23.58f,buildLanguages(firstLanguage, secondLanguage), List.of(trimmedSolutionDto1, trimmedSolutionDto2));
     }
 
     @Test
@@ -111,7 +115,7 @@ class ChallengeDtoTest {
 
     static ChallengeDto buildChallengeWithBasicInfoDto
             (UUID id, Map<Locale, String> titleMap, String level, String creationDate, DetailDocument detail,
-             Integer popularity, Float percentage, Set<LanguageDto> languages){
+             Integer popularity, Float percentage, Set<LanguageDto> languages, List<TrimmedSolutionDto> trimmedSolutionDtos){
         return ChallengeDto.builder()
                 .challengeId(id)
                 .title(titleMap)
@@ -121,6 +125,7 @@ class ChallengeDtoTest {
                 .popularity(popularity)
                 .percentage(percentage)
                 .languages(languages)
+                .solutions(trimmedSolutionDtos)
                 .build();
     }
 

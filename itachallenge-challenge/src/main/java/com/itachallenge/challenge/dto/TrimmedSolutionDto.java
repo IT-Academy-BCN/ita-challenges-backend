@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 public class TrimmedSolutionDto {
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-    private static final String STRING_PATTERN = "^.{1,500}$";  //max 500 characters    @Id
+    private static final String STRING_PATTERN = "^.{1,500}$";  //max 500 characters  @Id
 
     @JsonProperty(value = "uuid_solution", index = 0)
     private UUID uuid;
