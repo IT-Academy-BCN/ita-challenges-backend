@@ -157,7 +157,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getDetail()).thenReturn(detail);
         when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
         when(challengeDocMocked.getLanguages()).thenReturn(languages);
-        when(challengeDocMocked.getSolutions()).thenReturn(solutions);
+        when(challengeDocMocked.getSolutionsUuid()).thenReturn(solutions);
         when(challengeDocMocked.getTestingValues()).thenReturn(testingValues);
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
