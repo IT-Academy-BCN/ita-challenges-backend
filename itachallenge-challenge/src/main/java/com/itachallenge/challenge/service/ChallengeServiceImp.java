@@ -163,7 +163,6 @@ public class ChallengeServiceImp implements IChallengeService {
                                 challengeDto.setChallengeId(challengeId);
                                 challengeDto.setLanguage(languageId);
                                 challengeDto.setSolutions(trimmedSolutionDto);
-                                System.out.println(challengeDto.getSolutions().size());
                                 return challengeDto;
                             });
                         })
