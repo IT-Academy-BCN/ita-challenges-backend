@@ -64,7 +64,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         );
         challengeStatus = determineChallengeStatus(status);
 
-        if (challengeStatus == null) {
+        if (challengeStatus == null || challengeStatus.getValue().isEmpty()) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
@@ -132,21 +132,14 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
+        ChallengeStatus challengeStatus = null;
 
-        if (status == null) {
-            return null;
-        }
-
-        if (status.equalsIgnoreCase(ChallengeStatus.STARTED.getValue())) {
-            return ChallengeStatus.STARTED;
+        if(status == null || status.isEmpty()) {
+            challengeStatus = ChallengeStatus.STARTED;
         } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
-            return ChallengeStatus.ENDED;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
-            return ChallengeStatus.EMPTY;
-        } else {
-            return null;
+            challengeStatus = ChallengeStatus.ENDED;
         }
-
+        return challengeStatus;
     }
 
 }
