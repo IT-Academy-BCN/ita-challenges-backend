@@ -3,7 +3,7 @@
 #       export ENV=dev
 #       export REGISTRY_NAME=itacademybcn/itachallenges
 #       export MICROSERVICE_VERSION=x.x.x
-#       ./itachallenge-score/build_Docker.sh
+#       ./itachallenge-auth/build_Docker.sh
 #
 #  At the server, execute:
 #      ./deploy_backend_dev.sh itachallenge-challenge [MICROSERVICE_VERSION]
@@ -18,13 +18,13 @@ echo " MICROSERVICE_VERSION="${MICROSERVICE_VERSION}
 now="$(date +'%d-%m-%Y %H:%M:%S:%3N')"
 base_dir=`pwd`
 
-./gradlew :itachallenge-score:clean && ./gradlew :itachallenge-score:build
+./gradlew :itachallenge-auth:clean && ./gradlew :itachallenge-auth:build
 
-cd itachallenge-score
-docker build -t=${REGISTRY_NAME}:itachallenge-score-${MICROSERVICE_VERSION} .
+cd itachallenge-auth
+docker build -t=${REGISTRY_NAME}:itachallenge-auth-${MICROSERVICE_VERSION} .
 
 #upload image to DockerHub
 if [ ${ENV} = "dev" ] || [ ${ENV} = "pre" ];
 then
-  docker push ${REGISTRY_NAME}:itachallenge-score-${MICROSERVICE_VERSION}
+  docker push ${REGISTRY_NAME}:itachallenge-auth-${MICROSERVICE_VERSION}
 fi
