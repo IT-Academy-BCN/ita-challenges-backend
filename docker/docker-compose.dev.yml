@@ -1,8 +1,8 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.0.9
-  last-updated: 2024-04-25
+  version: 1.13.0
+  last-updated: 2024-04-29
 
 services:
   consul-server1:
@@ -104,6 +104,42 @@ services:
     networks:
       apisix-dev:
         ipv4_address: 172.18.0.9
+
+  itachallenge-score:
+    image: '${REGISTRY_NAME}:itachallenge-score-${MICROSERVICE_TAG}'
+    container_name: 'itachallenge-score-${MICROSERVICE_TAG}-dev'
+    restart: always
+    networks:
+      apisix-dev:
+        ipv4_address: 172.18.0.10
+
+  itachallenge-user:
+    image: '${REGISTRY_NAME}:itachallenge-user-${MICROSERVICE_TAG}'
+    container_name: 'itachallenge-${MICROSERVICE_TAG}-dev'
+    restart: always
+    depends_on:
+      -  itachallenge-mongodb
+    environment:
+      - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_USER_DATABASE}?authSource=admin'
+    networks:
+      apisix-dev:
+        ipv4_address: 172.18.0.11
+
+  itachallenge-auth:
+    image: '${REGISTRY_NAME}:itachallenge-auth-${MICROSERVICE_TAG}'
+    container_name: 'itachallenge-auth-${MICROSERVICE_TAG}-dev'
+    restart: always
+    networks:
+      apisix-dev:
+        ipv4_address: 172.18.0.12
+
+  itachallenge-document:
+    image: '${REGISTRY_NAME}:itachallenge-document-${MICROSERVICE_TAG}'
+    container_name: 'itachallenge-document-${MICROSERVICE_TAG}-dev'
+    restart: always
+    networks:
+      apisix-dev:
+        ipv4_address: 172.18.0.13
 
 volumes:
   itachallenge_mongodb_data-dev:

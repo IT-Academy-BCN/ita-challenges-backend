@@ -301,7 +301,7 @@ class UserControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.application_name").isEqualTo("itachallenge-user")
-                .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
+                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
     }
 
 }
