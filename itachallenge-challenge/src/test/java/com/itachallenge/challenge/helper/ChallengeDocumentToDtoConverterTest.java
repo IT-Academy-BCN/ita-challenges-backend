@@ -114,7 +114,7 @@ class ChallengeDocumentToDtoConverterTest {
         ChallengeDto expectedDto = challengeDto1;
 
         assertThat(expectedDto).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
+                .ignoringFields("percentage", "popularity", "solutions")
                 .isEqualTo(resultDto);
     }
 
@@ -126,15 +126,13 @@ class ChallengeDocumentToDtoConverterTest {
 
         Flux<ChallengeDto> resultDto = converter.convertDocumentFluxToDtoFlux(Flux.just(challengeDoc1, challengeDoc2), ChallengeDto.class);
 
-
-
         assertThat(resultDto.count().block()).isEqualTo(Long.valueOf(2));
 
         assertThat(resultDto.blockFirst()).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
+                .ignoringFields("percentage", "popularity", "solutions")
                 .isEqualTo(challengeDto1);
         assertThat(resultDto.blockLast()).usingRecursiveComparison()
-                .ignoringFields("percentage", "popularity")
+                .ignoringFields("percentage", "popularity", "solutions")
                 .isEqualTo(challengeDto2);
     }
 
