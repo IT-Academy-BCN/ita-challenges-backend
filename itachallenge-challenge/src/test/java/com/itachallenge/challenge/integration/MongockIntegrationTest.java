@@ -28,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
-@ActiveProfiles("mongockTest")
 class MongockIntegrationTest {
     @Mock
     MongoDatabase mongoDatabase;
