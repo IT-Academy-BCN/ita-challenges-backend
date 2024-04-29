@@ -210,17 +210,17 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getSolutions_ValidIds_SolutionsReturned() {
+    void getSolutionsFromChallenge_ValidIds_SolutionsReturned() {
         // Arrange
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
-        int offset = 0;
-        int limit = 2;
+        int offset = 1;
+        int limit = 1;
 
-        GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(offset, limit, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{new ChallengeDto()});
 
-        when(challengeService.getSolutions(idChallenge, idLanguage, offset, limit)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getSolutionsFromChallenge(idChallenge, idLanguage, offset, limit)).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
         webTestClient.get()
@@ -230,9 +230,9 @@ class ChallengeControllerTest {
                 .expectBody(GenericResultDto.class)
                 .value(dto -> {
                     assert dto != null;
-                    assert dto.getCount() == 2;
+                    assert dto.getCount() == 1;
                     assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
+                    assert dto.getResults().length == 1;
                 });
     }
 
