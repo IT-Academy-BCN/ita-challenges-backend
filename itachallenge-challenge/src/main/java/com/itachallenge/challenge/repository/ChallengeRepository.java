@@ -22,5 +22,5 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String level, UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
-
+    Mono<Long> count();
 }
