@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +56,9 @@ public class DocumentController {
 
     @GetMapping("/version")
     public ResponseEntity<Map<String, String>> getVersion() {
-        String version = env.getProperty("spring.application.version");
+        String appVersion = env.getProperty("spring.application.version");
         Map<String, String> versionMap = new HashMap<>();
-        versionMap.put("version", version);
+        versionMap.put("version", appVersion);
         return new ResponseEntity<>(versionMap, HttpStatus.OK);
     }
 
