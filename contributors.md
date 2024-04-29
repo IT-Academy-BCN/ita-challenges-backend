@@ -43,4 +43,4 @@
 * Marc Santasusana Berch - https://github.com/MarcSantasusana
 * Gerard Benages - https://github.com/OZu16
 * Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
-
+* Marc Sánchez Moreno - https://github.com/marcsanchez95
