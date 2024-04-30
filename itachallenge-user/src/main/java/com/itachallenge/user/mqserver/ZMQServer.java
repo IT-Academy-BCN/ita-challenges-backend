@@ -26,7 +26,7 @@ public class ZMQServer {
     @Autowired
     ObjectSerializer objectSerializer;
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address.server}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }

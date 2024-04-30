@@ -31,7 +31,7 @@ public class ZMQClient {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQClient(ZContext context, @Value("${zeromq.socket.address.challenge}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
         this.socket = context.createSocket(SocketType.REQ);

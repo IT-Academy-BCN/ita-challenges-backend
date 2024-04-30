@@ -27,7 +27,7 @@ public class ZMQClient {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQClient(ZContext context, @Value("${zeromq.socket.address.user}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }

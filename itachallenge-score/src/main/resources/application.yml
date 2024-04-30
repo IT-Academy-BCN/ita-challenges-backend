@@ -27,7 +27,8 @@ management:
 
 zeromq:
   socket:
-    address: tcp://*:5555 #tcp://challenge:5555
+    address:
+      challenge: tcp://*:5555 #tcp://challenge:5555
 
 
 logging:

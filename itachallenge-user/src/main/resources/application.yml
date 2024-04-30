@@ -33,7 +33,8 @@ management:
 
 zeromq:
   socket:
-    address: tcp://*:5555
+    address:
+        server: tcp://*:5556
 
 url:
   max_length: 2048

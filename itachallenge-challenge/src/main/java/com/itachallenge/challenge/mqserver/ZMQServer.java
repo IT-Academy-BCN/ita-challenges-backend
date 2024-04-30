@@ -42,7 +42,7 @@ public class ZMQServer {
     @Autowired
     private ChallengeRepository challengeRepository;
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address.server}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }
@@ -102,7 +102,6 @@ public class ZMQServer {
         return TestingValuesResponseDto.builder()
                 .testingValues(testParams)
                 .build();
-
     }
 }
 
