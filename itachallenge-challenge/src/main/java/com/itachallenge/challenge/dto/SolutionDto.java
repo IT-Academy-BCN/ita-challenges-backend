@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.annotations.ValidUUID;
