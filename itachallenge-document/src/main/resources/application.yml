@@ -1,6 +1,6 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-document
     version: 1.0.0-RELEASE
 
   autoconfigure:

@@ -1,8 +1,8 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.13.0
-  last-updated: 2024-04-29
+  version: 1.13.2
+  last-updated: 2024-04-30
 
 services:
   consul-server1:
@@ -115,12 +115,12 @@ services:
 
   itachallenge-user:
     image: '${REGISTRY_NAME}:itachallenge-user-${MICROSERVICE_TAG}'
-    container_name: 'itachallenge-${MICROSERVICE_TAG}-dev'
+    container_name: 'itachallenge-user-${MICROSERVICE_TAG}-dev'
     restart: always
     depends_on:
       -  itachallenge-mongodb
     environment:
-      - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_USER_DATABASE}?authSource=admin'
+      - 'spring.data.mongodb.uri=mongodb://${MONGODB_USER_USERNAME}:${MONGODB_USER_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_USER_DATABASE}?authSource=admin'
     networks:
       apisix-dev:
         ipv4_address: 172.18.0.11
