@@ -617,7 +617,7 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID challengeId = UUID.randomUUID();
         UUID languageId = UUID.randomUUID();
-        UUID anotherLanguageId = UUID.randomUUID(); // This is a different languageId that is not in the challenge
+        UUID anotherLanguageId = UUID.randomUUID();
         ChallengeDocument challengeDocument = new ChallengeDocument();
         challengeDocument.setUuid(challengeId);
         challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
@@ -657,7 +657,6 @@ class ChallengeServiceImpTest {
         StepVerifier.create(result)
                 .assertNext(actualResult -> {
                     assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
-                    // Aquí puedes agregar más aserciones para verificar otras propiedades si es necesario
                 })
                 .verifyComplete();
     }
@@ -704,7 +703,6 @@ class ChallengeServiceImpTest {
         StepVerifier.create(result)
                 .assertNext(actualResult -> {
                     assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(genericResultDto.getResults()[0]);
-                    // Aquí puedes agregar más aserciones para verificar otras propiedades si es necesario
                 })
                 .verifyComplete();
     }
