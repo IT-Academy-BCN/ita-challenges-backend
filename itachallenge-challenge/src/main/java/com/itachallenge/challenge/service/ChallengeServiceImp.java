@@ -5,6 +5,8 @@ import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.dto.zmq.TestingValuesResponseDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
@@ -237,6 +239,18 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
+    public Mono<TestingValuesResponseDto> getTestingParamsByChallengeUuid(UUID challengeId) {
+
+        return testingValueConverter.convertDocumentFluxToDtoFlux(
+                        challengeRepository.findByUuid(challengeId)
+                                .flatMapMany(challenge -> Flux.fromIterable(challenge.getTestingValues())), TestingValueDto.class
+                )
+                .collectList()
+                .flatMap(params -> Mono.just(TestingValuesResponseDto.builder()
+                        .testingValues(params)
+                        .build()));
+
+    }
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
