@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.13.2
+  version: 1.14.0
   last-updated: 2024-04-30
 
 services:
@@ -137,6 +137,11 @@ services:
     image: '${REGISTRY_NAME}:itachallenge-document-${MICROSERVICE_TAG}'
     container_name: 'itachallenge-document-${MICROSERVICE_TAG}-dev'
     restart: always
+    environment:
+      - 'redirect-api.auth.url=http://172.18.0.12:7777'
+      - 'redirect-api.challenge.url=http://172.18.0.6:7777'
+      - 'redirect-api.score.url=http://172.18.0.10:7777'
+      - 'redirect-api.user.url=172.18.0.11:7777'
     networks:
       apisix-dev:
         ipv4_address: 172.18.0.13
