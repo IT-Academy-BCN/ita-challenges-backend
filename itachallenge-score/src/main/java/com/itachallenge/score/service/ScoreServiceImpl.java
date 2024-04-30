@@ -13,9 +13,8 @@ import java.util.UUID;
 public class ScoreServiceImpl implements IScoreService{
     @Autowired
     ZMQClient zmqClient;
-
+    //TODO Proof of concept. Missing proper validations
     public Mono<TestingValuesResponseDto> getTestParams(String challengeId) {
-        //TODO Pending UUID validation
             ChallengeRequestDto challengeRequestDto = ChallengeRequestDto.builder()
                     .challengeId(UUID.fromString(challengeId))
                     .build();
