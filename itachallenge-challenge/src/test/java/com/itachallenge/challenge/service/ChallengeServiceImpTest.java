@@ -384,6 +384,65 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void testGetSolutionsFromChallenge_InvalidChallengeId() {
+        // Arrange
+        int offset = 0;
+        int limit = 3;
+        String invalidChallengeStringId = "invalid_challenge_id";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getSolutionsFromChallenge(invalidChallengeStringId, languageStringId, offset, limit))
+                .expectError(BadUUIDException.class)
+                .verify();
+
+        verify(challengeRepository, never()).findByUuid(any(UUID.class));
+        verify(solutionRepository, never()).findById(any(UUID.class));
+        verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
+        verify(solutionConverter, never()).convertFullSolutionDtoToTrimmedSolutionDtoFlux(any());
+    }
+
+    @Test
+    void testGetSolutionsFromChallenge_InvalidLanguageId() {
+        // Arrange
+        int offset = 1;
+        int limit = 2;
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String invalidLanguageStringId = "invalid_language_id";
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getSolutionsFromChallenge(challengeStringId, invalidLanguageStringId, offset, limit))
+                .expectError(BadUUIDException.class)
+                .verify();
+
+        verify(challengeRepository, never()).findByUuid(any(UUID.class));
+        verify(solutionRepository, never()).findById(any(UUID.class));
+        verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
+        verify(solutionConverter, never()).convertFullSolutionDtoToTrimmedSolutionDtoFlux(any());
+    }
+
+    @Test
+    void testGetSolutionsFromChallenge_ChallengeNotFound() {
+        // Arrange
+        int offset = 1;
+        int limit = 2;
+        String nonExistentChallengeStringId = "2f948de0-6f0c-4089-90b9-7f70a0812322";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+
+        // Simulate that the challenge with the specified UUID is not found
+        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.empty());
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getSolutionsFromChallenge(nonExistentChallengeStringId, languageStringId, offset, limit))
+                .expectError(ChallengeNotFoundException.class)
+                .verify();
+
+        verify(challengeRepository).findByUuid(any(UUID.class));
+        verify(solutionRepository, never()).findById(any(UUID.class));
+        verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
+    }
+
+    @Test
     void testGetSolutions_InvalidChallengeId() {
         // Arrange
         int offset = 0;

@@ -140,7 +140,7 @@ class ChallengeIntegrationTest {
                 .value(String::toString, equalTo("Hello from ITA Challenge!!!"));
     }
 
-    /*@Test
+    @Test
     void shouldReturnBadRequestForUnknownUserId() { //TODO Change to proper HTTP status once controller has been normalized
         webTestClient
                 .get()
@@ -149,7 +149,7 @@ class ChallengeIntegrationTest {
                 .expectStatus()
                 .isEqualTo(BAD_REQUEST);
     }
-*/
+
     @Test
     void shouldReturnOk_ValidUserId() {
         webTestClient
