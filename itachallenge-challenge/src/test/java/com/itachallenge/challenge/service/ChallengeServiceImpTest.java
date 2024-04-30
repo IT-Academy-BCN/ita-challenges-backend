@@ -222,8 +222,10 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
         // Act
-        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
-        Flux.just(result);
+//        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
+//        Flux.just(result);
+        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit)
+                .flatMap(genericResult -> Flux.fromArray(genericResult.getResults()));
         // Assert
         verify(challengeRepository).findAllByUuidNotNull();
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
