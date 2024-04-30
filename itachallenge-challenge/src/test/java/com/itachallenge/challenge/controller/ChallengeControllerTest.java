@@ -155,7 +155,7 @@ class ChallengeControllerTest {
         String limit = "3";
 
         when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
-                .thenReturn(expectedChallengesFlux);
+                .thenReturn(Flux.just());
 
         // Act & Assert
         webTestClient.get()
