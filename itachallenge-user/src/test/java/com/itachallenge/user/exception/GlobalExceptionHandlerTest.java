@@ -55,10 +55,10 @@ class GlobalExceptionHandlerTest {
 
         IllegalArgumentException ex = new IllegalArgumentException("Test error message");
 
-        ResponseEntity<String> response = globalExceptionHandler.handleIllegalArgumentException(ex);
+        ResponseEntity<ErrorResponseDto> response = globalExceptionHandler.handleIllegalArgumentException(ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Test error message", response.getBody());
+        assertEquals("Test error message", response.getBody().getMessage());
     }
 
     @Test

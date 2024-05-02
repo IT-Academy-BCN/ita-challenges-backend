@@ -17,15 +17,30 @@ routes:
       - GET
     upstream_id: 2
   -
+    uri: /itachallenge/api/v1/auth/**
+    methods:
+      - GET
+    upstream_id: 3
+  -
     uri: /api-docs**
     methods:
       - GET
-    upstream_id: 2
+    upstream_id: 4
   -
     uri: /swagger-ui/**
     methods:
       - GET
-    upstream_id: 2
+    upstream_id: 4
+  -
+    uri: /itachallenge/api/v1/score/**
+    methods:
+      - GET
+    upstream_id: 5
+  -
+    uri: /itachallenge/api/v1/user/**
+    methods:
+      - GET
+    upstream_id: 6
 
 
 upstreams:
@@ -38,6 +53,26 @@ upstreams:
     id: 2
     nodes:
       "172.18.0.6:8762": 1
+    type: roundrobin
+  -
+    id: 3
+    nodes:
+      "172.18.0.12:8761": 1
+    type: roundrobin
+  -
+    id: 4
+    nodes:
+      "172.18.0.13:8769": 1
+    type: roundrobin
+  -
+    id: 5
+    nodes:
+      "172.18.0.10:8763": 1
+    type: roundrobin
+  -
+    id: 6
+    nodes:
+      "172.18.0.11:8764": 1
     type: roundrobin
 
 #END

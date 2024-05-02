@@ -2,13 +2,9 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -20,6 +16,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +58,12 @@ public class ChallengeController {
     ZMQClient zmqClient;
     @Autowired
     ChallengeRequestDto challengeInputDto;
+
+    @Value("${spring.application.version}")
+    private String version;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
@@ -115,18 +118,13 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "400", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
             }
     )
+    public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
 
-    public ResponseEntity<Mono<?>> getOneChallenge(@PathVariable("challengeId") String id) {
-        Mono<ChallengeDto> response = challengeService.getChallengeById(id);
-
-        return ResponseEntity.ok()
-                .body(response
-                        .map(challengeDto -> (Object) challengeDto)
-                        .defaultIfEmpty(Collections.singletonMap("message", "Challenge with id " + id + " not found."))
-                );
+        return challengeService.getChallengeById(id)
+                .map(dto -> ResponseEntity.ok().body(dto));
     }
 
 
@@ -262,5 +260,40 @@ public class ChallengeController {
              @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
                      limit) {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
+    }
+
+    @GetMapping("/test/params/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Get the testing parameters for the chosen challenge & language.",
+            summary = "Get the arrays of the testing values in & out parameters",
+            description = "Sending the ID Challenge & ID Language returns the relevant challenge's testing values.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The Challenge Id & Language Id can't be null or empty.", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<Map<String, Object>> getChallengesTestingValues(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
+                                                                @PathVariable("idLanguage") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage) {
+        return challengeService.getTestingParamsByChallengeIdAndLanguageId(idChallenge, idLanguage);
+    }
+
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version and name.",
+                            content = @Content(schema = @Schema(implementation = Map.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> getVersion() {
+        Map<String, String> response = new HashMap<>();
+        response.put("application_name", appName);
+        response.put("version", version);
+        return Mono.just(ResponseEntity.ok(response));
     }
 }
