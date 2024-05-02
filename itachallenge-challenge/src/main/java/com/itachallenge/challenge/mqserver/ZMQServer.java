@@ -7,7 +7,6 @@ import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.TestingValuesResponseDto;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.helper.ObjectSerializer;
-import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.IChallengeService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -19,13 +18,9 @@ import org.springframework.stereotype.Component;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
-import reactor.core.publisher.Flux;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class ZMQServer {
@@ -43,7 +38,7 @@ public class ZMQServer {
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> converter;
 
     @Autowired
-    private IChallengeService challengeService;
+    protected IChallengeService challengeService;
 
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address.server}") String socketAddress){
         this.context = context;
@@ -59,29 +54,36 @@ public class ZMQServer {
 
     public void run(){
         try (ZMQ.Socket socket = context.createSocket(SocketType.REP)) {
+            ChallengeRequestDto requestDto;
+            TestingValuesResponseDto responseDto;
+            Optional<Object> request;
+            Optional<byte[]> response;
+            byte[] reply;
+
             socket.bind(SOCKET_ADDRESS);
 
             while (!Thread.currentThread().isInterrupted() && isRunning) {
-                byte[] reply = socket.recv(0);
+                request = Optional.empty();
+                response = Optional.empty();
+                reply = socket.recv(0);
 
-                Optional<Object> request = Optional.empty();
                 try {
                     request = Optional.of(objectSerializer.deserialize(reply, ChallengeRequestDto.class));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
 
-                ChallengeRequestDto requestDto = (ChallengeRequestDto) request.get();
+                if(request.isPresent()) {
+                    requestDto = (ChallengeRequestDto) request.get();
+                    log.info("Received: [" + requestDto.getChallengeId() + "]");
 
-                log.info("Received: [" + requestDto.getChallengeId() + "]");
+                    responseDto = challengeService.getTestingParamsByChallengeUuid(requestDto.getChallengeId()).block();
 
-                TestingValuesResponseDto responseDto = challengeService.getTestingParamsByChallengeUuid(requestDto.getChallengeId()).block();
-
-                Optional<byte[]> response = Optional.empty();
-                try {
-                    response = Optional.of(objectSerializer.serialize(responseDto));
-                } catch (JsonProcessingException e) {
-                    log.error(e.getMessage());
+                    try {
+                        response = Optional.of(objectSerializer.serialize(responseDto));
+                    } catch (JsonProcessingException e) {
+                        log.error(e.getMessage());
+                    }
                 }
 
                 socket.send(response.orElse(new byte[0]), 0);
