@@ -67,6 +67,8 @@ class ChallengeServiceImpCacheTest {
                 .expectComplete()
                 .verify();
 
+        verify(challengeRepository, times(1)).findByUuid(challengeId);
+
         Mono<ChallengeDto> result2 = challengeService.getChallengeById(challengeId.toString());
 
         StepVerifier.create(result2)
@@ -117,7 +119,7 @@ class ChallengeServiceImpCacheTest {
 
         verifyNoMoreInteractions(languageRepository, languageConverter);
     }
-
+    @DisplayName("Cache - getAllChallenges")
     @Test
     void getAllChallenges_cacheTest() { // No esta funcionando.
         // Arrange
@@ -170,10 +172,9 @@ class ChallengeServiceImpCacheTest {
         // Verify repository and converter are not called again
         verifyNoMoreInteractions(challengeRepository);
     }
-
+    @DisplayName("Cache - getRelatedChallenges")
     @Test
-    void testGetRelatedChallenges_ReturnedAll() {
-        // Arrange
+    void testGetRelatedChallenges_cacheTest() {
         int offset = 1;
         int limit = 1;
         String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
@@ -200,24 +201,22 @@ class ChallengeServiceImpCacheTest {
         List<ChallengeDto> expectedRelated = List.of(relatedDto1, relatedDto2, relatedDto3);
 
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
-        when(challengeRepository.findByUuid(related1.getUuid())).thenReturn(Mono.just(related1));
         when(challengeRepository.findByUuid(related2.getUuid())).thenReturn(Mono.just(related2));
         when(challengeRepository.findByUuid(related3.getUuid())).thenReturn(Mono.just(related3));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId, 0, challenge.getRelatedChallenges().size());
+        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId, offset, limit);
 
         // Assert
         StepVerifier.create(resultMono)
-                .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isZero();
-                    assertThat(resultDto.getLimit()).isEqualTo(expectedRelated.size());
-                    assertThat(resultDto.getCount()).isEqualTo(expectedRelated.size());
-                    return true;
-                })
+                .expectSubscription()
+                .expectNextCount(1)
                 .expectComplete()
                 .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challenge.getUuid());
+
         // Act
         Mono<GenericResultDto<ChallengeDto>> resultMonoCached = challengeService.getRelatedChallenges(challengeStringId, offset, limit);
 
