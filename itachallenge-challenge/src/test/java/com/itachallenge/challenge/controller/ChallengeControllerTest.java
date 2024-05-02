@@ -171,7 +171,13 @@ class ChallengeControllerTest {
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
-        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+        Flux<GenericResultDto<ChallengeDto>> expectedChallengesFlux = Flux.just(expectedChallenges)
+                .collectList()
+                        .flatMapMany(challenges -> {
+                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                            resultDto.setInfo(0, 2, 22, challenges.toArray(new ChallengeDto[0]));
+                            return Flux.just(resultDto);
+                        });
 
         String offset = "0";
         String limit = "2";

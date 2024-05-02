@@ -110,15 +110,12 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
 
-        Long challengesCounted = challengeRepository.findAllByUuidNotNull()
-                .count().block();
-
         return challengeConverter.convertDocumentFluxToDtoFlux(
                         challengeRepository.findAllByUuidNotNull().skip(offset).take(limit), ChallengeDto.class)
                 .collectList()
                 .flatMapMany(challenges -> {
                     GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                    resultDto.setInfo(offset, limit, Math.toIntExact(challengesCounted), challenges.toArray(new ChallengeDto[0]));
+                    resultDto.setInfo(offset, limit, challenges.size(), challenges.toArray(new ChallengeDto[0]));
                     return Flux.just(resultDto);
                 });
 
