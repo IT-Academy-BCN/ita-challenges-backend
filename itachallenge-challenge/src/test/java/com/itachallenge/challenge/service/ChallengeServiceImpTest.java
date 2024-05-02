@@ -45,7 +45,8 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @Mock
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
-
+    @Mock
+    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter;
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
