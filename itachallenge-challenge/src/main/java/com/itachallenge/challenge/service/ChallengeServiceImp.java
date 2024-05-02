@@ -54,6 +54,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Cacheable (value = "challenge", key="#id", unless="#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
+        System.out.println("Base de datos");
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
                         .switchIfEmpty(Mono.empty())
@@ -104,6 +105,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
+            System.out.println("Base de datos");
             GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
             resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
             return resultDto;
@@ -113,6 +115,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
+        System.out.println("Base de datos");
         return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
     }
 
@@ -187,7 +190,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Cacheable (value="relatedChallenges", key="{#id, #offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
-
+        System.out.println("Base de datos");
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
