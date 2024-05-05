@@ -217,7 +217,7 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
 
-        when(challengeRepository.findAllByUuidNotNull())
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
                 .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
@@ -225,7 +225,7 @@ class ChallengeServiceImpTest {
         Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
-        verify(challengeRepository).findAllByUuidNotNull();
+        verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
 
         StepVerifier.create(result)
@@ -240,7 +240,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit))
+        StepVerifier.create(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit))
                 .expectSubscription()
                 .expectNextCount(2)
                 .expectComplete()
