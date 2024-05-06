@@ -16,6 +16,21 @@
 
 ### Description
 
+The ITA-challenges-backend project is built using Java with the Spring Boot framework and reactive programming. It is an
+initiative designed specifically for students enrolled in the IT Academy program at Barcelona Activa. 
+
+The primary goal is to provide students with hands-on experience in a real-world development environment, 
+simulating scenarios they may encounter in their future careers. 
+
+Simultaneously, students collaborate to create a valuable learning tool for the [ITA challenges application](http://dev.ita-challenges.eurecatacademy.org/ita-challenge/challenges)
+dedicated to code and programming coding-challenges. This project involves tackling new features, addressing legacy code, resolving bugs, 
+and fostering teamwork. The emphasis is not only on technical proficiency but also on providing a holistic learning experience 
+for our students.
+
+This project exists thanks to all the people who contribute.
+
+For newcomers, we strongly advise reading through all the provided material before diving in.
+
 ### Usage
 
 ### Installation
