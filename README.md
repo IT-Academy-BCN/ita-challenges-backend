@@ -18,6 +18,8 @@
 
 ### Usage
 
+Each microservice exposes REST APIs for interacting with it. To use any microservice, call its main method in the App class. For more information about each microservice, refer to the API documentation in each of their README.md file.
+
 ### Installation
 
 ####  Versions used
