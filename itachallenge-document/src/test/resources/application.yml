@@ -9,6 +9,18 @@ spring:
   jmx:
     enabled: true
 
+
+redirect-api:
+  auth:
+    url: "http://localhost:8761"
+  challenge:
+    url: "http://localhost:8762"
+  score:
+    url: "http://localhost:8763"
+  user:
+    url: "http://localhost:8764"
+
+
 springdoc:
   swagger-ui:
     path: "/swagger"
@@ -57,5 +69,3 @@ logging:
 url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
-
-
