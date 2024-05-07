@@ -35,13 +35,13 @@ For newcomers, we strongly advise reading through all the provided material befo
 
 ### Installation
 
-####  Versions used
+#### Required versions
 
-- Java SE Development Kit 17.0.7: [JDK17](https://www.oracle.com/java/technologies/javase-jdk17-downloads.html)
-- Gradle 8.0: [Gradle](https://gradle.org/install/)
-- MongoDB 1.17.6: [MongoDB](https://www.mongodb.com/try/download/community)
-- Project Reactor 3.1.0 Release: [Project Reactor](https://projectreactor.io/docs/core/release/reference/)
-- Spring Boot Starter Test 3.0.6: [Spring Boot Starter Test](https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test/2.6.0)
+The project is compatible with the following versions. It's essential to ensure that your development environment aligns with these specifications to maintain compatibility and maximize the functionality and performance of the project.
+
+- Gradle 8.1.1
+- Java 17.0.1
+- Docker 20.10.8
 
 #### Project links
 
@@ -53,11 +53,24 @@ For newcomers, we strongly advise reading through all the provided material befo
 
 #### Procedure
 
-1. Install the required software listed in the "Versions used" and "Project links" sections.
-2. Clone the repository: `git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git`
-3. Navigate into the project directory: `cd ita-challenges-backend`
-4. Install the dependencies: `gradle build`
-5. Run the application: `gradle bootRun`
+Install the required software listed in the "Versions used" and "Project links" sections.
+
+Clone the repository: 
+
+    git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
+
+Navigate into the project directory:
+
+    cd ita-challenges-backend
+
+Install the dependencies:
+
+    gradle build
+
+
+Run the application: 
+
+    gradle bootRun
 
 ### Newcomers
 
