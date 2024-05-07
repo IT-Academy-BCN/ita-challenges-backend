@@ -37,25 +37,32 @@ Each microservice exposes REST APIs for interacting with it. To use any microser
 
 ### Installation
 
-#### Required versions
+#### Required programs
 
-The project is compatible with the following versions. It's essential to ensure that your development environment aligns with these specifications to maintain compatibility and maximize the functionality and performance of the project.
+- **MongoDB**: MongoDB is a NoSQL database widely used in application development. It is used to store and retrieve data efficiently. You can download [MongoCompass](https://www.mongodb.com/try/download/compass) from the official website.
 
-- Gradle 8.1.1
-- Java 17.0.1
-- Docker 20.10.8
+- **Postman**: Postman is a tool that will allow you to easily test and document APIs. It is especially useful for sending HTTP requests and verifying the responses. You can download [Postman](https://www.postman.com/downloads/) from the official website.
+
+- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
+
+- **Docker**: Docker is a platform that enables packaging and distributing applications in containers. It provides an isolated environment to run the application and its dependencies. You can download [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
+
+- **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download [Git](https://git-scm.com/downloads) from the official website.
+
+- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
+
+It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
 #### Project links
 
 - GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)
 - Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)
-- Frontend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/16/views/1)
 - Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)
 - Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)
 
 #### Procedure
 
-Install the required software listed in the "Versions used" and "Project links" sections.
+Install the required software listed in the "Required programs" and "Project links" sections.
 
 Clone the repository: 
 
@@ -68,7 +75,6 @@ Navigate into the project directory:
 Install the dependencies:
 
     gradle build
-
 
 Run the application: 
 
