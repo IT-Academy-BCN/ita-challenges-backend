@@ -104,9 +104,24 @@ See [GUIDELINES.md](GUIDELINES.md)
 * **Do I need start up the project fully on my pc to start coding?**
     - Of course not.
 
-### Contributors
+## Contributors
 
-This project exists thanks to all the people who contribute.
+Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
+
+### Contribution Instructions
+
+1. **To start working on your contribution, create a new branch in your local repository.**
+   Use the format `feature#` followed by the assigned ticket number. For example:
+
+   -git checkout -b feature#123
+
+2. **After you've finished, you should push your branch and then submit a pull request.**
+
+3. **For your first contribution, you should add your name and GitHub profile to "contributors.md" in a new branch. The name of the branch can be your name.**
+
+We look forward to your contributions! Don't forget that the project exists thanks to everyone who contributes.
+
+
 
 <a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=IT-Academy-BCN/ita-challenges-backend" /></a>
