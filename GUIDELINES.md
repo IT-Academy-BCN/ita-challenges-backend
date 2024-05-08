@@ -37,7 +37,7 @@
    5.3 [Testimplementation area](#53-testimplementation-area)
 
 6. [**REQUIRED PROGRAMS**](#6-required-programs)\
-   6.1 [Requierd programs](#61-required-programs)
+   6.1 [Required programs](#61-required-programs)
 
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
@@ -550,7 +550,7 @@ It is important to make sure you have all these tools installed and configured c
 
 # 7 RECOMMENDED PROGRAMS
 
-The following programs are recommended to failitate the work on the project::
+The following programs are recommended to facilitate the work on the project:
 
 ## 7.1 Recommended programs
 
