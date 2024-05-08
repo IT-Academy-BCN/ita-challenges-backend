@@ -73,25 +73,25 @@ It is important to make sure you have all these tools installed and configured c
 3. Import data into MongoDB. You can see how in the [guidelines.](./GUIDELINES.md#212-import-data-into-mongodb-example-for-micro-itachallenge-challenge-data)
 
 4. Clone the repository:
-
-    <pre>git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git</pre>
-
+```
+    git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
+```
 5. Navigate into the project directory:
-
-    <pre>cd ita-challenges-backend</pre>
-
+```
+    cd ita-challenges-backend
+```
 6. Install the dependencies:
-
-    <pre>gradle build</pre>
-
+```
+    gradle build
+```
 7. Navigate to the directory of the microservice you want to start, for example 'challenges'.
-
-    <pre>cd itachallenge-challenge</pre>
-
+```
+    cd itachallenge-challenge
+```
 8. Run the application: 
-
-    <pre>gradle bootRun</pre>
-
+```
+    gradle bootRun
+```
 9. You can test the application in the browser at: http://localhost:8762/itachallenge/api/v1/challenge/test
 
 10. If you want to test the application in postman, you can import the environments and collections from the folder [`postman`](./postman) in the root of the project.
