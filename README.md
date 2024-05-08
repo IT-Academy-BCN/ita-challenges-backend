@@ -68,6 +68,10 @@ It is important to make sure you have all these tools installed and configured c
 
 Install the required software listed in the "Required programs" and "Project links" sections.
 
+Make sure you have Docker Desktop turned on.
+
+Import data into MongoDB. You can see how in the [guidelines.](./GUIDELINES.md#import-data-into-mongodb-example-for-micro-itachallenge-challenge-data)
+
 Clone the repository: 
 
     git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
@@ -80,9 +84,19 @@ Install the dependencies:
 
     gradle build
 
+Navigate to the directory of the microservice you want to start, for example 'challenges'.
+
+    cd itachallenge-challenge
+
 Run the application: 
 
     gradle bootRun
+
+You can test the application in the browser at:
+
+    http://localhost:8762/itachallenge/api/v1/challenge/test
+
+If you want to test the application in postman, you can import the environments and collections from the folder [`postman`](./postman) in the root of the project.
 
 ### Newcomers
 
