@@ -66,37 +66,35 @@ It is important to make sure you have all these tools installed and configured c
 
 #### Procedure
 
-Install the required software listed in the "Required programs" and "Project links" sections.
+1. Install the required software listed in the "Required programs" and "Project links" sections.
 
-Make sure you have Docker Desktop turned on.
+2. Make sure you have Docker Desktop turned on.
 
-Import data into MongoDB. You can see how in the [guidelines.](./GUIDELINES.md#212-import-data-into-mongodb-example-for-micro-itachallenge-challenge-data)
+3. Import data into MongoDB. You can see how in the [guidelines.](./GUIDELINES.md#212-import-data-into-mongodb-example-for-micro-itachallenge-challenge-data)
 
-Clone the repository: 
+4. Clone the repository:
 
-    git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
+    <pre>git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git</pre>
 
-Navigate into the project directory:
+5. Navigate into the project directory:
 
-    cd ita-challenges-backend
+    <pre>cd ita-challenges-backend</pre>
 
-Install the dependencies:
+6. Install the dependencies:
 
-    gradle build
+    <pre>gradle build</pre>
 
-Navigate to the directory of the microservice you want to start, for example 'challenges'.
+7. Navigate to the directory of the microservice you want to start, for example 'challenges'.
 
-    cd itachallenge-challenge
+    <pre>cd itachallenge-challenge</pre>
 
-Run the application: 
+8. Run the application: 
 
-    gradle bootRun
+    <pre>gradle bootRun</pre>
 
-You can test the application in the browser at:
+9. You can test the application in the browser at: http://localhost:8762/itachallenge/api/v1/challenge/test
 
-    http://localhost:8762/itachallenge/api/v1/challenge/test
-
-If you want to test the application in postman, you can import the environments and collections from the folder [`postman`](./postman) in the root of the project.
+10. If you want to test the application in postman, you can import the environments and collections from the folder [`postman`](./postman) in the root of the project.
 
 ### Newcomers
 
