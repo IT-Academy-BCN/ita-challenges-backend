@@ -72,11 +72,11 @@ See [GUIDELINES.md](GUIDELINES.md/#5-libraries-used)
 
 #### Project links
 
-- [GitHub](https://github.com/IT-Academy-BCN/ita-challenges-backend) Here you can find the source code.
-- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1) Here you can find the tasks to be done.
-- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D) Here you can find the requirements of the project.
+- [GitHub](https://github.com/IT-Academy-BCN/ita-challenges-backend). Here you can find the source code.
+- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1). Here you can find the tasks to be done.
+- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D). Here you can find the requirements of the project.
 - [Wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki) Here you can find the technical documentation of the project.
-- [Figma](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design) Here you can find the design of the project.
+- [Figma](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design). Here you can find the design of the project.
 
 #### Procedure
 
