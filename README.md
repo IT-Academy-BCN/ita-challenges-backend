@@ -121,15 +121,14 @@ See [GUIDELINES.md](GUIDELINES.md)
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
 
 ### Contribution Instructions
-
-1. **To start working on your contribution, create a new branch in your local repository.**
+* **To start working on your contribution, create a new branch in your local repository.**
    Use the format `feature#` followed by the assigned ticket number. For example:
+    ```
+  git checkout -b feature#123
 
-   -git checkout -b feature#123
+* **After you've finished, you should push your branch and then submit a pull request.**
 
-2. **After you've finished, you should push your branch and then submit a pull request.**
-
-3. **For your first contribution, you should add your name and GitHub profile to "contributors.md" in a new branch. The name of the branch can be your name.**
+* **For your first contribution, you should add your name and GitHub profile to "contributors.md" in a new branch. The name of the branch can be your name.**
 
 We look forward to your contributions! Don't forget that the project exists thanks to everyone who contributes.
 
@@ -145,6 +144,9 @@ We look forward to your contributions! Don't forget that the project exists than
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_ES.md)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_CA.md)
 
+## License
+
+- License information: [link](https://github.com/IT-Academy-BCN/ita-challenges-backend/tree/feature%23370b?tab=License-1-ov-file)
 
 
 
