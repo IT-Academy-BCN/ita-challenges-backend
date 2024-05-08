@@ -70,7 +70,7 @@ Install the required software listed in the "Required programs" and "Project lin
 
 Make sure you have Docker Desktop turned on.
 
-Import data into MongoDB. You can see how in the [guidelines.](./GUIDELINES.md#import-data-into-mongodb-example-for-micro-itachallenge-challenge-data)
+Import data into MongoDB. You can see how in the [guidelines.](./GUIDELINES.md#212-import-data-into-mongodb-example-for-micro-itachallenge-challenge-data)
 
 Clone the repository: 
 
