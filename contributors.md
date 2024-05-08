@@ -44,4 +44,5 @@
 * Gerard Benages - https://github.com/OZu16
 * Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
 * Ainoha Barcia - https://github.com/AinohaBarcia
+* Oriol Riera Lizcano - https://github.com/Uriera4
 
