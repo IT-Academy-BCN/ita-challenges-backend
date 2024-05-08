@@ -3,6 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
 
+### [itachallenge-challenge-1.5.0-RELEASE] - 2023-05-08
+* Issue #397: Filter revision at endpoint /GET Challenges?idLanguage=99&level=EASY with params offset, limit and count and pagination
+
 ### [itachallenge-challenge-1.1.0-RELEASE] - 2023-12-12
 * CORS enabled
 
