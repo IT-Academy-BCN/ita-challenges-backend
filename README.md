@@ -130,9 +130,12 @@ See [GUIDELINES.md](GUIDELINES.md)
 
 ### FAQ's
 
-* **May I use AI on this project? How can I use it the best way?**
-    - You must do it.
-
+* **Can I use any kind of AI as a help on this project? What is the best way to use AI?**
+    - You are totally allowed to use AI in this project. 
+   
+    - The best way to use AI is first to understand the problem you want to solve, then to choose the best algorithm to solve it, and finally to implement it in the application.
+  Please, remember to double-check the AI's results and to test it in different scenarios.
+  
 * **Is there any diagram of architecture, a technical description or similar?**
     - Yes, you can find it in the [wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki)
 
