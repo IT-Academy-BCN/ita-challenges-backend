@@ -29,7 +29,9 @@ for our students.
 
 This project exists thanks to all the people who contribute.
 
-For newcomers, we strongly advise reading through all the provided material before diving in.
+**For newcomers**, we strongly emphasize the importance of thoroughly reading the entire README. 
+This document contains crucial information about installation, configuration, and daily processes necessary for 
+effectively working on this project.
 
 ### Usage
 
@@ -38,6 +40,8 @@ Each microservice exposes REST APIs for interacting with it. To use any microser
 ### Installation
 
 #### Required programs
+
+It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
 - **MongoDB**: MongoDB is a NoSQL database widely used in application development. It is used to store and retrieve data efficiently. You can download [MongoCompass](https://www.mongodb.com/try/download/compass) from the official website.
 
@@ -51,7 +55,7 @@ Each microservice exposes REST APIs for interacting with it. To use any microser
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
 
-It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
+
 
 #### Project links
 
