@@ -29,7 +29,9 @@ for our students.
 
 This project exists thanks to all the people who contribute.
 
-For newcomers, we strongly advise reading through all the provided material before diving in.
+**For newcomers**, we strongly emphasize the importance of thoroughly reading the entire README. 
+This document contains crucial information about installation, configuration, and daily processes necessary for 
+effectively working on this project.
 
 ### Usage
 
@@ -38,6 +40,8 @@ Each microservice exposes REST APIs for interacting with it. To use any microser
 ### Installation
 
 #### Required programs
+
+It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
 - **MongoDB**: MongoDB is a NoSQL database widely used in application development. It is used to store and retrieve data efficiently. You can download [MongoCompass](https://www.mongodb.com/try/download/compass) from the official website.
 
@@ -51,7 +55,7 @@ Each microservice exposes REST APIs for interacting with it. To use any microser
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
 
-It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
+
 
 #### Project links
 
@@ -117,15 +121,14 @@ See [GUIDELINES.md](GUIDELINES.md)
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
 
 ### Contribution Instructions
-
-1. **To start working on your contribution, create a new branch in your local repository.**
+* **To start working on your contribution, create a new branch in your local repository.**
    Use the format `feature#` followed by the assigned ticket number. For example:
+    ```
+  git checkout -b feature#123
 
-   -git checkout -b feature#123
+* **After you've finished, you should push your branch and then submit a pull request.**
 
-2. **After you've finished, you should push your branch and then submit a pull request.**
-
-3. **For your first contribution, you should add your name and GitHub profile to "contributors.md" in a new branch. The name of the branch can be your name.**
+* **For your first contribution, you should add your name and GitHub profile to "contributors.md" in a new branch. The name of the branch can be your name.**
 
 We look forward to your contributions! Don't forget that the project exists thanks to everyone who contributes.
 
@@ -141,6 +144,9 @@ We look forward to your contributions! Don't forget that the project exists than
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_ES.md)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-v2.0%20adopted-ff69b4.svg)](CODE_OF_CONDUCT_CA.md)
 
+## License
+
+- License information: [link](https://github.com/IT-Academy-BCN/ita-challenges-backend/tree/feature%23370b?tab=License-1-ov-file)
 
 
 
