@@ -88,19 +88,19 @@ See [GUIDELINES.md](GUIDELINES.md/#5-libraries-used)
 
 4. Clone the repository:
 ```
-    git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
+git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
 ```
 5. Navigate into the project directory:
 ```
-    cd ita-challenges-backend
+cd ita-challenges-backend
 ```
 6. Install the dependencies:
 ```
-    ./gradlew build
+./gradlew build
 ```
 7. Run the microservice you want to start, for example 'itachallenge-challenge'.
 ```
-    ./gradlew itachallenge-challenge:bootRun
+./gradlew itachallenge-challenge:bootRun
 ```
 8. You can test the application in the browser at: http://localhost:8762/itachallenge/api/v1/challenge/test
 
