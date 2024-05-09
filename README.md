@@ -164,6 +164,9 @@ See [GUIDELINES.md](GUIDELINES.md)
 
 * **How can I get help if I have difficulty contributing or understanding the project?**
   - Feel free to ask in the dailys or to your team if you find the code hard to understand or if you encounter any other technical issues.
+  
+* **What programs do I need and how to proceed to set up the project?**
+  - Just go to the paragraphs: [Installation](#installation) and [Procedure](#procedure) and follow the steps.
 ## Contributors
 
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
