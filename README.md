@@ -96,19 +96,15 @@ See [GUIDELINES.md](GUIDELINES.md/#5-libraries-used)
 ```
 6. Install the dependencies:
 ```
-    gradle build
+    ./gradlew build
 ```
-7. Navigate to the directory of the microservice you want to start, for example 'challenges'.
+7. Run the microservice you want to start, for example 'itachallenge-challenge'.
 ```
-    cd itachallenge-challenge
+    ./gradlew itachallenge-challenge:bootRun
 ```
-8. Run the application: 
-```
-    gradle bootRun
-```
-9. You can test the application in the browser at: http://localhost:8762/itachallenge/api/v1/challenge/test
+8. You can test the application in the browser at: http://localhost:8762/itachallenge/api/v1/challenge/test
 
-10. If you want to test the application in postman, you can import the environments and collections from the folder [`postman`](./postman) in the root of the project.
+9. If you want to test the application in postman, you can import the environments and collections from the folder [`postman`](./postman) in the root of the project.
 
 ### Newcomers
 
