@@ -186,11 +186,11 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", description = "Level not found.", content = {@Content(schema = @Schema())})
             })
 
-    public Flux<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
             @RequestParam Optional<String> idLanguage,
             @RequestParam Optional<String> level,
             @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
-            @RequestParam(defaultValue = DEFAULT_LIMIT) int limit) {
+            @RequestParam(defaultValue = "-1") int limit) {
         return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
     }
 
