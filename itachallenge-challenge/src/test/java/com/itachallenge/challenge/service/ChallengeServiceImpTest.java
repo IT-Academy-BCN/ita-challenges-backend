@@ -651,7 +651,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
 
         // Act
-        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
 
         // Assert
         StepVerifier.create(result)
@@ -673,7 +673,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
 
         // Act
-        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
 
         // Assert
         StepVerifier.create(result)
@@ -697,7 +697,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(ChallengeDto.builder().build());
 
         // Act
-        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(difficulty), 0, 1);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(difficulty), 0, 1);
 
         // Assert
         StepVerifier.create(result)
