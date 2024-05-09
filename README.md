@@ -161,11 +161,10 @@ See [GUIDELINES.md](GUIDELINES.md)
   
 * **What are the coding standards for this project?**
   - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. Please read and follow them before contributing.
+
+* **How can I get help if I have difficulty contributing or understanding the project?**
+  - Feel free to ask in the dailys or to your team if you find the code hard to understand or if you encounter any other technical issues.
 ## Contributors
-
-Por supuesto, aquí está la traducción al inglés:
-
----
 
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
 
