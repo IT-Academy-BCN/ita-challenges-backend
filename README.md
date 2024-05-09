@@ -55,7 +55,7 @@ It is important to make sure you have all these tools installed and configured c
 
 - **Java SE Development Kit 17.0.7**
 
-See [GUIDELINES.md](GUIDELINES.md/#61-required-programs) to learn how to install and configure these tools.
+See [GUIDELINES.md](GUIDELINES.md#61-required-programs) to learn how to install and configure these tools.
 
 The following programs are optional but recommended:
 
@@ -64,11 +64,11 @@ The following programs are optional but recommended:
 - **IntelliJ IDEA**
 - **Plugin SonarLint para IntelliJ IDEA**
 
-See [GUIDELINES.md](GUIDELINES.md/#71-recommended-programs) to learn how to install and configure these tools.
+See [GUIDELINES.md](GUIDELINES.md#71-recommended-programs) to learn how to install and configure these tools.
 
 These are the libraries and frameworks used in the project, just in case you want to know more about them:
 
-See [GUIDELINES.md](GUIDELINES.md/#5-libraries-used)
+See [GUIDELINES.md](GUIDELINES.md#5-libraries-used)
 
 #### Project links
 
@@ -96,10 +96,20 @@ git clone https://github.com/IT-Academy-BCN/ita-challenges-backend.git
 cd ita-challenges-backend
 ```
 6. Install the dependencies:
+  - If you use Windows cmd:
+```
+gradlew build
+```
+  - If you use Windows PowerShell, Linux, macOS, etc:
 ```
 ./gradlew build
 ```
 7. Run the microservice you want to start, for example 'itachallenge-challenge'.
+   - If you use Windows cmd:
+```
+gradlew itachallenge-challenge:bootRun
+```
+  - If you use Windows PowerShell, Linux, macOS, etc:
 ```
 ./gradlew itachallenge-challenge:bootRun
 ```
@@ -111,7 +121,11 @@ cd ita-challenges-backend
 
 #### Git configuration
 
+You can see git configuration in the [guidelines](./GUIDELINES.md#22-git-configurations)
+
 #### Daily working flow
+
+You can see daily working flow in the [guidelines](./GUIDELINES.md#23-daily-procedure)
 
 #### Kanban Boards
 
@@ -155,7 +169,7 @@ Por supuesto, aquí está la traducción al inglés:
 
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
 
-You can access the link [GUIDELINES.md](GUIDELINES.md/#24-work-with-cards-procedure) to get detailed information on how to contribute. We look forward to your contributions! 
+You can access the link [GUIDELINES.md](GUIDELINES.md#24-work-with-cards-procedure) to get detailed information on how to contribute. We look forward to your contributions! 
 Don't forget that the project exists thanks to everyone who contributes!
 
 
