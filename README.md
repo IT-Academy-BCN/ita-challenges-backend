@@ -141,7 +141,12 @@ See [GUIDELINES.md](GUIDELINES.md)
 
 * **Do I need start up the project fully on my pc to start coding?**
     - Of course not.
-
+  
+* **What should I do if I find a bug?**
+   - If you find a new bug, please create a new issue in the GitHub repository [ita-challenges-backend repository](https://github.com/IT-Academy-BCN/ita-challenges-backend) describing the bug instead of trying to resolve it in another issue.
+  
+* **What are the coding standards for this project?**
+  - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. Please read and follow them before contributing.
 ## Contributors
 
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
