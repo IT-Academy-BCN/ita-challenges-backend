@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-custom-metadata:
-  version: 1.14.2
+  version: 1.14.4
   last-updated: 2024-04-30
 
 services:
@@ -72,8 +72,8 @@ services:
 
 
   itachallenge-nginx:
-    container_name: nginx-itachallenge
-    image: '${REGISTRY_NAME}:nginx-itachallenge-${NGINX_FRONTEND_TAG}'
+    image: '${REGISTRY_NAME}:itachallenge-nginx-${MICROSERVICE_TAG}'
+    container_name: 'nginx-itachallenge-${MICROSERVICE_TAG}-dev'
     restart: always
     ports:
       - "80:80"
@@ -98,8 +98,8 @@ services:
         ipv4_address: 172.18.0.8
 
   itachallenge-mock:
-    image: '${REGISTRY_NAME}:itachallenge-mock-${itachallenge-mock_TAG}'
-    container_name: 'itachallenge-mock-${itachallenge-mock_TAG}-dev'
+    image: '${REGISTRY_NAME}:itachallenge-mock-${MICROSERVICE_TAG}'
+    container_name: 'itachallenge-mock-${MICROSERVICE_TAG}-dev'
     restart: always
     networks:
       apisix-dev:
