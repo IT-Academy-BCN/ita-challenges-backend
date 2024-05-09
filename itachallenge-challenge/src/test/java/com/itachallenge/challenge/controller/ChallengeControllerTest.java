@@ -233,11 +233,11 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallengesByLanguageAndDifficultyTest() {
+    void getChallengesByLanguageOrDifficultyTest() {
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
         String level = "EASY";
         int offset = 0;
-        int limit = 1;
+        int limit = -1;
         ChallengeDto challengeDto1 = new ChallengeDto();
         challengeDto1.setLevel(level);
 
@@ -246,7 +246,7 @@ class ChallengeControllerTest {
         GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
         genericResultDto.setResults(challengeDtos.toArray(new ChallengeDto[0]));
 
-        Flux<GenericResultDto<ChallengeDto>> expectedResult = Flux.just(genericResultDto);
+        Mono<GenericResultDto<ChallengeDto>> expectedResult = Mono.just(genericResultDto);
 
         // Mock del servicio con los parámetros correctos
         when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit))
@@ -264,10 +264,10 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<List<GenericResultDto<ChallengeDto>>>() {})
+                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {})
                 .value(result -> {
                     assertNotNull(result);
-                    assertEquals(level, result.get(0).getResults()[0].getLevel());
+                    assertEquals(level, result.getResults()[0].getLevel());
                 });
     }
 
