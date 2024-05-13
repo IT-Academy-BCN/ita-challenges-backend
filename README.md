@@ -11,6 +11,7 @@
 5. [Guidelines and Code Conventions](#guidelines-and-code-conventions)
 6. [FAQ's](#faqs)
 7. [Contributors](#contributors)
+8. [Contact Information](#contact-information)
 
 <hr>
 
@@ -174,6 +175,12 @@ Thank you for participating in this project! Contributions are essential to expa
 
 You can access the link [GUIDELINES.md](GUIDELINES.md#24-work-with-cards-procedure) to get detailed information on how to contribute. We look forward to your contributions! 
 Don't forget that the project exists thanks to everyone who contributes!
+
+## Contact Information
+
+Project manager: Jonatan Vicente.
+
+Discord: Jonatan Vicente#1211
 
 
 <a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
