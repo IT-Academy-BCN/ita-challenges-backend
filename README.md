@@ -11,6 +11,7 @@
 5. [Guidelines and Code Conventions](#guidelines-and-code-conventions)
 6. [FAQ's](#faqs)
 7. [Contributors](#contributors)
+8. [Contact Information](#contact-information)
 
 <hr>
 
@@ -180,8 +181,8 @@ See [GUIDELINES.md](GUIDELINES.md)
 * **Do I need start up the project fully on my pc to start coding?**
     - Of course not.
   
-* **What should I do if I find a bug?**
-   - If you find a new bug, please create a new issue in the GitHub repository [ita-challenges-backend repository](https://github.com/IT-Academy-BCN/ita-challenges-backend) describing the bug instead of trying to resolve it in another issue.
+* **What should I do if I discover a bug?**
+   - If you discover a new bug, please create a new issue in the GitHub repository ita-challenges-backend repository describing the bug instead of trying to resolve it in another issue, and comment it to the product owner.
   
 * **What are the coding standards for this project?**
   - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. Please read and follow them before contributing.
@@ -191,12 +192,19 @@ See [GUIDELINES.md](GUIDELINES.md)
   
 * **What programs do I need and how to proceed to set up the project?**
   - Just go to the paragraphs: [Installation](#installation) and [Procedure](#procedure) and follow the steps.
+  
 ## Contributors
 
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
 
 You can access the link [GUIDELINES.md](GUIDELINES.md#24-work-with-cards-procedure) to get detailed information on how to contribute. We look forward to your contributions! 
 Don't forget that the project exists thanks to everyone who contributes!
+
+## Contact Information
+
+Project manager: Jonatan Vicente.
+
+Discord: Jonatan Vicente#1211
 
 
 <a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
@@ -211,7 +219,7 @@ Don't forget that the project exists thanks to everyone who contributes!
 
 ## License
 
-- License information: [link](https://github.com/IT-Academy-BCN/ita-challenges-backend/tree/feature%23370b?tab=License-1-ov-file)
+- License information: [link](https://github.com/IT-Academy-BCN/ita-challenges-backend/blob/main/LICENSE)
 
 
 
