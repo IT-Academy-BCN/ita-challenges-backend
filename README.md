@@ -187,7 +187,7 @@ See [GUIDELINES.md](GUIDELINES.md)
   
 * **Do I need start up the project fully on my pc to start coding?**
     - No, you don't need to start up the project fully on your pc to start coding. 
-  You can start coding in your IDE and run "App" in the microservice you are working on.
+  You can start coding in your IDE and run the **App** class in the microservice you are working on.
   
 * **What should I do if I discover a bug?**
    - If you discover a new bug, please create a new issue in the GitHub repository ita-challenges-backend repository 
