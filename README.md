@@ -148,13 +148,19 @@ See [GUIDELINES.md](GUIDELINES.md)
   Please, remember to double-check the AI's results and to test it in different scenarios.
   
 * **Is there any diagram of architecture, a technical description or similar?**
-    - Yes, you can find it in the [wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki)
+    - Yes, you can find it in the [Wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki)
 
 * **To contribute to this project, do I need make a fork?**
-    - No, you don't need to fork the project. We work with a single repository, adding branches for each feature and requesting pull requests to merge them.
+  - No, you don't need to fork of the project, you need to **clone** it.
 
+  - Our workflow is based on a single repository model, where we create separate branches for each feature.
+    Once a feature is completed, we initiate a pull request to merge the changes back into the main branch.
+
+  - You can find how to do a clone in point 4 of the [Procedure](#procedure) section.
+  
 * **Do I need start up the project fully on my pc to start coding?**
-    - Of course not.
+    - No, you don't need to start up the project fully on your pc to start coding. 
+  You can start coding in your IDE and run "App" int the microservice you are working on.
   
 * **What should I do if I find a bug?**
    - If you find a new bug, please create a new issue in the GitHub repository [ita-challenges-backend repository](https://github.com/IT-Academy-BCN/ita-challenges-backend) describing the bug instead of trying to resolve it in another issue.
