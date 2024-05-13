@@ -170,7 +170,8 @@ See [GUIDELINES.md](GUIDELINES.md)
 * **Can I use any kind of AI as a help on this project? What is the best way to use AI?**
     - You are totally allowed to use AI in this project. 
    
-    - The best way to use AI is first to understand the problem you want to solve, then to choose the best algorithm to solve it, and finally to implement it in the application.
+    - The best way to use AI is first to understand the problem you want to solve, then to choose the best algorithm 
+  to solve it, and finally to implement it in the application.
   Please, remember to double-check the AI's results and to test it in different scenarios.
   
 * **Is there any diagram of architecture, a technical description or similar?**
@@ -186,16 +187,18 @@ See [GUIDELINES.md](GUIDELINES.md)
   
 * **Do I need start up the project fully on my pc to start coding?**
     - No, you don't need to start up the project fully on your pc to start coding. 
-  You can start coding in your IDE and run "App" int the microservice you are working on.
+  You can start coding in your IDE and run "App" in the microservice you are working on.
   
 * **What should I do if I discover a bug?**
-   - If you discover a new bug, please create a new issue in the GitHub repository ita-challenges-backend repository describing the bug instead of trying to resolve it in another issue, and comment it to the product owner.
+   - If you discover a new bug, please create a new issue in the GitHub repository ita-challenges-backend repository 
+  describing the bug instead of trying to resolve it in another issue, and comment it to the product owner.
   
 * **What are the coding standards for this project?**
-  - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. Please read and follow them before contributing.
+  - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. 
+  Please read and follow them before contributing.
 
 * **How can I get help if I have difficulty contributing or understanding the project?**
-  - Feel free to ask in the dailies or to your team if you find the code hard to understand or if you encounter any other technical issues.
+  - Feel free to ask in the daily meetings or to your team if you find something hard to understand or if you encounter any other technical issues.
   
 * **What programs do I need and how to proceed to set up the project?**
   - Just go to the paragraphs: [Installation](#installation) and [Procedure](#procedure) and follow the steps.
