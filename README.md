@@ -11,6 +11,8 @@
 5. [Guidelines and Code Conventions](#guidelines-and-code-conventions)
 6. [FAQ's](#faqs)
 7. [Contributors](#contributors)
+8. [Contact Information](#contact-information)
+9. [License](#License)
 
 <hr>
 
@@ -35,7 +37,29 @@ effectively working on this project.
 
 ### Usage
 
-Each microservice exposes REST APIs for interacting with it. To use any microservice, call its main method in the App class. For more information about each microservice, refer to the API documentation in each of their README.md file.
+This project provides REST API services for the ITA challenges application and consists of five microservices.
+
+##### Challenges
+
+The challenge microservice is designed to manage and distribute information related to challenges within the project. For instance, it provides details such as title, level, creation date, solution, and other relevant information. This microservice communicates with various modules of the project through a set of endpoints.
+
+##### Score
+
+The score microservice is build to serve information relates to the score analysis given a specific challenge solution provided in a determinated language.
+
+##### User
+
+The user microservice is crafted to efficiently manage and deliver information stemming from user, challenge, and score interactions. For example, it facilitates access to user challenge solutions, bookmarks, and challenge statistics.
+
+##### Auth
+
+The auth microservice plays a pivotal role in ensuring the security and integrity of user interactions within the system. It is primarily responsible for validating user authentication tokens, thereby safeguarding access to sensitive resources and functionalities. By validating authentication tokens, this microservice verifies the identity of users and ensures that only authorized individuals can access the system's features and data.
+
+##### Document
+
+The document microservice serves as a unified gateway consolidating all documents from various endpoints within the system. Acting as a single entry point, it will be seamlessly redirected by the project's overarching API Gateway. Named itachallenge-document, this microservice is entrusted with aggregating all Swagger documentation from other microservices, ensuring comprehensive access and management of system documentation.
+
+Each microservice exposes REST APIs to interact with it. To use any microservice, you can refer to the [procedure](#procedure) section or start it from the App class in your IDE.
 
 ### Installation
 
@@ -75,7 +99,7 @@ See [GUIDELINES.md](GUIDELINES.md#5-libraries-used)
 - [GitHub](https://github.com/IT-Academy-BCN/ita-challenges-backend). The source code.
 - [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1). The tasks to be done.
 - [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D). The requirements of the project.
-- [Swagger](http://localhost:8762/itachallenge/api/v1/challenge/swagger-ui.html). The API documentation of each microservice.
+- [Swagger](http://dev.ita-challenges.eurecatacademy.org:9080/swagger-ui/index.html?urls.primaryName=All%20OpenAPI%20Definition). The API documentation of each microservice.
 - [Wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki) The technical documentation of the project.
 - [Figma](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design). The design of the project.
 
@@ -127,13 +151,15 @@ You can see git configuration in the [guidelines](./GUIDELINES.md#22-git-configu
 
 You can see daily working flow in the [guidelines](./GUIDELINES.md#23-daily-procedure)
 
-#### Kanban Boards
+#### Work with cards Procedure
 
-[Kanban board from project](https://github.com/orgs/IT-Academy-BCN/projects/15)
+You can see how work with cards in the [guidelines](./GUIDELINES.md#24-work-with-cards-procedure)
 
-Guidelines 2.4
+[Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15)
 
 #### Pull Requests
+
+You can see the points to consider when doing a PR in the [guidelines](./GUIDELINES.md#25-Points-to-consider-when-doing-a-PR)
 
 ### Guidelines and Code Conventions
 
@@ -162,8 +188,8 @@ See [GUIDELINES.md](GUIDELINES.md)
     - No, you don't need to start up the project fully on your pc to start coding. 
   You can start coding in your IDE and run "App" int the microservice you are working on.
   
-* **What should I do if I find a bug?**
-   - If you find a new bug, please create a new issue in the GitHub repository [ita-challenges-backend repository](https://github.com/IT-Academy-BCN/ita-challenges-backend) describing the bug instead of trying to resolve it in another issue.
+* **What should I do if I discover a bug?**
+   - If you discover a new bug, please create a new issue in the GitHub repository ita-challenges-backend repository describing the bug instead of trying to resolve it in another issue, and comment it to the product owner.
   
 * **What are the coding standards for this project?**
   - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. Please read and follow them before contributing.
@@ -173,12 +199,19 @@ See [GUIDELINES.md](GUIDELINES.md)
   
 * **What programs do I need and how to proceed to set up the project?**
   - Just go to the paragraphs: [Installation](#installation) and [Procedure](#procedure) and follow the steps.
+  
 ## Contributors
 
 Thank you for participating in this project! Contributions are essential to expand and enhance the experience for all users.
 
 You can access the link [GUIDELINES.md](GUIDELINES.md#24-work-with-cards-procedure) to get detailed information on how to contribute. We look forward to your contributions! 
 Don't forget that the project exists thanks to everyone who contributes!
+
+## Contact Information
+
+Project manager: Jonatan Vicente.
+
+Discord: Jonatan Vicente#1211
 
 
 <a href="https://github.com/IT-Academy-BCN/ita-challenges-backend/graphs/contributors">
@@ -193,7 +226,7 @@ Don't forget that the project exists thanks to everyone who contributes!
 
 ## License
 
-- License information: [link](https://github.com/IT-Academy-BCN/ita-challenges-backend/tree/feature%23370b?tab=License-1-ov-file)
+- License information: [link](https://github.com/IT-Academy-BCN/ita-challenges-backend/blob/main/LICENSE)
 
 
 
