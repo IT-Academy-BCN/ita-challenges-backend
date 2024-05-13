@@ -163,7 +163,7 @@ See [GUIDELINES.md](GUIDELINES.md)
   - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. Please read and follow them before contributing.
 
 * **How can I get help if I have difficulty contributing or understanding the project?**
-  - Feel free to ask in the dailys or to your team if you find the code hard to understand or if you encounter any other technical issues.
+  - Feel free to ask in the dailies or to your team if you find the code hard to understand or if you encounter any other technical issues.
   
 * **What programs do I need and how to proceed to set up the project?**
   - Just go to the paragraphs: [Installation](#installation) and [Procedure](#procedure) and follow the steps.
