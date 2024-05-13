@@ -11,8 +11,8 @@
 5. [Guidelines and Code Conventions](#guidelines-and-code-conventions)
 6. [FAQ's](#faqs)
 7. [Contributors](#contributors)
-8. [License](#License)
-9. [Contact Information](#contact-information)
+8. [Contact Information](#contact-information)
+9. [License](#License)
 
 <hr>
 
