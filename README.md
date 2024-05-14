@@ -24,10 +24,11 @@ Moreover, users have access to links to take part in Hackatons and to helpful re
 This project is a training space where users can reinforce programming skills across the most commonly used 
 languages in the software landscape.
 
-The ITA-challenges-backend project is built using Java with the Spring Boot framework and reactive programming. 
-Students enrolled in the IT Academy program at Barcelona Activa are an integral part of this project, 
+This project is built using Java with the Spring Boot framework and reactive programming.
+
+Junior developers enrolled in the IT Academy program at Barcelona Activa are an integral part of this project, 
 as they collaborate in its development and use the application to improve their programming skills. 
-Students have the opportunity to work in a real development environment, tackling new features, solving problems in existing code, 
+They have the opportunity to work in a real development environment, tackling new features, solving problems in existing code, 
 correcting errors, and fostering teamwork.
 
 This project exists thanks to all the people who contribute.
