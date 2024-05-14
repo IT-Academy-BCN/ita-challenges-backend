@@ -536,9 +536,7 @@ The following programs are required to work on the project:
   
 - **Postman**: Postman is a tool that will allow you to easily test and document APIs. It is especially useful for sending HTTP requests and verifying the responses. You can download [Postman](https://www.postman.com/downloads/) from the official website.
 
-- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
-
-- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
+- **Docker**: Docker is a platform that allows packaging and distributing applications in containers. It provides an isolated environment to run the application and its dependencies. You can download [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
 
 - **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
@@ -557,6 +555,8 @@ The following programs are recommended to facilitate the work on the project:
 - **Mongo Tools**: Mongo Tools is a set of command line utilities for working with MongoDB. It provides additional tools for importing and exporting data, among other tasks. You can download [MongoDB Command Line Database Tools](https://www.mongodb.com/try/download/database-tools) from the official website.
 
 - **Mongo Shell**: Mongo Shell is a command line interface for MongoDB. It provides an interactive way to interact with the database, execute queries and manage collections. You can download [MongoDB Shell](https://www.mongodb.com/try/download/shell) from the official website.
+
+- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
 
 - **IntelliJ IDEA**: IntelliJ IDEA is an integrated development environment (IDE) widely used in the development of Java applications and other programming languages. You can download [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) from the official website.
 
