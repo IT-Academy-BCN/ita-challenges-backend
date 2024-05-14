@@ -119,7 +119,7 @@ public class ChallengeServiceImp implements IChallengeService {
             challenges = challengeRepository.findByLevel(level.get())
                     .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
         } else {
-            challenges = challengeRepository.findAllByUuidNotNull()
+            challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
                     .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
         }
 
