@@ -3,6 +3,12 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
@@ -32,6 +38,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+
+    private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
@@ -93,9 +101,42 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeRepository.save(challenge);
     }
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
-        // TODO: Get challenges by language and difficulty
-        return null;
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
+        Flux<ChallengeDocument> challenges;
+
+        if (idLanguage.isPresent() && level.isPresent()) {
+            challenges = validateUUID(idLanguage.get())
+                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
+                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
+        } else if (idLanguage.isPresent()) {
+            challenges = validateUUID(idLanguage.get())
+                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
+                            .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
+        } else if (level.isPresent()) {
+            challenges = challengeRepository.findByLevel(level.get())
+                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
+        } else {
+            challenges = challengeRepository.findAllByUuidNotNull()
+                    .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
+        }
+
+        Flux<ChallengeDocument> finalChallenges = challenges;
+        return challenges.count().flatMap(total -> {
+            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
+            if (limit != -1) {
+                pagedChallenges = pagedChallenges.take(limit);
+            }
+            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                    .collectList()
+                    .map(challengeDtoList -> {
+                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
+                        return resultDto;
+                    });
+        });
     }
 
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {

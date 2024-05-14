@@ -3,7 +3,6 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -12,12 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.client.DefaultServiceInstance;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,6 +22,8 @@ import reactor.test.StepVerifier;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -235,28 +233,41 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallengesByLanguageAndDifficultyTest() {
-        // Arrange
-        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f"; // Test idLanguage with mongoId structure
-        String difficulty = "EASY";
+    void getChallengesByLanguageOrDifficultyTest() {
+        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        String level = "EASY";
+        int offset = 0;
+        int limit = -1;
+        ChallengeDto challengeDto1 = new ChallengeDto();
+        challengeDto1.setLevel(level);
 
-        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{new ChallengeDto(), new ChallengeDto()});
+        List<ChallengeDto> challengeDtos = List.of(challengeDto1);
 
-        when(challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty)).thenReturn(Mono.just(expectedResult));
+        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+        genericResultDto.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+
+        Mono<GenericResultDto<ChallengeDto>> expectedResult = Mono.just(genericResultDto);
+
+        // Mock del servicio con los parámetros correctos
+        when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit))
+                .thenReturn(expectedResult);
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/challenges/?idLanguage=" + idLanguage + "&difficulty=" + difficulty)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/challenge/challenges/")
+                        .queryParam("idLanguage", idLanguage)
+                        .queryParam("level", level)
+                        .queryParam("offset", offset)
+                        .queryParam("limit", limit)
+                        .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
+                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {})
+                .value(result -> {
+                    assertNotNull(result);
+                    assertEquals(level, result.getResults()[0].getLevel());
                 });
     }
 
