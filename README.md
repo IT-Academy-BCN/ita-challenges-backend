@@ -45,7 +45,7 @@ The challenge microservice is designed to manage and distribute information rela
 
 ##### Score
 
-The score microservice is build to serve information relates to the score analysis given a specific challenge solution provided in a determinated language.
+The score microservice is built to provide information related to the score analysis for a specific challenge solution provided in a determined language.
 
 ##### User
 
@@ -68,15 +68,7 @@ Each microservice exposes REST APIs to interact with it. To use any microservice
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
 - **MongoDB**
-
-- **Postman**
-
-- **Consul** 
-
 - **Docker**
-
-- **Git** 
-
 - **Java SE Development Kit 17.0.7**
 
 See [GUIDELINES.md](GUIDELINES.md#61-required-programs) to learn how to install and configure these tools.
@@ -85,6 +77,7 @@ The following programs are optional but recommended:
 
 - **Mongo Tools**
 - **Mongo Shell**
+- **Consul**
 - **IntelliJ IDEA**
 - **Plugin SonarLint para IntelliJ IDEA**
 
