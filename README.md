@@ -186,7 +186,7 @@ See [GUIDELINES.md](GUIDELINES.md)
   
 * **What should I do if I discover a bug?**
    - If you discover a new bug, please create a new issue in the GitHub repository ita-challenges-backend repository 
-  describing the bug instead of trying to resolve it in another issue, and comment it to the product owner.
+  describing the bug instead of trying to resolve it in another issue, and comment it to the Scrum Master.
   
 * **What are the coding standards for this project?**
   - The coding standards for this project are defined in the [GUIDELINES.md](GUIDELINES.md) file in the root of the repository. 
@@ -207,7 +207,7 @@ Don't forget that the project exists thanks to everyone who contributes!
 
 ## Contact Information
 
-Project manager: Jonatan Vicente.
+Scrum Master: Jonatan Vicente.
 
 Discord: Jonatan Vicente#1211
 
