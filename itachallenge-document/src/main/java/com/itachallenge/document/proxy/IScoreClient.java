@@ -5,7 +5,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@FeignClient(name = "itachallenge-score", url = "http://localhost:8763")
+@FeignClient(name = "itachallenge-score", url = "${redirect-api.score.url}")
 public interface IScoreClient {
 
     @GetMapping("/api-docs")

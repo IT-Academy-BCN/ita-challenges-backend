@@ -29,12 +29,6 @@ fi
 docker container prune -f
 sleep 10
 
-#echo 'Killing container '${id_container}
-#docker kill $id_container
-#echo 'Removing container... '${id_container}
-#docker rm $id_container
-
-export NGINX_FRONTEND_TAG=$microservice_upgrade_version
-#echo -e "NGINX_FRONTEND_TAG=${microservice_upgrade_version}\n" >> itachallenges/conf/.env.dev
+export MICROSERVICE_TAG=$microservice_upgrade_version
 docker compose --env-file itachallenges/conf/.env.dev -f itachallenges/docker/docker-compose.dev.yml up --remove-orphans $microservice_name -d
 
