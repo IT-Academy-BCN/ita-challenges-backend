@@ -18,20 +18,21 @@
 
 ### Description
 
-The ITA-challenges-backend project is built using Java with the Spring Boot framework and reactive programming. It is an
-initiative designed specifically for students enrolled in the IT Academy program at Barcelona Activa. 
+The ITA-challenges-backend project is an application designed for users to participate in coding challenges. 
+The application offers a diverse range of categories and features such as the type of language, the challenge difficulty or the user score. 
+Moreover, users have access to links to take part in Hackatons and to helpful resources. 
+This project is a training space where users can reinforce programming skills across the most commonly used 
+languages in the software landscape.
 
-The primary goal is to provide students with hands-on experience in a real-world development environment, 
-simulating scenarios they may encounter in their future careers. 
-
-Simultaneously, students collaborate to create a valuable learning tool for the [ITA challenges application](http://dev.ita-challenges.eurecatacademy.org/ita-challenge/challenges)
-dedicated to code and programming coding-challenges. This project involves tackling new features, addressing legacy code, resolving bugs, 
-and fostering teamwork. The emphasis is not only on technical proficiency but also on providing a holistic learning experience 
-for our students.
+The ITA-challenges-backend project is built using Java with the Spring Boot framework and reactive programming. 
+Students enrolled in the IT Academy program at Barcelona Activa are an integral part of this project, 
+as they collaborate in its development and use the application to improve their programming skills. 
+Students have the opportunity to work in a real development environment, tackling new features, solving problems in existing code, 
+correcting errors, and fostering teamwork.
 
 This project exists thanks to all the people who contribute.
 
-**For newcomers**, we strongly emphasize the importance of thoroughly reading the entire README. 
+**For new contributors**, we strongly emphasize the importance of thoroughly reading the entire README. 
 This document contains crucial information about installation, configuration, and daily processes necessary for 
 effectively working on this project.
 
