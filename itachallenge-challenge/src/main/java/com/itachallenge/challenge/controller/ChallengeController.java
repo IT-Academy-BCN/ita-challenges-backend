@@ -222,7 +222,7 @@ public class ChallengeController {
             @PathVariable("idChallenge") String idChallenge,
             @PathVariable("idLanguage") String idLanguage,
             @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
-            @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+            @RequestParam(defaultValue = "-1") String limit) {
         return challengeService.getSolutions(idChallenge, idLanguage, Integer.parseInt(offset), Integer.parseInt(limit));
 
     }

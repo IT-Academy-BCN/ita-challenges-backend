@@ -171,11 +171,11 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
                             )
                             .skip(offset)
-                            .take(limit)
+                            .take(limit != -1 ? limit : Integer.MAX_VALUE)
                             .collectList()
                             .map(solutions -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(offset, limit, solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                resultDto.setInfo(offset, limit != -1 ? limit : -1, solutions.size(), solutions.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });
