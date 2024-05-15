@@ -12,7 +12,7 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2019-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
@@ -107,11 +107,11 @@
         "out_param": "java.lang.NumberFormatException"
       },
       {
-        "in param": 42145,
+        "in_param": 42145,
         "out_param": 54421
       },
       {
-        "in param": 145263,
+        "in_param": 145263,
         "out_param": 654321
       }
     ]
@@ -129,7 +129,7 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "1986-02-01T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -224,7 +224,7 @@
         ]
       },
       {
-        "in param": [
+        "in_param": [
           1,
           2,
           -3,
@@ -237,7 +237,7 @@
         ]
       },
       {
-        "in param": [
+        "in_param": [
           1,
           9,
           3,
@@ -263,11 +263,10 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2003-08-10T11:43:54+0200"
     },
     "detail": {
       "description": {
-
         "ES": "Te gustan los bloques de construcción. Especialmente te gusta construir bloques que son cuadrados. Y lo que más te gusta es organizarlos en un cuadrado de bloques de construcción cuadrados. Sin embargo, a veces no puedes organizarlos en un cuadrado. ¡En cambio, terminas con un simple rectángulo! ¡Esas cosas malditas! Si tan solo tuvieras una manera de saber si estás trabajando en vano... ¡Espera! ¡Eso es! Solo tienes que verificar si tu número de bloques de construcción es un cuadrado perfecto. Tarea\n    Dado un número entero, determina si es un número cuadrado:\n    \n En matemáticas, un número cuadrado o cuadrado perfecto es un número entero que es el cuadrado de otro número entero; en otras palabras, es el producto de algún número entero consigo mismo.\n    \n Las pruebas siempre usarán algún número entero, así que no te preocupes por eso en lenguajes de tipado dinámico.",
         "CA": "T'agraden els blocs de construcció. T'agraden especialment els blocs quadrats. I el que encara t'agrada més, és colocar-los de forma que creïn un quadrat de blocs de construcció!    Però, de vegades no els pots ordenar en un quadrat. En canvi, acabes amb un simple rectangle! Maleíts rectangles! Tant de bó tinguessis una manera de saber si estas treballant en va... Espera! Ja ho tinc! Nomes has de comprovar si el teu nombre de quadrats es un quadrat. Tasca\n    Donat un nombre natural(int), deterimna si es tracta d'un nombre quadrat:\n    \n En les matemàtiques. un nombre quadrat o quadrat perfecte es un nombre natural que es el quadrat de un altre nombre natural. Dit d'una altre manera, és el producte d'un nombre amb ell mateix.\n    \n Els tests sempre fan servir nombres naturals os sigui que no et preocupis sobre aquesta dinàmica en llenguatges tipats.",
         "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n The tests will always use some integral number, so don't worry about that in dynamic typed languages."
@@ -352,11 +351,11 @@
         "out_param": false
       },
       {
-        "in param": 0,
+        "in_param": 0,
         "out_param": true
       },
       {
-        "in param": 3,
+        "in_param": 3,
         "out_param": false
       }
     ]
@@ -372,7 +371,7 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2004-09-07T11:43:54+0200"
     },
     "detail": {
       "description": {
@@ -468,7 +467,7 @@
         ]
       },
       {
-        "in param": [
+        "in_param": [
           1,
           2,
           "a",
@@ -484,7 +483,7 @@
         ]
       },
       {
-        "in param": [
+        "in_param": [
           1,
           2,
           "a",
@@ -513,7 +512,7 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "1999-02-01T11:43:54+0200"
     },
     "detail": {
       "description": {
@@ -601,11 +600,11 @@
         "out_param": true
       },
       {
-        "in param": "moose",
+        "in_param": "moose",
         "out_param": false
       },
       {
-        "in param": "aba",
+        "in_param": "aba",
         "out_param": false
       }
     ]
@@ -621,7 +620,7 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2011-11-09T11:43:54+0200"
     },
     "detail": {
       "description": {
@@ -709,11 +708,11 @@
         "out_param": true
       },
       {
-        "in param": "xooxx",
+        "in_param": "xooxx",
         "out_param": false
       },
       {
-        "in param": "ooxXm",
+        "in_param": "ooxXm",
         "out_param": true
       }
     ]
@@ -729,7 +728,7 @@
     },
     "level": "EASY",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "1996-09-09T11:43:54+0200"
     },
     "detail": {
       "description": {
@@ -817,11 +816,11 @@
         "out_param": "es"
       },
       {
-        "in param": "testing",
+        "in_param": "testing",
         "out_param": "t"
       },
       {
-        "in param": "middle",
+        "in_param": "middle",
         "out_param": "dd"
       }
     ]
@@ -837,7 +836,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "1992-08-01T11:43:54+0200"
     },
     "detail": {
       "description": {
@@ -926,7 +925,7 @@
         "out_param": "igPay atinlay siay oolcay"
       },
       {
-        "in param": "Hello world !",
+        "in_param": "Hello world !",
         "out_param": "elloHay orldway !"
       }
     ]
@@ -942,7 +941,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2005-10-10T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1035,7 +1034,7 @@
         "out_param": "FFFFFF"
       },
       {
-        "in param": [
+        "in_param": [
           0,
           0,
           0
@@ -1043,7 +1042,7 @@
         "out_param": "000000"
       },
       {
-        "in param": [
+        "in_param": [
           148,
           0,
           211
@@ -1063,7 +1062,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "1965-09-09T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1157,14 +1156,14 @@
         "out_param": true
       },
       {
-        "in param": [
+        "in_param": [
           "cedewaraaossoqqyt",
           "codewars"
         ],
         "out_param": true
       },
       {
-        "in param": [
+        "in_param": [
           "katas",
           "steak"
         ],
@@ -1183,7 +1182,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2019-01-01T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1273,7 +1272,7 @@
         "out_param": 1
       },
       {
-        "in param": 12,
+        "in_param": 12,
         "out_param": 2
       }
     ]
@@ -1289,7 +1288,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2014-02-03T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1379,11 +1378,11 @@
         "out_param": true
       },
       {
-        "in param": "xooxx",
+        "in_param": "xooxx",
         "out_param": false
       },
       {
-        "in param": "ooxXm",
+        "in_param": "ooxXm",
         "out_param": true
       }
     ]
@@ -1399,7 +1398,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2017-09-09T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1489,7 +1488,7 @@
         "out_param": 1.000098
       },
       {
-        "in param": 1.2125000000000001,
+        "in_param": 1.2125000000000001,
         "out_param": 1.2125
       }
     ]
@@ -1505,7 +1504,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2022-01-01T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1599,7 +1598,7 @@
         ]
       },
       {
-        "in param": 209917,
+        "in_param": 209917,
         "out_param": [
           29917,
           0,
@@ -1607,7 +1606,7 @@
         ]
       },
       {
-        "in param": 1000000,
+        "in_param": 1000000,
         "out_param": [
           1,
           0,
@@ -1627,7 +1626,7 @@
     },
     "level": "MEDIUM",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2003-09-09T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1723,7 +1722,7 @@
         "out_param": "Total land perimeter: 24"
       },
       {
-        "in param": [
+        "in_param": [
           "XOOO",
           "XOXO",
           "XOXO",
@@ -1835,7 +1834,7 @@
         "out_param": 0
       },
       {
-        "in param": "1 - -1",
+        "in_param": "1 - -1",
         "out_param": 2
       }
     ]
@@ -1851,7 +1850,7 @@
     },
     "level": "HARD",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2006-09-09T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -1953,7 +1952,7 @@
     },
     "level": "HARD",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2000-09-09T11:43:54+0200"
     },
     "detail": {
       "description":
@@ -2046,7 +2045,7 @@
         "out_param": "BCAB"
       },
       {
-        "in param": [
+        "in_param": [
           "abcdef",
           "acf"
         ],
@@ -2173,7 +2172,7 @@
     },
     "level": "HARD",
     "creation_date": {
-      "$date": "2018-09-09T11:43:54+0200"
+      "$date": "2007-01-09T11:43:54+0200"
     },
     "detail": {
       "description":

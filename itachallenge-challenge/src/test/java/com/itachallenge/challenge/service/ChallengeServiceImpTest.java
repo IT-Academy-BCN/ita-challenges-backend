@@ -3,11 +3,8 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.document.TestingValueDocument;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
@@ -48,6 +45,8 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @Mock
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
+    @Mock
+    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -218,7 +217,7 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
 
-        when(challengeRepository.findAllByUuidNotNull())
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
                 .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
@@ -226,7 +225,7 @@ class ChallengeServiceImpTest {
         Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
-        verify(challengeRepository).findAllByUuidNotNull();
+        verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
 
         StepVerifier.create(result)
@@ -241,7 +240,7 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit))
+        StepVerifier.create(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit))
                 .expectSubscription()
                 .expectNextCount(2)
                 .expectComplete()
@@ -570,4 +569,162 @@ class ChallengeServiceImpTest {
 
     }
 
+    @Test
+    void getTestingParamsByChallengeIdAndLanguageId_validId_ChallengeFound() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(challengeId);
+        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
+        TestingValueDocument testingValueDocument = new TestingValueDocument(Collections.singletonList("input"), Collections.singletonList("output"));
+        challengeDocument.setTestingValues(Collections.singletonList(testingValueDocument));
+
+        TestingValueDto testingValueDto = TestingValueDto.builder()
+                .inParam(Collections.singletonList("input"))
+                .outParam(Collections.singletonList("output"))
+                .build();
+
+        List<TestingValueDto> expectedTestingValues = Collections.singletonList(testingValueDto);
+
+        Map<String, Object> expectedResult = new LinkedHashMap<>();
+        expectedResult.put("uuid_challenge", challengeId.toString());
+        expectedResult.put("uuid_language", languageId.toString());
+        expectedResult.put("test_params", expectedTestingValues);
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class)).thenReturn(testingValueDto);
+
+        // Act
+        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(response -> {
+                    assertThat(response).containsEntry("uuid_challenge", challengeId.toString());
+                    assertThat(response).containsEntry("uuid_language", languageId.toString());
+                    Object testParamsObject = response.get("test_params");
+                    if (testParamsObject instanceof List) {
+                        List<?> testParamsList = (List<?>) testParamsObject;
+                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
+                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
+                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
+                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
+                        }
+                    }
+                })
+                .expectComplete()
+                .verify();
+
+        verify(challengeRepository).findByUuid(challengeId);
+        verify(testingValueConverter).convertDocumentToDto(testingValueDocument, TestingValueDto.class);
+    }
+
+    @Test
+    void getChallengesByLanguageOrDifficulty_NoChallengesFound_ExceptionThrown() {
+        // Arrange
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues()).thenReturn(Flux.empty());
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.empty(), 0, 1))
+                .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("No challenges found"))
+                .verify();
+
+        verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
+    }
+
+    @Test
+    void getTestingParamsByChallengeIdAndLanguageId_invalidLanguageId_ChallengeNotFoundExceptionThrown() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID anotherLanguageId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        challengeDocument.setUuid(challengeId);
+        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+
+        // Act
+        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), anotherLanguageId.toString());
+
+        // Assert
+        StepVerifier.create(result)
+                .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("Language " + anotherLanguageId + " not found in Challenge " + challengeId))
+                .verify();
+
+        verify(challengeRepository).findByUuid(challengeId);
+    }
+
+    @Test
+    void getChallengesByLanguageAndDifficulty_ValidInput_ChallengesReturned() {
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();
+        String level = "EASY";
+        int offset = 0;
+        int limit = 2;
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengesByLanguageOrDifficulty_OnlyIdLanguagePresent_ChallengesReturned() {
+        // Arrange
+        String languageId = UUID.randomUUID().toString();
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        when(languageRepository.findByIdLanguage(UUID.fromString(languageId))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLanguages_IdLanguage(UUID.fromString(languageId))).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengesByLanguageOrDifficulty_OnlyLevelPresent_ChallengesReturned() {
+        // Arrange
+        String difficulty = "HARD";
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
+        genericResultDto.setResults(new ChallengeDto[]{challengeDto});
+
+        when(challengeRepository.findByLevel(difficulty)).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(ChallengeDto.builder().build());
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(difficulty), 0, 1);
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(genericResultDto.getResults()[0]);
+                })
+                .verifyComplete();
+    }
 }

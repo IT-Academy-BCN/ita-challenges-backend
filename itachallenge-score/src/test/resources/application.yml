@@ -1,16 +1,10 @@
 spring:
   application:
-    name: itachallenge-user
+    name: itachallenge-score
     version: 1.0.0-RELEASE
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
   jmx:
     enabled: true
-  data:
-    mongodb:
-      uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
-      uuid-representation: standard
+
 
 springdoc:
   swagger-ui:
@@ -21,7 +15,7 @@ springdoc:
     path: "/api-docs"
 
 server:
-  port: 8764
+  port: 8763
 
 management:
   endpoints:
@@ -31,12 +25,8 @@ management:
   security:
     enabled: false
 
-zeromq:
-  socket:
-    address: tcp://*:5555
 
-url:
-  max_length: 2048
+
 
 logging:
   level:
@@ -47,7 +37,9 @@ logging:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
-#    name: itachallenge-user.log
+#    name: itachallenge-score.log
 
 validation:
+  number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+

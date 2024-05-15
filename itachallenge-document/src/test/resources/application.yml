@@ -1,7 +1,7 @@
 spring:
   application:
-    name: itachallenge-document
-    version: 1.1.0-RELEASE
+    name: itachallenge-challenge
+    version: 1.0.0-RELEASE
 
   autoconfigure:
     exclude:
@@ -69,5 +69,3 @@ logging:
 url:
   connection_timeout: 30000
   maxBytesInMemory: 30000000
-
-
