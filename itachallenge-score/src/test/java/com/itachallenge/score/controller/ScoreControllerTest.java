@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.Arrays;
@@ -13,10 +15,14 @@ import java.util.List;
 import java.util.UUID;
 
 @WebFluxTest(ScoreController.class)
+@ActiveProfiles("test")
 class ScoreControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private Environment env;
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
 
@@ -43,6 +49,8 @@ class ScoreControllerTest {
 
     @Test
     void getVersionTest() {
+        String expectedVersion = env.getProperty("spring.application.version");
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/score/version")
                 .exchange()
