@@ -1760,9 +1760,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '3+5', la salida esperada sería 8.",
+            "CA":  "Si la string d'entrada és '3+5', la sortida esperada seria 8.",
+            "EN":  "If the input string is '3+5', the expected output would be 8."
           }
         },
         {
@@ -1771,9 +1771,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '10-6', la salida esperada sería 4.",
+            "CA":  "Si la string d'entrada és '10-6', la sortida esperada seria 4.",
+            "EN":  "If the input string is '10-6', the expected output would be 4."
           }
         },
         {
@@ -1782,9 +1782,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '2*2', la salida esperada sería 4.",
+            "CA":  "Si la string d'entrada és '2*2', la sortida esperada seria 4.",
+            "EN":  "If the input string is '2*2', the expected output would be 4."
           }
         },
         {
@@ -1793,17 +1793,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '8/2', la salida esperada sería 4.",
+            "CA":  "Si la string d'entrada és '8/2', la sortida esperada seria 4.",
+            "EN":  "If the input string is '8/2', the expected output would be 4."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Asegúrate de manejar correctamente los casos de borde, como las expresiones vacías o las expresiones que contienen solo un número.",
+        "CA": "Assegura't de gestionar correctament els casos de vora, com les expressions buides o les expressions que contenen només un número.",
+        "EN": "Make sure to properly handle edge cases, such as empty expressions or expressions containing only a single number."
       }
     },
     "languages": [
