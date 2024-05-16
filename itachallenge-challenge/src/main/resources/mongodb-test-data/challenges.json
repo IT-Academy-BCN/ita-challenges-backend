@@ -1414,9 +1414,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 5, el resultado esperable es (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
+            "CA":  "Per n = 5, el resultat esperat és (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
+            "EN":  "For n = 5, the expected result is (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120"
           }
         },
         {
@@ -1425,9 +1425,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 1, el resultado esperable es 1",
+            "CA":  "Per n = 1, el resultat esperat és 1",
+            "EN":  "For n = 1, the expected result is 1"
           }
         },
         {
@@ -1436,9 +1436,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 3, el resultado esperable es 9/6",
+            "CA":  "Per n = 3, el resultat esperat és 9/6",
+            "EN":  "For n = 3, the expected result is 9/6"
           }
         },
         {
@@ -1447,17 +1447,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 2, el resultado esperable es 3/2",
+            "CA":  "Per n = 2, el resultat esperat és 3/2",
+            "EN":  "For n = 2, the expected result is 3/2"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "La expresión 'n!', o 'n factorial', se calcula multiplicando todos los numeros enteros positivos menores o iguales a n: n! = 1 * 2 * 3 * ... * n",
+        "CA": "L'expressió 'n!', o 'n factorial', es calcula multiplicant tots els nombres enters positius menors o iguals a n: n! = 1 * 2 * 3 * ... * n",
+        "EN": "The expression 'n!', or 'n factorial', can be found multiplying every positive integer smaller or equal to n: n! = 1 * 2 * 3 * ... * n"
       }
     },
     "languages": [
@@ -1520,9 +1520,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 3541, el dígito d = 1 con índice i = 3 debe moverse a la posición j = 0, para un resultado mínimo de m = 1354",
+            "CA":  "Donat n = 3541, el dígit d = 1 amb índex i = 3 s'ha de moure a la posició j = 0, per un resultat mínim de m = 1354",
+            "EN":  "Given n = 3541, digit d = 1 with index i = 3 must be moved to position j = 0, for a minimum result of m = 1354"
           }
         },
         {
@@ -1531,9 +1531,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 35141, el dígito d = 1 con índice i = 2 debe moverse a la posición j = 0, para un resultado mínimo de m = 13541",
+            "CA":  "Donat n = 35141, el dígit d = 1 amb índex i = 2 s'ha de moure a la posició j = 0, per un resultat mínim de m = 13541",
+            "EN":  "Given n = 35141, digit d = 1 with index i = 2 must be moved to position j = 0, for a minimum result of m = 13541"
           }
         },
         {
@@ -1542,9 +1542,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 3544, el dígito d = 3 con índice i = 0 debe quedarse en la posición j = 0, para un resultado mínimo de m = 3544",
+            "CA":  "Donat n = 3544, el dígit d = 3 amb índex i = 0 s'ha de quedar a la posició j = 0, per un resultat mínim de m = 3544",
+            "EN":  "Given n = 3544, digit d = 3 with index i = 0 must stay in position j = 0, for a minimum result of m = 3544"
           }
         },
         {
@@ -1553,17 +1553,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 03540, el dígito d = 0 con índice i = 0 debe quedarse en la posición j = 0, para un resultado mínimo de m = 035440",
+            "CA":  "Donat n = 035440, el dígit d = 0 amb índex i = 0 s'ha de quedar a la posició j = 0, per un resultat mínim de m = 035440",
+            "EN":  "Given n = 035440, digit d = 0 with index i = 0 must stay in position j = 0, for a minimum result of m = 035440"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Fíjate que 'i' y 'j' deben ser tan pequeños como sea posible",
+        "CA": "Fixa't que 'i' i 'j' han de ser tan petits com sigui possible",
+        "EN": "Note that 'i' and 'j' must be as small as possible"
       }
     },
     "languages": [
@@ -1642,9 +1642,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOO', OXOXO, OOOOO], la respuesta esperable es 8.",
+            "CA":  "Donat arr = ['OOOOO', OXOXO, OOOOO], la resposta esperada es 8.",
+            "EN":  "Given arr = ['OOOOO', OXOXO, OOOOO], the expected answer is 8."
           }
         },
         {
@@ -1653,9 +1653,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXXXXO, OOOOOO], la respuesta esperable es 10.",
+            "CA":  "Donat arr = ['OOOOOO', OXXXXO, OOOOOO], la resposta esperada es 10.",
+            "EN":  "Given arr = ['OOOOOO', OXXXXO, OOOOOO], the expected answer is 10."
           }
         },
         {
@@ -1664,9 +1664,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXX0XO, OOOOOO], la respuesta esperable es 10.",
+            "CA":  "Donat arr = ['OOOOOO', OXX0XO, OOOOOO], la resposta esperada es 10.",
+            "EN":  "Given arr = ['OOOOOO', OXX0XO, OOOOOO], the expected answer is 10."
           }
         },
         {
@@ -1675,17 +1675,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la respuesta esperable es 14.",
+            "CA":  "Donat arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la resposta esperada es 14.",
+            "EN":  "Given arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], the expected answer is 14."
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Ten en cuenta que dos islas en contacto forman una única isla",
+        "CA": "Tingues en compte que dues illes en contacte formen una única illa",
+        "EN": "Note that two islands touching each other form a single island"
       }
     },
     "languages": [
