@@ -1866,9 +1866,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'aaabbbccc', la salida esperada sería 'a3b3c3'.",
+            "CA":  "Si la string d'entrada és 'aaabbbccc', la sortida esperada seria 'a3b3c3'.",
+            "EN":  "If the input string is 'aaabbbccc', the expected output would be 'a3b3c3'."
           }
         },
         {
@@ -1877,9 +1877,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'aabbccdd', la salida esperada sería 'a2b2c2d2'.",
+            "CA":  "Si la string d'entrada és 'aabbccdd', la sortida esperada seria 'a2b2c2d2'.",
+            "EN":  "If the input string is 'aabbccdd', the expected output would be 'a2b2c2d2'."
           }
         },
         {
@@ -1888,9 +1888,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'zzzzyyyyyx', la salida esperada sería 'z4y5x'.",
+            "CA":  "Si la string d'entrada és 'zzzzyyyyyx', la sortida esperada seria 'z4y5x'.",
+            "EN":  "If the input string is 'zzzzyyyyyx', the expected output would be 'z4y5x'."
           }
         },
         {
@@ -1899,17 +1899,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'abcdeeffff', la salida esperada sería 'abcde2f4'.",
+            "CA":  "Si la string d'entrada és 'abcdeeffff', la sortida esperada seria 'abcde2f4'.",
+            "EN":  "If the input string is 'abcdeeffff', the expected output would be 'abcde2f4'."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "La salida comprimida debe mantener el orden de los caracteres en la cadena original.",
+        "CA": "La sortida comprimida ha de mantenir l'ordre dels caràcters en la cadena original.",
+        "EN": "The compressed output should maintain the order of characters in the original string."
       }
     },
     "languages": [
@@ -1968,9 +1968,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si las strings son 'ABCBDAB' y 'BDCAB', la subsecuencia común más larga sería 'BCAB'.",
+            "CA":  "Si les strings són 'ABCBDAB' i 'BDCAB', la subseqüència comuna més llarga seria 'BCAB'.",
+            "EN":  "If the strings are 'ABCBDAB' and 'BDCAB', the longest common subsequence would be 'BCAB'."
           }
         },
         {
@@ -1979,9 +1979,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para las strings 'abcdef' y 'acf', la subsecuencia común más larga sería 'acf'.",
+            "CA":  "Per a les strings 'abcdef' i 'acf', la subseqüència comuna més llarga seria 'acf'.",
+            "EN":  "For the strings 'abcdef' and 'acf', the longest common subsequence would be 'acf'."
           }
         },
         {
@@ -1990,9 +1990,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si las strings son 'AGGTAB' y 'GXTXAYB', la subsecuencia común más larga sería 'GTAB'.",
+            "CA":  "Si les strings són 'AGGTAB' i 'GXTXAYB', la subseqüència comuna més llarga seria 'GTAB'.",
+            "EN":  "If the strings are 'AGGTAB' and 'GXTXAYB', the longest common subsequence would be 'GTAB'."
           }
         },
         {
@@ -2001,17 +2001,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para las strings 'abcdgh' y 'aedfhr', la subsecuencia común más larga sería 'adh'.",
+            "CA":  "Per a les strings 'abcdgh' i 'aedfhr', la subseqüència comuna més llarga seria 'adh'.",
+            "EN":  "For the strings 'abcdgh' and 'aedfhr', the longest common subsequence would be 'adh'."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "La subsecuencia común más larga no necesariamente tiene que ser una subcadena. Puede ser una subsecuencia de caracteres que aparecen en el mismo orden relativo en ambas cadenas, pero no necesariamente contiguos.",
+        "CA": "La subseqüència comuna més llarga no necessàriament ha de ser una subcadena. Pot ser una subseqüència de caràcters que apareixen en el mateix ordre relatiu en ambdues cadenes, però no necessàriament contigus.",
+        "EN": "The longest common subsequence doesn't necessarily have to be a substring. It can be a sequence of characters that appear in the same relative order in both strings, but not necessarily contiguous."
       }
     },
     "languages": [
@@ -2080,9 +2080,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [-7, 1, 5, 2, -4, 3, 0], el punto de equilibrio sería el índice 3.",
+            "CA": "Per a l'array [-7, 1, 5, 2, -4, 3, 0], el punt d'equilibri seria l'índex 3.",
+            "EN": "For the array [-7, 1, 5, 2, -4, 3, 0], the equilibrium point would be index 3."
           }
         },
         {
@@ -2091,9 +2091,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [1, 2, 3, 4, 6], el punto de equilibrio sería el índice 3.",
+            "CA": "Per a l'array [1, 2, 3, 4, 6], el punt d'equilibri seria l'índex 3.",
+            "EN": "For the array [1, 2, 3, 4, 6], the equilibrium point would be index 3."
           }
         },
         {
@@ -2102,9 +2102,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [1, -1, 1], el punto de equilibrio sería el índice 1.",
+            "CA": "Per a l'array [1, -1, 1], el punt d'equilibri seria l'índex 1.",
+            "EN": "For the array [1, -1, 1], the equilibrium point would be index 1."
           }
         },
         {
@@ -2113,17 +2113,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [2, 4, 6, 8], no hay punto de equilibrio ya que la suma de los elementos a la izquierda y a la derecha nunca es igual.",
+            "CA": "Per a l'array [2, 4, 6, 8], no hi ha punt d'equilibri ja que la suma dels elements a l'esquerra i a la dreta mai és igual.",
+            "EN": "For the array [2, 4, 6, 8], there is no equilibrium point since the sum of elements to the left and to the right is never equal."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Recuerda manejar el caso en que no haya un punto de equilibrio en el array, es decir, cuando la suma de los elementos a la izquierda nunca es igual a la suma de los elementos a la derecha.",
+        "CA": "Recorda gestionar el cas en què no hi hagi un punt d'equilibri en l'array, és a dir, quan la suma dels elements a l'esquerra mai és igual a la suma dels elements a la dreta.",
+        "EN": "Remember to handle the case where there is no equilibrium point in the array, i.e., when the sum of elements to the left is never equal to the sum of elements to the right."
       }
     },
     "languages": [
