@@ -2189,9 +2189,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '(2 + 3) * 4'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '(2 + 3 * 4'. Esta expresión es inválida porque falta un paréntesis de cierre.",
+            "CA":  "1. Expressió vàlida: '(2 + 3) * 4'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '(2 + 3 * 4'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
+            "EN":  "1. Valid expression: '(2 + 3) * 4'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '(2 + 3 * 4'. This expression is invalid because a closing parenthesis is missing."
           }
         },
         {
@@ -2200,9 +2200,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '5 * (3 + (2 - 5))'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '2 + )3 * 4('. Esta expresión es inválida porque los paréntesis están desequilibrados.",
+            "CA":  "1. Expressió vàlida: '5 * (3 + (2 - 5))'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 + )3 * 4('. Aquesta expressió és invàlida perquè els parèntesis estan desequilibrats.",
+            "EN":  "1. Valid expression: '5 * (3 + (2 - 5))'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '2 + )3 * 4('. This expression is invalid because the parentheses are unbalanced."
           }
         },
         {
@@ -2211,9 +2211,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '2 * 3'. Esta expresión es válida porque no hay paréntesis y los operadores matemáticos son válidos. 2. Expresión inválida: '2 & 3'. Esta expresión es inválida porque el operador '&' no es un operador matemático válido.",
+            "CA":  "1. Expressió vàlida: '2 * 3'. Aquesta expressió és vàlida perquè no hi ha parèntesis i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 & 3'. Aquesta expressió és invàlida perquè l'operador '&' no és un operador matemàtic vàlid.",
+            "EN":  "1. Valid expression: '2 * 3'. This expression is valid because there are no parentheses and the mathematical operators are valid. 2. Invalid expression: '2 & 3'. This expression is invalid because the '&' operator is not a valid mathematical operator."
           }
         },
         {
@@ -2222,17 +2222,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '((3 + 4) * 2) / (5 - 2)'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '((3 + 4) * 2 / (5 - 2'. Esta expresión es inválida porque falta un paréntesis de cierre.",
+            "CA":  "1. Expressió vàlida: '((3 + 4) * 2) / (5 - 2)'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '((3 + 4) * 2 / (5 - 2'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
+            "EN":  "1. Valid expression: '((3 + 4) * 2) / (5 - 2)'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '((3 + 4) * 2 / (5 - 2'. This expression is invalid because a closing parenthesis is missing."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este ejercicio, es útil familiarizarse con las estructuras de datos como pilas y con los conceptos básicos de las expresiones matemáticas.",
+        "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb les estructures de dades com a piles i amb els conceptes bàsics de les expressions matemàtiques.",
+        "EN": "To solve this exercise, it's helpful to familiarize yourself with data structures like stacks and basic concepts of mathematical expressions."
       }
     },
     "languages": [
@@ -2292,9 +2292,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contiguo más grande es [4, -1, 2, 1] con una suma de 6. 2. Array de entrada: [1, -2, 3, 5, -3, 2]. El subarray contiguo más grande es [3, 5] con una suma de 8.",
+            "CA":  "1. Array d'entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contigu més gran és [4, -1, 2, 1] amb una suma de 6. 2. Array d'entrada: [1, -2, 3, 5, -3, 2]. El subarray contigu més gran és [3, 5] amb una suma de 8.",
+            "EN":  "1. Input array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. The largest contiguous subarray is [4, -1, 2, 1] with a sum of 6. 2. Input array: [1, -2, 3, 5, -3, 2]. The largest contiguous subarray is [3, 5] with a sum of 8."
           }
         },
         {
@@ -2303,9 +2303,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [5, -3, 5]. El subarray contiguo más grande es [5, -3, 5] con una suma de 7. 2. Array de entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contiguo más grande es [0] con una suma de 0.",
+            "CA":  "1. Array d'entrada: [5, -3, 5]. El subarray contigu més gran és [5, -3, 5] amb una suma de 7. 2. Array d'entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contigu més gran és [0] amb una suma de 0.",
+            "EN":  "1. Input array: [5, -3, 5]. The largest contiguous subarray is [5, -3, 5] with a sum of 7. 2. Input array: [0, -2, -3, -4, -1, -2, -3, -5, -4]. The largest contiguous subarray is [0] with a sum of 0."
           }
         },
         {
@@ -2314,9 +2314,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 2, 3, 4, 5]. El subarray contiguo más grande es [1, 2, 3, 4, 5] con una suma de 15. 2. Array de entrada: [-1, -2, -3, -4, -5]. El subarray contiguo más grande es [-1] con una suma de -1.",
+            "CA":  "1. Array d'entrada: [1, 2, 3, 4, 5]. El subarray contigu més gran és [1, 2, 3, 4, 5] amb una suma de 15. 2. Array d'entrada: [-1, -2, -3, -4, -5]. El subarray contigu més gran és [-1] amb una suma de -1.",
+            "EN":  "1. Input array: [1, 2, 3, 4, 5]. The largest contiguous subarray is [1, 2, 3, 4, 5] with a sum of 15. 2. Input array: [-1, -2, -3, -4, -5]. The largest contiguous subarray is [-1] with a sum of -1."
           }
         },
         {
@@ -2325,17 +2325,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contiguo más grande es [4, -1, -2, 1, 5] con una suma de 7. 2. Array de entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contiguo más grande es [1, -1, 1, -1, 1, -1, 1] con una suma de 1.",
+            "CA":  "1. Array d'entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contigu més gran és [4, -1, -2, 1, 5] amb una suma de 7. 2. Array d'entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contigu més gran és [1, -1, 1, -1, 1, -1, 1] amb una suma de 1.",
+            "EN":  "1. Input array: [2, -3, 4, -1, -2, 1, 5, -3]. The largest contiguous subarray is [4, -1, -2, 1, 5] with a sum of 7. 2. Input array: [1, -1, 1, -1, 1, -1, 1, -1]. The largest contiguous subarray is [1, -1, 1, -1, 1, -1, 1] with a sum of 1."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de subarrays y con algoritmos de programación dinámica.",
+        "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes de subarrays i amb algoritmes de programació dinàmica.",
+        "EN": "To solve this exercise, it's helpful to familiarize yourself with the concepts of subarrays and dynamic programming algorithms."
       }
     },
     "languages": [
@@ -2410,9 +2410,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [2, 4, 1, 3, 5]. El número de inversiones es 3. 2. Array de entrada: [5, 4, 3, 2, 1]. El número de inversiones es 10.",
+            "CA":  "1. Array d'entrada: [2, 4, 1, 3, 5]. El nombre d'inversions és 3. 2. Array d'entrada: [5, 4, 3, 2, 1]. El nombre d'inversions és 10.",
+            "EN":  "1. Input array: [2, 4, 1, 3, 5]. The number of inversions is 3. 2. Input array: [5, 4, 3, 2, 1]. The number of inversions is 10."
           }
         },
         {
@@ -2421,9 +2421,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 2, 5, 3, 4, 6]. El número de inversiones es 2. 2. Array de entrada: [6, 5, 4, 3, 2, 1]. El número de inversiones es 15.",
+            "CA":  "1. Array d'entrada: [1, 2, 5, 3, 4, 6]. El nombre d'inversions és 2. 2. Array d'entrada: [6, 5, 4, 3, 2, 1]. El nombre d'inversions és 15.",
+            "EN":  "1. Input array: [1, 2, 5, 3, 4, 6]. The number of inversions is 2. 2. Input array: [6, 5, 4, 3, 2, 1]. The number of inversions is 15."
           }
         },
         {
@@ -2432,9 +2432,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 3, 5, 2, 4, 6]. El número de inversiones es 3. 2. Array de entrada: [6, 4, 2, 5, 3, 1]. El número de inversiones es 9.",
+            "CA":  "1. Array d'entrada: [1, 3, 5, 2, 4, 6]. El nombre d'inversions és 3. 2. Array d'entrada: [6, 4, 2, 5, 3, 1]. El nombre d'inversions és 9.",
+            "EN":  "1. Input array: [1, 3, 5, 2, 4, 6]. The number of inversions is 3. 2. Input array: [6, 4, 2, 5, 3, 1]. The number of inversions is 9."
           }
         },
         {
@@ -2443,15 +2443,18 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 2, 3, 4, 5]. El número de inversiones es 0. 2. Array de entrada: [5, 3, 4, 2, 1]. El número de inversiones es 6.",
+            "CA":  "1. Array d'entrada: [1, 2, 3, 4, 5]. El nombre d'inversions és 0. 2. Array d'entrada: [5, 3, 4, 2, 1]. El nombre d'inversions és 6.",
+            "EN":  "1. Input array: [1, 2, 3, 4, 5]. The number of inversions is 0. 2. Input array: [5, 3, 4, 2, 1]. The number of inversions is 6."
           }
         }
       ],
-                  "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+          "notes":
+      {
+        "ES": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de inversiones en arrays y con algoritmos de ordenación.",
+        "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes d'inversions en arrays i amb algoritmes d'ordenació.",
+        "EN": "To solve this exercise, it's helpful to familiarize yourself with the concepts of inversions in arrays and sorting algorithms."
+      }
     },
     "languages": [
       {
