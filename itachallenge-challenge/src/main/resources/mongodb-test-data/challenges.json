@@ -147,9 +147,9 @@
           "example_text":
           {
            
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos la lista [1, 2, 3, 4, 5] a la función, nos devolverá [5, 1], que es el número más alto y el más bajo que se puede obtener de la lista.",
+            "CA": "Si passem la llista [1, 2, 3, 4, 5] a la funció, ens retornarà [5, 1], que és el número més alt i el més baix que es pot obtenir de la llista.",
+            "EN": "If we pass the list [1, 2, 3, 4, 5] to the function, it will return [5, 1], which is the highest and lowest number that can be obtained from the list."
 
           }
         },
@@ -160,9 +160,9 @@
           "example_text":
           {
             
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos la lista [1, 2, -3, 4, 5] a la función, nos devolverá [5, -3], que es el número más alto y el más bajo que se puede obtener de la lista.",
+            "CA": "Si passem la llista [1, 2, -3, 4, 5] a la funció, ens retornarà [5, -3], que és el número més alt i el més baix que es pot obtenir de la llista.",
+            "EN": "If we pass the list [1, 2, -3, 4, 5] to the function, it will return [5, -3], which is the highest and lowest number that can be obtained from the list."
 
           }
         },
@@ -173,18 +173,18 @@
           "example_text":
           {
             
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos la lista [1, 9, 3, 4, -5] a la función, nos devolverá [9, -5], que es el número más alto y el más bajo que se puede obtener de la lista.",
+            "CA": "Si passem la llista [1, 9, 3, 4, -5] a la funció, ens retornarà [9, -5], que és el número més alt i el més baix que es pot obtenir de la llista.",
+            "EN": "f we pass the list [1, 9, 3, 4, -5] to the function, it will return [9, -5], which is the highest and lowest number that can be obtained from the list."
 
           }
         }
       ],
       "notes": {
 
-        "ES":"Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays, manejo de errores y excepciones en tu lenguaje de programación preferido.",
+        "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays, gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
+        "EN": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays, error and exception handling in your preferred programming language."
       }
     },
     "languages": [
