@@ -1642,9 +1642,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOO', OXOXO, OOOOO], la respuesta esperable es 8.",
+            "CA":  "Donat arr = ['OOOOO', OXOXO, OOOOO], la resposta esperada es 8.",
+            "EN":  "Given arr = ['OOOOO', OXOXO, OOOOO], the expected answer is 8."
           }
         },
         {
@@ -1653,9 +1653,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXXXXO, OOOOOO], la respuesta esperable es 10.",
+            "CA":  "Donat arr = ['OOOOOO', OXXXXO, OOOOOO], la resposta esperada es 10.",
+            "EN":  "Given arr = ['OOOOOO', OXXXXO, OOOOOO], the expected answer is 10."
           }
         },
         {
@@ -1664,9 +1664,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXX0XO, OOOOOO], la respuesta esperable es 10.",
+            "CA":  "Donat arr = ['OOOOOO', OXX0XO, OOOOOO], la resposta esperada es 10.",
+            "EN":  "Given arr = ['OOOOOO', OXX0XO, OOOOOO], the expected answer is 10."
           }
         },
         {
@@ -1675,17 +1675,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la respuesta esperable es 14.",
+            "CA":  "Donat arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la resposta esperada es 14.",
+            "EN":  "Given arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], the expected answer is 14."
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Ten en cuenta que dos islas en contacto forman una única isla",
+        "CA": "Tingues en compte que dues illes en contacte formen una única illa",
+        "EN": "Note that two islands touching each other form a single island"
       }
     },
     "languages": [
