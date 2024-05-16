@@ -317,10 +317,10 @@
           }
         }
       ],
-          "notes": {
-            "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con números enteros y cuadrados perfectos en tu lenguaje de programación preferido.",
-            "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i quadrats perfectes en el teu llenguatge de programació preferit.",
-            "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and perfect squares in your preferred programming language."
+      "notes": {
+        "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con números enteros y cuadrados perfectos en tu lenguaje de programación preferido.",
+        "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i quadrats perfectes en el teu llenguatge de programació preferit.",
+        "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and perfect squares in your preferred programming language."
       }
     },
     "languages": [
@@ -386,9 +386,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, 2, \"a\", \"b\"] a la función, nos devolverá [1, 2], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, 2, \"a\", \"b\"] a la funció, ens retornarà [1, 2], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, 2, \"a\", \"b\"] to the function, it will return [1, 2], which is the list with the strings filtered out."
           }
         },
         {
@@ -397,9 +397,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, 2, \"a\", \"b\", 0, 15] a la función, nos devolverá [1, 2, 0, 15], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, 2, \"a\", \"b\", 0, 15] a la funció, ens retornarà [1, 2, 0, 15], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, 2, \"a\", \"b\", 0, 15] to the function, it will return [1, 2, 0, 15], which is the list with the strings filtered out."
           }
         },
         {
@@ -408,9 +408,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la función, nos devolverá [1, 2, 231], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la funció, ens retornarà [1, 2, 231], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] to the function, it will return [1, 2, 231], which is the list with the strings filtered out."
           }
         },
         {
@@ -419,16 +419,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la función, nos devolverá [1, 0, 15, 123], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la funció, ens retornarà [1, 0, 15, 123], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, \"a\", \"b\", 0, 15, \"abc\", 123] to the function, it will return [1, 0, 15, 123], which is the list with the strings filtered out."
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays y manejo de tipos de datos en tu lenguaje de programación preferido.",
+        "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays i gestió de tipus de dades en el teu llenguatge de programació preferit.",
+        "EN": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays and data type handling in your preferred programming language."
       }
     },
     "languages": [
