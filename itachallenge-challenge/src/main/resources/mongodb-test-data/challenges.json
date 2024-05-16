@@ -957,9 +957,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "255 / 255 / 255 - FFFFFF",
+            "CA":  "255 / 255 / 255 - FFFFFF",
+            "EN":  "255 / 255 / 255 - FFFFFF"
           }
         },
         {
@@ -968,9 +968,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "0 / 0 / 0 - 000000",
+            "CA":  "0 / 0 / 0 - 000000",
+            "EN":  "0 / 0 / 0 - 000000"
           }
         },
         {
@@ -979,9 +979,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "148 / 0 / 211 - 9400D3",
+            "CA":  "148 / 0 / 211 - 9400D3",
+            "EN":  "148 / 0 / 211 - 9400D3"
           }
         },
         {
@@ -990,16 +990,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "128 / 10 / 255 - 8000FF",
+            "CA":  "128 / 10 / 255 - 8000FF",
+            "EN":  "128 / 10 / 255 - 8000FF"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Informate sobre los valores decimales RGB",
+        "CA": "Informa't sobre els valors decimals RGB",
+        "EN": "Learn about RGB decimal values"
       }
     },
     "languages": [
@@ -1079,9 +1079,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "rkqodlw / world - True",
+            "CA":  "rkqodlw / world - True",
+            "EN":  "rkqodlw / world - True"
           }
         },
         {
@@ -1090,9 +1090,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "cedewaraaossoqqyt / codewars - True",
+            "CA":  "cedewaraaossoqqyt / codewars - True",
+            "EN":  "cedewaraaossoqqyt / codewars - True"
           }
         },
         {
@@ -1101,9 +1101,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "katas / steak - False",
+            "CA":  "katas / steak - False",
+            "EN":  "katas / steak - False"
           }
         },
         {
@@ -1112,17 +1112,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Adios / Hola - False",
+            "CA":  "Adios / Hola - False",
+            "EN":  "Adios / Hola - False"
           }
         }
       ],
       "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Informáte sobre los bucles para realizar el ejercicio",
+        "CA": "Informeu-vos sobre els bucles per realitzar l'exercici",
+        "EN": "Find out about the loops to perform the exercise"
       }
     },
     "languages": [
@@ -1198,9 +1198,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 6, resultado 1",
+            "CA":  "Per a valor d'entrada 6, resultat 1",
+            "EN":  "For input value 6, result 1"
           }
         },
         {
@@ -1209,9 +1209,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 12, resultado 2",
+            "CA":  "Per a valor d'entrada 12, resultat 2",
+            "EN":  "For input value 12, result 2"
           }
         },
         {
@@ -1220,9 +1220,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 34, resultado 11",
+            "CA":  "Per a valor d'entrada 34, resultat 11",
+            "EN":  "For input value 34, result 11"
           }
         },
         {
@@ -1231,17 +1231,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 15, resultado 4",
+            "CA":  "Per a valor d'entrada 15, resultat 4",
+            "EN":  "For input value 15, result 4"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Un numero factorial es el resultado de multiplicar todos sus valores",
+        "CA": "Un numero factorial és el resultat de multiplicar tots els seus valors",
+        "EN": "A factorial number is the result of multiplying all its values."
       }
     },
     "languages": [
@@ -1304,9 +1304,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "ooxx - True",
+            "CA":  "ooxx - True",
+            "EN":  "ooxx - True"
           }
         },
         {
@@ -1315,9 +1315,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "xooxx - False",
+            "CA":  "xooxx - False",
+            "EN":  "xooxx - False"
           }
         },
         {
@@ -1326,9 +1326,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "ooxXm - True",
+            "CA":  "ooxXm - True",
+            "EN":  "ooxXm - True"
           }
         },
         {
@@ -1337,17 +1337,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "alxofrex - False",
+            "CA":  "alxofrex - False",
+            "EN":  "alxofrex - False"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Informáte sobre los bucles para realizar el ejercicio",
+        "CA": "Informeu-vos sobre els bucles per realitzar l'exercici",
+        "EN": "Find out about the loops to perform the exercise"
       }
     },
     "languages": [
