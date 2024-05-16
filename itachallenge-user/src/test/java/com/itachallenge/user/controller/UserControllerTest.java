@@ -16,9 +16,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -37,12 +39,16 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     UserController userController;
+
+    @Autowired
+    Environment env;
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
@@ -295,13 +301,15 @@ class UserControllerTest {
 
     @Test
     void getVersionTest() {
+        String expectedVersion = env.getProperty("spring.application.version"); // Obtiene la versión desde el archivo application-test.yml
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/version")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.application_name").isEqualTo("itachallenge-user")
-                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
+                .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
     }
 
 }
