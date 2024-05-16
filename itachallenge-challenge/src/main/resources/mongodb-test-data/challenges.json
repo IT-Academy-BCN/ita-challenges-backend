@@ -278,9 +278,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número -1 a la función, nos devolverá false, ya que -1 no es un cuadrado perfecto. ",
+            "CA":  "Si passem el número -1 a la funció, ens retornarà false, ja que -1 no és un quadrat perfecte.",
+            "EN":  "If we pass the number -1 to the function, it will return false, as -1 is not a perfect square."
           }
         },
         {
@@ -289,9 +289,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número 0 a la función, nos devolverá true, ya que 0 es un cuadrado perfecto.",
+            "CA":  "Si passem el número 0 a la funció, ens retornarà true, ja que 0 és un quadrat perfecte.",
+            "EN":  " If we pass the number 0 to the function, it will return true, as 0 is a perfect square."
           }
         },
         {
@@ -300,9 +300,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número 3 a la función, nos devolverá false, ya que 3 no es un cuadrado perfecto.",
+            "CA":  "Si passem el número 3 a la funció, ens retornarà false, ja que 3 no és un quadrat perfecte.",
+            "EN":  "If we pass the number 3 to the function, it will return false, as 3 is not a perfect square."
           }
         },
         {
@@ -311,16 +311,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número 16 a la función, nos devolverá true, ya que 16 es un cuadrado perfecto.",
+            "CA":  "Si passem el número 16 a la funció, ens retornarà true, ja que 16 és un quadrat perfecte.",
+            "EN":  "If we pass the number 16 to the function, it will return true, as 16 is a perfect square."
           }
         }
       ],
-      "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+          "notes": {
+            "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con números enteros y cuadrados perfectos en tu lenguaje de programación preferido.",
+            "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i quadrats perfectes en el teu llenguatge de programació preferit.",
+            "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and perfect squares in your preferred programming language."
       }
     },
     "languages": [
