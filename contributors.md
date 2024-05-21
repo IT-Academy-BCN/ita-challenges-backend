@@ -45,4 +45,5 @@
 * Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
 * Ainoha Barcia - https://github.com/AinohaBarcia
 * Oriol Riera Lizcano - https://github.com/Uriera4
+* Nuria Fernandez Torres -https://github.com/Nuria-Fernandez
 
