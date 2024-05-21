@@ -26,12 +26,10 @@
           "_id": {
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
-          "example_text": 
-          
+          "example_text": {
             "ES": "Si intentamos pasar una cadena de texto como \"a,bcde\" a la función, nos dará un error de formato de número, ya que la función solo acepta números enteros no negativos.",
             "CA": "Si intentem passar una cadena de text com \"a,bcde\" a la funció, ens donarà un error de format de número, ja que la funció només accepta nombres enters no negatius.",
             "EN": "If we try to pass a string like \"a,bcde\" to the function, it will give us a number format error, as the function only accepts non-negative integers."
-
           }
         },
         {
