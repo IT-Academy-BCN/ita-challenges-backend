@@ -527,21 +527,18 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Una cadena vacía al no tener letras repetidas. Resultado: true",
+            "CA":  "Una cadena buida al no tenir lletres repetides. Resultat: true",
+            "EN":  "An empty string as it has no repeating letters. Result: true"
           }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text":
-          {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
-          }
+          "ES":  "Murciélago:Esta palabra no tiene letras repetidas.Resultado: true",
+          "CA":  "Estdiant: Aquesta paraula no te lletres repetides.Resultat: true",
+          "EN":  "unsubscribed: This word has no repeating letters. Result: true"
         },
         {
           "_id": {
@@ -549,9 +546,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Programación:Esta palabra tiene letras repetidas. Resultado: false",
+            "CA":  "Programació: Aquesta paraula te lletres repetides. Resultat: false",
+            "EN":  "Programming: This word has repeating letters. Result: false"
           }
         },
         {
@@ -560,16 +557,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Repetir:Esta palabra tiene letras repetidas. Resultado: false",
+            "CA":  "Repetir: Aquesta paraula te lletres repetides. Resultat: false",
+            "EN":  "Bumblebee: This word has repeating letters. Result: false"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Busca información sobre arrays para encontrar duplicados en una lista o cadena de caracteres, así como sobre la función toLowerCase() para ignorar la distinción entre mayúsculas y minúsculas",
+        "CA": "Busca informació sobre arrays per trobar duplicats en una llista o cadena de caràcters, així com sobre la funció toLowerCase() per ignorar la distinció entre majúscules i minúscules",
+        "EN": "Seek information about arrays to find duplicates in a list or string, as well as about the toLowerCase() function to ignore case distinction"
       }
     },
     "languages": [
@@ -635,9 +632,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "xxoo, para esta cadena el resultado es true",
+            "CA":  "xxoo, per aquesta string el resultat es true",
+            "EN":  "xxoo, for this string the result is true"
           }
         },
         {
@@ -646,9 +643,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "xXoo, para esta cadena el resultado es true",
+            "CA":  "xXoo, per aquesta cadena el resultat es true",
+            "EN":  "xXoo, for this string the result is true"
           }
         },
         {
@@ -657,9 +654,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "OxoO, para esta cadena el resultado es false",
+            "CA":  "OxoO, per aquesta cadena el resultat es fals",
+            "EN":  "OxoO, for this string the result is false"
           }
         },
         {
@@ -668,16 +665,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "oxxxoox, para esta cadena el resultado es false",
+            "CA":  "oxxxoox, per aquesta cadensa el resultat es fals",
+            "EN":  "oxxxoox, for this string the result is false"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Revisa las arrays y los bucles para contar el número de 'x' y 'o' en una cadena",
+        "CA": "Revisa les arrays i els bucles per contar el nombre de 'x' i 'o' en una string",
+        "EN": "Look into arrays and loops to count the number of 'x's and 'o's in a string"
       }
     },
     "languages": [
@@ -743,9 +740,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "hello: la longitud de la palabra es impar, por lo que el carácter del medio es 'l'",
+            "CA":  "hello: la llargada de la paraula es senar, per tant el caràcter del mig es 'l'",
+            "EN":  "hello: the length of the word is odd, so the middle character is 'l'"
           }
         },
         {
@@ -754,9 +751,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "apple: la longitud de la palabra es par, por lo que los carácteres del medio son 'pp'",
+            "CA":  "apple: la llargada de la paraula es parell, per tant els caràcters del mig son 'pp'",
+            "EN":  "apple: the length of the word is even, so the middle characters are 'pp'"
           }
         },
         {
@@ -765,9 +762,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "testing: la longitud de la palabra es impar, por lo que el carácter del medio es 't'",
+            "CA":  "testing: la llargada de la paraula es senar, per tant el caràcter del mig es 't'",
+            "EN":  "testing: the length of the word is odd, so the middle character is 't'"
           }
         },
         {
@@ -776,16 +773,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "elephant: la longitud de la palabra es par, por lo que los carácteres del medio son 'ph'",
+            "CA":  "elephant: la llargada de la paraula es parell, per tant els caràcters del mig son 'ph'",
+            "EN":  "elephant: the length of the word is even, so the middle characters are 'ph'"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Investiga sobre la función substring() para obtener los caracteres del medio de una cadena",
+        "CA": "Investiga sobre la funció substring() per obtenir els caràcters del mig d'una string",
+        "EN": "Investigate the substring() function to get the middle characters of a string"
       }
     },
     "languages": [
@@ -851,9 +848,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Las cerezas: asLay erezascay",
+            "CA":  "Les cireres: esLay irerescay",
+            "EN":  "The cherries: heTay herrieschay"
           }
         },
         {
@@ -862,9 +859,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Programar!: rogramar!Pay",
+            "CA":  "Programar!: rogramar!Pay",
+            "EN":  "Programming!: rogramming!Pay"
           }
         },
         {
@@ -873,9 +870,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Roma: omaRay",
+            "CA":  "Roma: omaRay",
+            "EN":  "Rome: omeRay"
           }
         },
         {
@@ -884,16 +881,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Colores: oloresCay",
+            "CA":  "Colors: olorsCay",
+            "EN":  "Colors: olorsCay"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Investiga acerca de las cadenas de palabras y cómo manipularlas",
+        "CA": "Investiga sobre les cadenes de paraules i com manipular-les",
+        "EN": "Look into word strings and how to manipulate them"
       }
     },
     "languages": [
