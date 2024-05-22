@@ -37,4 +37,14 @@ class ScoreServiceImplTest {
                     assertEquals(expectedResponse, result);
                 });
     }
+
+    @Test
+    void getTestParamsTest_UUIDinvalid (){
+        String challengeId = "invalid";
+        scoreService.getTestParams(challengeId)
+                .subscribe(result -> {
+                    verify(zmqClient, times(0)).sendMessage(any(ChallengeRequestDto.class), eq(TestingValuesResponseDto.class));
+                });
+
+    }
 }
