@@ -27,9 +27,9 @@
             "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
           },
           "example_text": {
-            "ES": "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN": "Descending Order"
+            "ES": "Si intentamos pasar una cadena de texto como \"a,bcde\" a la función, nos dará un error de formato de número, ya que la función solo acepta números enteros no negativos.",
+            "CA": "Si intentem passar una cadena de text com \"a,bcde\" a la funció, ens donarà un error de format de número, ja que la funció només accepta nombres enters no negatius.",
+            "EN": "If we try to pass a string like \"a,bcde\" to the function, it will give us a number format error, as the function only accepts non-negative integers."
           }
         },
         {
@@ -39,9 +39,9 @@
           "example_text":
           {
            
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos el número 42145 a la función, nos devolverá 54421, que es el número más alto que se puede formar reorganizando los dígitos de 42145.",
+            "CA": "Si passem el nombre 42145 a la funció, ens retornarà 54421, que és el nombre més alt que es pot formar reorganitzant els dígits de 42145.",
+            "EN": "If we pass the number 42145 to the function, it will return 54421, which is the highest number that can be formed by rearranging the digits of 42145."
 
           }
         },
@@ -52,18 +52,18 @@
           "example_text":
           {
            
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos el número 145263 a la función, nos devolverá 654321, que es el número más alto que se puede formar reorganizando los dígitos de 145263.",
+            "CA": "Si passem el nombre 145263 a la funció, ens retornarà 654321, que és el nombre més alt que es pot formar reorganitzant els dígits de 145263.",
+            "EN": "If we pass the number 145263 to the function, it will return 654321, which is the highest number that can be formed by rearranging the digits of 145263."
 
           }
         }
       ],
-      "notes": {
+          "notes": {
        
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+            "ES": "Para resolver este reto necesitarás un conocimiento básico de cómo trabajar con números enteros y cadenas, ordenamiento de listas o arrays y manejo de errores y excepciones en tu lenguaje de programación preferido.",
+            "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i cadenes, ordenació de llistes o arrays, i gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
+            "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and strings, sorting of lists or arrays, and error and exception handling in your preferred programming language."
       }
     },
     "languages": [
@@ -75,9 +75,8 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
-      }
+      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
       {
@@ -147,9 +146,9 @@
           "example_text":
           {
            
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos la lista [1, 2, 3, 4, 5] a la función, nos devolverá [5, 1], que es el número más alto y el más bajo que se puede obtener de la lista.",
+            "CA": "Si passem la llista [1, 2, 3, 4, 5] a la funció, ens retornarà [5, 1], que és el número més alt i el més baix que es pot obtenir de la llista.",
+            "EN": "If we pass the list [1, 2, 3, 4, 5] to the function, it will return [5, 1], which is the highest and lowest number that can be obtained from the list."
 
           }
         },
@@ -160,9 +159,9 @@
           "example_text":
           {
             
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos la lista [1, 2, -3, 4, 5] a la función, nos devolverá [5, -3], que es el número más alto y el más bajo que se puede obtener de la lista.",
+            "CA": "Si passem la llista [1, 2, -3, 4, 5] a la funció, ens retornarà [5, -3], que és el número més alt i el més baix que es pot obtenir de la llista.",
+            "EN": "If we pass the list [1, 2, -3, 4, 5] to the function, it will return [5, -3], which is the highest and lowest number that can be obtained from the list."
 
           }
         },
@@ -173,18 +172,18 @@
           "example_text":
           {
             
-            "ES":  "Orden descendente",
-            "CA": "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Si pasamos la lista [1, 9, 3, 4, -5] a la función, nos devolverá [9, -5], que es el número más alto y el más bajo que se puede obtener de la lista.",
+            "CA": "Si passem la llista [1, 9, 3, 4, -5] a la funció, ens retornarà [9, -5], que és el número més alt i el més baix que es pot obtenir de la llista.",
+            "EN": "f we pass the list [1, 9, 3, 4, -5] to the function, it will return [9, -5], which is the highest and lowest number that can be obtained from the list."
 
           }
         }
       ],
       "notes": {
 
-        "ES":"Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays, manejo de errores y excepciones en tu lenguaje de programación preferido.",
+        "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays, gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
+        "EN": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays, error and exception handling in your preferred programming language."
       }
     },
     "languages": [
@@ -196,7 +195,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
       {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
@@ -277,9 +277,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número -1 a la función, nos devolverá false, ya que -1 no es un cuadrado perfecto. ",
+            "CA":  "Si passem el número -1 a la funció, ens retornarà false, ja que -1 no és un quadrat perfecte.",
+            "EN":  "If we pass the number -1 to the function, it will return false, as -1 is not a perfect square."
           }
         },
         {
@@ -288,9 +288,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número 0 a la función, nos devolverá true, ya que 0 es un cuadrado perfecto.",
+            "CA":  "Si passem el número 0 a la funció, ens retornarà true, ja que 0 és un quadrat perfecte.",
+            "EN":  " If we pass the number 0 to the function, it will return true, as 0 is a perfect square."
           }
         },
         {
@@ -299,9 +299,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número 3 a la función, nos devolverá false, ya que 3 no es un cuadrado perfecto.",
+            "CA":  "Si passem el número 3 a la funció, ens retornarà false, ja que 3 no és un quadrat perfecte.",
+            "EN":  "If we pass the number 3 to the function, it will return false, as 3 is not a perfect square."
           }
         },
         {
@@ -310,16 +310,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos el número 16 a la función, nos devolverá true, ya que 16 es un cuadrado perfecto.",
+            "CA":  "Si passem el número 16 a la funció, ens retornarà true, ja que 16 és un quadrat perfecte.",
+            "EN":  "If we pass the number 16 to the function, it will return true, as 16 is a perfect square."
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con números enteros y cuadrados perfectos en tu lenguaje de programación preferido.",
+        "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i quadrats perfectes en el teu llenguatge de programació preferit.",
+        "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and perfect squares in your preferred programming language."
       }
     },
     "languages": [
@@ -331,7 +331,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"}
+      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
       {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
@@ -384,9 +385,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, 2, \"a\", \"b\"] a la función, nos devolverá [1, 2], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, 2, \"a\", \"b\"] a la funció, ens retornarà [1, 2], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, 2, \"a\", \"b\"] to the function, it will return [1, 2], which is the list with the strings filtered out."
           }
         },
         {
@@ -395,9 +396,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, 2, \"a\", \"b\", 0, 15] a la función, nos devolverá [1, 2, 0, 15], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, 2, \"a\", \"b\", 0, 15] a la funció, ens retornarà [1, 2, 0, 15], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, 2, \"a\", \"b\", 0, 15] to the function, it will return [1, 2, 0, 15], which is the list with the strings filtered out."
           }
         },
         {
@@ -406,9 +407,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la función, nos devolverá [1, 2, 231], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la funció, ens retornarà [1, 2, 231], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] to the function, it will return [1, 2, 231], which is the list with the strings filtered out."
           }
         },
         {
@@ -417,16 +418,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si pasamos la lista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la función, nos devolverá [1, 0, 15, 123], que es la lista con las strings filtradas.",
+            "CA":  "Si passem la llista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la funció, ens retornarà [1, 0, 15, 123], que és la llista amb les strings filtrades.",
+            "EN":  "If we pass the list [1, \"a\", \"b\", 0, 15, \"abc\", 123] to the function, it will return [1, 0, 15, 123], which is the list with the strings filtered out."
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays y manejo de tipos de datos en tu lenguaje de programación preferido.",
+        "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays i gestió de tipus de dades en el teu llenguatge de programació preferit.",
+        "EN": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays and data type handling in your preferred programming language."
       }
     },
     "languages": [
@@ -438,6 +439,7 @@
       }
     ],
     "solutions": [
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
       {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
@@ -524,21 +526,18 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Una cadena vacía al no tener letras repetidas. Resultado: true",
+            "CA":  "Una cadena buida al no tenir lletres repetides. Resultat: true",
+            "EN":  "An empty string as it has no repeating letters. Result: true"
           }
         },
         {
           "_id": {
             "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
           },
-          "example_text":
-          {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
-          }
+          "ES":  "Murciélago:Esta palabra no tiene letras repetidas.Resultado: true",
+          "CA":  "Estdiant: Aquesta paraula no te lletres repetides.Resultat: true",
+          "EN":  "unsubscribed: This word has no repeating letters. Result: true"
         },
         {
           "_id": {
@@ -546,9 +545,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Programación:Esta palabra tiene letras repetidas. Resultado: false",
+            "CA":  "Programació: Aquesta paraula te lletres repetides. Resultat: false",
+            "EN":  "Programming: This word has repeating letters. Result: false"
           }
         },
         {
@@ -557,16 +556,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Repetir:Esta palabra tiene letras repetidas. Resultado: false",
+            "CA":  "Repetir: Aquesta paraula te lletres repetides. Resultat: false",
+            "EN":  "Bumblebee: This word has repeating letters. Result: false"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Busca información sobre arrays para encontrar duplicados en una lista o cadena de caracteres, así como sobre la función toLowerCase() para ignorar la distinción entre mayúsculas y minúsculas",
+        "CA": "Busca informació sobre arrays per trobar duplicats en una llista o cadena de caràcters, així com sobre la funció toLowerCase() per ignorar la distinció entre majúscules i minúscules",
+        "EN": "Seek information about arrays to find duplicates in a list or string, as well as about the toLowerCase() function to ignore case distinction"
       }
     },
     "languages": [
@@ -578,7 +577,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -631,9 +631,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "xxoo, para esta cadena el resultado es true",
+            "CA":  "xxoo, per aquesta string el resultat es true",
+            "EN":  "xxoo, for this string the result is true"
           }
         },
         {
@@ -642,9 +642,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "xXoo, para esta cadena el resultado es true",
+            "CA":  "xXoo, per aquesta cadena el resultat es true",
+            "EN":  "xXoo, for this string the result is true"
           }
         },
         {
@@ -653,9 +653,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "OxoO, para esta cadena el resultado es false",
+            "CA":  "OxoO, per aquesta cadena el resultat es fals",
+            "EN":  "OxoO, for this string the result is false"
           }
         },
         {
@@ -664,16 +664,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "oxxxoox, para esta cadena el resultado es false",
+            "CA":  "oxxxoox, per aquesta cadensa el resultat es fals",
+            "EN":  "oxxxoox, for this string the result is false"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Revisa las arrays y los bucles para contar el número de 'x' y 'o' en una cadena",
+        "CA": "Revisa les arrays i els bucles per contar el nombre de 'x' i 'o' en una string",
+        "EN": "Look into arrays and loops to count the number of 'x's and 'o's in a string"
       }
     },
     "languages": [
@@ -685,6 +685,7 @@
       }
     ],
     "solutions": [
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
       {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
@@ -738,9 +739,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "hello: la longitud de la palabra es impar, por lo que el carácter del medio es 'l'",
+            "CA":  "hello: la llargada de la paraula es senar, per tant el caràcter del mig es 'l'",
+            "EN":  "hello: the length of the word is odd, so the middle character is 'l'"
           }
         },
         {
@@ -749,9 +750,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "apple: la longitud de la palabra es par, por lo que los carácteres del medio son 'pp'",
+            "CA":  "apple: la llargada de la paraula es parell, per tant els caràcters del mig son 'pp'",
+            "EN":  "apple: the length of the word is even, so the middle characters are 'pp'"
           }
         },
         {
@@ -760,9 +761,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "testing: la longitud de la palabra es impar, por lo que el carácter del medio es 't'",
+            "CA":  "testing: la llargada de la paraula es senar, per tant el caràcter del mig es 't'",
+            "EN":  "testing: the length of the word is odd, so the middle character is 't'"
           }
         },
         {
@@ -771,16 +772,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "elephant: la longitud de la palabra es par, por lo que los carácteres del medio son 'ph'",
+            "CA":  "elephant: la llargada de la paraula es parell, per tant els caràcters del mig son 'ph'",
+            "EN":  "elephant: the length of the word is even, so the middle characters are 'ph'"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Investiga sobre la función substring() para obtener los caracteres del medio de una cadena",
+        "CA": "Investiga sobre la funció substring() per obtenir els caràcters del mig d'una string",
+        "EN": "Investigate the substring() function to get the middle characters of a string"
       }
     },
     "languages": [
@@ -792,7 +793,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -845,9 +847,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Las cerezas: asLay erezascay",
+            "CA":  "Les cireres: esLay irerescay",
+            "EN":  "The cherries: heTay herrieschay"
           }
         },
         {
@@ -856,9 +858,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Programar!: rogramar!Pay",
+            "CA":  "Programar!: rogramar!Pay",
+            "EN":  "Programming!: rogramming!Pay"
           }
         },
         {
@@ -867,9 +869,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Roma: omaRay",
+            "CA":  "Roma: omaRay",
+            "EN":  "Rome: omeRay"
           }
         },
         {
@@ -878,16 +880,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Colores: oloresCay",
+            "CA":  "Colors: olorsCay",
+            "EN":  "Colors: olorsCay"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Investiga acerca de las cadenas de palabras y cómo manipularlas",
+        "CA": "Investiga sobre les cadenes de paraules i com manipular-les",
+        "EN": "Look into word strings and how to manipulate them"
       }
     },
     "languages": [
@@ -899,7 +901,9 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
+
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -949,9 +953,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "255 / 255 / 255 - FFFFFF",
+            "CA":  "255 / 255 / 255 - FFFFFF",
+            "EN":  "255 / 255 / 255 - FFFFFF"
           }
         },
         {
@@ -960,9 +964,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "0 / 0 / 0 - 000000",
+            "CA":  "0 / 0 / 0 - 000000",
+            "EN":  "0 / 0 / 0 - 000000"
           }
         },
         {
@@ -971,9 +975,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "148 / 0 / 211 - 9400D3",
+            "CA":  "148 / 0 / 211 - 9400D3",
+            "EN":  "148 / 0 / 211 - 9400D3"
           }
         },
         {
@@ -982,16 +986,16 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "128 / 10 / 255 - 8000FF",
+            "CA":  "128 / 10 / 255 - 8000FF",
+            "EN":  "128 / 10 / 255 - 8000FF"
           }
         }
       ],
       "notes": {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Informate sobre los valores decimales RGB",
+        "CA": "Informa't sobre els valors decimals RGB",
+        "EN": "Learn about RGB decimal values"
       }
     },
     "languages": [
@@ -1003,6 +1007,7 @@
       }
     ],
     "solutions": [
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
       {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
     ],
     "resources": [
@@ -1070,9 +1075,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "rkqodlw / world - True",
+            "CA":  "rkqodlw / world - True",
+            "EN":  "rkqodlw / world - True"
           }
         },
         {
@@ -1081,9 +1086,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "cedewaraaossoqqyt / codewars - True",
+            "CA":  "cedewaraaossoqqyt / codewars - True",
+            "EN":  "cedewaraaossoqqyt / codewars - True"
           }
         },
         {
@@ -1092,9 +1097,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "katas / steak - False",
+            "CA":  "katas / steak - False",
+            "EN":  "katas / steak - False"
           }
         },
         {
@@ -1103,17 +1108,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Adios / Hola - False",
+            "CA":  "Adios / Hola - False",
+            "EN":  "Adios / Hola - False"
           }
         }
       ],
       "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Informáte sobre los bucles para realizar el ejercicio",
+        "CA": "Informeu-vos sobre els bucles per realitzar l'exercici",
+        "EN": "Find out about the loops to perform the exercise"
       }
     },
     "languages": [
@@ -1125,7 +1130,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1188,9 +1194,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 6, resultado 1",
+            "CA":  "Per a valor d'entrada 6, resultat 1",
+            "EN":  "For input value 6, result 1"
           }
         },
         {
@@ -1199,9 +1205,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 12, resultado 2",
+            "CA":  "Per a valor d'entrada 12, resultat 2",
+            "EN":  "For input value 12, result 2"
           }
         },
         {
@@ -1210,9 +1216,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 34, resultado 11",
+            "CA":  "Per a valor d'entrada 34, resultat 11",
+            "EN":  "For input value 34, result 11"
           }
         },
         {
@@ -1221,17 +1227,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para valor de entrada 15, resultado 4",
+            "CA":  "Per a valor d'entrada 15, resultat 4",
+            "EN":  "For input value 15, result 4"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Un numero factorial es el resultado de multiplicar todos sus valores",
+        "CA": "Un numero factorial és el resultat de multiplicar tots els seus valors",
+        "EN": "A factorial number is the result of multiplying all its values."
       }
     },
     "languages": [
@@ -1243,7 +1249,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
+      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1293,9 +1300,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "ooxx - True",
+            "CA":  "ooxx - True",
+            "EN":  "ooxx - True"
           }
         },
         {
@@ -1304,9 +1311,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "xooxx - False",
+            "CA":  "xooxx - False",
+            "EN":  "xooxx - False"
           }
         },
         {
@@ -1315,9 +1322,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "ooxXm - True",
+            "CA":  "ooxXm - True",
+            "EN":  "ooxXm - True"
           }
         },
         {
@@ -1326,17 +1333,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "alxofrex - False",
+            "CA":  "alxofrex - False",
+            "EN":  "alxofrex - False"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Informáte sobre los bucles para realizar el ejercicio",
+        "CA": "Informeu-vos sobre els bucles per realitzar l'exercici",
+        "EN": "Find out about the loops to perform the exercise"
       }
     },
     "languages": [
@@ -1348,7 +1355,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
+      {"$uuid" : "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1402,9 +1410,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 5, el resultado esperable es (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
+            "CA":  "Per n = 5, el resultat esperat és (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
+            "EN":  "For n = 5, the expected result is (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120"
           }
         },
         {
@@ -1413,9 +1421,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 1, el resultado esperable es 1",
+            "CA":  "Per n = 1, el resultat esperat és 1",
+            "EN":  "For n = 1, the expected result is 1"
           }
         },
         {
@@ -1424,9 +1432,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 3, el resultado esperable es 9/6",
+            "CA":  "Per n = 3, el resultat esperat és 9/6",
+            "EN":  "For n = 3, the expected result is 9/6"
           }
         },
         {
@@ -1435,17 +1443,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para n = 2, el resultado esperable es 3/2",
+            "CA":  "Per n = 2, el resultat esperat és 3/2",
+            "EN":  "For n = 2, the expected result is 3/2"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "La expresión 'n!', o 'n factorial', se calcula multiplicando todos los numeros enteros positivos menores o iguales a n: n! = 1 * 2 * 3 * ... * n",
+        "CA": "L'expressió 'n!', o 'n factorial', es calcula multiplicant tots els nombres enters positius menors o iguals a n: n! = 1 * 2 * 3 * ... * n",
+        "EN": "The expression 'n!', or 'n factorial', can be found multiplying every positive integer smaller or equal to n: n! = 1 * 2 * 3 * ... * n"
       }
     },
     "languages": [
@@ -1457,7 +1465,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1507,9 +1516,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 3541, el dígito d = 1 con índice i = 3 debe moverse a la posición j = 0, para un resultado mínimo de m = 1354",
+            "CA":  "Donat n = 3541, el dígit d = 1 amb índex i = 3 s'ha de moure a la posició j = 0, per un resultat mínim de m = 1354",
+            "EN":  "Given n = 3541, digit d = 1 with index i = 3 must be moved to position j = 0, for a minimum result of m = 1354"
           }
         },
         {
@@ -1518,9 +1527,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 35141, el dígito d = 1 con índice i = 2 debe moverse a la posición j = 0, para un resultado mínimo de m = 13541",
+            "CA":  "Donat n = 35141, el dígit d = 1 amb índex i = 2 s'ha de moure a la posició j = 0, per un resultat mínim de m = 13541",
+            "EN":  "Given n = 35141, digit d = 1 with index i = 2 must be moved to position j = 0, for a minimum result of m = 13541"
           }
         },
         {
@@ -1529,9 +1538,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 3544, el dígito d = 3 con índice i = 0 debe quedarse en la posición j = 0, para un resultado mínimo de m = 3544",
+            "CA":  "Donat n = 3544, el dígit d = 3 amb índex i = 0 s'ha de quedar a la posició j = 0, per un resultat mínim de m = 3544",
+            "EN":  "Given n = 3544, digit d = 3 with index i = 0 must stay in position j = 0, for a minimum result of m = 3544"
           }
         },
         {
@@ -1540,17 +1549,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado n = 03540, el dígito d = 0 con índice i = 0 debe quedarse en la posición j = 0, para un resultado mínimo de m = 035440",
+            "CA":  "Donat n = 035440, el dígit d = 0 amb índex i = 0 s'ha de quedar a la posició j = 0, per un resultat mínim de m = 035440",
+            "EN":  "Given n = 035440, digit d = 0 with index i = 0 must stay in position j = 0, for a minimum result of m = 035440"
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Fíjate que 'i' y 'j' deben ser tan pequeños como sea posible",
+        "CA": "Fixa't que 'i' i 'j' han de ser tan petits com sigui possible",
+        "EN": "Note that 'i' and 'j' must be as small as possible"
       }
     },
     "languages": [
@@ -1562,7 +1571,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1628,9 +1638,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOO', OXOXO, OOOOO], la respuesta esperable es 8.",
+            "CA":  "Donat arr = ['OOOOO', OXOXO, OOOOO], la resposta esperada es 8.",
+            "EN":  "Given arr = ['OOOOO', OXOXO, OOOOO], the expected answer is 8."
           }
         },
         {
@@ -1639,9 +1649,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXXXXO, OOOOOO], la respuesta esperable es 10.",
+            "CA":  "Donat arr = ['OOOOOO', OXXXXO, OOOOOO], la resposta esperada es 10.",
+            "EN":  "Given arr = ['OOOOOO', OXXXXO, OOOOOO], the expected answer is 10."
           }
         },
         {
@@ -1650,9 +1660,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXX0XO, OOOOOO], la respuesta esperable es 10.",
+            "CA":  "Donat arr = ['OOOOOO', OXX0XO, OOOOOO], la resposta esperada es 10.",
+            "EN":  "Given arr = ['OOOOOO', OXX0XO, OOOOOO], the expected answer is 10."
           }
         },
         {
@@ -1661,17 +1671,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Dado arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la respuesta esperable es 14.",
+            "CA":  "Donat arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la resposta esperada es 14.",
+            "EN":  "Given arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], the expected answer is 14."
           }
         }
       ],
                  "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Ten en cuenta que dos islas en contacto forman una única isla",
+        "CA": "Tingues en compte que dues illes en contacte formen una única illa",
+        "EN": "Note that two islands touching each other form a single island"
       }
     },
     "languages": [
@@ -1683,7 +1693,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1745,9 +1756,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '3+5', la salida esperada sería 8.",
+            "CA":  "Si la string d'entrada és '3+5', la sortida esperada seria 8.",
+            "EN":  "If the input string is '3+5', the expected output would be 8."
           }
         },
         {
@@ -1756,9 +1767,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '10-6', la salida esperada sería 4.",
+            "CA":  "Si la string d'entrada és '10-6', la sortida esperada seria 4.",
+            "EN":  "If the input string is '10-6', the expected output would be 4."
           }
         },
         {
@@ -1767,9 +1778,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '2*2', la salida esperada sería 4.",
+            "CA":  "Si la string d'entrada és '2*2', la sortida esperada seria 4.",
+            "EN":  "If the input string is '2*2', the expected output would be 4."
           }
         },
         {
@@ -1778,17 +1789,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es '8/2', la salida esperada sería 4.",
+            "CA":  "Si la string d'entrada és '8/2', la sortida esperada seria 4.",
+            "EN":  "If the input string is '8/2', the expected output would be 4."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Asegúrate de manejar correctamente los casos de borde, como las expresiones vacías o las expresiones que contienen solo un número.",
+        "CA": "Assegura't de gestionar correctament els casos de vora, com les expressions buides o les expressions que contenen només un número.",
+        "EN": "Make sure to properly handle edge cases, such as empty expressions or expressions containing only a single number."
       }
     },
     "languages": [
@@ -1800,7 +1811,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
+      {"$uuid" : "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1850,9 +1862,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'aaabbbccc', la salida esperada sería 'a3b3c3'.",
+            "CA":  "Si la string d'entrada és 'aaabbbccc', la sortida esperada seria 'a3b3c3'.",
+            "EN":  "If the input string is 'aaabbbccc', the expected output would be 'a3b3c3'."
           }
         },
         {
@@ -1861,9 +1873,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'aabbccdd', la salida esperada sería 'a2b2c2d2'.",
+            "CA":  "Si la string d'entrada és 'aabbccdd', la sortida esperada seria 'a2b2c2d2'.",
+            "EN":  "If the input string is 'aabbccdd', the expected output would be 'a2b2c2d2'."
           }
         },
         {
@@ -1872,9 +1884,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'zzzzyyyyyx', la salida esperada sería 'z4y5x'.",
+            "CA":  "Si la string d'entrada és 'zzzzyyyyyx', la sortida esperada seria 'z4y5x'.",
+            "EN":  "If the input string is 'zzzzyyyyyx', the expected output would be 'z4y5x'."
           }
         },
         {
@@ -1883,17 +1895,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si la string de entrada es 'abcdeeffff', la salida esperada sería 'abcde2f4'.",
+            "CA":  "Si la string d'entrada és 'abcdeeffff', la sortida esperada seria 'abcde2f4'.",
+            "EN":  "If the input string is 'abcdeeffff', the expected output would be 'abcde2f4'."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "La salida comprimida debe mantener el orden de los caracteres en la cadena original.",
+        "CA": "La sortida comprimida ha de mantenir l'ordre dels caràcters en la cadena original.",
+        "EN": "The compressed output should maintain the order of characters in the original string."
       }
     },
     "languages": [
@@ -1905,7 +1917,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1951,9 +1964,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si las strings son 'ABCBDAB' y 'BDCAB', la subsecuencia común más larga sería 'BCAB'.",
+            "CA":  "Si les strings són 'ABCBDAB' i 'BDCAB', la subseqüència comuna més llarga seria 'BCAB'.",
+            "EN":  "If the strings are 'ABCBDAB' and 'BDCAB', the longest common subsequence would be 'BCAB'."
           }
         },
         {
@@ -1962,9 +1975,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para las strings 'abcdef' y 'acf', la subsecuencia común más larga sería 'acf'.",
+            "CA":  "Per a les strings 'abcdef' i 'acf', la subseqüència comuna més llarga seria 'acf'.",
+            "EN":  "For the strings 'abcdef' and 'acf', the longest common subsequence would be 'acf'."
           }
         },
         {
@@ -1973,9 +1986,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Si las strings son 'AGGTAB' y 'GXTXAYB', la subsecuencia común más larga sería 'GTAB'.",
+            "CA":  "Si les strings són 'AGGTAB' i 'GXTXAYB', la subseqüència comuna més llarga seria 'GTAB'.",
+            "EN":  "If the strings are 'AGGTAB' and 'GXTXAYB', the longest common subsequence would be 'GTAB'."
           }
         },
         {
@@ -1984,17 +1997,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "Para las strings 'abcdgh' y 'aedfhr', la subsecuencia común más larga sería 'adh'.",
+            "CA":  "Per a les strings 'abcdgh' i 'aedfhr', la subseqüència comuna més llarga seria 'adh'.",
+            "EN":  "For the strings 'abcdgh' and 'aedfhr', the longest common subsequence would be 'adh'."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "La subsecuencia común más larga no necesariamente tiene que ser una subcadena. Puede ser una subsecuencia de caracteres que aparecen en el mismo orden relativo en ambas cadenas, pero no necesariamente contiguos.",
+        "CA": "La subseqüència comuna més llarga no necessàriament ha de ser una subcadena. Pot ser una subseqüència de caràcters que apareixen en el mateix ordre relatiu en ambdues cadenes, però no necessàriament contigus.",
+        "EN": "The longest common subsequence doesn't necessarily have to be a substring. It can be a sequence of characters that appear in the same relative order in both strings, but not necessarily contiguous."
       }
     },
     "languages": [
@@ -2006,7 +2019,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2062,9 +2076,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [-7, 1, 5, 2, -4, 3, 0], el punto de equilibrio sería el índice 3.",
+            "CA": "Per a l'array [-7, 1, 5, 2, -4, 3, 0], el punt d'equilibri seria l'índex 3.",
+            "EN": "For the array [-7, 1, 5, 2, -4, 3, 0], the equilibrium point would be index 3."
           }
         },
         {
@@ -2073,9 +2087,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [1, 2, 3, 4, 6], el punto de equilibrio sería el índice 3.",
+            "CA": "Per a l'array [1, 2, 3, 4, 6], el punt d'equilibri seria l'índex 3.",
+            "EN": "For the array [1, 2, 3, 4, 6], the equilibrium point would be index 3."
           }
         },
         {
@@ -2084,9 +2098,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [1, -1, 1], el punto de equilibrio sería el índice 1.",
+            "CA": "Per a l'array [1, -1, 1], el punt d'equilibri seria l'índex 1.",
+            "EN": "For the array [1, -1, 1], the equilibrium point would be index 1."
           }
         },
         {
@@ -2095,17 +2109,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES": "Para el array [2, 4, 6, 8], no hay punto de equilibrio ya que la suma de los elementos a la izquierda y a la derecha nunca es igual.",
+            "CA": "Per a l'array [2, 4, 6, 8], no hi ha punt d'equilibri ja que la suma dels elements a l'esquerra i a la dreta mai és igual.",
+            "EN": "For the array [2, 4, 6, 8], there is no equilibrium point since the sum of elements to the left and to the right is never equal."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Recuerda manejar el caso en que no haya un punto de equilibrio en el array, es decir, cuando la suma de los elementos a la izquierda nunca es igual a la suma de los elementos a la derecha.",
+        "CA": "Recorda gestionar el cas en què no hi hagi un punt d'equilibri en l'array, és a dir, quan la suma dels elements a l'esquerra mai és igual a la suma dels elements a la dreta.",
+        "EN": "Remember to handle the case where there is no equilibrium point in the array, i.e., when the sum of elements to the left is never equal to the sum of elements to the right."
       }
     },
     "languages": [
@@ -2117,7 +2131,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2170,9 +2185,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '(2 + 3) * 4'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '(2 + 3 * 4'. Esta expresión es inválida porque falta un paréntesis de cierre.",
+            "CA":  "1. Expressió vàlida: '(2 + 3) * 4'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '(2 + 3 * 4'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
+            "EN":  "1. Valid expression: '(2 + 3) * 4'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '(2 + 3 * 4'. This expression is invalid because a closing parenthesis is missing."
           }
         },
         {
@@ -2181,9 +2196,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '5 * (3 + (2 - 5))'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '2 + )3 * 4('. Esta expresión es inválida porque los paréntesis están desequilibrados.",
+            "CA":  "1. Expressió vàlida: '5 * (3 + (2 - 5))'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 + )3 * 4('. Aquesta expressió és invàlida perquè els parèntesis estan desequilibrats.",
+            "EN":  "1. Valid expression: '5 * (3 + (2 - 5))'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '2 + )3 * 4('. This expression is invalid because the parentheses are unbalanced."
           }
         },
         {
@@ -2192,9 +2207,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '2 * 3'. Esta expresión es válida porque no hay paréntesis y los operadores matemáticos son válidos. 2. Expresión inválida: '2 & 3'. Esta expresión es inválida porque el operador '&' no es un operador matemático válido.",
+            "CA":  "1. Expressió vàlida: '2 * 3'. Aquesta expressió és vàlida perquè no hi ha parèntesis i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 & 3'. Aquesta expressió és invàlida perquè l'operador '&' no és un operador matemàtic vàlid.",
+            "EN":  "1. Valid expression: '2 * 3'. This expression is valid because there are no parentheses and the mathematical operators are valid. 2. Invalid expression: '2 & 3'. This expression is invalid because the '&' operator is not a valid mathematical operator."
           }
         },
         {
@@ -2203,17 +2218,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Expresión válida: '((3 + 4) * 2) / (5 - 2)'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '((3 + 4) * 2 / (5 - 2'. Esta expresión es inválida porque falta un paréntesis de cierre.",
+            "CA":  "1. Expressió vàlida: '((3 + 4) * 2) / (5 - 2)'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '((3 + 4) * 2 / (5 - 2'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
+            "EN":  "1. Valid expression: '((3 + 4) * 2) / (5 - 2)'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '((3 + 4) * 2 / (5 - 2'. This expression is invalid because a closing parenthesis is missing."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este ejercicio, es útil familiarizarse con las estructuras de datos como pilas y con los conceptos básicos de las expresiones matemáticas.",
+        "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb les estructures de dades com a piles i amb els conceptes bàsics de les expressions matemàtiques.",
+        "EN": "To solve this exercise, it's helpful to familiarize yourself with data structures like stacks and basic concepts of mathematical expressions."
       }
     },
     "languages": [
@@ -2225,7 +2240,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2272,9 +2288,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contiguo más grande es [4, -1, 2, 1] con una suma de 6. 2. Array de entrada: [1, -2, 3, 5, -3, 2]. El subarray contiguo más grande es [3, 5] con una suma de 8.",
+            "CA":  "1. Array d'entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contigu més gran és [4, -1, 2, 1] amb una suma de 6. 2. Array d'entrada: [1, -2, 3, 5, -3, 2]. El subarray contigu més gran és [3, 5] amb una suma de 8.",
+            "EN":  "1. Input array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. The largest contiguous subarray is [4, -1, 2, 1] with a sum of 6. 2. Input array: [1, -2, 3, 5, -3, 2]. The largest contiguous subarray is [3, 5] with a sum of 8."
           }
         },
         {
@@ -2283,9 +2299,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [5, -3, 5]. El subarray contiguo más grande es [5, -3, 5] con una suma de 7. 2. Array de entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contiguo más grande es [0] con una suma de 0.",
+            "CA":  "1. Array d'entrada: [5, -3, 5]. El subarray contigu més gran és [5, -3, 5] amb una suma de 7. 2. Array d'entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contigu més gran és [0] amb una suma de 0.",
+            "EN":  "1. Input array: [5, -3, 5]. The largest contiguous subarray is [5, -3, 5] with a sum of 7. 2. Input array: [0, -2, -3, -4, -1, -2, -3, -5, -4]. The largest contiguous subarray is [0] with a sum of 0."
           }
         },
         {
@@ -2294,9 +2310,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 2, 3, 4, 5]. El subarray contiguo más grande es [1, 2, 3, 4, 5] con una suma de 15. 2. Array de entrada: [-1, -2, -3, -4, -5]. El subarray contiguo más grande es [-1] con una suma de -1.",
+            "CA":  "1. Array d'entrada: [1, 2, 3, 4, 5]. El subarray contigu més gran és [1, 2, 3, 4, 5] amb una suma de 15. 2. Array d'entrada: [-1, -2, -3, -4, -5]. El subarray contigu més gran és [-1] amb una suma de -1.",
+            "EN":  "1. Input array: [1, 2, 3, 4, 5]. The largest contiguous subarray is [1, 2, 3, 4, 5] with a sum of 15. 2. Input array: [-1, -2, -3, -4, -5]. The largest contiguous subarray is [-1] with a sum of -1."
           }
         },
         {
@@ -2305,17 +2321,17 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contiguo más grande es [4, -1, -2, 1, 5] con una suma de 7. 2. Array de entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contiguo más grande es [1, -1, 1, -1, 1, -1, 1] con una suma de 1.",
+            "CA":  "1. Array d'entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contigu més gran és [4, -1, -2, 1, 5] amb una suma de 7. 2. Array d'entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contigu més gran és [1, -1, 1, -1, 1, -1, 1] amb una suma de 1.",
+            "EN":  "1. Input array: [2, -3, 4, -1, -2, 1, 5, -3]. The largest contiguous subarray is [4, -1, -2, 1, 5] with a sum of 7. 2. Input array: [1, -1, 1, -1, 1, -1, 1, -1]. The largest contiguous subarray is [1, -1, 1, -1, 1, -1, 1] with a sum of 1."
           }
         }
       ],
-                 "notes":
+          "notes":
       {
-        "ES": "Orden descendente",
-        "CA": "Ordre descendent",
-        "EN": "Descending Order"
+        "ES": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de subarrays y con algoritmos de programación dinámica.",
+        "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes de subarrays i amb algoritmes de programació dinàmica.",
+        "EN": "To solve this exercise, it's helpful to familiarize yourself with the concepts of subarrays and dynamic programming algorithms."
       }
     },
     "languages": [
@@ -2327,7 +2343,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
+      {"$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2389,9 +2406,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [2, 4, 1, 3, 5]. El número de inversiones es 3. 2. Array de entrada: [5, 4, 3, 2, 1]. El número de inversiones es 10.",
+            "CA":  "1. Array d'entrada: [2, 4, 1, 3, 5]. El nombre d'inversions és 3. 2. Array d'entrada: [5, 4, 3, 2, 1]. El nombre d'inversions és 10.",
+            "EN":  "1. Input array: [2, 4, 1, 3, 5]. The number of inversions is 3. 2. Input array: [5, 4, 3, 2, 1]. The number of inversions is 10."
           }
         },
         {
@@ -2400,9 +2417,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 2, 5, 3, 4, 6]. El número de inversiones es 2. 2. Array de entrada: [6, 5, 4, 3, 2, 1]. El número de inversiones es 15.",
+            "CA":  "1. Array d'entrada: [1, 2, 5, 3, 4, 6]. El nombre d'inversions és 2. 2. Array d'entrada: [6, 5, 4, 3, 2, 1]. El nombre d'inversions és 15.",
+            "EN":  "1. Input array: [1, 2, 5, 3, 4, 6]. The number of inversions is 2. 2. Input array: [6, 5, 4, 3, 2, 1]. The number of inversions is 15."
           }
         },
         {
@@ -2411,9 +2428,9 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 3, 5, 2, 4, 6]. El número de inversiones es 3. 2. Array de entrada: [6, 4, 2, 5, 3, 1]. El número de inversiones es 9.",
+            "CA":  "1. Array d'entrada: [1, 3, 5, 2, 4, 6]. El nombre d'inversions és 3. 2. Array d'entrada: [6, 4, 2, 5, 3, 1]. El nombre d'inversions és 9.",
+            "EN":  "1. Input array: [1, 3, 5, 2, 4, 6]. The number of inversions is 3. 2. Input array: [6, 4, 2, 5, 3, 1]. The number of inversions is 9."
           }
         },
         {
@@ -2422,15 +2439,18 @@
           },
           "example_text":
           {
-            "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+            "ES":  "1. Array de entrada: [1, 2, 3, 4, 5]. El número de inversiones es 0. 2. Array de entrada: [5, 3, 4, 2, 1]. El número de inversiones es 6.",
+            "CA":  "1. Array d'entrada: [1, 2, 3, 4, 5]. El nombre d'inversions és 0. 2. Array d'entrada: [5, 3, 4, 2, 1]. El nombre d'inversions és 6.",
+            "EN":  "1. Input array: [1, 2, 3, 4, 5]. The number of inversions is 0. 2. Input array: [5, 3, 4, 2, 1]. The number of inversions is 6."
           }
         }
       ],
-                  "ES":  "Orden descendente",
-            "CA":  "Ordre descendent",
-            "EN":  "Descending Order"
+          "notes":
+      {
+        "ES": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de inversiones en arrays y con algoritmos de ordenación.",
+        "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes d'inversions en arrays i amb algoritmes d'ordenació.",
+        "EN": "To solve this exercise, it's helpful to familiarize yourself with the concepts of inversions in arrays and sorting algorithms."
+      }
     },
     "languages": [
       {
@@ -2441,7 +2461,8 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
