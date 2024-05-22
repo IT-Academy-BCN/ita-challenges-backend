@@ -1,5 +1,4 @@
-package com.itachallenge.score.ScoreServiceImpl;
-import com.itachallenge.score.service.ScoreServiceImpl;
+package com.itachallenge.score.service;
 import com.itachallenge.score.mqclient.ZMQClient;
 import com.itachallenge.score.dto.zmq.TestingValuesResponseDto;
 import com.itachallenge.score.dto.zmq.ChallengeRequestDto;
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
