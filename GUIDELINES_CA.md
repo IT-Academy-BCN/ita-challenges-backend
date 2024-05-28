@@ -11,7 +11,8 @@
    2.3 [Procediment diari](#23-procediment-diari)\
    2.4 [Procediment de treball amb targetes](#24-treball-amb-les-targetes)\
    2.5 [Aspectes a tenir en compte en fer una PR](#25-aspectes-a-tenir-en-compte-a-lhora-de-fer-un-pr)\
-   2.6 [Metodologia Scrum](#26-metodologia-scrum)
+   
+   2.7 [Metodologia Scrum](#27-metodologia-scrum)
 
 3. [**NORMALITZACIÓ D'URL**](#3-normalització-durl)\
    3.1 [Convencions](#31-convencions)
@@ -218,7 +219,22 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 
 <hr/>
 
-## 2.6 Metodologia Scrum
+
+## 2.6 Treball amb git
+
+El workflow de git que seguim en projecte és similar a Gitflow.
+Per a poder treballar en el projecte, hauria de conèixer almenys els següents comandos git:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+Pot trobar un bon tutorial en https://www.atlassian.com/git, i molts altres recursos en https://docs.github.com/en/get-started/using-github/github-flow
+
+
+## 2.7 Metodologia Scrum
 https://scrumguides.org/
 
 

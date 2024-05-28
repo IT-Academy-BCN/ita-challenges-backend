@@ -13,7 +13,8 @@
    2.3 [Daily Procedure](#23-daily-procedure)\
    2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
    2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
-   2.6 [Scrum metodology](#26-scrum-metodology)
+   2.6 [Working with git](#26-working-with-git)\
+   2.7 [Scrum metodology](#27-scrum-metodology)\
 
 3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Conventions](#31-conventions)
@@ -216,7 +217,22 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 
 <hr/>
 
-## 2.6 Scrum metodology
+## 2.6 Working with git 
+
+The workflow we follow is similar to the Gitflow Workflow.
+To work at the project, you should know at least following git commands:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+A good tutorial is located at https://www.atlassian.com/git, and many other resources are available on https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Scrum metodology
 https://scrumguides.org/
 
 

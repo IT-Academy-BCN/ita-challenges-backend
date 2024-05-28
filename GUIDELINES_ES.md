@@ -11,7 +11,8 @@
    2.3 [Procedimiento diario](#23-procedimiento-diario)\
    2.4 [Procedimiento de trabajo con tarjetas](#24-procedimiento-de-trabajo-con-tarjeta)\
    2.5 [Aspectos a tener en cuenta al hacer una PR](#25-aspectos-a-tener-en-cuenta-al-hacer-una-pr)\
-   2.6 [Metodología Scrum](#26-metodología-scrum)
+   2.6 [Trabajo con git](#26-trabajo-con-git)\
+   2.7 [Metodología Scrum](#27-metodología-scrum)
 
 3. [**NORMALIZACIÓN DE URL**](#3-normalización-de-url)\
    3.1 [Convenciones](#31-convenciones)
@@ -216,7 +217,22 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 <hr/>
 
-## 2.6 Metodología Scrum
+## 2.6 Trabajo con git
+
+El workflow de git que seguimos en proyecto es similar a Gitflow.
+Para poder trabajar en el proyecto, debería conocer al menos los siguientes comandos git:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+Puede encontrar un buen tutorial en https://www.atlassian.com/git, y hay muchos otros recursos en https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Metodología Scrum
 https://scrumguides.org/
 
 
