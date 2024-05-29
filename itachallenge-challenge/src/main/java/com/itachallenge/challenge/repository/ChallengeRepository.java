@@ -9,6 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -28,4 +29,7 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String level, UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
+    Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguageAndStatus(String level, UUID idLanguage, String status);
+    Flux<ChallengeDocument> findByLanguages_IdLanguageAndStatus(UUID idLanguage, String status);
+    Flux<ChallengeDocument> findByLevelAndStatus(String level, String status);
 }

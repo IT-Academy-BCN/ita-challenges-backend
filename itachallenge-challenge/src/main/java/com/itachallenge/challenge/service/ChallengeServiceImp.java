@@ -278,6 +278,50 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageDifficultyStatus(Optional<String> idLanguage, Optional<String> level, Optional<String> status, int offset, int limit) {
+        Flux<SolutionDocument> userSolutions;
+
+        // Si se proporciona el estado, filtrar las soluciones de usuario por ese estado
+        if (status.isPresent()) {
+            userSolutions = solutionRepository.findByStatus(ChallengeStatus.valueOf(status.get()))
+                    .switchIfEmpty(Flux.error(new NotFoundException("No user solutions found with status " + status.get())));
+        } else {
+            userSolutions = solutionRepository.findAll();
+        }
+
+        // Filtrar las soluciones de usuario por los parámetros de lenguaje y nivel si están presentes
+        if (idLanguage.isPresent() && level.isPresent()) {
+            userSolutions = userSolutions.filter(solution ->
+                    solution.getLanguageId().equals(UUID.fromString(idLanguage.get())) &&
+                            solution.getLevel().equals(level.get()));
+        } else if (idLanguage.isPresent()) {
+            userSolutions = userSolutions.filter(solution ->
+                    solution.getLanguageId().equals(UUID.fromString(idLanguage.get())));
+        } else if (level.isPresent()) {
+            userSolutions = userSolutions.filter(solution ->
+                    solution.getLevel().equals(level.get()));
+        }
+
+        Flux<ChallengeDocument> challenges = userSolutions
+                .flatMap(userSolution -> challengeRepository.findByUuid(userSolution.getChallengeId()))
+                .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found for the given criteria")));
+
+        Flux<ChallengeDocument> finalChallenges = challenges;
+        return challenges.count().flatMap(total -> {
+            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
+            if (limit != -1) {
+                pagedChallenges = pagedChallenges.take(limit);
+            }
+            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                    .collectList()
+                    .map(challengeDtoList -> {
+                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
+                        return resultDto;
+                    });
+        });
+    }
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

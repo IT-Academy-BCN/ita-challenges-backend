@@ -19,4 +19,6 @@ public interface IChallengeService {
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit);
     Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit);
     Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage);
+
+    Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageDifficultyStatus(Optional<String> idLanguage, Optional<String> level, Optional<String> status, int offset, int limit);
 }

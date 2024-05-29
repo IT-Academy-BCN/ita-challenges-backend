@@ -194,7 +194,26 @@ public class ChallengeController {
         return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
     }
 
-
+   //ADDED BY ENRIQUE
+    @GetMapping("/challenges")
+    @Operation(
+            operationId = "Get challenges by language, difficulty, and status",
+            summary = "Get challenges filtered by language, difficulty, and status",
+            description = "Fetch challenges by specifying language ID, difficulty level, and optionally status",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Invalid parameters", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageDifficultyStatus(
+            @RequestParam Optional<String> idLanguage,
+            @RequestParam Optional<String> level,
+            @RequestParam Optional<String> status,
+            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
+            @RequestParam(defaultValue = DEFAULT_LIMIT) int limit) {
+        return challengeService.getChallengesByLanguageDifficultyStatus(idLanguage, level, status, offset, limit);
+    }
+    //ENDS ADDED BY ENRIQUE
     @GetMapping("/language")
     @Operation(
             operationId = "Get all the stored languages into the Database.",
