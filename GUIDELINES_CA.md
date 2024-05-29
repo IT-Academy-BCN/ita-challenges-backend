@@ -223,7 +223,7 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 ## 2.6 Treball amb git
 
 El workflow de git que seguim en projecte és similar a Gitflow.
-Per a poder treballar en el projecte, hauria de conèixer almenys els següents comandos git:
+Per a poder treballar en el projecte, hauries de conèixer almenys els següents comandos git:
 - git clone
 - git merge
 - git push
