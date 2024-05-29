@@ -13,7 +13,8 @@
    2.3 [Daily Procedure](#23-daily-procedure)\
    2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
    2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
-   2.6 [Scrum metodology](#26-scrum-metodology)
+   2.6 [Working with git](#26-working-with-git)\
+   2.7 [Scrum metodology](#27-scrum-metodology)\
 
 3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Conventions](#31-conventions)
@@ -41,6 +42,8 @@
 
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
+
+8. [**TESTING**](#8-testing)
 
 <hr/>
 
@@ -216,7 +219,22 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 
 <hr/>
 
-## 2.6 Scrum metodology
+## 2.6 Working with git 
+
+The workflow we follow is similar to the Gitflow Workflow.
+To work at the project, you should know at least following git commands:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+A good tutorial is located at https://www.atlassian.com/git, and many other resources are available on https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Scrum metodology
 https://scrumguides.org/
 
 
@@ -563,3 +581,7 @@ The following programs are recommended to facilitate the work on the project:
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint is a static code analysis tool that will help you identify and correct quality problems in your code. It is a useful aid to detect Code Smell. You can get more information about [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) from the Jetbrains offical website.
 
 Remember that these programs or plugins are recommended, but not mandatory. Using them can improve your productivity and code quality, but you can opt for other alternatives according to your preferences and needs.
+
+# 8 TESTING
+
+Is available a guide about testing at https://martinfowler.com/articles/practical-test-pyramid.html. Please, check it before start testing.

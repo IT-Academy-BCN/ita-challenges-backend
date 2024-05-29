@@ -11,7 +11,8 @@
    2.3 [Procedimiento diario](#23-procedimiento-diario)\
    2.4 [Procedimiento de trabajo con tarjetas](#24-procedimiento-de-trabajo-con-tarjeta)\
    2.5 [Aspectos a tener en cuenta al hacer una PR](#25-aspectos-a-tener-en-cuenta-al-hacer-una-pr)\
-   2.6 [Metodología Scrum](#26-metodología-scrum)
+   2.6 [Trabajo con git](#26-trabajo-con-git)\
+   2.7 [Metodología Scrum](#27-metodología-scrum)
 
 3. [**NORMALIZACIÓN DE URL**](#3-normalización-de-url)\
    3.1 [Convenciones](#31-convenciones)
@@ -39,6 +40,9 @@
 
 7. [**PROGRAMAS RECOMENDADOS**](#7-programas-recomendados)\
    7.1 [Programas recomendados](#71-programas-recomendados)
+
+8. [**TESTING**](#8-testing)
+
 
 <hr/>
 
@@ -216,7 +220,22 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 <hr/>
 
-## 2.6 Metodología Scrum
+## 2.6 Trabajo con git
+
+El workflow de git que seguimos en proyecto es similar a Gitflow.
+Para poder trabajar en el proyecto, debería conocer al menos los siguientes comandos git:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+Puede encontrar un buen tutorial en https://www.atlassian.com/git, y hay muchos otros recursos en https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Metodología Scrum
 https://scrumguides.org/
 
 
@@ -558,3 +577,9 @@ Los siguientes programas son recomendables para facilitar el trabajo en el proye
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint es una herramienta de análisis estático de código que te ayudará a identificar y corregir problemas de calidad en tu código. Es una ayuda útil para detectar Code Smell. Puedes obtener más información de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) desde la web ofical de Jetbrains.
 
 Recuerda que estos programas o plugins son recomendados, pero no son obligatorios. Utilizarlos puede mejorar tu productividad y la calidad del código, pero puedes optar por otras alternativas según tus preferencias y necesidades.
+
+# 8 TESTING
+
+Hay una guía sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html.
+Por favor, revísala antes de empezar el testing.
+
