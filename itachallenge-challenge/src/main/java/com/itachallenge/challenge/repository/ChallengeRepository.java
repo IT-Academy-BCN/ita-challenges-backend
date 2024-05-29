@@ -22,6 +22,8 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     @Query(value = "{}", fields = "{'testingValues':0}")
     Flux<ChallengeDocument> findAllByUuidNotNullExcludingTestingValues();
     Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
+    @Query("SELECT COUNT(c) FROM ChallengeDocument c")
+    Mono<Long> countAllChallenges();
     Mono<Void> deleteByUuid(UUID uuid);
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
     Flux<ChallengeDocument> saveAll(Flux<ChallengeDocument> challengeDocumentFlux);

@@ -168,11 +168,11 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
             })
-    public Flux<ChallengeDto> getAllChallenges
-            (@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
-             @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
-                     limit) {
-        return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
+
+    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(
+            @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+            @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
     @GetMapping("/challenges/")

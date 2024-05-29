@@ -12,6 +12,7 @@ import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -222,7 +223,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
 
         // Act
-        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
         verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
@@ -234,11 +235,27 @@ class ChallengeServiceImpTest {
                 .expectComplete()
                 .verify();
 
-        StepVerifier.create(result.skip(offset).take(limit))
-                .expectSubscription()
-                .expectNext(challengeDto2, challengeDto3)
-                .expectComplete()
-                .verify();
+        StepVerifier.create(
+                        result.flatMapMany(challengeDto -> Flux.just(challengeDto)) // Convertir el Mono a un Flux de un solo elemento
+                                .skip(offset) // Saltar los elementos según el offset
+                                .take(limit) // Tomar solo los elementos específicos
+                                .collectList() // Recolectar los elementos en una lista
+                                .map(challengeList -> {
+                                    // Verificar los elementos esperados
+                                    Assertions.assertEquals(2, challengeList.size());
+                                    Assertions.assertTrue(challengeList.contains(challengeDto2));
+                                    Assertions.assertTrue(challengeList.contains(challengeDto3));
+                                    return challengeList; // Devolver la lista para el siguiente paso en el flujo
+                                })
+                )
+                .expectSubscription() // Verificar que se ha suscrito al flujo
+                .expectNextMatches(challengeList ->
+                        challengeList.contains(challengeDto2) && challengeList.contains(challengeDto3)
+                )
+                // Verificar los elementos de la lista
+                .expectComplete() // Verificar que el flujo se ha completado
+                .verify(); // Realizar la verificación
+
 
         StepVerifier.create(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit))
                 .expectSubscription()

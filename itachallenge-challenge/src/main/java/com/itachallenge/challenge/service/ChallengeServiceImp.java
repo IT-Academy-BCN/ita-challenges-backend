@@ -149,9 +149,20 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit) , ChallengeDto.class);
+    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
+        return challengeRepository.countAllChallenges()
+                .flatMap(totalCount ->
+                        challengeConverter.convertDocumentFluxToDtoFlux(
+                                        challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                                                .skip(offset)
+                                                .take(limit),
+                                        ChallengeDto.class)
+                                .collectList()
+                                .map(challenges -> {
+                                    ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
+                                    return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
+                                })
+                );
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
