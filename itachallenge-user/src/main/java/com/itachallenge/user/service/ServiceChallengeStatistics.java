@@ -1,17 +1,21 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.repository.IUserSolutionRepository;
+import com.itachallenge.user.exception.ChallengeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
@@ -19,6 +23,8 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     private IUserSolutionRepository userSolutionRepository;
     //region ATTRIBUTES
     SecureRandom random = new SecureRandom();
+
+    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
     //endregion ATTRIBUTES
 
@@ -61,6 +67,26 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     }
 
     //endregion METHODS
+    @Override
+    public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
+        return getUserSolutions()
+                .collectList()
+                .flatMap(userSolutions -> {
+                    if (userSolutions.isEmpty()) {
+                        return Mono.just(0f);
+                    }
+                    return getUserSolutionsChallenge(userSolutions, idChallenge)
+                            .collectList()
+                            .map(userSolutionsChallenge -> {
+                                float percentage = ((float) userSolutionsChallenge.size() * 100 / userSolutions.size());
+                                return percentage;
+                            });
+                });
+    }
+
+    private Flux<UserSolutionDocument> getUserSolutions() {
+        return userSolutionRepository.findAll();
+    }
 
     @Override
     public Mono<Long> getChallengePercentage() {
@@ -77,4 +103,15 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
 
     }
 
+    private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
+        List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
+                .filter(us -> challengeId.equals(us.getChallengeId()))
+                .collect(Collectors.toList());
+
+        if (userSolutionsChallenge.isEmpty()) {
+            return Flux.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)));
+        }
+
+        return Flux.fromIterable(userSolutionsChallenge);
+    }
 }

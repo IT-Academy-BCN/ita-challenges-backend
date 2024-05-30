@@ -11,4 +11,5 @@ public interface IServiceChallengeStatistics {
     Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge);
 
     Mono<Long> getChallengePercentage();
+    Mono<Float> getChallengeUsersPercentage(UUID idChallenge);
 }
