@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface IServiceChallengeStatistics {
     Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds);
     Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge);
+
+    Mono<Long> getChallengePercentage();
 }

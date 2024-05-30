@@ -1,6 +1,8 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.dtos.UserSolutionDto;
+import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,5 +61,20 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     }
 
     //endregion METHODS
+
+    @Override
+    public Mono<Long> getChallengePercentage() {
+
+        Mono<Long> startedChallengesCount = userSolutionRepository.findByStatus(ChallengeStatus.STARTED).count();
+        Mono<Long> emptyChallengesCount = userSolutionRepository.findByStatus(ChallengeStatus.EMPTY).count();
+
+        Mono<Long> allChallengesCount = userSolutionRepository.findAll().count();
+
+        Mono<Long> percentage = startedChallengesCount.zipWith(emptyChallengesCount, (value1, value2) -> value1 + value2)
+                .zipWith(allChallengesCount, (sum, value3) -> (sum * 100) / value3);
+
+      return percentage;
+
+    }
 
 }

@@ -150,4 +150,23 @@ public class UserController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
+
+
+    @GetMapping(value = "/challengePercentage/")
+    @Operation(
+            summary = "Get the percentage of challenges that have been started or terminated",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = {@Content(schema = @Schema(implementation = Long.class), mediaType = "application/json")})
+            }
+    )
+public Mono<ResponseEntity<Long>> getChallengePercentage() {
+
+        Mono<Long> challengePercentage = serviceChallengeStatistics.getChallengePercentage();
+
+       return Mono.just(ResponseEntity.ok(challengePercentage.block()));
+
+    }
+
 }
