@@ -41,6 +41,9 @@
 7. [**PROGRAMAS RECOMENDADOS**](#7-programas-recomendados)\
    7.1 [Programas recomendados](#71-programas-recomendados)
 
+8. [**TESTING**](#8-testing)
+
+
 <hr/>
 
 # 1. ENLACES DEL PROYECTO
@@ -574,3 +577,9 @@ Los siguientes programas son recomendables para facilitar el trabajo en el proye
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint es una herramienta de análisis estático de código que te ayudará a identificar y corregir problemas de calidad en tu código. Es una ayuda útil para detectar Code Smell. Puedes obtener más información de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) desde la web ofical de Jetbrains.
 
 Recuerda que estos programas o plugins son recomendados, pero no son obligatorios. Utilizarlos puede mejorar tu productividad y la calidad del código, pero puedes optar por otras alternativas según tus preferencias y necesidades.
+
+# 8 TESTING
+
+Hay una guía sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html.
+Por favor, revísala antes de empezar el testing.
+
