@@ -177,7 +177,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ## 2.4 Procedimiento de trabajo con tarjeta
 ### Como asignarse una tarjeta
-1. En el tablero de Sprint Backlog, localiza la tarjeta que deseas asignarte.
+1. En el tablero de Sprint Backlog, localiza la tarjeta que deseas asignarte. Las tarjetas están clasificadas por niveles (1, 2, 3), siendo 1 el nivel de complejidad más bajo.
 2. Haz clic en la tarjeta para abrirla y ver más detalles.
 3. En la parte de la derecha, en el campo "Assignees", si aprietas "Add assigness" se abre un desplegable con todos los participantes del proyecto y ya te puedes seleccionar a ti para asignártela.
 4. Una vez que te has asignado la tarjeta, tu perfil de usuario se mostrará como el responsable de la tarjeta.
