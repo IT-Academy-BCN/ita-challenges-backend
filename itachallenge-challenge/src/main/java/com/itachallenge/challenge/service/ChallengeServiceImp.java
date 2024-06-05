@@ -150,25 +150,21 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
-/*        return challengeRepository.countAllChallenges()
-                .flatMap(totalCount ->
-                        challengeConverter.convertDocumentFluxToDtoFlux(
-                                        challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                                                .skip(offset)
-                                                .take(limit),
-                                        ChallengeDto.class)
-                                .collectList()
-                                .map(challenges -> {
-                                    ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
-                                    return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
-                                })
-                );*/
 
-        // JVR
-        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
         Mono<Long> countMono = challengeRepository.count();
-        countMono.subscribe(count -> System.out.println("Count: " + count));
-        return Mono.just(resultDto);
+        Flux<ChallengeDto> challengeDtoFlux = challengeConverter.convertDocumentFluxToDtoFlux(
+                challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                        .skip(offset)
+                        .take(limit),
+                ChallengeDto.class);
+
+        return countMono.zipWith(challengeDtoFlux.collectList(), (totalCount, challenges) -> {
+            ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
+            return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
+        }).onErrorResume(e -> {
+            // Manejo de errores, por ejemplo, devolver un GenericResultDto vacío o un error específico.
+            return Mono.just(new GenericResultDto<>(offset, limit, 0, new ChallengeDto[0]));
+        });
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
