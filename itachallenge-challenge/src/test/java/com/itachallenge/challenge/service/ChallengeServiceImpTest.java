@@ -218,16 +218,17 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
 
-        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+        /*when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
                 .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
-
+        when(challengeRepository.countAllChallenges()).thenReturn(Mono.just(100L));*/
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
         verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
+
 
         StepVerifier.create(result)
                 .expectSubscription()
@@ -236,7 +237,7 @@ class ChallengeServiceImpTest {
                 .verify();
 
         StepVerifier.create(
-                        result.flatMapMany(challengeDto -> Flux.just(challengeDto)) // Convertir el Mono a un Flux de un solo elemento
+                        result.flatMapMany(resultDto -> Flux.fromArray(resultDto.getResults()))
                                 .skip(offset) // Saltar los elementos según el offset
                                 .take(limit) // Tomar solo los elementos específicos
                                 .collectList() // Recolectar los elementos en una lista
