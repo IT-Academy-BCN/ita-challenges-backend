@@ -69,39 +69,25 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     //endregion METHODS
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
-        return getUserSolutions()
-                .collectList()
-                .flatMap(userSolutions -> {
-                    if (userSolutions.isEmpty()) {
-                        return Mono.just(0f);
-                    }
-                    return getUserSolutionsChallenge(userSolutions, idChallenge)
-                            .collectList()
-                            .map(userSolutionsChallenge -> {
-                                float percentage = ((float) userSolutionsChallenge.size() * 100 / userSolutions.size());
-                                return percentage;
-                            });
-                });
+
+
+        Mono<Long> startedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.STARTED).count();
+
+        Mono<Long> endedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.ENDED).count();
+
+        Mono<Long> allChallengesCount = userSolutionRepository.findByChallengeId(idChallenge).count();
+
+        Mono<Long> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2).zipWith(allChallengesCount, (sum, value3) -> sum*100 / value3);
+
+        return percentage.map(value -> value.floatValue());
+
+
     }
 
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
     }
 
-    @Override
-    public Mono<Long> getChallengePercentage() {
-
-        Mono<Long> startedChallengesCount = userSolutionRepository.findByStatus(ChallengeStatus.STARTED).count();
-        Mono<Long> emptyChallengesCount = userSolutionRepository.findByStatus(ChallengeStatus.EMPTY).count();
-
-        Mono<Long> allChallengesCount = userSolutionRepository.findAll().count();
-
-        Mono<Long> percentage = startedChallengesCount.zipWith(emptyChallengesCount, (value1, value2) -> value1 + value2)
-                .zipWith(allChallengesCount, (sum, value3) -> (sum * 100) / value3);
-
-      return percentage;
-
-    }
 
     private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
         List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
