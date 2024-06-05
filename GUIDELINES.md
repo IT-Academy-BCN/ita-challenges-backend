@@ -43,6 +43,8 @@
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
+8. [**TESTING**](#8-testing)
+
 <hr/>
 
 # 1. PROJECT LINKS
@@ -174,7 +176,7 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 ## 2.4 Work with cards Procedure
 ### How to assign a card
 1. Sign in, on the your Github account.
-2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself.
+2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself. Tasks are classified by their complexity by levels (1, 2, 3) from less to more complex.
 2. Click on the card to open it and see more details.
 3. On the right hand side, in the "Assigness" field, if you click on "Add assigness" a drop-down list opens with all the participants of the project and you can select yourself to be assigned.
 4. Once you have been assigned the card, you user profile will be displayed as the person responsible for the card.
@@ -579,3 +581,7 @@ The following programs are recommended to facilitate the work on the project:
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint is a static code analysis tool that will help you identify and correct quality problems in your code. It is a useful aid to detect Code Smell. You can get more information about [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) from the Jetbrains offical website.
 
 Remember that these programs or plugins are recommended, but not mandatory. Using them can improve your productivity and code quality, but you can opt for other alternatives according to your preferences and needs.
+
+# 8 TESTING
+
+Is available a guide about testing at https://martinfowler.com/articles/practical-test-pyramid.html. Please, check it before start testing.

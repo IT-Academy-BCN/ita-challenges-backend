@@ -46,4 +46,5 @@
 * Ainoha Barcia - https://github.com/AinohaBarcia
 * Oriol Riera Lizcano - https://github.com/Uriera4
 * Nuria Fernández Torres - https://github.com/Nuria-Fernandez
-
+* Enrique Arranz Puig - https://github.com/EnriqueArranz
+* Ezequiel Salas Deramo - https://github.com/ecs90

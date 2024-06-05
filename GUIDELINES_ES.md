@@ -41,6 +41,9 @@
 7. [**PROGRAMAS RECOMENDADOS**](#7-programas-recomendados)\
    7.1 [Programas recomendados](#71-programas-recomendados)
 
+8. [**TESTING**](#8-testing)
+
+
 <hr/>
 
 # 1. ENLACES DEL PROYECTO
@@ -174,7 +177,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ## 2.4 Procedimiento de trabajo con tarjeta
 ### Como asignarse una tarjeta
-1. En el tablero de Sprint Backlog, localiza la tarjeta que deseas asignarte.
+1. En el tablero de Sprint Backlog, localiza la tarjeta que deseas asignarte. Las tarjetas están clasificadas por niveles (1, 2, 3), siendo 1 el nivel de complejidad más bajo.
 2. Haz clic en la tarjeta para abrirla y ver más detalles.
 3. En la parte de la derecha, en el campo "Assignees", si aprietas "Add assigness" se abre un desplegable con todos los participantes del proyecto y ya te puedes seleccionar a ti para asignártela.
 4. Una vez que te has asignado la tarjeta, tu perfil de usuario se mostrará como el responsable de la tarjeta.
@@ -574,3 +577,9 @@ Los siguientes programas son recomendables para facilitar el trabajo en el proye
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint es una herramienta de análisis estático de código que te ayudará a identificar y corregir problemas de calidad en tu código. Es una ayuda útil para detectar Code Smell. Puedes obtener más información de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) desde la web ofical de Jetbrains.
 
 Recuerda que estos programas o plugins son recomendados, pero no son obligatorios. Utilizarlos puede mejorar tu productividad y la calidad del código, pero puedes optar por otras alternativas según tus preferencias y necesidades.
+
+# 8 TESTING
+
+Hay una guía sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html.
+Por favor, revísala antes de empezar el testing.
+

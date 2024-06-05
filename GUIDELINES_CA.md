@@ -41,6 +41,7 @@
 7. [**PROGRAMAS RECOMANATS**](#7-programas-recomanats)\
    7.1 [Programas recomanats](#71-programes-recomanats)
 
+8. [**TESTING**](#8-testing)
 
 <hr/>
 
@@ -177,7 +178,7 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 
 ## 2.4 Treball amb les targetes
 ### Com assignar-se una targeta
-1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te.
+1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te. Les targetes estan classificades per nivells (1, 2, 3), sent 1 el nivell més baix de complexitat.
 2. Fes clic a la targeta per obrir-la i veure'n més detalls.
 3. A la part de la dreta, al camp "Assigness", si prems "Add assigness" s'obre un desplegable amb tots els participants del projecte i ja et pots seleccionar a tu per assignar-te-la.
 4. Un cop t'has assignat la targeta, el vostre perfil d'usuari es mostrarà com el responsable de la targeta.
@@ -576,3 +577,11 @@ Els programes següents són recomanables per facilitar el treball en el project
 - **Plugin SonarLint per a IntelliJ IDEA**: SonarLint és una eina d'anàlisi estàtica de codi que t'ajudarà a identificar i corregir problemes de qualitat al teu codi. És una ajuda útil per detectar Code Smell. Pots obtenir més informació de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) des del web ofical de Jetbrains.
 
 Recordeu que aquests programes o plugins són recomanats, però no són obligatoris. Utilitzar-los pot millorar la teva productivitat i la qualitat del codi, però pots optar per altres alternatives segons les teves preferències i necessitats.
+
+
+# 8 TESTING
+
+Hi ha disponible una guia sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html. 
+Si us plau, revisala abans de començar el testing.
+
+
