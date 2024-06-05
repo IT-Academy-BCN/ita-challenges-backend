@@ -176,7 +176,7 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 ## 2.4 Work with cards Procedure
 ### How to assign a card
 1. Sign in, on the your Github account.
-2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself.
+2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself. Tasks are classified by their complexity by levels (1, 2, 3) from less to more complex.
 2. Click on the card to open it and see more details.
 3. On the right hand side, in the "Assigness" field, if you click on "Add assigness" a drop-down list opens with all the participants of the project and you can select yourself to be assigned.
 4. Once you have been assigned the card, you user profile will be displayed as the person responsible for the card.

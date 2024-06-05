@@ -178,7 +178,7 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 
 ## 2.4 Treball amb les targetes
 ### Com assignar-se una targeta
-1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te.
+1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te. Les targetes estan classificades per nivells (1, 2, 3), sent 1 el nivell més baix de complexitat.
 2. Fes clic a la targeta per obrir-la i veure'n més detalls.
 3. A la part de la dreta, al camp "Assigness", si prems "Add assigness" s'obre un desplegable amb tots els participants del projecte i ja et pots seleccionar a tu per assignar-te-la.
 4. Un cop t'has assignat la targeta, el vostre perfil d'usuari es mostrarà com el responsable de la targeta.
