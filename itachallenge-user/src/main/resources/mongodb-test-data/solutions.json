@@ -1,0 +1,456 @@
+[
+  {
+    "_id" : {
+      "$uuid" : "956c9dbd-2e85-4d68-a75b-9783d83c7f72"
+    },
+    "user_id": { "$uuid": "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"},
+    "challenge_id": { "$uuid":"7fc6a737-dc36-4e1b-87f3-120d81c548aa"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": "ENDED",
+    "score": 95,
+     "solution":[ 
+       {
+          "_id" :  {
+              "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+          },
+          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+      }
+  	]
+  },
+  {
+    "_id" : {
+      "$uuid" : "1e8f64e2-6d68-4ae1-9425-8102d0ab61d3"
+    },
+    "user_id": { "$uuid": "76f906d8-8d02-4a61-892e-83744b685fd2"},
+    "challenge_id": { "$uuid":"866853b8-ae7d-4daf-8c82-5e6f653e0fc1"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 60,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "47fa6202-61d5-4de8-9fa1-6f5e4d82a4a0"
+        },
+        "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "c3c9e174-3b1f-472b-a6b5-af662619847b"
+    },
+    "user_id": { "$uuid": "8819a939-a769-4bc2-b256-f70cb8f2fe1e"},
+    "challenge_id": { "$uuid":"a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": false,
+    "status": "STARTED",
+    "score": 67,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "589b23b7-281b-44a5-a4f5-ceae650234bd"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "afc846ad-88ef-4dc7-b95c-c0d0bfe79b20"
+    },
+    "user_id": { "$uuid": "c128e9b1-a2cc-47ec-8b33-645cebd2fb1e"},
+    "challenge_id": { "$uuid":"6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "ENDED",
+    "score": 63,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "5240129c-786d-48a8-9d0c-01ac23577351"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "55ec8eb6-e2ec-4c8a-b609-40dd0608cbc0'"
+    },
+    "user_id": { "$uuid": "3b20820a-95b9-4ba3-aa81-0925fcb6507e"},
+    "challenge_id": { "$uuid":"f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": false,
+    "status": "STARTED",
+    "score": 66,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "5ccb53b4-bb1c-42cb-aa6d-1c99a7288672"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "e50ffb37-2f6a-445f-9a47-ae4e6d8947de"
+    },
+    "user_id": { "$uuid": "9781475b-c8b8-43b4-83ad-70cf197ad38a"},
+    "challenge_id": { "$uuid":"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f'"},
+    "bookmarked": false,
+    "status": "STARTED",
+    "score": 69,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "86090cd8-9a78-4c6c-b67b-fe7138bc0758"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "59200beb-ce77-48be-8548-2501e867f7b8"
+    },
+    "user_id": { "$uuid": "5e219845-c57a-4716-951a-a5587a4aadbd"},
+    "challenge_id": { "$uuid":"6099f6e8-39b2-4c72-9ae1-21fdd3c9010a"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 66,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "1d0a1db7-4f74-43f0-b43a-64e28ef5599e"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "f7ca4c53-1512-4e5b-9e6e-43c1eb24aabd"
+    },
+    "user_id": { "$uuid": "940602d8-309a-4af8-9c5a-fc05abe36935"},
+    "challenge_id": { "$uuid":"6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "ENDED",
+    "score": 74,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "e823642b-df50-4e54-b973-02ebcc6da8db"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "11b6fabf-3aeb-44ab-8326-f2ed0e6bbbe2"
+    },
+    "user_id": { "$uuid": "b599bb79-9870-4de5-b13a-e9b2a7605390"},
+    "challenge_id": { "$uuid":"9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 63,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "5135ac9e-a827-42a9-a58b-ede2539d3b48"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "c7c5078e-ed0e-45d6-bbee-767dfc87ae5c"
+    },
+    "user_id": { "$uuid": "2a060c36-1073-4d5e-974b-4f0065736162"},
+    "challenge_id": { "$uuid":"7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 92,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "31c19c1f-bfc3-47b1-a601-b13a193b6896"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "461a3cb6-83c2-45ea-ab81-f8a6cfe2a78e"
+    },
+    "user_id": { "$uuid": "04cbd082-f321-47c1-8f78-209807a6d333"},
+    "challenge_id": { "$uuid":"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "ENDED",
+    "score": 94,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "6d975403-8248-447c-9528-fdf1c0bf06c1"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "3951fdfc-4128-42b1-b6d9-2e16cc2f6922"
+    },
+    "user_id": { "$uuid": "9742e8cf-78df-40f5-9379-f8fd79ab4a63"},
+    "challenge_id": { "$uuid":"6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 74,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "aee93ff9-e157-4a72-9a20-dea27ea5159b"
+        },
+        "solution_text": "PHP solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "85bb9d23-0c94-4735-af61-c8d4ce0a7f5f"
+    },
+    "user_id": { "$uuid": "38f45a34-221c-40c1-8b5a-f5d804d77043"},
+    "challenge_id": { "$uuid":"c3946e8d-e7b4-4e3c-aacf-e8d6c5e9d0b6"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": false,
+    "status": "STARTED",
+    "score": 81,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "32ce0c4c-6568-41fa-904b-beb053b4b90a"
+        },
+        "solution_text": "JavaScript solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "1076e6c9-6e37-4e36-b9ee-998dbb1d65f6"
+    },
+    "user_id": { "$uuid": "3f1d2835-66cc-4c28-804a-26ce2602d21a"},
+    "challenge_id": { "$uuid":"a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": false,
+    "status": "STARTED",
+    "score": 88,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "ff5f3fcc-333c-45f7-b486-e2f17bb20c74"
+        },
+        "solution_text": "Python solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "456a7c5c-9d02-47c2-850a-694e71782161"
+    },
+    "user_id": { "$uuid": "a783343d-6552-4c21-a631-a3b0e1669e0a"},
+    "challenge_id": { "$uuid":"a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 97,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "a9ef220d-912e-4ce6-b824-8d59fd5d5f3d"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "cb2e1ee7-28c9-4e43-96a6-5c9d0b261006"
+    },
+    "user_id": { "$uuid": "ab12e58b-e476-4ea6-99b3-e62d6d266c9f"},
+    "challenge_id": { "$uuid":"7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 76,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "147319eb-e6a8-4f04-ba9c-545a2c52b81d"
+        },
+        "solution_text": "JavaScript solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "e1beaf3e-07d8-4bc8-b38c-efa86350ba13"
+    },
+    "user_id": { "$uuid": "c7ffa93b-dff0-440e-b56f-dd0a6324c598"},
+    "challenge_id": { "$uuid":"4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 79,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "9fff17a3-11d5-4d8a-9f0e-13703fb16e28"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "5d909358-d1b4-4f04-8597-9c28d279f52a"
+    },
+    "user_id": { "$uuid": "5f7b85fa-2a83-470a-9c6b-3270790cc592"},
+    "challenge_id": { "$uuid":"ec52b7f1-2f78-4a83-aef0-3b9b6f34a763"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "EMPTY",
+    "score": 73,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "8ab26cba-d632-4c9b-b80e-c9de2c19b5e6"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "3c1f4db5-b4d3-461a-8982-b695c4870492"
+    },
+    "user_id": { "$uuid": "afe603bf-07a5-4e8e-845c-6062375cb0e1"},
+    "challenge_id": { "$uuid":"4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "EMPTY",
+    "score": 71,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "21b179b7-f6d6-4ff7-b34b-c1de8e95f32b"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "df48fb4a-b1cd-4994-b370-57df76de2b9f"
+    },
+    "user_id": { "$uuid": "d9468613-8fb4-40e4-8af5-db2050fcac12"},
+    "challenge_id": { "$uuid":"2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"},
+    "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
+    "bookmarked": false,
+    "status": "STARTED",
+    "score": 85,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "46f59650-d840-40c2-9ea1-649904905563"
+        },
+        "solution_text": "PHP solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "197134a6-19a8-4cb0-ba91-108701c097c0"
+    },
+    "user_id": { "$uuid": "4d544cfc-e87b-4d13-af4d-9d5cbdf8f32a"},
+    "challenge_id": { "$uuid":"2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"},
+    "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 86,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "acc10f36-8cc9-4b90-b824-b13b1191bcc2"
+        },
+        "solution_text": "JavaScript solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "ee778367-0a92-4ecf-b2ec-42add5031e4a"
+    },
+    "user_id": { "$uuid": "96c05f8a-30a0-4af4-8935-bdbb6dee39d8"},
+    "challenge_id": { "$uuid":"7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"},
+    "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
+    "bookmarked": true,
+    "status": "ENDED",
+    "score": 67,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "b66d5b7e-9642-4d0c-b60f-b326776ff4f0"
+        },
+        "solution_text": "Python solution example."
+      }
+    ]
+  },
+  {
+    "_id" : {
+      "$uuid" : "7eea3d8f-7ea3-4d37-ae20-6577224f1f97"
+    },
+    "user_id": { "$uuid": "03c3a86a-ec44-4268-b184-bfa35b635e36"},
+    "challenge_id": { "$uuid":"a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "bookmarked": true,
+    "status": "STARTED",
+    "score": 91,
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "6af3ac87-e62b-4c5b-9a15-b7528b4f3b4f"
+        },
+        "solution_text": "Java solution example."
+      }
+    ]
+  },
+  {
+    "_id": {
+      "$uuid": "76331520-2f2c-4a6a-ad7f-cf3767745b71"
+    },
+    "user_id": {
+      "$uuid": "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"
+    },
+    "challenge_id": {
+      "$uuid": "5c1a97e5-1cca-4144-9981-2de1fb73b178"
+    },
+    "language_id": {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    },
+    "bookmarked": true,
+    "status": "EMPTY",
+    "score": 0
+  }
+]
