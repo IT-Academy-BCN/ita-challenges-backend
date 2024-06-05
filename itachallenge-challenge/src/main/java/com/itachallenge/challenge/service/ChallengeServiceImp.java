@@ -150,7 +150,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
-        return challengeRepository.countAllChallenges()
+/*        return challengeRepository.countAllChallenges()
                 .flatMap(totalCount ->
                         challengeConverter.convertDocumentFluxToDtoFlux(
                                         challengeRepository.findAllByUuidNotNullExcludingTestingValues()
@@ -162,7 +162,13 @@ public class ChallengeServiceImp implements IChallengeService {
                                     ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
                                     return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
                                 })
-                );
+                );*/
+
+        // JVR
+        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+        Mono<Long> countMono = challengeRepository.count();
+        countMono.subscribe(count -> System.out.println("Count: " + count));
+        return Mono.just(resultDto);
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
