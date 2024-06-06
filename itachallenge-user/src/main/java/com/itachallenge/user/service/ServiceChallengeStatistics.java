@@ -71,16 +71,23 @@ public class ServiceChallengeStatistics implements IServiceChallengeStatistics {
     public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
 
 
+
         Mono<Long> startedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.STARTED).count();
 
         Mono<Long> endedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.ENDED).count();
 
-        Mono<Long> allChallengesCount = userSolutionRepository.findByChallengeId(idChallenge).count();
+        Mono<Long> allChallenges = userSolutionRepository.findByChallengeId(idChallenge).count();
 
-        Mono<Long> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2).zipWith(allChallengesCount, (sum, value3) -> sum*100 / value3);
 
-        return percentage.map(value -> value.floatValue());
+        Mono<Float> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2)
+                .flatMap(sum -> allChallenges.flatMap(value3 -> {
+                    if (value3 == 0) {
+                        return Mono.error(new ChallengeNotFoundException("Challenge's id " + idChallenge + " is not found"));
+                    }
+                    return Mono.just((sum * 100f) / value3);
+                }));
 
+        return percentage;
 
     }
 

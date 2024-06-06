@@ -118,6 +118,8 @@ public class UserController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
                             mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "404", description = "Challenge not found",
                             content = {@Content(schema = @Schema())})
             }
     )
