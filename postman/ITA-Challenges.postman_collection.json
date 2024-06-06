@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"dni\": \"32983483B\",\n  \"email\": \"jonatan@pp.com\",\n  \"name\": \"Jonatan\",\n  \"itineraryId\": \"clpb8tc17000208l90u4h0wqn\",\n  \"password\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\",\n  \"confirmPassword\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\" \n}",
+							"raw": "{\n  \"dni\": \"84997685N\",\n  \"email\": \"jonatan@ppp.com\",\n  \"name\": \"Jonatan\",\n  \"itineraryId\": \"clpb8tc17000208l90u4h0wqn\",\n  \"password\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\",\n  \"confirmPassword\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\" \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -190,6 +190,36 @@
 								"api",
 								"v1",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SSO - Validate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InZjd2ZxOXE3ZWg2d3o1YW5ybnVxMDlrMiIsImlhdCI6MTcxNTY3OTE3MiwiZXhwIjoxNzE2MjgzOTcyfQ.9Il2ZIcrxilL0IbUr1YwzPrY3zoZAjV6vl8STNxC9cw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{dns}}/api/v1/tokens/validate",
+							"protocol": "https",
+							"host": [
+								"{{dns}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens",
+								"validate"
 							]
 						}
 					},
@@ -528,7 +558,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/?idLanguage=09fabe32-7362-4bfb-ac05-b7bf854c6e0f&level=HARD&offset=1&limit=1",
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/?idLanguage=660e1b18-0c0a-4262-a28a-85de9df6ac5f",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -545,19 +575,7 @@
 							"query": [
 								{
 									"key": "idLanguage",
-									"value": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
-								},
-								{
-									"key": "level",
-									"value": "HARD"
-								},
-								{
-									"key": "offset",
-									"value": "1"
-								},
-								{
-									"key": "limit",
-									"value": "1"
+									"value": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
 								}
 							]
 						}

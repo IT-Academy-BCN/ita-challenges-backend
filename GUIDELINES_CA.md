@@ -11,7 +11,8 @@
    2.3 [Procediment diari](#23-procediment-diari)\
    2.4 [Procediment de treball amb targetes](#24-treball-amb-les-targetes)\
    2.5 [Aspectes a tenir en compte en fer una PR](#25-aspectes-a-tenir-en-compte-a-lhora-de-fer-un-pr)\
-   2.6 [Metodologia Scrum](#26-metodologia-scrum)
+   
+   2.7 [Metodologia Scrum](#27-metodologia-scrum)
 
 3. [**NORMALITZACIÓ D'URL**](#3-normalització-durl)\
    3.1 [Convencions](#31-convencions)
@@ -40,6 +41,7 @@
 7. [**PROGRAMAS RECOMANATS**](#7-programas-recomanats)\
    7.1 [Programas recomanats](#71-programes-recomanats)
 
+8. [**TESTING**](#8-testing)
 
 <hr/>
 
@@ -176,7 +178,7 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 
 ## 2.4 Treball amb les targetes
 ### Com assignar-se una targeta
-1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te.
+1. Al tauler de Spring Backlog, localitza la targeta que vols assignar-te. Les targetes estan classificades per nivells (1, 2, 3), sent 1 el nivell més baix de complexitat.
 2. Fes clic a la targeta per obrir-la i veure'n més detalls.
 3. A la part de la dreta, al camp "Assigness", si prems "Add assigness" s'obre un desplegable amb tots els participants del projecte i ja et pots seleccionar a tu per assignar-te-la.
 4. Un cop t'has assignat la targeta, el vostre perfil d'usuari es mostrarà com el responsable de la targeta.
@@ -218,7 +220,22 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 
 <hr/>
 
-## 2.6 Metodologia Scrum
+
+## 2.6 Treball amb git
+
+El workflow de git que seguim en projecte és similar a Gitflow.
+Per a poder treballar en el projecte, hauries de conèixer almenys els següents comandos git:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+Pot trobar un bon tutorial en https://www.atlassian.com/git, i molts altres recursos en https://docs.github.com/en/get-started/using-github/github-flow
+
+
+## 2.7 Metodologia Scrum
 https://scrumguides.org/
 
 
@@ -560,3 +577,11 @@ Els programes següents són recomanables per facilitar el treball en el project
 - **Plugin SonarLint per a IntelliJ IDEA**: SonarLint és una eina d'anàlisi estàtica de codi que t'ajudarà a identificar i corregir problemes de qualitat al teu codi. És una ajuda útil per detectar Code Smell. Pots obtenir més informació de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) des del web ofical de Jetbrains.
 
 Recordeu que aquests programes o plugins són recomanats, però no són obligatoris. Utilitzar-los pot millorar la teva productivitat i la qualitat del codi, però pots optar per altres alternatives segons les teves preferències i necessitats.
+
+
+# 8 TESTING
+
+Hi ha disponible una guia sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html. 
+Si us plau, revisala abans de començar el testing.
+
+
