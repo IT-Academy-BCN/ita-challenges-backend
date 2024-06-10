@@ -48,3 +48,4 @@
 * Nuria Fernández Torres - https://github.com/Nuria-Fernandez
 * Enrique Arranz Puig - https://github.com/EnriqueArranz
 * Ezequiel Salas Deramo - https://github.com/ecs90
+* German Medina Calle - https://github.com/audiochemist
