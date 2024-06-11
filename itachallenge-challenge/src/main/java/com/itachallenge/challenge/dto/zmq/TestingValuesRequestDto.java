@@ -1,4 +1,4 @@
-package com.itachallenge.user.dtos.zmq;
+package com.itachallenge.challenge.dto.zmq;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,12 +14,12 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+public class TestingValuesRequestDto {
 
-public class TestValuesResponseDto {
-
-    @JsonProperty(value="in_param", index = 0)
+    @JsonProperty(value="id_challenge", index = 0)
     private UUID challengeId;
 
-    @JsonProperty(value="out_param", index = 1)
+    @JsonProperty(value="id_language", index = 1)
     private UUID languageId;
+
 }
