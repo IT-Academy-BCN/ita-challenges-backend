@@ -86,18 +86,27 @@ class ServiceChallengeStatisticsTest {
 
     @Test
     void getChallengeUsersPercentageTest() {
+
         List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
-        UUID challengeId = UUID.randomUUID();
+        UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
+        float expectedValue = 100f;
+
         List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 45, solutionField),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
         );
 
-        when(userSolutionRepository.findAll()).thenReturn(Flux.fromIterable(userSolutions));
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
+                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.STARTED).toList()));
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.fromIterable(
+                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.ENDED).toList()));
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.fromIterable(userSolutions));
 
         Mono<Float> result = statisticsService.getChallengeUsersPercentage(challengeId);
+
         StepVerifier.create(result)
-                .expectNextMatches(percentage -> percentage >= 0)
+                .expectNext(expectedValue)
                 .verifyComplete();
     }
+
 }
