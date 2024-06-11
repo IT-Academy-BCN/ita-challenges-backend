@@ -207,20 +207,14 @@ class ChallengeServiceImpTest {
         challenge1.setUuid(UUID.randomUUID());
         ChallengeDocument challenge2 = new ChallengeDocument();
         challenge2.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge3 = new ChallengeDocument();
-        challenge3.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge4 = new ChallengeDocument();
-        challenge4.setUuid(UUID.randomUUID());
 
         // Simulate a set of ChallengeDto
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto challengeDto3 = new ChallengeDto();
-        ChallengeDto challengeDto4 = new ChallengeDto();
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
-                .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
+                .thenReturn(Flux.just(challenge1, challenge2));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
         when(challengeRepository.count()).thenReturn(Mono.just(100L));
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
@@ -232,35 +226,14 @@ class ChallengeServiceImpTest {
 
         StepVerifier.create(result)
                 .expectSubscription()
-                .expectNextCount(4)
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(
-                        result.flatMapMany(resultDto -> Flux.fromArray(resultDto.getResults()))
-                                .skip(offset) // Saltar los elementos según el offset
-                                .take(limit) // Tomar solo los elementos específicos
-                                .collectList() // Recolectar los elementos en una lista
-                                .map(challengeList -> {
-                                    // Verificar los elementos esperados
-                                    Assertions.assertEquals(2, challengeList.size());
-                                    Assertions.assertTrue(challengeList.contains(challengeDto2));
-                                    Assertions.assertTrue(challengeList.contains(challengeDto3));
-                                    return challengeList; // Devolver la lista para el siguiente paso en el flujo
-                                })
-                )
-                .expectSubscription() // Verificar que se ha suscrito al flujo
-                .expectNextMatches(challengeList ->
-                        challengeList.contains(challengeDto2) && challengeList.contains(challengeDto3)
-                )
-                // Verificar los elementos de la lista
-                .expectComplete() // Verificar que el flujo se ha completado
-                .verify(); // Realizar la verificación
-
-
-        StepVerifier.create(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit))
-                .expectSubscription()
-                .expectNextCount(2)
+                .assertNext(resultDto -> {
+                    Assertions.assertEquals(100, resultDto.getCount());
+                    Assertions.assertEquals(offset, resultDto.getOffset());
+                    Assertions.assertEquals(limit, resultDto.getLimit());
+                    Assertions.assertEquals(2, resultDto.getResults().length);
+                    Assertions.assertEquals(challengeDto1, resultDto.getResults()[0]);
+                    Assertions.assertEquals(challengeDto2, resultDto.getResults()[1]);
+                })
                 .expectComplete()
                 .verify();
     }
