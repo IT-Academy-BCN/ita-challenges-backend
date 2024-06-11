@@ -39,7 +39,7 @@ public class ZMQServer {
     public void run(){
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind("tcp://*:5555");
+            socket.bind("tcp://*:5556");
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
