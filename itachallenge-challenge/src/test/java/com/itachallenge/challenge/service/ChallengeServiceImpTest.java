@@ -218,10 +218,10 @@ class ChallengeServiceImpTest {
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
 
-        /*when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
                 .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
-        when(challengeRepository.countAllChallenges()).thenReturn(Mono.just(100L));*/
+        when(challengeRepository.count()).thenReturn(Mono.just(100L));
         // Act
         Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
 
