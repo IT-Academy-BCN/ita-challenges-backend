@@ -165,20 +165,20 @@ public class ChallengeServiceImp implements IChallengeService {
 
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
-                                    .flatMap(solutionId -> solutionRepository.findById(solutionId))
-                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                    .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
-                            )
+                            .flatMapMany(challenge -> {
+                                // Una vez encontrado el desafío, realiza la consulta de agregación para obtener las soluciones
+                                return challengeRepository.aggregateChallengesWithSolutions(challengeId, languageId)
+                                        .flatMap(solution -> Mono.just(solutionConverter.convertDocumentToDto(solution, SolutionDto.class)));
+                            })
                             .collectList()
                             .map(solutions -> {
+                                // Una vez que se han convertido todas las soluciones a DTO, crea el resultado genérico
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
                                 resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });
     }
-
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 

@@ -2,8 +2,10 @@ package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -36,6 +38,13 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
                     .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle);
             mapper.addConverter(converterFromLocalDateTimeToString);
+        }
+        if (dtoClass.isAssignableFrom(SolutionDto.class)) {
+            mapper.createTypeMap(SolutionDocument.class, SolutionDto.class)
+                    .addMapping(SolutionDocument::getUuid, SolutionDto::setUuid)
+                    .addMapping(SolutionDocument::getSolutionText, SolutionDto::setSolutionText)
+                    .addMapping(SolutionDocument::getIdLanguage, SolutionDto::setIdLanguage)
+                    .addMapping(SolutionDocument::getIdChallenge, SolutionDto::setIdChallenge);
         }
 
         if(dtoClass.isAssignableFrom(LanguageDto.class)) {

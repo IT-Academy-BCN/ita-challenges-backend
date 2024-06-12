@@ -3,6 +3,8 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 
+import com.itachallenge.challenge.document.SolutionDocument;
+import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -28,4 +30,17 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String level, UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
+
+
+
+    @Aggregation(pipeline = {
+            "{ $lookup: { from: 'solutions', localField: 'solutions', foreignField: '_id', as: 'solutionData' } }",
+            "{ $unwind: '$solutionData' }",
+            "{ $match: { '_id': ?0, 'solutionData.language': ?1 } }",
+            "{ $project: { _id: 0, 'uuid': '$solutionData._id', 'solution_text': '$solutionData.solution_text', 'language': '$solutionData.language', 'idChallenge': '$_id' } }"
+    })
+    Flux<SolutionDocument> aggregateChallengesWithSolutions(UUID challengeID, UUID lenguageID);
+
+
+
 }
