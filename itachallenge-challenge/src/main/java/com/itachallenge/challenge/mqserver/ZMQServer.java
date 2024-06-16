@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.challenge.dto.TestingValueDto;
 import com.itachallenge.challenge.dto.zmq.TestingValuesRequestDto;
 import com.itachallenge.challenge.helper.ObjectSerializer;
+import com.itachallenge.challenge.service.ChallengeServiceImp;
+import com.itachallenge.challenge.service.IChallengeService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,10 @@ import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class ZMQServer {
@@ -23,9 +28,9 @@ public class ZMQServer {
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
     @Autowired
-    ObjectSerializer objectSerializer;
+    IChallengeService challengeService;
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }
@@ -39,26 +44,37 @@ public class ZMQServer {
     public void run(){
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind("tcp://*:5556");
+            socket.bind(SOCKET_ADDRESS);
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
 
                 Optional<Object> request = Optional.empty();
                 try {
-                    request = Optional.of(objectSerializer.deserialize(reply, TestingValuesRequestDto.class));
+                    request = Optional.of(ObjectSerializer.deserialize(reply, TestingValuesRequestDto.class));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
 
-                log.info("Received: [" + ((TestingValuesRequestDto)request.get()).getChallengeId() + ", "
-                        + ((TestingValuesRequestDto)request.get()).getLanguageId() + "]");
-                TestingValueDto dto = new TestingValueDto();
+                TestingValuesRequestDto dto = (TestingValuesRequestDto)request.get();
+                log.info("Received: [" + dto.getChallengeId() + ", "
+                        + dto.getLanguageId() + "]");
+
+                CompletableFuture<List<TestingValueDto>> future = new CompletableFuture<>();
+                challengeService.getTestingParamsByChallengeIdAndLanguageId(
+                        dto.getChallengeId().toString(), dto.getLanguageId().toString())
+                        .subscribe(response -> {
+                                    List<TestingValueDto> testParams = (List<TestingValueDto>) response.get("test_params");
+                                    future.complete(testParams);
+                                },
+                                error ->
+                                System.err.println("Error: " + error.getMessage()));
 
                 Optional<byte[]> response = Optional.empty();
                 try {
-                    response = Optional.of(objectSerializer.serialize(dto));
-                } catch (JsonProcessingException e) {
+                    List<TestingValueDto> testParams = future.get();
+                    response = Optional.of(ObjectSerializer.serialize(testParams));
+                } catch (JsonProcessingException | ExecutionException | InterruptedException e) {
                     log.error(e.getMessage());
                 }
 
