@@ -28,8 +28,15 @@ public class SolutionDocument {
     private UUID idLanguage;
 
     private UUID idChallenge;
+    //constructor para el test
+    public SolutionDocument(UUID uuid, String solutionText, UUID idLanguage) {
+        this.uuid = uuid;
+        this.solutionText = solutionText;
+        this.idLanguage = idLanguage;
+    }
 
 
 
 
-}
+
+    }

@@ -274,7 +274,7 @@ class ChallengeServiceImpTest {
         verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
     }
 
-    @Test
+    /*@Test
     void testGetSolutions() {
         // Arrange
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
@@ -313,6 +313,49 @@ class ChallengeServiceImpTest {
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(solutionRepository, times(2)).findById(any(UUID.class));
         verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
+    }*/
+    @Test
+    void testGetSolutions() {
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        UUID challengeId = UUID.fromString(challengeStringId);
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
+
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(challengeId);
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
+        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
+        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
+        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
+        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.aggregateChallengesWithSolutions(challengeId, languageId)).thenReturn(Flux.just(solution1, solution2));
+        when(solutionConverter.convertDocumentToDto(solution1, SolutionDto.class)).thenReturn(solutionDto1);
+        when(solutionConverter.convertDocumentToDto(solution2, SolutionDto.class)).thenReturn(solutionDto2);
+
+        // Act
+        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getOffset()).isZero();
+                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
+                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
+                    assertThat(resultDto.getResults()).containsExactlyInAnyOrderElementsOf(expectedSolutions);
+                    return true;
+                })
+                .verifyComplete();
+
+        verify(challengeRepository).findByUuid(challengeId);
+        verify(challengeRepository).aggregateChallengesWithSolutions(challengeId, languageId);
+        verify(solutionConverter).convertDocumentToDto(solution1, SolutionDto.class);
+        verify(solutionConverter).convertDocumentToDto(solution2, SolutionDto.class);
     }
 
     @Test
