@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class ZMQServer {
     private final ZContext context;
-    private final String SOCKET_ADDRESS;
+    private final String SOCKET_ADDRESS2;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
     @Autowired
@@ -32,7 +32,7 @@ public class ZMQServer {
 
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
         this.context = context;
-        this.SOCKET_ADDRESS = socketAddress;
+        this.SOCKET_ADDRESS2 = socketAddress;
     }
 
     @PostConstruct
@@ -44,7 +44,7 @@ public class ZMQServer {
     public void run(){
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind(SOCKET_ADDRESS);
+            socket.bind(SOCKET_ADDRESS2);
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
