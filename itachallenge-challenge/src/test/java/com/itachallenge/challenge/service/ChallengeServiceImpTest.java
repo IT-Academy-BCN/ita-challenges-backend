@@ -318,6 +318,7 @@ class ChallengeServiceImpTest {
         verify(solutionConverter).convertDocumentToDto(solution2, SolutionDto.class);
     }
 
+
     @Test
     void testGetSolutions_InvalidLanguageId() {
         // Arrange
