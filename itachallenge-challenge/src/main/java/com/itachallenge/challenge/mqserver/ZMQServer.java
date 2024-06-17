@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.challenge.dto.TestingValueDto;
 import com.itachallenge.challenge.dto.zmq.TestingValuesRequestDto;
 import com.itachallenge.challenge.helper.ObjectSerializer;
-import com.itachallenge.challenge.service.ChallengeServiceImp;
 import com.itachallenge.challenge.service.IChallengeService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -12,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+import org.zeromq.ZContext;
 
 import java.io.IOException;
 import java.util.List;
