@@ -35,6 +35,13 @@ public class SolutionDocument {
         this.idLanguage = idLanguage;
     }
 
+    //constructor para el test
+    public SolutionDocument(UUID uuid, String solutionText, UUID idLanguage) {
+        this.uuid = uuid;
+        this.solutionText = solutionText;
+        this.idLanguage = idLanguage;
+    }
+
 
 
 
