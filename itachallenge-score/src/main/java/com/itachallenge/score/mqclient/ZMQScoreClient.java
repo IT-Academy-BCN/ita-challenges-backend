@@ -19,17 +19,17 @@ import java.util.concurrent.Executors;
 
 
 @Component
-public class ZMQClient {
+public class ZMQScoreClient {
     private final ZContext context;
     private final String SOCKET_ADDRESS2;
-    private static final Logger log = LoggerFactory.getLogger(ZMQClient.class);
+    private static final Logger log = LoggerFactory.getLogger(ZMQScoreClient.class);
 
     @Autowired
     ObjectSerializer objectSerializer;
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ZMQClient(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
+    public ZMQScoreClient(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS2 = socketAddress;
     }
