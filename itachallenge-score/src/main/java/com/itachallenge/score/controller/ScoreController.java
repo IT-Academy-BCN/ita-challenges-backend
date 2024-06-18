@@ -3,7 +3,7 @@ import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.zmq.ChallengeTestingValuesRequestDto;
 import com.itachallenge.score.dto.zmq.TestingValuesDto;
-import com.itachallenge.score.mqclient.ZMQClient;
+import com.itachallenge.score.mqclient.ZMQScoreClient;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class ScoreController {
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
 
     @Autowired
-    ZMQClient zmqClient;
+    ZMQScoreClient zmqScoreClient;
     @Autowired
     ChallengeTestingValuesRequestDto ctvRequestDto;
 
@@ -42,7 +42,7 @@ public class ScoreController {
         ctvRequestDto.setChallengeId(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"));
         ctvRequestDto.setLanguageId(UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef"));
 
-        zmqClient.sendMessage(ctvRequestDto, TestingValuesDto[].class)
+        zmqScoreClient.sendMessage(ctvRequestDto, TestingValuesDto[].class)
                 .thenAccept(response ->{
                         for(TestingValuesDto dto: (TestingValuesDto[]) response){
                         log.info("[ Response: " + dto.getInParam() + ", "

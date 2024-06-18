@@ -21,15 +21,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class ZMQServer {
+public class ZMQChallengeServer {
     private final ZContext context;
     private final String SOCKET_ADDRESS2;
-    private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
+    private static final Logger log = LoggerFactory.getLogger(ZMQChallengeServer.class);
 
     @Autowired
     IChallengeService challengeService;
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
+    public ZMQChallengeServer(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
         this.context = context;
         this.SOCKET_ADDRESS2 = socketAddress;
     }
