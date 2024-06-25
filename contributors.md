@@ -50,3 +50,6 @@
 * Ezequiel Salas Deramo - https://github.com/ecs90
 * German Medina Calle - https://github.com/audiochemist
 * Montserrat Masó - https://github.com/m-maso
+* Dani Diaz - https://github.com/invictuzzzzz
+* Andrés Allegue - https://github.com/Alalilacias
+* Marcos Pagliaruzza - https://github.com/MarLea11
