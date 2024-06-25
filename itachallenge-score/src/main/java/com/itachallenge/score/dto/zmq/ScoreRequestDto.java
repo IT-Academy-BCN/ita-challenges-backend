@@ -19,4 +19,7 @@ public class ScoreRequestDto {
     @JsonProperty(value="id_challenge", index = 0)
     private UUID challengeId;
 
+    @JsonProperty(value="id_solution", index = 1)
+    private UUID solutionId;
+
 }
