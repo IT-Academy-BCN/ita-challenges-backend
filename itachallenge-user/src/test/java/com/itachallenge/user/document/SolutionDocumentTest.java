@@ -14,7 +14,7 @@ class SolutionDocumentTest {
 
     @Test
     void getUuid(){
-        assertEquals(uuid, solutionDocument.getUuidSolution());
+        assertEquals(uuid, solutionDocument.getUuid());
     }
     @Test
     void getSolutionText(){

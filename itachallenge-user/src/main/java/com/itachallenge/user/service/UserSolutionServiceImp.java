@@ -62,7 +62,7 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
-                        .uuidSolution(UUID.randomUUID())
+                        .uuid(UUID.randomUUID())
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
