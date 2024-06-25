@@ -19,7 +19,7 @@ import java.util.UUID;
 
 
 @Service
-public class UserSolutionServiceImp implements IUserSolutionService {
+public class    UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
@@ -58,7 +58,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
-                        .uuid(UUID.randomUUID())
+                        .uuidSolution(UUID.randomUUID())
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
