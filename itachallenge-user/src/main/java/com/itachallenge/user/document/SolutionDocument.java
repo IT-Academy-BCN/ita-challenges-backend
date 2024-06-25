@@ -18,7 +18,7 @@ public class SolutionDocument {
 
     @Id
     @Field(name="id_solution")
-    private UUID uuid;
+    private UUID uuidSolution;
 
     @Field(name="solution_text")
     private String solutionText;

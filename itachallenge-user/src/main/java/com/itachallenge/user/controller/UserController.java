@@ -2,9 +2,10 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.mqclient.ZMQClient;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,9 +28,12 @@ import java.util.*;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-
+    @Autowired
+    IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
+    @Autowired
+    ZMQClient zmqClient;
 
     @Value("${spring.application.version}")
     private String version;
@@ -53,7 +57,7 @@ public class UserController {
         Mono<List<ChallengeStatisticsDto>> elements = null;
 
         if (!challengeIds.isEmpty()) {
-            elements = userScoreService.getChallengeStatistics(challengeIds);
+            elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
         }
 
         return elements;
@@ -106,30 +110,8 @@ public class UserController {
     )
     public Mono<ResponseEntity<Map<String, Long>>> getBookmarkCountByIdChallenge(
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
-        return userScoreService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
+        return serviceChallengeStatistics.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
                 .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
-    }
-
-    @GetMapping(path = "/statistics/percent/{idChallenge}")
-    @Operation(
-            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
-                            mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Something went wrong",
-                            content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "404", description = "Challenge not found",
-                            content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<ResponseEntity<ChallengeUserPercentageStatisticDto>> challengeUserPercentageStatistic(
-            @PathVariable("idChallenge")
-            @GenericUUIDValid(message = "Invalid UUID for challenge")
-            String idChallenge) {
-
-        return userScoreService.getChallengeUsersPercentage(UUID.fromString(idChallenge))
-                .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
-                .map(ResponseEntity::ok);
     }
 
     @PutMapping("/bookmark")
@@ -171,26 +153,4 @@ public class UserController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
-
-
-    @GetMapping(path = "/{idUser}/challenges/solutions")
-    @Operation(
-            summary = "Retrieves all user challenges solutions and their status.",
-            description = "Retrieves all user-contributed solutions for all challenges and their status (whether they've finished completing them or not).",
-            responses = {
-            @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully", content = {@Content(array = @ArraySchema(schema = @Schema(implementation = UserSolutionDto.class)), mediaType = "application/json")}),
-            @ApiResponse(responseCode = "400", description = "Invalid UUID for user"),
-            @ApiResponse(responseCode = "404", description = "User not found")
-            }
-    )
-    public Mono<ResponseEntity<List<UserSolutionDto>>> getAllSolutionsByIdUser(
-            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser) {
-        UUID userUuid = UUID.fromString(idUser);
-
-        return userScoreService.showAllUserSolutions(userUuid)
-                .collectList()
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
-
 }
