@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ScoreResponseDto {
 
-    // ??
     @JsonProperty(value="percent", index = 0)
     private Integer percent;
 
+    /* ??
     @JsonProperty(value="bookmarks", index = 1)
     private Integer bookmarks;
-
+    */
 }
