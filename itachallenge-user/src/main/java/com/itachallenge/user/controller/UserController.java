@@ -153,4 +153,32 @@ public class UserController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
+
+    @GetMapping(path = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    @Operation(
+            summary = "Return the score calculated by ita-score micro to the user",
+            description = "Send request over ZMQ to ita-score server requesting the score parameter",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implemetation = UserScoreDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<??ScoreResponse>> getScoreFromSolution(
+            @PathVariable("idUser") String idUser,
+            @PathVariable("idChallenge") String idChallenge,
+            @PathVariable("idSolution") String idSolution) {
+
+        /*
+         * Find Solution and prepare to send it
+         * Send request to ita-score server
+         * Receive 'score parameter'
+         * Save parameter into DB
+         * Return-show score to user
+         */
+
+        return ResponseEntity.ok(userScoreService.serviceMethodWeCreate/* ?? addScore */(idUser, idChallenge, idSolution));
+        return /* reply from server giving score -> type ScoreResponse ??
+                ?? map(Dto -> ResponseEntity.status(HttpStatus.OK).body()
+                */;
+    }
 }
