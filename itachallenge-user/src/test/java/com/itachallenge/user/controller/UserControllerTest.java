@@ -110,7 +110,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getSolutionsByUserIdChallengeIdLanguageId (){
+    void getSolutionsByUserIdChallengeIdLanguageId() {
 
         String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
@@ -121,12 +121,12 @@ class UserControllerTest {
 
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
+        expectedSolutionUserDto.setInfo(0, 1, 1, new UserScoreDto[]{userScoreDto});
 
-        when(userSolutionService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
+        when(userSolutionService.getChallengeById(any(), any(), any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
+                .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(SolutionUserDto.class)
@@ -253,6 +253,7 @@ class UserControllerTest {
                     verify(userSolutionService).addSolution(userSolutionDto);
                 });
     }
+
     @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
     @Test
     void addSolutionIfInvalidValuesThenBadRequest_test() {
@@ -277,6 +278,7 @@ class UserControllerTest {
             verifyNoInteractions(userSolutionService);
         }
     }
+
     @DisplayName("UserDocumentControllerTest - addSolution - return 409 CONFLICT if Service returns UnmodifiableSolutionException")
     @Test
     void addSolutionServiceThrowsExceptionInternalServerError_test() {
@@ -312,7 +314,20 @@ class UserControllerTest {
                 .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
     }
 
+    @Test
+    public void testGetSolutionsByUserIdChallengeIdLanguageId() {
+        String userId = UUID.randomUUID().toString(); // Genera un UUID válido para userId
+        String challengeId = UUID.randomUUID().toString(); // Genera un UUID válido para challengeId
+        String languageId = UUID.randomUUID().toString(); // Genera un UUID válido para languageId
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/solution/user/{userId}/challenge/{challengeId}/language/{languageId}", userId, challengeId, languageId)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
 }
+
 
 
 
