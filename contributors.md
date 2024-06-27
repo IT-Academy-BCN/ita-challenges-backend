@@ -52,3 +52,6 @@
 * Montserrat Masó - https://github.com/m-maso
 * Andrés Allegue Zabala - https://github.com/Alalilacias
 * Daniel Diaz Diaz - https://github.com/invictuzzzzz
+* Marcos Leandro Pagliaruzza - https://github.com/MarLea11
+
+
