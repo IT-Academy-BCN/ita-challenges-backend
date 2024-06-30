@@ -4,12 +4,15 @@ import com.itachallenge.score.helper.CodeValidator;
 import com.itachallenge.score.helper.DockerContainerHelper;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Testcontainers
 class DockerIntegrationTest {
 
     @Test

@@ -1,11 +1,13 @@
 package com.itachallenge.score.helper;
 
+import lombok.NoArgsConstructor;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 
+@NoArgsConstructor
 public class DockerContainerHelper {
 
     public static GenericContainer<?> createContainer(String image) {
