@@ -10,7 +10,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class DockerIntegrationTest {
+class DockerIntegrationTest {
 
     @Test
     void testJavaContainerSortNumbers() {
@@ -27,7 +27,6 @@ public class DockerIntegrationTest {
             }
         }
         """;
-
 
         GenericContainer<?> containerJavaSort = DockerContainerHelper.createContainer("openjdk:11");
 
@@ -79,7 +78,18 @@ public class DockerIntegrationTest {
                     }
                 }"
                 """;
+
+        String code2 = """
+                import java.util.Scanner;
+                public class Main {
+                    public static void main(String[] args) {
+                        Scanner scanner = new Scanner(System.in);
+                        System.out.println("Hola! Estoy intentado importar Scanner");
+                    }
+                }"
+                """;
         assertFalse(CodeValidator.isLibraryImportAllowed(code)); // Debería devolver false al intentar importar java.lang.System
+        assertTrue(CodeValidator.isLibraryImportAllowed(code2)); // Debería devolver true al intentar importar java.util.Scanner
 
         // Si el código no importa java.lang.System, entonces se intenta compilar
         if (CodeValidator.isLibraryImportAllowed(code)) {

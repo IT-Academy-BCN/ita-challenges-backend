@@ -5,6 +5,9 @@ import java.util.regex.Pattern;
 
 public class CodeValidator {
 
+    private CodeValidator() {
+    }
+
     private static final String[] forbiddenLibraries = {
             "java\\.lang\\.System",
             "java\\.io\\.PrintStream",
@@ -13,7 +16,6 @@ public class CodeValidator {
             "java\\.io\\.FileWriter",
             "java\\.io\\.BufferedReader",
             "java\\.io\\.BufferedWriter",
-            "java\\.util\\.Scanner",
             // se puede agregar más librerías aquí
     };
 
