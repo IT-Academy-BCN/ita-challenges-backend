@@ -4,21 +4,20 @@ import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
-import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.security.SecureRandom;
-import java.util.ArrayList;
+
+
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Service
 public class    UserSolutionServiceImp implements IUserSolutionService {
@@ -26,8 +25,6 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
-    SecureRandom random = new SecureRandom();
-    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
     public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
@@ -45,11 +42,11 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
                 .collectList()
                 .map(userScoreDtos -> {
                     SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                    int count = userScoreDtos.size();
-                    solutionUserDto.setInfo(0, 1, count, userScoreDtos.toArray(new UserScoreDto[0]));
+                    solutionUserDto.setInfo(0, 1, 0, userScoreDtos.toArray(new UserScoreDto[0]));
                     return solutionUserDto;
                 });
     }
+
 
     @Override
     public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
@@ -73,21 +70,22 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-                .map(savedDocument -> UserSolutionScoreDto.builder()
-                        .userId(String.valueOf(savedDocument.getUserId()))
-                        .languageId(String.valueOf(savedDocument.getLanguageId()))
-                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                        .score(savedDocument.getScore())
-                        .build())
-                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
-                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
+            .map(savedDocument -> UserSolutionScoreDto.builder()
+                    .userId(String.valueOf(savedDocument.getUserId()))
+                    .languageId(String.valueOf(savedDocument.getLanguageId()))
+                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                    .score(savedDocument.getScore())
+                    .build())
+            .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
+            .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
         UUID challengeId = UUID.fromString(uuidChallenge);
         UUID languageId = UUID.fromString(uuidLanguage);
         UUID userId = UUID.fromString(uuidUser);
+
 
         return userSolutionRepository
                 .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
@@ -97,7 +95,6 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
                 })
                 .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
     }
-
     private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
         UserSolutionDocument newDocument = UserSolutionDocument.builder()
                 .uuid(UUID.randomUUID())
@@ -113,7 +110,7 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
-                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
+                    if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
                         return Mono.error(new UnmodifiableSolutionException("Existing solution has status ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
@@ -135,81 +132,33 @@ public class    UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
-
         ChallengeStatus challengeStatus = null;
 
         if(status == null || status.isEmpty()) {
             challengeStatus = ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
+        } else if (status.equalsIgnoreCase("ENDED")) {
             challengeStatus = ChallengeStatus.ENDED;
-    }
+        }
         return challengeStatus;
     }
 
-    public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
-        return userSolutionRepository.findByUserId(userUuid)
-                .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
-    }
-
     @Override
-    public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
+    public Mono<ResponseEntity<UserSolutionDocument>> addScore(String idUser, String idChallenge, String idSolution) {  // phase 1 returns solToSend
+        // public Mono<SolutionScoreDto> addScore(String idUser, String idChallenge, String idSolution) {   to do phase 2
 
-        List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
+        UUID uuidUser = UUID.fromString(idUser);
+        UUID uuidChallenge = UUID.fromString(idChallenge);
+        UUID uuidSolution = UUID.fromString(idSolution);
 
-        try{
-            for (UUID id : challengeIds) {
-                //TODO: missing check if UUID is correctly constructed.
+        Mono<UserSolutionDocument> solutionToSend =  userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(uuidUser, uuidChallenge, uuidSolution);
 
-                //TODO: missing call repository for get statistics of challenge.
-
-                //TODO: delete below code when uppers todo are implemented.
-                challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat (100)));
-            }
-        }catch(Exception ex){
-            //TODO: missing error control
-        }
-        return Mono.just(challengesList);
-    }
-
-    @Override
-    public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
-        return userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, true);
-    }
-
-    @Override
-    public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
-
-        Mono<Long> startedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.STARTED).count();
-
-        Mono<Long> endedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.ENDED).count();
-
-        Mono<Long> allChallenges = userSolutionRepository.findByChallengeId(idChallenge).count();
-
-        Mono<Float> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2)
-                .flatMap(sum -> allChallenges.flatMap(value3 -> {
-                    if (value3 == 0) {
-                        return Mono.error(new ChallengeNotFoundException("Challenge's id " + idChallenge + " is not found"));
-                    }
-                    return Mono.just((sum * 100f) / value3);
-                }));
-
-        return percentage;
-    }
-
-    private Flux<UserSolutionDocument> getUserSolutions() {
-        return userSolutionRepository.findAll();
-    }
-
-    private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
-        List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
-                .filter(us -> challengeId.equals(us.getChallengeId()))
-                .collect(Collectors.toList());
-
-        if (userSolutionsChallenge.isEmpty()) {
-            return Flux.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)));
-        }
-
-        return Flux.fromIterable(userSolutionsChallenge);
+        return solutionToSend.map(scoreReq -> {
+            UserSolutionScoreDto solToSend = new UserSolutionScoreDto();
+            solToSend.setChallengeId(idChallenge);
+            solToSend.setLanguageId(String.valueOf(scoreReq.getLanguageId()));
+            solToSend.setSolutionText(scoreReq.getSolutionDocument().get(0).getSolutionText());
+            solToSend.setScore(scoreReq.getScore()); // It will be 0 by default when solution is created
+            return ResponseEntity.ok(scoreReq);
+        });
     }
 }
-
