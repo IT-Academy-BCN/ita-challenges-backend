@@ -4,8 +4,6 @@ import com.itachallenge.score.helper.CodeValidator;
 import com.itachallenge.score.helper.DockerContainerHelper;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.images.builder.Transferable;
-
 import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
@@ -15,17 +13,21 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class DockerIntegrationTest {
 
     @Test
-    public void testJavaContainerSortNumbers() {
+    void testJavaContainerSortNumbers() {
 
-        String codeSort = "import java.util.Arrays;\n" +
-                "public class Main {\n" +
-                "    public static void main(String[] args) {\n" +
-                "        String numbers = \"3,1,4,1,5,9\";\n" +
-                "        int[] numArray = Arrays.stream(numbers.split(\",\")).mapToInt(Integer::parseInt).toArray();\n" +
-                "        Arrays.sort(numArray);\n" +
-                "        System.out.println(Arrays.toString(numArray));\n" +
-                "    }\n" +
-                "}";
+        String codeSort = """
+        import java.util.Arrays;
+        
+        public class Main {
+            public static void main(String[] args) {
+                String numbers = "3,1,4,1,5,9";
+                int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
+                Arrays.sort(numArray);
+                System.out.println(Arrays.toString(numArray));
+            }
+        }
+        """;
+
 
         GenericContainer<?> containerJavaSort = DockerContainerHelper.createContainer("openjdk:11");
 
@@ -44,13 +46,15 @@ public class DockerIntegrationTest {
     }
 
     @Test
-    public void testJavaContainerCompileError() {
+    void testJavaContainerCompileError() {
 
-        String codeError = "public class Main {\n" +
-                "    public static void main(String[] args) {\n" +
-                "        System.out.println(\"Esto no compila porque falta un paréntesis\";\n" +
-                "    }\n" +
-                "}";
+        String codeError = """
+                    public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Esto no compila porque falta un paréntesis";
+                    }
+                }
+          """;
 
         GenericContainer<?> containerJavaError = DockerContainerHelper.createContainer("openjdk:11");
 
@@ -66,14 +70,15 @@ public class DockerIntegrationTest {
     }
 
     @Test
-    public void testRestrictedLibraryImport() {
-        String code = "import java.lang.System;\n" +
-                "public class Main {\n" +
-                "    public static void main(String[] args) {\n" +
-                "        System.out.println(\"Hola! Estoy intentado importar System\");\n" +
-                "    }\n" +
-                "}";
-
+    void testRestrictedLibraryImport() {
+        String code = """
+                import java.lang.System;
+                public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Hola! Estoy intentado importar System");
+                    }
+                }"
+                """;
         assertFalse(CodeValidator.isLibraryImportAllowed(code)); // Debería devolver false al intentar importar java.lang.System
 
         // Si el código no importa java.lang.System, entonces se intenta compilar
