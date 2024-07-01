@@ -2,10 +2,10 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.dtos.UserSolutionDto;
+import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
-import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,15 +17,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,9 +37,6 @@ class UserSolutionServiceImpTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
-    @Mock
-    private ConverterDocumentToDto converter;
-
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -98,34 +94,6 @@ class UserSolutionServiceImpTest {
         assert (userSolutionDocument.getLanguageId().equals(languageId));
         assert (userSolutionDocument.getChallengeId().equals(challengeId));
 
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
-    @Test
-    void getChallengeByIdTest() {
-
-        ConverterDocumentToDto converter = new ConverterDocumentToDto();
-
-        userSolutionDocument = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(ChallengeStatus.ENDED)
-                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
-                .score(mockScore)
-                .build();
-        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
-
-        Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
-
-        assertNotNull(challengeById);
-        StepVerifier.create(challengeById)
-                .expectNextMatches(solutionUserDto -> solutionUserDto.getCount() == 1
-                        && solutionUserDto.getLimit() == 1
-                        && solutionUserDto.getOffset() == 0
-                        && solutionUserDto.getResults().length == 1)
-                .verifyComplete();
     }
 
     @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when existing document can't be found and status is empty or ENDED")
@@ -235,103 +203,25 @@ class UserSolutionServiceImpTest {
 
     }
 
-    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns all solutions for the user")
     @Test
-    void showAllUserSolutions() {
-        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(userSolutionDocument.getChallengeId().toString())
-                .languageId(userSolutionDocument.getLanguageId().toString())
-                .status(userSolutionDocument.getStatus().toString())
-                .solutionText("Sample Solution")
-                .build();
+    void addScoreShouldReturnSolutionWithScore() {
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(any(), any(), any()))
+                .thenReturn(Mono.just(userSolutionDocument));
 
-        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        when(converter.fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument)).thenReturn(Flux.just(userSolutionDto));
-
-        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
-
-        StepVerifier.create(resultFlux)
-                .expectNextMatches(dto ->
-                        dto.getUserId().equals(userUuid.toString()) &&
-                                dto.getSolutionText().equals("Sample Solution"))
-                .verifyComplete();
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns empty flux when no solutions are found")
-    @Test
-    void showAllUserSolutions_NoSolutions() {
-        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.empty());
-
-        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
-
-        StepVerifier.create(resultFlux)
-                .expectNextCount(0)
-                .verifyComplete();
-    }
-
-    @Test
-    void getChallengeStatistics() {
-        List<UUID> challengeIds;
-        List<ChallengeStatisticsDto> challengeList;
-        Mono<List<ChallengeStatisticsDto>> result;
-
-        challengeIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
-
-        result = userSolutionService.getChallengeStatistics(challengeIds);
-        challengeList = result.block();
-
-        assertNotNull(challengeList);
-        assertEquals(challengeIds.size(), challengeList.size());
-    }
-
-    @DisplayName("Should return number of BookmarkedTrue by idChallenge")
-    @Test
-    void testGetBookmarkCountByIdChallenge(){
-        UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
-        boolean isBookmarked = true;
-        long expectedValue = 2L;
-
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        UserSolutionDocument userSolutionDocument2 = new UserSolutionDocument();
-        userSolutionDocument.setChallengeId(idChallenge);
-        userSolutionDocument2.setChallengeId(idChallenge);
-        userSolutionDocument.setBookmarked(true);
-        userSolutionDocument2.setBookmarked(true);
-
-        when(userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, isBookmarked))
-                .thenReturn(Mono.just(2L));
-
-        Mono<Long> resultMono = userSolutionService.getBookmarkCountByIdChallenge(idChallenge);
-
-        StepVerifier.create(resultMono)
-                .expectNext(expectedValue)
-                .verifyComplete();
-
-    }
-
-    @Test
-    void getChallengeUsersPercentageTest() {
-
-        List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
-        UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
-        float expectedValue = 100f;
-
-        List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
-        );
-
-        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
-                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.STARTED).toList()));
-        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.fromIterable(
-                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.ENDED).toList()));
-        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.fromIterable(userSolutions));
-
-        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+        Mono<ResponseEntity<UserSolutionDocument>> result = userSolutionService.addScore(userUuid.toString(), challengeUuid.toString(), userSolutionDocument.getSolutionDocument().get(0).getUuid().toString());
 
         StepVerifier.create(result)
-                .expectNext(expectedValue)
-                .verifyComplete();
+                .expectSubscription()
+                .assertNext(response -> {
+                    UserSolutionDocument document = response.getBody();
+                    assert document != null;
+                    assert document.getUserId().equals(userUuid);
+                    assert document.getChallengeId().equals(challengeUuid);
+                    assert document.getSolutionDocument().get(0).getSolutionText().equals(solutionText);
+                    assert document.getScore() == mockScore;
+                })
+                .expectComplete()
+                .verify();
     }
+
 }

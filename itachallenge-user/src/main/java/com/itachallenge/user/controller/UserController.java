@@ -32,7 +32,7 @@ public class UserController {
     @Autowired
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
-    private IUserSolutionService userScoreService;
+    private IUserSolutionService userSolutionService; //modified attribbute name because it will be userSolutionService not userScoreService
     @Autowired
     ZMQClient zmqClient;
 
@@ -77,7 +77,7 @@ public class UserController {
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
-        return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
+        return userSolutionService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 
     @PutMapping(path = "/solution")
@@ -95,7 +95,7 @@ public class UserController {
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
-        return userScoreService.addSolution(userSolutionDto)
+        return userSolutionService.addSolution(userSolutionDto)
                 .map(savedUserSolutionScoreDto ->
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
                 );
@@ -127,7 +127,7 @@ public class UserController {
 
             @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
 
-        return userScoreService.markAsBookmarked(
+        return userSolutionService.markAsBookmarked(
 
                         bookmarkRequestDto.getUuid_challenge(),
                         bookmarkRequestDto.getUuid_language(),
@@ -173,6 +173,6 @@ public class UserController {
             @PathVariable("idChallenge") String idChallenge,
             @PathVariable("idSolution") String idSolution) {
 
-        return userScoreService.addScore(idUser, idChallenge, idSolution);
+        return userSolutionService.addScore(idUser, idChallenge, idSolution);
     }
 }
