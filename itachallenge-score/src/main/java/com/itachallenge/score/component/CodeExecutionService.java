@@ -192,6 +192,10 @@ public class CodeExecutionService {
     }
 
     public static String removeTrailingNewline(String input) {
+        // Si la cadena de entrada está vacía, devolverla tal cual
+        if (input.isEmpty()) {
+            return input;
+        }
         //elimina el salto de línea al final del resultado si existe
         if (input.lastIndexOf("\n") == input.length() - 1) {
             return input.substring(0, input.length() - 1);
