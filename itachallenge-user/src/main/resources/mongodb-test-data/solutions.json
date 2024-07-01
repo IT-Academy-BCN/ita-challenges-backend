@@ -8,7 +8,7 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": "ENDED",
-    "score": 95,
+    "score": 100,
      "solution":[ 
        {
           "_id" :  {
@@ -27,7 +27,7 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 60,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -46,7 +46,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": false,
     "status": "STARTED",
-    "score": 67,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -65,7 +65,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "ENDED",
-    "score": 63,
+    "score": 100,
     "solution":[
       {
         "_id" :  {
@@ -84,7 +84,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": false,
     "status": "STARTED",
-    "score": 66,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -103,7 +103,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f'"},
     "bookmarked": false,
     "status": "STARTED",
-    "score": 69,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -122,7 +122,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 66,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -141,7 +141,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "ENDED",
-    "score": 74,
+    "score": 100,
     "solution":[
       {
         "_id" :  {
@@ -160,7 +160,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 63,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -179,7 +179,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 92,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -198,7 +198,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "ENDED",
-    "score": 94,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -217,7 +217,7 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 74,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -236,7 +236,7 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": false,
     "status": "STARTED",
-    "score": 81,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -255,7 +255,7 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": false,
     "status": "STARTED",
-    "score": 88,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -274,7 +274,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 97,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -293,7 +293,7 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 76,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -312,7 +312,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 79,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -331,7 +331,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "EMPTY",
-    "score": 73,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -350,7 +350,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "EMPTY",
-    "score": 71,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -369,7 +369,7 @@
     "language_id": { "$uuid": "1e047ea2-b787-49e7-acea-d79e92be3909"},
     "bookmarked": false,
     "status": "STARTED",
-    "score": 85,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -388,7 +388,7 @@
     "language_id": { "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 86,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
@@ -407,7 +407,7 @@
     "language_id": { "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"},
     "bookmarked": true,
     "status": "ENDED",
-    "score": 67,
+    "score": 100,
     "solution":[
       {
         "_id" :  {
@@ -426,7 +426,7 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "STARTED",
-    "score": 91,
+    "score": 0,
     "solution":[
       {
         "_id" :  {
