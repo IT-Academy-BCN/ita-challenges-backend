@@ -1,6 +1,5 @@
 package com.itachallenge.user.repository;
 
-import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;

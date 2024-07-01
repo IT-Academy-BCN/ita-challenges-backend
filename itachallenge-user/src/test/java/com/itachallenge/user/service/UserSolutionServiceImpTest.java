@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
 import reactor.core.publisher.Mono;
@@ -202,4 +203,24 @@ class UserSolutionServiceImpTest {
 
     }
 
+    @Test
+    void addScoreShouldReturnSolutionWithScore() {
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(any(), any(), any()))
+                .thenReturn(Mono.just(userSolutionDocument));
+
+        Mono<ResponseEntity<UserSolutionDocument>> result = userSolutionService.addScore(userUuid.toString(), challengeUuid.toString(), userSolutionDocument.getSolutionDocument().get(0).getUuid().toString());
+
+        StepVerifier.create(result)
+                .expectSubscription()
+                .assertNext(response -> {
+                    UserSolutionDocument document = response.getBody();
+                    assert document != null;
+                    assert document.getChallengeId().equals(challengeUuid);
+                    assert document.getLanguageId().equals(languageUuid);
+                    assert document.getSolutionDocument().get(0).getSolutionText().equals(solutionText);
+                    assert document.getScore() == mockScore;
+                })
+                .expectComplete()
+                .verify();
+    }
 }
