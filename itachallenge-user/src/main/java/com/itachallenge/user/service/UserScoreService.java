@@ -50,10 +50,7 @@ public class UserScoreService implements IUserScoreService{
 
     @Override
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(UUID userId, UUID challengeId, UUID languageId) {
-        // Lógica para obtener la puntuación del usuario por su ID de usuario, desafío y lenguaje
-        // Esto podría involucrar llamadas al repositorio y la conversión de documentos a DTOs
 
-        // Ejemplo simplificado:
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
                 .flatMap(userSolutionDocument -> {
                     UserScoreDto userScoreDto = converter.fromUserScoreDocumentToUserScoreDto(userSolutionDocument);

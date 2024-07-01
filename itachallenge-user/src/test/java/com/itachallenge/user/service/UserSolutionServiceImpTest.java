@@ -204,7 +204,7 @@ class UserSolutionServiceImpTest {
     }
 
     @Test
-    void addScoreShouldReturnSolutionWithScore() {
+    void addScoreShouldReturnSolutionWithScore() {//TODO maybe erase this method because it will be in branch Montse 533b
         when(userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(any(), any(), any()))
                 .thenReturn(Mono.just(userSolutionDocument));
 
@@ -215,8 +215,8 @@ class UserSolutionServiceImpTest {
                 .assertNext(response -> {
                     UserSolutionDocument document = response.getBody();
                     assert document != null;
-                    assert document.getUserId().equals(userUuid);
                     assert document.getChallengeId().equals(challengeUuid);
+                    assert document.getLanguageId().equals(languageUuid);
                     assert document.getSolutionDocument().get(0).getSolutionText().equals(solutionText);
                     assert document.getScore() == mockScore;
                 })
