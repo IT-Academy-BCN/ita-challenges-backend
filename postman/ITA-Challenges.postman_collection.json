@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"dni\": \"32983483B\",\n  \"email\": \"jonatan@pp.com\",\n  \"name\": \"Jonatan\",\n  \"itineraryId\": \"clpb8tc17000208l90u4h0wqn\",\n  \"password\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\",\n  \"confirmPassword\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\" \n}",
+							"raw": "{\n  \"dni\": \"84997685N\",\n  \"email\": \"jonatan@ppp.com\",\n  \"name\": \"Jonatan\",\n  \"itineraryId\": \"clpb8tc17000208l90u4h0wqn\",\n  \"password\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\",\n  \"confirmPassword\": \"rU2GiuiTf3oj2RvQjMQX8EyozA7k2ehTp8YIUGSWOL3TdZcn7jaq7vG8z5ovfo6NMr77\" \n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -190,6 +190,36 @@
 								"api",
 								"v1",
 								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SSO - Validate",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InZjd2ZxOXE3ZWg2d3o1YW5ybnVxMDlrMiIsImlhdCI6MTcxNTY3OTE3MiwiZXhwIjoxNzE2MjgzOTcyfQ.9Il2ZIcrxilL0IbUr1YwzPrY3zoZAjV6vl8STNxC9cw\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{dns}}/api/v1/tokens/validate",
+							"protocol": "https",
+							"host": [
+								"{{dns}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens",
+								"validate"
 							]
 						}
 					},
@@ -528,7 +558,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/?idLanguage=409c9fe8-74de-4db3-81a1-a55280cf92ef",
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/?idLanguage=660e1b18-0c0a-4262-a28a-85de9df6ac5f",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -545,7 +575,7 @@
 							"query": [
 								{
 									"key": "idLanguage",
-									"value": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+									"value": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
 								}
 							]
 						}
@@ -875,41 +905,12 @@
 					"response": []
 				},
 				{
-					"name": "User/bookmarks",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenge/7fc6a737-dc36-4e1b-87f3-120d81c548aa/language/1e047ea2-b787-49e7-acea-d79e92be3909",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{user_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"user",
-								"solution",
-								"user",
-								"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-								"challenge",
-								"7fc6a737-dc36-4e1b-87f3-120d81c548aa",
-								"language",
-								"1e047ea2-b787-49e7-acea-d79e92be3909"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "User/statistics",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/statistics/percent/b2c9c18d-1483-4a2a-a4cb-12f8dbff1a18",
+							"raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/statistics/percent/3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -922,7 +923,7 @@
 								"user",
 								"statistics",
 								"percent",
-								"b2c9c18d-1483-4a2a-a4cb-12f8dbff1a18"
+								"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"
 							]
 						}
 					},
@@ -1153,19 +1154,19 @@
 			"name": "Document",
 			"item": [
 				{
-					"name": "Document/version",
+					"name": "Document/api-docs",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{document_port}}/version",
+							"raw": "http://{{ip}}:{{document_port}}/api-docs",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
 							],
 							"port": "{{document_port}}",
 							"path": [
-								"version"
+								"api-docs"
 							]
 						}
 					},

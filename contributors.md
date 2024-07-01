@@ -43,4 +43,15 @@
 * Marc Santasusana Berch - https://github.com/MarcSantasusana
 * Gerard Benages - https://github.com/OZu16
 * Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
+* Ainoha Barcia - https://github.com/AinohaBarcia
+* Oriol Riera Lizcano - https://github.com/Uriera4
+* Nuria Fernández Torres - https://github.com/Nuria-Fernandez
+* Enrique Arranz Puig - https://github.com/EnriqueArranz
+* Ezequiel Salas Deramo - https://github.com/ecs90
+* German Medina Calle - https://github.com/audiochemist
+* Montserrat Masó - https://github.com/m-maso
+* Andrés Allegue Zabala - https://github.com/Alalilacias
+* Daniel Diaz Diaz - https://github.com/invictuzzzzz
+* Marcos Leandro Pagliaruzza - https://github.com/MarLea11
+
 

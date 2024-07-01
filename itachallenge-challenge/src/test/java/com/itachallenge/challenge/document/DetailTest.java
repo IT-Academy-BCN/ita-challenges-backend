@@ -39,13 +39,13 @@ class DetailTest {
     }
 
     @Test
-    void getNote() {
-        Map<Locale, String> noteMap = new HashMap<>();
-            noteMap.put(Locale.forLanguageTag("ES"), "Nota de prueba");
-            noteMap.put(Locale.forLanguageTag("CA"), "Nota de prova");
-            noteMap.put(Locale.ENGLISH, "Test Note");
-        DetailDocument detail = new DetailDocument(null, null, noteMap);
-        assertEquals(noteMap, detail.getNote());
+    void getNotes() {
+        Map<Locale, String> notesMap = new HashMap<>();
+            notesMap.put(Locale.forLanguageTag("ES"), "Nota de prueba");
+            notesMap.put(Locale.forLanguageTag("CA"), "Nota de prova");
+            notesMap.put(Locale.ENGLISH, "Test Note");
+        DetailDocument detail = new DetailDocument(null, null, notesMap);
+        assertEquals(notesMap, detail.getNotes());
     }
 }
 
