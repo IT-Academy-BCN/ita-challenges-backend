@@ -204,7 +204,7 @@ class UserSolutionServiceImpTest {
     }
 
     @Test
-    void addScoreShouldReturnSolutionWithScore() {//TODO maybe erase this method because it will be in branch Montse 533b
+    void addScoreShouldReturnSolutionWithScore() {
         when(userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(any(), any(), any()))
                 .thenReturn(Mono.just(userSolutionDocument));
 
@@ -223,5 +223,4 @@ class UserSolutionServiceImpTest {
                 .expectComplete()
                 .verify();
     }
-
 }
