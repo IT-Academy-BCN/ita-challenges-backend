@@ -3,9 +3,11 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
+import com.itachallenge.user.service.UserScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +35,8 @@ public class UserController {
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userSolutionService; //modified attribbute name because it will be userSolutionService not userScoreService
+    @Autowired
+    private UserScoreService userScoreService;
     @Autowired
     ZMQClient zmqClient;
 
@@ -168,11 +172,22 @@ public class UserController {
 /* phase 1 returns solToSend
    To Do: phase 2 we receive score value from ita-score server
  */
-    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+    public Mono<ResponseEntity<ResponseEntity<UserSolutionDocument>>> getScoreFromSolution(
             @PathVariable("idUser") String idUser,
             @PathVariable("idChallenge") String idChallenge,
             @PathVariable("idSolution") String idSolution) {
 
-        return userSolutionService.addScore(idUser, idChallenge, idSolution);
+        return userSolutionService.addScore(idUser, idChallenge, idSolution)
+                .map(score ->ResponseEntity.ok(score))
+                .onErrorResume(e ->{
+                    if (e instanceof IllegalArgumentException) {
+                        return Mono.just(ResponseEntity.badRequest().build());
+                    } else if (e instanceof SolutionNotFoundException) {
+                        return Mono.just(ResponseEntity.notFound().build());
+                    } else {
+                        return Mono.just(ResponseEntity.status(500).build());
+                    }
+
+                });
     }
 }
