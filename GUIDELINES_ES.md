@@ -161,8 +161,9 @@ Configuraciones Git necesarias para evitar problemas
 
 ### 2.2.2 Autocrlf
 
-Antes de nada, por favor revisa Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
-Es importante.
+**Antes de nada**, por favor revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Ten presente que el encoding por defecto en el proyecto es UTF-8. Asegúrate de que tus editores emplean esa codificación.
 
 
 <hr/>

@@ -159,7 +159,9 @@ Note! This configuration will not only serve for the current project, but also f
 
 ### 2.2.2 Autocrlf
 
-Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+**Before all**, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Keep in mind that default encoding in project is UTF-8. Ensure that your text editor is set to uses that encoding.
 
 
 <hr/>
