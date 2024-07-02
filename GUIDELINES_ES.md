@@ -11,7 +11,8 @@
    2.3 [Procedimiento diario](#23-procedimiento-diario)\
    2.4 [Procedimiento de trabajo con tarjetas](#24-procedimiento-de-trabajo-con-tarjeta)\
    2.5 [Aspectos a tener en cuenta al hacer una PR](#25-aspectos-a-tener-en-cuenta-al-hacer-una-pr)\
-   2.6 [Metodología Scrum](#26-metodología-scrum)
+   2.6 [Trabajo con git](#26-trabajo-con-git)\
+   2.7 [Metodología Scrum](#27-metodología-scrum)
 
 3. [**NORMALIZACIÓN DE URL**](#3-normalización-de-url)\
    3.1 [Convenciones](#31-convenciones)
@@ -39,6 +40,9 @@
 
 7. [**PROGRAMAS RECOMENDADOS**](#7-programas-recomendados)\
    7.1 [Programas recomendados](#71-programas-recomendados)
+
+8. [**TESTING**](#8-testing)
+
 
 <hr/>
 
@@ -139,6 +143,8 @@ mongoimport --db=challenges  --username admin_challenge --authenticationDatabase
 
 <hr/>
 
+11. Por favor, revisa los documentos README.md dentro de cada microservicio, puede que contengan instrucciones adicionales.
+
 ## 2.2 Configuraciones Git
 
 Configuraciones Git necesarias para evitar problemas
@@ -155,8 +161,9 @@ Configuraciones Git necesarias para evitar problemas
 
 ### 2.2.2 Autocrlf
 
-Antes de nada, por favor revisa Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
-Es importante.
+**Antes de nada**, por favor revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Ten presente que el encoding por defecto en el proyecto es UTF-8. Asegúrate de que tus editores emplean esa codificación.
 
 
 <hr/>
@@ -173,7 +180,7 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 ## 2.4 Procedimiento de trabajo con tarjeta
 ### Como asignarse una tarjeta
-1. En el tablero de Sprint Backlog, localiza la tarjeta que deseas asignarte.
+1. En el tablero de Sprint Backlog, localiza la tarjeta que deseas asignarte. Las tarjetas están clasificadas por niveles (1, 2, 3), siendo 1 el nivel de complejidad más bajo.
 2. Haz clic en la tarjeta para abrirla y ver más detalles.
 3. En la parte de la derecha, en el campo "Assignees", si aprietas "Add assigness" se abre un desplegable con todos los participantes del proyecto y ya te puedes seleccionar a ti para asignártela.
 4. Una vez que te has asignado la tarjeta, tu perfil de usuario se mostrará como el responsable de la tarjeta.
@@ -216,7 +223,22 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 
 <hr/>
 
-## 2.6 Metodología Scrum
+## 2.6 Trabajo con git
+
+El workflow de git que seguimos en proyecto es similar a Gitflow.
+Para poder trabajar en el proyecto, debería conocer al menos los siguientes comandos git:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+Puede encontrar un buen tutorial en https://www.atlassian.com/git, y hay muchos otros recursos en https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Metodología Scrum
 https://scrumguides.org/
 
 
@@ -539,6 +561,8 @@ Los siguientes programas son requeridos para poder trabajar en el proyecto:
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 17.0.7 del JDK que es la que se usa en este proyecto. Puedes descargar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) desde la web oficial de Oracle.
 
+- **Gradle 8.8**
+
 Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
 
 <hr/>
@@ -558,3 +582,9 @@ Los siguientes programas son recomendables para facilitar el trabajo en el proye
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint es una herramienta de análisis estático de código que te ayudará a identificar y corregir problemas de calidad en tu código. Es una ayuda útil para detectar Code Smell. Puedes obtener más información de [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) desde la web ofical de Jetbrains.
 
 Recuerda que estos programas o plugins son recomendados, pero no son obligatorios. Utilizarlos puede mejorar tu productividad y la calidad del código, pero puedes optar por otras alternativas según tus preferencias y necesidades.
+
+# 8 TESTING
+
+Hay una guía sobre testing en https://martinfowler.com/articles/practical-test-pyramid.html.
+Por favor, revísala antes de empezar el testing.
+

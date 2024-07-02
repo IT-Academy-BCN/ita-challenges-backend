@@ -1,6 +1,6 @@
 spring:
   application:
-    name: itachallenge-challenge
+    name: itachallenge-auth
     version: 1.0.0-RELEASE
   jmx:
     enabled: true

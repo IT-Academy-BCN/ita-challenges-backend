@@ -17,7 +17,7 @@ public class DetailDocument {
     @Field(name="examples")
     private List<ExampleDocument> examples;
 
-    @Field(name="note")
-    private Map<Locale, String> note;
+    @Field(name="notes")
+    private Map<Locale, String> notes;
 
 }
