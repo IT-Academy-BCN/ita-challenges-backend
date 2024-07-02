@@ -147,5 +147,23 @@
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
+  },
+  {
+    "_id": {
+      "$uuid": "5508909d-b215-4ed7-9911-7dedcbb27153"
+    },
+    "solution_text":" int[][] testCases = {\n            {255, 255, 255}, // \"FFFFFF\"\n            {255, 255, 300}, // \"FFFFFF\"\n            {0, 0, 0},       // \"000000\"\n            {148, 0, 211}    // \"9400D3\"\n        };\n\n        for (int[] testCase : testCases) {\n            int r = testCase[0];\n            int g = testCase[1];\n            int b = testCase[2];\n   \n            r = Math.max(0, Math.min(255, r));\n            g = Math.max(0, Math.min(255, g));\n            b = Math.max(0, Math.min(255, b));\n   \n            String hex = String.format(\"%02X%02X%02X\", r, g, b);\n\n            System.out.println(hex);\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": ""
+    },
+    "solution_text":"",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
   }
 ]
