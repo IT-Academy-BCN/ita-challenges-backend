@@ -3,11 +3,9 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.UserScoreService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -34,9 +33,7 @@ public class UserController {
     @Autowired
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
-    private IUserSolutionService userSolutionService; //modified attribbute name because it will be userSolutionService not userScoreService
-    @Autowired
-    private UserScoreService userScoreService;
+    private IUserSolutionService userScoreService;
     @Autowired
     ZMQClient zmqClient;
 
@@ -81,7 +78,7 @@ public class UserController {
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
             @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
-        return userSolutionService.getChallengeById(idUser, idChallenge, idLanguage);
+        return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
     }
 
     @PutMapping(path = "/solution")
@@ -99,7 +96,7 @@ public class UserController {
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
-        return userSolutionService.addSolution(userSolutionDto)
+        return userScoreService.addSolution(userSolutionDto)
                 .map(savedUserSolutionScoreDto ->
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
                 );
@@ -131,7 +128,7 @@ public class UserController {
 
             @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
 
-        return userSolutionService.markAsBookmarked(
+        return userScoreService.markAsBookmarked(
 
                         bookmarkRequestDto.getUuid_challenge(),
                         bookmarkRequestDto.getUuid_language(),
@@ -164,30 +161,19 @@ public class UserController {
             summary = "Return the score calculated by ita-score micro to the user",
             description = "Send request over ZMQ to ita-score server requesting the score parameter",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = SolutionScoreDto.class), mediaType = "application/json")}),
-                  //  @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = UserSolutionScoreDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = UserSolScoreDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(schema = @Schema())})
             }
     )
 /* phase 1 returns solToSend
    To Do: phase 2 we receive score value from ita-score server
  */
-    public Mono<ResponseEntity<ResponseEntity<UserSolutionDocument>>> getScoreFromSolution(
+    public Flux<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+//    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
             @PathVariable("idUser") String idUser,
             @PathVariable("idChallenge") String idChallenge,
             @PathVariable("idSolution") String idSolution) {
 
-        return userSolutionService.addScore(idUser, idChallenge, idSolution)
-                .map(score ->ResponseEntity.ok(score))
-                .onErrorResume(e ->{
-                    if (e instanceof IllegalArgumentException) {
-                        return Mono.just(ResponseEntity.badRequest().build());
-                    } else if (e instanceof SolutionNotFoundException) {
-                        return Mono.just(ResponseEntity.notFound().build());
-                    } else {
-                        return Mono.just(ResponseEntity.status(500).build());
-                    }
-
-                });
+        return userScoreService.addScore(idUser, idChallenge, idSolution);
     }
 }
