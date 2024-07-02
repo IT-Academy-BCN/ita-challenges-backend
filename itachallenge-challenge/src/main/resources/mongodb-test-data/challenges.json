@@ -75,8 +75,7 @@
       }
     ],
     "solutions": [
-      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
-      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
+      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"}
     ],
     "resources": [
       {
@@ -330,7 +329,6 @@
       }
     ],
     "solutions": [
-      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
       {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
     ],
     "resources": [
@@ -1122,8 +1120,7 @@
       }
     ],
     "solutions": [
-      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
-      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
+      {"$uuid" : "9f5d7339-f87b-4d7e-b8e8-c6e850ff7a50"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1241,8 +1238,7 @@
       }
     ],
     "solutions": [
-      {"$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
-      {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"}
+      {"$uuid" : "c2c2a6c4-83b1-4a8a-82e3-f5cfb64fcfb4"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1347,7 +1343,6 @@
       }
     ],
     "solutions": [
-      {"$uuid" : "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
       {"$uuid" : "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"}
     ],
     "resources": [
@@ -1800,8 +1795,7 @@
       }
     ],
     "solutions": [
-      {"$uuid" : "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"},
-      {"$uuid" : "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"}
+      {"$uuid" : "9afabfaa-071c-4b29-94f1-4a536e2c4dd5"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
