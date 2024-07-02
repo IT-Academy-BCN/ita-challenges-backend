@@ -998,7 +998,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "5508909d-b215-4ed7-9911-7dedcbb27153"}
+      {"$uuid": "5508909d-b215-4ed7-9911-7dedcbb27153"}//
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
