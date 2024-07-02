@@ -138,5 +138,14 @@
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
     }
+  },
+  {
+    "_id": {
+      "$uuid": "cf6f54cf-6950-4d24-8bf9-7108e80dffbc"
+    },
+    "solution_text": "  String[] testCases = {\"xxoo\", \"OxoO\", \"xxooxxoo\", \"xXoO\", \"abcd\"};\n        for (String str : testCases) {\n            \n            int countX = 0;\n            int countO = 0;\n            str = str.toLowerCase();\n\n           for (int i = 0; i < str.length(); i++) {\n                char c = str.charAt(i);\n                if (c == 'x') {\n                    countX++;\n                } else if (c == 'o') {\n                    countO++;\n                }\n            }\n            \n            boolean result = countX == countO;\n            System.out.println( str + \": \" + result);\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
   }
 ]

@@ -680,7 +680,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": ""} //TODO solution
+      {"$uuid": "cf6f54cf-6950-4d24-8bf9-7108e80dffbc"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
