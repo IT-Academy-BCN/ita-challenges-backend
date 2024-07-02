@@ -138,5 +138,14 @@
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
     }
+  },
+  {
+    "_id": {
+      "$uuid": "9151e4cf-8195-4ad5-9363-b378aa322d31"
+    },
+    "solution_text": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class FilterStrings {\n\n    public static List<Object> filterList(List<Object> list) {\n        List<Object> filteredList = new ArrayList<>();\n        for (Object item : list) {\n            if (item instanceof Integer) {\n                filteredList.add(item);\n            }\n        }\n        return filteredList;\n    }\n\n    public static void main(String[] args) {\n        List<Object> inputList = List.of(1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231);\n        List<Object> outputList = filterList(inputList);\n        System.out.println(outputList);  // Output: [1, 2, 231]\n    }\n}",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
   }
 ]
