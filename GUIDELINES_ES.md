@@ -143,6 +143,8 @@ mongoimport --db=challenges  --username admin_challenge --authenticationDatabase
 
 <hr/>
 
+11. Por favor, revisa los documentos README.md dentro de cada microservicio, puede que contengan instrucciones adicionales.
+
 ## 2.2 Configuraciones Git
 
 Configuraciones Git necesarias para evitar problemas
@@ -557,6 +559,8 @@ Los siguientes programas son requeridos para poder trabajar en el proyecto:
 - **Git**: Git es un sistema de control de versiones distribuido ampliamente utilizado en el desarrollo de software. Te permitirá colaborar con otros desarrolladores y mantener un historial de cambios en el código fuente. Puedes descargar [Git](https://git-scm.com/downloads) desde la web oficial.
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 17.0.7 del JDK que es la que se usa en este proyecto. Puedes descargar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) desde la web oficial de Oracle.
+
+- **Gradle 8.8**
 
 Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
 
