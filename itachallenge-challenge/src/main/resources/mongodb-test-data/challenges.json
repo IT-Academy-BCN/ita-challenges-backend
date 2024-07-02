@@ -1,4 +1,4 @@
-[
+[ //TODO buscar y/o hacer? un challenge que matchee con sol_id: 75a74089-99bb-468d-ae71-b8c0b97ce6b3 (borrado de todos los challenges por no ser respuesta)
   {
     "_id": {
       "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
@@ -438,7 +438,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
@@ -683,7 +683,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -790,7 +790,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1003,7 +1003,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1460,7 +1460,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1687,7 +1687,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1910,7 +1910,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2123,7 +2123,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2231,7 +2231,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -2451,7 +2451,7 @@
       }
     ],
     "solutions": [
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": ""} //TODO solution
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
