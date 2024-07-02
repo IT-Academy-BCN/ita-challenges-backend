@@ -139,7 +139,11 @@ mongoimport --db=challenges  --username admin_challenge --authenticationDatabase
 mongoimport --db=challenges  --username admin_challenge --authenticationDatabase admin --password BYBcMJEEWw5egRUo --collection=solutions --jsonArray --file=./mongodb-test-data/solutions.json
 ```
 
-11. Obre MongoDB Compass, fes un "Reload Data" i ja veuràs la base de dades correctament importada.
+10. Obre MongoDB Compass, fes un "Reload Data" i ja veuràs la base de dades correctament importada.
+
+
+11. Si us plau, revisa els documents Readme.md dins de cada microservei, pot ser que continguin instruccions addicionals.
+
 
 <hr/>
 
@@ -159,9 +163,11 @@ Configuracions necessàries de Git per evitar problemes
    Nota! Aquesta configuració no només servirà per al projecte actual, sinó també per a tots els projectes que feu amb GIT.
 
 ### 2.2.2 Autocrlf
-**Important:** 
-Si us plau, revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
 
+**Important:**
+**Abans de començar a treballar en el projecte**, si us plau, revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Tingui en compte que la codificació predeterminada en el projecte és UTF-8. Asseguri's que el seu editor de text estigui configurat per a utilitzar aquesta codificació.
 
 
 <hr/>
@@ -557,6 +563,9 @@ Els programes següents són requerits per poder treballar en el projecte:
 - **Git**: Git és un sistema de control de versions distribuït àmpliament utilitzat en el desenvolupament de programari. Et permetrà col·laborar amb altres desenvolupadors i mantenir un historial de canvis al codi font. Pots descarregar [Git](https://git-scm.com/downloads) des de la web oficial.
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 17.0.7 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) des del web oficial d'Oracle.
+
+- **Gradle 8.8**
+
 
 És important assegurar-se de tenir totes aquestes eines instal·lades i configurades correctament abans de començar a treballar al projecte.
 
