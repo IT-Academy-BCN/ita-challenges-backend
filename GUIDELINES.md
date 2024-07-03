@@ -139,6 +139,8 @@
 
 10. Start MongoDB Compass, click on "Reload Data" and you should see the database correctly imported.
 
+11. Please, review README.md documents inside each microservice, they may contain additional instructions.
+
 <hr/>
 
 ## 2.2 Git configurations
@@ -157,7 +159,9 @@ Note! This configuration will not only serve for the current project, but also f
 
 ### 2.2.2 Autocrlf
 
-Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+**Before all**, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Keep in mind that default encoding in project is UTF-8. Ensure that your text editor is set to uses that encoding.
 
 
 <hr/>
@@ -165,8 +169,9 @@ Before all, please check https://docs.github.com/es/get-started/getting-started-
 ## 2.3 Daily Procedure
 1. Connect to Teams at 9h15
 2. Make pull the "develop" branch
-3. Merge "develop" with the branc you are working on
-4. Coffee time at the 10h15 approx.
+3. Merge "develop" with the branch you are working on
+4. If you have some PR started, please update the branch with develop branch
+5. Coffee time at the 10h15 approx.
 
 IMPORTANT: It's expected that in the project we will be online with the camera on from 9h15 to 13h15, to work as a team (execpt for circumstance that justify it).
 
@@ -559,6 +564,8 @@ The following programs are required to work on the project:
 - **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
+
+- **Gradle 8.8**
 
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
