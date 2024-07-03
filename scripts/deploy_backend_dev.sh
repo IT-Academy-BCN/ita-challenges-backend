@@ -31,4 +31,3 @@ sleep 10
 
 export MICROSERVICE_TAG=$microservice_upgrade_version
 docker compose --env-file itachallenges/conf/.env.dev -f itachallenges/docker/docker-compose.dev.yml up --remove-orphans $microservice_name -d
-
