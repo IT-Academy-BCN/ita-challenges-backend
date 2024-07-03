@@ -1,9 +1,11 @@
-package com.itachallenge.score.dto.zmq;
+package com.itachallenge.user.dtos.zmq;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -12,8 +14,12 @@ import org.springframework.stereotype.Component;
 @Builder
 @Getter
 @Setter
-public class ScoreResponseDto {
+public class ScoreRequestDto {
 
-    @JsonProperty(value="score", index = 0)
-    private Integer score;
+    @JsonProperty(value="id_challenge", index = 0)
+    private UUID challengeId;
+
+    @JsonProperty(value="id_solution", index = 1)
+    private UUID solutionId;
+
 }
