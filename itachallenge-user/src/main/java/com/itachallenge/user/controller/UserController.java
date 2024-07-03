@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -160,15 +161,15 @@ public class UserController {
             summary = "Return the score calculated by ita-score micro to the user",
             description = "Send request over ZMQ to ita-score server requesting the score parameter",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = SolutionScoreDto.class), mediaType = "application/json")}),
-                  //  @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = UserSolutionScoreDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = UserSolScoreDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(schema = @Schema())})
             }
     )
 /* phase 1 returns solToSend
    To Do: phase 2 we receive score value from ita-score server
  */
-    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+    public Flux<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+//    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
             @PathVariable("idUser") String idUser,
             @PathVariable("idChallenge") String idChallenge,
             @PathVariable("idSolution") String idSolution) {
