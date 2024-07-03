@@ -163,9 +163,11 @@ Configuracions necessàries de Git per evitar problemes
    Nota! Aquesta configuració no només servirà per al projecte actual, sinó també per a tots els projectes que feu amb GIT.
 
 ### 2.2.2 Autocrlf
-**Important:** 
-Si us plau, revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
 
+**Important:**
+**Abans de començar a treballar en el projecte**, si us plau, revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Tingui en compte que la codificació predeterminada en el projecte és UTF-8. Asseguri's que el seu editor de text estigui configurat per a utilitzar aquesta codificació.
 
 
 <hr/>
@@ -174,7 +176,8 @@ Si us plau, revisa https://docs.github.com/es/get-started/getting-started-with-g
 1. Connectar-se a Teams a les 9:15h
 2. Fer pull de la branca "develop"
 3. Fer merge de develop amb la branca en què estàs treballant
-4. "Coffee time" a les 10:15h aproximadament
+4. Si tens alguna PR oberta, actualitza la branca amb els canvis de develop 
+5. "Coffee time" a les 10:15h aproximadament
 
 IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de les 9:15h fins a les 13:15h, per treballar en equip (tret de circumstàncies que ho justifiquin).
 
