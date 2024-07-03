@@ -22,7 +22,6 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -103,7 +102,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
         Flux<ChallengeDocument> challenges;
 
         if (idLanguage.isPresent() && level.isPresent()) {
@@ -120,22 +119,23 @@ public class ChallengeServiceImp implements IChallengeService {
             challenges = challengeRepository.findByLevel(level.get())
                     .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
         } else {
-            challenges = challengeRepository.findAllByUuidNotNull()
+            challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
                     .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
         }
 
         Flux<ChallengeDocument> finalChallenges = challenges;
-        return challenges.count().flatMapMany(total -> {
+        return challenges.count().flatMap(total -> {
             Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
             if (limit != -1) {
                 pagedChallenges = pagedChallenges.take(limit);
             }
-            return pagedChallenges.map(challenge -> {
-                GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
-                resultDto.setInfo(offset, limit, total.intValue(), new ChallengeDto[]{challengeDto});
-                return resultDto;
-            });
+            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                    .collectList()
+                    .map(challengeDtoList -> {
+                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
+                        return resultDto;
+                    });
         });
     }
 
@@ -151,7 +151,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
 
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
+        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit) , ChallengeDto.class);
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {

@@ -8,12 +8,13 @@ import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.core.env.Environment;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,10 +30,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(ChallengeController.class)
+@ActiveProfiles("test")
 class ChallengeControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;
+
+    @Autowired
+    private Environment env;
 
     @MockBean
     private IChallengeService challengeService;
@@ -233,11 +238,11 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallengesByLanguageAndDifficultyTest() {
+    void getChallengesByLanguageOrDifficultyTest() {
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
         String level = "EASY";
         int offset = 0;
-        int limit = 1;
+        int limit = -1;
         ChallengeDto challengeDto1 = new ChallengeDto();
         challengeDto1.setLevel(level);
 
@@ -246,7 +251,7 @@ class ChallengeControllerTest {
         GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
         genericResultDto.setResults(challengeDtos.toArray(new ChallengeDto[0]));
 
-        Flux<GenericResultDto<ChallengeDto>> expectedResult = Flux.just(genericResultDto);
+        Mono<GenericResultDto<ChallengeDto>> expectedResult = Mono.just(genericResultDto);
 
         // Mock del servicio con los parámetros correctos
         when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit))
@@ -264,10 +269,10 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<List<GenericResultDto<ChallengeDto>>>() {})
+                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {})
                 .value(result -> {
                     assertNotNull(result);
-                    assertEquals(level, result.get(0).getResults()[0].getLevel());
+                    assertEquals(level, result.getResults()[0].getLevel());
                 });
     }
 
@@ -466,13 +471,15 @@ void getChallengesTestingValues_ValidIds_ReturnsTestingValues() {
 
     @Test
     void getVersionTest() {
+        String expectedVersion = env.getProperty("spring.application.version");
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/version")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
-                .jsonPath("$.version").isEqualTo("1.2.0-RELEASE");
+                .jsonPath("$.version").isEqualTo(expectedVersion);
     }
 
 }

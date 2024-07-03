@@ -13,7 +13,8 @@
    2.3 [Daily Procedure](#23-daily-procedure)\
    2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
    2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
-   2.6 [Scrum metodology](#26-scrum-metodology)
+   2.6 [Working with git](#26-working-with-git)\
+   2.7 [Scrum metodology](#27-scrum-metodology)\
 
 3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Conventions](#31-conventions)
@@ -37,10 +38,12 @@
    5.3 [Testimplementation area](#53-testimplementation-area)
 
 6. [**REQUIRED PROGRAMS**](#6-required-programs)\
-   6.1 [Requierd programs](#61-required-programs)
+   6.1 [Required programs](#61-required-programs)
 
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
+
+8. [**TESTING**](#8-testing)
 
 <hr/>
 
@@ -136,6 +139,8 @@
 
 10. Start MongoDB Compass, click on "Reload Data" and you should see the database correctly imported.
 
+11. Please, review README.md documents inside each microservice, they may contain additional instructions.
+
 <hr/>
 
 ## 2.2 Git configurations
@@ -154,7 +159,9 @@ Note! This configuration will not only serve for the current project, but also f
 
 ### 2.2.2 Autocrlf
 
-Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+**Before all**, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Keep in mind that default encoding in project is UTF-8. Ensure that your text editor is set to uses that encoding.
 
 
 <hr/>
@@ -173,7 +180,7 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 ## 2.4 Work with cards Procedure
 ### How to assign a card
 1. Sign in, on the your Github account.
-2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself.
+2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself. Tasks are classified by their complexity by levels (1, 2, 3) from less to more complex.
 2. Click on the card to open it and see more details.
 3. On the right hand side, in the "Assigness" field, if you click on "Add assigness" a drop-down list opens with all the participants of the project and you can select yourself to be assigned.
 4. Once you have been assigned the card, you user profile will be displayed as the person responsible for the card.
@@ -216,7 +223,22 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 
 <hr/>
 
-## 2.6 Scrum metodology
+## 2.6 Working with git 
+
+The workflow we follow is similar to the Gitflow Workflow.
+To work at the project, you should know at least following git commands:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+A good tutorial is located at https://www.atlassian.com/git, and many other resources are available on https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Scrum metodology
 https://scrumguides.org/
 
 
@@ -536,13 +558,13 @@ The following programs are required to work on the project:
   
 - **Postman**: Postman is a tool that will allow you to easily test and document APIs. It is especially useful for sending HTTP requests and verifying the responses. You can download [Postman](https://www.postman.com/downloads/) from the official website.
 
-- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
-
-- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
+- **Docker**: Docker is a platform that allows packaging and distributing applications in containers. It provides an isolated environment to run the application and its dependencies. You can download [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
 
 - **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
+
+- **Gradle 8.8**
 
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
@@ -550,7 +572,7 @@ It is important to make sure you have all these tools installed and configured c
 
 # 7 RECOMMENDED PROGRAMS
 
-The following programs are recommended to failitate the work on the project::
+The following programs are recommended to facilitate the work on the project:
 
 ## 7.1 Recommended programs
 
@@ -558,8 +580,14 @@ The following programs are recommended to failitate the work on the project::
 
 - **Mongo Shell**: Mongo Shell is a command line interface for MongoDB. It provides an interactive way to interact with the database, execute queries and manage collections. You can download [MongoDB Shell](https://www.mongodb.com/try/download/shell) from the official website.
 
+- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
+
 - **IntelliJ IDEA**: IntelliJ IDEA is an integrated development environment (IDE) widely used in the development of Java applications and other programming languages. You can download [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) from the official website.
 
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint is a static code analysis tool that will help you identify and correct quality problems in your code. It is a useful aid to detect Code Smell. You can get more information about [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) from the Jetbrains offical website.
 
 Remember that these programs or plugins are recommended, but not mandatory. Using them can improve your productivity and code quality, but you can opt for other alternatives according to your preferences and needs.
+
+# 8 TESTING
+
+Is available a guide about testing at https://martinfowler.com/articles/practical-test-pyramid.html. Please, check it before start testing.
