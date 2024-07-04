@@ -95,6 +95,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 })
                 .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
     }
+
     private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
         UserSolutionDocument newDocument = UserSolutionDocument.builder()
                 .uuid(UUID.randomUUID())
@@ -132,6 +133,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
+
         ChallengeStatus challengeStatus = null;
 
         if(status == null || status.isEmpty()) {
