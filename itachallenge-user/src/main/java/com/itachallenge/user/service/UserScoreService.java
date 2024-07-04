@@ -19,26 +19,6 @@ public class UserScoreService implements IUserScoreService{
     private ConverterDocumentToDto converter;
 
 
-    public Mono<SolutionScoreDto> addScore(UUID idUser, UUID idChallenge, UUID idSolution) {
-        UUID uuidUser = UUID.fromString(String.valueOf(idUser));
-        UUID uuidChallenge = UUID.fromString(String.valueOf(idChallenge));
-        UUID uuidSolution = UUID.fromString(String.valueOf(idSolution));
-
-        return userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(uuidUser, uuidChallenge, uuidSolution)
-                .flatMap(solution -> {
-                    // Lógica para obtener el puntaje del microservicio ita-score a través de ZMQ
-                    return Mono.just(convertToSolutionScoreDto(solution)); // Reemplaza esto con la lógica real
-                })
-                .switchIfEmpty(Mono.error(new SolutionNotFoundException("Solution not found for given IDs")))
-                .onErrorMap(e -> {
-                    if (e instanceof IllegalArgumentException) {
-                        return new IllegalArgumentException("Invalid argument provided", e);
-                    } else {
-                        return new RuntimeException("Internal server error", e);
-                    }
-                });
-    }
-
     public SolutionScoreDto convertToSolutionScoreDto(UserSolutionDocument solution) {
         SolutionScoreDto dto = new SolutionScoreDto();
         dto.setChallengeId(UUID.fromString(solution.getChallengeId().toString()));
