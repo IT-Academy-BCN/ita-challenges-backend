@@ -13,6 +13,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @Document(collection="solutions")
+@Getter
+@Setter
 public class UserSolutionDocument {
 
     @Id

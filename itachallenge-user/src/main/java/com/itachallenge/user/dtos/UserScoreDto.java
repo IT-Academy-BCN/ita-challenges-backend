@@ -27,4 +27,8 @@ public class UserScoreDto {
     @JsonProperty(value = "solutions", index = 4)
     private List<SolutionDocument> solutions;
 
+    @JsonProperty(value = "uuid_solution", index = 5)
+    private UUID solutionId;
+
+
 }

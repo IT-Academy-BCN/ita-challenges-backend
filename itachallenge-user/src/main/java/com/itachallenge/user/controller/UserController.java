@@ -1,7 +1,9 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
+import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -31,6 +34,8 @@ public class UserController {
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
+    @Autowired
+    ZMQClient zmqClient;
 
     @Value("${spring.application.version}")
     private String version;
@@ -149,5 +154,26 @@ public class UserController {
         response.put("application_name", appName);
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
+    }
+
+    @GetMapping(path = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    @Operation(
+            summary = "Return the score calculated by ita-score micro to the user",
+            description = "Send request over ZMQ to ita-score server requesting the score parameter",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = UserSolScoreDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(schema = @Schema())})
+            }
+    )
+/* phase 1 returns solToSend
+   To Do: phase 2 we receive score value from ita-score server
+ */
+    public Flux<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+//    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+            @PathVariable("idUser") String idUser,
+            @PathVariable("idChallenge") String idChallenge,
+            @PathVariable("idSolution") String idSolution) {
+
+        return userScoreService.addScore(idUser, idChallenge, idSolution);
     }
 }

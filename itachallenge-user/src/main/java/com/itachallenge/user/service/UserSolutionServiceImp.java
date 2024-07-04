@@ -9,6 +9,7 @@ import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -143,5 +144,21 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return challengeStatus;
     }
 
+    @Override
+    public Flux<ResponseEntity<UserSolutionDocument>> addScore(String idUser, String idChallenge, String idSolution) {  // phase 1 returns solToSend
+
+        UUID uuidUser = UUID.fromString(idUser);
+        UUID uuidChallenge = UUID.fromString(idChallenge);
+        UUID uuidSolution = UUID.fromString(idSolution);
+
+        return userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+                .map(request -> {
+                    UserSolScoreDto scoreRequest = new UserSolScoreDto();
+                    scoreRequest.setUuidChallenge(uuidChallenge);
+                    scoreRequest.setUuidLanguage(request.getLanguageId());
+                    scoreRequest.setSolutionText(request.getSolutionDocument().get(0).getSolutionText());
+                    return ResponseEntity.ok(request);
+                });
+    }
 }
 

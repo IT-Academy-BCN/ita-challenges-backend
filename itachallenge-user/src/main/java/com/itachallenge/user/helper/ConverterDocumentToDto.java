@@ -9,9 +9,28 @@ import reactor.core.publisher.Flux;
 @Component
 public class ConverterDocumentToDto {
 
-
     public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserSolutionDocument> just) {
-    return just.map(this::toUserScoreDto);
+        return just.map(this::toUserScoreDto);
+    }
+
+   /* private UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
+        return UserScoreDto.builder()
+                .challengeId(userScoreDocument.getChallengeId())
+                .languageID(userScoreDocument.getLanguageId())
+                .userId(userScoreDocument.getUserId())
+                .solutions(userScoreDocument.getSolutionDocument())
+                .build();
+    }
+}*/
+
+
+    public UserScoreDto fromUserScoreDocumentToUserScoreDto(UserSolutionDocument userSolutionDocument) {
+        return UserScoreDto.builder()
+                .challengeId(userSolutionDocument.getChallengeId())
+                .languageID(userSolutionDocument.getLanguageId())
+                .userId(userSolutionDocument.getUserId())
+                .solutions(userSolutionDocument.getSolutionDocument())
+                .build();
     }
 
     private UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
