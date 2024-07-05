@@ -143,5 +143,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return challengeStatus;
     }
 
+    public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
+        return userSolutionRepository.findByUserId(userUuid)
+                .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
+    }
+
 }
 

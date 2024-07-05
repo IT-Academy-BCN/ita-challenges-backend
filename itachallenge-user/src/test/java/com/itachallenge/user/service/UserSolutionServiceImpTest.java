@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -200,6 +201,32 @@ class UserSolutionServiceImpTest {
                         && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
+    }
+
+    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns all solutions for the user")
+    @Test
+    void showAllUserSolutions() {
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
+
+        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
+
+        StepVerifier.create(resultFlux)
+                .expectNextMatches(userSolutionDto ->
+                        userSolutionDto.getUserId().equals(userUuid.toString())
+                                && userSolutionDto.getSolutionText().equals("Sample Solution"))
+                .verifyComplete();
+    }
+
+    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns empty flux when no solutions are found")
+    @Test
+    void showAllUserSolutions_NoSolutions() {
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.empty());
+
+        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
+
+        StepVerifier.create(resultFlux)
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
 }

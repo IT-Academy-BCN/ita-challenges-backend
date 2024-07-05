@@ -3,6 +3,7 @@ package com.itachallenge.user.helper;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserScoreDto;
+import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,7 @@ import reactor.test.StepVerifier;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -59,4 +61,19 @@ class ConverterDocumentToDtoTest {
                 userScoreDto.getSolutions().equals(userScoreDocument.getSolutionDocument()) &&
                 userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId());
     }
+
+    public Flux<UserSolutionDto> fromUserSolutionDocumentToUserSolutionDto(UserSolutionDocument userSolutionDocument) {
+        return Flux.fromIterable(
+                userSolutionDocument.getSolutionDocument().stream()
+                        .map(solution -> UserSolutionDto.builder()
+                                .userId(userSolutionDocument.getUserId().toString())
+                                .challengeId(userSolutionDocument.getChallengeId().toString())
+                                .languageId(userSolutionDocument.getLanguageId().toString())
+                                .status(userSolutionDocument.getStatus().toString())
+                                .solutionText(solution.getSolutionText())
+                                .build())
+                        .collect(Collectors.toList())
+        );
+    }
+
 }
