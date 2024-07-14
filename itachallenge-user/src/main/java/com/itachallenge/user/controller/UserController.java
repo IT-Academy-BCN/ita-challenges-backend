@@ -168,7 +168,7 @@ public class UserController {
 /* phase 1 returns solToSend
    To Do: phase 2 we receive score value from ita-score server
  */
-    public Flux<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+    public Mono<ResponseEntity<Integer>> getScoreFromSolution(
 //    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
             @PathVariable("idUser") String idUser,
             @PathVariable("idChallenge") String idChallenge,

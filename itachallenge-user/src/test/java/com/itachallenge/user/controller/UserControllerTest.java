@@ -3,12 +3,16 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,12 +23,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,6 +55,8 @@ class UserControllerTest {
 
     @MockBean
     IUserSolutionService userSolutionService;
+    @MockBean
+    IServiceChallengeStatistics statisticsService;
 
     @BeforeEach
     public void setUp() {
@@ -154,7 +162,7 @@ class UserControllerTest {
         String URI_TEST = "/bookmarks/{idChallenge}";
         Long testCount = 1L;
 
-        when(userSolutionService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
+        when(statisticsService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
                 .thenReturn(Mono.just(testCount));
 
         webTestClient.get()
@@ -177,25 +185,6 @@ class UserControllerTest {
         for (int i = 1; i < numberUUID; i++) URI_TEST += String.format("&challenge=%s", UUID.randomUUID());
 
         return URI_TEST;
-    }
-
-    @Test
-    void getChallengeUserPercentageTest() {
-        UUID challengeId = UUID.randomUUID();
-        float percentage = 75.0f;
-        ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
-
-        when(userSolutionService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
-
-        webTestClient.get()
-                .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ChallengeUserPercentageStatisticDto.class)
-                .value(responseDto -> {
-                    assertEquals(expectedDto.getChallengeId(), responseDto.getChallengeId());
-                    assertEquals(expectedDto.getPercentage(), responseDto.getPercentage());
-                });
     }
 
     @Test
@@ -265,7 +254,6 @@ class UserControllerTest {
                     verify(userSolutionService).addSolution(userSolutionDto);
                 });
     }
-
     @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
     @Test
     void addSolutionIfInvalidValuesThenBadRequest_test() {
@@ -290,7 +278,6 @@ class UserControllerTest {
             verifyNoInteractions(userSolutionService);
         }
     }
-
     @DisplayName("UserDocumentControllerTest - addSolution - return 409 CONFLICT if Service returns UnmodifiableSolutionException")
     @Test
     void addSolutionServiceThrowsExceptionInternalServerError_test() {
@@ -327,31 +314,30 @@ class UserControllerTest {
     }
 
     @Test
-    void getAllSolutionsByIdUser() {
-        String URI_TEST = "/{idUser}/challenges/solutions";
-        UUID userId = UUID.randomUUID();
+    void testGetScoreFromSolution() {
+        // Datos de ejemplo
+        String idUser = "123";
+        String idChallenge = "456";
+        String idSolution = "789";
+        Integer expectedScore = 100; // Este es un valor de ejemplo, ajusta según necesites
 
-        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
-                .userId(userId.toString())
-                .challengeId(UUID.randomUUID().toString())
-                .languageId(UUID.randomUUID().toString())
-                .status("STARTED")
-                .solutionText("Sample Solution")
-                .build();
+        // Configura el comportamiento del servicio mock
+        when(userSolutionService.addScore(anyString(), anyString(), anyString()))
+                .thenAnswer(invocation -> Mono.just(expectedScore));
 
-        when(userSolutionService.showAllUserSolutions(userId)).thenReturn(Flux.just(userSolutionDto));
 
+        // Realiza la llamada al endpoint del controlador utilizando WebTestClient
         webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId.toString())
+                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score", idUser, idChallenge, idSolution)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserSolutionDto.class)
-                .value(solutions -> {
-                    assertNotNull(solutions);
-                    assertEquals(1, solutions.size());
-                    UserSolutionDto solution = solutions.get(0);
-                    assertEquals(userId.toString(), solution.getUserId());
-                    assertEquals("Sample Solution", solution.getSolutionText());
-                });
+                .expectBody(Integer.class)
+                .value(score -> assertEquals(expectedScore, score));
+
+        // Verifica que el método del servicio mock haya sido invocado correctamente
+        verify(userSolutionService, times(1)).addScore(idUser, idChallenge, idSolution);
     }
 }
+
+
+

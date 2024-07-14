@@ -15,6 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -145,19 +146,24 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     @Override
-    public Flux<ResponseEntity<UserSolutionDocument>> addScore(String idUser, String idChallenge, String idSolution) {  // phase 1 returns solToSend
+    public Mono<ResponseEntity<Integer>> addScore(String idUser, String idChallenge, String idSolution) {  // phase 1 returns solToSend
 
         UUID uuidUser = UUID.fromString(idUser);
         UUID uuidChallenge = UUID.fromString(idChallenge);
         UUID uuidSolution = UUID.fromString(idSolution);
 
         return userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+                .next()
                 .map(request -> {
                     UserSolScoreDto scoreRequest = new UserSolScoreDto();
                     scoreRequest.setUuidChallenge(uuidChallenge);
                     scoreRequest.setUuidLanguage(request.getLanguageId());
                     scoreRequest.setSolutionText(request.getSolutionDocument().get(0).getSolutionText());
-                    return ResponseEntity.ok(request);
+                    //TODO implement logic to calculate the score, then change return to: return Mono.just(ResponseEntity.ok(userSolutionDocument));
+                    int score = 80;
+
+                    return ResponseEntity.ok(score);
                 });
     }
+
 }
