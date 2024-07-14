@@ -195,7 +195,7 @@
     },
     "user_id": { "$uuid": "04cbd082-f321-47c1-8f78-209807a6d333"},
     "challenge_id": { "$uuid":"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"},
-    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28 a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "ENDED",
     "score": 0,

@@ -24,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -312,6 +313,30 @@ class UserControllerTest {
                 .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
     }
 
+    @Test
+    void testGetScoreFromSolution() {
+        // Datos de ejemplo
+        String idUser = "123";
+        String idChallenge = "456";
+        String idSolution = "789";
+        Integer expectedScore = 100; // Este es un valor de ejemplo, ajusta según necesites
+
+        // Configura el comportamiento del servicio mock
+        when(userSolutionService.addScore(anyString(), anyString(), anyString()))
+                .thenAnswer(invocation -> Mono.just(expectedScore));
+
+
+        // Realiza la llamada al endpoint del controlador utilizando WebTestClient
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score", idUser, idChallenge, idSolution)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Integer.class)
+                .value(score -> assertEquals(expectedScore, score));
+
+        // Verifica que el método del servicio mock haya sido invocado correctamente
+        verify(userSolutionService, times(1)).addScore(idUser, idChallenge, idSolution);
+    }
 }
 
 
