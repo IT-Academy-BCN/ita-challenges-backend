@@ -157,23 +157,22 @@ public class UserController {
     }
 
     @GetMapping(path = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
-    @Operation(
-            summary = "Return the score calculated by ita-score micro to the user",
-            description = "Send request over ZMQ to ita-score server requesting the score parameter",
+    @Operation(summary = "prepare json file for send",
+            description = "a parameter of this json file isn't available in this micro",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Ok", content = {@Content(schema = @Schema(implementation = UserSolScoreDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(schema = @Schema())})
-            }
-    )
-/* phase 1 returns solToSend
-   To Do: phase 2 we receive score value from ita-score server
- */
-    public Mono<ResponseEntity<Integer>> getScoreFromSolution(
-//    public Mono<ResponseEntity<UserSolutionDocument>> getScoreFromSolution(
+                    @ApiResponse(responseCode = "200", description = "Successful response with the score value",
+                            content = @Content(schema = @Schema(implementation = UserSolScoreDto.class)))
+            })
+    public Flux<ResponseEntity<UserSolScoreDto>> getScoreFromMicroScore(
             @PathVariable("idUser") String idUser,
             @PathVariable("idChallenge") String idChallenge,
-            @PathVariable("idSolution") String idSolution) {
+            @PathVariable("idSolution") String idSolution)
+    {
+        // phase 1 returns solToSend -> To Do: phase 2 we receive score value from ita-score server
 
-        return userScoreService.addScore(idUser, idChallenge, idSolution);
+        return this.userScoreService.getScore(idUser, idChallenge, idSolution)
+                .map(userSolScoreDto -> ResponseEntity.status(HttpStatus.OK).body(userSolScoreDto));
+
     }
+
 }

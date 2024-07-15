@@ -1,11 +1,15 @@
 package com.itachallenge.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
+import com.itachallenge.user.helper.ObjectSerializer;
+import com.itachallenge.user.repository.IUserScoreRepository;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
-import java.util.Collections;
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +29,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
+    private final IUserScoreRepository userScoreRepository;
     private final ConverterDocumentToDto converter;
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, IUserScoreRepository userScoreRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
+        this.userScoreRepository = userScoreRepository;
         this.converter = converter;
     }
 
@@ -71,15 +77,15 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-            .map(savedDocument -> UserSolutionScoreDto.builder()
-                    .userId(String.valueOf(savedDocument.getUserId()))
-                    .languageId(String.valueOf(savedDocument.getLanguageId()))
-                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                    .score(savedDocument.getScore())
-                    .build())
-            .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
-            .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
+                .map(savedDocument -> UserSolutionScoreDto.builder()
+                        .userId(String.valueOf(savedDocument.getUserId()))
+                        .languageId(String.valueOf(savedDocument.getLanguageId()))
+                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                        .score(savedDocument.getScore())
+                        .build())
+                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
+                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
@@ -112,7 +118,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
-                    if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
+                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
                         return Mono.error(new UnmodifiableSolutionException("Existing solution has status ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
@@ -139,31 +145,31 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         if(status == null || status.isEmpty()) {
             challengeStatus = ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase("ENDED")) {
+        } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
             challengeStatus = ChallengeStatus.ENDED;
-        }
+    }
         return challengeStatus;
     }
 
     @Override
-    public Mono<ResponseEntity<Integer>> addScore(String idUser, String idChallenge, String idSolution) {  // phase 1 returns solToSend
-
+    public Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution)
+    {
         UUID uuidUser = UUID.fromString(idUser);
         UUID uuidChallenge = UUID.fromString(idChallenge);
         UUID uuidSolution = UUID.fromString(idSolution);
 
-        return userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
-                .next()
-                .map(request -> {
-                    UserSolScoreDto scoreRequest = new UserSolScoreDto();
-                    scoreRequest.setUuidChallenge(uuidChallenge);
-                    scoreRequest.setUuidLanguage(request.getLanguageId());
-                    scoreRequest.setSolutionText(request.getSolutionDocument().get(0).getSolutionText());
-                    //TODO implement logic to calculate the score, then change return to: return Mono.just(ResponseEntity.ok(userSolutionDocument));
-                    int score = 80;
+        String solutionText = String.valueOf(userScoreRepository.findByUuid(uuidSolution)
+                .map(SolutionDocument::getSolutionText));
 
-                    return ResponseEntity.ok(score);
+        return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+                .map(req -> {
+                    UserSolScoreDto scoreReq = new UserSolScoreDto();
+                    scoreReq.setUuidChallenge(uuidChallenge);
+                    scoreReq.setUuidLanguage(req.getLanguageId());
+                    scoreReq.setSolutionText(solutionText);
+                    return scoreReq;
                 });
     }
 
 }
+
