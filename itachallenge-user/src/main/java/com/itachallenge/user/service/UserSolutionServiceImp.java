@@ -1,11 +1,15 @@
 package com.itachallenge.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
+import com.itachallenge.user.helper.ObjectSerializer;
+import com.itachallenge.user.repository.IUserScoreRepository;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,10 +29,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
+    private final IUserScoreRepository userScoreRepository;
     private final ConverterDocumentToDto converter;
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, IUserScoreRepository userScoreRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
+        this.userScoreRepository = userScoreRepository;
         this.converter = converter;
     }
 
@@ -145,20 +152,24 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     @Override
-    public Flux<ResponseEntity<UserSolutionDocument>> addScore(String idUser, String idChallenge, String idSolution) {  // phase 1 returns solToSend
-
+    public Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution)
+    {
         UUID uuidUser = UUID.fromString(idUser);
         UUID uuidChallenge = UUID.fromString(idChallenge);
         UUID uuidSolution = UUID.fromString(idSolution);
 
-        return userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
-                .map(request -> {
-                    UserSolScoreDto scoreRequest = new UserSolScoreDto();
-                    scoreRequest.setUuidChallenge(uuidChallenge);
-                    scoreRequest.setUuidLanguage(request.getLanguageId());
-                    scoreRequest.setSolutionText(request.getSolutionDocument().get(0).getSolutionText());
-                    return ResponseEntity.ok(request);
+        String solutionText = String.valueOf(userScoreRepository.findByUuid(uuidSolution)
+                .map(SolutionDocument::getSolutionText));
+
+        return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+                .map(req -> {
+                    UserSolScoreDto scoreReq = new UserSolScoreDto();
+                    scoreReq.setUuidChallenge(uuidChallenge);
+                    scoreReq.setUuidLanguage(req.getLanguageId());
+                    scoreReq.setSolutionText(solutionText);
+                    return scoreReq;
                 });
     }
+
 }
 

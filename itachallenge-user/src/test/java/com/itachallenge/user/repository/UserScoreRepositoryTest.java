@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.springframework.test.context.DynamicPropertySource;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.Duration;
@@ -20,6 +21,8 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataMongoTest
 @Testcontainers
@@ -39,6 +42,7 @@ class UserScoreRepositoryTest {
 
     @Autowired
     private IUserSolutionRepository userScoreRepository;
+    private IUserScoreRepository scoreRepository;
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120001");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120002");
@@ -91,4 +95,16 @@ class UserScoreRepositoryTest {
                 .expectNextCount(2)
                 .verifyComplete();
     }
+
+    @DisplayName("Find SolutionDocument by UUID")
+    @Test
+    void findByUuidTest()
+    {
+        Mono<SolutionDocument> solutionFound = scoreRepository.findByUuid(uuid_1);
+        solutionFound.blockOptional().ifPresentOrElse(
+                solution -> assertEquals(solution.getUuid(), uuid_1),
+                () -> fail("Solution with UUID " + uuid_1 + " is not found")
+        );
+    }
+
 }
