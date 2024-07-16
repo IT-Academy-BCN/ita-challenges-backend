@@ -16,9 +16,9 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -41,6 +41,9 @@ class ConverterDocumentToDtoTest {
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
     UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid_1, idUser, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 90, solutionDocumentList);
 
+    SolutionDocument solutionDocument = new SolutionDocument();
+    UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
+
 
     @DisplayName("Convertir un objeto UserScoreDocument en un objeto UserScoreDto")
     @Test
@@ -62,18 +65,38 @@ class ConverterDocumentToDtoTest {
                 userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId());
     }
 
-    public Flux<UserSolutionDto> fromUserSolutionDocumentToUserSolutionDto(UserSolutionDocument userSolutionDocument) {
-        return Flux.fromIterable(
-                userSolutionDocument.getSolutionDocument().stream()
-                        .map(solution -> UserSolutionDto.builder()
-                                .userId(userSolutionDocument.getUserId().toString())
-                                .challengeId(userSolutionDocument.getChallengeId().toString())
-                                .languageId(userSolutionDocument.getLanguageId().toString())
-                                .status(userSolutionDocument.getStatus().toString())
-                                .solutionText(solution.getSolutionText())
-                                .build())
-                        .collect(Collectors.toList())
-        );
+    @Test
+    public void testFromUserSolutionDocumentToUserSolutionDto() {
+        solutionDocument.setSolutionText("Sample Solution Text");
+
+        userSolutionDocument.setUserId(UUID.randomUUID());
+        userSolutionDocument.setChallengeId(UUID.randomUUID());
+        userSolutionDocument.setLanguageId(UUID.randomUUID());
+        userSolutionDocument.setStatus(ChallengeStatus.STARTED);
+        userSolutionDocument.setSolutionDocument(Collections.singletonList(solutionDocument));
+
+        Flux<UserSolutionDto> userSolutionDtoFlux = fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument);
+
+        StepVerifier.create(userSolutionDtoFlux)
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals(userSolutionDocument.getUserId().toString()) &&
+                                dto.getChallengeId().equals(userSolutionDocument.getChallengeId().toString()) &&
+                                dto.getLanguageId().equals(userSolutionDocument.getLanguageId().toString()) &&
+                                dto.getStatus().equals(userSolutionDocument.getStatus().toString()) && // Convert status to string
+                                dto.getSolutionText().equals(solutionDocument.getSolutionText())
+                )
+                .expectComplete()
+                .verify();
     }
 
+    public Flux<UserSolutionDto> fromUserSolutionDocumentToUserSolutionDto(@NotNull UserSolutionDocument document) {
+        return Flux.just(UserSolutionDto.builder()
+                .userId(document.getUserId().toString())
+                .challengeId(document.getChallengeId().toString())
+                .languageId(document.getLanguageId().toString())
+                .status(document.getStatus().toString())
+                .solutionText(document.getSolutionDocument().get(0).getSolutionText())
+                .build());
+    }
 }
+

@@ -33,5 +33,4 @@ public class ConverterDocumentToDto {
                 .solutionText(document.getSolutionDocument().get(0).getSolutionText())
                 .build());
     }
-
 }
