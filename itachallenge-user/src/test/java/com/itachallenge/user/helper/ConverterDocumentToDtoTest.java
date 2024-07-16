@@ -65,7 +65,7 @@ class ConverterDocumentToDtoTest {
                 userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId());
     }
 
-    @DisplayName("Convert an object UserSolutionDocument to an object UserSolutionDocumentDto")
+    @DisplayName("Convert an object UserSolutionDocument to an object UserSolutionDto")
     @Test
     public void testFromUserSolutionDocumentToUserSolutionDto() {
         solutionDocument.setSolutionText("Sample Solution Text");
@@ -76,28 +76,20 @@ class ConverterDocumentToDtoTest {
         userSolutionDocument.setStatus(ChallengeStatus.STARTED);
         userSolutionDocument.setSolutionDocument(Collections.singletonList(solutionDocument));
 
-        Flux<UserSolutionDto> userSolutionDtoFlux = fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument);
+        Flux<UserSolutionDto> userSolutionDtoFlux = converter.fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument);
 
         StepVerifier.create(userSolutionDtoFlux)
-                .expectNextMatches(dto ->
-                        dto.getUserId().equals(userSolutionDocument.getUserId().toString()) &&
-                                dto.getChallengeId().equals(userSolutionDocument.getChallengeId().toString()) &&
-                                dto.getLanguageId().equals(userSolutionDocument.getLanguageId().toString()) &&
-                                dto.getStatus().equals(userSolutionDocument.getStatus().toString()) &&
-                                dto.getSolutionText().equals(solutionDocument.getSolutionText())
-                )
+                .expectNextMatches(userSolutionDto -> validateUserSolutionDto(userSolutionDto, userSolutionDocument))
                 .expectComplete()
                 .verify();
     }
 
-    public Flux<UserSolutionDto> fromUserSolutionDocumentToUserSolutionDto(@NotNull UserSolutionDocument document) {
-        return Flux.just(UserSolutionDto.builder()
-                .userId(document.getUserId().toString())
-                .challengeId(document.getChallengeId().toString())
-                .languageId(document.getLanguageId().toString())
-                .status(document.getStatus().toString())
-                .solutionText(document.getSolutionDocument().get(0).getSolutionText())
-                .build());
+    private boolean validateUserSolutionDto(@NotNull UserSolutionDto userSolutionDto, @NotNull UserSolutionDocument userSolutionDocument) {
+        return userSolutionDto.getUserId().equals(userSolutionDocument.getUserId().toString()) &&
+                userSolutionDto.getChallengeId().equals(userSolutionDocument.getChallengeId().toString()) &&
+                userSolutionDto.getLanguageId().equals(userSolutionDocument.getLanguageId().toString()) &&
+                userSolutionDto.getStatus().equals(userSolutionDocument.getStatus().toString()) &&
+                userSolutionDto.getSolutionText().equals(userSolutionDocument.getSolutionDocument().get(0).getSolutionText());
     }
 }
 
