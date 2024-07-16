@@ -1,72 +1,64 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
+    id 'io.spring.dependency-management' version '1.1.0' // Agregar el plugin de gestión de dependencias de Spring
     id 'jacoco'
 }
 
-
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'com.itachallenge.challenge.App'
-        )
-    }
-}
-jacoco{
-    toolVersion = '0.8.11'
-    reportsDirectory = layout.buildDirectory.dir('jacocoXml')
-}
-
 group = 'ita.challenges'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-
+    // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
-    implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
+    // Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
-    implementation 'org.springframework:spring-context:5.3.13'
-    implementation 'org.modelmapper:modelmapper:3.1.1'
+
+    // Spring Cloud
+    implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.2'
-    implementation 'org.zeromq:jeromq:0.5.4'
 
+    // Otros
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+    implementation 'org.zeromq:jeromq:0.5.4'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
-    implementation "io.mongock:mongock:5.0.32"
-    implementation "io.mongock:mongock-springboot-v3:5.2.4"
-    implementation "io.mongock:mongodb-reactive-driver:5.2.4"
+    // Mongock
+    implementation 'io.mongock:mongock:5.0.32'
+    implementation 'io.mongock:mongock-springboot-v3:5.2.4'
+    implementation 'io.mongock:mongodb-reactive-driver:5.2.4'
 
+    // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-test:5.3.13'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.mockito:mockito-core:5.3.1'
     testImplementation 'org.hamcrest:hamcrest:2.2'
     testImplementation 'org.assertj:assertj-core:3.24.2'
-    testImplementation 'io.projectreactor:reactor-test:3.1.0.RELEASE'
+    testImplementation 'io.projectreactor:reactor-test:3.5.1' // Actualiza la versión a una más reciente
     testImplementation 'org.testcontainers:mongodb:1.17.6'
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
-
-
-
 }
 
 test {
@@ -104,4 +96,16 @@ sonar {
     properties {
         //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.itachallenge.challenge.App'
+        )
+    }
+}
+jacoco {
+    toolVersion = '0.8.11'
+    reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }

@@ -14,6 +14,16 @@ spring:
   profiles:
     active: mongock
 
+mongock:
+  enabled: true
+  transactionEnabled: false
+  migration-scan-package: com.itachallenge.challenge.config.dbchangelog
+  lock:
+    collectionName: "mongockLocks"
+    maxWaitingForLockMinutes: 5
+    maxTries: 3
+    maxTriesInterval: 1000
+
 springdoc:
   swagger-ui:
     path: "/swagger-ui-custom.html"
@@ -42,8 +52,8 @@ logging:
     root: INFO
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
+    "io.mongock": DEBUG  # Habilita el logging de Mongock en nivel DEBUG
   pattern:
-    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
@@ -53,7 +63,6 @@ url:
   maxBytesInMemory: 30000000
 
 validation:
-  number: "^\\d{1,9}$"                             # Integers up to 9 digits
-
-messages:
-  errorMessage: "Invalid values."
+  number: "^\\d{1,9}$"
+  messages:
+    errorMessage: "Invalid values."
