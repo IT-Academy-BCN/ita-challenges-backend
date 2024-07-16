@@ -65,6 +65,7 @@ class ConverterDocumentToDtoTest {
                 userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId());
     }
 
+    @DisplayName("Convert an object UserSolutionDocument to an object UserSolutionDocumentDto")
     @Test
     public void testFromUserSolutionDocumentToUserSolutionDto() {
         solutionDocument.setSolutionText("Sample Solution Text");
@@ -82,7 +83,7 @@ class ConverterDocumentToDtoTest {
                         dto.getUserId().equals(userSolutionDocument.getUserId().toString()) &&
                                 dto.getChallengeId().equals(userSolutionDocument.getChallengeId().toString()) &&
                                 dto.getLanguageId().equals(userSolutionDocument.getLanguageId().toString()) &&
-                                dto.getStatus().equals(userSolutionDocument.getStatus().toString()) && // Convert status to string
+                                dto.getStatus().equals(userSolutionDocument.getStatus().toString()) &&
                                 dto.getSolutionText().equals(solutionDocument.getSolutionText())
                 )
                 .expectComplete()
