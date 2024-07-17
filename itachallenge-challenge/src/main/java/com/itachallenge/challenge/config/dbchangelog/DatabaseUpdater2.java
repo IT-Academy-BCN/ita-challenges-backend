@@ -19,12 +19,15 @@ import static com.mongodb.client.model.Updates.rename;
 @ChangeUnit(id = "Provocate RollbackExecution", order = "5", author = "Dani")
 public class DatabaseUpdater2 {
 
-    private final Logger logger = LoggerFactory.getLogger(DatabaseUpdater2.class);
+    private Logger logger = LoggerFactory.getLogger(DatabaseUpdater2.class);
     private ReactiveMongoTemplate reactiveMongoTemplate;
     private static final String COLLECTION_NAME = "mongockDemo";
+    private static final String LANGUAGE_NAME = "language_name";
 
-    public DatabaseUpdater2(ReactiveMongoTemplate reactiveMongoTemplate) {
+
+    public DatabaseUpdater2(ReactiveMongoTemplate reactiveMongoTemplate, Logger logger) {
         this.reactiveMongoTemplate = reactiveMongoTemplate;
+        this.logger = logger;
     }
 
     @Execution
@@ -33,10 +36,9 @@ public class DatabaseUpdater2 {
             updateFieldInCollection(client);
             addFieldToAllDocuments(reactiveMongoTemplate);
             // Intentional error to provoke rollback
-            throw new RuntimeException("Intentional error occurred during execution");
-        } catch (Exception e) {
-            logger.error("Error occurred during execution", e);
-            throw new RuntimeException("Error occurred during execution", e);
+            throw new IntentionalException("Intentional error occurred during execution");
+        } catch (RuntimeException e) {
+            throw new IntentionalException("Error occurred during execution");
         }
     }
 
@@ -49,7 +51,7 @@ public class DatabaseUpdater2 {
 
     public void updateFieldInCollection(MongoClient client) {
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
-        Mono.from(mongockTest.updateOne(new Document(), rename("language_name", "language_name_updated")))
+        Mono.from(mongockTest.updateOne(new Document(), rename(LANGUAGE_NAME, "language_name_updated")))
                 .doOnSuccess(updateResult -> logger.info("Field 'language_name' renamed to 'language_name_updated'"))
                 .block();
     }
@@ -62,13 +64,13 @@ public class DatabaseUpdater2 {
     }
 
     public void addFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {
-        Query query = new Query(where("language_name").ne(null));
+        Query query = new Query(where(LANGUAGE_NAME).ne(null));
         Update update = new Update().set("new_field", "new_value");
         reactiveMongoTemplate.updateMulti(query, update, COLLECTION_NAME).block();
     }
 
     public void removeFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {
-        Query query = new Query(where("language_name").ne(null));
+        Query query = new Query(where(LANGUAGE_NAME).ne(null));
         Update update = new Update().unset("new_field");
         reactiveMongoTemplate.updateMulti(query, update, COLLECTION_NAME).block();
     }

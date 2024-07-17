@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @ActiveProfiles("mongockTest")
-public class MongockTestContainer {
+class MongockTestContainer {
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10")

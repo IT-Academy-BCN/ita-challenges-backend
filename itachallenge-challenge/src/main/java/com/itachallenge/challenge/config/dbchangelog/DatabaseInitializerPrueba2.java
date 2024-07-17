@@ -4,8 +4,6 @@ package com.itachallenge.challenge.config.dbchangelog;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
 import com.mongodb.reactivestreams.client.MongoDatabase;
 import io.mongock.api.annotations.*;
 import io.mongock.driver.mongodb.reactive.util.MongoSubscriberSync;
