@@ -12,6 +12,7 @@ import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -206,43 +207,33 @@ class ChallengeServiceImpTest {
         challenge1.setUuid(UUID.randomUUID());
         ChallengeDocument challenge2 = new ChallengeDocument();
         challenge2.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge3 = new ChallengeDocument();
-        challenge3.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge4 = new ChallengeDocument();
-        challenge4.setUuid(UUID.randomUUID());
 
         // Simulate a set of ChallengeDto
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
-        ChallengeDto challengeDto3 = new ChallengeDto();
-        ChallengeDto challengeDto4 = new ChallengeDto();
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
-                .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2, challengeDto3, challengeDto4));
-
+                .thenReturn(Flux.just(challenge1, challenge2));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
+        when(challengeRepository.count()).thenReturn(Mono.just(100L));
         // Act
-        Flux<ChallengeDto> result = challengeService.getAllChallenges(offset, limit);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
 
         // Assert
         verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
         verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
 
+
         StepVerifier.create(result)
                 .expectSubscription()
-                .expectNextCount(4)
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(result.skip(offset).take(limit))
-                .expectSubscription()
-                .expectNext(challengeDto2, challengeDto3)
-                .expectComplete()
-                .verify();
-
-        StepVerifier.create(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit))
-                .expectSubscription()
-                .expectNextCount(2)
+                .assertNext(resultDto -> {
+                    Assertions.assertEquals(100, resultDto.getCount());
+                    Assertions.assertEquals(offset, resultDto.getOffset());
+                    Assertions.assertEquals(limit, resultDto.getLimit());
+                    Assertions.assertEquals(2, resultDto.getResults().length);
+                    Assertions.assertEquals(challengeDto1, resultDto.getResults()[0]);
+                    Assertions.assertEquals(challengeDto2, resultDto.getResults()[1]);
+                })
                 .expectComplete()
                 .verify();
     }

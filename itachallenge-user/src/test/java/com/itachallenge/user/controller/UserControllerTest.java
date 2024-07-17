@@ -185,6 +185,25 @@ class UserControllerTest {
     }
 
     @Test
+    void getChallengeUserPercentageTest() {
+        UUID challengeId = UUID.randomUUID();
+        float percentage = 75.0f;
+        ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
+
+        when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeUserPercentageStatisticDto.class)
+                .value(responseDto -> {
+                    assertEquals(expectedDto.getChallengeId(), responseDto.getChallengeId());
+                    assertEquals(expectedDto.getPercentage(), responseDto.getPercentage());
+                });
+    }
+
+    @Test
     void markOrAddBookmark() {
 
         BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto();
