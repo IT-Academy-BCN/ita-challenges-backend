@@ -1,13 +1,16 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.ChallengeStatisticsDto;
+import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -80,4 +83,30 @@ class ServiceChallengeStatisticsTest {
                 .verifyComplete();
 
     }
+
+    @Test
+    void getChallengeUsersPercentageTest() {
+
+        List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
+        UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
+        float expectedValue = 100f;
+
+        List<UserSolutionDocument> userSolutions = Arrays.asList(
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
+        );
+
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
+                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.STARTED).toList()));
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.fromIterable(
+                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.ENDED).toList()));
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.fromIterable(userSolutions));
+
+        Mono<Float> result = statisticsService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectNext(expectedValue)
+                .verifyComplete();
+    }
+
 }
