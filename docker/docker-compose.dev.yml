@@ -1,6 +1,7 @@
 version: '3.8'
 
 x-custom-metadata:
+
   version: 1.14.4
   last-updated: 2024-04-30
 
@@ -98,8 +99,10 @@ services:
         ipv4_address: 172.18.0.8
 
   itachallenge-mock:
+
     image: '${REGISTRY_NAME}:itachallenge-mock-${MICROSERVICE_TAG}'
     container_name: 'itachallenge-mock-${MICROSERVICE_TAG}-dev'
+
     restart: always
     networks:
       apisix-dev:
