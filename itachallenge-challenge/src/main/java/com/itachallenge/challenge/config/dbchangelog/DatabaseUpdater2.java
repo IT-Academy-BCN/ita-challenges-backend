@@ -56,7 +56,7 @@ public class DatabaseUpdater2 {
 
     public void rollbackUpdateFieldInCollection(MongoClient client) {
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
-        Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name")))
+        Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name_Rollbacked")))
                 .doOnSuccess(updateResult -> logger.info("Field 'language_name_updated' renamed back to 'language_name'"))
                 .block();
     }
