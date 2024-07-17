@@ -1,9 +1,7 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
-import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -34,8 +31,6 @@ public class UserController {
     IServiceChallengeStatistics serviceChallengeStatistics;
     @Autowired
     private IUserSolutionService userScoreService;
-    @Autowired
-    ZMQClient zmqClient;
 
     @Value("${spring.application.version}")
     private String version;
@@ -116,6 +111,28 @@ public class UserController {
                 .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
 
+    @GetMapping(path = "/statistics/percent/{idChallenge}")
+    @Operation(
+            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "404", description = "Challenge not found",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<ChallengeUserPercentageStatisticDto>> challengeUserPercentageStatistic(
+            @PathVariable("idChallenge")
+            @GenericUUIDValid(message = "Invalid UUID for challenge")
+            String idChallenge) {
+
+        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge))
+                .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
+                .map(ResponseEntity::ok);
+    }
+
     @PutMapping("/bookmark")
     @Operation(
             summary = "Mark or create a bookmark",
@@ -156,23 +173,5 @@ public class UserController {
         return Mono.just(ResponseEntity.ok(response));
     }
 
-    @GetMapping(path = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
-    @Operation(summary = "prepare json file for send",
-            description = "a parameter of this json file isn't available in this micro",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful response with the score value",
-                            content = @Content(schema = @Schema(implementation = UserSolScoreDto.class)))
-            })
-    public Flux<ResponseEntity<UserSolScoreDto>> getScoreFromMicroScore(
-            @PathVariable("idUser") String idUser,
-            @PathVariable("idChallenge") String idChallenge,
-            @PathVariable("idSolution") String idSolution)
-    {
-        // phase 1 returns solToSend -> To Do: phase 2 we receive score value from ita-score server
-
-        return this.userScoreService.getScore(idUser, idChallenge, idSolution)
-                .map(userSolScoreDto -> ResponseEntity.status(HttpStatus.OK).body(userSolScoreDto));
-
-    }
 
 }

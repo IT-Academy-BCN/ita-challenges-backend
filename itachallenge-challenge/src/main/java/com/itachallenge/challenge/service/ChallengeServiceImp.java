@@ -26,9 +26,14 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+
+
+
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -149,9 +154,22 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
+    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
 
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(offset).take(limit) , ChallengeDto.class);
+        Mono<Long> countMono = challengeRepository.count();
+        Flux<ChallengeDto> challengeDtoFlux = challengeConverter.convertDocumentFluxToDtoFlux(
+                challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                        .skip(offset)
+                        .take(limit),
+                ChallengeDto.class);
+
+        return countMono.zipWith(challengeDtoFlux.collectList(), (totalCount, challenges) -> {
+            ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
+            return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
+        }).onErrorResume(e -> {
+            // Manejo de errores, por ejemplo, devolver un GenericResultDto vacío o un error específico.
+            return Mono.just(new GenericResultDto<>(offset, limit, 0, new ChallengeDto[0]));
+        });
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {

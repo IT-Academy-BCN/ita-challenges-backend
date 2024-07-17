@@ -72,6 +72,16 @@ class GlobalExceptionHandlerTest {
         assertEquals("Test error message", response.getBody().getMessage());
     }
 
+    @Test
+    void testHandleChallengeNotFoundException() {
+        ChallengeNotFoundException ex = new ChallengeNotFoundException("Test error message");
+
+        ResponseEntity<ErrorResponseDto> response = globalExceptionHandler.handleChallengeNotFoundException(ex);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Test error message", response.getBody().getMessage());
+    }
+
     private MethodArgumentNotValidException createMethodArgumentNotValidException(String objectName, String fieldName, String errorMessage) {
         BindingResult bindingResult = mock(BindingResult.class);
         FieldError fieldError = new FieldError(objectName, fieldName, errorMessage);
