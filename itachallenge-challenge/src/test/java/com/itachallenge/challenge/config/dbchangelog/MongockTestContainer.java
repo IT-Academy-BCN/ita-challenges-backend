@@ -3,15 +3,10 @@ package com.itachallenge.challenge.config.dbchangelog;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
-import io.mongock.driver.mongodb.reactive.driver.MongoReactiveDriver;
-import io.mongock.runner.springboot.MongockSpringboot;
-import io.mongock.runner.springboot.base.MongockInitializingBeanRunner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -19,7 +14,6 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -27,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @ActiveProfiles("mongockTest")
-public class DataBaseInitializerTest1 {
+public class MongockTestContainer {
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10")
@@ -40,10 +34,9 @@ public class DataBaseInitializerTest1 {
     }
 
     @Autowired
-    private ApplicationContext applicationContext;
-
     private ReactiveMongoTemplate reactiveMongoTemplate;
 
+    @Autowired
     private DatabaseInitializer databaseInitializer = new DatabaseInitializer();
 
     @BeforeEach
@@ -54,6 +47,7 @@ public class DataBaseInitializerTest1 {
         databaseInitializer.createCollection(mongoDatabase);
         databaseInitializer.execution(reactiveMongoTemplate);
     }
+
 
     @Test
     void testCollectionCreation() {
@@ -86,7 +80,7 @@ public class DataBaseInitializerTest1 {
                     assertNotNull(document, "The document should not be null");
                     assertNotNull(document.get("language_name"), "The field 'language_name' should exist");
                 })
-                .blockLast(); // Block until the last element is emitted
+                .blockLast();
     }
 
 
@@ -111,6 +105,8 @@ public class DataBaseInitializerTest1 {
                 })
                 .blockLast();
     }
+
+
 
     @AfterEach
     void tearDown() {

@@ -5,6 +5,21 @@ spring:
   jmx:
     enabled: true
 
+mongock:
+  enabled: true
+  transactionEnabled: false
+  migration-scan-package: com.itachallenge.challenge.config.dbchangelog
+  lock:
+    collectionName: "mongockLocks" # Name of the collection used to lock the execution of the migration
+    maxWaitingForLockMinutes: 5
+    maxTries: 3 # Number of times to try to acquire a lock
+    maxTriesInterval: 1000 # Interval in milliseconds between tries to acquire a lock
+    timeToLive: 3600 # Time in seconds to keep the lock
+    change-logs-scan-package: com.itachallenge.challenge.config.dbchangelog
+    metadata-collection-name: "mongockChangeLog"
+    metadata-lock-collection-name: "mongockLocks"
+    metadata-lock-id: "mongockLockId"
+
 server:
   port: 8762
 
