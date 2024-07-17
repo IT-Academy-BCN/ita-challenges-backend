@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -184,6 +183,25 @@ class UserControllerTest {
         for (int i = 1; i < numberUUID; i++) URI_TEST += String.format("&challenge=%s", UUID.randomUUID());
 
         return URI_TEST;
+    }
+
+    @Test
+    void getChallengeUserPercentageTest() {
+        UUID challengeId = UUID.randomUUID();
+        float percentage = 75.0f;
+        ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
+
+        when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeUserPercentageStatisticDto.class)
+                .value(responseDto -> {
+                    assertEquals(expectedDto.getChallengeId(), responseDto.getChallengeId());
+                    assertEquals(expectedDto.getPercentage(), responseDto.getPercentage());
+                });
     }
 
     @Test
