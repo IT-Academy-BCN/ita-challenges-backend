@@ -1,7 +1,7 @@
-package com.itachallenge.challenge.config.dbchangelog;
+package com.itachallenge.challenge.exception;
 
-public class IntentionalException extends RuntimeException{
-    public IntentionalException(String message) {
+public class IntentionalRollBackException extends RuntimeException{
+    public IntentionalRollBackException(String message) {
         super(message);
     }
 }

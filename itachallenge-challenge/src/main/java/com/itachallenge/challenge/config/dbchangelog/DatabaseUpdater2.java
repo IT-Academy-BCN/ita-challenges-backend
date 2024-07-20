@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
+import com.itachallenge.challenge.exception.IntentionalRollBackException;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import io.mongock.api.annotations.ChangeUnit;
@@ -36,9 +37,9 @@ public class DatabaseUpdater2 {
             updateFieldInCollection(client);
             addFieldToAllDocuments(reactiveMongoTemplate);
             // Intentional error to provoke rollback
-            throw new IntentionalException("Intentional error occurred during execution");
+            throw new IntentionalRollBackException("Intentional error occurred during execution");
         } catch (RuntimeException e) {
-            throw new IntentionalException("Error occurred during execution");
+            throw new IntentionalRollBackException("Error occurred during execution");
         }
     }
 
