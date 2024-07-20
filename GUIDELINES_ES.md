@@ -161,8 +161,9 @@ Configuraciones Git necesarias para evitar problemas
 
 ### 2.2.2 Autocrlf
 
-Antes de nada, por favor revisa Before all, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
-Es importante.
+**Antes de nada**, por favor revisa https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Ten presente que el encoding por defecto en el proyecto es UTF-8. Asegúrate de que tus editores emplean esa codificación.
 
 
 <hr/>
@@ -171,7 +172,8 @@ Es importante.
 1. Conectarse a Teams a las 9:15h
 2. Hacer pull de la rama "develop"
 3. Hacer merge de develop con la rama en la que estás trabajando
-4. "Coffee time" a las 10:15h aproximadamente
+4. Si tienes alguna PR abierta, actualiza la rama con los cambios de develop
+5. "Coffee time" a las 10:15h aproximadamente
 
 IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
 
