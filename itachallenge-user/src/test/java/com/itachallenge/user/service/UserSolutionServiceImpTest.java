@@ -2,10 +2,13 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.dtos.SolutionUserDto;
+import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +18,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -32,10 +37,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class UserSolutionServiceImpTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
+    @Mock
+    ConverterDocumentToDto converterDocumentToDto;
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -46,6 +54,7 @@ class UserSolutionServiceImpTest {
     private int mockScore;
     private UserSolutionDto userSolutionDto;
     private UserSolutionDocument userSolutionDocument;
+    private ConverterDocumentToDto converter = new ConverterDocumentToDto();
 
     @BeforeEach
     void setUp() {
@@ -93,6 +102,32 @@ class UserSolutionServiceImpTest {
         assert (userSolutionDocument.getLanguageId().equals(languageId));
         assert (userSolutionDocument.getChallengeId().equals(challengeId));
 
+    }
+
+    @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
+    @Test
+    void getChallengeByIdValidDocument_test() {
+
+        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.ENDED)
+                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
+                .score(mockScore)
+                .build();
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
+        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
+
+        Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
+
+        assertNotNull(challengeById);
+        StepVerifier.create(challengeById)
+                .expectNextMatches(solutionUserDto -> solutionUserDto.getCount() == 1
+                                && solutionUserDto.getLimit() == 1
+                                && solutionUserDto.getOffset() == 0
+                                && solutionUserDto.getResults().length == 1)
+                .verifyComplete();
     }
 
     @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when existing document can't be found and status is empty or ENDED")
