@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.document.ChallengeDocument;
@@ -8,6 +7,7 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import io.mongock.api.annotations.*;
 import io.mongock.driver.mongodb.reactive.util.MongoSubscriberSync;
 import io.mongock.driver.mongodb.reactive.util.SubscriberSync;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -63,12 +63,11 @@ public class DatabaseInitializerPrueba2 {
         subscriber.await();
 
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        logger.info("Collections droped");
+        logger.info("Collections dropped");
     }
 
     @Execution
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
-
         try {
             InputStream challenges = getClass().getClassLoader().getResourceAsStream("mongodb-test-data/challenges.json");
             InputStream languages = getClass().getClassLoader().getResourceAsStream("mongodb-test-data/languages.json");
@@ -80,18 +79,22 @@ public class DatabaseInitializerPrueba2 {
             List<Map<String, Object>> solutionDocuments = mapper.readValue(solutions, new TypeReference<List<Map<String, Object>>>() {});
 
             for (Map<String, Object> challengeDocument : challengeDocuments) {
-                reactiveMongoTemplate.insert(challengeDocument, CHALLENGE_COLLECTION_NAME).subscribe();
+                Document mongoDocument = new Document(challengeDocument);
+                processSpecialFields(mongoDocument);
+                reactiveMongoTemplate.insert(mongoDocument, CHALLENGE_COLLECTION_NAME).subscribe();
             }
 
             for (Map<String, Object> languageDocument : languageDocuments) {
-                reactiveMongoTemplate.insert(languageDocument, LANGUAGE_COLLECTION_NAME).subscribe();
+                Document mongoDocument = new Document(languageDocument);
+                processSpecialFields(mongoDocument);
+                reactiveMongoTemplate.insert(mongoDocument, LANGUAGE_COLLECTION_NAME).subscribe();
             }
 
             for (Map<String, Object> solutionDocument : solutionDocuments) {
-                reactiveMongoTemplate.insert(solutionDocument, SOLUTION_COLLECTION_NAME).subscribe();
+                Document mongoDocument = new Document(solutionDocument);
+                processSpecialFields(mongoDocument);
+                reactiveMongoTemplate.insert(mongoDocument, SOLUTION_COLLECTION_NAME).subscribe();
             }
-
-
 
             logger.info("Challenges loaded");
 
@@ -100,10 +103,31 @@ public class DatabaseInitializerPrueba2 {
         }
     }
 
+    private void processSpecialFields(Document document) {
+        for (Map.Entry<String, Object> entry : document.entrySet()) {
+            Object value = entry.getValue();
+            if (value instanceof Map) {
+                Map<String, Object> valueMap = (Map<String, Object>) value;
+                if (valueMap.containsKey("$uuid")) {
+                    entry.setValue(java.util.UUID.fromString((String) valueMap.get("$uuid")));
+                } else if (valueMap.containsKey("$date")) {
+                    entry.setValue(new java.util.Date((long) valueMap.get("$date")));
+                } else {
+                    processSpecialFields(new Document(valueMap));
+                }
+            } else if (value instanceof List) {
+                for (Object item : (List) value) {
+                    if (item instanceof Map) {
+                        processSpecialFields(new Document((Map<String, Object>) item));
+                    }
+                }
+            }
+        }
+    }
+
     @RollbackExecution
     public void rollbackExecution(ReactiveMongoTemplate reactiveMongoTemplate) {
         reactiveMongoTemplate.remove(query, ChallengeDocument.class, CHALLENGE_COLLECTION_NAME).subscribe();
         logger.info("Challenges removed");
     }
-
 }
