@@ -18,7 +18,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -37,13 +36,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
 class UserSolutionServiceImpTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
-    @Mock
-    ConverterDocumentToDto converterDocumentToDto;
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -54,7 +50,6 @@ class UserSolutionServiceImpTest {
     private int mockScore;
     private UserSolutionDto userSolutionDto;
     private UserSolutionDocument userSolutionDocument;
-    private ConverterDocumentToDto converter = new ConverterDocumentToDto();
 
     @BeforeEach
     void setUp() {
@@ -107,6 +102,8 @@ class UserSolutionServiceImpTest {
     @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
     @Test
     void getChallengeByIdValidDocument_test() {
+
+        ConverterDocumentToDto converter = new ConverterDocumentToDto();
 
         UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
@@ -216,7 +213,7 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodifiableSolutionException
-                        && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
+                                && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
@@ -230,9 +227,9 @@ class UserSolutionServiceImpTest {
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
-            .expectErrorMatches(
-                    throwable -> throwable instanceof IllegalArgumentException
-                        && throwable.getMessage().equals("Status not allowed")).verify();
+                .expectErrorMatches(
+                        throwable -> throwable instanceof IllegalArgumentException
+                                && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
     }
