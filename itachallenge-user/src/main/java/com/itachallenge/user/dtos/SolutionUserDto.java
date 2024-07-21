@@ -6,8 +6,7 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 @Component
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 public class SolutionUserDto<T> {
 

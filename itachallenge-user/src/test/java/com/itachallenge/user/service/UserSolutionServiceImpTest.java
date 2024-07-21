@@ -124,9 +124,9 @@ class UserSolutionServiceImpTest {
         assertNotNull(challengeById);
         StepVerifier.create(challengeById)
                 .expectNextMatches(solutionUserDto -> solutionUserDto.getCount() == 1
-                                && solutionUserDto.getLimit() == 1
-                                && solutionUserDto.getOffset() == 0
-                                && solutionUserDto.getResults().length == 1)
+                        && solutionUserDto.getLimit() == 1
+                        && solutionUserDto.getOffset() == 0
+                        && solutionUserDto.getResults().length == 1)
                 .verifyComplete();
     }
 
