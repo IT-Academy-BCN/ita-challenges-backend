@@ -101,11 +101,11 @@ class UserSolutionServiceImpTest {
 
     @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
     @Test
-    void getChallengeByIdValidDocument_test() {
+    void getChallengeByIdTest() {
 
         ConverterDocumentToDto converter = new ConverterDocumentToDto();
 
-        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+        userSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
