@@ -216,7 +216,7 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodifiableSolutionException
-                                && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
+                        && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
@@ -230,9 +230,9 @@ class UserSolutionServiceImpTest {
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
-                .expectErrorMatches(
-                        throwable -> throwable instanceof IllegalArgumentException
-                                && throwable.getMessage().equals("Status not allowed")).verify();
+            .expectErrorMatches(
+                    throwable -> throwable instanceof IllegalArgumentException
+                        && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
     }
