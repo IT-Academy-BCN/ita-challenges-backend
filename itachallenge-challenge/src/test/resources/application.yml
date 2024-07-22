@@ -2,8 +2,23 @@ spring:
   application:
     name: itachallenge-challenge
     version: 1.2.0-RELEASE
-  jmx:
-    enabled: true
+    jmx:
+      enabled: true
+
+mongock:
+  enabled: true
+  transactionEnabled: false
+  migration-scan-package: com.itachallenge.challenge.config.dbchangelog
+  lock:
+    collectionName: "mongockLocks" # Name of the collection used to lock the execution of the migration
+    maxWaitingForLockMinutes: 5
+    maxTries: 3 # Number of times to try to acquire a lock
+    maxTriesInterval: 1000 # Interval in milliseconds between tries to acquire a lock
+    timeToLive: 3600 # Time in seconds to keep the lock
+    change-logs-scan-package: com.itachallenge.challenge.config.dbchangelog
+    metadata-collection-name: "mongockChangeLog"
+    metadata-lock-collection-name: "mongockLocks"
+    metadata-lock-id: "mongockLockId"
 
 mongock:
   enabled: true
@@ -21,28 +36,28 @@ mongock:
     metadata-lock-id: "mongockLockId"
 
 server:
-  port: 8762
+port: 8762
 
 management:
   endpoints:
-    web:
-      exposure:
-        include: "*"
+web:
+exposure:
+  include: "*"
   security:
-    enabled: false
+  enabled: false
 
 zeromq:
   socket:
-    address: tcp://*:5555
+address: tcp://*:5555
 
 logging:
   level:
-    root: INFO
-    "[org.springframework]": ERROR
-    "[com.itachallenge]": INFO
-  pattern:
-    # console: Spring's default
-    file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
+  root: INFO
+  "[org.springframework]": ERROR
+  "[com.itachallenge]": INFO
+pattern:
+# console: Spring's default
+  file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-challenge.log
 
@@ -58,4 +73,4 @@ validation:
   defaultLimit: 200
 
 messages:
-  errorMessage: "Invalid values."
+errorMessage: "Invalid values."
