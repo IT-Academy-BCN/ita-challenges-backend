@@ -152,13 +152,16 @@ class ChallengeControllerTest {
         ChallengeDto challengeDto2 = new ChallengeDto();
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2, challengeDto3};
-        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 3, 3, expectedChallenges);
+
+        Mono<GenericResultDto<ChallengeDto>> expectedResultMono = Mono.just(expectedResult);
 
         String offset = "0";
         String limit = "3";
 
         when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
-                .thenReturn(expectedChallengesFlux);
+                .thenReturn(expectedResultMono);
 
         // Act & Assert
         webTestClient.get()
@@ -174,13 +177,17 @@ class ChallengeControllerTest {
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
-        Flux<ChallengeDto> expectedChallengesFlux = Flux.just(expectedChallenges);
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, expectedChallenges);
+
+        Mono<GenericResultDto<ChallengeDto>> expectedResultMono = Mono.just(expectedResult);
+
 
         String offset = "0";
         String limit = "2";
 
         when(challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit)))
-                .thenReturn(expectedChallengesFlux);
+                .thenReturn(expectedResultMono);
 
         // Act & Assert
         webTestClient.get()

@@ -1,7 +1,7 @@
 spring:
   application:
     name: itachallenge-user
-    version: 2.0.0-RELEASE
+    version: 2.2.0-RELEASE
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
