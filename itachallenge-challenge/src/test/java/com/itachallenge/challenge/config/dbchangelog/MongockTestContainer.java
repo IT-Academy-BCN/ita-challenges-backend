@@ -20,7 +20,6 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
-@ActiveProfiles("mongockTest")
 class MongockTestContainer {
 
     @Container
@@ -64,7 +63,6 @@ class MongockTestContainer {
     }
 
 
-
     @Test
     void testDocumentCreation() {
         String expectedCollectionName = "mongockDemo";
@@ -94,9 +92,8 @@ class MongockTestContainer {
         assertNotNull(actualCollectionName, "El nombre de la colección no debería ser nulo");
         assertEquals(expectedCollectionName, actualCollectionName, "El nombre de la colección debe ser 'mongockDemo'");
 
-        // Perform the update operation or invoke the method that performs the update
-        databaseInitializer.execution(reactiveMongoTemplate);
 
+        databaseInitializer.execution(reactiveMongoTemplate);
         reactiveMongoTemplate.getCollection(actualCollectionName)
                 .flatMapMany(collection -> collection.find().first())
                 .doOnNext(document -> {
@@ -105,7 +102,6 @@ class MongockTestContainer {
                 })
                 .blockLast();
     }
-
 
 
     @AfterEach

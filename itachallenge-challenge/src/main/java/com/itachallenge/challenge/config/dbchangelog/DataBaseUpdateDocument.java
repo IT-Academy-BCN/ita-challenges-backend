@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
-import com.itachallenge.challenge.document.LanguageDocument;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoCollection;
 import io.mongock.api.annotations.ChangeUnit;
@@ -13,8 +12,6 @@ import reactor.core.publisher.Mono;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-
-import java.util.UUID;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static com.mongodb.client.model.Updates.rename;

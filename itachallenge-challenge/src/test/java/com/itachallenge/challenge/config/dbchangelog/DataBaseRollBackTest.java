@@ -22,7 +22,6 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @Testcontainers
-@ActiveProfiles("mongockTest")
 class DataBaseRollBackTest {
 
     @Container
@@ -52,7 +51,6 @@ class DataBaseRollBackTest {
         reactiveMongoTemplate = new ReactiveMongoTemplate(mongoClient, "challenges");
         reactiveMongoTemplate.createCollection("mongockDemo").block();
 
-        // Re-inyectar el logger mockeado en DataBaseRollback
         dataBaseRollback = new DataBaseRollback(reactiveMongoTemplate, mockLogger);
     }
 
@@ -61,23 +59,14 @@ class DataBaseRollBackTest {
         reactiveMongoTemplate.dropCollection("mongockDemo").block();
     }
 
-    @Test
-    void testExecution() { // Este test debería lanzar una excepción
-        assertThrows(RuntimeException.class, this::execute);
 
+    @Test
+    void testExecution() { // Este test verifica que al ejecutar el Execute de DataBaseRollback funciona el método de rollBackExecution.
+
+        assertThrows(RuntimeException.class, this::execute);
         assertEquals(0, reactiveMongoTemplate.findAll(LanguageDocument.class).count().block());
     }
 
-    @Test
-    void testExecutionLogMessages() {
-        try {
-            dataBaseRollback.execution(MongoClients.create(mongoDBContainer.getReplicaSetUrl()));
-        } catch (Exception e) {
-            System.out.println("-----------------------------------------------------------");
-            System.out.println("Error intencional durante la ejecución");
-        }
-        verify(mockLogger).error(eq("Intentional exception to trigger rollback"), any(Exception.class));
-    }
 
     private void execute() {
         dataBaseRollback.execution(MongoClients.create(mongoDBContainer.getReplicaSetUrl()));

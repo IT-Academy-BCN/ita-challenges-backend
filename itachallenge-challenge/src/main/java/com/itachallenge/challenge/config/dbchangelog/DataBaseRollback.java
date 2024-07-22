@@ -54,7 +54,7 @@ public class DataBaseRollback {
 
 
             throw new RuntimeException("Intentional exception to trigger rollback");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             logger.info("Exception occurred: {}", e.getMessage(), e);
             throw e;
         }
