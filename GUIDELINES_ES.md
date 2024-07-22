@@ -172,7 +172,8 @@ Ten presente que el encoding por defecto en el proyecto es UTF-8. Asegúrate de 
 1. Conectarse a Teams a las 9:15h
 2. Hacer pull de la rama "develop"
 3. Hacer merge de develop con la rama en la que estás trabajando
-4. "Coffee time" a las 10:15h aproximadamente
+4. Si tienes alguna PR abierta, actualiza la rama con los cambios de develop
+5. "Coffee time" a las 10:15h aproximadamente
 
 IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde las 9:15h hasta las 13:15h, para trabajar en equipo (salvo circunstancias que lo justifiquen).
 

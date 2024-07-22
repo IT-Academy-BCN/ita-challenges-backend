@@ -169,8 +169,9 @@ Keep in mind that default encoding in project is UTF-8. Ensure that your text ed
 ## 2.3 Daily Procedure
 1. Connect to Teams at 9h15
 2. Make pull the "develop" branch
-3. Merge "develop" with the branc you are working on
-4. Coffee time at the 10h15 approx.
+3. Merge "develop" with the branch you are working on
+4. If you have some PR started, please update the branch with develop branch
+5. Coffee time at the 10h15 approx.
 
 IMPORTANT: It's expected that in the project we will be online with the camera on from 9h15 to 13h15, to work as a team (execpt for circumstance that justify it).
 
