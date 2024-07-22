@@ -333,7 +333,7 @@ class UserControllerTest {
 
     @Test
     void getAllSolutionsByIdUser() {
-        String URI_TEST = "/{idUser}/challenges";
+        String URI_TEST = "/{idUser}/challenges/solutions";
         UUID userId = UUID.randomUUID();
 
         UserSolutionDto userSolutionDto = UserSolutionDto.builder()
