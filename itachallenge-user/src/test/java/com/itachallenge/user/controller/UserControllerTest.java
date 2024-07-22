@@ -3,6 +3,7 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,7 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -330,28 +332,34 @@ class UserControllerTest {
     }
 
     @Test
-    void addSolutionRequestBodyTooLarge_test() {
-        String URI_TEST = "/solution";
+    void getAllSolutionsByIdUser() {
+        String URI_TEST = "/{idUser}/challenges";
+        UUID userId = UUID.randomUUID();
 
-        String largeSolutionText = "aLongText"; // 3MB de datos
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
-        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
-        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setSolutionText(largeSolutionText);
+        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
+                .userId(userId.toString())
+                .challengeId(UUID.randomUUID().toString())
+                .languageId(UUID.randomUUID().toString())
+                .status("STARTED")
+                .solutionText("Sample Solution")
+                .build();
 
-        when(userSolutionService.addSolution(any()))
-                .thenReturn(Mono.error(new MaxUploadSizeExceededException(2 * 1024 * 1024)));
+        when(userSolutionService.showAllUserSolutions(userId)).thenReturn(Flux.just(userSolutionDto));
 
-        webTestClient.put()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(userSolutionDto)
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, userId.toString())
                 .exchange()
-                .expectStatus().isEqualTo(HttpStatus.PAYLOAD_TOO_LARGE);
-
-        verify(userSolutionService).addSolution(userSolutionDto);
+                .expectStatus().isOk()
+                .expectBodyList(UserSolutionDto.class)
+                .value(solutions -> {
+                    assertNotNull(solutions);
+                    assertEquals(1, solutions.size());
+                    UserSolutionDto solution = solutions.get(0);
+                    assertEquals(userId.toString(), solution.getUserId());
+                    assertEquals("Sample Solution", solution.getSolutionText());
+                });
     }
+
 }
 
 

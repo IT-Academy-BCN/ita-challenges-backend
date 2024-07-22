@@ -40,6 +40,9 @@ class UserSolutionServiceImpTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
+    @Mock
+    private ConverterDocumentToDto converter;
+
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -232,6 +235,42 @@ class UserSolutionServiceImpTest {
                                 && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
+    }
+
+    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns all solutions for the user")
+    @Test
+    void showAllUserSolutions() {
+        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(userSolutionDocument.getChallengeId().toString())
+                .languageId(userSolutionDocument.getLanguageId().toString())
+                .status(userSolutionDocument.getStatus().toString())
+                .solutionText("Sample Solution")
+                .build();
+
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
+        when(converter.fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument)).thenReturn(Flux.just(userSolutionDto));
+
+        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
+
+        StepVerifier.create(resultFlux)
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals(userUuid.toString()) &&
+                                dto.getSolutionText().equals("Sample Solution"))
+                .verifyComplete();
+    }
+
+
+    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns empty flux when no solutions are found")
+    @Test
+    void showAllUserSolutions_NoSolutions() {
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.empty());
+
+        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
+
+        StepVerifier.create(resultFlux)
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
 }
