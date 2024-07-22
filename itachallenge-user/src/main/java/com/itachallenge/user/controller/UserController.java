@@ -175,7 +175,7 @@ public class UserController {
     }
 
 
-    @GetMapping(path = "/{idUser}/challenges")
+    @GetMapping(path = "/{idUser}/challenges/solutions")
     @Operation(
             summary = "Retrieves all user challenges solutions and their status.",
             description = "Retrieves all user-contributed solutions for all challenges and their status (whether they've finished completing them or not).",
