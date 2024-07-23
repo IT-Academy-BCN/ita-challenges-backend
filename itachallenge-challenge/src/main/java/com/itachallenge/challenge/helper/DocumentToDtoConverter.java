@@ -42,9 +42,7 @@ public class DocumentToDtoConverter<S,D> {
         if (dtoClass.isAssignableFrom(SolutionDto.class)) {
             mapper.createTypeMap(SolutionDocument.class, SolutionDto.class)
                     .addMapping(SolutionDocument::getUuid, SolutionDto::setUuid)
-                    .addMapping(SolutionDocument::getSolutionText, SolutionDto::setSolutionText)
-                    .addMapping(SolutionDocument::getIdLanguage, SolutionDto::setIdLanguage)
-                    .addMapping(SolutionDocument::getIdChallenge, SolutionDto::setIdChallenge);
+                    .addMapping(SolutionDocument::getSolutionText, SolutionDto::setSolutionText);
         }
 
         if(dtoClass.isAssignableFrom(LanguageDto.class)) {
