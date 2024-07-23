@@ -18,6 +18,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 @Component
 @ChangeUnit(id = "DatabaseInitalizerDemo", order = "1", author = "Ernesto Arcos / Pedro López")
 public class DatabaseInitializer {
+
     Query query = new Query(where("_id").ne(null));
     private final Logger logger = LoggerFactory.getLogger(DatabaseInitializer.class);
     private static final String COLLECTION_NAME = "mongockDemo";
@@ -49,10 +50,10 @@ public class DatabaseInitializer {
     // Method to execute the changes in the database
     @Execution
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
-        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "LanguageDemo");
+        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "JAVA");
         reactiveMongoTemplate.save(languageDocument, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nexecution"))
-                .subscribe();
+                .block();
     }
 
     // Method to rollback the changes in case of any failure during the execution

@@ -20,6 +20,7 @@ import java.time.Duration;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
+@ActiveProfiles("mongockTest")
 class DataBaseMongoContainerTest {
 
     @Container
@@ -110,4 +111,3 @@ class DataBaseMongoContainerTest {
         reactiveMongoTemplate.dropCollection("mongockDemo").block();
     }
 }
-

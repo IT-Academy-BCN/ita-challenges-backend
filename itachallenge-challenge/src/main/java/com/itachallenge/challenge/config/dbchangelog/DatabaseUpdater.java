@@ -57,10 +57,11 @@ public class DatabaseUpdater {
     public void rollbackUpdateFieldInCollection(MongoClient client){
         MongoCollection<Document> mongockTest = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
 
-        Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name")))
+        Mono.from(mongockTest.updateOne(new Document(), rename("language_name_updated", "language_name_Rollbacked")))
                 .doOnSuccess(updateResult -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~\nUpdaterRollbackExecution"))
                 .subscribe();
     }
+
 
     // Method to add a new field to all documents in a collection
     public void addFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {

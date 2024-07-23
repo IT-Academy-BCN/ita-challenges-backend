@@ -25,6 +25,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  *
  * @Author: Dani Diaz
  */
+
 @Component
 @ChangeUnit(id = "Add Documents", order = "3", author = "Dani Diaz")
 public class DataBaseAddDocument {
@@ -61,16 +62,15 @@ public class DataBaseAddDocument {
 
 
     private void addDocumentToCollection(ReactiveMongoTemplate mongoTemplate) {
-        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "Java");
+        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "Java_Demo");
         mongoTemplate.save(languageDocument, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("Document added to collection"))
-                .doOnError(error -> logger.error("Error during document insertion: {}", error.getMessage()))
-                .subscribe();
+                .block();
     }
 
     private void removeDocumentFromCollection(ReactiveMongoTemplate mongoTemplate) {
 
-        Query query = Query.query(where(FIELD_NAME).is("Java"));
+        Query query = Query.query(where(FIELD_NAME).is("Java_Demo"));
         mongoTemplate.remove(query, COLLECTION_NAME)
                 .doOnSuccess(result -> logger.info("Document removed from collection"))
                 .doOnError(error -> logger.error("Error during document removal: {}", error.getMessage()))

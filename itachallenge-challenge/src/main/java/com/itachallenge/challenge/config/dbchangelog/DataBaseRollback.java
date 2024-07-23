@@ -13,6 +13,7 @@ import reactor.core.publisher.Mono;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 
 import static com.mongodb.client.model.Updates.rename;
+import static com.mongodb.client.model.Updates.set;
 
 /*
  * This class is a change log that updates the database by adding a new field to all documents in a collection,
@@ -31,7 +32,7 @@ import static com.mongodb.client.model.Updates.rename;
 @ChangeUnit(id = "Intentional Rollback order", order = "5", author = "Dani Diaz")
 public class DataBaseRollback {
 
-    private Logger logger = LoggerFactory.getLogger(DataBaseRollback.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseRollback.class);
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     private static final String COLLECTION_NAME = "mongockDemo";
@@ -39,44 +40,55 @@ public class DataBaseRollback {
     private static final String FIELD_NAME = "language_name";
 
 
-    public DataBaseRollback(ReactiveMongoTemplate reactiveMongoTemplate, Logger logger) {
+    public DataBaseRollback(ReactiveMongoTemplate reactiveMongoTemplate) {
         this.reactiveMongoTemplate = reactiveMongoTemplate;
-        this.logger = logger;
     }
 
     @Execution
     public void execution(MongoClient client) {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdater execution started");
 
-        try {
             updateFieldInCollection(client);
             logger.info("Field updated in collection");
-
-
-            throw new RuntimeException("Intentional exception to trigger rollback");
-        } catch (RuntimeException e) {
-            logger.info("Exception occurred: {}", e.getMessage(), e);
-            throw e;
-        }
     }
 
     @RollbackExecution
     public void rollBackExecution(MongoClient client) {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution started");
+
         rollbackUpdateFieldInCollection(client);
+        updateTextInField(client);
         logger.info("Field updated in collection rolled back");
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution completed successfully");
 
     }
 
     private void updateFieldInCollection(MongoClient client) {
+
         MongoCollection<Document> collection = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
+        Document updateQuery = new Document("invalidOperator", new Document("$invalid", "someValue"));
+
         Mono.from(collection.updateMany(
                         new Document(FIELD_NAME_UPDATED, new Document("$exists", true)),
-                        rename(FIELD_NAME_UPDATED, FIELD_NAME)))
-                .doOnSuccess(updateResult -> logger.info("Field '{}' renamed to '{}'", FIELD_NAME_UPDATED, FIELD_NAME_UPDATED))
+                        updateQuery))
+                .doOnSuccess(updateResult -> logger.info("Field '{}' renamed to '{}'", FIELD_NAME, FIELD_NAME_UPDATED))
+                .doOnError(error -> logger.error("Update failed: {}", error.getMessage()))
                 .block();
     }
+
+
+    private void updateTextInField(MongoClient client) {
+        MongoCollection<Document> collection = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
+
+        Document filter = new Document(FIELD_NAME_UPDATED, "LanguageDemo");
+        Document update = new Document("$set", new Document(FIELD_NAME_UPDATED, "LanguageUpdated"));
+
+        Mono.from(collection.updateMany(filter, update))
+                .doOnSuccess(updateResult -> logger.info("Field '{}' updated from 'LanguageDemo' to 'LanguageUpdateD'", FIELD_NAME_UPDATED))
+                .block();
+    }
+
+
 
     private void rollbackUpdateFieldInCollection(MongoClient client) {
 

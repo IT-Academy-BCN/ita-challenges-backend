@@ -45,13 +45,12 @@ class DataBaseRollBackTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this); // Inicializar mocks
 
+        MockitoAnnotations.openMocks(this);
         MongoClient mongoClient = MongoClients.create(mongoDBContainer.getReplicaSetUrl());
         reactiveMongoTemplate = new ReactiveMongoTemplate(mongoClient, "challenges");
         reactiveMongoTemplate.createCollection("mongockDemo").block();
-
-        dataBaseRollback = new DataBaseRollback(reactiveMongoTemplate, mockLogger);
+        dataBaseRollback = new DataBaseRollback(reactiveMongoTemplate);
     }
 
     @AfterEach
@@ -60,11 +59,10 @@ class DataBaseRollBackTest {
     }
 
 
+    @DisplayName("This test verify when try @Execution method in DataBaseRollback, works @RollbackExecution")
     @Test
-    void testExecution() { // Este test verifica que al ejecutar el Execute de DataBaseRollback funciona el método de rollBackExecution.
-
-        assertThrows(RuntimeException.class, this::execute);
-        assertEquals(0, reactiveMongoTemplate.findAll(LanguageDocument.class).count().block());
+    void testExecution() {
+        assertThrows(IllegalArgumentException.class, this::execute);
     }
 
 

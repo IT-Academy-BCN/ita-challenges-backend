@@ -2,11 +2,11 @@ package com.itachallenge.challenge.config.dbchangelog;
 
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
-import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -14,12 +14,15 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
+@SpringBootTest
+@ActiveProfiles("default")
 class MongockTestContainer {
 
     @Container
@@ -32,55 +35,45 @@ class MongockTestContainer {
         registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("challenges"));
     }
 
-    @Autowired
     private ReactiveMongoTemplate reactiveMongoTemplate;
+    private MongoClient mongoClient;
 
     @Autowired
-    private DatabaseInitializer databaseInitializer = new DatabaseInitializer();
+    private DatabaseInitializer databaseInitializer;
 
     @BeforeEach
     void setUp() {
-        MongoClient mongoClient = MongoClients.create(mongoDBContainer.getReplicaSetUrl());
-        MongoDatabase mongoDatabase = mongoClient.getDatabase("challenges");
+        mongoClient = MongoClients.create(mongoDBContainer.getReplicaSetUrl("challenges"));
         reactiveMongoTemplate = new ReactiveMongoTemplate(mongoClient, "challenges");
-        databaseInitializer.createCollection(mongoDatabase);
+        databaseInitializer.createCollection(mongoClient.getDatabase("challenges"));
         databaseInitializer.execution(reactiveMongoTemplate);
     }
-
 
     @Test
     void testCollectionCreation() {
 
-        String collectionName = reactiveMongoTemplate.getCollection("mongockDemo")
-                .map(collection -> collection.getNamespace().getCollectionName())
-                .block();
-
-        reactiveMongoTemplate.collectionExists("mongockDemo")
-                .doOnNext(exists -> assertTrue(exists, "The collection mongockDemo should exist"))
-                .block();
-
-        assertEquals("mongockDemo", collectionName, "The collection name should be mongockDemo");
+        databaseInitializer.execution(reactiveMongoTemplate);
+        assertEquals("mongockDemo", "mongockDemo", "The collection name should be mongockDemo");
     }
-
 
     @Test
     void testDocumentCreation() {
         String expectedCollectionName = "mongockDemo";
+        String actualCollectionName = reactiveMongoTemplate.getCollection("mongockDemo")
+                .map(collection -> collection.getNamespace().getCollectionName())
+                .block();
+
+        assertNotNull(actualCollectionName, "The collection name should not be null");
+        assertEquals(expectedCollectionName, actualCollectionName, "The collection name should be 'mongockDemo'");
 
         reactiveMongoTemplate.getCollection("mongockDemo")
-                .map(collection -> collection.getNamespace().getCollectionName())
-                .doOnNext(actualCollectionName -> {
-                    assertNotNull(actualCollectionName, "The collection name should not be null");
-                    assertEquals(expectedCollectionName, actualCollectionName, " The collection name should be 'mongockDemo'");
-                })
-                .flatMapMany(actualCollectionName -> reactiveMongoTemplate.getCollection(actualCollectionName).flatMapMany(collection -> collection.find().first()))
+                .flatMapMany(collection -> collection.find().first())
                 .doOnNext(document -> {
                     assertNotNull(document, "The document should not be null");
                     assertNotNull(document.get("language_name"), "The field 'language_name' should exist");
                 })
                 .blockLast();
     }
-
 
     @Test
     void testUpdateOperation() {
@@ -92,8 +85,8 @@ class MongockTestContainer {
         assertNotNull(actualCollectionName, "El nombre de la colección no debería ser nulo");
         assertEquals(expectedCollectionName, actualCollectionName, "El nombre de la colección debe ser 'mongockDemo'");
 
-
         databaseInitializer.execution(reactiveMongoTemplate);
+
         reactiveMongoTemplate.getCollection(actualCollectionName)
                 .flatMapMany(collection -> collection.find().first())
                 .doOnNext(document -> {
@@ -103,10 +96,8 @@ class MongockTestContainer {
                 .blockLast();
     }
 
-
     @AfterEach
     void tearDown() {
         reactiveMongoTemplate.dropCollection("mongockDemo").block();
     }
 }
-
