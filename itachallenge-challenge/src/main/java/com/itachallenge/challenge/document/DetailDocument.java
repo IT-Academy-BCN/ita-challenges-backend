@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.document;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -10,8 +9,6 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DetailDocument {
 
     @Field(name="description")

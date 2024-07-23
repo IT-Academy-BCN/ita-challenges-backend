@@ -82,8 +82,8 @@ class MongockTestContainer {
                 .map(collection -> collection.getNamespace().getCollectionName())
                 .block();
 
-        assertNotNull(actualCollectionName, "El nombre de la colección no debería ser nulo");
-        assertEquals(expectedCollectionName, actualCollectionName, "El nombre de la colección debe ser 'mongockDemo'");
+        assertNotNull(actualCollectionName, "The collection name should not be null");
+        assertEquals(expectedCollectionName, actualCollectionName, "The collection name should be 'mongockDemo'");
 
         databaseInitializer.execution(reactiveMongoTemplate);
 
