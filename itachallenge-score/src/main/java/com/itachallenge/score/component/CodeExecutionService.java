@@ -7,6 +7,7 @@ import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -18,8 +19,9 @@ import java.util.Arrays;
 public class CodeExecutionService {
 
     /*RECEPCIÓN DEL CÓDIGO DEL USUARIO
-    La cabecera -- public class Main{ public static void main(String[] args){ }}"; --
-    ya viene por defecto, el usuario solo debe agregar el código que se le pide en el enunciado.
+    El código plantilla -- public class Main{ public static void main(String[] args){ }}"; --
+    viene por defecto en application.yml. El usuario se limita a introducir la lógica o el algoritmo
+    que se le pide en el enunciado.
 
     La inyección de parámetros al código del cliente se hace mediante el uso varargs, el método castArgs,
     nos permite llamar al método pasando un array de objetos o pasando los objetos directamente, por ejemplo:
@@ -32,18 +34,13 @@ public class CodeExecutionService {
 
     private static final Logger log = LoggerFactory.getLogger(CodeExecutionService.class);
 
+    @Value("${code.execution.template}")
+    private String codeTemplate;
+
     public ExecutionResultDto compileAndRunCode(String sourceCode, String codeResult, Object... args) {
 
-        //TODO: falta implementar la gestión de los imports
-        //ahora todas las ejecuciones incluyen java.util.* por defecto
-        String imports = "import java.util.*;\n";
-
-        sourceCode = imports +
-                "public class Main {\n" +
-                "    public static void main(String[] args) {\n" +
-                sourceCode +
-                "    }\n" +
-                "}";
+        // Integrar el código del usuario en la plantilla
+        sourceCode = String.format(codeTemplate, sourceCode);
 
         SimpleCompiler compiler = null;
         String result = null;
