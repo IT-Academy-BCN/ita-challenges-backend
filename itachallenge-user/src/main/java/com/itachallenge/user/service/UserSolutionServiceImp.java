@@ -6,6 +6,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
+import com.itachallenge.user.repository.IUserScoreRepository;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
+    private final IUserScoreRepository userScoreRepository;
     private final ConverterDocumentToDto converter;
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, IUserScoreRepository userScoreRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
+        this.userScoreRepository = userScoreRepository;
         this.converter = converter;
     }
 
@@ -147,6 +150,26 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
         return userSolutionRepository.findByUserId(userUuid)
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
+    }
+
+    @Override
+    public Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution)
+    {
+        UUID uuidUser = UUID.fromString(idUser);
+        UUID uuidChallenge = UUID.fromString(idChallenge);
+        UUID uuidSolution = UUID.fromString(idSolution);
+
+        String solutionText = String.valueOf(userScoreRepository.findByUuid(uuidSolution)
+                .map(SolutionDocument::getSolutionText));
+
+        return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+                .map(req -> {
+                    UserSolScoreDto scoreReq = new UserSolScoreDto();
+                    scoreReq.setUuidChallenge(uuidChallenge);
+                    scoreReq.setUuidLanguage(req.getLanguageId());
+                    scoreReq.setSolutionText(solutionText);
+                    return scoreReq;
+                });
     }
 
 }

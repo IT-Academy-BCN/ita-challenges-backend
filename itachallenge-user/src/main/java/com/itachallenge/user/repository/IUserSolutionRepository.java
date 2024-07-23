@@ -1,6 +1,5 @@
 package com.itachallenge.user.repository;
 
-import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
@@ -27,9 +26,4 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
 
-
-
-
-
-//    Mono<SolutionDocument> findByUuid(UUID uuid);
 }

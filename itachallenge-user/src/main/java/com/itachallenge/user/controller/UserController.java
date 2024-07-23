@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
@@ -195,4 +196,20 @@ public class UserController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @GetMapping(path = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    @Operation(summary = "prepare json file for send",
+            description = "a parameter of this json file isn't available in this micro",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful response with the score value",
+                            content = @Content(schema = @Schema(implementation = UserSolScoreDto.class)))
+            })
+    public Flux<ResponseEntity<UserSolScoreDto>> getScoreFromMicroScore(
+            @PathVariable("idUser") String idUser,
+            @PathVariable("idChallenge") String idChallenge,
+            @PathVariable("idSolution") String idSolution)
+    {
+        // phase 1 returns solToSend -> To Do: phase 2 we receive score value from ita-score server
+        return this.userScoreService.getScore(idUser, idChallenge, idSolution)
+                .map(userSolScoreDto -> ResponseEntity.status(HttpStatus.OK).body(userSolScoreDto));
+    }
 }
