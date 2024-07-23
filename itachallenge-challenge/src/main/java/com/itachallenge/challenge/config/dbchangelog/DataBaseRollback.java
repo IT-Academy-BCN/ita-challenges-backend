@@ -8,7 +8,6 @@ import io.mongock.api.annotations.RollbackExecution;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -30,16 +29,12 @@ import static com.mongodb.client.model.Updates.rename;
 public class DataBaseRollback {
 
     private static final Logger logger = LoggerFactory.getLogger(DataBaseRollback.class);
-    private final ReactiveMongoTemplate reactiveMongoTemplate;
 
+    private static final String DATABASE_NAME = "challenges";
     private static final String COLLECTION_NAME = "mongockDemo";
     private static final String FIELD_NAME_UPDATED = "Language Rollbacked";
     private static final String FIELD_NAME = "language_name";
 
-
-    public DataBaseRollback(ReactiveMongoTemplate reactiveMongoTemplate) {
-        this.reactiveMongoTemplate = reactiveMongoTemplate;
-    }
 
     @Execution
     public void execution(MongoClient client) {
@@ -62,7 +57,7 @@ public class DataBaseRollback {
 
     private void updateFieldInCollection(MongoClient client) {
 
-        MongoCollection<Document> collection = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
+        MongoCollection<Document> collection = client.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME);
         Document updateQuery = new Document("invalidOperator", new Document("$invalid", "someValue"));
 
         Mono.from(collection.updateMany(
@@ -75,7 +70,7 @@ public class DataBaseRollback {
 
 
     private void updateTextInField(MongoClient client) {
-        MongoCollection<Document> collection = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
+        MongoCollection<Document> collection = client.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME);
 
         Document filter = new Document(FIELD_NAME_UPDATED, "LanguageDemo");
         Document update = new Document("$set", new Document(FIELD_NAME_UPDATED, "LanguageUpdated"));
@@ -89,7 +84,7 @@ public class DataBaseRollback {
 
     private void rollbackUpdateFieldInCollection(MongoClient client) {
 
-        MongoCollection<Document> collection = client.getDatabase("challenges").getCollection(COLLECTION_NAME);
+        MongoCollection<Document> collection = client.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME);
         Mono.from(collection.updateMany(
                         new Document(FIELD_NAME, new Document("$exists", true)),
                         rename(FIELD_NAME, FIELD_NAME_UPDATED)))
