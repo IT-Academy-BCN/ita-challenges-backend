@@ -2,10 +2,13 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.dtos.SolutionUserDto;
+import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.dtos.UserSolutionScoreDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -36,6 +40,9 @@ class UserSolutionServiceImpTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
+    @Mock
+    private ConverterDocumentToDto converter;
+
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -93,6 +100,34 @@ class UserSolutionServiceImpTest {
         assert (userSolutionDocument.getLanguageId().equals(languageId));
         assert (userSolutionDocument.getChallengeId().equals(challengeId));
 
+    }
+
+    @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
+    @Test
+    void getChallengeByIdTest() {
+
+        ConverterDocumentToDto converter = new ConverterDocumentToDto();
+
+        userSolutionDocument = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.ENDED)
+                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
+                .score(mockScore)
+                .build();
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
+        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
+
+        Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
+
+        assertNotNull(challengeById);
+        StepVerifier.create(challengeById)
+                .expectNextMatches(solutionUserDto -> solutionUserDto.getCount() == 1
+                        && solutionUserDto.getLimit() == 1
+                        && solutionUserDto.getOffset() == 0
+                        && solutionUserDto.getResults().length == 1)
+                .verifyComplete();
     }
 
     @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when existing document can't be found and status is empty or ENDED")
@@ -200,6 +235,42 @@ class UserSolutionServiceImpTest {
                         && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
+    }
+
+    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns all solutions for the user")
+    @Test
+    void showAllUserSolutions() {
+        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(userSolutionDocument.getChallengeId().toString())
+                .languageId(userSolutionDocument.getLanguageId().toString())
+                .status(userSolutionDocument.getStatus().toString())
+                .solutionText("Sample Solution")
+                .build();
+
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
+        when(converter.fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument)).thenReturn(Flux.just(userSolutionDto));
+
+        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
+
+        StepVerifier.create(resultFlux)
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals(userUuid.toString()) &&
+                                dto.getSolutionText().equals("Sample Solution"))
+                .verifyComplete();
+    }
+
+
+    @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns empty flux when no solutions are found")
+    @Test
+    void showAllUserSolutions_NoSolutions() {
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.empty());
+
+        Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
+
+        StepVerifier.create(resultFlux)
+                .expectNextCount(0)
+                .verifyComplete();
     }
 
 }

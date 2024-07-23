@@ -41,7 +41,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .collectList()
                 .map(userScoreDtos -> {
                     SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                    solutionUserDto.setInfo(0, 1, 0, userScoreDtos.toArray(new UserScoreDto[0]));
+                    int count = userScoreDtos.size();
+                    solutionUserDto.setInfo(0, 1, count, userScoreDtos.toArray(new UserScoreDto[0]));
                     return solutionUserDto;
                 });
     }
@@ -141,6 +142,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             challengeStatus = ChallengeStatus.ENDED;
     }
         return challengeStatus;
+    }
+
+    public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
+        return userSolutionRepository.findByUserId(userUuid)
+                .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
 
 }
