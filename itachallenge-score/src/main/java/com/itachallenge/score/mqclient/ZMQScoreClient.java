@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 @Component
 public class ZMQScoreClient {
     private final ZContext context;
-    private final String SOCKET_ADDRESS2;
+    private final String CLIENT_SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQScoreClient.class);
 
     @Autowired
@@ -29,9 +29,9 @@ public class ZMQScoreClient {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ZMQScoreClient(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
+    public ZMQScoreClient(ZContext context, @Value("${zeromq.socket.address_client}") String socketAddress){
         this.context = context;
-        this.SOCKET_ADDRESS2 = socketAddress;
+        this.CLIENT_SOCKET_ADDRESS = socketAddress;
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
@@ -40,7 +40,7 @@ public class ZMQScoreClient {
 
             ZContext context = new ZContext();
             ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
-            socket.connect(SOCKET_ADDRESS2);
+            socket.connect(CLIENT_SOCKET_ADDRESS);
 
             Optional<byte[]> request = Optional.empty();
             try {

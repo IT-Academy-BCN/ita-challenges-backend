@@ -23,15 +23,15 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class ZMQChallengeServer {
     private final ZContext context;
-    private final String SOCKET_ADDRESS2;
+    private final String SERVER_SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQChallengeServer.class);
 
     @Autowired
     IChallengeService challengeService;
 
-    public ZMQChallengeServer(ZContext context, @Value("${zeromq.socket.address2}") String socketAddress){
+    public ZMQChallengeServer(ZContext context, @Value("${zeromq.socket.address_server}") String socketAddress){
         this.context = context;
-        this.SOCKET_ADDRESS2 = socketAddress;
+        this.SERVER_SOCKET_ADDRESS = socketAddress;
     }
 
     @PostConstruct
@@ -43,7 +43,7 @@ public class ZMQChallengeServer {
     public void run(){
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind(SOCKET_ADDRESS2);
+            socket.bind(SERVER_SOCKET_ADDRESS);
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);

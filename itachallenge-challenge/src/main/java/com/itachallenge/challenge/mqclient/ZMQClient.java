@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.mqclient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import java.util.concurrent.*;
 public class ZMQClient {
 
     private final ZContext context;
-    private final String SOCKET_ADDRESS;
+    private final String CLIENT_SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQClient.class);
 
     @Autowired
@@ -27,9 +26,9 @@ public class ZMQClient {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQClient(ZContext context, @Value("${zeromq.socket.address_client}") String socketAddress){
         this.context = context;
-        this.SOCKET_ADDRESS = socketAddress;
+        this.CLIENT_SOCKET_ADDRESS = socketAddress;
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz){
@@ -38,7 +37,7 @@ public class ZMQClient {
 
             ZContext context = new ZContext();
                 ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
-                socket.connect(SOCKET_ADDRESS);
+                socket.connect(CLIENT_SOCKET_ADDRESS);
 
                 Optional<byte[]> request = Optional.empty();
                 try {

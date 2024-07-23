@@ -27,7 +27,7 @@ management:
 
 zeromq:
   socket:
-    address2: tcp://*:5556
+    address_client: tcp://*:5556
 
 
 logging:
