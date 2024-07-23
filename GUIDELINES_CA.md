@@ -176,7 +176,8 @@ Tingui en compte que la codificació predeterminada en el projecte és UTF-8. As
 1. Connectar-se a Teams a les 9:15h
 2. Fer pull de la branca "develop"
 3. Fer merge de develop amb la branca en què estàs treballant
-4. "Coffee time" a les 10:15h aproximadament
+4. Si tens alguna PR oberta, actualitza la branca amb els canvis de develop 
+5. "Coffee time" a les 10:15h aproximadament
 
 IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de les 9:15h fins a les 13:15h, per treballar en equip (tret de circumstàncies que ho justifiquin).
 

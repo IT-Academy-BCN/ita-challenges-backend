@@ -5,6 +5,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -111,6 +112,28 @@ public class UserController {
                 .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
 
+    @GetMapping(path = "/statistics/percent/{idChallenge}")
+    @Operation(
+            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Something went wrong",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "404", description = "Challenge not found",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<ChallengeUserPercentageStatisticDto>> challengeUserPercentageStatistic(
+            @PathVariable("idChallenge")
+            @GenericUUIDValid(message = "Invalid UUID for challenge")
+            String idChallenge) {
+
+        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge))
+                .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
+                .map(ResponseEntity::ok);
+    }
+
     @PutMapping("/bookmark")
     @Operation(
             summary = "Mark or create a bookmark",
@@ -150,4 +173,26 @@ public class UserController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
+
+
+    @GetMapping(path = "/{idUser}/challenges/solutions")
+    @Operation(
+            summary = "Retrieves all user challenges solutions and their status.",
+            description = "Retrieves all user-contributed solutions for all challenges and their status (whether they've finished completing them or not).",
+            responses = {
+            @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully", content = {@Content(array = @ArraySchema(schema = @Schema(implementation = UserSolutionDto.class)), mediaType = "application/json")}),
+            @ApiResponse(responseCode = "400", description = "Invalid UUID for user"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+            }
+    )
+    public Mono<ResponseEntity<List<UserSolutionDto>>> getAllSolutionsByIdUser(
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser) {
+        UUID userUuid = UUID.fromString(idUser);
+
+        return userScoreService.showAllUserSolutions(userUuid)
+                .collectList()
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
 }

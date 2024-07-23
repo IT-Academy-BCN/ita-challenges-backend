@@ -31,6 +31,16 @@
   },
   {
     "_id": {
+      "$uuid" : "9f1d2a4b-3c6e-4d7b-8a9c-5e0f7b3c2a1d"
+    },
+    "solution_text": "String s1 = \"ABCBDAB\";\n        String s2 = \"BDCAB\";\n        int[][] dp = new int[s1.length() + 1][s2.length() + 1];\n\n        for (int i = 1; i <= s1.length(); i++) {\n            for (int j = 1; j <= s2.length(); j++) {\n                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1] + 1;\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n\n        int index = dp[s1.length()][s2.length()];\n        char[] lcs = new char[index];\n        int i = s1.length(), j = s2.length();\n        while (i > 0 && j > 0) {\n            if (s1.charAt(i - 1) == s2.charAt(j - 1)) {\n                lcs[index - 1] = s1.charAt(i - 1);\n                i--;\n                j--;\n                index--;\n            } else if (dp[i - 1][j] > dp[i][j - 1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n\n        System.out.println(new String(lcs));",
+    "language":
+    {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
       "$uuid" : "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"
     },
     "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
@@ -61,6 +71,36 @@
   },
   {
     "_id": {
+      "$uuid" : "f7c9e2a1-8b6d-4c3f-a9e0-2d5f8c7b1e4a"
+    },
+    "solution_text": "int number = 16;\n        double squareRoot = Math.sqrt(number);\n        boolean isSquareNumber = squareRoot == Math.floor(squareRoot);\n        System.out.println(isSquareNumber);",
+    "language":
+    {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "9f5d7339-f87b-4d7e-b8e8-c6e850ff7a50"
+    },
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "language":
+    {
+      "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "c2c2a6c4-83b1-4a8a-82e3-f5cfb64fcfb4"
+    },
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "language":
+    {
+      "$uuid": "409c9fe8-74de-4db3-81a1-a55280cf92ef"
+    }
+  },
+  {
+    "_id": {
       "$uuid" : "d0e7d7dd-8269-41b6-8e97-b66a952dd1e5"
     },
     "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
@@ -81,9 +121,19 @@
   },
   {
     "_id": {
+      "$uuid" : "f3b6c7d8-2e9a-4b1d-8c7e-4f5a9d0c3b2e"
+    },
+    "solution_text": "String expression = \"6 + -(4)\";\n        System.out.println(evaluate(expression));\n  public static double evaluate(String expression) {\n        return parseExpression(tokenize(expression));\n    }\n\n    private static String[] tokenize(String expression) {\n        return expression.replaceAll(\"\\\\s+\", \"\")\n                .replaceAll(\"([-+*/()])\", \" $1 \")\n                .trim()\n                .split(\"\\\\s+\");\n    }\n\n    private static double parseExpression(String[] tokens) {\n        Stack<Double> numbers = new Stack<>();\n        Stack<Character> operations = new Stack<>();\n\n        for (String token : tokens) {\n            if (token.matches(\"-?\\\\d+(\\\\.\\\\d+)?\")) {\n                numbers.push(Double.parseDouble(token));\n            } else if (token.equals(\"(\")) {\n                operations.push('(');\n            } else if (token.equals(\")\")) {\n                while (operations.peek() != '(') {\n                    numbers.push(applyOp(operations.pop(), numbers.pop(), numbers.pop()));\n                }\n                operations.pop();\n            } else if (\"+-*/\".contains(token)) {\n                while (!operations.isEmpty() && hasPrecedence(token.charAt(0), operations.peek())) {\n                    numbers.push(applyOp(operations.pop(), numbers.pop(), numbers.pop()));\n                }\n                operations.push(token.charAt(0));\n            }\n        }\n\n        while (!operations.isEmpty()) {\n            numbers.push(applyOp(operations.pop(), numbers.pop(), numbers.pop()));\n        }\n\n        return numbers.pop();\n    }\n\n    private static boolean hasPrecedence(char op1, char op2) {\n        if (op2 == '(' || op2 == ')') return false;\n        if ((op1 == '*' || op1 == '/') && (op2 == '+' || op2 == '-')) return false;\n        return true;\n    }\n\n    private static double applyOp(char op, double b, double a) {\n        switch (op) {\n            case '+':\n                return a + b;\n            case '-':\n                return a - b;\n            case '*':\n                return a * b;\n            case '/':\n                if (b == 0) throw new UnsupportedOperationException(\"Cannot divide by zero\");\n                return a / b;\n        }\n        return 0;\n    }",
+    "language":
+    {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
       "$uuid" : "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
     },
-    "solution_text": "import java.util.Arrays;\n\npublic class DescendingOrder {\n    public static void main(String[] args) {\n        int number = 583209;\n        int result = descendingOrder(number);\n        System.out.println(result);\n    }\n\n    public static int descendingOrder(int num) {\n        // Convert the number to a char array\n        char[] digits = String.valueOf(num).toCharArray();\n\n        // Sort the array in descending order\n        Arrays.sort(digits);\n        StringBuilder result = new StringBuilder(new String(digits));\n        result.reverse();\n\n        // Convert the result back to an integer\n        return Integer.parseInt(result.toString());\n    }\n}\n",
+    "solution_text": "int numero = 2345;\n    int[] conteoDigitos = new int[10];\n        while (numero > 0) {\n            int digito = numero % 10;\n            conteoDigitos[digito]++;\n            numero /= 10;\n        }\n\n        int resultado = 0;\n        for (int i = 9; i >= 0; i--) {\n            while (conteoDigitos[i] > 0) {\n                resultado = resultado * 10 + i;\n                conteoDigitos[i]--;\n            }\n        }\n\n        System.out.println(resultado);",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -93,7 +143,7 @@
     "_id": {
       "$uuid" : "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"
     },
-    "solution_text": "public class HighLowNumbers {\n    public static void main(String[] args) {\n        String numbersString = \"4 5 29 54 4 0 -214 542 -64 1 -3 6 -6\";\n        String result = findHighAndLow(numbersString);\n        System.out.println(result);\n    }\n\n    public static String findHighAndLow(String numbersString) {\n        String[] numbersArray = numbersString.split(\" \");\n\n        int[] numbers = new int[numbersArray.length];\n        for (int i = 0; i < numbersArray.length; i++) {\n            numbers[i] = Integer.parseInt(numbersArray[i]);\n        }\n\n        int max = Arrays.stream(numbers).max().getAsInt();\n        int min = Arrays.stream(numbers).min().getAsInt();\n\n        return \"Max: \" + max + \", Min: \" + min;\n    }\n}\n",
+    "solution_text": "public static String findHighAndLow(String numbers) {\n        int[] numArray = Arrays.stream(numbers.split(\" \"))\n                               .mapToInt(Integer::parseInt)\n                               .toArray();\n        \n        int max = Arrays.stream(numArray).max().getAsInt();\n        int min = Arrays.stream(numArray).min().getAsInt();\n        \n        return max + \" \" + min;\n    }",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -111,12 +161,158 @@
   },
   {
     "_id": {
+      "$uuid" : "d6a5b2c1-9e8d-4f7c-a3b0-1e9f8c2d5a4b"
+    },
+    "solution_text": "String sentence = \"Hello, world! This is a test.\";\n        String[] words = sentence.split(\" \");\n        String result = \"\";\n\n        for (String word : words) {\n            String firstLetter = word.substring(0, 1);\n            String restOfWord = word.substring(1);\n            result += restOfWord + firstLetter + \"ay \";\n        }\n\n        System.out.println(result.trim());",
+    "language":
+    {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
       "$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
     },
-    "solution_text": "public class HighLowNumbers {\n    public static void main(String[] args) {\n        String numbersString = \"4 5 29 54 4 0 -214 542 -64 1 -3 6 -6\";\n        String result = findHighAndLow(numbersString);\n        System.out.println(result);\n    }\n\n    public static String findHighAndLow(String numbersString) {\n        String[] numbersArray = numbersString.split(\" \");\n\n        int[] numbers = new int[numbersArray.length];\n        for (int i = 0; i < numbersArray.length; i++) {\n            numbers[i] = Integer.parseInt(numbersArray[i]);\n        }\n\n        int max = Arrays.stream(numbers).max().getAsInt();\n        int min = Arrays.stream(numbers).min().getAsInt();\n\n        return \"Max: \" + max + \", Min: \" + min;\n    }\n}\n",
+    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "e1a9f2b8-7c3d-4e9b-8a1f-99c6d5f17a83"
+    },
+    "solution_text": "String input = \"Dermatoglyphics\";\n        input = input.toLowerCase();\n        boolean isIsogram = true;\n\n        for (int i = 0; i < input.length() && isIsogram; i++) {\n            for (int j = i + 1; j < input.length(); j++) {\n                if (input.charAt(i) == input.charAt(j)) {\n                    isIsogram = false;\n                }\n            }\n        }\n\n        System.out.println(isIsogram);",
+    "language":
+    {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "36ffd264-9eca-48c1-8cdd-09f190d7adca"
+    },
+    "solution_text": " int[][] testCases = {\n            {255, 255, 255}, // \"FFFFFF\"\n            {255, 255, 300}, // \"FFFFFF\"\n            {0, 0, 0},       // \"000000\"\n            {148, 0, 211}    // \"9400D3\"\n        };\n\n        for (int[] testCase : testCases) {\n            int r = testCase[0];\n            int g = testCase[1];\n            int b = testCase[2];\n   \n            r = Math.max(0, Math.min(255, r));\n            g = Math.max(0, Math.min(255, g));\n            b = Math.max(0, Math.min(255, b));\n   \n            String hex = String.format(\"%02X%02X%02X\", r, g, b);\n\n            System.out.println(hex);\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "9151e4cf-8195-4ad5-9363-b378aa322d31"
+    },
+    "solution_text": "public static List<Integer> filterList(List<Object> list) {\n        List<Integer> result = new ArrayList<>();\n        for (Object item : list) {\n            if (item instanceof Integer && (Integer) item >= 0) {\n                result.add((Integer) item);\n            }\n        }\n        return result;\n    }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "6ab78fab-642a-4e25-baf0-4890794dd8e2"
+    },
+    "solution_text": "public static String getMiddleCharacter(String word) {\n        int length = word.length();\n        int middle = length / 2;\n\n        if (length % 2 == 0) {\n            return word.substring(middle - 1, middle + 1);\n        } else {\n            return String.valueOf(word.charAt(middle));\n        }\n    }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "ce76eeb5-1a1f-4aa5-908a-dcf229c1f48f"
+    },
+    "solution_text": "public static double calculateExpression(int n) {\n        if (n < 1) {\n            throw new IllegalArgumentException(\"n debe ser mayor o igual a 1\");\n        }\n\n        long factorialSum = 0;\n        long factorial = 1;\n\n        for (int i = 1; i <= n; i++) {\n            factorial *= i;\n            factorialSum += factorial;\n        }\n\n        return (double) factorialSum / nFactorial;\n    }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "d0f57f27-a5e0-49f6-8a72-24ad9a497b8d"
+    },
+    "solution_text": "public static int calculatePerimeter(String[] arr) {\n        int rows = arr.length;\n        int cols = arr[0].length();\n        int perimeter = 0;\n\n        for (int i = 0; i < rows; i++) {\n            for (int j = 0; j < cols; j++) {\n                if (arr[i].charAt(j) == 'X') {\n                    if (i == 0 || arr[i - 1].charAt(j) == 'O') {\n                        perimeter++;\n                    }\n                    if (i == rows - 1 || arr[i + 1].charAt(j) == 'O') {\n                        perimeter++;\n                    }\n                    if (j == 0 || arr[i].charAt(j - 1) == 'O') {\n                        perimeter++;\n                    }\n                    if (j == cols - 1 || arr[i].charAt(j + 1) == 'O') {\n                        perimeter++;\n                    }\n                }\n            }\n        }\n\n        return perimeter;\n    }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "d624bae4-9a43-4515-8979-801c0d6fd88c"
+    },
+    "solution_text": "String[] ejemplos = {\n            \"aaabbbccc\",\n            \"aabbccdd\",\n            \"zzzzyyyyyx\",\n            \"abcdeeffff\"\n        };\n\n        for (String input : ejemplos) {\n           \n            if (input == null || input.length() == 0) {\n                System.out.println(input + \": \" + input);\n                continue;\n            }\n\n            StringBuilder resultado = new StringBuilder();\n            char currentChar = input.charAt(0);\n            int count = 1;\n\n            for (int i = 1; i < input.length(); i++) {\n                if (input.charAt(i) == currentChar) {\n                    count++;\n                } else {\n                    resultado.append(currentChar);\n                    if (count > 1) {\n                        resultado.append(count);\n                    }\n                    currentChar = input.charAt(i);\n                    count = 1;\n                }\n            }\n\n            resultado.append(currentChar);\n            if (count > 1) {\n                resultado.append(count);\n            }\n\n            System.out.println(input + \": \" + resultado.toString());\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "ea837e7d-3d39-42f1-a795-bfc1e928567b"
+    },
+    "solution_text": "String[] ejemplos = {\n            \"(2 + 3) * 4\",\n            \"(2 + 3 * 4\",\n            \"5 * (3 + (2 - 5))\",\n            \"2 + )3 * 4(\",\n            \"2 * 3\",\n            \"2 & 3\",\n            \"((3 + 4) * 2) / (5 - 2)\",\n            \"((3 + 4) * 2 / (5 - 2\"\n        };\n\n        for (String expresion : ejemplos) {\n            // Verificar paréntesis balanceados\n            boolean paréntesisBalanceados = true;\n            Stack<Character> stack = new Stack<>();\n            for (char c : expresion.toCharArray()) {\n                if (c == '(') {\n                    stack.push(c);\n                } else if (c == ')') {\n                    if (stack.isEmpty()) {\n                        paréntesisBalanceados = false;\n                        break;\n                    }\n                    stack.pop();\n                }\n            }\n            if (!stack.isEmpty()) {\n                paréntesisBalanceados = false;\n            }\n\n            \n            boolean operadoresValidos = true;\n            String operadores = \"+-*/\";\n            String validChars = \"0123456789+-*/() \";\n            for (int i = 0; i < expresion.length(); i++) {\n                char c = expresion.charAt(i);\n                if (validChars.indexOf(c) == -1) {\n                    operadoresValidos = false;\n                    break;\n                }\n\n                if (operadores.indexOf(c) != -1) {\n                    if (i == 0 || i == expresion.length() - 1) {\n                        operadoresValidos = false; // Un operador no puede estar al principio o al final\n                        break;\n                    }\n                    char anterior = expresion.charAt(i - 1);\n                    char siguiente = expresion.charAt(i + 1);\n                    if (operadores.indexOf(anterior) != -1 || operadores.indexOf(siguiente) != -1) {\n                        operadoresValidos = false; // No puede haber dos operadores seguidos\n                        break;\n                    }\n                }\n            }\n\n           \n            boolean esValida = paréntesisBalanceados && operadoresValidos;\n            System.out.println(expresion + \": \" + (esValida ? \"Válida\" : \"Inválida\"));\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "429866e1-c489-4500-a458-d46ed62b26be"
+    },
+    "solution_text": "public static int findEquilibriumIndex(int[] arr) {\n        int totalSum = 0;\n        int leftSum = 0;\n\n        for (int num : arr) {\n            totalSum += num;\n        }\n\n        for (int i = 0; i < arr.length; i++) {\n            totalSum -= arr[i];\n\n            if (leftSum == totalSum) {\n                return i;\n            }\n\n            leftSum += arr[i];\n        }\n\n        return -1;\n    }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "a8e7d3f9-2b5c-4a6e-9d8f-6c1b0a4e3f8d"
+    },
+    "solution_text": "int[] array = {2, 4, 1, 3, 5};\n        int inversionCount = 0;\n        for (int i = 0; i < array.length; i++) {\n            for (int j = i + 1; j < array.length; j++) {\n                if (array[i] > array[j]) {\n                    inversionCount++;\n                }\n            }\n        }\n        System.out.println(inversionCount);",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "edd8283a-3978-4657-b776-ff75536e231d"
+    },
+    "solution_text": "String[] str1Array = {\"rkqodlw\", \"cedewaraaossoqqyt\", \"katas\", \"adios\"};\n        String[] str2Array = {\"world\", \"codewars\", \"steak\", \"hola\"};\n\n        for (int i = 0; i < str1Array.length; i++) {\n            String str1 = str1Array[i];\n            String str2 = str2Array[i];\n\n            \n            int[] count = new int[26]; // Hay 26 letras en el alfabeto inglés\n\n           \n            for (char c : str1.toCharArray()) {\n                count[c - 'a']++;\n            }\n\n            \n            boolean esValido = true;\n            for (char c : str2.toCharArray()) {\n                if (count[c - 'a'] == 0) {\n                    esValido = false; // No hay suficientes caracteres en str1 para formar str2\n                    break;\n                }\n                count[c - 'a']--;\n            }\n\n           \n            System.out.println(str1 + \" / \" + str2 + \" - \" + (esValido ? \"True\" : \"False\"));\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "046791ae-7355-4fc8-a696-4f9665eac927"
+    },
+    "solution_text": " try {\n            \n            System.out.print(\"Introduce un número: \");\n            StringBuilder inputBuilder = new StringBuilder();\n            int ch;\n            while ((ch = System.in.read()) != '\\n') {\n                if (ch != '\\r') { // Ignorar los retornos de carro\n                    inputBuilder.append((char) ch);\n                }\n            }\n            String input = inputBuilder.toString().trim();\n            int N = Integer.parseInt(input);\n\n         \n            int ceros = 0;\n\n            \n            for (int i = 5; N / i >= 1; i *= 5) {\n                ceros += N / i;\n            }\n\n            \n            System.out.println(\"El número de ceros finales en \" + N + \"! es: \" + ceros);\n        } catch (Exception e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "396d1164-85c5-470a-8977-fc68b9b26fb1"
+    },
+    "solution_text": "String[] testCases = {\"xxoo\", \"OxoO\", \"xxooxxoo\", \"xXoO\", \"abcd\"};\n\n        for (String str : testCases) {\n            // Inicializar contadores para 'x' y 'o'\n            int countX = 0;\n            int countO = 0;\n\n            str = str.toLowerCase();\n           \n            for (int i = 0; i < str.length(); i++) {\n                char c = str.charAt(i);\n                if (c == 'x') {\n                    countX++;\n                } else if (c == 'o') {\n                    countO++;\n                }\n            }\n            \n            boolean result = countX == countO;\n           \n            System.out.println( str + \": \" + result);\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "6b1df7af-f32f-4f2b-8f97-7d7430874d34"
+    },
+    "solution_text": "  int[][] testCases = {\n            {-2, 1, -3, 4, -1, 2, 1, -5, 4},\n            {1, -2, 3, 5, -3, 2},\n            {5, -3, 5},\n            {0, -2, -3, -4, -1, -2, -3, -5, -4},\n            {1, 2, 3, 4, 5},\n            {-1, -2, -3, -4, -5},\n            {2, -3, 4, -1, -2, 1, 5, -3},\n            {1, -1, 1, -1, 1, -1, 1, -1}\n        };\n\n        for (int[] arr : testCases) {\n            int maxSoFar = arr[0];\n            int maxEndingHere = arr[0];\n            int start = 0, end = 0, s = 0;\n\n            for (int i = 1; i < arr.length; i++) {\n                if (arr[i] > maxEndingHere + arr[i]) {\n                    maxEndingHere = arr[i];\n                    s = i;\n                } else {\n                    maxEndingHere += arr[i];\n                }\n\n                if (maxEndingHere > maxSoFar) {\n                    maxSoFar = maxEndingHere;\n                    start = s;\n                    end = i;\n                }\n            }\n\n            \n            System.out.print(\"El subarray contiguo más grande es [\");\n            for (int i = start; i <= end; i++) {\n                System.out.print(arr[i] + (i < end ? \", \" : \"\"));\n            }\n            System.out.println(\"] con una suma de \" + maxSoFar);\n        }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid": "2d423ff6-93fe-483d-bc86-9d8c58552942"
+    },
+    "solution_text": "public static int[] findSmallestNumber(String numStr) {\n        //String numStr = String.valueOf(n);\n        int len = numStr.length();\n        int[] result = {Integer.parseInt(numStr), 0, 0}; // Default result if no changes are needed\n\n        for (int i = 0; i < len; i++) {\n            for (int j = 0; j < len; j++) {\n                if (i != j) {\n                    String newNumStr = moveDigit(numStr, i, j);\n                    int newNum = Integer.parseInt(newNumStr);\n                    if (newNum < result[0]) {\n                        result[0] = newNum;\n                        result[1] = i;\n                        result[2] = j;\n                    }\n                }\n            }\n        }\n        return result;\n    }\n\n    public static String moveDigit(String numStr, int i, int j) {\n        StringBuilder sb = new StringBuilder(numStr);\n        char digit = sb.charAt(i);\n        sb.deleteCharAt(i);\n        sb.insert(j, digit);\n        return sb.toString();\n    }",
+    "language": {
+      "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
   }
 ]
