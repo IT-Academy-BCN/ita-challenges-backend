@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("default")
+@Profile("mongock")
 public class MongockConfig {
 
     @Value("${mongock.migration-scan-package}")

@@ -26,7 +26,7 @@ import static com.mongodb.client.model.Updates.rename;
  * The class has an execution method that adds a document to the collection, adds a field to all documents in the collection,
  * and updates the field name in all documents in the collection.
  * The class has a rollbackExecution method that rolls back the changes made in the execution method.
- * If you want do a new Order, you can do a new class with the same structure and change the order in the annotation.
+ * If you want to do a new Order, you can do a new class with the same structure and change the order in the annotation.
  *
  * @Author: Dani Diaz
  */

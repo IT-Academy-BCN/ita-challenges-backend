@@ -21,7 +21,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  * The class is annotated with @ChangeUnit, which specifies the id, order, and author of the change log.
  * The class has an execution method that adds a document to the collection.
  * The class has a rollbackExecution method that rolls back the changes made in the execution method.
- * If you want do a new Order, you can do a new class with the same structure and change the order in the annotation.
+ * If you want to do a new Order, you can do a new class with the same structure and change the order in the annotation.
  *
  * @Author: Dani Diaz
  */
