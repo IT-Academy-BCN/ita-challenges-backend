@@ -53,7 +53,7 @@ public class DatabaseInitializer {
         LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "JAVA");
         reactiveMongoTemplate.save(languageDocument, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nexecution"))
-                .block();
+                .subscribe();
     }
 
     // Method to rollback the changes in case of any failure during the execution

@@ -58,7 +58,7 @@ class MongockIntegrationTest {
         testDatabaseInitializer.createCollection(mongoDatabase);
         Thread.sleep(1000); // wait for 1 second
         List<String> collectionNames = getCollectionNames(mongoDatabase.listCollectionNames());
-        assertTrue(collectionNames.contains("mongockTest"));
+        assertTrue(collectionNames.contains("MongockTest"));
 
         // Test rollback
         testDatabaseInitializer.rollbackBeforeExecution(mongoDatabase);
