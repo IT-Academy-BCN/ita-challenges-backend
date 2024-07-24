@@ -14,7 +14,7 @@ public class BlackBoxTestCase {
 
     //Test for bubble sort exercise
     String sourceCodeBubbleSort =
-                    "        // Convertir los argumentos de cadena a enteros\n" +
+            "        // Convertir los argumentos de cadena a enteros\n" +
                     "        int[] numbers = new int[args.length];\n" +
                     "            for (int i = 0; i < args.length; i++) {\n" +
                     "                numbers[i] = Integer.parseInt(args[i]);\n" +
@@ -93,10 +93,6 @@ public class BlackBoxTestCase {
 
     String sortingCode =
                     "        int number = Integer.parseInt(args[0]);\n" +
-                    "        String sortedNumber = sortNumber(number);\n" +
-                    "        System.out.println(sortedNumber);\n" +
-                    "    }\n" +
-                    "    public static String sortNumber(int number) {\n" +
                     "        String numberStr = Integer.toString(number);\n" +
                     "        List<Character> chars = new ArrayList<>();\n" +
                     "        for (char c : numberStr.toCharArray()) {\n" +
@@ -107,9 +103,11 @@ public class BlackBoxTestCase {
                     "        for (Character c : chars) {\n" +
                     "            sortedNumberStr.append(c);\n" +
                     "        }\n" +
-                    "        return sortedNumberStr.toString();\n";
+                    "        System.out.println(sortedNumberStr.toString());\n";
+
+
     @Test
-    public void sortingCodeTest(){
+    public void sortingCodeTest() {
         String sourceCode = sortingCode;
         String codeResult = "1234";
 
