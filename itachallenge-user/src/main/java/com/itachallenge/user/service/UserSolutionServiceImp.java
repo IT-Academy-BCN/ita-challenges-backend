@@ -5,7 +5,6 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
-import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -17,7 +16,6 @@ import reactor.core.publisher.Mono;
 
 
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 
 
@@ -25,7 +23,6 @@ import java.util.UUID;
 public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
-    private static final String SOLUTION_NOT_FOUND = "Solution with Id %s not found";
     private static final String CHALLENGE_NOT_FOUND = "Challenge with Id %s of the User Id %s not found";
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;

@@ -2,10 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.dtos.SolutionUserDto;
-import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.dtos.UserSolutionDto;
-import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
@@ -271,6 +268,36 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(resultFlux)
                 .expectNextCount(0)
                 .verifyComplete();
+    }
+
+
+    @DisplayName("UserSolutionServiceImpTest - getScore in Phase 1 returns a UserSolScoreDto")
+    @Test
+    void getScoreTest()
+    {
+        UUID solutionUuid = UUID.randomUUID();
+
+        userSolutionDocument = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.STARTED)
+                .solutionDocument(List.of(SolutionDocument.builder().uuid(solutionUuid).solutionText(solutionText).build()))
+                .score(mockScore).build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeId(userUuid, challengeUuid)).thenReturn(Flux.just(userSolutionDocument));
+
+        Flux<UserSolScoreDto> score = userSolutionService.getScore(userUuid.toString(), challengeUuid.toString(), solutionUuid.toString());
+
+        assertNotNull(score);
+        StepVerifier.create(score)
+                .expectNextMatches(userSolScoreDto ->
+                        userSolScoreDto.getUuidChallenge().equals(challengeUuid)
+                        && userSolScoreDto.getUuidLanguage().equals(languageUuid)
+                        && userSolScoreDto.getSolutionText().equals(solutionText)
+                )
+                .verifyComplete();
+
     }
 
 }

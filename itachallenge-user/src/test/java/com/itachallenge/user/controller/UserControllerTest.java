@@ -360,6 +360,44 @@ class UserControllerTest {
                 });
     }
 
+
+    @DisplayName("UserControllerTest - getScoreFromMicroScore  in Phase 1 returns a UserSolScoreDto")
+    @Test
+    void getScoreFromMicroScoreTest()
+    {
+        String URI_TEST = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score";
+
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID solutionUuid = UUID.randomUUID();
+
+        UUID languageUuid = UUID.randomUUID();
+        String solutionText = "Java solution example Test.";
+
+        UserSolScoreDto expectedDto = UserSolScoreDto.builder()
+                .uuidChallenge(challengeUuid)
+                .uuidLanguage(languageUuid)
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionService.getScore(userUuid.toString(), challengeUuid.toString(), solutionUuid.toString()))
+                .thenReturn(Flux.just(expectedDto));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, userUuid.toString(), challengeUuid.toString(), solutionUuid.toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserSolScoreDto.class)
+                .value(dto -> {
+                    assertNotNull(dto);
+                    assertEquals(expectedDto.getUuidChallenge(), dto.getUuidChallenge());
+                    assertEquals(expectedDto.getUuidLanguage(), dto.getUuidLanguage());
+                    assertEquals(solutionText, dto.getSolutionText());
+                });
+
+    }
+
 }
 
 
