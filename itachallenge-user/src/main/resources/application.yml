@@ -27,7 +27,7 @@ springdoc:
 server:
   port: 8764
   tomcat:
-    max-http-form-post-size: 2MB
+    max-http-form-post-size: 2097152
 
 management:
   endpoints:
