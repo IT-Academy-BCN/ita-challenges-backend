@@ -66,7 +66,7 @@ class ChallengeDtoTest {
             notesMap.put(Locale.forLanguageTag("ES"), "Notas");
             notesMap.put(Locale.forLanguageTag("CA"), "Notes");
             notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument();
 
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")

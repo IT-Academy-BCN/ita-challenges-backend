@@ -20,4 +20,7 @@ public class DetailDocument {
     @Field(name="notes")
     private Map<Locale, String> notes;
 
+    public DetailDocument() {
+
+    }
 }

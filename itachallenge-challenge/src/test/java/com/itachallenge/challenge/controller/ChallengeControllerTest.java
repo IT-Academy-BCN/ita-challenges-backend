@@ -225,9 +225,24 @@ class ChallengeControllerTest {
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
 
-        GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        // Crear los objetos necesarios para el stub
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID solutionId1 = UUID.randomUUID();
+        UUID solutionId2 = UUID.randomUUID();
 
+        SolutionDto solutionDto1 = new SolutionDto(solutionId1, "Solution 1", languageId);
+        SolutionDto solutionDto2 = new SolutionDto(solutionId2, "Solution 2", languageId);
+
+        ChallengeDto challengeDto = ChallengeDto.builder()
+                .challengeId(challengeId)
+                .solutions(Arrays.asList(solutionDto1, solutionDto2))
+                .build();
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{challengeDto});
+
+        // Configurar el stub del servicio
         when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
@@ -243,7 +258,6 @@ class ChallengeControllerTest {
                     assert dto.getResults().length == 2;
                 });
     }
-
     @Test
     void getChallengesByLanguageOrDifficultyTest() {
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";

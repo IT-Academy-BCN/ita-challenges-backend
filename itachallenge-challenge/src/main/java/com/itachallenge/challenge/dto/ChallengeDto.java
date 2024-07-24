@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
+@Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor

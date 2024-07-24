@@ -44,7 +44,7 @@ class ChallengeTest {
 
     @Test
     void getDetail() {
-        DetailDocument detail = new DetailDocument(null, null, null);
+        DetailDocument detail = new DetailDocument();
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null, null, null,null);
         assertEquals(detail, challenge.getDetail());
     }
