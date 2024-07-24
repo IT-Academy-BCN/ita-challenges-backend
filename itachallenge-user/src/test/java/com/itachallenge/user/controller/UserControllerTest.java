@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -23,8 +22,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -188,6 +187,25 @@ class UserControllerTest {
     }
 
     @Test
+    void getChallengeUserPercentageTest() {
+        UUID challengeId = UUID.randomUUID();
+        float percentage = 75.0f;
+        ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
+
+        when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeUserPercentageStatisticDto.class)
+                .value(responseDto -> {
+                    assertEquals(expectedDto.getChallengeId(), responseDto.getChallengeId());
+                    assertEquals(expectedDto.getPercentage(), responseDto.getPercentage());
+                });
+    }
+
+    @Test
     void markOrAddBookmark() {
 
         BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto();
@@ -314,29 +332,72 @@ class UserControllerTest {
     }
 
     @Test
-    void testGetScoreFromSolution() {
-        // Datos de ejemplo
-        String idUser = "123";
-        String idChallenge = "456";
-        String idSolution = "789";
-        Integer expectedScore = 100; // Este es un valor de ejemplo, ajusta según necesites
+    void getAllSolutionsByIdUser() {
+        String URI_TEST = "/{idUser}/challenges/solutions";
+        UUID userId = UUID.randomUUID();
 
-        // Configura el comportamiento del servicio mock
-        when(userSolutionService.addScore(anyString(), anyString(), anyString()))
-                .thenAnswer(invocation -> Mono.just(expectedScore));
+        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
+                .userId(userId.toString())
+                .challengeId(UUID.randomUUID().toString())
+                .languageId(UUID.randomUUID().toString())
+                .status("STARTED")
+                .solutionText("Sample Solution")
+                .build();
 
+        when(userSolutionService.showAllUserSolutions(userId)).thenReturn(Flux.just(userSolutionDto));
 
-        // Realiza la llamada al endpoint del controlador utilizando WebTestClient
         webTestClient.get()
-                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score", idUser, idChallenge, idSolution)
+                .uri(CONTROLLER_URL + URI_TEST, userId.toString())
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Integer.class)
-                .value(score -> assertEquals(expectedScore, score));
-
-        // Verifica que el método del servicio mock haya sido invocado correctamente
-        verify(userSolutionService, times(1)).addScore(idUser, idChallenge, idSolution);
+                .expectBodyList(UserSolutionDto.class)
+                .value(solutions -> {
+                    assertNotNull(solutions);
+                    assertEquals(1, solutions.size());
+                    UserSolutionDto solution = solutions.get(0);
+                    assertEquals(userId.toString(), solution.getUserId());
+                    assertEquals("Sample Solution", solution.getSolutionText());
+                });
     }
+
+
+    @DisplayName("UserControllerTest - getScoreFromMicroScore  in Phase 1 returns a UserSolScoreDto")
+    @Test
+    void getScoreFromMicroScoreTest()
+    {
+        String URI_TEST = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score";
+
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID solutionUuid = UUID.randomUUID();
+
+        UUID languageUuid = UUID.randomUUID();
+        String solutionText = "Java solution example Test.";
+
+        UserSolScoreDto expectedDto = UserSolScoreDto.builder()
+                .uuidChallenge(challengeUuid)
+                .uuidLanguage(languageUuid)
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionService.getScore(userUuid.toString(), challengeUuid.toString(), solutionUuid.toString()))
+                .thenReturn(Flux.just(expectedDto));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, userUuid.toString(), challengeUuid.toString(), solutionUuid.toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserSolScoreDto.class)
+                .value(dto -> {
+                    assertNotNull(dto);
+                    assertEquals(expectedDto.getUuidChallenge(), dto.getUuidChallenge());
+                    assertEquals(expectedDto.getUuidLanguage(), dto.getUuidLanguage());
+                    assertEquals(solutionText, dto.getSolutionText());
+                });
+
+    }
+
 }
 
 
