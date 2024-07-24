@@ -2,11 +2,13 @@ package com.itachallenge.challenge.config.dbchangelog;
 
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.mongodb.reactivestreams.client.MongoClient;
+import io.mongock.api.annotations.BeforeExecution;
 import io.mongock.api.annotations.ChangeUnit;
 import io.mongock.api.annotations.Execution;
 import io.mongock.api.annotations.RollbackExecution;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -31,19 +33,24 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class DataBaseAddDocument {
 
     private static final Logger logger = LoggerFactory.getLogger(DataBaseAddDocument.class);
-    private final ReactiveMongoTemplate reactiveMongoTemplate;
+
+    @Autowired
+    private ReactiveMongoTemplate reactiveMongoTemplate;
 
     private static final String COLLECTION_NAME = "mongockDemo";
     private static final String FIELD_NAME = "Language";
 
+    @BeforeExecution
+    public void createCollection(MongoClient mongoClient) {
 
-    public DataBaseAddDocument(ReactiveMongoTemplate reactiveMongoTemplate) {
-        this.reactiveMongoTemplate = reactiveMongoTemplate;
+        reactiveMongoTemplate.createCollection(COLLECTION_NAME)
+                .doOnSuccess(success -> logger.info("Collection created"))
+                .doOnError(error -> logger.error("Error during collection creation: {}", error.getMessage()))
+                .subscribe();
     }
 
-
     @Execution
-    public void execution(MongoClient client) {
+    public void execution() {
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nUpdater execution started");
         addDocumentToCollection(reactiveMongoTemplate);
         logger.info("Document added to collection");
@@ -51,7 +58,7 @@ public class DataBaseAddDocument {
     }
 
     @RollbackExecution
-    public void rollBackExecution(MongoClient client) {
+    public void rollBackExecution() {
 
         logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nRollback execution started");
         removeDocumentFromCollection(reactiveMongoTemplate);

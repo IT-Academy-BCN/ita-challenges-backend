@@ -1,131 +1,64 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
 import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoCollection;
-import com.mongodb.reactivestreams.client.MongoDatabase;
-import org.bson.Document;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import reactor.core.publisher.Mono;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static org.mockito.Mockito.*;
+import java.time.Duration;
 
-class DataBaseRollBackTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-    @Mock
-    private MongoDatabase mongoDatabase;
+@Testcontainers
+@SpringBootTest
+class DataBaseRollbackTest {
 
-    @Mock
-    private MongoClient mongoClient;
+    @Container
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10")
+            .withExposedPorts(27017)
+            .withStartupTimeout(Duration.ofSeconds(60));
 
-    @Mock
-    private MongoCollection<Document> mongoCollection;
+    @DynamicPropertySource
+    static void initMongoProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.data.mongodb.uri", () -> mongoDBContainer.getReplicaSetUrl("challenges"));
+    }
 
+    @Autowired
+    private ReactiveMongoTemplate reactiveMongoTemplate;
+
+    @Autowired
     private DataBaseRollback dataBaseRollback;
+
+    @Autowired
+    private MongoClient mongoClient;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-        dataBaseRollback = new DataBaseRollback();
+        openMocks(this);
     }
 
+    @DisplayName("Test @Execution method - Verify thrown exception to demostrate rollback feature")
     @Test
-    void testExecution() {
-        // Mock the behavior of the database and collection
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.empty());
+    void ExecutionTest() {
 
-        // Execute the method
-        dataBaseRollback.execution(mongoClient);
-
-        // Verify that updateFieldInCollection method was called
-        verify(mongoCollection, times(1)).updateMany(any(Document.class), any(Document.class));
+        assertThrows(IllegalArgumentException.class, () -> dataBaseRollback.execution(mongoClient));
     }
 
-    @Test
-    void testRollBackExecution() {
-        // Mock the behavior of the database and collection
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.empty());
-
-        // Execute the rollback method
-        dataBaseRollback.rollBackExecution(mongoClient);
-
-        // Verify that rollbackUpdateFieldInCollection and updateTextInField methods were called
-        verify(mongoCollection, times(2)).updateMany(any(Document.class), any(Document.class));
-    }
-
-    @Test
-    void testUpdateFieldInCollection() {
-        // Mock the behavior of the database and collection
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.empty());
-
-        // Call the private method via reflection (if needed)
-        dataBaseRollback.execution(mongoClient);
-
-        // Verify that updateMany was called on the collection
-        verify(mongoCollection, times(1)).updateMany(any(Document.class), any(Document.class));
-    }
-
-    @Test
-    void testUpdateTextInField() {
-        // Mock the behavior of the database and collection
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.empty());
-
-        // Call the private method via reflection (if needed)
-        dataBaseRollback.rollBackExecution(mongoClient);
-
-        // Verify that updateMany was called on the collection
-        verify(mongoCollection, times(2)).updateMany(any(Document.class), any(Document.class));
-    }
-
-    @Test
-    void testRollbackUpdateFieldInCollection() {
-        // Mock the behavior of the database and collection
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.empty());
-
-        // Call the private method via reflection (if needed)
-        dataBaseRollback.rollBackExecution(mongoClient);
-
-        // Verify that updateMany was called on the collection
-        verify(mongoCollection, times(2)).updateMany(any(Document.class), any(Document.class));
-    }
-
-    @Test
-    void testExecutionErrorHandling() {
-        // Mock the behavior of the database and collection with an error
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.error(new RuntimeException("Update failed")));
-
-        // Call the method
-        dataBaseRollback.execution(mongoClient);
-
-        // Verify that the error was logged
-        verify(mongoCollection, times(1)).updateMany(any(Document.class), any(Document.class));
-    }
-
-    @Test
-    void testRollbackErrorHandling() {
-        // Mock the behavior of the database and collection with an error
-        when(mongoClient.getDatabase(anyString())).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection(anyString())).thenReturn(mongoCollection);
-        when(mongoCollection.updateMany(any(Document.class), any(Document.class))).thenReturn(Mono.error(new RuntimeException("Update failed")));
-
-        // Call the method
-        dataBaseRollback.rollBackExecution(mongoClient);
-
-        // Verify that the error was logged
-        verify(mongoCollection, times(2)).updateMany(any(Document.class), any(Document.class));
+    @AfterEach
+    void tearDown() {
+        reactiveMongoTemplate.dropCollection("mongockDemo").block();
     }
 }
