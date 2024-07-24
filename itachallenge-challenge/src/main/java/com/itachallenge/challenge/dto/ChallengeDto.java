@@ -16,6 +16,7 @@ import java.util.*;
 @Builder
 @Getter
 @Setter
+@EqualsAndHashCode
 public class ChallengeDto {
 
     @JsonProperty(value = "id_challenge", index = 0)

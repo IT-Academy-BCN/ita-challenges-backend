@@ -18,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Data
+@EqualsAndHashCode
 public class SolutionDto {
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
     private static final String STRING_PATTERN = "^.{1,500}$";  //max 500 characters    @Id

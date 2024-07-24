@@ -10,6 +10,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Data
+@EqualsAndHashCode
 public class LanguageDto{
 
     @JsonProperty(value = "id_language", index = 0)
