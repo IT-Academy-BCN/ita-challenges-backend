@@ -42,7 +42,6 @@ class UserScoreRepositoryTest {
 
     @Autowired
     private IUserSolutionRepository userScoreRepository;
-    private IUserScoreRepository scoreRepository;
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120001");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120002");
@@ -94,17 +93,6 @@ class UserScoreRepositoryTest {
         StepVerifier.create(userScoreDocTest)
                 .expectNextCount(2)
                 .verifyComplete();
-    }
-
-    @DisplayName("Find SolutionDocument by UUID")
-    @Test
-    void findByUuidTest()
-    {
-        Mono<SolutionDocument> solutionFound = scoreRepository.findByUuid(uuid_1);
-        solutionFound.blockOptional().ifPresentOrElse(
-                solution -> assertEquals(solution.getUuid(), uuid_1),
-                () -> fail("Solution with UUID " + uuid_1 + " is not found")
-        );
     }
 
 }

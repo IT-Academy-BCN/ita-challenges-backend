@@ -4,9 +4,10 @@ import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.ChallengeNotFoundException;
+import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
-import com.itachallenge.user.repository.IUserScoreRepository;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -23,13 +25,13 @@ import java.util.UUID;
 public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
+    private static final String SOLUTION_NOT_FOUND = "Solution with Id %s not found";
+    private static final String CHALLENGE_NOT_FOUND = "Challenge with Id %s of the User Id %s not found";
     private final IUserSolutionRepository userSolutionRepository;
-    private final IUserScoreRepository userScoreRepository;
     private final ConverterDocumentToDto converter;
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, IUserScoreRepository userScoreRepository, ConverterDocumentToDto converter) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
-        this.userScoreRepository = userScoreRepository;
         this.converter = converter;
     }
 
@@ -159,17 +161,16 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID uuidChallenge = UUID.fromString(idChallenge);
         UUID uuidSolution = UUID.fromString(idSolution);
 
-        String solutionText = String.valueOf(userScoreRepository.findByUuid(uuidSolution)
-                .map(SolutionDocument::getSolutionText));
-
         return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+                .filter(u -> u.getSolutionDocument().get(0).getUuid().equals(uuidSolution))
                 .map(req -> {
                     UserSolScoreDto scoreReq = new UserSolScoreDto();
                     scoreReq.setUuidChallenge(uuidChallenge);
                     scoreReq.setUuidLanguage(req.getLanguageId());
-                    scoreReq.setSolutionText(solutionText);
+                    scoreReq.setSolutionText(req.getSolutionDocument().get(0).getSolutionText());
                     return scoreReq;
-                });
+                })
+                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND, idChallenge, idUser))));
     }
 
 }
