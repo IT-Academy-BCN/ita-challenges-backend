@@ -25,7 +25,7 @@ import static com.mongodb.client.model.Updates.rename;
  */
 
 @Component
-@ChangeUnit(id = "Intentional Rollback order", order = "5", author = "Dani Diaz")
+@ChangeUnit(id = "Intentional Rollback order", order = "5", author = "Daniel Diaz")
 public class DataBaseRollback {
 
     private static final Logger logger = LoggerFactory.getLogger(DataBaseRollback.class);
@@ -33,7 +33,7 @@ public class DataBaseRollback {
     private static final String DATABASE_NAME = "challenges";
     private static final String COLLECTION_NAME = "mongockDemo";
     private static final String FIELD_NAME_UPDATED = "Language Rollbacked";
-    private static final String FIELD_NAME = "language_name";
+    private static final String FIELD_NAME = "Language Name Updated";
 
 
     @Execution
@@ -65,7 +65,7 @@ public class DataBaseRollback {
                         updateQuery))
                 .doOnSuccess(updateResult -> logger.info("Field '{}' renamed to '{}'", FIELD_NAME, FIELD_NAME_UPDATED))
                 .doOnError(error -> logger.error("Update failed: {}", error.getMessage()))
-                .subscribe();
+                .block();
     }
 
 

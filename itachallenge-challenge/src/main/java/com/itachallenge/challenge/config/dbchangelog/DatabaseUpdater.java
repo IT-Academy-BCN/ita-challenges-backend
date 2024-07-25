@@ -18,15 +18,15 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
 
-@ChangeUnit(id="DatabaseUpdaterDemo", order = "2", author = "Ernesto Arcos / Pedro López")
+@ChangeUnit(id="DatabaseUpdaterDemo", order = "2", author = "Daniel Diaz")
 public class DatabaseUpdater {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseUpdater.class);
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     private static final String DATABASE_NAME = "challenges";
     private static final String COLLECTION_NAME = "mongockDemo";
-    private static final String FIELD_NAME = "language_name_updated";
-    private static final String NEW_FIELD_NAME = "LanguageUpdated4";
+    private static final String FIELD_NAME = "language_name";
+    private static final String NEW_FIELD_NAME = "Language Name Updated";
     private static final String STATE_FIELD = "State";
     private static final String ERROR_UPDATE = "Error during update: {}";
     private static final String EXIST = "$exists";

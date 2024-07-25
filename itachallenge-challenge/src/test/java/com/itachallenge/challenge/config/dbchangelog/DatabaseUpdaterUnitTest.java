@@ -26,9 +26,9 @@ import static reactor.core.publisher.Mono.just;
 class DatabaseUpdaterUnitTest {
 
     final static String COLLECTION_NAME = "mongockDemo";
-    final static String FIELD_NAME = "language_name_updated";
-    final static String STATE_FIELD = "State";
-    final static String NEW_FIELD_NAME = "LanguageUpdated4";
+    private static final String FIELD_NAME = "Language Name";
+    private static final String NEW_FIELD_NAME = "Language Name Updated";
+    private static final String STATE_FIELD = "State";
     @Mock
     private MongoDatabase mongoDatabase;
 
