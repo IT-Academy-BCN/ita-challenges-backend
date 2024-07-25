@@ -2,8 +2,8 @@ version: '3.8'
 
 x-custom-metadata:
 
-  version: 1.14.4
-  last-updated: 2024-04-30
+  version: 1.16.1
+  last-updated: 2024-07-23
 
 services:
   consul-server1:
@@ -66,7 +66,9 @@ services:
     depends_on:
       -  itachallenge-mongodb
     environment:
+      - 'JAVA_OPTS=-Xmx512m'
       - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}?authSource=admin'
+      - 'logging.level.com.itachallenge=ERROR'
     networks:
       apisix-dev:
         ipv4_address: 172.18.0.6
