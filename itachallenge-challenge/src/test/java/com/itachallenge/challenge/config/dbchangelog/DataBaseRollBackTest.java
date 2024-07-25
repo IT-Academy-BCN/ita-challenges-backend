@@ -16,15 +16,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @Testcontainers
 @SpringBootTest
-class DataBaseRollbackTest {
+class DataBaseRollBackTest {
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10")
@@ -47,7 +43,7 @@ class DataBaseRollbackTest {
 
     @BeforeEach
     void setUp() {
-        openMocks(this);
+
     }
 
     @DisplayName("Test @Execution method - Verify thrown exception to demostrate rollback feature")

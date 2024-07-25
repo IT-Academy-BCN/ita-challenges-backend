@@ -7,10 +7,10 @@ import com.mongodb.reactivestreams.client.MongoDatabase;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.reactivestreams.Publisher;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -20,8 +20,15 @@ import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static reactor.core.publisher.Mono.empty;
+import static reactor.core.publisher.Mono.just;
 
 class DatabaseUpdaterUnitTest {
+
+    final static String COLLECTION_NAME = "mongockDemo";
+    final static String FIELD_NAME = "language_name_updated";
+    final static String STATE_FIELD = "State";
+    final static String NEW_FIELD_NAME = "LanguageUpdated4";
     @Mock
     private MongoDatabase mongoDatabase;
 
@@ -29,6 +36,7 @@ class DatabaseUpdaterUnitTest {
     private ReactiveMongoTemplate reactiveMongoTemplate;
     @Mock
     MongoClient mongoClient;
+
     @InjectMocks
     private DatabaseUpdater databaseUpdater;
 
@@ -37,110 +45,115 @@ class DatabaseUpdaterUnitTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    @DisplayName("Test execution method - in DatabaseUpdater")
     @Test
     void executionTest() {
-        ReactiveMongoTemplate reactiveMongoTemplateMock = Mockito.mock(ReactiveMongoTemplate.class);
-        MongoCollection<Document> mongoCollection = Mockito.mock(MongoCollection.class);
-        MongoDatabase mongoDatabase = Mockito.mock(MongoDatabase.class);
-        Bson update = new Document("$rename", new Document("language_name", "language_name_updated"));
-        UpdateResult updateResult = Mockito.mock(UpdateResult.class);
+
+        ReactiveMongoTemplate reactiveMongoTemplateMock = mock(ReactiveMongoTemplate.class);
+        MongoCollection<Document> mongoCollection = mock(MongoCollection.class);
+
+
+        UpdateResult updateResult = mock(UpdateResult.class);
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
-            when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-            when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
-            when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
-
-        when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockDemo"))).thenReturn(Mono.empty());
+        // Configurar mocks para MongoClient y MongoDatabase
+        when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
+        when(mongoDatabase.getCollection(COLLECTION_NAME)).thenReturn(mongoCollection);
+        when(mongoCollection.updateMany(any(Bson.class), any(Bson.class))).thenReturn(updateResultPublisher);
+        when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq(COLLECTION_NAME))).thenReturn(empty());
 
         DatabaseUpdater databaseUpdater = new DatabaseUpdater(reactiveMongoTemplateMock);
-
         databaseUpdater.execution(mongoClient);
 
-        verify(mongoCollection).updateOne((Bson) any(), (Bson) any());
-        verify(reactiveMongoTemplateMock, times(2)).updateMulti(any(), any(), eq("mongockDemo"));
+        verify(mongoCollection).updateMany(any(Bson.class), any(Bson.class));
+        verify(reactiveMongoTemplateMock, times(1)).updateMulti(any(Query.class), any(Update.class), eq(COLLECTION_NAME));
     }
 
+    @DisplayName("Test rollBackExecution method - in DatabaseUpdater")
     @Test
     void rollBackExecutionTest() {
-        ReactiveMongoTemplate reactiveMongoTemplateMock = Mockito.mock(ReactiveMongoTemplate.class);
-        MongoCollection<Document> mongoCollection = Mockito.mock(MongoCollection.class);
-        MongoDatabase mongoDatabase = Mockito.mock(MongoDatabase.class);
-        Bson update = new Document("$rename", new Document("language_name_updated", "language_name"));
-        UpdateResult updateResult = Mockito.mock(UpdateResult.class);
-        Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
+
+        ReactiveMongoTemplate reactiveMongoTemplateMock = mock(ReactiveMongoTemplate.class);
+        MongoCollection<Document> mongoCollection = mock(MongoCollection.class);
+
+
+        UpdateResult updateResult = mock(UpdateResult.class);
+        Publisher<UpdateResult> updateResultPublisher = just(updateResult);
 
         when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
         when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
-        when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
-
-            when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockDemo"))).thenReturn(Mono.empty());
+        when(mongoCollection.updateMany((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
+        when(reactiveMongoTemplateMock.updateMulti(any(), any(), eq("mongockDemo"))).thenReturn(empty());
 
         DatabaseUpdater databaseUpdater = new DatabaseUpdater(reactiveMongoTemplateMock);
-
         databaseUpdater.rollBackExecution(mongoClient);
 
-        verify(mongoCollection).updateOne((Bson) any(), (Bson) any());
+        verify(mongoCollection).updateMany((Bson) any(), (Bson) any());
 
     }
 
     @Test
     void updateFieldInCollectionTest() {
-        MongoCollection<Document> mongoCollection = Mockito.mock(MongoCollection.class);
-        MongoDatabase mongoDatabase = Mockito.mock(MongoDatabase.class);
-        Bson update = new Document("$rename", new Document("language_name", "language_name_updated"));
-        UpdateResult updateResult = Mockito.mock(UpdateResult.class);
+
+        MongoCollection<Document> mongoCollection = mock(MongoCollection.class);
+        Bson filter = new Document(FIELD_NAME, new Document("$exists", true));
+        Bson update = new Document("$rename", new Document(FIELD_NAME, NEW_FIELD_NAME));
+        UpdateResult updateResult = mock(UpdateResult.class);
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
         when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
-        when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
+        when(mongoDatabase.getCollection(COLLECTION_NAME)).thenReturn(mongoCollection);
+        when(mongoCollection.updateMany(filter, update)).thenReturn(updateResultPublisher);
 
         databaseUpdater.updateFieldInCollection(mongoClient);
 
-        verify(mongoCollection).updateOne((Bson) any(), (Bson) any());
+        verify(mongoCollection).updateMany(filter, update);
     }
 
     @Test
     void rollbackUpdateFieldInCollectionTest() {
-        MongoCollection<Document> mongoCollection = Mockito.mock(MongoCollection.class);
-        MongoDatabase mongoDatabase = Mockito.mock(MongoDatabase.class);
-        Bson update = new Document("$rename", new Document("language_name_updated", "language_name"));
-        UpdateResult updateResult = Mockito.mock(UpdateResult.class);
+
+        MongoCollection<Document> mongoCollection = mock(MongoCollection.class);
+        Bson filter = new Document(NEW_FIELD_NAME, new Document("$exists", true));
+        Bson update = new Document("$rename", new Document(NEW_FIELD_NAME, FIELD_NAME));
+        UpdateResult updateResult = mock(UpdateResult.class);
         Publisher<UpdateResult> updateResultPublisher = Mono.just(updateResult);
 
         when(mongoClient.getDatabase("challenges")).thenReturn(mongoDatabase);
-        when(mongoDatabase.getCollection("mongockDemo")).thenReturn(mongoCollection);
-        when(mongoCollection.updateOne((Bson) any(), (Bson) any())).thenReturn(updateResultPublisher);
+        when(mongoDatabase.getCollection(COLLECTION_NAME)).thenReturn(mongoCollection);
+        when(mongoCollection.updateMany(filter, update)).thenReturn(updateResultPublisher);
 
         databaseUpdater.rollbackUpdateFieldInCollection(mongoClient);
-
-        verify(mongoCollection).updateOne((Bson) any(), (Bson) any());
-
+        verify(mongoCollection).updateMany(filter, update);
     }
 
     @Test
     void addFieldToAllDocumentsTest() {
-        Query query = new Query(where("_id").ne(null));
-        Update update = new Update().set("newField", "newValue");
 
-        when(reactiveMongoTemplate.updateMulti(query, update, "mongockDemo"))
-                .thenReturn(Mono.just(UpdateResult.acknowledged(1, 1L, null)));
+        Query query = Query.query(where(FIELD_NAME).exists(true));
+        Update update = new Update().set(STATE_FIELD, "ACTIVE");
+
+        UpdateResult updateResult = UpdateResult.acknowledged(1, 1L, null);
+
+        when(reactiveMongoTemplate.updateMulti(query, update, COLLECTION_NAME))
+                .thenReturn(Mono.just(updateResult));
 
         databaseUpdater.addFieldToAllDocuments(reactiveMongoTemplate);
-
-        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, "mongockDemo");
+        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, COLLECTION_NAME);
     }
+
 
     @Test
     void removeFieldToAllDocumentsTest() {
-        Update update = new Update().unset("newField");
-        Query query = new Query(where("_id").ne(null));
 
-        when(reactiveMongoTemplate.updateMulti(query, update, "mongockDemo"))
+        Query query = Query.query(where(FIELD_NAME).exists(true));
+        Update update = new Update().unset(STATE_FIELD);
+
+        when(reactiveMongoTemplate.updateMulti(query, update, COLLECTION_NAME))
                 .thenReturn(Mono.just(UpdateResult.acknowledged(1, 1L, null)));
 
         databaseUpdater.removeFieldToAllDocuments(reactiveMongoTemplate);
-
-        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, "mongockDemo");
+        verify(reactiveMongoTemplate, times(1)).updateMulti(query, update, COLLECTION_NAME);
     }
+
 }

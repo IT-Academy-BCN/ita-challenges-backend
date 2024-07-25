@@ -8,7 +8,6 @@ import io.mongock.api.annotations.RollbackExecution;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -66,7 +65,7 @@ public class DataBaseRollback {
                         updateQuery))
                 .doOnSuccess(updateResult -> logger.info("Field '{}' renamed to '{}'", FIELD_NAME, FIELD_NAME_UPDATED))
                 .doOnError(error -> logger.error("Update failed: {}", error.getMessage()))
-                .block();
+                .subscribe();
     }
 
 
