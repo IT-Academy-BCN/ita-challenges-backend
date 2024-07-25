@@ -117,22 +117,22 @@ class ChallengeRepositoryTest {
     @Test
     void findAllTest() {
 
-        Flux<ChallengeDocument> challengesOffset0Limit1 = challengeRepository.findAllByUuidNotNull().skip(0).take(1);
+        Flux<ChallengeDocument> challengesOffset0Limit1 = challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(0).take(1);
         StepVerifier.create(challengesOffset0Limit1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesOffset0Limit2 = challengeRepository.findAllByUuidNotNull().skip(0).take(2);
+        Flux<ChallengeDocument> challengesOffset0Limit2 = challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(0).take(2);
         StepVerifier.create(challengesOffset0Limit2)
                 .expectNextCount(2)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesOffset1Limit1 = challengeRepository.findAllByUuidNotNull().skip(1).take(1);
+        Flux<ChallengeDocument> challengesOffset1Limit1 = challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(1).take(1);
         StepVerifier.create(challengesOffset1Limit1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesOffset1Limit2 = challengeRepository.findAllByUuidNotNull().skip(2).take(2);
+        Flux<ChallengeDocument> challengesOffset1Limit2 = challengeRepository.findAllByUuidNotNullExcludingTestingValues().skip(2).take(2);
         StepVerifier.create(challengesOffset1Limit2)
                 .expectNextCount(1)
                 .verifyComplete();

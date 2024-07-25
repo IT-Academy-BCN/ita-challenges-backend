@@ -3,6 +3,12 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.RelatedDto;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
@@ -33,6 +39,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
+
+    private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
@@ -97,6 +105,43 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty(String idLanguage, String difficulty) {
         // TODO: Get challenges by language and difficulty
         return null;
+
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
+        Flux<ChallengeDocument> challenges;
+
+        if (idLanguage.isPresent() && level.isPresent()) {
+            challenges = validateUUID(idLanguage.get())
+                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
+                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
+        } else if (idLanguage.isPresent()) {
+            challenges = validateUUID(idLanguage.get())
+                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
+                            .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
+        } else if (level.isPresent()) {
+            challenges = challengeRepository.findByLevel(level.get())
+                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
+        } else {
+            challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                    .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
+        }
+
+        Flux<ChallengeDocument> finalChallenges = challenges;
+        return challenges.count().flatMap(total -> {
+            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
+            if (limit != -1) {
+                pagedChallenges = pagedChallenges.take(limit);
+            }
+            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                    .collectList()
+                    .map(challengeDtoList -> {
+                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
+                        return resultDto;
+                    });
+        });
     }
 
     @Cacheable (value = "allLanguages")
@@ -111,8 +156,22 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
     @Override
-    public Flux<ChallengeDto> getAllChallenges(int offset, int limit) {
-        return challengeConverter.convertDocumentFluxToDtoFlux(challengeRepository.findAllByUuidNotNull().skip(offset).take(limit) , ChallengeDto.class);
+    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
+
+        Mono<Long> countMono = challengeRepository.count();
+        Flux<ChallengeDto> challengeDtoFlux = challengeConverter.convertDocumentFluxToDtoFlux(
+                challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                        .skip(offset)
+                        .take(limit),
+                ChallengeDto.class);
+
+        return countMono.zipWith(challengeDtoFlux.collectList(), (totalCount, challenges) -> {
+            ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
+            return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
+        }).onErrorResume(e -> {
+            // Manejo de errores, por ejemplo, devolver un GenericResultDto vacío o un error específico.
+            return Mono.just(new GenericResultDto<>(offset, limit, 0, new ChallengeDto[0]));
+        });
     }
 
     @Cacheable (value="solutions", key="{#idChallene, #idLanguage}", unless="#result==null") // Falta aplicar durabilidad de caché

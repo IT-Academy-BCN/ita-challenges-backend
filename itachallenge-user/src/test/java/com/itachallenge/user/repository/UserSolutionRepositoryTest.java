@@ -244,4 +244,20 @@ public class UserSolutionRepositoryTest {
                 .expectNextCount(expectedValue)
                 .verifyComplete();
     }
+
+
+    @DisplayName("Return solutions by idChallenge and status")
+    @Test
+    void testFindByChallengeIdAndStatus() {
+
+        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByChallengeIdAndStatus(testChallengeUuid, testStatus);
+
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution ->
+                        userSolution.getChallengeId().equals(testChallengeUuid) &&
+                        userSolution.getStatus().equals(testStatus))
+                .thenCancel()
+                .verify();
+
+    }
 }
