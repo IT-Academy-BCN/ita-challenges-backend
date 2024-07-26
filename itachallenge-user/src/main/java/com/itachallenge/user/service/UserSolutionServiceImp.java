@@ -151,24 +151,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
 
-    @Override
-    public Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution)
-    {
-        UUID uuidUser = UUID.fromString(idUser);
-        UUID uuidChallenge = UUID.fromString(idChallenge);
-        UUID uuidSolution = UUID.fromString(idSolution);
-
-        return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
-                .filter(u -> u.getSolutionDocument().get(0).getUuid().equals(uuidSolution))
-                .map(req -> {
-                    UserSolScoreDto scoreReq = new UserSolScoreDto();
-                    scoreReq.setUuidChallenge(uuidChallenge);
-                    scoreReq.setUuidLanguage(req.getLanguageId());
-                    scoreReq.setSolutionText(req.getSolutionDocument().get(0).getSolutionText());
-                    return scoreReq;
-                })
-                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND, idChallenge, idUser))));
-    }
 
 }
 

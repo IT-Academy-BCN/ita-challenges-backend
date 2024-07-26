@@ -4,13 +4,9 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.SolutionScoreDto;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.dtos.UserSolScoreDto;
-import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -23,7 +19,7 @@ public class UserScoreService implements IUserScoreService{
 
 
 
-
+/*
     public SolutionScoreDto convertToSolutionScoreDto(UserSolutionDocument solution) {
         SolutionScoreDto dto = new SolutionScoreDto();
         dto.setChallengeId(UUID.fromString(solution.getChallengeId().toString()));
@@ -32,7 +28,7 @@ public class UserScoreService implements IUserScoreService{
         dto.setScore(solution.getScore());
         return dto;
     }
-
+*/
     @Override
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(UUID userId, UUID challengeId, UUID languageId) {
 
