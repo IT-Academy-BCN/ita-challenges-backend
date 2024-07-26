@@ -14,5 +14,4 @@ public interface IUserSolutionService {
     Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto);
     Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked);
     Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid);
-    Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution);
 }
