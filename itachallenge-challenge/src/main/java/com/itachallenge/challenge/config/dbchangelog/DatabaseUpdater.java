@@ -115,7 +115,7 @@ public class DatabaseUpdater {
     public void removeFieldToAllDocuments(ReactiveMongoTemplate reactiveMongoTemplate) {
         Query query = Query.query(where(FIELD_NAME).exists(true));
         reactiveMongoTemplate.updateMulti(query, new Update().unset(STATE_FIELD), COLLECTION_NAME)
-                .defaultIfEmpty(UpdateResult.unacknowledged()) // Manejo del Mono vacío
+                .defaultIfEmpty(UpdateResult.unacknowledged())
                 .doOnSuccess(result -> {
                     logger.info("Matched count: {}", result.getMatchedCount());
                     logger.info("Modified count: {}", result.getModifiedCount());
