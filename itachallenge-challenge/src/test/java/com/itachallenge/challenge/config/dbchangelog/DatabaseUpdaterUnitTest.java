@@ -25,7 +25,7 @@ import static reactor.core.publisher.Mono.just;
 
 class DatabaseUpdaterUnitTest {
 
-    final static String COLLECTION_NAME = "mongockDemo";
+    private static final String COLLECTION_NAME = "mongockDemo";
     private static final String FIELD_NAME = "language_name";
     private static final String NEW_FIELD_NAME = "Language Name Updated";
     private static final String STATE_FIELD = "State";

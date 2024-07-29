@@ -50,7 +50,10 @@ class MongockTestContainer {
     void testCollectionCreation() {
 
         databaseInitializer.execution(reactiveMongoTemplate);
-        assertEquals("mongockDemo", "mongockDemo", "The collection name should be mongockDemo");
+        String collectionName = reactiveMongoTemplate.getCollection("mongockDemo")
+                .map(collection -> collection.getNamespace().getCollectionName())
+                .block();
+        assertEquals("mongockDemo", collectionName, "The collection name should be mongockDemo");
     }
 
     @Test
@@ -74,13 +77,13 @@ class MongockTestContainer {
 
     @Test
     void testUpdateOperation() {
-        String expectedCollectionName = "mongockDemo";
+
         String actualCollectionName = reactiveMongoTemplate.getCollection("mongockDemo")
                 .map(collection -> collection.getNamespace().getCollectionName())
                 .block();
 
         assertNotNull(actualCollectionName, "The collection name should not be null");
-        assertEquals(expectedCollectionName, actualCollectionName, "The collection name should be 'mongockDemo'");
+        assertEquals("mongockDemo", actualCollectionName, "The collection name should be 'mongockDemo'");
 
         databaseInitializer.execution(reactiveMongoTemplate);
 

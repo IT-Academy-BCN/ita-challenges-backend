@@ -18,8 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest
@@ -90,7 +89,7 @@ class DataBaseRollBackTest {
                         org.springframework.data.mongodb.core.query.Criteria.where("Language Rollbacked").is("LanguageUpdated")),
                 Document.class, "mongockDemo").block();
 
-        assertTrue(updatedDocument != null, "The document should be updated with the new value 'LanguageUpdated'");
+        assertNotNull(updatedDocument, "The document should be updated with the new value 'LanguageUpdated'");
     }
 
 
@@ -106,7 +105,7 @@ class DataBaseRollBackTest {
                         org.springframework.data.mongodb.core.query.Criteria.where("Language Rollbacked").exists(true)),
                 Document.class, "mongockDemo").block();
 
-        assertTrue(rolledBackDocument != null, "The field should be renamed back to 'Language Rollbacked'");
+        assertNotNull(rolledBackDocument, "The field should be renamed back to 'Language Rollbacked'");
     }
 
 
