@@ -18,6 +18,18 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 import static org.springframework.data.mongodb.core.query.Update.update;
 
+
+/*
+ * This class is a change log that updates the database by adding a new field to all documents in a collection,
+ * then updates the field name in all documents in the collection, and modifies text in the field.
+ * The class uses the reactive MongoDB driver to interact with the database.
+ * The class is annotated with @ChangeUnit, which specifies the id, order, and author of the change log.
+ * The class do an intentional rollback of the changes made in the execution method to demonstrate the rollback feature.
+ * If you want to do a new Order, you can do a new class with the same structure and change the order in the annotation.
+ *
+ * Author: Dani Diaz
+ */
+
 @ChangeUnit(id="DatabaseUpdaterDemo", order = "2", author = "Daniel Diaz")
 public class DatabaseUpdater {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseUpdater.class);
@@ -111,5 +123,4 @@ public class DatabaseUpdater {
                 .doOnError(error -> logger.error(ERROR_UPDATE, error.getMessage()))
                 .subscribe();
     }
-
 }

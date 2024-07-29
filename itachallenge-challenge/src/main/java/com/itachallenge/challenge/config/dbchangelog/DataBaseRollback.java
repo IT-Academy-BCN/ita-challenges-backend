@@ -55,7 +55,7 @@ public class DataBaseRollback {
 
     }
 
-    private void updateFieldInCollection(MongoClient client) {
+    public void updateFieldInCollection(MongoClient client) {
 
         MongoCollection<Document> collection = client.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME);
         Document updateQuery = new Document("invalidOperator", new Document("$invalid", "someValue"));
@@ -69,7 +69,7 @@ public class DataBaseRollback {
     }
 
 
-    private void updateTextInField(MongoClient client) {
+    public void updateTextInField(MongoClient client) {
         MongoCollection<Document> collection = client.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME);
 
         Document filter = new Document(FIELD_NAME_UPDATED, "LanguageDemo");
@@ -82,7 +82,7 @@ public class DataBaseRollback {
 
 
 
-    private void rollbackUpdateFieldInCollection(MongoClient client) {
+    public void rollbackUpdateFieldInCollection(MongoClient client) {
 
         MongoCollection<Document> collection = client.getDatabase(DATABASE_NAME).getCollection(COLLECTION_NAME);
         Mono.from(collection.updateMany(
