@@ -1,10 +1,10 @@
 package com.itachallenge.score.controller;
+
 import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,9 @@ public class ScoreController {
         log.info("** Saludos desde el logger **");
         return "Hello from ITA Score!!!";
     }
+
+
+    //Falta implementar la lógica para calcular el puntaje
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)
@@ -44,14 +47,15 @@ public class ScoreController {
                     String sourceCode = req.getSolutionText();
                     String codeResult = "99";  // El resultado esperado es 99
                     ExecutionResultDto executionResult = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
+                    int score = codeExecutionService.calculateScore(executionResult);
 
                     // Crear la respuesta
                     ScoreResponse scoreResponse = new ScoreResponse();
                     scoreResponse.setUuidChallenge(req.getUuidChallenge());
                     scoreResponse.setUuidLanguage(req.getUuidLanguage());
                     scoreResponse.setSolutionText(req.getSolutionText());
-                        scoreResponse.setScore(99);//TODO
-                        scoreResponse.setCompilationMessage(executionResult.getMessage());
+                    scoreResponse.setScore(score);
+                    scoreResponse.setCompilationMessage(executionResult.getMessage());
 
 
                     return ResponseEntity.ok(scoreResponse);

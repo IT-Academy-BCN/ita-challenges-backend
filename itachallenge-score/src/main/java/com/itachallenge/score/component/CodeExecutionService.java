@@ -1,7 +1,5 @@
 package com.itachallenge.score.component;
 
-import java.util.concurrent.*;
-
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.SimpleCompiler;
@@ -13,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
+import java.util.concurrent.*;
 
 @Component
 public class CodeExecutionService {
@@ -144,7 +142,6 @@ public class CodeExecutionService {
         result = result.trim(); // Eliminar espacios en blanco alrededor del resultado, a veces aparecía "/r" al final del resultado y eso hace que la comparación falle.
         codeResult = codeResult.trim();
 
-        log.info("Result: " + result);
         log.info("CodeResult: " + codeResult);
 
         if (result.equals(codeResult)) {
@@ -198,6 +195,27 @@ public class CodeExecutionService {
             return input.substring(0, input.length() - 1);
         }
         return input;
+    }
+
+
+    public int calculateScore(ExecutionResultDto executionResult) {
+        int score = 0;
+
+        if (executionResult.isCompile() && executionResult.isExecution() && executionResult.isResultCodeMatch()) {
+            score = 99;
+            log.info("Score calculated: {}. \nReason: Code compiled, executed, and result matched.", score);
+        } else if (executionResult.isCompile() && executionResult.isExecution() && !executionResult.isResultCodeMatch()) {
+            score = 75;
+            log.info("Score calculated: {}. \nReason: Code compiled and executed, but result did not match.", score);
+        } else if (executionResult.isCompile() && !executionResult.isExecution()) {
+            score = 50;
+            log.info("Score calculated: {}.\nReason: Code compiled, but did not execute.", score);
+        } else if (!executionResult.isCompile()) {
+            score = 0;
+            log.info("Score calculated: {}. \nReason: Code did not compile.", score);
+        }
+
+        return score;
     }
 
 }
