@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
+//@Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor//(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
 @Getter

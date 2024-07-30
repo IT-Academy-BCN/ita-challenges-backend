@@ -152,5 +152,34 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
 
+    @Override
+//    public Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution)
+    public Mono<Integer> getScore(String idUser, String idChallenge, String idSolution)
+//    public Mono<SolutionScoreDto> getScore(String idUser, String idChallenge, String idSolution)
+    {
+        UUID uuidUser = UUID.fromString(idUser);
+        UUID uuidChallenge = UUID.fromString(idChallenge);
+        UUID uuidSolution = UUID.fromString(idSolution);
+        ChallengeStatus statusReadyToScore = ChallengeStatus.STARTED;
+
+        return Mono.just(4);
+
+//        return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
+//                .filter(u -> u.getStatus().equals(statusReadyToScore) && u.getSolutionDocument().get(0).getUuid().equals(uuidSolution))
+//                .map(req -> {
+//                    UserSolScoreDto scoreReq = new UserSolScoreDto();
+//                    scoreReq.setUserId(uuidUser);
+//                    scoreReq.setChallengeId(uuidChallenge);
+//                    scoreReq.setLanguageId(req.getLanguageId());
+//                    scoreReq.setSolutionId(uuidSolution);
+//                    scoreReq.setStatus(req.getStatus());
+//                    scoreReq.setScore(req.getScore());
+//                    return scoreReq;
+//                });
+
+
+
+
+    }
 }
 
