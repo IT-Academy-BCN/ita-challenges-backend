@@ -68,10 +68,13 @@
     "score": 0,
     "errors": [
       {
-        "error_description": "cannot find symbol"
+        "error_description": "Test.java:1: '{' expected"
       },
       {
-        "error_description": "StringIndexOutOfBoundsException"
+        "error_description": "Test.java:7: cannot find symbol"
+      },
+      {
+        "error_description": "<identifier> expected"
       }
     ],
     "solution":[
