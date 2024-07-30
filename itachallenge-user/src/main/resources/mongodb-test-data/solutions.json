@@ -9,14 +9,14 @@
     "bookmarked": true,
     "status": "ENDED",
     "score": 100,
-     "solution":[ 
-       {
-          "_id" :  {
-              "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
-          },
-          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+        },
+        "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
       }
-  	]
+    ]
   },
   {
     "_id" : {
@@ -66,7 +66,14 @@
     "bookmarked": true,
     "status": "ENDED",
     "score": 0,
-    "errors": "Example of errors found while scoring the solution.",
+    "errors": [
+      {
+        "error_description": "cannot find symbol"
+      },
+      {
+        "error_description": "StringIndexOutOfBoundsException"
+      }
+    ],
     "solution":[
       {
         "_id" :  {
