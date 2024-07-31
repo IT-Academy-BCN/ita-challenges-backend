@@ -1,4 +1,4 @@
-package com.itachallenge.score.helper;
+package com.itachallenge.score.docker;
 
 import lombok.NoArgsConstructor;
 import org.testcontainers.containers.GenericContainer;

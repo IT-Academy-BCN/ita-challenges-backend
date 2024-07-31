@@ -1,7 +1,5 @@
 package com.itachallenge.score.docker;
 
-import com.itachallenge.score.helper.CodeValidator;
-import com.itachallenge.score.helper.DockerContainerHelper;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
