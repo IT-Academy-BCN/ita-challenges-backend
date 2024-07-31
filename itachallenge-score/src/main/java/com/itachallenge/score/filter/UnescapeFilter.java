@@ -6,15 +6,12 @@ public class UnescapeFilter implements Filter {
 
     @Override
     public boolean apply(String input) {
-
         String code = UnescapeJava.unescapeJavaCode(input);
         if (next != null) {
             return next.apply(code);
         }
-
         return true;
     }
-
 
     @Override
     public void setNext(Filter next) {

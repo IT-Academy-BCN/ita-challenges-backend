@@ -1,5 +1,6 @@
 package com.itachallenge.score.helper;
 
+import com.itachallenge.score.filter.StringTest;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertFalse;

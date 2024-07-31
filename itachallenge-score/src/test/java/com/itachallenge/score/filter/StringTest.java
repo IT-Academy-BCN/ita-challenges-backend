@@ -1,4 +1,4 @@
-package com.itachallenge.score.helper;
+package com.itachallenge.score.filter;
 
 public class StringTest {
 
