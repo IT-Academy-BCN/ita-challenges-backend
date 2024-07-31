@@ -75,7 +75,7 @@ public class ScoreController {
                     return ResponseEntity.ok(scoreResponse);
                 });
     }
-    
+
 
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {

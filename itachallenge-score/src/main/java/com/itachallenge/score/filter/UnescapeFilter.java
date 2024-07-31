@@ -1,15 +1,15 @@
 package com.itachallenge.score.filter;
 
-public class EscapeFilter implements Filter {
+public class UnescapeFilter implements Filter {
 
     private Filter next;
 
     @Override
     public boolean apply(String input) {
 
-        String escape = EscapeJava.escapeJavaCode(input);
+        String code = UnescapeJava.unescapeJavaCode(input);
         if (next != null) {
-            return next.apply(escape);
+            return next.apply(code);
         }
 
         return true;
