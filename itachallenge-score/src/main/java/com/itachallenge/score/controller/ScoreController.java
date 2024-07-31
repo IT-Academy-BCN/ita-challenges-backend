@@ -64,7 +64,7 @@ public class ScoreController {
                     String codeResult = "99";  // El resultado esperado es 99
                     ExecutionResultDto executionResult = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
                     int score = codeExecutionService.calculateScore(executionResult);
-                    
+
                     ScoreResponse scoreResponse = new ScoreResponse();
                     scoreResponse.setUuidChallenge(req.getUuidChallenge());
                     scoreResponse.setUuidLanguage(req.getUuidLanguage());
@@ -75,6 +75,7 @@ public class ScoreController {
                     return ResponseEntity.ok(scoreResponse);
                 });
     }
+    
 
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
