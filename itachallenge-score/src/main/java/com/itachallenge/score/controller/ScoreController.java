@@ -4,6 +4,7 @@ import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.filter.Filter;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,9 @@ public class ScoreController {
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
 
     @Autowired
+    private Filter filterChain;
+
+    @Autowired
     private CodeExecutionService codeExecutionService;
     @Value("${spring.application.version}")
     private String version;
@@ -38,25 +42,35 @@ public class ScoreController {
     }
 
 
-    //Falta implementar la lógica para calcular el puntaje
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)
                 .map(req -> {
-                    // Compilar y ejecutar el código proporcionado en la solicitud
                     String sourceCode = req.getSolutionText();
+
+                    boolean isValid = filterChain.apply(sourceCode);
+
+                    if (!isValid) {
+                        ScoreResponse errorResponse = new ScoreResponse();
+                        errorResponse.setUuidChallenge(req.getUuidChallenge());
+                        errorResponse.setUuidLanguage(req.getUuidLanguage());
+                        errorResponse.setSolutionText(req.getSolutionText());
+                        errorResponse.setScore(0);
+                        errorResponse.setCompilationMessage("The input contains a non-ASCII character");
+
+                        return ResponseEntity.badRequest().body(errorResponse);
+                    }
+
                     String codeResult = "99";  // El resultado esperado es 99
                     ExecutionResultDto executionResult = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
                     int score = codeExecutionService.calculateScore(executionResult);
-
-                    // Crear la respuesta
+                    
                     ScoreResponse scoreResponse = new ScoreResponse();
                     scoreResponse.setUuidChallenge(req.getUuidChallenge());
                     scoreResponse.setUuidLanguage(req.getUuidLanguage());
                     scoreResponse.setSolutionText(req.getSolutionText());
                     scoreResponse.setScore(score);
                     scoreResponse.setCompilationMessage(executionResult.getMessage());
-
 
                     return ResponseEntity.ok(scoreResponse);
                 });
