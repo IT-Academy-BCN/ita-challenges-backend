@@ -9,17 +9,17 @@ import java.util.BitSet;
 
 @Getter
 @Setter
-public class Filter_BitSet {
+public class FilterBitSet {
 
     private static final int ASCII_SIZE = 128;
     private BitSet allowedChars = new BitSet(ASCII_SIZE);
-    private static final Logger log = LoggerFactory.getLogger(Filter_BitSet.class);
+    private static final Logger log = LoggerFactory.getLogger(FilterBitSet.class);
 
     private String input;
     private boolean result;
 
 
-    public Filter_BitSet(String input) {
+    public FilterBitSet(String input) {
         allowedChars.set(0, ASCII_SIZE);
         this.input = input;
         this.result = filter(input);

@@ -5,17 +5,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class Filter_SimpleValidateTest {
+class Filter_SimpleValidateTest {
 
 
     @Test
-    public void testFilterValid() {
+    void testFilterValid() {
         SimpleValidate filter = new SimpleValidate(StringTest.ASCIIvalid);
         assertTrue("The String had a valids ASCII chars", filter.isResult());
     }
 
     @Test
-    public void testFilterInvalid() {
+    void testFilterInvalid() {
         SimpleValidate filter = new SimpleValidate(StringTest.ASCIIinvalid);
         assertFalse("The String had a invalids ASCII chars", filter.isResult());
     }
