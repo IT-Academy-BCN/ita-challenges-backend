@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
@@ -17,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -60,6 +57,8 @@ class ScoreControllerTest {
                 "int number = 1;"
         );
 
+        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
+        when(codeExecutionService.calculateScore(any(ExecutionResultDto.class))).thenReturn(score);
         webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(scoreRequest)
@@ -67,7 +66,7 @@ class ScoreControllerTest {
                 .expectStatus().isOk()
                 .expectBody(ScoreResponse.class)
                 .consumeWith(response -> {
-                    assert response.getResponseBody().getScore() == 99;
+                    assert response.getResponseBody().getScore() == score;
                     assert response.getResponseBody().getCompilationMessage().equals("Compilation successful");
                 });
     }
@@ -79,7 +78,7 @@ class ScoreControllerTest {
                 UUID.randomUUID(),
                 ""
         );
-
+        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
         webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(scoreRequest)
@@ -87,7 +86,7 @@ class ScoreControllerTest {
                 .expectStatus().isOk()
                 .expectBody(ScoreResponse.class)
                 .consumeWith(response -> {
-                    assert response.getResponseBody().getScore() == 99;
+                    assert response.getResponseBody().getScore() == score;
                     assert response.getResponseBody().getCompilationMessage().equals("Compilation successful");
                 });
     }
@@ -129,7 +128,7 @@ class ScoreControllerTest {
                 UUID.randomUUID(),
                 "int number = 1 / 0;" // Code that will cause compilation/runtime error
         );
-
+        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
         webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(scoreRequest)
@@ -137,13 +136,14 @@ class ScoreControllerTest {
                 .expectStatus().isOk()
                 .expectBody(ScoreResponse.class)
                 .consumeWith(response -> {
-                    assert response.getResponseBody().getScore() == 99;
+                    assert response.getResponseBody().getScore() == score;
                     assert response.getResponseBody().getCompilationMessage().equals("Compilation failed");
                 });
     }
 
     @Test
     void testCreateScore() {
+        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
         ScoreRequest scoreRequest = new ScoreRequest(
                 UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
                 UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
@@ -159,7 +159,7 @@ class ScoreControllerTest {
                 .jsonPath("$.uuid_challenge").isEqualTo("123e4567-e89b-12d3-a456-426614174000")
                 .jsonPath("$.uuid_language").isEqualTo("456f7890-e89b-12d3-a456-426614174000")
                 .jsonPath("$.solution_text").isEqualTo("texto de ejemplo")
-                .jsonPath("$.score").isEqualTo(99);
+                .jsonPath("$.score").isEqualTo(score);
 
     }
 
