@@ -13,38 +13,36 @@ class BlackBoxTestCase {
     CodeExecutionService codeExecutionService;
 
     //Test for bubble sort exercise
-    String sourceCodeBubbleSort = """
-        // Convertir los argumentos de cadena a enteros
-        int[] numbers = new int[args.length];
-        for (int i = 0; i < args.length; i++) {
-            numbers[i] = Integer.parseInt(args[i]);
-        }
-        // Aplicar el algoritmo de ordenación de burbuja
-        bubbleSort(numbers);
-        // Imprimir los números ordenados en una sola línea
-        for (int num : numbers) {
-            System.out.print(num + " ");
-        }
-    }
-
-    // Implementación del algoritmo de ordenación de burbuja
-    private static void bubbleSort(int[] arr) {
-        int n = arr.length;
-        boolean swapped;
-        do {
-            swapped = false;
-            for (int i = 1; i < n; i++) {
-                if (arr[i - 1] > arr[i]) {
-                    // Intercambiar elementos si están en el orden incorrecto
-                    int temp = arr[i - 1];
-                    arr[i - 1] = arr[i];
-                    arr[i] = temp;
-                    swapped = true;
-                }
-            }
-        } while (swapped);
-    }
-    """;
+    String sourceCodeBubbleSort =
+            "        // Convertir los argumentos de cadena a enteros\n" +
+                    "        int[] numbers = new int[args.length];\n" +
+                    "            for (int i = 0; i < args.length; i++) {\n" +
+                    "                numbers[i] = Integer.parseInt(args[i]);\n" +
+                    "            }\n" +
+                    "        // Aplicar el algoritmo de ordenación de burbuja\n" +
+                    "        bubbleSort(numbers);\n" +
+                    "        // Imprimir los números ordenados en una sola línea\n" +
+                    "        for (int num : numbers) {\n" +
+                    "            System.out.print(num + \" \");\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "\n" +
+                    "    // Implementación del algoritmo de ordenación de burbuja\n" +
+                    "    private static void bubbleSort(int[] arr) {\n" +
+                    "        int n = arr.length;\n" +
+                    "        boolean swapped;\n" +
+                    "        do {\n" +
+                    "            swapped = false;\n" +
+                    "            for (int i = 1; i < n; i++) {\n" +
+                    "                if (arr[i - 1] > arr[i]) {\n" +
+                    "                    // Intercambiar elementos si están en el orden incorrecto\n" +
+                    "                    int temp = arr[i - 1];\n" +
+                    "                    arr[i - 1] = arr[i];\n" +
+                    "                    arr[i] = temp;\n" +
+                    "                    swapped = true;\n" +
+                    "                }\n" +
+                    "            }\n" +
+                    "        } while (swapped);\n";
 
     @Test
     void bubbleSortTestCorrectParamInjection() {
@@ -64,7 +62,7 @@ class BlackBoxTestCase {
         String sourceCode = sourceCodeBubbleSort;
         String codeResult = "1 2 3 4 5 ";
 
-        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 3, 5, "a", "bce", 5, 1);
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "3", "5", "a", "bce", "5", "1");
         Assertions.assertTrue(resultDto.isCompile());
         Assertions.assertFalse(resultDto.isExecution());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: java.lang.NumberFormatException: "));
@@ -75,7 +73,7 @@ class BlackBoxTestCase {
         String sourceCode = "System.out.println(\"Hello, World!\");\n";
         String codeResult = "1 2 3 4 5 ";
 
-        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 3, 5, 1, 2, 4);
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "3", "5", "1", "2", "4");
         Assertions.assertTrue(resultDto.isCompile());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertFalse(resultDto.isResultCodeMatch());
@@ -108,18 +106,15 @@ class BlackBoxTestCase {
         System.out.println(sortedNumberStr.toString());
         """;
 
-
     @Test
     void sortingCodeTest() {
         String sourceCode = sortingCode;
         String codeResult = "1234";
 
-        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 4321);
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "4321");
         Assertions.assertTrue(resultDto.isCompile());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
     }
-
-
 }
