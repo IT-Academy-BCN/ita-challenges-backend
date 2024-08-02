@@ -33,7 +33,7 @@ class IScoreRepositoryTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
-        .withStartupTimeout(Duration.ofSeconds(60));
+            .withStartupTimeout(Duration.ofSeconds(60));
 
     @DynamicPropertySource
     static void initMongoProperties(DynamicPropertyRegistry registry) {
@@ -88,6 +88,7 @@ class IScoreRepositoryTest {
         scoreRepository.deleteAll().block();
         scoreRepository.saveAll(Flux.just(score1, score2)).blockLast();
     }
+
     @Test
     void testFindByScoreID() {
 

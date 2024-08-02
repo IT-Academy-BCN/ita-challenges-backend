@@ -68,7 +68,7 @@ class CodeExecutionServiceTest {
     void testCompileAndRunCodeExecutionError() {
 
         String sourceCode =
-                        "        int num = 10;\n" +
+                "        int num = 10;\n" +
                         "        int div = 0;\n" +
                         "        System.out.println(num / div);\n";
         String codeResult = "Hello, World!";
@@ -90,7 +90,7 @@ class CodeExecutionServiceTest {
                         "System.out.println(num / 2);\n";
         String codeResult = "5";  // Esperamos que 10 / 2 sea 5
 
-        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult,10);// Pasamos 10 como argumento al método main
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10);// Pasamos 10 como argumento al método main
 
         // Verificar que resultDto tenga los valores esperados
         Assertions.assertTrue(resultDto.isCompile());
@@ -115,6 +115,7 @@ class CodeExecutionServiceTest {
         Assertions.assertFalse(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: java.lang.NumberFormatException: "));
     }
+
     @Test
     void testCompileAndRunCodeWithNullTypeParameterInjection() {
         String sourceCode =
@@ -196,39 +197,39 @@ class CodeExecutionServiceTest {
     }
 
     // Prueba de inyección de múltiples parámetros
-@Test
-void testCompileAndRunCodeWithMultipleParameterInjection() {
-    String sourceCode =
-            "int num1 = Integer.parseInt(args[0]);\n" +
-            "int num2 = Integer.parseInt(args[1]);\n" +
-            "System.out.println(num1 + num2);\n";
-    String codeResult = "30";  // Esperamos que 10 + 20 sea 30
+    @Test
+    void testCompileAndRunCodeWithMultipleParameterInjection() {
+        String sourceCode =
+                "int num1 = Integer.parseInt(args[0]);\n" +
+                        "int num2 = Integer.parseInt(args[1]);\n" +
+                        "System.out.println(num1 + num2);\n";
+        String codeResult = "30";  // Esperamos que 10 + 20 sea 30
 
-    ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10, 20); // Pasamos 10 y 20 como argumentos al método main
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10, 20); // Pasamos 10 y 20 como argumentos al método main
 
-    // Verificar que resultDto tenga los valores esperados
-    Assertions.assertTrue(resultDto.isCompile());
-    Assertions.assertTrue(resultDto.isExecution());
-    Assertions.assertTrue(resultDto.isResultCodeMatch());
-    Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
-}
+        // Verificar que resultDto tenga los valores esperados
+        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isExecution());
+        Assertions.assertTrue(resultDto.isResultCodeMatch());
+        Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
+    }
 
-// Prueba de inyección de parámetros de diferentes tipos
-@Test
-void testCompileAndRunCodeWithDifferentTypeParameterInjection() {
-    String sourceCode =
-            "double num = Double.parseDouble(args[0]);\n" +
-            "System.out.println(num / 2);\n";
-    String codeResult = "5.0";  // Esperamos que 10.0 / 2 sea 5.0
+    // Prueba de inyección de parámetros de diferentes tipos
+    @Test
+    void testCompileAndRunCodeWithDifferentTypeParameterInjection() {
+        String sourceCode =
+                "double num = Double.parseDouble(args[0]);\n" +
+                        "System.out.println(num / 2);\n";
+        String codeResult = "5.0";  // Esperamos que 10.0 / 2 sea 5.0
 
-    ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10.0); // Pasamos 10.0 como argumento al método main
+        ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10.0); // Pasamos 10.0 como argumento al método main
 
-    // Verificar que resultDto tenga los valores esperados
-    Assertions.assertTrue(resultDto.isCompile());
-    Assertions.assertTrue(resultDto.isExecution());
-    Assertions.assertTrue(resultDto.isResultCodeMatch());
-    Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
-}
+        // Verificar que resultDto tenga los valores esperados
+        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isExecution());
+        Assertions.assertTrue(resultDto.isResultCodeMatch());
+        Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
+    }
 
     @Test
     void testCalculateScore() {

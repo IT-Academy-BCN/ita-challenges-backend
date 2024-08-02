@@ -92,19 +92,19 @@ class BlackBoxTestCase {
     }
 
     String sortingCode = """
-        int number = Integer.parseInt(args[0]);
-        String numberStr = Integer.toString(number);
-        List<Character> chars = new ArrayList<>();
-        for (char c : numberStr.toCharArray()) {
-            chars.add(c);
-        }
-        Collections.sort(chars);
-        StringBuilder sortedNumberStr = new StringBuilder(chars.size());
-        for (Character c : chars) {
-            sortedNumberStr.append(c);
-        }
-        System.out.println(sortedNumberStr.toString());
-        """;
+            int number = Integer.parseInt(args[0]);
+            String numberStr = Integer.toString(number);
+            List<Character> chars = new ArrayList<>();
+            for (char c : numberStr.toCharArray()) {
+                chars.add(c);
+            }
+            Collections.sort(chars);
+            StringBuilder sortedNumberStr = new StringBuilder(chars.size());
+            for (Character c : chars) {
+                sortedNumberStr.append(c);
+            }
+            System.out.println(sortedNumberStr.toString());
+            """;
 
     @Test
     void sortingCodeTest() {

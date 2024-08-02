@@ -1,6 +1,7 @@
 package com.itachallenge.score.filter;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,7 +30,6 @@ class AsciiFilterTest {
         AsciiFilter filter = new AsciiFilter();
         assertTrue("Boundary characters should be valid", filter.apply("\u0000\u007F"));
     }
-
 
 
     @Test

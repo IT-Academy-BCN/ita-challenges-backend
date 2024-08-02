@@ -42,7 +42,6 @@ public class CodeExecutionService {
         sourceCode = String.format(codeTemplate, sourceCode);
 
 
-
         //Compilar el código
         CompilationResult compilationResult = compile(sourceCode);
         ExecutionResultDto executionResultDto = compilationResult.getExecutionResultDto();
