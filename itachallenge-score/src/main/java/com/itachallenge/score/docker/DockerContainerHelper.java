@@ -1,14 +1,15 @@
 package com.itachallenge.score.docker;
 
-import lombok.NoArgsConstructor;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.utility.DockerImageName;
 
 import java.io.IOException;
 
-@NoArgsConstructor
 public class DockerContainerHelper {
+
+    private DockerContainerHelper() {
+    }
 
     public static GenericContainer<?> createContainer(String image) {
         GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(image));
@@ -30,4 +31,3 @@ public class DockerContainerHelper {
         container.copyFileToContainer(Transferable.of(content.getBytes()), containerPath);
     }
 }
-

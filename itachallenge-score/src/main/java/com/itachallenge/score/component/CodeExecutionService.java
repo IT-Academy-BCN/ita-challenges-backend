@@ -98,17 +98,17 @@ public class CodeExecutionService {
             } catch (ClassNotFoundException | NoSuchMethodException e) {
                 log.error(e.getMessage());
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Execution failed: " + e.getMessage());
-                throw new RuntimeException(e);
+                executionResultDto.setMessage(executionFailedMessage + e.getMessage());
+                throw new FailExecutionException(e.getMessage());
             } catch (InvocationTargetException e) {
                 log.error(e.getMessage() + " " + e.getTargetException());
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Execution failed: " + e.getTargetException());
-                throw new RuntimeException(e.getTargetException());
+                executionResultDto.setMessage(executionFailedMessage + e.getTargetException());
+                throw new FailExecutionException(e.getMessage());
             } catch (Throwable e) {
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Execution failed: " + e.getMessage());
-                throw new RuntimeException(e);
+                executionResultDto.setMessage(executionFailedMessage + e.getMessage());
+                throw new FailExecutionException(e.getMessage());
             }
         });
 
@@ -116,12 +116,12 @@ public class CodeExecutionService {
             future.get(5, TimeUnit.SECONDS); // Esperar 10 segundos
         } catch (InterruptedException | TimeoutException e) {
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: Code execution timed out");
+            executionResultDto.setMessage(executionFailedMessage + "Code execution timed out");
             return executionResult;
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Execution failed: " + cause.getMessage());
+            executionResultDto.setMessage(executionFailedMessage + cause.getMessage());
             return executionResult;
         } finally {
             executor.shutdownNow();

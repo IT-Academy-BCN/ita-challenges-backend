@@ -4,6 +4,9 @@ package com.itachallenge.score.filter;
 
 public class UnescapeJava {
 
+    private UnescapeJava() {
+    }
+
 
     public static String unescapeJavaCode(String value) {
         return value

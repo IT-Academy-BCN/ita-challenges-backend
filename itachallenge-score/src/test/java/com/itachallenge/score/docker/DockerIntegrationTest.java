@@ -17,17 +17,17 @@ class DockerIntegrationTest {
     void testJavaContainerSortNumbers() {
 
         String codeSort = """
-                import java.util.Arrays;
-                        
-                public class Main {
-                    public static void main(String[] args) {
-                        String numbers = "3,1,4,1,5,9";
-                        int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
-                        Arrays.sort(numArray);
-                        System.out.println(Arrays.toString(numArray));
-                    }
-                }
-                """;
+        import java.util.Arrays;
+        
+        public class Main {
+            public static void main(String[] args) {
+                String numbers = "3,1,4,1,5,9";
+                int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
+                Arrays.sort(numArray);
+                System.out.println(Arrays.toString(numArray));
+            }
+        }
+        """;
 
         GenericContainer<?> containerJavaSort = DockerContainerHelper.createContainer("openjdk:11");
 
@@ -49,12 +49,12 @@ class DockerIntegrationTest {
     void testJavaContainerCompileError() {
 
         String codeError = """
-                          public class Main {
-                          public static void main(String[] args) {
-                              System.out.println("Esto no compila porque falta un paréntesis";
-                          }
-                      }
-                """;
+                    public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Esto no compila porque falta un paréntesis";
+                    }
+                }
+          """;
 
         GenericContainer<?> containerJavaError = DockerContainerHelper.createContainer("openjdk:11");
 

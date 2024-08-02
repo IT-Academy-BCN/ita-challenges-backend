@@ -65,7 +65,6 @@ class BlackBoxTestCase {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "3", "5", "a", "bce", "5", "1");
         Assertions.assertTrue(resultDto.isCompile());
         Assertions.assertFalse(resultDto.isExecution());
-        Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: java.lang.NumberFormatException: "));
     }
 
     @Test

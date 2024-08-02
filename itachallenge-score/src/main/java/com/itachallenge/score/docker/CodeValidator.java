@@ -1,12 +1,13 @@
 package com.itachallenge.score.docker;
 
-import lombok.NoArgsConstructor;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@NoArgsConstructor
+
 public class CodeValidator {
+
+    private CodeValidator() {
+    }
 
     private static final String[] forbiddenLibraries = {
             "java\\.lang\\.System",

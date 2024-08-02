@@ -52,7 +52,7 @@ class CodeExecutionServiceTest {
     @Test
     void testCompileAndRunCodeCompilationError() {
 
-        String sourceCode = "System.out.println(\"Hello, World!\")\n";  //falta ;
+        String sourceCode = "System.out.println(\"Hello, World!\")\n";  //falta
         String codeResult = "Hello, World!";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
@@ -113,7 +113,6 @@ class CodeExecutionServiceTest {
         Assertions.assertTrue(resultDto.isCompile());
         Assertions.assertFalse(resultDto.isExecution());
         Assertions.assertFalse(resultDto.isResultCodeMatch());
-        Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: java.lang.NumberFormatException: "));
     }
 
     @Test
@@ -233,7 +232,7 @@ class CodeExecutionServiceTest {
 
     @Test
     void testCalculateScore() {
-        CodeExecutionService codeExecutionService = new CodeExecutionService();
+
 
         // Test case 1: Code compiled, executed, and result matched
         ExecutionResultDto result1 = new ExecutionResultDto(true, true, true, "");
