@@ -3,20 +3,19 @@ package com.itachallenge.score.component;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.InvocationTargetException;
 
 @SpringBootTest
-public class CodeExecutionServiceTest {
+class CodeExecutionServiceTest {
     @Autowired
     CodeExecutionService codeExecutionService;
 
     //Test for client code result match
     @Test
-    public void testCompileAndRunCode() {
+    void testCompileAndRunCode() {
 
         String sourceCode = "System.out.println(\"Hello, World!\");\n";
         String codeResult = "Hello, World!";
@@ -32,7 +31,7 @@ public class CodeExecutionServiceTest {
 
     //Test for client code result not match
     @Test
-    public void testCompileAndRunCodeResultNotMatch() {
+    void testCompileAndRunCodeResultNotMatch() {
 
         String sourceCode = "System.out.println(\"Bad Hello, World!\");\n";
 
@@ -49,7 +48,7 @@ public class CodeExecutionServiceTest {
 
     //Test for client code compilation error
     @Test
-    public void testCompileAndRunCodeCompilationError() {
+    void testCompileAndRunCodeCompilationError() {
 
         String sourceCode = "System.out.println(\"Hello, World!\")\n";  //falta ;
         String codeResult = "Hello, World!";
@@ -64,7 +63,7 @@ public class CodeExecutionServiceTest {
 
     //Test for client code execution error
     @Test
-    public void testCompileAndRunCodeExecutionError() {
+    void testCompileAndRunCodeExecutionError() {
 
         String sourceCode =
                         "        int num = 10;\n" +
@@ -83,7 +82,7 @@ public class CodeExecutionServiceTest {
 
     //Test for client code correct parameter injection
     @Test
-    public void testCompileAndRunCodeWithParameterInjection() {
+    void testCompileAndRunCodeWithParameterInjection() {
         String sourceCode =
                 "int num = Integer.parseInt(args[0]);\n" +
                         "System.out.println(num / 2);\n";
@@ -100,7 +99,7 @@ public class CodeExecutionServiceTest {
 
     //Test for client code wrong parameter injection
     @Test
-    public void testCompileAndRunCodeWithWrongTypeParameterInjection() {
+    void testCompileAndRunCodeWithWrongTypeParameterInjection() {
         String sourceCode =
                 "int num = Integer.parseInt(args[0]);\n" +
                         "System.out.println(num / 2);\n";
@@ -115,7 +114,7 @@ public class CodeExecutionServiceTest {
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: java.lang.NumberFormatException: "));
     }
     @Test
-    public void testCompileAndRunCodeWithNullTypeParameterInjection() {
+    void testCompileAndRunCodeWithNullTypeParameterInjection() {
         String sourceCode =
                 "int num = Integer.parseInt(args[0]);\n" +
                         "System.out.println(num / 2);\n";
@@ -129,7 +128,7 @@ public class CodeExecutionServiceTest {
 
     //Test for ClassNotFoundException
     @Test
-    public void testCompileAndRunCodeClassNotFoundException() {
+    void testCompileAndRunCodeClassNotFoundException() {
         String sourceCode = "public class NotMain {\n" +
                 "    public static void main(String[] args) {\n" +
                 "        System.out.println(\"Hello, World!\");\n" +
@@ -150,7 +149,7 @@ public class CodeExecutionServiceTest {
 
     //Test for NoSuchMethodException
     @Test
-    public void testCompileAndRunCodeNoSuchMethodException() {
+    void testCompileAndRunCodeNoSuchMethodException() {
         String sourceCode = "public class Main {\n" +
                 "    public static void notMain(String[] args) {\n" +
                 "        System.out.println(\"Hello, World!\");\n" +
@@ -172,7 +171,7 @@ public class CodeExecutionServiceTest {
 
     //Test for InvocationTargetException
     @Test
-    public void testCompileAndRunCodeInvocationTargetException() {
+    void testCompileAndRunCodeInvocationTargetException() {
         String sourceCode = "public class Main {\n" +
                 "    public static void main(String[] args) {\n" +
                 "        throw new RuntimeException(\"Hello, World!\");\n" +
@@ -196,7 +195,7 @@ public class CodeExecutionServiceTest {
 
     // Prueba de inyección de múltiples parámetros
 @Test
-public void testCompileAndRunCodeWithMultipleParameterInjection() {
+void testCompileAndRunCodeWithMultipleParameterInjection() {
     String sourceCode =
             "int num1 = Integer.parseInt(args[0]);\n" +
             "int num2 = Integer.parseInt(args[1]);\n" +
@@ -214,7 +213,7 @@ public void testCompileAndRunCodeWithMultipleParameterInjection() {
 
 // Prueba de inyección de parámetros de diferentes tipos
 @Test
-public void testCompileAndRunCodeWithDifferentTypeParameterInjection() {
+void testCompileAndRunCodeWithDifferentTypeParameterInjection() {
     String sourceCode =
             "double num = Double.parseDouble(args[0]);\n" +
             "System.out.println(num / 2);\n";

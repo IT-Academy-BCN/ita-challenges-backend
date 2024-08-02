@@ -7,45 +7,47 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class BlackBoxTestCase {
+class BlackBoxTestCase {
 
     @Autowired
     CodeExecutionService codeExecutionService;
 
     //Test for bubble sort exercise
-    String sourceCodeBubbleSort =
-            "        // Convertir los argumentos de cadena a enteros\n" +
-                    "        int[] numbers = new int[args.length];\n" +
-                    "            for (int i = 0; i < args.length; i++) {\n" +
-                    "                numbers[i] = Integer.parseInt(args[i]);\n" +
-                    "            }\n" +
-                    "        // Aplicar el algoritmo de ordenación de burbuja\n" +
-                    "        bubbleSort(numbers);\n" +
-                    "        // Imprimir los números ordenados en una sola línea\n" +
-                    "        for (int num : numbers) {\n" +
-                    "            System.out.print(num + \" \");\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "\n" +
-                    "    // Implementación del algoritmo de ordenación de burbuja\n" +
-                    "    private static void bubbleSort(int[] arr) {\n" +
-                    "        int n = arr.length;\n" +
-                    "        boolean swapped;\n" +
-                    "        do {\n" +
-                    "            swapped = false;\n" +
-                    "            for (int i = 1; i < n; i++) {\n" +
-                    "                if (arr[i - 1] > arr[i]) {\n" +
-                    "                    // Intercambiar elementos si están en el orden incorrecto\n" +
-                    "                    int temp = arr[i - 1];\n" +
-                    "                    arr[i - 1] = arr[i];\n" +
-                    "                    arr[i] = temp;\n" +
-                    "                    swapped = true;\n" +
-                    "                }\n" +
-                    "            }\n" +
-                    "        } while (swapped);\n";
+    String sourceCodeBubbleSort = """
+        // Convertir los argumentos de cadena a enteros
+        int[] numbers = new int[args.length];
+        for (int i = 0; i < args.length; i++) {
+            numbers[i] = Integer.parseInt(args[i]);
+        }
+        // Aplicar el algoritmo de ordenación de burbuja
+        bubbleSort(numbers);
+        // Imprimir los números ordenados en una sola línea
+        for (int num : numbers) {
+            System.out.print(num + " ");
+        }
+    }
+
+    // Implementación del algoritmo de ordenación de burbuja
+    private static void bubbleSort(int[] arr) {
+        int n = arr.length;
+        boolean swapped;
+        do {
+            swapped = false;
+            for (int i = 1; i < n; i++) {
+                if (arr[i - 1] > arr[i]) {
+                    // Intercambiar elementos si están en el orden incorrecto
+                    int temp = arr[i - 1];
+                    arr[i - 1] = arr[i];
+                    arr[i] = temp;
+                    swapped = true;
+                }
+            }
+        } while (swapped);
+    }
+    """;
 
     @Test
-    public void bubbleSortTestCorrectParamInjection() {
+    void bubbleSortTestCorrectParamInjection() {
         String sourceCode = sourceCodeBubbleSort;
         String codeResult = "1 2 3 4 5 ";
 
@@ -58,7 +60,7 @@ public class BlackBoxTestCase {
     }
 
     @Test
-    public void bubbleSortTestIncorrectParamInjection() {
+    void bubbleSortTestIncorrectParamInjection() {
         String sourceCode = sourceCodeBubbleSort;
         String codeResult = "1 2 3 4 5 ";
 
@@ -69,7 +71,7 @@ public class BlackBoxTestCase {
     }
 
     @Test
-    public void bubbleSortTestIncorrectResult() {
+    void bubbleSortTestIncorrectResult() {
         String sourceCode = "System.out.println(\"Hello, World!\");\n";
         String codeResult = "1 2 3 4 5 ";
 
@@ -81,7 +83,7 @@ public class BlackBoxTestCase {
     }
 
     @Test
-    public void infiniteLoopTest() {
+    void infiniteLoopTest() {
         String sourceCode = "while(true) {}";
         String codeResult = "Hello, World!\n";
 
@@ -91,23 +93,24 @@ public class BlackBoxTestCase {
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: Code execution timed out"));
     }
 
-    String sortingCode =
-                    "        int number = Integer.parseInt(args[0]);\n" +
-                    "        String numberStr = Integer.toString(number);\n" +
-                    "        List<Character> chars = new ArrayList<>();\n" +
-                    "        for (char c : numberStr.toCharArray()) {\n" +
-                    "            chars.add(c);\n" +
-                    "        }\n" +
-                    "        Collections.sort(chars);\n" +
-                    "        StringBuilder sortedNumberStr = new StringBuilder(chars.size());\n" +
-                    "        for (Character c : chars) {\n" +
-                    "            sortedNumberStr.append(c);\n" +
-                    "        }\n" +
-                    "        System.out.println(sortedNumberStr.toString());\n";
+    String sortingCode = """
+        int number = Integer.parseInt(args[0]);
+        String numberStr = Integer.toString(number);
+        List<Character> chars = new ArrayList<>();
+        for (char c : numberStr.toCharArray()) {
+            chars.add(c);
+        }
+        Collections.sort(chars);
+        StringBuilder sortedNumberStr = new StringBuilder(chars.size());
+        for (Character c : chars) {
+            sortedNumberStr.append(c);
+        }
+        System.out.println(sortedNumberStr.toString());
+        """;
 
 
     @Test
-    public void sortingCodeTest() {
+    void sortingCodeTest() {
         String sourceCode = sortingCode;
         String codeResult = "1234";
 
