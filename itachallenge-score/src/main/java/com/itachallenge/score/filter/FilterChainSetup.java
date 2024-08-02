@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class FilterChainSetup {
 
+    private FilterChainSetup() {
+    }
+
     @Bean
     public static Filter createFilterChain() {
         Filter asciiFilter = new AsciiFilter();

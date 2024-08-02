@@ -4,6 +4,7 @@ package com.itachallenge.score.filter;
 
 public class UnescapeJava {
 
+
     public static String unescapeJavaCode(String value) {
         return value
                 .replace("\\u003C", "<") // Replace less than

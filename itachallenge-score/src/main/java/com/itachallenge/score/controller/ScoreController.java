@@ -28,6 +28,7 @@ public class ScoreController {
 
     @Autowired
     private CodeExecutionService codeExecutionService;
+
     @Value("${spring.application.version}")
     private String version;
 

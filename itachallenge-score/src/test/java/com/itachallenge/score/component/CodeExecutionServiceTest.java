@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 class CodeExecutionServiceTest {
     @Autowired
@@ -227,5 +229,30 @@ void testCompileAndRunCodeWithDifferentTypeParameterInjection() {
     Assertions.assertTrue(resultDto.isResultCodeMatch());
     Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
 }
+
+    @Test
+    void testCalculateScore() {
+        CodeExecutionService codeExecutionService = new CodeExecutionService();
+
+        // Test case 1: Code compiled, executed, and result matched
+        ExecutionResultDto result1 = new ExecutionResultDto(true, true, true, "");
+        int score1 = codeExecutionService.calculateScore(result1);
+        assertEquals(99, score1);
+
+        // Test case 2: Code compiled and executed, but result did not match
+        ExecutionResultDto result2 = new ExecutionResultDto(true, true, false, "");
+        int score2 = codeExecutionService.calculateScore(result2);
+        assertEquals(75, score2);
+
+        // Test case 3: Code compiled, but did not execute
+        ExecutionResultDto result3 = new ExecutionResultDto(true, false, false, "");
+        int score3 = codeExecutionService.calculateScore(result3);
+        assertEquals(50, score3);
+
+        // Test case 4: Code did not compile
+        ExecutionResultDto result4 = new ExecutionResultDto(false, false, false, "");
+        int score4 = codeExecutionService.calculateScore(result4);
+        assertEquals(0, score4);
+    }
 
 }

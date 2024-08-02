@@ -4,8 +4,7 @@ import com.itachallenge.score.filter.UnescapeFilter;
 import com.itachallenge.score.filter.Filter;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 
 class UnescapeFilterTest {
 
@@ -18,7 +17,7 @@ class UnescapeFilterTest {
         String escapedInput = "Hello \\u003Cworld\\u003E";
         String expectedOutput = "Hello <world>";
         assertTrue("The unescaped code should be passed to the next filter", filter.apply(escapedInput));
-        assertTrue("The unescaped code matches the expected output", MockFilter.lastInput.equals(expectedOutput));
+        assertEquals("The unescaped code matches the expected output", MockFilter.lastInput, expectedOutput);
     }
 
     @Test

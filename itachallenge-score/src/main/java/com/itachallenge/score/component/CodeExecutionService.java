@@ -16,7 +16,8 @@ import java.util.concurrent.*;
 @Component
 public class CodeExecutionService {
 
-    /*RECEPCIÓN DEL CÓDIGO DEL USUARIO
+    /*
+    RECEPCIÓN DEL CÓDIGO DEL USUARIO
     El código plantilla -- public class Main{ public static void main(String[] args){ }}"; --
     viene por defecto en application.yml. El usuario se limita a introducir la lógica o el algoritmo
     que se le pide en el enunciado.
@@ -40,8 +41,7 @@ public class CodeExecutionService {
         // Integrar el código del usuario en la plantilla
         sourceCode = String.format(codeTemplate, sourceCode);
 
-        SimpleCompiler compiler = null;
-        String result = null;
+
 
         //Compilar el código
         CompilationResult compilationResult = compile(sourceCode);
@@ -63,7 +63,7 @@ public class CodeExecutionService {
 
     public CompilationResult compile(String sourceCode) {
         ExecutionResultDto executionResultDto = new ExecutionResultDto(false, false, false, "");
-        SimpleCompiler compiler = null;
+        SimpleCompiler compiler;
 
         try {
             compiler = new SimpleCompiler();
@@ -85,6 +85,7 @@ public class CodeExecutionService {
         ExecutionResultDto executionResultDto = compilationResult.getExecutionResultDto();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PrintStream printStream = new PrintStream(outputStream);
+        String executionFailedMessage = "Execution failed: ";
         PrintStream old = System.out;
         System.setOut(printStream);
 
@@ -142,7 +143,7 @@ public class CodeExecutionService {
         result = result.trim(); // Eliminar espacios en blanco alrededor del resultado, a veces aparecía "/r" al final del resultado y eso hace que la comparación falle.
         codeResult = codeResult.trim();
 
-        log.info("CodeResult: " + codeResult);
+        log.info("CodeResult: {}", codeResult);
 
         if (result.equals(codeResult)) {
             executionResultDto.setResultCodeMatch(true);
@@ -210,8 +211,8 @@ public class CodeExecutionService {
         } else if (executionResult.isCompile() && !executionResult.isExecution()) {
             score = 50;
             log.info("Score calculated: {}.\nReason: Code compiled, but did not execute.", score);
-        } else if (!executionResult.isCompile()) {
-            score = 0;
+        } else {
+
             log.info("Score calculated: {}. \nReason: Code did not compile.", score);
         }
 
