@@ -11,6 +11,7 @@ public class DockerContainerHelper {
     private DockerContainerHelper() {
     }
 
+    //GnerecicContainer<?> is a type of container that can be used to creaty any type of container
     public static GenericContainer<?> createContainer(String image) {
         GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(image));
         container.start();

@@ -24,9 +24,10 @@ public class CodeExecutionService {
 
     La inyección de parámetros al código del cliente se hace mediante el uso varargs, el método castArgs,
     nos permite llamar al método pasando un array de objetos o pasando los objetos directamente, por ejemplo:
-    Object[] args = new Object[]{"hola", 1, 2.0};
-    compileAndRunCode(sourceCode, codeResult, args);
-    compileAndRunCode(sourceCode, codeResult, "hola", 1, 2.0);
+
+                Object[] args = new Object[]{"hola", 1, 2.0};
+                compileAndRunCode(sourceCode, codeResult, args);
+                compileAndRunCode(sourceCode, codeResult, "hola", 1, 2.0);
 
     La salida del compilador es a traves del Sistem.out.println
      */
@@ -54,7 +55,7 @@ public class CodeExecutionService {
             ExecutionResult executionResult = execute(compilationResult, codeResult, argsString);
             if (executionResultDto.isExecution()) {
                 //Comparar el resultado
-                executionResultDto = compareResults(executionResult.getExecutionResult(), codeResult, executionResultDto);
+                executionResultDto = compareResults(executionResult.getExecutionResultMsg(), codeResult, executionResultDto);
             }
         }
         return executionResultDto;
@@ -95,21 +96,12 @@ public class CodeExecutionService {
                 compilationResult.getCompiler().getClassLoader().loadClass("Main")
                         .getMethod("main", String[].class)
                         .invoke(null, (Object) args);
-            } catch (ClassNotFoundException | NoSuchMethodException e) {
-                log.error(e.getMessage());
-                executionResultDto.setExecution(false);
-                executionResultDto.setMessage(executionFailedMessage + e.getMessage());
-                throw new FailExecutionException(e.getMessage());
-            } catch (InvocationTargetException e) {
-                log.error(e.getMessage() + " " + e.getTargetException());
-                executionResultDto.setExecution(false);
-                executionResultDto.setMessage(executionFailedMessage + e.getTargetException());
-                throw new FailExecutionException(e.getMessage());
-            } catch (Throwable e) {
+            } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e ) {
                 executionResultDto.setExecution(false);
                 executionResultDto.setMessage(executionFailedMessage + e.getMessage());
                 throw new FailExecutionException(e.getMessage());
             }
+
         });
 
         try {
@@ -127,12 +119,13 @@ public class CodeExecutionService {
             executor.shutdownNow();
         }
 
+
         System.out.flush();
         System.setOut(old);
 
         // Ejecución correcta
         executionResultDto.setExecution(true);
-        executionResult.setExecutionResult(removeTrailingNewline(outputStream.toString()));
+        executionResult.setExecutionResultMsg(removeTrailingNewline(outputStream.toString()));
 
         return executionResult;
     }

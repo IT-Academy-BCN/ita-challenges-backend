@@ -165,9 +165,8 @@ class ScoreControllerTest {
 
     @Test
     void getVersionTest() {
-        String expectedVersion = env.getProperty("spring.application.version");
 
-        webTestClient.get()
+                webTestClient.get()
                 .uri("/itachallenge/api/v1/score/version")
                 .exchange()
                 .expectStatus().isOk()

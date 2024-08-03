@@ -12,5 +12,5 @@ import lombok.Setter;
 @Setter
 public class ExecutionResult {
     private ExecutionResultDto executionResultDto;
-    private String executionResult;
+    private String executionResultMsg;
 }
