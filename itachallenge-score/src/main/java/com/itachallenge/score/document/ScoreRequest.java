@@ -10,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ScoreRequest {
-    //atributos
+    
     @JsonProperty("uuid_challenge")
     private UUID uuidChallenge;
 

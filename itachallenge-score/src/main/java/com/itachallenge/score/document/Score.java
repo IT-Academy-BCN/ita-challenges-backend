@@ -11,6 +11,7 @@ import java.util.UUID;
 @Builder
 @ToString
 public class Score {
+
     private UUID scoreID;
     private UUID userID;
     private UUID challengeID;

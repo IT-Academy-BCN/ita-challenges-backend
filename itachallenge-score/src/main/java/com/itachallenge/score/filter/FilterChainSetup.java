@@ -11,9 +11,17 @@ public class FilterChainSetup {
 
     @Bean
     public static Filter createFilterChain() {
-        Filter asciiFilter = new AsciiFilter();
+
         Filter escapeFilter = new UnescapeFilter();
+        Filter asciiFilter = new AsciiFilter();
+        Filter dockerJavaFilter = new DockerJavaFilter();
+        Filter compilationFilter = new CompilationFilter();
+        Filter executionFilter = new ExecutionFilter();
+
         escapeFilter.setNext(asciiFilter);
+        asciiFilter.setNext(dockerJavaFilter);
+        dockerJavaFilter.setNext(compilationFilter);
+        compilationFilter.setNext(executionFilter);
         return escapeFilter;
     }
 }

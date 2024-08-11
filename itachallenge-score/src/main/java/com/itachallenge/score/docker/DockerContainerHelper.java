@@ -41,6 +41,7 @@ public class DockerContainerHelper {
         container.start();
         return container;
     }
+
     // Mirar si el codevalidator es necesario para no repetir la lista de librerias prohibidas
     public static void runWithCustomClassLoader() throws ClassNotFoundException {
         List<String> prohibitedClasses = Arrays.asList(
