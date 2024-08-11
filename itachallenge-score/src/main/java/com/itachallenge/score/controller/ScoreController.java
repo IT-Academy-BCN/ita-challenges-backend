@@ -4,6 +4,7 @@ import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.docker.DockerContainerHelper;
 import com.itachallenge.score.filter.Filter;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.testcontainers.containers.GenericContainer;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +45,6 @@ public class ScoreController {
         return "Hello from ITA Score!!!";
     }
 
-
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)
@@ -62,8 +64,23 @@ public class ScoreController {
                         return ResponseEntity.badRequest().body(errorResponse);
                     }
 
-                    String codeResult = "99";  // El resultado esperado es 99
-                    ExecutionResultDto executionResult = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
+                    GenericContainer<?> sandbox = DockerContainerHelper.createJavaSandboxContainer();
+                    ExecutionResultDto executionResult;
+                    try {
+                        sandbox.start(); // Ensure the container is started
+                        DockerContainerHelper.copyFileToContainer(sandbox, sourceCode, "/home/sandbox/CodeToExecute.java");
+                        DockerContainerHelper.executeCommand(sandbox, "javac", "/home/sandbox/CodeToExecute.java");
+                        DockerContainerHelper.executeCommand(sandbox, "java", "-cp", "/home/sandbox", "CodeToExecute");
+
+                        executionResult = new ExecutionResultDto(/* populate with actual results */);
+                    } catch (IOException | InterruptedException e) {
+                        log.error("Error during code execution", e); // Log the error
+                        executionResult = new ExecutionResultDto();
+                        executionResult.setMessage("Error during code execution: " + e.getMessage());
+                    } finally {
+                        sandbox.stop(); // Ensure the container is stopped
+                    }
+
                     int score = codeExecutionService.calculateScore(executionResult);
 
                     ScoreResponse scoreResponse = new ScoreResponse();
@@ -77,7 +94,6 @@ public class ScoreController {
                 });
     }
 
-
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
         Map<String, String> response = new HashMap<>();
@@ -85,7 +101,4 @@ public class ScoreController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
-
-
 }
-

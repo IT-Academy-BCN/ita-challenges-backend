@@ -91,7 +91,6 @@ class ScoreControllerTest {
                 });
     }
 
-
     @Test
     @DisplayName("Test Score Creation with Invalid Characters")
     void createScoreWithInvalidCharacters() {
@@ -160,13 +159,11 @@ class ScoreControllerTest {
                 .jsonPath("$.uuid_language").isEqualTo("456f7890-e89b-12d3-a456-426614174000")
                 .jsonPath("$.solution_text").isEqualTo("texto de ejemplo")
                 .jsonPath("$.score").isEqualTo(score);
-
     }
 
     @Test
     void getVersionTest() {
-
-                webTestClient.get()
+        webTestClient.get()
                 .uri("/itachallenge/api/v1/score/version")
                 .exchange()
                 .expectStatus().isOk()
@@ -174,6 +171,4 @@ class ScoreControllerTest {
                 .jsonPath("$.application_name").isEqualTo("itachallenge-score")
                 .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
     }
-
 }
-
