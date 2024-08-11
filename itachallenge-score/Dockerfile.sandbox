@@ -1,0 +1,18 @@
+FROM openjdk:11-jdk-alpine
+WORKDIR /sandbox
+
+# Install necessary tools
+RUN apk add --no-cache bash
+
+# Create a non-root user
+RUN addgroup -S sandbox && adduser -S sandbox -G sandbox
+USER sandbox
+
+# Set the working directory
+WORKDIR /home/sandbox
+
+# Expose a port if needed (optional)
+EXPOSE 8081
+
+# Default command to keep the container running
+CMD ["tail", "-f", "/dev/null"]

@@ -11,7 +11,6 @@ public class DockerContainerHelper {
     private DockerContainerHelper() {
     }
 
-    //GnerecicContainer<?> is a type of container that can be used to creaty any type of container
     public static GenericContainer<?> createContainer(String image) {
         GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse(image));
         container.start();
@@ -30,5 +29,14 @@ public class DockerContainerHelper {
 
     public static void copyFileToContainer(GenericContainer<?> container, String content, String containerPath) {
         container.copyFileToContainer(Transferable.of(content.getBytes()), containerPath);
+    }
+
+    // Specific Sandbox for Java code
+    public static GenericContainer<?> createJavaSandboxContainer() {
+        GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse("sandbox-image"))
+                .withWorkingDirectory("/home/sandbox")
+                .withCommand("tail", "-f", "/dev/null");
+        container.start();
+        return container;
     }
 }
