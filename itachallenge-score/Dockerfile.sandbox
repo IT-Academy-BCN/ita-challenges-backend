@@ -1,18 +1,16 @@
-FROM openjdk:11-jdk-alpine
+FROM openjdk:11-jdk-slim
 WORKDIR /sandbox
 
 # Install necessary tools
-RUN apk add --no-cache bash
+RUN apt-get update && apt-get install -y bash
+
 
 # Create a non-root user
-RUN addgroup -S sandbox && adduser -S sandbox -G sandbox
-USER sandbox
+RUN useradd -ms /bin/bash appuser
+USER appuser
 
-# Set the working directory
-WORKDIR /home/sandbox
+# Copy application files
+COPY . .
 
-# Expose a port if needed (optional)
-EXPOSE 8081
-
-# Default command to keep the container running
-CMD ["tail", "-f", "/dev/null"]
+# Run your application
+CMD ["java", "-jar", "your-application.jar"]

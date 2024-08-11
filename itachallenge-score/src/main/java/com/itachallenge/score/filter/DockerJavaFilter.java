@@ -29,11 +29,8 @@ public class DockerJavaFilter implements Filter {
             return false;
         }
 
+
         boolean result = next == null || next.apply(code);
-
-        DockerContainerHelper.stopContainer(sandboxContainer);
-        log.info("Sandbox container stopped");
-
         return result;
     }
 
