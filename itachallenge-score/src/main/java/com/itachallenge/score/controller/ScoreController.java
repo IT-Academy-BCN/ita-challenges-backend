@@ -1,6 +1,7 @@
 package com.itachallenge.score.controller;
 
 import com.itachallenge.score.component.CodeExecutionService;
+import com.itachallenge.score.docker.DockerContainerHelper;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
@@ -30,6 +31,9 @@ public class ScoreController {
 
     @Autowired
     private ApplicationContext context;
+
+    @Autowired
+    private DockerContainerHelper dockerContainerHelper;
 
     @Value("${spring.application.version}")
     private String version;
@@ -65,7 +69,7 @@ public class ScoreController {
                     System.out.println("Source code: " + sourceCode);
 
                     // Get the filter chain from the context
-                    Filter filterChain = context.getBean(FilterChainSetup.class).createFilterChain();
+                    Filter filterChain = context.getBean(FilterChainSetup.class).createFilterChain(dockerContainerHelper);
 
                     boolean isValid = filterChain.apply(sourceCode);
 

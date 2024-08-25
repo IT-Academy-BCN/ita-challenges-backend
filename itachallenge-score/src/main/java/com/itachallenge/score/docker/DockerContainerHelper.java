@@ -3,6 +3,8 @@ package com.itachallenge.score.docker;
 import org.codehaus.janino.SimpleCompiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.utility.DockerImageName;
@@ -15,7 +17,7 @@ public class DockerContainerHelper {
 
     private static final Logger log = LoggerFactory.getLogger(DockerContainerHelper.class);
 
-    private DockerContainerHelper() {
+    public DockerContainerHelper() {
     }
 
     public static GenericContainer<?> createContainer(String image) {

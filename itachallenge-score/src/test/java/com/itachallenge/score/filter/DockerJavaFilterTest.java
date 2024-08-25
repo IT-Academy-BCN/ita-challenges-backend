@@ -14,11 +14,13 @@ class DockerJavaFilterTest {
 
     private DockerJavaFilter dockerJavaFilter;
     private Filter nextFilter;
+    private DockerContainerHelper dockerContainerHelper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        dockerJavaFilter = new DockerJavaFilter();
+        dockerContainerHelper = mock(DockerContainerHelper.class);
+        dockerJavaFilter = new DockerJavaFilter(dockerContainerHelper);
         nextFilter = mock(Filter.class);
         dockerJavaFilter.setNext(nextFilter);
     }
@@ -31,14 +33,13 @@ class DockerJavaFilterTest {
 
         try (MockedStatic<DockerContainerHelper> mockedHelper = mockStatic(DockerContainerHelper.class)) {
             GenericContainer<?> mockedContainer = mock(GenericContainer.class);
-            mockedHelper.when(DockerContainerHelper::createJavaSandboxContainer).thenReturn(mockedContainer);
-
+            when(dockerContainerHelper.createJavaSandboxContainer()).thenReturn(mockedContainer);
 
             boolean result = dockerJavaFilter.apply(validCode);
 
             assertTrue(result, "Valid code should pass through DockerJavaFilter");
             verify(nextFilter).apply(validCode);
-            mockedHelper.verify(DockerContainerHelper::createJavaSandboxContainer);
+            verify(dockerContainerHelper).createJavaSandboxContainer();
         }
     }
 }

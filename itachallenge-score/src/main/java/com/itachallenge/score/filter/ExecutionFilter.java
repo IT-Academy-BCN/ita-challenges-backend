@@ -11,12 +11,15 @@ public class ExecutionFilter implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(ExecutionFilter.class);
     private Filter next;
+    private DockerJavaFilter dockerJavaFilter;
 
+    public ExecutionFilter(DockerJavaFilter dockerJavaFilter) {
+        this.dockerJavaFilter = dockerJavaFilter;
+    }
 
     @Override
     public boolean apply(String code) {
-
-        GenericContainer<?> sandbox = ((DockerJavaFilter) next).getSandboxContainer();
+        GenericContainer<?> sandbox = dockerJavaFilter.getSandboxContainer();
 
         try {
             DockerContainerHelper.executeCommand(sandbox, "java", "-cp", "/home/sandbox", "CodeToExecute");
