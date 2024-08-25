@@ -50,38 +50,49 @@ public class ScoreController {
         return Mono.just(ResponseEntity.ok(response));
     }
 
-    @PostMapping(value = "/score")
-    public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
-        return Mono.just(scoreRequest)
-                .map(req -> {
-                    String sourceCode = req.getSolutionText();
+@PostMapping(value = "/score")
+public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
+    // Log the incoming request
+    System.out.println("Received request: " + scoreRequest);
 
-                    boolean isValid = filterChain.apply(sourceCode);
+    return Mono.just(scoreRequest)
+            .map(req -> {
+                String sourceCode = req.getSolutionText();
 
-                    if (!isValid) {
-                        ScoreResponse errorResponse = new ScoreResponse();
-                        errorResponse.setUuidChallenge(req.getUuidChallenge());
-                        errorResponse.setUuidLanguage(req.getUuidLanguage());
-                        errorResponse.setSolutionText(req.getSolutionText());
-                        errorResponse.setScore(0);
-                        errorResponse.setCompilationMessage("Error occurred during the execution process");
+                // Log the source code
+                System.out.println("Source code: " + sourceCode);
 
-                        return ResponseEntity.badRequest().body(errorResponse);
-                    }
+                boolean isValid = filterChain.apply(sourceCode);
 
-                    int score = codeExecutionService.calculateScore(new ExecutionResultDto());
+                // Log the filter chain result
+                System.out.println("Filter chain result: " + isValid);
 
-                    ScoreResponse scoreResponse = new ScoreResponse();
-                    scoreResponse.setUuidChallenge(req.getUuidChallenge());
-                    scoreResponse.setUuidLanguage(req.getUuidLanguage());
-                    scoreResponse.setSolutionText(req.getSolutionText());
-                    scoreResponse.setScore(score);
-                    scoreResponse.setCompilationMessage("Code executed successfully");
+                if (!isValid) {
+                    ScoreResponse errorResponse = new ScoreResponse();
+                    errorResponse.setUuidChallenge(req.getUuidChallenge());
+                    errorResponse.setUuidLanguage(req.getUuidLanguage());
+                    errorResponse.setSolutionText(req.getSolutionText());
+                    errorResponse.setScore(0);
+                    errorResponse.setCompilationMessage("Error occurred during the execution process");
 
-                    return ResponseEntity.ok(scoreResponse);
-                });
+                    return ResponseEntity.badRequest().body(errorResponse);
+                }
 
-    }
+                int score = codeExecutionService.calculateScore(new ExecutionResultDto());
+
+                // Log the calculated score
+                System.out.println("Calculated score: " + score);
+
+                ScoreResponse scoreResponse = new ScoreResponse();
+                scoreResponse.setUuidChallenge(req.getUuidChallenge());
+                scoreResponse.setUuidLanguage(req.getUuidLanguage());
+                scoreResponse.setSolutionText(req.getSolutionText());
+                scoreResponse.setScore(score);
+                scoreResponse.setCompilationMessage("Code executed successfully");
+
+                return ResponseEntity.ok(scoreResponse);
+            });
+}
 
 
 }

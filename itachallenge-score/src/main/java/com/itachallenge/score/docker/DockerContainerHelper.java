@@ -1,5 +1,6 @@
 package com.itachallenge.score.docker;
 
+import org.codehaus.janino.SimpleCompiler;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.utility.DockerImageName;
@@ -35,15 +36,15 @@ public class DockerContainerHelper {
 
     // Specific Sandbox for Java code
     public static GenericContainer<?> createJavaSandboxContainer() {
-        GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse("sandbox-image"))
+        GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse("openjdk:11-jdk-slim"))
                 .withWorkingDirectory("/home/sandbox")
                 .withCommand("tail", "-f", "/dev/null");
         container.start();
         return container;
     }
 
-    // Mirar si el codevalidator es necesario para no repetir la lista de librerias prohibidas
-    public static void runWithCustomClassLoader() throws ClassNotFoundException {
+    // Run Java code with a custom class loader and Janino compiler
+    public static void runWithCustomClassLoader() throws Exception {
         List<String> prohibitedClasses = Arrays.asList(
                 "java.lang.System",
                 "java.lang.Runtime",
@@ -59,7 +60,12 @@ public class DockerContainerHelper {
         ClassLoader parent = ClassLoader.getSystemClassLoader();
         ClassLoader customClassLoader = new CustomClassLoader(parent, prohibitedClasses);
 
-        // Use the custom class loader
-        Class<?> clazz = Class.forName("com.example.MyClass", true, customClassLoader);
+        // Example of using Janino to compile and execute code
+        String code = "public class Test { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
+        SimpleCompiler compiler = new SimpleCompiler();
+        compiler.setParentClassLoader(customClassLoader);
+        compiler.cook(code);
+        Class<?> testClass = compiler.getClassLoader().loadClass("Test");
+        testClass.getMethod("main", String[].class).invoke(null, (Object) new String[]{});
     }
 }
