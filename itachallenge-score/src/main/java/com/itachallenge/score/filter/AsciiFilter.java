@@ -24,7 +24,7 @@ public class AsciiFilter implements Filter {
         for (int i = 0; i < code.length(); i++) {
             char currentChar = code.charAt(i);
             if (!isValidChar(currentChar)) {
-                String errorMessage = String.format("The input contains a non-ASCII character: '%c' at position %d", currentChar, i);
+                String errorMessage = String.format("Invalid character '%s' in code", currentChar);
                 log.error(errorMessage);
 
                 ExecutionResultDto executionResultDto = new ExecutionResultDto();
