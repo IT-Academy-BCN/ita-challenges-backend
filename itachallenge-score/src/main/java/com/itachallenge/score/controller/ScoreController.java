@@ -4,12 +4,14 @@ import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.filter.*;
+import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.filter.FilterChainSetup;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
@@ -25,6 +27,9 @@ public class ScoreController {
 
     @Autowired
     private CodeExecutionService codeExecutionService;
+
+    @Autowired
+    private ApplicationContext context;
 
     @Value("${spring.application.version}")
     private String version;
@@ -59,17 +64,10 @@ public class ScoreController {
                     // Log the source code
                     System.out.println("Source code: " + sourceCode);
 
-                    // Set up the filter chain
-                    Filter unescapeFilter = new UnescapeFilter();
-                    Filter asciiFilter = new AsciiFilter();
-                    Filter compilationFilter = new CompilationFilter();
-                    Filter dockerJavaFilter = new DockerJavaFilter();
+                    // Get the filter chain from the context
+                    Filter filterChain = context.getBean(FilterChainSetup.class).createFilterChain();
 
-                    unescapeFilter.setNext(asciiFilter);
-                    asciiFilter.setNext(compilationFilter);
-                    compilationFilter.setNext(dockerJavaFilter);
-
-                    boolean isValid = unescapeFilter.apply(sourceCode);
+                    boolean isValid = filterChain.apply(sourceCode);
 
                     // Log the filter chain result
                     System.out.println("Filter chain result: " + isValid);
