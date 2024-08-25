@@ -4,7 +4,7 @@ import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.filter.*;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +22,6 @@ import java.util.Map;
 public class ScoreController {
 
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
-
-    @Autowired
-    private Filter filterChain;
 
     @Autowired
     private CodeExecutionService codeExecutionService;
@@ -50,49 +47,57 @@ public class ScoreController {
         return Mono.just(ResponseEntity.ok(response));
     }
 
-@PostMapping(value = "/score")
-public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
-    // Log the incoming request
-    System.out.println("Received request: " + scoreRequest);
+    @PostMapping(value = "/score")
+    public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
+        // Log the incoming request
+        System.out.println("Received request: " + scoreRequest);
 
-    return Mono.just(scoreRequest)
-            .map(req -> {
-                String sourceCode = req.getSolutionText();
+        return Mono.just(scoreRequest)
+                .map(req -> {
+                    String sourceCode = req.getSolutionText();
 
-                // Log the source code
-                System.out.println("Source code: " + sourceCode);
+                    // Log the source code
+                    System.out.println("Source code: " + sourceCode);
 
-                boolean isValid = filterChain.apply(sourceCode);
+                    // Set up the filter chain
+                    Filter unescapeFilter = new UnescapeFilter();
+                    Filter asciiFilter = new AsciiFilter();
+                    Filter compilationFilter = new CompilationFilter();
+                    Filter dockerJavaFilter = new DockerJavaFilter();
 
-                // Log the filter chain result
-                System.out.println("Filter chain result: " + isValid);
+                    unescapeFilter.setNext(asciiFilter);
+                    asciiFilter.setNext(compilationFilter);
+                    compilationFilter.setNext(dockerJavaFilter);
 
-                if (!isValid) {
-                    ScoreResponse errorResponse = new ScoreResponse();
-                    errorResponse.setUuidChallenge(req.getUuidChallenge());
-                    errorResponse.setUuidLanguage(req.getUuidLanguage());
-                    errorResponse.setSolutionText(req.getSolutionText());
-                    errorResponse.setScore(0);
-                    errorResponse.setCompilationMessage("Error occurred during the execution process");
+                    boolean isValid = unescapeFilter.apply(sourceCode);
 
-                    return ResponseEntity.badRequest().body(errorResponse);
-                }
+                    // Log the filter chain result
+                    System.out.println("Filter chain result: " + isValid);
 
-                int score = codeExecutionService.calculateScore(new ExecutionResultDto());
+                    if (!isValid) {
+                        ScoreResponse errorResponse = new ScoreResponse();
+                        errorResponse.setUuidChallenge(req.getUuidChallenge());
+                        errorResponse.setUuidLanguage(req.getUuidLanguage());
+                        errorResponse.setSolutionText(req.getSolutionText());
+                        errorResponse.setScore(0);
+                        errorResponse.setCompilationMessage("Error occurred during the execution process");
 
-                // Log the calculated score
-                System.out.println("Calculated score: " + score);
+                        return ResponseEntity.badRequest().body(errorResponse);
+                    }
 
-                ScoreResponse scoreResponse = new ScoreResponse();
-                scoreResponse.setUuidChallenge(req.getUuidChallenge());
-                scoreResponse.setUuidLanguage(req.getUuidLanguage());
-                scoreResponse.setSolutionText(req.getSolutionText());
-                scoreResponse.setScore(score);
-                scoreResponse.setCompilationMessage("Code executed successfully");
+                    int score = codeExecutionService.calculateScore(new ExecutionResultDto());
 
-                return ResponseEntity.ok(scoreResponse);
-            });
-}
+                    // Log the calculated score
+                    System.out.println("Calculated score: " + score);
 
+                    ScoreResponse scoreResponse = new ScoreResponse();
+                    scoreResponse.setUuidChallenge(req.getUuidChallenge());
+                    scoreResponse.setUuidLanguage(req.getUuidLanguage());
+                    scoreResponse.setSolutionText(req.getSolutionText());
+                    scoreResponse.setScore(score);
+                    scoreResponse.setCompilationMessage("Code executed successfully");
 
+                    return ResponseEntity.ok(scoreResponse);
+                });
+    }
 }
