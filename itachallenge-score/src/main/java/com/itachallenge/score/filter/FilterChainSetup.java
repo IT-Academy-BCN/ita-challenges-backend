@@ -16,13 +16,11 @@ public class FilterChainSetup {
 
         Filter escapeFilter = new UnescapeFilter();
         Filter asciiFilter = new AsciiFilter();
-        Filter compilationFilter = new CompilationFilter();
-        Filter executionFilter = new ExecutionFilter();
+        Filter compilationFilter = new CompileExecuterFilter();
 
         escapeFilter.setNext(asciiFilter);
         asciiFilter.setNext(javaContainerFilter);
         javaContainerFilter.setNext(compilationFilter);
-        compilationFilter.setNext(executionFilter);
 
         return escapeFilter;
     }

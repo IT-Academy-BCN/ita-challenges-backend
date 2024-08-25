@@ -1,5 +1,6 @@
 package com.itachallenge.score.filter;
 
+import com.itachallenge.score.dto.ExecutionResultDto;
 import com.itachallenge.score.docker.JavaSandboxContainer;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -20,26 +21,32 @@ public class JavaContainerFilter implements Filter {
     @Getter
     private GenericContainer<?> sandboxContainer;
 
-
-
     @Override
-    public boolean apply(String code) {
+    public ExecutionResultDto apply(String code, String resultExpected) {
 
         try {
             javaSandboxContainer.startContainer();
         } catch (Exception e) {
-            log.error("Error starting sandbox container");
-            return false;
+            log.error("Error starting sandbox container", e);
+
+            ExecutionResultDto executionResultDto = new ExecutionResultDto();
+            executionResultDto.setCompile(false);
+            executionResultDto.setExecution(false);
+            executionResultDto.setMessage("Error starting sandbox container: " + e.getMessage());
+            return executionResultDto;
+        }
+
+        // Go to the next filter
+        if (next != null) {
+            return next.apply(code, resultExpected);
         }
 
 
-        boolean result = next == null || next.apply(code);
-        return result;
+        return new ExecutionResultDto();
     }
 
     @Override
     public void setNext(Filter next) {
         this.next = next;
     }
-
 }

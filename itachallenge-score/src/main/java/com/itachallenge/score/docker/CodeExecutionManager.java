@@ -23,28 +23,33 @@ public class CodeExecutionManager {
 
         String sourceCode = scoreRequest.getSolutionText();
 
-        boolean isValid = filterChain.apply(sourceCode);
+        String resultExpected = "99";
+        // Se necesita agregar funcion en CodeExecutionService para obtener el resultado esperado
+        // De cada solución para luego compararla con la respuesta del código ejecutado
 
-        if (!isValid) {
+        ExecutionResultDto executionResultDto = filterChain.apply(sourceCode, resultExpected);
+
+        if (!executionResultDto.isCompile()) {
             javaSandboxContainer.stopContainer();
             ScoreResponse errorResponse = new ScoreResponse();
             errorResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
             errorResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
             errorResponse.setSolutionText(scoreRequest.getSolutionText());
             errorResponse.setScore(0);
-            errorResponse.setCompilationMessage("Code is not valid");
+            errorResponse.setCompilationMessage(executionResultDto.getMessage());
 
             return ResponseEntity.badRequest().body(errorResponse);
         }
 
-        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
+
+        int score = codeExecutionService.calculateScore(executionResultDto);
 
         ScoreResponse scoreResponse = new ScoreResponse();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
         scoreResponse.setScore(score);
-        scoreResponse.setCompilationMessage("Code executed successfully");
+        scoreResponse.setCompilationMessage(executionResultDto.getMessage());
         javaSandboxContainer.stopContainer();
 
         return ResponseEntity.ok(scoreResponse);

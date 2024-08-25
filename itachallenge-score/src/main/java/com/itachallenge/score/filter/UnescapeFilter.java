@@ -1,16 +1,22 @@
 package com.itachallenge.score.filter;
 
+import com.itachallenge.score.dto.ExecutionResultDto;
+
 public class UnescapeFilter implements Filter {
 
     private Filter next;
 
     @Override
-    public boolean apply(String input) {
+    public ExecutionResultDto apply(String input, String resultExpected) {
         String code = UnescapeJava.unescapeJavaCode(input);
+
+        // Go to the next filter
         if (next != null) {
-            return next.apply(code);
+            return next.apply(code, resultExpected);
         }
-        return true;
+
+
+        return new ExecutionResultDto();
     }
 
     @Override

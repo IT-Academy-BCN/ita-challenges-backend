@@ -1,14 +1,15 @@
 package com.itachallenge.score.filter;
 
-import java.util.BitSet;
-
+import com.itachallenge.score.dto.ExecutionResultDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.BitSet;
 
 public class AsciiFilter implements Filter {
 
     private static final int ASCII_SIZE = 128;
-    private BitSet allowedChars = new BitSet(ASCII_SIZE);
+    private final BitSet allowedChars = new BitSet(ASCII_SIZE);
     private static final Logger log = LoggerFactory.getLogger(AsciiFilter.class);
 
     private Filter next;
@@ -18,18 +19,32 @@ public class AsciiFilter implements Filter {
     }
 
     @Override
-    public boolean apply(String code) {
+    public ExecutionResultDto apply(String code, String resultExpected) {
+
         for (int i = 0; i < code.length(); i++) {
-            if (!isValidChar(code.charAt(i))) {
-                log.error("The input contains a non-ASCII character: {}", code.charAt(i));
-                return false;
+            char currentChar = code.charAt(i);
+            if (!isValidChar(currentChar)) {
+                String errorMessage = String.format("The input contains a non-ASCII character: '%c' at position %d", currentChar, i);
+                log.error(errorMessage);
+
+                ExecutionResultDto executionResultDto = new ExecutionResultDto();
+                executionResultDto.setCompile(false);
+                executionResultDto.setExecution(false);
+                executionResultDto.setMessage(errorMessage);
+                return executionResultDto;
             }
         }
-        return next == null || next.apply(code);
+
+        // Go to the next filter
+        if (next != null) {
+            return next.apply(code, resultExpected);
+        }
+
+        return new ExecutionResultDto();
     }
 
-    private boolean isValidChar(char c) {
-        return c < ASCII_SIZE && allowedChars.get(c);
+    private boolean isValidChar(char charCode) {
+        return allowedChars.get(charCode);
     }
 
     @Override
