@@ -16,7 +16,7 @@ public class ExecutionFilter implements Filter {
     @Override
     public boolean apply(String code) {
 
-        GenericContainer<?> sandbox = ((DockerJavaFilter) next).getSandboxContainer();
+        GenericContainer<?> sandbox = ((JavaContainerFilter) next).getSandboxContainer();
 
         try {
             DockerContainerHelper.executeCommand(sandbox, "java", "-cp", "/home/sandbox", "CodeToExecute");

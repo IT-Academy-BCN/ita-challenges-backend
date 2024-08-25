@@ -12,9 +12,7 @@ public class FilterChainSetup {
     @Bean
     public static Filter createFilterChain() {
 
-        DockerJavaFilter dockerJavaFilter = new DockerJavaFilter();
-        TearDownDockerJavaFilter tearDownDockerJavaFilter = new TearDownDockerJavaFilter();
-
+        JavaContainerFilter javaContainerFilter = new JavaContainerFilter();
 
         Filter escapeFilter = new UnescapeFilter();
         Filter asciiFilter = new AsciiFilter();
@@ -22,11 +20,9 @@ public class FilterChainSetup {
         Filter executionFilter = new ExecutionFilter();
 
         escapeFilter.setNext(asciiFilter);
-        asciiFilter.setNext(dockerJavaFilter);
-        dockerJavaFilter.setNext(compilationFilter);
+        asciiFilter.setNext(javaContainerFilter);
+        javaContainerFilter.setNext(compilationFilter);
         compilationFilter.setNext(executionFilter);
-        executionFilter.setNext(tearDownDockerJavaFilter);
-        tearDownDockerJavaFilter.setSandboxContainer(dockerJavaFilter.getSandboxContainer());
 
         return escapeFilter;
     }

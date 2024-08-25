@@ -1,17 +1,21 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.docker.DockerContainerHelper;
+import com.itachallenge.score.docker.JavaSandboxContainer;
 import lombok.Getter;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.GenericContainer;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class DockerJavaFilter implements Filter {
+public class JavaContainerFilter implements Filter {
 
-    private static final Logger log = getLogger(DockerJavaFilter.class.getName());
+    private static final Logger log = getLogger(JavaContainerFilter.class.getName());
 
     private Filter next;
+
+    @Autowired
+    private JavaSandboxContainer javaSandboxContainer;
 
     @Getter
     private GenericContainer<?> sandboxContainer;
@@ -22,8 +26,7 @@ public class DockerJavaFilter implements Filter {
     public boolean apply(String code) {
 
         try {
-            sandboxContainer = DockerContainerHelper.createJavaSandboxContainer();
-            log.info("Sandbox container started");
+            javaSandboxContainer.startContainer();
         } catch (Exception e) {
             log.error("Error starting sandbox container");
             return false;
