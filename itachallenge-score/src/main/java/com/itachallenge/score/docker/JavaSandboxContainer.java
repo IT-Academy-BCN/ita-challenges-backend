@@ -15,9 +15,8 @@ public class JavaSandboxContainer {
 
     private final GenericContainer<?> javaContainer;
 
-
     public JavaSandboxContainer() {
-        this.javaContainer = DockerContainerHelper.createContainer("openjdk:11-jdk-slim-sid");
+        this.javaContainer = new GenericContainer<>("openjdk:11-jdk-slim-sid");
         log.info("Java Sandbox Container created");
     }
 
@@ -31,8 +30,12 @@ public class JavaSandboxContainer {
     }
 
     public void stopContainer() {
-        DockerContainerHelper.stopContainer(javaContainer);
-        log.info("Java Sandbox Container stopped");
+        if (javaContainer.isRunning()) {
+            javaContainer.stop();
+            log.info("Java Sandbox Container stopped");
+        } else {
+            log.warn("Java Sandbox Container is not running");
+        }
     }
 
     public GenericContainer<?> getContainer() {
