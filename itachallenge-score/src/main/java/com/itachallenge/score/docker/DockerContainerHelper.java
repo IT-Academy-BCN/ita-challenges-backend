@@ -12,7 +12,7 @@ public class DockerContainerHelper {
 
     private static final Logger log = LoggerFactory.getLogger(DockerContainerHelper.class);
 
-    private DockerContainerHelper() {
+    public DockerContainerHelper() {
     }
 
     public static GenericContainer<?> createContainer(String image) {
