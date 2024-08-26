@@ -1,46 +1,62 @@
-package com.itachallenge.score.helper;
+package com.itachallenge.score.filter;
 
-import com.itachallenge.score.filter.UnescapeFilter;
-import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.dto.ExecutionResultDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class UnescapeFilterTest {
 
+
+    @DisplayName("Test unescape valid")
     @Test
     void testUnescapeValid() {
         UnescapeFilter filter = new UnescapeFilter();
-        Filter nextFilter = new MockFilter();
+        MockFilter nextFilter = new MockFilter();
         filter.setNext(nextFilter);
 
         String escapedInput = "Hello \\u003Cworld\\u003E";
         String expectedOutput = "Hello <world>";
-        assertTrue("The unescaped code should be passed to the next filter", filter.apply(escapedInput));
-        assertEquals("The unescaped code matches the expected output", MockFilter.lastInput, expectedOutput);
+
+        filter.apply(escapedInput, null);
+
+        assertEquals(expectedOutput, MockFilter.lastInput, "The unescaped code matches the expected output");
     }
 
+
+    @DisplayName("Test unescape with unsupported escape sequence")
     @Test
-    void testNoNextFilter() {
+    void testUnescapeWithUnsupportedEscape() {
         UnescapeFilter filter = new UnescapeFilter();
+        Filter nextFilter = mock(Filter.class);
+        filter.setNext(nextFilter);
 
-        String escapedInput = "Hello \\u003Cworld\\u003E";
-        assertTrue("Without next filter, the process should be successful", filter.apply(escapedInput));
+
+        String escapedInput = "Hello \\u00AEworld";
+        String expectedOutput = "Hello \\u00AEworld"; // Same as input because the escape sequence is not supported
+
+
+        filter.apply(escapedInput, null);
+
+        // Verify that the input was not modified
+        assertEquals(expectedOutput, MockFilter.lastInput, "The unescaped code should match the expected output with unsupported escape sequence");
+
+        // Verify that the next filter was not called
+        verify(nextFilter, never()).apply(anyString(), anyString());
     }
-
 
     static class MockFilter implements Filter {
         static String lastInput;
 
         @Override
-        public boolean apply(String input) {
+        public ExecutionResultDto apply(String input, String codeExpected) {
             lastInput = input;
-            return true;
+            return new ExecutionResultDto();
         }
 
         @Override
-        public void setNext(Filter next) {
-            // No implementation needed for mock
-        }
+        public void setNext(Filter next) {}
     }
 }

@@ -25,7 +25,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
         //verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
@@ -42,7 +42,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
         //verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertFalse(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result does not match expected result. Execution result: "));
@@ -58,7 +58,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
         //verificar que resultDto tenga los valores esperados
-        Assertions.assertFalse(resultDto.isCompile());
+        Assertions.assertFalse(resultDto.isCompiled());
         //verificar que resultDto.getMeassage empieze por "Compilation failed: "
         Assertions.assertTrue(resultDto.getMessage().startsWith("Compilation failed: "));
     }
@@ -76,7 +76,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
 
         //verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
         Assertions.assertFalse(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: "));
@@ -93,7 +93,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10);// Pasamos 10 como argumento al método main
 
         // Verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
@@ -110,7 +110,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, args);
 
         // Verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
         Assertions.assertFalse(resultDto.isResultCodeMatch());
     }
@@ -143,7 +143,7 @@ class CodeExecutionServiceTest {
         CompilationResult compilationResult = codeExecutionService.compile(sourceCode);
         codeExecutionService.execute(compilationResult, codeResult, args);
 
-        Assertions.assertTrue(compilationResult.getExecutionResultDto().isCompile());
+        Assertions.assertTrue(compilationResult.getExecutionResultDto().isCompiled());
         Assertions.assertThrows(ClassNotFoundException.class, () -> {
             compilationResult.getCompiler().getClassLoader().loadClass("Main");
         });
@@ -164,7 +164,7 @@ class CodeExecutionServiceTest {
         CompilationResult compilationResult = codeExecutionService.compile(sourceCode);
         codeExecutionService.execute(compilationResult, codeResult, args);
 
-        Assertions.assertTrue(compilationResult.getExecutionResultDto().isCompile());
+        Assertions.assertTrue(compilationResult.getExecutionResultDto().isCompiled());
         Assertions.assertThrows(NoSuchMethodException.class, () -> {
             compilationResult.getCompiler().getClassLoader().loadClass("Main")
                     .getMethod("main", String[].class);
@@ -186,7 +186,7 @@ class CodeExecutionServiceTest {
         CompilationResult compilationResult = codeExecutionService.compile(sourceCode);
         codeExecutionService.execute(compilationResult, codeResult, args);
 
-        Assertions.assertTrue(compilationResult.getExecutionResultDto().isCompile());
+        Assertions.assertTrue(compilationResult.getExecutionResultDto().isCompiled());
         Assertions.assertThrows(InvocationTargetException.class, () -> {
             compilationResult.getCompiler().getClassLoader().loadClass("Main")
                     .getMethod("main", String[].class)
@@ -207,7 +207,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10, 20); // Pasamos 10 y 20 como argumentos al método main
 
         // Verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
@@ -224,7 +224,7 @@ class CodeExecutionServiceTest {
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10.0); // Pasamos 10.0 como argumento al método main
 
         // Verificar que resultDto tenga los valores esperados
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));

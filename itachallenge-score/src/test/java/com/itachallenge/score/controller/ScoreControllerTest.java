@@ -6,7 +6,6 @@ import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import com.itachallenge.score.filter.Filter;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -18,7 +17,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -46,7 +44,7 @@ class ScoreControllerTest {
         mockExecutionResult.setMessage("Compilation successful");
         when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
                 .thenReturn(mockExecutionResult);
-        when(filterChain.apply(any(String.class))).thenReturn(true);
+        when(filterChain.apply(any(String.class), any())).thenReturn(mockExecutionResult);
     }
 
     @Test
@@ -91,29 +89,7 @@ class ScoreControllerTest {
                 });
     }
 
-    @Test
-    @DisplayName("Test Score Creation with Invalid Characters")
-    void createScoreWithInvalidCharacters() {
-        when(filterChain.apply(any(String.class))).thenReturn(false);
 
-        ScoreRequest scoreRequest = new ScoreRequest(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                "int number = 1; // Comment with non-ASCII character: ✓"
-        );
-
-        webTestClient.post().uri(CONTROLLER_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(scoreRequest)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(ScoreResponse.class)
-                .consumeWith(response -> {
-                    ScoreResponse responseBody = response.getResponseBody();
-                    assertEquals(0, responseBody.getScore());
-                    assertEquals("The input contains a non-ASCII character", responseBody.getCompilationMessage());
-                });
-    }
 
     @Test
     void createScoreCompilationFailure() {

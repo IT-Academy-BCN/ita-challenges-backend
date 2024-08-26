@@ -1,12 +1,10 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.docker.DockerContainerHelper;
 import com.itachallenge.score.docker.JavaSandboxContainer;
+import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.testcontainers.containers.GenericContainer;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -20,27 +18,42 @@ class JavaContainerFilterTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        javaSandboxContainer = mock(JavaSandboxContainer.class);
         javaContainerFilter = new JavaContainerFilter();
+        javaContainerFilter.setJavaSandboxContainer(javaSandboxContainer);
         nextFilter = mock(Filter.class);
         javaContainerFilter.setNext(nextFilter);
     }
 
     @Test
     void testApply_withValidCode() {
-
         String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
-        when(nextFilter.apply(validCode)).thenReturn(true);
-
-        try (MockedStatic<DockerContainerHelper> mockedHelper = mockStatic(DockerContainerHelper.class)) {
-            GenericContainer<?> mockedContainer = mock(GenericContainer.class);
-            mockedHelper.when(javaSandboxContainer::startContainer).thenReturn(mockedContainer);
+        String expectedCode = "Hello, World!";
+        when(nextFilter.apply(validCode, expectedCode)).thenReturn(new ExecutionResultDto());
 
 
-            boolean result = javaContainerFilter.apply(validCode);
+        ExecutionResultDto result = javaContainerFilter.apply(validCode, expectedCode);
 
-            assertTrue(result, "Valid code should pass through JavaContainerFilter");
-            verify(nextFilter).apply(validCode);
-            mockedHelper.verify(javaSandboxContainer::startContainer);
-        }
+
+        verify(nextFilter).apply(validCode, expectedCode);
+        verify(javaSandboxContainer).startContainer();
+    }
+
+
+
+    @Test
+    void testApply_withContainerStartException() {
+        String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
+
+        // Simular una excepción al iniciar el contenedor
+        doThrow(new RuntimeException("Container start failed")).when(javaSandboxContainer).startContainer();
+
+        ExecutionResultDto result = javaContainerFilter.apply(validCode, "expectedCode");
+
+        // Verificar que el mensaje de error contiene la excepción
+        assertTrue(result.getMessage().contains("Error starting sandbox container"), "Error message should indicate container start failure");
+
+        // Verificar que el siguiente filtro no fue llamado
+        verify(nextFilter, never()).apply(anyString(), anyString());
     }
 }

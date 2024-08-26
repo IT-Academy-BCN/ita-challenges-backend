@@ -51,7 +51,7 @@ class BlackBoxTestCase {
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 2, 4, 1, 5, 3);
 
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));
@@ -63,7 +63,7 @@ class BlackBoxTestCase {
         String codeResult = "1 2 3 4 5 ";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "3", "5", "a", "bce", "5", "1");
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
     }
 
@@ -73,7 +73,7 @@ class BlackBoxTestCase {
         String codeResult = "1 2 3 4 5 ";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "3", "5", "1", "2", "4");
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertFalse(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result does not match expected result. Execution result: "));
@@ -85,7 +85,7 @@ class BlackBoxTestCase {
         String codeResult = "Hello, World!\n";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Execution failed: Code execution timed out"));
     }
@@ -111,7 +111,7 @@ class BlackBoxTestCase {
         String codeResult = "1234";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, "4321");
-        Assertions.assertTrue(resultDto.isCompile());
+        Assertions.assertTrue(resultDto.isCompiled());
         Assertions.assertTrue(resultDto.isExecution());
         Assertions.assertTrue(resultDto.isResultCodeMatch());
         Assertions.assertTrue(resultDto.getMessage().startsWith("Code executed successfully, result matches expected result. Execution result: "));

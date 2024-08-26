@@ -22,7 +22,7 @@ public class CompileExecuterFilter implements Filter {
         } catch (Exception e) {
             log.error("Error compiling and executing code", e);
             executionResultDto = new ExecutionResultDto();
-            executionResultDto.setCompile(false);
+            executionResultDto.setCompiled(false);
             executionResultDto.setExecution(false);
             executionResultDto.setMessage(e.getMessage());
             return executionResultDto;

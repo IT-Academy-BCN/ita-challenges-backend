@@ -50,7 +50,7 @@ public class CodeExecutionService {
         //Descomposición y tipado de parámetros de entrada
         String[] argsString = castArgs(args);
 
-        if (executionResultDto.isCompile()) {
+        if (executionResultDto.isCompiled()) {
             //Ejecutar el código
             ExecutionResult executionResult = execute(compilationResult, codeResult, argsString);
             if (executionResultDto.isExecution()) {
@@ -69,7 +69,7 @@ public class CodeExecutionService {
             compiler = new SimpleCompiler();
             compiler.cook(sourceCode);
             // Si la compilación es exitosa, actualizar ExecutionResultDto
-            executionResultDto.setCompile(true);
+            executionResultDto.setCompiled(true);
         } catch (CompileException e) {
             // Si la compilación falla, actualizar y devolver ExecutionResultDto
             executionResultDto.setMessage("Compilation failed: " + e.getMessage());
@@ -194,13 +194,13 @@ public class CodeExecutionService {
     public int calculateScore(ExecutionResultDto executionResult) {
         int score = 0;
 
-        if (executionResult.isCompile() && executionResult.isExecution() && executionResult.isResultCodeMatch()) {
+        if (executionResult.isCompiled() && executionResult.isExecution() && executionResult.isResultCodeMatch()) {
             score = 99;
             log.info("Score calculated: {}. \nReason: Code compiled, executed, and result matched.", score);
-        } else if (executionResult.isCompile() && executionResult.isExecution() && !executionResult.isResultCodeMatch()) {
+        } else if (executionResult.isCompiled() && executionResult.isExecution() && !executionResult.isResultCodeMatch()) {
             score = 75;
             log.info("Score calculated: {}. \nReason: Code compiled and executed, but result did not match.", score);
-        } else if (executionResult.isCompile() && !executionResult.isExecution()) {
+        } else if (executionResult.isCompiled() && !executionResult.isExecution()) {
             score = 50;
             log.info("Score calculated: {}.\nReason: Code compiled, but did not execute.", score);
         } else {

@@ -3,12 +3,15 @@ package com.itachallenge.score.filter;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import com.itachallenge.score.docker.JavaSandboxContainer;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.GenericContainer;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+@Getter
+@Setter
 public class JavaContainerFilter implements Filter {
 
     private static final Logger log = getLogger(JavaContainerFilter.class.getName());
@@ -30,7 +33,7 @@ public class JavaContainerFilter implements Filter {
             log.error("Error starting sandbox container", e);
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
-            executionResultDto.setCompile(false);
+            executionResultDto.setCompiled(false);
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Error starting sandbox container: " + e.getMessage());
             return executionResultDto;
@@ -49,4 +52,6 @@ public class JavaContainerFilter implements Filter {
     public void setNext(Filter next) {
         this.next = next;
     }
+
+
 }

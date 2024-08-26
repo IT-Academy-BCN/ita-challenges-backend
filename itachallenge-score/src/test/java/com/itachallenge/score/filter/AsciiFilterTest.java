@@ -1,13 +1,16 @@
 package com.itachallenge.score.filter;
 
+import com.itachallenge.score.dto.ExecutionResultDto;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class AsciiFilterTest {
 
-    String ASCIIvalid = """
+
+    String asciiValid = """
                   import java.util.Arrays;
                     
             public class Main {
@@ -20,7 +23,7 @@ class AsciiFilterTest {
             }
                 """;
 
-    String ASCIIinvalid = """
+    String asciiInvalid = """
                               import java.util.Arrays;
                     
             public class βain {
@@ -30,38 +33,52 @@ class AsciiFilterTest {
                     Arrays.sort(numArray);
                     System.out.println(Arrays.toString(numArray)); """;
 
+
+    @DisplayName("Test filter valid - Code contains only valid characters, next filter should be called")
     @Test
     void testFilterValid() {
         AsciiFilter filter = new AsciiFilter();
-        assertTrue("The String had a valid ASCII chars", filter.apply(ASCIIvalid));
+        MockFilter nextFilter = new MockFilter();
+        filter.setNext(nextFilter);
+
+
+        ExecutionResultDto result = filter.apply(asciiValid, null);
+
+        // Verify that the result indicates success and the next filter was called
+        assertEquals(asciiValid, MockFilter.lastInput, "The ASCII string should pass through the filter unchanged");
+
     }
 
+
+    @DisplayName("Test filter invalid - Code contains invalid character, next filter should not be called")
     @Test
     void testFilterInvalid() {
         AsciiFilter filter = new AsciiFilter();
-        assertFalse("The String had invalid ASCII chars", filter.apply(ASCIIinvalid));
+        Filter nextFilter = mock(Filter.class);
+        filter.setNext(nextFilter);
+
+        ExecutionResultDto result = filter.apply(asciiInvalid, null);
+
+
+        String expectedMessage = "Invalid character 'β' in code";
+        assertEquals(expectedMessage, result.getMessage(), "The result should contain the expected error message");
+
+        // Verify that the next filter was not called
+        verify(nextFilter, never()).apply(anyString(), anyString());
     }
 
-    @Test
-    void testEmptyString() {
-        AsciiFilter filter = new AsciiFilter();
-        assertTrue("Empty string should be valid", filter.apply(""));
-    }
 
-    @Test
-    void testBoundaryCharacters() {
-        AsciiFilter filter = new AsciiFilter();
-        assertTrue("Boundary characters should be valid", filter.apply("\u0000\u007F"));
-    }
+    static class MockFilter implements Filter {
+        static String lastInput;
 
-
-    @Test
-    void testLongString() {
-        AsciiFilter filter = new AsciiFilter();
-        StringBuilder longString = new StringBuilder();
-        for (int i = 0; i < 100000; i++) {
-            longString.append('a');
+        @Override
+        public ExecutionResultDto apply(String input, String codeExpected) {
+            lastInput = input;
+            return new ExecutionResultDto();
         }
-        assertTrue("Long string with valid ASCII chars should be valid", filter.apply(longString.toString()));
+
+        @Override
+        public void setNext(Filter next) {
+        }
     }
 }

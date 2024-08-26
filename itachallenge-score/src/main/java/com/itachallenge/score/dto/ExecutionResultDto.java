@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Setter
 public class ExecutionResultDto {
 
-    private boolean compile;
+    private boolean compiled;
     private boolean execution;
     private boolean resultCodeMatch;
     private String message;

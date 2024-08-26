@@ -29,7 +29,7 @@ public class CodeExecutionManager {
 
         ExecutionResultDto executionResultDto = filterChain.apply(sourceCode, resultExpected);
 
-        if (!executionResultDto.isCompile()) {
+        if (!executionResultDto.isCompiled()) {
             javaSandboxContainer.stopContainer();
             ScoreResponse errorResponse = new ScoreResponse();
             errorResponse.setUuidChallenge(scoreRequest.getUuidChallenge());

@@ -28,7 +28,7 @@ public class AsciiFilter implements Filter {
                 log.error(errorMessage);
 
                 ExecutionResultDto executionResultDto = new ExecutionResultDto();
-                executionResultDto.setCompile(false);
+                executionResultDto.setCompiled(false);
                 executionResultDto.setExecution(false);
                 executionResultDto.setMessage(errorMessage);
                 return executionResultDto;
