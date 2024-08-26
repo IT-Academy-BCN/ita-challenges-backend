@@ -17,6 +17,7 @@ class JavaContainerFilterTest {
 
     @BeforeEach
     void setUp() {
+        
         MockitoAnnotations.openMocks(this);
         javaSandboxContainer = mock(JavaSandboxContainer.class);
         javaContainerFilter = new JavaContainerFilter();
@@ -39,7 +40,7 @@ class JavaContainerFilterTest {
         // Verify that the result indicates success
         verify(javaSandboxContainer).startContainer();
     }
-    
+
 
     @Test
     void testApply_withContainerStartException() {
