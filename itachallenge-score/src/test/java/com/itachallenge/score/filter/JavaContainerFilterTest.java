@@ -31,29 +31,29 @@ class JavaContainerFilterTest {
         String expectedCode = "Hello, World!";
         when(nextFilter.apply(validCode, expectedCode)).thenReturn(new ExecutionResultDto());
 
-
         ExecutionResultDto result = javaContainerFilter.apply(validCode, expectedCode);
 
-
+        // Verify that the next filter was called
         verify(nextFilter).apply(validCode, expectedCode);
+
+        // Verify that the result indicates success
         verify(javaSandboxContainer).startContainer();
     }
-
-
+    
 
     @Test
     void testApply_withContainerStartException() {
         String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
 
-        // Simular una excepción al iniciar el contenedor
+        // Mock the container to throw an exception when startContainer is called
         doThrow(new RuntimeException("Container start failed")).when(javaSandboxContainer).startContainer();
 
         ExecutionResultDto result = javaContainerFilter.apply(validCode, "expectedCode");
 
-        // Verificar que el mensaje de error contiene la excepción
+        // Verify that the result indicates failure
         assertTrue(result.getMessage().contains("Error starting sandbox container"), "Error message should indicate container start failure");
 
-        // Verificar que el siguiente filtro no fue llamado
+        // Verify that the next filter was not called
         verify(nextFilter, never()).apply(anyString(), anyString());
     }
 }
