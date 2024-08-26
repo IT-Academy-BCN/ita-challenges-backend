@@ -1,6 +1,7 @@
 package com.itachallenge.score.filter;
 
 import com.itachallenge.score.docker.DockerContainerHelper;
+import com.itachallenge.score.docker.JavaSandboxContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
@@ -10,19 +11,18 @@ import org.testcontainers.containers.GenericContainer;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-class DockerJavaFilterTest {
+class JavaContainerFilterTest {
 
-    private DockerJavaFilter dockerJavaFilter;
+    private JavaContainerFilter javaContainerFilter;
+    private JavaSandboxContainer javaSandboxContainer;
     private Filter nextFilter;
-    private DockerContainerHelper dockerContainerHelper;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        dockerContainerHelper = mock(DockerContainerHelper.class);
-        dockerJavaFilter = new DockerJavaFilter(dockerContainerHelper);
+        javaContainerFilter = new JavaContainerFilter();
         nextFilter = mock(Filter.class);
-        dockerJavaFilter.setNext(nextFilter);
+        javaContainerFilter.setNext(nextFilter);
     }
 
     @Test
@@ -33,13 +33,14 @@ class DockerJavaFilterTest {
 
         try (MockedStatic<DockerContainerHelper> mockedHelper = mockStatic(DockerContainerHelper.class)) {
             GenericContainer<?> mockedContainer = mock(GenericContainer.class);
-            when(dockerContainerHelper.createJavaSandboxContainer()).thenReturn(mockedContainer);
+            mockedHelper.when(javaSandboxContainer::startContainer).thenReturn(mockedContainer);
 
-            boolean result = dockerJavaFilter.apply(validCode);
 
-            assertTrue(result, "Valid code should pass through DockerJavaFilter");
+            boolean result = javaContainerFilter.apply(validCode);
+
+            assertTrue(result, "Valid code should pass through JavaContainerFilter");
             verify(nextFilter).apply(validCode);
-            verify(dockerContainerHelper).createJavaSandboxContainer();
+            mockedHelper.verify(javaSandboxContainer::startContainer);
         }
     }
 }

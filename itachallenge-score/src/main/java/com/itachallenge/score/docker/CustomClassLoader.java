@@ -12,9 +12,15 @@ public class CustomClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
+        prohibitedClasses = getProhibitedClasses();
+
         if (prohibitedClasses.contains(name)) {
             throw new ClassNotFoundException("Loading of class " + name + " is prohibited");
         }
         return super.loadClass(name);
+    }
+
+    public List<String> getProhibitedClasses() throws ClassNotFoundException {
+        return JavaSandboxContainer.runWithCustomClassLoader();
     }
 }

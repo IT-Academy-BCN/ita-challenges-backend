@@ -1,27 +1,29 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.docker.DockerContainerHelper;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 public class FilterChainSetup {
 
+    private FilterChainSetup() {
+    }
+
     @Bean
-    public Filter createFilterChain(DockerContainerHelper dockerContainerHelper) {
-        Filter unescapeFilter = new UnescapeFilter();
+    public static Filter createFilterChain() {
+
+        JavaContainerFilter javaContainerFilter = new JavaContainerFilter();
+
+        Filter escapeFilter = new UnescapeFilter();
         Filter asciiFilter = new AsciiFilter();
-        DockerJavaFilter dockerJavaFilter = new DockerJavaFilter(dockerContainerHelper);
         Filter compilationFilter = new CompilationFilter();
-        Filter executionFilter = new ExecutionFilter(dockerJavaFilter);
-        Filter tearDownDockerJavaFilter = new TearDownDockerJavaFilter();
+        Filter executionFilter = new ExecutionFilter();
 
-        unescapeFilter.setNext(asciiFilter);
-        asciiFilter.setNext(dockerJavaFilter);
-        dockerJavaFilter.setNext(compilationFilter);
+        escapeFilter.setNext(asciiFilter);
+        asciiFilter.setNext(javaContainerFilter);
+        javaContainerFilter.setNext(compilationFilter);
         compilationFilter.setNext(executionFilter);
-        executionFilter.setNext(tearDownDockerJavaFilter);
 
-        return unescapeFilter;
+        return escapeFilter;
     }
 }
