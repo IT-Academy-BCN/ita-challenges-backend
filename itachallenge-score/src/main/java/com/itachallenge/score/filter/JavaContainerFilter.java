@@ -6,23 +6,29 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.testcontainers.containers.GenericContainer;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Getter
 @Setter
+@Component
 public class JavaContainerFilter implements Filter {
 
     private static final Logger log = getLogger(JavaContainerFilter.class.getName());
 
     private Filter next;
 
-    @Autowired
     private JavaSandboxContainer javaSandboxContainer;
 
     @Getter
     private GenericContainer<?> sandboxContainer;
+
+    @Autowired
+    public JavaContainerFilter(JavaSandboxContainer javaSandboxContainer) {
+        this.javaSandboxContainer = javaSandboxContainer;
+    }
 
     @Override
     public ExecutionResultDto apply(String code, String resultExpected) {
@@ -44,7 +50,6 @@ public class JavaContainerFilter implements Filter {
             return next.apply(code, resultExpected);
         }
 
-
         return new ExecutionResultDto();
     }
 
@@ -52,6 +57,4 @@ public class JavaContainerFilter implements Filter {
     public void setNext(Filter next) {
         this.next = next;
     }
-
-
 }

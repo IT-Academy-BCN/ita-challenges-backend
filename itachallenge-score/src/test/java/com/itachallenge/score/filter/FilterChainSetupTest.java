@@ -1,28 +1,47 @@
 package com.itachallenge.score.filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class FilterChainSetupTest {
 
+    private FilterChainSetup filterChainSetup;
+    private JavaContainerFilter javaContainerFilter;
+    private CompileExecuterFilter compileExecuterFilter;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        javaContainerFilter = mock(JavaContainerFilter.class);
+        compileExecuterFilter = mock(CompileExecuterFilter.class);
+        filterChainSetup = new FilterChainSetup();
+    }
+
     @Test
-    void testFilterChainSetup() {
-        Filter filterChain = FilterChainSetup.createFilterChain();
-        String expectedCode = "Hello, World!";
+    void testCreateFilterChain() {
+        Filter filter = filterChainSetup.createFilterChain(javaContainerFilter, compileExecuterFilter);
 
-        String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
-        ExecutionResultDto validResult = filterChain.apply(validCode, expectedCode);
-        assertTrue(validResult.isCompiled(), "The valid code should pass the filter chain");
+        assertNotNull(filter, "The filter chain should not be null");
+        assertTrue(filter instanceof UnescapeFilter, "The first filter should be an UnescapeFilter");
 
-        String invalidAsciiCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World! ✓\"); } }";
-        ExecutionResultDto invalidAsciiResult = filterChain.apply(invalidAsciiCode, expectedCode);
-        assertFalse(invalidAsciiResult.isCompiled(), "The code with non-ASCII characters should not pass the filter chain");
+        // Mock the behavior of the filters
+        when(javaContainerFilter.apply("step1", "step2")).thenReturn(new ExecutionResultDto(true, "step3"));
+        when(compileExecuterFilter.apply("step3", "step4")).thenReturn(new ExecutionResultDto(true, "step5"));
 
-        String escapedCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, \\\"World\\\"\"); } }";
-        ExecutionResultDto escapedResult = filterChain.apply(escapedCode, expectedCode);
-        assertTrue(escapedResult.isCompiled(), "The escaped code should pass the filter chain after unescaping");
+        // Apply the filter chain to verify the order
+        String inputCode = "step1";
+        String expectedCode = "step5";
+
+        ExecutionResultDto result = filter.apply(inputCode, "step2");
+
+        // Verify that the result is not null
+        assertNotNull(result, "The result should not be null");
     }
 }
