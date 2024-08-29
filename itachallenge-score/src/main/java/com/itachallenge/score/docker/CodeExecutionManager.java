@@ -6,6 +6,7 @@ import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import com.itachallenge.score.filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class CodeExecutionManager {
 
     @Autowired
+    @Qualifier("createFilterChain") // Specify the bean to be injected
     private Filter filterChain;
 
     @Autowired

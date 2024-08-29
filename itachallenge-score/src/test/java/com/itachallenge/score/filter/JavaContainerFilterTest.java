@@ -15,16 +15,14 @@ class JavaContainerFilterTest {
     private JavaSandboxContainer javaSandboxContainer;
     private Filter nextFilter;
 
-    @BeforeEach
-    void setUp() {
-        
-        MockitoAnnotations.openMocks(this);
-        javaSandboxContainer = mock(JavaSandboxContainer.class);
-        javaContainerFilter = new JavaContainerFilter();
-        javaContainerFilter.setJavaSandboxContainer(javaSandboxContainer);
-        nextFilter = mock(Filter.class);
-        javaContainerFilter.setNext(nextFilter);
-    }
+@BeforeEach
+void setUp() {
+    MockitoAnnotations.openMocks(this);
+    javaSandboxContainer = mock(JavaSandboxContainer.class);
+    javaContainerFilter = new JavaContainerFilter(javaSandboxContainer);
+    nextFilter = mock(Filter.class);
+    javaContainerFilter.setNext(nextFilter);
+}
 
     @Test
     void testApply_withValidCode() {
