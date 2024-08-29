@@ -1,150 +1,102 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.component.CodeExecutionService;
+import com.itachallenge.score.docker.CodeExecutionManager;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.filter.Filter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.env.Environment;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@WebFluxTest(ScoreController.class)
-@ActiveProfiles("test")
 class ScoreControllerTest {
 
-    @Autowired
-    private WebTestClient webTestClient;
+    @Mock
+    private CodeExecutionManager codeExecutionManager;
 
-    @MockBean
-    private Filter filterChain;
+    @InjectMocks
+    private ScoreController scoreController;
 
-    @Autowired
-    private Environment env;
+    @Value("${spring.application.version}")
+    private String version = "1.0.0";
 
-    @MockBean
-    private CodeExecutionService codeExecutionService;
-
-    private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
+    @Value("${spring.application.name}")
+    private String appName = "ITAChallenge";
 
     @BeforeEach
     void setUp() {
-        ExecutionResultDto mockExecutionResult = new ExecutionResultDto();
-        mockExecutionResult.setMessage("Compilation successful");
-        when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
-                .thenReturn(mockExecutionResult);
-        when(filterChain.apply(any(String.class), any())).thenReturn(mockExecutionResult);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void createScoreSuccessful() {
-        ScoreRequest scoreRequest = new ScoreRequest(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                "int number = 1;"
-        );
-
-        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
-        when(codeExecutionService.calculateScore(any(ExecutionResultDto.class))).thenReturn(score);
-        webTestClient.post().uri(CONTROLLER_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(scoreRequest)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ScoreResponse.class)
-                .consumeWith(response -> {
-                    assert response.getResponseBody().getScore() == score;
-                    assert response.getResponseBody().getCompilationMessage().equals("Compilation successful");
-                });
+    @DisplayName("Test GET /test endpoint")
+    void testTestEndpoint() {
+        String response = scoreController.test();
+        assertEquals("Hello from ITA Score!!!", response);
     }
 
     @Test
-    void createScoreWithEmptySourceCode() {
-        ScoreRequest scoreRequest = new ScoreRequest(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                ""
-        );
-        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
-        webTestClient.post().uri(CONTROLLER_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(scoreRequest)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ScoreResponse.class)
-                .consumeWith(response -> {
-                    assert response.getResponseBody().getScore() == score;
-                    assert response.getResponseBody().getCompilationMessage().equals("Compilation successful");
-                });
-    }
+    @DisplayName("Test GET /version endpoint")
+    void testGetVersionEndpoint() {
+        Mono<ResponseEntity<Map<String, String>>> responseEntityMono = scoreController.getVersion();
 
+        Map<String, String> expectedResponse = new HashMap<>();
+        expectedResponse.put("application_name", appName);
+        expectedResponse.put("version", version);
 
-
-    @Test
-    void createScoreCompilationFailure() {
-        ExecutionResultDto mockExecutionResult = new ExecutionResultDto();
-        mockExecutionResult.setMessage("Compilation failed");
-        when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
-                .thenReturn(mockExecutionResult);
-
-        ScoreRequest scoreRequest = new ScoreRequest(
-                UUID.randomUUID(),
-                UUID.randomUUID(),
-                "int number = 1 / 0;" // Code that will cause compilation/runtime error
-        );
-        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
-        webTestClient.post().uri(CONTROLLER_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(scoreRequest)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ScoreResponse.class)
-                .consumeWith(response -> {
-                    assert response.getResponseBody().getScore() == score;
-                    assert response.getResponseBody().getCompilationMessage().equals("Compilation failed");
-                });
+        ResponseEntity<Map<String, String>> responseEntity = responseEntityMono.block();
+        assertEquals(ResponseEntity.ok(expectedResponse), responseEntity);
     }
 
     @Test
+    @DisplayName("Test POST /score endpoint")
     void testCreateScore() {
-        int score = codeExecutionService.calculateScore(new ExecutionResultDto());
-        ScoreRequest scoreRequest = new ScoreRequest(
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
-                UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
-                "texto de ejemplo"
-        );
 
-        webTestClient.post().uri(CONTROLLER_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(scoreRequest)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.uuid_challenge").isEqualTo("123e4567-e89b-12d3-a456-426614174000")
-                .jsonPath("$.uuid_language").isEqualTo("456f7890-e89b-12d3-a456-426614174000")
-                .jsonPath("$.solution_text").isEqualTo("texto de ejemplo")
-                .jsonPath("$.score").isEqualTo(score);
-    }
+        UUID uuidChallenge = UUID.randomUUID();
+        UUID uuidLanguage = UUID.randomUUID();
 
-    @Test
-    void getVersionTest() {
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/score/version")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.application_name").isEqualTo("itachallenge-score")
-                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
+        
+        ScoreRequest scoreRequest = new ScoreRequest();
+        scoreRequest.setSolutionText("public class Solution {}");
+        scoreRequest.setUuidChallenge(uuidChallenge);
+        scoreRequest.setUuidLanguage(uuidLanguage);
+
+
+        ScoreResponse scoreResponse = new ScoreResponse();
+        scoreResponse.setUuidChallenge(uuidChallenge);
+        scoreResponse.setUuidLanguage(uuidLanguage);
+        scoreResponse.setSolutionText("public class Solution {}");
+        scoreResponse.setScore(100);
+        scoreResponse.setCompilationMessage("Compiled successfully");
+
+
+        when(codeExecutionManager.processCode(any(ScoreRequest.class)))
+                .thenReturn(ResponseEntity.ok(scoreResponse));
+
+
+        Mono<ResponseEntity<ScoreResponse>> responseEntityMono = scoreController.createScore(scoreRequest);
+        ResponseEntity<ScoreResponse> responseEntity = responseEntityMono.block();
+
+
+        assertEquals(ResponseEntity.ok(scoreResponse), responseEntity);
+
+
+        assertEquals(uuidChallenge, responseEntity.getBody().getUuidChallenge());
+        assertEquals(uuidLanguage, responseEntity.getBody().getUuidLanguage());
+        assertEquals("public class Solution {}", responseEntity.getBody().getSolutionText());
+        assertEquals(100, responseEntity.getBody().getScore());
+        assertEquals("Compiled successfully", responseEntity.getBody().getCompilationMessage());
     }
 }
