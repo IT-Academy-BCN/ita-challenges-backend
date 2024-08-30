@@ -1,7 +1,7 @@
 package com.itachallenge.score.controller;
 
 import com.itachallenge.score.component.CodeExecutionService;
-import com.itachallenge.score.docker.CodeExecutionManager;
+import com.itachallenge.score.sandBox.CodeExecutionManager;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;

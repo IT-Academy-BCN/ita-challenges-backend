@@ -1,6 +1,7 @@
-package com.itachallenge.score.filter;
+package com.itachallenge.score.sandBox.sandBox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.sandBox.sandBox_filter.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
