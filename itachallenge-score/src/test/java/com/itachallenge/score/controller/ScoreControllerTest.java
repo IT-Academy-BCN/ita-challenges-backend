@@ -1,102 +1,102 @@
 package com.itachallenge.score.controller;
 
+import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.docker.CodeExecutionManager;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
+import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+@WebFluxTest(ScoreController.class)
+@ActiveProfiles("test")
 class ScoreControllerTest {
 
-    @Mock
+    @MockBean
     private CodeExecutionManager codeExecutionManager;
 
-    @InjectMocks
-    private ScoreController scoreController;
+    @MockBean
+    private CodeExecutionService codeExecutionService;
 
-    @Value("${spring.application.version}")
-    private String version = "1.0.0";
 
-    @Value("${spring.application.name}")
-    private String appName = "ITAChallenge";
+    @Autowired
+    private WebTestClient webTestClient;
+
+    @Autowired
+    private Environment env;
+
+
+    private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
+        ExecutionResultDto mockExecutionResult = new ExecutionResultDto();
+        mockExecutionResult.setMessage("Compilation successful");
 
-    @Test
-    @DisplayName("Test GET /test endpoint")
-    void testTestEndpoint() {
-        String response = scoreController.test();
-        assertEquals("Hello from ITA Score!!!", response);
-    }
-
-    @Test
-    @DisplayName("Test GET /version endpoint")
-    void testGetVersionEndpoint() {
-        Mono<ResponseEntity<Map<String, String>>> responseEntityMono = scoreController.getVersion();
-
-        Map<String, String> expectedResponse = new HashMap<>();
-        expectedResponse.put("application_name", appName);
-        expectedResponse.put("version", version);
-
-        ResponseEntity<Map<String, String>> responseEntity = responseEntityMono.block();
-        assertEquals(ResponseEntity.ok(expectedResponse), responseEntity);
-    }
-
-    @Test
-    @DisplayName("Test POST /score endpoint")
-    void testCreateScore() {
-
-        UUID uuidChallenge = UUID.randomUUID();
-        UUID uuidLanguage = UUID.randomUUID();
-
-        
-        ScoreRequest scoreRequest = new ScoreRequest();
-        scoreRequest.setSolutionText("public class Solution {}");
-        scoreRequest.setUuidChallenge(uuidChallenge);
-        scoreRequest.setUuidLanguage(uuidLanguage);
+        when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
+                .thenReturn(mockExecutionResult);
 
 
-        ScoreResponse scoreResponse = new ScoreResponse();
-        scoreResponse.setUuidChallenge(uuidChallenge);
-        scoreResponse.setUuidLanguage(uuidLanguage);
-        scoreResponse.setSolutionText("public class Solution {}");
-        scoreResponse.setScore(100);
-        scoreResponse.setCompilationMessage("Compiled successfully");
+        ScoreResponse mockScoreResponse = new ScoreResponse();
+        mockScoreResponse.setUuidChallenge(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
+        mockScoreResponse.setUuidLanguage(UUID.fromString("456f7890-e89b-12d3-a456-426614174000"));
+        mockScoreResponse.setSolutionText("texto de ejemplo");
+        mockScoreResponse.setScore(99); // Simulando una puntuación
 
 
         when(codeExecutionManager.processCode(any(ScoreRequest.class)))
-                .thenReturn(ResponseEntity.ok(scoreResponse));
+                .thenReturn(ResponseEntity.ok(mockScoreResponse));
+    }
 
 
-        Mono<ResponseEntity<ScoreResponse>> responseEntityMono = scoreController.createScore(scoreRequest);
-        ResponseEntity<ScoreResponse> responseEntity = responseEntityMono.block();
 
 
-        assertEquals(ResponseEntity.ok(scoreResponse), responseEntity);
+    @Test
+    void getVersionTest() {
+        String expectedVersion = env.getProperty("spring.application.version");
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/score/version")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.application_name").isEqualTo("itachallenge-score")
+                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
+
+    }
 
 
-        assertEquals(uuidChallenge, responseEntity.getBody().getUuidChallenge());
-        assertEquals(uuidLanguage, responseEntity.getBody().getUuidLanguage());
-        assertEquals("public class Solution {}", responseEntity.getBody().getSolutionText());
-        assertEquals(100, responseEntity.getBody().getScore());
-        assertEquals("Compiled successfully", responseEntity.getBody().getCompilationMessage());
+    @Test
+    void testCreateScore() {
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+                UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
+                "texto de ejemplo"
+        );
+
+        webTestClient.post().uri(ScoreControllerTest.CONTROLLER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(scoreRequest)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.uuid_challenge").isEqualTo("123e4567-e89b-12d3-a456-426614174000")
+                .jsonPath("$.uuid_language").isEqualTo("456f7890-e89b-12d3-a456-426614174000")
+                .jsonPath("$.solution_text").isEqualTo("Solution text example")
+                .jsonPath("$.score").isEqualTo(99);
+
     }
 }
