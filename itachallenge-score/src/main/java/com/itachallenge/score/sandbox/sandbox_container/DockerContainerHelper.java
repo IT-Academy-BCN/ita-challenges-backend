@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.sandboxContainer;
+package com.itachallenge.score.sandbox.sandbox_container;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
