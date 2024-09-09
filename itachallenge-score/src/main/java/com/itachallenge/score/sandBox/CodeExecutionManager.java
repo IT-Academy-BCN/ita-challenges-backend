@@ -4,7 +4,7 @@ import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandBox.sandBox_container.JavaSandboxContainer;
+import com.itachallenge.score.sandBox.sandBoxContainer.JavaSandboxContainer;
 import com.itachallenge.score.sandBox.sandBox_filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,8 +29,8 @@ public class CodeExecutionManager {
         String sourceCode = scoreRequest.getSolutionText();
 
         String resultExpected = "99";
-        // Se necesita agregar funcion en CodeExecutionService para obtener el resultado esperado
-        // De cada solución para luego compararla con la respuesta del código ejecutado
+
+        //TODO: We need to change the expected result to be dynamic result from the challenge UUID;
 
         ExecutionResultDto executionResultDto = filterChain.apply(sourceCode, resultExpected);
 

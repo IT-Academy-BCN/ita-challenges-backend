@@ -1,10 +1,9 @@
 package com.itachallenge.score.sandBox.sandBox_filter;
 
-import com.itachallenge.score.sandBox.sandBox_container.JavaSandboxContainer;
+import com.itachallenge.score.sandBox.sandBoxContainer.JavaSandboxContainer;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandBox.sandBox_filter.Filter;
-import com.itachallenge.score.sandBox.sandBox_filter.JavaContainerFilter;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 
@@ -17,15 +16,16 @@ class JavaContainerFilterTest {
     private JavaSandboxContainer javaSandboxContainer;
     private Filter nextFilter;
 
-@BeforeEach
-void setUp() {
-    MockitoAnnotations.openMocks(this);
-    javaSandboxContainer = mock(JavaSandboxContainer.class);
-    javaContainerFilter = new JavaContainerFilter(javaSandboxContainer);
-    nextFilter = mock(Filter.class);
-    javaContainerFilter.setNext(nextFilter);
-}
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        javaSandboxContainer = mock(JavaSandboxContainer.class);
+        javaContainerFilter = new JavaContainerFilter(javaSandboxContainer);
+        nextFilter = mock(Filter.class);
+        javaContainerFilter.setNext(nextFilter);
+    }
 
+    @DisplayName("Test apply - Code contains only valid characters, next filter should be called")
     @Test
     void testApply_withValidCode() {
         String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
@@ -39,9 +39,11 @@ void setUp() {
 
         // Verify that the result indicates success
         verify(javaSandboxContainer).startContainer();
+        assertTrue(result.isCompiled(), "The result should indicate that the code compiled successfully");
     }
 
 
+    @DisplayName("Test apply - Code contains invalid characters, next filter should not be called")
     @Test
     void testApply_withContainerStartException() {
         String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";

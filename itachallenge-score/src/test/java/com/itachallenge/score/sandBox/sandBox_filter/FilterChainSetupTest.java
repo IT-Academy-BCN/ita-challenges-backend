@@ -1,7 +1,6 @@
 package com.itachallenge.score.sandBox.sandBox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandBox.sandBox_filter.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -34,11 +33,10 @@ class FilterChainSetupTest {
 
         // Mock the behavior of the filters
         when(javaContainerFilter.apply("step1", "step2")).thenReturn(new ExecutionResultDto(true, "step3"));
-        when(compileExecuterFilter.apply("step3", "step4")).thenReturn(new ExecutionResultDto(true, "step5"));
+
 
         // Apply the filter chain to verify the order
         String inputCode = "step1";
-        String expectedCode = "step5";
 
         ExecutionResultDto result = filter.apply(inputCode, "step2");
 
