@@ -31,15 +31,15 @@ class ScoreControllerTest {
     @MockBean
     private CodeExecutionService codeExecutionService;
 
-
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     private Environment env;
 
-
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
+
+    private ScoreResponse mockScoreResponse;
 
     @BeforeEach
     void setUp() {
@@ -49,20 +49,15 @@ class ScoreControllerTest {
         when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
                 .thenReturn(mockExecutionResult);
 
-
-        ScoreResponse mockScoreResponse = new ScoreResponse();
+        mockScoreResponse = new ScoreResponse();
         mockScoreResponse.setUuidChallenge(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         mockScoreResponse.setUuidLanguage(UUID.fromString("456f7890-e89b-12d3-a456-426614174000"));
-        mockScoreResponse.setSolutionText("texto de ejemplo");
-        mockScoreResponse.setScore(99); // Simulando una puntuación
-
+        mockScoreResponse.setSolutionText("Example text");
+        mockScoreResponse.setScore(99);
 
         when(codeExecutionManager.processCode(any(ScoreRequest.class)))
                 .thenReturn(ResponseEntity.ok(mockScoreResponse));
     }
-
-
-
 
     @Test
     void getVersionTest() {
@@ -75,16 +70,14 @@ class ScoreControllerTest {
                 .expectBody()
                 .jsonPath("$.application_name").isEqualTo("itachallenge-score")
                 .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
-
     }
-
 
     @Test
     void testCreateScore() {
         ScoreRequest scoreRequest = new ScoreRequest(
                 UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
                 UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
-                "texto de ejemplo"
+                "Example text"
         );
 
         webTestClient.post().uri(ScoreControllerTest.CONTROLLER_URL)
@@ -93,10 +86,9 @@ class ScoreControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.uuid_challenge").isEqualTo("123e4567-e89b-12d3-a456-426614174000")
-                .jsonPath("$.uuid_language").isEqualTo("456f7890-e89b-12d3-a456-426614174000")
-                .jsonPath("$.solution_text").isEqualTo("Solution text example")
-                .jsonPath("$.score").isEqualTo(99);
-
+                .jsonPath("$.uuid_challenge").isEqualTo(mockScoreResponse.getUuidChallenge().toString())
+                .jsonPath("$.uuid_language").isEqualTo(mockScoreResponse.getUuidLanguage().toString())
+                .jsonPath("$.solution_text").isEqualTo(mockScoreResponse.getSolutionText())
+                .jsonPath("$.score").isEqualTo(mockScoreResponse.getScore());
     }
 }
