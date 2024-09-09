@@ -6,7 +6,6 @@ import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
 import com.itachallenge.score.sandbox.sandbox_filter.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,15 +13,18 @@ import org.springframework.stereotype.Component;
 @Component
 public class CodeExecutionManager {
 
-    @Autowired
     @Qualifier("createFilterChain") // Specify the bean to be injected
-    private Filter filterChain;
+    private final Filter filterChain;
 
-    @Autowired
-    private JavaSandboxContainer javaSandboxContainer;
+    private final JavaSandboxContainer javaSandboxContainer;
 
-    @Autowired
-    private CodeExecutionService codeExecutionService;
+    private final CodeExecutionService codeExecutionService;
+
+    public CodeExecutionManager(@Qualifier("compileExecuterFilter") Filter filterChain, JavaSandboxContainer javaSandboxContainer, CodeExecutionService codeExecutionService) {
+        this.filterChain = filterChain;
+        this.javaSandboxContainer = javaSandboxContainer;
+        this.codeExecutionService = codeExecutionService;
+    }
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
 
