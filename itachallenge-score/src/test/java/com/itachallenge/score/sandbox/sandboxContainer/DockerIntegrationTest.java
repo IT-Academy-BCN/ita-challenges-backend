@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandBox.sandBoxContainer;
+package com.itachallenge.score.sandbox.sandboxContainer;
 
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;

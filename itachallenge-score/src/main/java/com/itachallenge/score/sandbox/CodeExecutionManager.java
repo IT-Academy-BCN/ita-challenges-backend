@@ -1,11 +1,11 @@
-package com.itachallenge.score.sandBox;
+package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandBox.sandBoxContainer.JavaSandboxContainer;
-import com.itachallenge.score.sandBox.sandBox_filter.Filter;
+import com.itachallenge.score.sandbox.sandboxContainer.JavaSandboxContainer;
+import com.itachallenge.score.sandbox.sandbox_filter.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;

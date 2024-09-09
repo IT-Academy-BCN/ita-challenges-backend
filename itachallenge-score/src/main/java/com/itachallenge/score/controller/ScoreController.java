@@ -1,6 +1,6 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.sandBox.CodeExecutionManager;
+import com.itachallenge.score.sandbox.CodeExecutionManager;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import io.swagger.v3.oas.annotations.Operation;

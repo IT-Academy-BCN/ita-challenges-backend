@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandBox.sandBox_filter;
+package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.slf4j.Logger;

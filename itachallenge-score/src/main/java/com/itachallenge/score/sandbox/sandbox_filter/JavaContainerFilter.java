@@ -1,7 +1,7 @@
-package com.itachallenge.score.sandBox.sandBox_filter;
+package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandBox.sandBoxContainer.JavaSandboxContainer;
+import com.itachallenge.score.sandbox.sandboxContainer.JavaSandboxContainer;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
