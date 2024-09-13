@@ -1,4 +1,4 @@
-package com.itachallenge.score.filter;
+package com.itachallenge.score.sandbox.sandbox_filter;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

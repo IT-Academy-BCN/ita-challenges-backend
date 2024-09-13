@@ -1,11 +1,10 @@
-package com.itachallenge.score.filter;
+package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -19,9 +18,9 @@ public class CompileExecuterFilter implements Filter {
 
     private Filter next;
 
-    private CodeExecutionService codeExecutionService;
+    private final CodeExecutionService codeExecutionService;
 
-    @Autowired
+
     public CompileExecuterFilter(CodeExecutionService codeExecutionService) {
         this.codeExecutionService = codeExecutionService;
     }

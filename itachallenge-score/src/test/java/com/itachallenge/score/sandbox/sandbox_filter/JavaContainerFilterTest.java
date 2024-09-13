@@ -1,8 +1,9 @@
-package com.itachallenge.score.filter;
+package com.itachallenge.score.sandbox.sandbox_filter;
 
-import com.itachallenge.score.docker.JavaSandboxContainer;
+import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 
@@ -15,15 +16,16 @@ class JavaContainerFilterTest {
     private JavaSandboxContainer javaSandboxContainer;
     private Filter nextFilter;
 
-@BeforeEach
-void setUp() {
-    MockitoAnnotations.openMocks(this);
-    javaSandboxContainer = mock(JavaSandboxContainer.class);
-    javaContainerFilter = new JavaContainerFilter(javaSandboxContainer);
-    nextFilter = mock(Filter.class);
-    javaContainerFilter.setNext(nextFilter);
-}
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        javaSandboxContainer = mock(JavaSandboxContainer.class);
+        javaContainerFilter = new JavaContainerFilter(javaSandboxContainer);
+        nextFilter = mock(Filter.class);
+        javaContainerFilter.setNext(nextFilter);
+    }
 
+    @DisplayName("Test apply - Code contains only valid characters, next filter should be called")
     @Test
     void testApply_withValidCode() {
         String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";
@@ -37,9 +39,11 @@ void setUp() {
 
         // Verify that the result indicates success
         verify(javaSandboxContainer).startContainer();
+
     }
 
 
+    @DisplayName("Test apply - Code contains invalid characters, next filter should not be called")
     @Test
     void testApply_withContainerStartException() {
         String validCode = "public class Main { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }";

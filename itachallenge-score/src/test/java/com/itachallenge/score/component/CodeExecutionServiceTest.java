@@ -12,8 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class CodeExecutionServiceTest {
+
     @Autowired
-    CodeExecutionService codeExecutionService;
+    private CodeExecutionService codeExecutionService;
+
 
     //Test for client code result match
     @Test

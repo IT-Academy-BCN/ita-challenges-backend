@@ -1,4 +1,4 @@
-package com.itachallenge.score.docker;
+package com.itachallenge.score.sandbox.sandbox_container;
 
 import java.util.List;
 

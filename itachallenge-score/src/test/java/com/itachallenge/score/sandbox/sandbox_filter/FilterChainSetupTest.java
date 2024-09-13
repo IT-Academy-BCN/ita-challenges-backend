@@ -1,4 +1,4 @@
-package com.itachallenge.score.filter;
+package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +33,10 @@ class FilterChainSetupTest {
 
         // Mock the behavior of the filters
         when(javaContainerFilter.apply("step1", "step2")).thenReturn(new ExecutionResultDto(true, "step3"));
-        when(compileExecuterFilter.apply("step3", "step4")).thenReturn(new ExecutionResultDto(true, "step5"));
+
 
         // Apply the filter chain to verify the order
         String inputCode = "step1";
-        String expectedCode = "step5";
 
         ExecutionResultDto result = filter.apply(inputCode, "step2");
 
