@@ -16,13 +16,13 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     private final GenericContainer<?> javaContainer;
 
     public JavaSandboxContainer() {
-        this.javaContainer = new GenericContainer<>("openjdk:11-jdk-slim-sid").withFileSystemBind("/app", "/app");
+        this.javaContainer = new GenericContainer<>("openjdk:11-jdk-slim-sid").withFileSystemBind("/tmp/app", "/app");
         log.info("Java Sandbox Container created");
     }
 
     @Override
     public GenericContainer<?> createContainer(String imageName) {
-        return new GenericContainer<>(imageName).withFileSystemBind("/app", "/app");
+        return new GenericContainer<>(imageName).withFileSystemBind("/tmp/app", "/app");
     }
 
     @Override
