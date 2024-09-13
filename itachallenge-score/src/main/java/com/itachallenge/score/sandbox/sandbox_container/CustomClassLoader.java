@@ -12,8 +12,10 @@ public class CustomClassLoader extends ClassLoader {
 
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if (prohibitedClasses.contains(name)) {
-            throw new ClassNotFoundException("Loading of class " + name + " is prohibited");
+        for (String prohibitedClass : prohibitedClasses) {
+            if (name.startsWith(prohibitedClass)) {
+                throw new ClassNotFoundException("Class " + name + " is prohibited");
+            }
         }
         return super.loadClass(name);
     }

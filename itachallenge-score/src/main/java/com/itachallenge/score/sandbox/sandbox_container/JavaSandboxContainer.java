@@ -74,7 +74,12 @@ public class JavaSandboxContainer implements DockerContainerHelper {
                 "java.io.FileReader",
                 "java.io.FileWriter",
                 "java.io.BufferedReader",
-                "java.io.BufferedWriter"
+                "java.io.BufferedWriter",
+                "java.io.InputStream",
+                "java.io.OutputStream",
+                "java.io.RandomAccessFile",
+                "java.io.FileOutputStream",
+                "java.io.FileDescriptor"
         );
     }
 }
