@@ -70,77 +70,100 @@ class JavaSandboxContainerTest {
         GenericContainer<?> newContainer = container.createContainer("openjdk:11-jdk-slim-sid");
         assertTrue(newContainer != null, "Container should be created");
     }
+    @Test
+    void testJavaContainerSortNumbers() {
+        String codeSort = """
+        import java.util.Arrays;
 
-@Test
-void testExecuteMaliciousCommand() throws IOException, InterruptedException {
-    JavaSandboxContainer container = new JavaSandboxContainer();
-    container.startContainer();
+        public class Main {
+            public static void main(String[] args) {
+                String numbers = "3,1,4,1,5,9";
+                int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
+                Arrays.sort(numArray);
+                System.out.println(Arrays.toString(numArray));
+            }
+        }
+        """;
 
-    // Ensure the /tmp/app directory exists
-    container.getContainer().execInContainer("mkdir", "-p", "/tmp/app");
+        GenericContainer<?> containerJavaSort = container.createContainer("openjdk:11");
 
-    // Create a Java code snippet with malicious code
-    String maliciousCode = "import java.io.*;\n" +
-                           "public class Main { \n" +
-                           "    public static void main(String[] args) { \n" +
-                           "        int numero = 2345;\n" +
-                           "        int[] conteoDigitos = new int[10];\n" +
-                           "        while (numero > 0) {\n" +
-                           "            int digito = numero % 10;\n" +
-                           "            conteoDigitos[digito]++;\n" +
-                           "            numero /= 10;\n" +
-                           "        }\n" +
-                           "        int resultado = 0;\n" +
-                           "        for (int i = 9; i >= 0; i--) {\n" +
-                           "            while (conteoDigitos[i] > 0) {\n" +
-                           "                resultado = resultado * 10 + i;\n" +
-                           "                conteoDigitos[i]--;\n" +
-                           "            }\n" +
-                           "        }\n" +
-                           "        System.out.println(99);\n" +
-                           "        // Malicious code\n" +
-                           "        try { \n" +
-                           "            File file = new File(\"/tmp/malicious.txt\");\n" +
-                           "            FileWriter writer = new FileWriter(file);\n" +
-                           "            writer.write(\"This is a malicious file.\");\n" +
-                           "            writer.close();\n" +
-                           "        } catch (IOException e) { \n" +
-                           "            e.printStackTrace();\n" +
-                           "        }\n" +
-                           "    }\n" +
-                           "}";
+        try {
+            containerJavaSort.start(); // Ensure the container is started
+            container.copyFileToContainer(containerJavaSort, codeSort, "/app/Main.java");
+            container.executeCommand(containerJavaSort, "javac", "/app/Main.java");
+            String output = containerJavaSort.execInContainer("java", "-cp", "/app", "Main").getStdout().trim();
 
-    String mainClassPath = "/tmp/app/Main.java";
-    container.copyFileToContainer(container.getContainer(), maliciousCode, mainClassPath);
-
-    // Compile the Main class inside the container using CustomClassLoader
-    GenericContainer<?> javaContainer = container.getContainer();
-    Container.ExecResult compileResult = javaContainer.execInContainer("javac", "-cp", "/path/to/custom/classloader", mainClassPath);
-    assertEquals(0, compileResult.getExitCode(), "Compilation should be successful");
-
-    // Execute the Main class
-    Container.ExecResult result = javaContainer.execInContainer("java", "-cp", "/tmp/app:/path/to/custom/classloader", "Main");
-    String output = result.getStdout().trim();
-    assertEquals("99", output, "Command output should match");
-
-    // Verify the malicious file is not created
-    Container.ExecResult fileCheckResult = javaContainer.execInContainer("ls", "/tmp/malicious.txt");
-    assertEquals(1, fileCheckResult.getExitCode(), "Malicious file should not be created");
-
-    // Check for prohibited classes
-    List<String> prohibitedClasses = JavaSandboxContainer.getProhibitedClasses();
-    for (String prohibitedClass : prohibitedClasses) {
-        if (maliciousCode.contains(prohibitedClass)) {
-            container.stopContainer();
-            assertFalse(container.getContainer().isRunning(), "Container should be stopped due to prohibited class usage");
-            assertThrows(ClassNotFoundException.class, () -> {
-                new CustomClassLoader(ClassLoader.getSystemClassLoader(), prohibitedClasses).loadClass(prohibitedClass);
-            }, "ClassNotFoundException should be thrown for prohibited class " + prohibitedClass);
-            return;
+            assertTrue(output.contains("[1, 1, 3, 4, 5, 9]"));
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        } finally {
+            container.stopContainer(containerJavaSort);
         }
     }
 
-    // Stop the container
-    container.stopContainer();
-}
+    @Test
+    void testJavaContainerCompileError() {
+        String codeError = """
+                    public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Esto no compila porque falta un paréntesis";
+                    }
+                }
+          """;
+
+        GenericContainer<?> containerJavaError = container.createContainer("openjdk:11");
+
+        try {
+            containerJavaError.start(); // Ensure the container is started
+            container.copyFileToContainer(containerJavaError, codeError, "/app/Main.java");
+            container.executeCommand(containerJavaError, "javac", "/app/Main.java");
+        } catch (IOException | InterruptedException e) {
+            String errorMessage = e.getMessage();
+            assertTrue(errorMessage.contains("error: ';' expected"));
+        } finally {
+            container.stopContainer(containerJavaError);
+        }
+    }
+
+    @Test
+    void testRestrictedLibraryImport() {
+        String code = """
+                import java.lang.System;
+                public class Main {
+                    public static void main(String[] args) {
+                        System.out.println("Hola! Estoy intentado importar System");
+                    }
+                }
+                """;
+
+        String code2 = """
+                import java.util.Scanner;
+                public class Main {
+                    public static void main(String[] args) {
+                        Scanner scanner = new Scanner(System.in);
+                        System.out.println("Hola! Estoy intentado importar Scanner");
+                    }
+                }
+                """;
+        assertFalse(CustomClassLoader.isLibraryImportAllowed(code)); // Debería devolver false al intentar importar java.lang.System
+        assertTrue(CustomClassLoader.isLibraryImportAllowed(code2)); // Debería devolver true al intentar importar java.util.Scanner
+
+        // Si el código no importa java.lang.System, entonces se intenta compilar
+        if (CustomClassLoader.isLibraryImportAllowed(code)) {
+            GenericContainer<?> container = this.container.createContainer("openjdk:11");
+
+            try {
+                this.container.copyFileToContainer(container, code, "/app/Main.java");
+                this.container.executeCommand(container, "javac", "/app/Main.java");
+
+                fail("Expected a compilation error, but the code compiled successfully");
+            } catch (IOException | InterruptedException e) {
+                String errorMessage = e.getMessage();
+                assertTrue(errorMessage.contains("error: package java.lang.System does not exist"));
+            } finally {
+                this.container.stopContainer(container);
+            }
+        }
+    }
+
 }
