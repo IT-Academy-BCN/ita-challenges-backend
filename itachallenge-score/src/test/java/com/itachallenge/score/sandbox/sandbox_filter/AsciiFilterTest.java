@@ -78,6 +78,7 @@ class AsciiFilterTest {
 
         @Override
         public void setNext(Filter next) {
+            // Do nothing
         }
     }
 }

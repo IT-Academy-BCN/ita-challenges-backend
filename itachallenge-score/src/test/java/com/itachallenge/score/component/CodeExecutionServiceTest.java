@@ -69,10 +69,11 @@ class CodeExecutionServiceTest {
     @Test
     void testCompileAndRunCodeExecutionError() {
 
-        String sourceCode =
-                "        int num = 10;\n" +
-                        "        int div = 0;\n" +
-                        "        System.out.println(num / div);\n";
+        String sourceCode = """
+                int num = 10;
+                int div = 0;
+                System.out.println(num / div);
+                """;
         String codeResult = "Hello, World!";
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult);
@@ -87,9 +88,10 @@ class CodeExecutionServiceTest {
     //Test for client code correct parameter injection
     @Test
     void testCompileAndRunCodeWithParameterInjection() {
-        String sourceCode =
-                "int num = Integer.parseInt(args[0]);\n" +
-                        "System.out.println(num / 2);\n";
+        String sourceCode = """
+                int num = Integer.parseInt(args[0]);
+                System.out.println(num / 2);
+                """;
         String codeResult = "5";  // Esperamos que 10 / 2 sea 5
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10);// Pasamos 10 como argumento al método main
@@ -104,9 +106,10 @@ class CodeExecutionServiceTest {
     //Test for client code wrong parameter injection
     @Test
     void testCompileAndRunCodeWithWrongTypeParameterInjection() {
-        String sourceCode =
-                "int num = Integer.parseInt(args[0]);\n" +
-                        "System.out.println(num / 2);\n";
+        String sourceCode = """
+                int num = Integer.parseInt(args[0]);
+                System.out.println(num / 2);
+                """;
         String codeResult = "5";  // Esperamos que 10 / 2 sea 5
         Object args = new String[]{"a, bce"};  // Pasamos tipo erróneo para int como argumento al método main
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, args);
@@ -119,9 +122,10 @@ class CodeExecutionServiceTest {
 
     @Test
     void testCompileAndRunCodeWithNullTypeParameterInjection() {
-        String sourceCode =
-                "int num = Integer.parseInt(args[0]);\n" +
-                        "System.out.println(num / 2);\n";
+        String sourceCode = """
+                int num = Integer.parseInt(args[0]);
+                System.out.println(num / 2);
+                """;
         String codeResult = "5";  // Esperamos que 10 / 2 sea 5
         Object nullObject = null;
 
@@ -133,11 +137,13 @@ class CodeExecutionServiceTest {
     //Test for ClassNotFoundException
     @Test
     void testCompileAndRunCodeClassNotFoundException() {
-        String sourceCode = "public class NotMain {\n" +
-                "    public static void main(String[] args) {\n" +
-                "        System.out.println(\"Hello, World!\");\n" +
-                "    }\n" +
-                "}";
+        String sourceCode = """
+                public class NotMain {
+                    public static void main(String[] args) {
+                        System.out.println("Hello, World!");
+                    }
+                }
+                """;
         String codeResult = "Hello, World!";
 
         String[] args = new String[]{};
@@ -154,11 +160,13 @@ class CodeExecutionServiceTest {
     //Test for NoSuchMethodException
     @Test
     void testCompileAndRunCodeNoSuchMethodException() {
-        String sourceCode = "public class Main {\n" +
-                "    public static void notMain(String[] args) {\n" +
-                "        System.out.println(\"Hello, World!\");\n" +
-                "    }\n" +
-                "}";
+        String sourceCode = """
+                public class Main {
+                    public static void notMain(String[] args) {
+                        System.out.println("Hello, World!");
+                    }
+                }
+                """;
         String codeResult = "Hello, World!";
 
         String[] args = new String[]{};
@@ -176,11 +184,13 @@ class CodeExecutionServiceTest {
     //Test for InvocationTargetException
     @Test
     void testCompileAndRunCodeInvocationTargetException() {
-        String sourceCode = "public class Main {\n" +
-                "    public static void main(String[] args) {\n" +
-                "        throw new RuntimeException(\"Hello, World!\");\n" +
-                "    }\n" +
-                "}";
+        String sourceCode = """
+                public class Main {
+                    public static void main(String[] args) {
+                        throw new RuntimeException("Hello, World!");
+                    }
+                }
+                """;
         String codeResult = "Hello, World!";
 
         String[] args = new String[]{};
@@ -200,10 +210,11 @@ class CodeExecutionServiceTest {
     // Prueba de inyección de múltiples parámetros
     @Test
     void testCompileAndRunCodeWithMultipleParameterInjection() {
-        String sourceCode =
-                "int num1 = Integer.parseInt(args[0]);\n" +
-                        "int num2 = Integer.parseInt(args[1]);\n" +
-                        "System.out.println(num1 + num2);\n";
+        String sourceCode = """
+                int num1 = Integer.parseInt(args[0]);
+                int num2 = Integer.parseInt(args[1]);
+                System.out.println(num1 + num2);
+                """;
         String codeResult = "30";  // Esperamos que 10 + 20 sea 30
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10, 20); // Pasamos 10 y 20 como argumentos al método main
@@ -218,9 +229,10 @@ class CodeExecutionServiceTest {
     // Prueba de inyección de parámetros de diferentes tipos
     @Test
     void testCompileAndRunCodeWithDifferentTypeParameterInjection() {
-        String sourceCode =
-                "double num = Double.parseDouble(args[0]);\n" +
-                        "System.out.println(num / 2);\n";
+        String sourceCode = """
+                double num = Double.parseDouble(args[0]);
+                System.out.println(num / 2);
+                """;
         String codeResult = "5.0";  // Esperamos que 10.0 / 2 sea 5.0
 
         ExecutionResultDto resultDto = codeExecutionService.compileAndRunCode(sourceCode, codeResult, 10.0); // Pasamos 10.0 como argumento al método main

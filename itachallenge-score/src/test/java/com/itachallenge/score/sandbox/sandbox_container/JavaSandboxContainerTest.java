@@ -3,8 +3,6 @@ package com.itachallenge.score.sandbox.sandbox_container;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -17,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Testcontainers
 class JavaSandboxContainerTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(JavaSandboxContainerTest.class);
     private JavaSandboxContainer container;
 
     @BeforeEach
@@ -68,22 +65,23 @@ class JavaSandboxContainerTest {
     @Test
     void testCreateContainer() {
         GenericContainer<?> newContainer = container.createContainer("openjdk:11-jdk-slim-sid");
-        assertTrue(newContainer != null, "Container should be created");
+        assertNotNull(newContainer, "Container should be created");
     }
+
     @Test
     void testJavaContainerSortNumbers() {
         String codeSort = """
-        import java.util.Arrays;
+                import java.util.Arrays;
 
-        public class Main {
-            public static void main(String[] args) {
-                String numbers = "3,1,4,1,5,9";
-                int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
-                Arrays.sort(numArray);
-                System.out.println(Arrays.toString(numArray));
-            }
-        }
-        """;
+                public class Main {
+                    public static void main(String[] args) {
+                        String numbers = "3,1,4,1,5,9";
+                        int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
+                        Arrays.sort(numArray);
+                        System.out.println(Arrays.toString(numArray));
+                    }
+                }
+                """;
 
         GenericContainer<?> containerJavaSort = container.createContainer("openjdk:11");
 
@@ -104,12 +102,12 @@ class JavaSandboxContainerTest {
     @Test
     void testJavaContainerCompileError() {
         String codeError = """
-                    public class Main {
-                    public static void main(String[] args) {
-                        System.out.println("Esto no compila porque falta un paréntesis";
-                    }
-                }
-          """;
+                          public class Main {
+                          public static void main(String[] args) {
+                              System.out.println("Esto no compila porque falta un paréntesis";
+                          }
+                      }
+                """;
 
         GenericContainer<?> containerJavaError = container.createContainer("openjdk:11");
 
@@ -149,21 +147,26 @@ class JavaSandboxContainerTest {
         assertTrue(CustomClassLoader.isLibraryImportAllowed(code2)); // Debería devolver true al intentar importar java.util.Scanner
 
         // Si el código no importa java.lang.System, entonces se intenta compilar
-        if (CustomClassLoader.isLibraryImportAllowed(code)) {
-            GenericContainer<?> container = this.container.createContainer("openjdk:11");
+if (CustomClassLoader.isLibraryImportAllowed(code)) {
+    GenericContainer<?> javaContainer = this.container.createContainer("openjdk:11");
 
-            try {
-                this.container.copyFileToContainer(container, code, "/app/Main.java");
-                this.container.executeCommand(container, "javac", "/app/Main.java");
+    try {
+        this.container.copyFileToContainer(javaContainer, code, "/app/Main.java");
+    } catch (IOException e) {
+        fail("IOException occurred while copying file to container: " + e.getMessage());
+    } catch (InterruptedException e) {
+        throw new RuntimeException(e);
+    }
 
-                fail("Expected a compilation error, but the code compiled successfully");
-            } catch (IOException | InterruptedException e) {
-                String errorMessage = e.getMessage();
-                assertTrue(errorMessage.contains("error: package java.lang.System does not exist"));
-            } finally {
-                this.container.stopContainer(container);
-            }
-        }
+    try {
+        this.container.executeCommand(javaContainer, "javac", "/app/Main.java");
+        fail("Expected a compilation error, but the code compiled successfully");
+    } catch (IOException | InterruptedException e) {
+        assertTrue(e.getMessage().contains("error: package java.lang.System does not exist"));
+    } finally {
+        this.container.stopContainer(javaContainer);
+    }
+}
     }
 
 }

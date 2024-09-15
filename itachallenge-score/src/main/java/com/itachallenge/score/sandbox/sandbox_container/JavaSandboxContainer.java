@@ -12,17 +12,25 @@ import java.util.List;
 public class JavaSandboxContainer implements DockerContainerHelper {
 
     private static final Logger log = LoggerFactory.getLogger(JavaSandboxContainer.class);
+    private static final String JAVA_SANDBOX_IMAGE = "openjdk:11-jdk-slim-sid";
 
     private final GenericContainer<?> javaContainer;
 
     public JavaSandboxContainer() {
-        this.javaContainer = new GenericContainer<>("openjdk:11-jdk-slim-sid").withFileSystemBind("/tmp/app", "/app");
+        javaContainer = createContainer(JAVA_SANDBOX_IMAGE);
         log.info("Java Sandbox Container created");
     }
 
     @Override
     public GenericContainer<?> createContainer(String imageName) {
-        return new GenericContainer<>(imageName).withFileSystemBind("/tmp/app", "/app");
+
+        try (GenericContainer<?> container = new GenericContainer<>(imageName)) {
+            container.withFileSystemBind("/tmp/app", "/app");
+            return container;
+        } catch (Exception e) {
+            log.error("Error creating container", e);
+            return null;
+        }
     }
 
     @Override

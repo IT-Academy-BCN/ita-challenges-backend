@@ -6,12 +6,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class JavaContainerFilterTest {
 
+    private static final Logger log = LoggerFactory.getLogger(JavaContainerFilterTest.class);
     private JavaContainerFilter javaContainerFilter;
     private JavaSandboxContainer javaSandboxContainer;
     private Filter nextFilter;
@@ -33,6 +36,7 @@ class JavaContainerFilterTest {
         when(nextFilter.apply(validCode, expectedCode)).thenReturn(new ExecutionResultDto());
 
         ExecutionResultDto result = javaContainerFilter.apply(validCode, expectedCode);
+        log.info("Result: {}", result);
 
         // Verify that the next filter was called
         verify(nextFilter).apply(validCode, expectedCode);

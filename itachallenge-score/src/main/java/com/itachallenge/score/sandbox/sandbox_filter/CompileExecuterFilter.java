@@ -32,7 +32,7 @@ public class CompileExecuterFilter implements Filter {
         }
 
         try {
-            return codeExecutionService.compileAndRunCode(code, resultExpected, new Object[]{});
+            return codeExecutionService.compileAndRunCode(code, resultExpected);
         } catch (Exception e) {
             log.error("Error compiling and executing code", e);
 

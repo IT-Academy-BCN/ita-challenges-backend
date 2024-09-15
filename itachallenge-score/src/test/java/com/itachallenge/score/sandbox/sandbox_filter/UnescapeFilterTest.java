@@ -57,6 +57,8 @@ class UnescapeFilterTest {
         }
 
         @Override
-        public void setNext(Filter next) {}
+        public void setNext(Filter next) {
+            // Do nothing
+        }
     }
 }
