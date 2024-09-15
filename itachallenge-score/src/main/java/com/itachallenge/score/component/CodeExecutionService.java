@@ -88,6 +88,7 @@ public class CodeExecutionService {
         String executionFailedMessage = "Execution failed: ";
         PrintStream old = System.out;
         System.setOut(printStream);
+        log.info("CodeResult: {}", codeResult);
 
         // Ejecutar el código en un hilo separado para poder cancelarlo si se queda en un bucle infinito
         ExecutorService executor = Executors.newSingleThreadExecutor();

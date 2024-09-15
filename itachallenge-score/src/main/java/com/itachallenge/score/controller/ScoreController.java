@@ -1,12 +1,11 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.sandbox.CodeExecutionManager;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
+import com.itachallenge.score.sandbox.CodeExecutionManager;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,11 @@ import java.util.Map;
 public class ScoreController {
 
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
+    private final CodeExecutionManager codeExecutionManager;
 
-    @Autowired
-    private CodeExecutionManager codeExecutionManager;
+    public ScoreController(CodeExecutionManager codeExecutionManager) {
+        this.codeExecutionManager = codeExecutionManager;
+    }
 
     @Value("${spring.application.version}")
     private String version;
@@ -48,6 +49,6 @@ public class ScoreController {
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)
-                .map(req -> codeExecutionManager.processCode(req));
+                .map(codeExecutionManager::processCode);
     }
 }
