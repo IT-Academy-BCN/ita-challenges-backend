@@ -1,6 +1,5 @@
 package com.itachallenge.score.sandbox.sandbox_filter;
 
-import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
 import lombok.Getter;
@@ -21,51 +20,39 @@ public class CompileExecuterFilter implements Filter {
     private static final Logger log = getLogger(CompileExecuterFilter.class.getName());
 
     private Filter next;
-    private final CodeExecutionService codeExecutionService;
 
     @Autowired
     private JavaSandboxContainer javaSandboxContainer;
 
-    public CompileExecuterFilter(CodeExecutionService codeExecutionService) {
-        this.codeExecutionService = codeExecutionService;
-    }
+
 
     @Override
     public ExecutionResultDto apply(String code, String resultExpected) {
-        if (codeExecutionService == null) {
-            throw new IllegalStateException("CodeExecutionService is not initialized");
-        }
 
-        // Verifica si el contenedor está corriendo
+
         GenericContainer<?> sandboxContainer = javaSandboxContainer.getContainer();
         if (!sandboxContainer.isRunning()) {
             javaSandboxContainer.startContainer();
         }
 
-        // Log del código que se va a ejecutar
-        log.info("Código a ejecutar:\n{}", code);
-        log.info("Resultado esperado:\n{}", resultExpected);
+        log.info("Código to execute:\n{}", code);
 
         try {
-            // Copiar el código fuente dentro del contenedor usando el método del JavaSandboxContainer
-            String codeFilePath = "/app/Main.java";  // Ruta en el contenedor
+            String codeFilePath = "/app/Main.java";
             javaSandboxContainer.copyFileToContainer(sandboxContainer, code, codeFilePath);
 
-            // Ejecutar el comando para compilar y correr el código en el contenedor
-            String compileCommand = "javac /app/Main.java";  // Compilar la clase Main
-            String runCommand = "java -cp /app Main";  // Ejecutar la clase Main
+            // Execute the code in the sandbox container
+            String compileCommand = "javac /app/Main.java";  // Compile the Main.java file
+            String runCommand = "java -cp /app Main";  // Execute the Main class
 
-            log.info("Ejecutando comando de compilación: {}", compileCommand);
             javaSandboxContainer.executeCommand(sandboxContainer, "sh", "-c", compileCommand);
-
-            log.info("Ejecutando comando de ejecución: {}", runCommand);
             Container.ExecResult execResult = sandboxContainer.execInContainer("sh", "-c", runCommand);
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
 
-            // Verificar si hubo errores de ejecución
+
             if (execResult.getExitCode() != 0) {
-                executionResultDto.setCompiled(true);  // La compilación ha sido exitosa aunque haya errores en la ejecución
+                executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(false);
                 executionResultDto.setMessage("Error: " + execResult.getStderr());
             } else {
@@ -86,6 +73,7 @@ public class CompileExecuterFilter implements Filter {
             return executionResultDto;
         }
     }
+
 
     @Override
     public void setNext(Filter next) {

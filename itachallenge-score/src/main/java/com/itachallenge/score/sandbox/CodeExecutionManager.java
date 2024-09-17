@@ -1,6 +1,5 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
@@ -18,48 +17,48 @@ public class CodeExecutionManager {
 
     private final JavaSandboxContainer javaSandboxContainer;
 
-    private final CodeExecutionService codeExecutionService;
-
-    public CodeExecutionManager(@Qualifier("compileExecuterFilter") Filter filterChain, JavaSandboxContainer javaSandboxContainer, CodeExecutionService codeExecutionService) {
+    public CodeExecutionManager(@Qualifier("compileExecuterFilter") Filter filterChain, JavaSandboxContainer javaSandboxContainer) {
         this.filterChain = filterChain;
         this.javaSandboxContainer = javaSandboxContainer;
-        this.codeExecutionService = codeExecutionService;
     }
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
 
         String sourceCode = scoreRequest.getSolutionText();
-
-        String resultExpected = "99";
-
-        //TODO: We need to change the expected result to be dynamic result from the challenge UUID;
+        String resultExpected = "5432"; // TODO: Change to dynamic result from the challenge UUID
 
         ExecutionResultDto executionResultDto = filterChain.apply(sourceCode, resultExpected);
-
-        if (!executionResultDto.isCompiled()) {
-            javaSandboxContainer.stopContainer();
-            ScoreResponse errorResponse = new ScoreResponse();
-            errorResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
-            errorResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
-            errorResponse.setSolutionText(scoreRequest.getSolutionText());
-            errorResponse.setScore(0);
-            errorResponse.setCompilationMessage(executionResultDto.getMessage());
-
-            return ResponseEntity.badRequest().body(errorResponse);
-        }
-
-
-        int score = codeExecutionService.calculateScore(executionResultDto);
 
         ScoreResponse scoreResponse = new ScoreResponse();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
-        scoreResponse.setScore(score);
         scoreResponse.setCompilationMessage(executionResultDto.getMessage());
-        javaSandboxContainer.stopContainer();
 
+        if (!executionResultDto.isCompiled()) {
+            scoreResponse.setScore(0);
+            javaSandboxContainer.stopContainer();
+            return ResponseEntity.badRequest().body(scoreResponse);
+        }
+
+        int score = calculateScore(executionResultDto, resultExpected);
+        scoreResponse.setScore(score);
+
+        javaSandboxContainer.stopContainer();
         return ResponseEntity.ok(scoreResponse);
     }
 
+    private int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
+        if (executionResultDto.isCompiled() && executionResultDto.isExecution()) {
+            if (executionResultDto.getMessage().trim().equals(resultExpected)) {
+                return 100;
+            } else {
+                return 75;
+            }
+        } else if (executionResultDto.isCompiled()) {
+            return 50;
+        } else {
+            return 0;
+        }
+    }
 }
