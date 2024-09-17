@@ -9,12 +9,17 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.logging.Logger;
+
+import static java.util.logging.Logger.getLogger;
+
 @Component
 public class CodeExecutionManager {
 
     @Qualifier("createFilterChain") // Specify the bean to be injected
     private final Filter filterChain;
 
+    private static final Logger log = getLogger(CodeExecutionManager.class.getName());
     private final JavaSandboxContainer javaSandboxContainer;
 
     public CodeExecutionManager(@Qualifier("compileExecuterFilter") Filter filterChain, JavaSandboxContainer javaSandboxContainer) {
@@ -48,17 +53,29 @@ public class CodeExecutionManager {
         return ResponseEntity.ok(scoreResponse);
     }
 
-    private int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
-        if (executionResultDto.isCompiled() && executionResultDto.isExecution()) {
-            if (executionResultDto.getMessage().trim().equals(resultExpected)) {
-                return 100;
-            } else {
-                return 75;
-            }
-        } else if (executionResultDto.isCompiled()) {
-            return 50;
-        } else {
+    public int calculateScore(String stdout, String stderr, String expectedOutput) {
+        if (!stderr.isEmpty()) {
+            log.info("Error de compilación o ejecución: {}" + stderr);
+            // Error de compilación o de ejecución => Score 0
             return 0;
         }
+
+        // Si stdout está vacío, significa que hubo un error de ejecución
+        if (stdout.isEmpty()) {
+            log.info("Ejecución fallida o salida vacía");
+            // Score bajo por ejecución sin resultado
+            return 50;
+        }
+
+        // Compara la salida estándar (stdout) con la salida esperada
+        if (stdout.trim().equals(expectedOutput.trim())) {
+            log.info("Salida correcta, asignando score máximo");
+            return 100;
+        } else {
+            log.info("Salida incorrecta, evaluando score parcial");
+            // Comparación aproximada para asignar un score parcial
+            return 70;  // Por ejemplo, si la ejecución fue correcta pero la salida no es la esperada
+        }
     }
+
 }

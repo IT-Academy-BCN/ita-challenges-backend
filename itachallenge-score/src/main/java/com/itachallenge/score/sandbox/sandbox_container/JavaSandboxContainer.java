@@ -3,6 +3,7 @@ package com.itachallenge.score.sandbox.sandbox_container;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.Transferable;
 
@@ -25,9 +26,9 @@ public class JavaSandboxContainer implements DockerContainerHelper {
 
     @Override
     public GenericContainer<?> createContainer(String imageName) {
-
-        try (GenericContainer<?> container = new GenericContainer<>(imageName)) {
-            container.withFileSystemBind("/tmp/app", "/app");
+        try {
+            GenericContainer<?> container = new GenericContainer<>(imageName);
+            container.withFileSystemBind("/tmp/app", "/app");  // Verifica que esta ruta sea la correcta
             return container;
         } catch (Exception e) {
             log.error("Error creating container", e);
@@ -38,17 +39,22 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     @Override
     public void copyFileToContainer(GenericContainer<?> container, String fileContent, String containerPath) throws IOException, InterruptedException {
         container.copyFileToContainer(Transferable.of(fileContent.getBytes()), containerPath);
+        log.info("File copied to container at path: {}", containerPath);
     }
 
     @Override
     public void executeCommand(GenericContainer<?> container, String... command) throws IOException, InterruptedException {
-        container.execInContainer(command);
+        Container.ExecResult result = container.execInContainer(command);
+        log.info("stdout: {}", result.getStdout());
+        log.error("stderr: {}", result.getStderr());
     }
+
 
     @Override
     public void stopContainer(GenericContainer<?> container) {
         if (container.isRunning()) {
             container.stop();
+            log.info("Container stopped");
         }
     }
 

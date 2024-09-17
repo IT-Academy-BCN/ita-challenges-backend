@@ -5,6 +5,7 @@ import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.testcontainers.containers.Container;
@@ -24,37 +25,50 @@ public class CompileExecuterFilter implements Filter {
     @Autowired
     private JavaSandboxContainer javaSandboxContainer;
 
-
+    @Value("${code.execution.template}")  // Inyección directa de la plantilla desde el yml
+    private String codeTemplate;
 
     @Override
     public ExecutionResultDto apply(String code, String resultExpected) {
-
-
         GenericContainer<?> sandboxContainer = javaSandboxContainer.getContainer();
         if (!sandboxContainer.isRunning()) {
             javaSandboxContainer.startContainer();
         }
 
-        log.info("Código to execute:\n{}", code);
+        log.info("Código recibido:\n{}", code);
+
+        // Aplicar la plantilla al código del usuario
+        String completeCode = String.format(codeTemplate, code);
+
+        log.info("Código final a ejecutar:\n{}", completeCode);
 
         try {
             String codeFilePath = "/app/Main.java";
-            javaSandboxContainer.copyFileToContainer(sandboxContainer, code, codeFilePath);
+            javaSandboxContainer.copyFileToContainer(sandboxContainer, completeCode, codeFilePath);
 
-            // Execute the code in the sandbox container
-            String compileCommand = "javac /app/Main.java";  // Compile the Main.java file
-            String runCommand = "java -cp /app Main";  // Execute the Main class
-
-            javaSandboxContainer.executeCommand(sandboxContainer, "sh", "-c", compileCommand);
-            Container.ExecResult execResult = sandboxContainer.execInContainer("sh", "-c", runCommand);
+            // Comando para compilar
+            String compileCommand = "javac " + codeFilePath;
+            Container.ExecResult compileResult = sandboxContainer.execInContainer("sh", "-c", compileCommand);
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
 
+            // Verificar si hay errores de compilación
+            if (compileResult.getExitCode() != 0) {
+                executionResultDto.setCompiled(false);
+                executionResultDto.setExecution(false);
+                executionResultDto.setMessage("Error de compilación: " + compileResult.getStderr());
+                return executionResultDto;
+            }
 
+            // Comando para ejecutar el código si ha compilado correctamente
+            String runCommand = "java -cp /app Main";
+            Container.ExecResult execResult = sandboxContainer.execInContainer("sh", "-c", runCommand);
+
+            // Manejo de la ejecución
             if (execResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Error: " + execResult.getStderr());
+                executionResultDto.setMessage("Error de ejecución: " + execResult.getStderr());
             } else {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(true);
@@ -64,16 +78,17 @@ public class CompileExecuterFilter implements Filter {
             return executionResultDto;
 
         } catch (Exception e) {
-            log.error("Error compiling and executing code in sandbox container", e);
+            log.error("Error compilando y ejecutando el código en el contenedor sandbox", e);
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
             executionResultDto.setCompiled(false);
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Error compiling and executing code in sandbox container: " + e.getMessage());
+            executionResultDto.setMessage("Error: " + e.getMessage());
             return executionResultDto;
+        } finally {
+            javaSandboxContainer.stopContainer(sandboxContainer);
         }
     }
-
 
     @Override
     public void setNext(Filter next) {
