@@ -54,6 +54,7 @@
 * Andrés Allegue Zabala - https://github.com/Alalilacias
 * Daniel Diaz Diaz - https://github.com/invictuzzzzz
 * Marcos Leandro Pagliaruzza - https://github.com/MarLea11
-* Marine Achinian - https://github.com/MarineAvramova
+* Joan Caballero Portolés - https://github.com/JoanCaballero
+
 
 
