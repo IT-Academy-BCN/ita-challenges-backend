@@ -1,0 +1,17 @@
+FROM bellsoft/liberica-openjdk-alpine:17.0.1
+
+# Create a custom JDK image including only necessary modules
+RUN jlink --module-path $JAVA_HOME/jmods --add-modules java.base,java.logging --output /opt/custom-jdk --strip-debug --no-man-pages --no-header-files --compress=2
+
+# Set JAVA_HOME to the custom JDK
+ENV JAVA_HOME=/opt/custom-jdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Copy the script to remove specific classes
+COPY remove_classes.sh /opt/remove_classes.sh
+
+# Run the script to remove specific classes
+RUN chmod +x /opt/remove_classes.sh && /opt/remove_classes.sh
+
+# Verify the custom JDK
+RUN java -version
