@@ -9,14 +9,14 @@
     "bookmarked": true,
     "status": "ENDED",
     "score": 100,
-     "solution":[ 
-       {
-          "_id" :  {
-              "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
-          },
-          "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
+    "solution":[
+      {
+        "_id" :  {
+          "$uuid" : "dcacb291-b4aa-4029-8e9b-284c8ca80296"
+        },
+        "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec"
       }
-  	]
+    ]
   },
   {
     "_id" : {
@@ -65,7 +65,18 @@
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
     "status": "ENDED",
-    "score": 100,
+    "score": 0,
+    "errors": [
+      {
+        "error_description": "Test.java:1: '{' expected"
+      },
+      {
+        "error_description": "Test.java:7: cannot find symbol"
+      },
+      {
+        "error_description": "<identifier> expected"
+      }
+    ],
     "solution":[
       {
         "_id" :  {
@@ -199,6 +210,7 @@
     "bookmarked": true,
     "status": "ENDED",
     "score": 0,
+    "errors": "Example of errors found while scoring the solution.",
     "solution":[
       {
         "_id" :  {
@@ -273,8 +285,9 @@
     "challenge_id": { "$uuid":"a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"},
     "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": true,
-    "status": "STARTED",
+    "status": "ENDED",
     "score": 0,
+    "errors": "Example of errors found while scoring the solution.",
     "solution":[
       {
         "_id" :  {

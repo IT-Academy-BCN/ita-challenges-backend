@@ -195,4 +195,29 @@ public class UserController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+/* branch 533b
+
+    @GetMapping(path = "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    @Operation(summary = "Returns to the user the score of a provided solution",
+            description = "Returns the score if the provided solution arrives to this endpoint with ChallengeStatus.STARTED",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful response with the score value",
+//                            content = {@Content(schema = @Schema(implementation = SolutionScoreDto.class), mediaType = "application/json")}),
+                            content = {@Content(schema = @Schema(implementation = UserSolScoreDto.class), mediaType = "application/json")}),
+                @ApiResponse(responseCode = "400", description = "Bad Request", content = {@Content(schema = @Schema())}),
+                @ApiResponse(responseCode = "404", description = "Combination of User Id and Challenge Id provided not found", content = {@Content(schema = @Schema())}),
+            })
+//    public Flux<ResponseEntity<UserSolScoreDto>> getScoreFromMicroScore(
+    public Mono<ResponseEntity<Integer>> getScoreFromMicroScore(
+//    public Mono<ResponseEntity<SolutionScoreDto>> getScoreFromMicroScore(
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
+            @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
+            @PathVariable("idSolution") @GenericUUIDValid(message = "Invalid UUID for solution") String idSolution)
+    {
+//        return this.userScoreService.getScore(idUser, idChallenge, idSolution)
+//                .map(solutionScoreDto -> ResponseEntity.status(HttpStatus.OK).body(solutionScoreDto));
+        return this.userScoreService.getScore(idUser, idChallenge, idSolution)
+                .map(userSolScoreDto -> ResponseEntity.status(HttpStatus.OK).body(userSolScoreDto));
+    } */
+
 }

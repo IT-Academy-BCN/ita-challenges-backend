@@ -39,6 +39,9 @@ public class UserSolutionDocument {
     @Field("score")
     private int score;
 
+//    @Field("errors")
+//    private String errors;
+
     @Field("solution")
     private List<SolutionDocument> solutionDocument;
 

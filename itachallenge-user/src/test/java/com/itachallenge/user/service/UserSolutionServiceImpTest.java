@@ -2,10 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.dtos.SolutionUserDto;
-import com.itachallenge.user.dtos.UserScoreDto;
-import com.itachallenge.user.dtos.UserSolutionDto;
-import com.itachallenge.user.dtos.UserSolutionScoreDto;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
@@ -272,5 +269,4 @@ class UserSolutionServiceImpTest {
                 .expectNextCount(0)
                 .verifyComplete();
     }
-
 }
