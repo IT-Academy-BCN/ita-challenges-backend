@@ -17,7 +17,7 @@ public class CodeExecutionManager {
 
     private final JavaSandboxContainer javaSandboxContainer;
 
-    public CodeExecutionManager(@Qualifier("compileExecuterFilter") Filter filterChain, JavaSandboxContainer javaSandboxContainer) {
+    public CodeExecutionManager(@Qualifier("createFilterChain") Filter filterChain, JavaSandboxContainer javaSandboxContainer) {
         this.filterChain = filterChain;
         this.javaSandboxContainer = javaSandboxContainer;
     }
