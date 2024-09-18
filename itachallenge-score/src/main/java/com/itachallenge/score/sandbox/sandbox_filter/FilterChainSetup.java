@@ -16,11 +16,12 @@ public class FilterChainSetup {
     public Filter createFilterChain(JavaContainerFilter javaContainerFilter, CompileExecuterFilter compileExecuterFilter, JavaSandboxContainer javaSandboxContainer) {
         Filter escapeFilter = new UnescapeFilter();
         Filter asciiFilter = new AsciiFilter();
-        
+
         escapeFilter.setNext(asciiFilter);
         asciiFilter.setNext(javaContainerFilter);
         javaContainerFilter.setNext(compileExecuterFilter);
 
         return escapeFilter;
     }
+
 }

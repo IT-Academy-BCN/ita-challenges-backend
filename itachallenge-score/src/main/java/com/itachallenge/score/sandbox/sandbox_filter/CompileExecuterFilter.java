@@ -52,7 +52,7 @@ public class CompileExecuterFilter implements Filter {
             if (compileResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(false);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Compiled error: \n" + compileResult.getStderr());
+                executionResultDto.setMessage("Compiled error: \n" + compileResult.getStderr().trim());
                 return executionResultDto;
             }
 
@@ -64,7 +64,7 @@ public class CompileExecuterFilter implements Filter {
             if (execResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Execution error: " + execResult.getStderr());
+                executionResultDto.setMessage("Execution error: " + execResult.getStderr().trim());
             } else {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(true);
@@ -79,14 +79,13 @@ public class CompileExecuterFilter implements Filter {
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
             executionResultDto.setCompiled(false);
             executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Error: " + e.getMessage());
+            executionResultDto.setMessage("Error: " + e.getMessage().trim());
             return executionResultDto;
 
         } finally {
             javaSandboxContainer.stopContainer(sandboxContainer);
         }
     }
-
 
 
     @Override
