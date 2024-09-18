@@ -34,13 +34,7 @@ public class CodeExecutionManager {
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
         scoreResponse.setCompilationMessage(executionResultDto.getMessage());
-
-        if (!executionResultDto.isCompiled()) {
-            scoreResponse.setScore(0);
-            javaSandboxContainer.stopContainer();
-            return ResponseEntity.badRequest().body(scoreResponse);
-        }
-
+        scoreResponse.setExpected_result(resultExpected);
         int score = calculateScore(executionResultDto, resultExpected);
         scoreResponse.setScore(score);
 
@@ -49,16 +43,19 @@ public class CodeExecutionManager {
     }
 
     private int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
-        if (executionResultDto.isCompiled() && executionResultDto.isExecution()) {
-            if (executionResultDto.getMessage().trim().equals(resultExpected)) {
-                return 100;
-            } else {
-                return 75;
-            }
-        } else if (executionResultDto.isCompiled()) {
-            return 50;
-        } else {
-            return 0;
-        }
+
+    if (!executionResultDto.isCompiled()) {
+        return 0;
     }
+    if (!executionResultDto.isExecution()) {
+        return 25;
+    }
+    if (executionResultDto.getMessage().equals(resultExpected)) {
+        return 100;
+    }
+    if (executionResultDto.getMessage().contains(resultExpected)) {
+        return 75;
+    }
+    return 50;
+}
 }

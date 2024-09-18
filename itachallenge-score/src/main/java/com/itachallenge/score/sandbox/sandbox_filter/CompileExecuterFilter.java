@@ -25,7 +25,7 @@ public class CompileExecuterFilter implements Filter {
     @Autowired
     private JavaSandboxContainer javaSandboxContainer;
 
-    @Value("${code.execution.template}")  // Inyección directa de la plantilla desde el yml
+    @Value("${code.execution.template}")
     private String codeTemplate;
 
     @Override
@@ -35,60 +35,59 @@ public class CompileExecuterFilter implements Filter {
             javaSandboxContainer.startContainer();
         }
 
-        log.info("Código recibido:\n{}", code);
 
-        // Aplicar la plantilla al código del usuario
         String completeCode = String.format(codeTemplate, code);
-
-        log.info("Código final a ejecutar:\n{}", completeCode);
+        log.info("Executing code:\n {}", completeCode);
 
         try {
             String codeFilePath = "/app/Main.java";
             javaSandboxContainer.copyFileToContainer(sandboxContainer, completeCode, codeFilePath);
 
-            // Comando para compilar
             String compileCommand = "javac " + codeFilePath;
             Container.ExecResult compileResult = sandboxContainer.execInContainer("sh", "-c", compileCommand);
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
 
-            // Verificar si hay errores de compilación
+
             if (compileResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(false);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Error de compilación: " + compileResult.getStderr());
+                executionResultDto.setMessage("Compiled error: \n" + compileResult.getStderr());
                 return executionResultDto;
             }
 
-            // Comando para ejecutar el código si ha compilado correctamente
+            // If the code is compiled, execute it
             String runCommand = "java -cp /app Main";
             Container.ExecResult execResult = sandboxContainer.execInContainer("sh", "-c", runCommand);
 
-            // Manejo de la ejecución
+
             if (execResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Error de ejecución: " + execResult.getStderr());
+                executionResultDto.setMessage("Execution error: " + execResult.getStderr());
             } else {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(true);
-                executionResultDto.setMessage(execResult.getStdout());
+                executionResultDto.setMessage(execResult.getStdout().trim());
             }
 
             return executionResultDto;
 
         } catch (Exception e) {
-            log.error("Error compilando y ejecutando el código en el contenedor sandbox", e);
+            log.error("Error executing code", e);
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
             executionResultDto.setCompiled(false);
             executionResultDto.setExecution(false);
             executionResultDto.setMessage("Error: " + e.getMessage());
             return executionResultDto;
+
         } finally {
             javaSandboxContainer.stopContainer(sandboxContainer);
         }
     }
+
+
 
     @Override
     public void setNext(Filter next) {
