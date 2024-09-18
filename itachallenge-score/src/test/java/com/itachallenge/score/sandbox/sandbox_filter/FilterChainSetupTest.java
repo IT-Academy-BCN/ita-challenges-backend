@@ -1,6 +1,7 @@
 package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -15,18 +16,21 @@ class FilterChainSetupTest {
     private FilterChainSetup filterChainSetup;
     private JavaContainerFilter javaContainerFilter;
     private CompileExecuterFilter compileExecuterFilter;
+    private JavaSandboxContainer javaSandboxContainer;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
         javaContainerFilter = mock(JavaContainerFilter.class);
         compileExecuterFilter = mock(CompileExecuterFilter.class);
+        javaSandboxContainer = mock(JavaSandboxContainer.class);
+
         filterChainSetup = new FilterChainSetup();
     }
 
     @Test
     void testCreateFilterChain() {
-        Filter filter = filterChainSetup.createFilterChain(javaContainerFilter, compileExecuterFilter);
+        Filter filter = filterChainSetup.createFilterChain(javaContainerFilter, compileExecuterFilter, javaSandboxContainer);
 
         assertNotNull(filter, "The filter chain should not be null");
         assertTrue(filter instanceof UnescapeFilter, "The first filter should be an UnescapeFilter");
