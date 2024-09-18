@@ -21,6 +21,7 @@ public class ScoreResponse {
     private String solutionText;
     private int score;
     private String compilationMessage;
+    private String expected_result;
 
 }
 
