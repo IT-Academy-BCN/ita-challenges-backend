@@ -28,7 +28,7 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     public GenericContainer<?> createContainer(String imageName) {
         try {
             GenericContainer<?> container = new GenericContainer<>(imageName);
-            container.withFileSystemBind("/tmp/app", "/app");  // Verifica que esta ruta sea la correcta
+            container.withFileSystemBind("/tmp/app", "/app");
             return container;
         } catch (Exception e) {
             log.error("Error creating container", e);

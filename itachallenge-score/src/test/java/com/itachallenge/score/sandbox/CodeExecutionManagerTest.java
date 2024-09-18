@@ -1,6 +1,5 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
@@ -29,9 +28,6 @@ class CodeExecutionManagerTest {
     @Mock
     private JavaSandboxContainer javaSandboxContainer;
 
-    @Mock
-    private CodeExecutionService codeExecutionService;
-
     @InjectMocks
     private CodeExecutionManager codeExecutionManager;
 
@@ -51,16 +47,16 @@ class CodeExecutionManagerTest {
 
         ExecutionResultDto executionResultDto = new ExecutionResultDto();
         executionResultDto.setCompiled(true);
-        executionResultDto.setMessage("Compilation successful");
+        executionResultDto.setExecution(true);
+        executionResultDto.setMessage("5432");
 
         when(filterChain.apply(any(String.class), any(String.class))).thenReturn(executionResultDto);
-        when(codeExecutionService.calculateScore(any(ExecutionResultDto.class))).thenReturn(100);
 
         ResponseEntity<ScoreResponse> responseEntity = codeExecutionManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
-        assertEquals("Compilation successful", responseEntity.getBody().getCompilationMessage());
+        assertEquals("5432", responseEntity.getBody().getCompilationMessage());
         verify(javaSandboxContainer, times(1)).stopContainer();
     }
 
@@ -70,7 +66,7 @@ class CodeExecutionManagerTest {
         ScoreRequest scoreRequest = new ScoreRequest(
                 UUID.randomUUID(),
                 UUID.randomUUID(),
-                "int number = 1," // Code that will cause compilation/runtime error because don't have ";" at the end
+                "int number = 1," // Code that will cause compilation/runtime error because it doesn't have ";" at the end
         );
 
         ExecutionResultDto executionResultDto = new ExecutionResultDto();
@@ -81,7 +77,7 @@ class CodeExecutionManagerTest {
 
         ResponseEntity<ScoreResponse> responseEntity = codeExecutionManager.processCode(scoreRequest);
 
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
         assertEquals("Compilation failed", responseEntity.getBody().getCompilationMessage());
         verify(javaSandboxContainer, times(1)).stopContainer();

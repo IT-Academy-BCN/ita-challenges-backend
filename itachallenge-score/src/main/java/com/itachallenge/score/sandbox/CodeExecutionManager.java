@@ -42,7 +42,7 @@ public class CodeExecutionManager {
         return ResponseEntity.ok(scoreResponse);
     }
 
-    private int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
+    public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
 
     if (!executionResultDto.isCompiled()) {
         return 0;
