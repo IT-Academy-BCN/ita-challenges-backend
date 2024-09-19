@@ -5,10 +5,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,12 +42,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleConstraintViolation(ConstraintViolationException ex) {
         String constraintMessage = ex.getConstraintViolations()
                 .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
-        return ResponseEntity.badRequest().body(new MessageDto(constraintMessage));
+        return ResponseEntity.ok().body(new MessageDto(constraintMessage));
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -57,8 +55,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(LanguageNotFoundException.class)
-    public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<MessageDto> handleNotFoundException(NotFoundException ex) {
         return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
