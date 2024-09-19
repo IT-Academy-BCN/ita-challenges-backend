@@ -30,9 +30,7 @@ public class CodeProcessingManager {
 
         ExecutionResultDto executionResultDto = filterChain.apply(sourceCode);
 
-        if (!executionResultDto.isPassedAllFilters()) {
-            executionResultDto.setMessage("Filter error: " + executionResultDto.getMessage());
-        } else if (executionResultDto.isPassedAllFilters()) {
+        if (executionResultDto.isPassedAllFilters()) {
             executionResultDto = compileExecuter.executeCode(sourceCode);
         }
 
@@ -50,7 +48,7 @@ public class CodeProcessingManager {
 
     public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
         if (!executionResultDto.isCompiled()) {
-            if (!executionResultDto.getMessage().startsWith("Filter error:")) {
+            if (executionResultDto.getMessage().isEmpty()) {
                 executionResultDto.setMessage("Compilation error: " + executionResultDto.getMessage());
             }
             return 0;

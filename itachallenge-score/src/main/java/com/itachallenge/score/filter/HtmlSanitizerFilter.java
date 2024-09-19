@@ -13,20 +13,33 @@ public class HtmlSanitizerFilter implements Filter{
     private static final Logger log = LoggerFactory.getLogger(HtmlSanitizerFilter.class);
     private Filter next;
 
-    @Override
-    public ExecutionResultDto apply(String code) {
-        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-        String sanitizedCode = policy.sanitize(code);
-        log.info("Sanitized code: " + sanitizedCode);
+@Override
+public ExecutionResultDto apply(String code) {
+    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+    String sanitizedCode;
+    try {
+        sanitizedCode = policy.sanitize(code);
+    } catch (Exception e) {
+        String errorMessage = String.format("HtmlSanitizerFilter error: %s", e.getMessage());
+        log.error(errorMessage);
 
-        // Go to the next filter
-        if (next != null) {
-            return next.apply(sanitizedCode);
-        }
-
-        return new ExecutionResultDto();
-
+        ExecutionResultDto executionResultDto = new ExecutionResultDto();
+        executionResultDto.setCompiled(false);
+        executionResultDto.setExecution(false);
+        executionResultDto.setMessage(errorMessage);
+        return executionResultDto;
     }
+    log.info("Sanitized code: " + sanitizedCode);
+
+    // Go to the next filter
+    if (next != null) {
+        return next.apply(sanitizedCode);
+    }
+
+    ExecutionResultDto executionResultDto = new ExecutionResultDto();
+    executionResultDto.setPassedAllFilters(true);
+    return executionResultDto;
+}
 
     @Override
     public void setNext(Filter next) {

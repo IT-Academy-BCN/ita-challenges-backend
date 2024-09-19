@@ -222,6 +222,6 @@ class CodeProcessingManagerTest {
         log.info("Response entity: {}", responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
-        assertEquals("Filter error: Filter failed", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Filter failed", responseEntity.getBody().getCompilation_Message());
     }
 }

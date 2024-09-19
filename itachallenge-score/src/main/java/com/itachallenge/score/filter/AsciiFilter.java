@@ -28,7 +28,7 @@ public class AsciiFilter implements Filter {
         for (int i = 0; i < code.length(); i++) {
             char currentChar = code.charAt(i);
             if (!isValidChar(currentChar)) {
-                String errorMessage = String.format("Invalid character '%s' in code", currentChar);
+                String errorMessage = String.format("ASCII FILTER ERROR: Invalid character '%s' in code", currentChar);
                 log.error(errorMessage);
 
                 ExecutionResultDto executionResultDto = new ExecutionResultDto();
