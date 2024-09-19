@@ -1,6 +1,8 @@
 package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.filter.UnescapeFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

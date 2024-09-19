@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.sandbox_container;
+package com.itachallenge.score.sandbox;
 
 import org.testcontainers.containers.GenericContainer;
 import java.io.IOException;

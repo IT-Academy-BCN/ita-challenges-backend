@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.filter;
 
 
 

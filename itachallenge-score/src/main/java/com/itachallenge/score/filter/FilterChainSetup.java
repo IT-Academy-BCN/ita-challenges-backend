@@ -1,6 +1,5 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.filter;
 
-import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
 import org.slf4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,15 +12,15 @@ public class FilterChainSetup {
     private static final Logger log = getLogger(FilterChainSetup.class.getName());
 
     @Bean
-    public Filter createFilterChain(JavaContainerFilter javaContainerFilter, CompileExecuterFilter compileExecuterFilter, JavaSandboxContainer javaSandboxContainer) {
+    public Filter createFilterChain() {
         Filter escapeFilter = new UnescapeFilter();
         Filter asciiFilter = new AsciiFilter();
+        Filter htemSanitizerFilter = new HtmlSanitizerFilter();
 
+        htemSanitizerFilter.setNext(escapeFilter);
         escapeFilter.setNext(asciiFilter);
-        asciiFilter.setNext(javaContainerFilter);
-        javaContainerFilter.setNext(compileExecuterFilter);
 
-        return escapeFilter;
+        return htemSanitizerFilter;
     }
 
 }

@@ -1,9 +1,6 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +10,10 @@ import org.testcontainers.containers.GenericContainer;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@Getter
-@Setter
 @Component
-public class CompileExecuterFilter implements Filter {
+public class CompileExecuter {
 
-    private static final Logger log = getLogger(CompileExecuterFilter.class.getName());
-
-    private Filter next;
+    private static final Logger log = getLogger(CompileExecuter.class.getName());
 
     @Autowired
     private JavaSandboxContainer javaSandboxContainer;
@@ -28,20 +21,15 @@ public class CompileExecuterFilter implements Filter {
     @Value("${code.execution.template}")
     private String codeTemplate;
 
-    @Override
-    public ExecutionResultDto apply(String code, String resultExpected) {
+    public ExecutionResultDto executeCode(String code) {
+
         GenericContainer<?> sandboxContainer = javaSandboxContainer.getContainer();
         if (!sandboxContainer.isRunning()) {
             javaSandboxContainer.startContainer();
         }
 
-        // Split the code into main and methods
-        String[] parts = splitCodeIntoMainAndMethods(code);
-        String mainCode = parts[0];
-        String methodsCode = parts.length > 1 ? parts[1] : "";
-
         // Complete the code with the template
-        String completeCode = String.format(codeTemplate, mainCode, methodsCode);
+        String completeCode = String.format(codeTemplate, code);
         log.info("Executing code:\n {}", completeCode);
 
         try {
@@ -88,19 +76,5 @@ public class CompileExecuterFilter implements Filter {
         } finally {
             javaSandboxContainer.stopContainer(sandboxContainer);
         }
-    }
-
-    private String[] splitCodeIntoMainAndMethods(String code) {
-
-        int mainEndIndex = code.indexOf("}") + 1;
-        String mainCode = code.substring(0, mainEndIndex);
-        String methodsCode = code.substring(mainEndIndex).trim();
-        return new String[]{mainCode, methodsCode};
-    }
-
-
-    @Override
-    public void setNext(Filter next) {
-        this.next = next;
     }
 }

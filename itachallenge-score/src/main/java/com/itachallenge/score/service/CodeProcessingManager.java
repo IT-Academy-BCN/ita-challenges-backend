@@ -1,25 +1,28 @@
-package com.itachallenge.score.sandbox;
+package com.itachallenge.score.service;
 
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
-import com.itachallenge.score.sandbox.sandbox_filter.Filter;
+import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.sandbox.CompileExecuter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class CodeExecutionManager {
+
+@Service
+public class CodeProcessingManager {
 
     @Qualifier("createFilterChain") // Specify the bean to be injected
     private final Filter filterChain;
 
-    private final JavaSandboxContainer javaSandboxContainer;
+    @Autowired
+    CompileExecuter compileExecuter;
 
-    public CodeExecutionManager(@Qualifier("createFilterChain") Filter filterChain, JavaSandboxContainer javaSandboxContainer) {
+
+    public CodeProcessingManager(@Qualifier("createFilterChain") Filter filterChain) {
         this.filterChain = filterChain;
-        this.javaSandboxContainer = javaSandboxContainer;
     }
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
@@ -27,8 +30,12 @@ public class CodeExecutionManager {
         String sourceCode = scoreRequest.getSolutionText();
         String resultExpected = "5432"; // TODO: Change to dynamic result from the challenge UUID
 
-        ExecutionResultDto executionResultDto = filterChain.apply(sourceCode, resultExpected);
+        ExecutionResultDto executionResultDto = filterChain.apply(sourceCode);
 
+        if (executionResultDto.isPassedAllFilters()) {
+            executionResultDto = compileExecuter.executeCode(sourceCode);
+        }
+        
         ScoreResponse scoreResponse = new ScoreResponse();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
@@ -38,8 +45,8 @@ public class CodeExecutionManager {
         int score = calculateScore(executionResultDto, resultExpected);
         scoreResponse.setScore(score);
 
-        javaSandboxContainer.stopContainer();
         return ResponseEntity.ok(scoreResponse);
+
     }
 
     public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {

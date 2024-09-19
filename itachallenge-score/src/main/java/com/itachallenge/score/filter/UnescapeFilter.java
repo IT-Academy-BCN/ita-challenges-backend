@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
 
@@ -7,12 +7,12 @@ public class UnescapeFilter implements Filter {
     private Filter next;
 
     @Override
-    public ExecutionResultDto apply(String input, String resultExpected) {
+    public ExecutionResultDto apply(String input) {
         String code = UnescapeJava.unescapeJavaCode(input);
 
         // Go to the next filter
         if (next != null) {
-            return next.apply(code, resultExpected);
+            return next.apply(code);
         }
 
 

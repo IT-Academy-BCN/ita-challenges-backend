@@ -1,7 +1,11 @@
 package com.itachallenge.score.sandbox.sandbox_filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
+import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.filter.FilterChainSetup;
+import com.itachallenge.score.filter.UnescapeFilter;
+import com.itachallenge.score.sandbox.CompileExecuter;
+import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
@@ -14,15 +18,15 @@ import static org.mockito.Mockito.when;
 class FilterChainSetupTest {
 
     private FilterChainSetup filterChainSetup;
-    private JavaContainerFilter javaContainerFilter;
-    private CompileExecuterFilter compileExecuterFilter;
+    private JavaContainer javaContainer;
+    private CompileExecuter compileExecuter;
     private JavaSandboxContainer javaSandboxContainer;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        javaContainerFilter = mock(JavaContainerFilter.class);
-        compileExecuterFilter = mock(CompileExecuterFilter.class);
+        javaContainer = mock(JavaContainer.class);
+        compileExecuter = mock(CompileExecuter.class);
         javaSandboxContainer = mock(JavaSandboxContainer.class);
 
         filterChainSetup = new FilterChainSetup();
@@ -30,13 +34,13 @@ class FilterChainSetupTest {
 
     @Test
     void testCreateFilterChain() {
-        Filter filter = filterChainSetup.createFilterChain(javaContainerFilter, compileExecuterFilter, javaSandboxContainer);
+        Filter filter = filterChainSetup.createFilterChain(javaContainer, compileExecuter, javaSandboxContainer);
 
         assertNotNull(filter, "The filter chain should not be null");
         assertTrue(filter instanceof UnescapeFilter, "The first filter should be an UnescapeFilter");
 
         // Mock the behavior of the filters
-        when(javaContainerFilter.apply("step1", "step2")).thenReturn(new ExecutionResultDto(true, "step3"));
+        when(javaContainer.apply("step1", "step2")).thenReturn(new ExecutionResultDto(true, "step3"));
 
 
         // Apply the filter chain to verify the order

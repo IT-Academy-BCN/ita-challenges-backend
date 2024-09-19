@@ -3,8 +3,8 @@ package com.itachallenge.score.sandbox;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
-import com.itachallenge.score.sandbox.sandbox_filter.Filter;
+import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class CodeExecutionManagerTest {
+class CodeProcessingManagerTest {
 
     @Mock
     private Filter filterChain;
@@ -29,7 +29,7 @@ class CodeExecutionManagerTest {
     private JavaSandboxContainer javaSandboxContainer;
 
     @InjectMocks
-    private CodeExecutionManager codeExecutionManager;
+    private CodeProcessingManager codeProcessingManager;
 
     @BeforeEach
     void setUp() {
@@ -52,7 +52,7 @@ class CodeExecutionManagerTest {
 
         when(filterChain.apply(any(String.class), any(String.class))).thenReturn(executionResultDto);
 
-        ResponseEntity<ScoreResponse> responseEntity = codeExecutionManager.processCode(scoreRequest);
+        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
@@ -75,7 +75,7 @@ class CodeExecutionManagerTest {
 
         when(filterChain.apply(any(String.class), any(String.class))).thenReturn(executionResultDto);
 
-        ResponseEntity<ScoreResponse> responseEntity = codeExecutionManager.processCode(scoreRequest);
+        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());

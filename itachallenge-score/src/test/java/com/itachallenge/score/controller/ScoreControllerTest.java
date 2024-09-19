@@ -2,7 +2,7 @@ package com.itachallenge.score.controller;
 
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.sandbox.CodeExecutionManager;
+import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class ScoreControllerTest {
 
     @MockBean
-    private CodeExecutionManager codeExecutionManager;
+    private CodeProcessingManager codeProcessingManager;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -44,7 +44,7 @@ class ScoreControllerTest {
         mockScoreResponse.setSolutionText("Example text");
         mockScoreResponse.setScore(99);
 
-        when(codeExecutionManager.processCode(any(ScoreRequest.class)))
+        when(codeProcessingManager.processCode(any(ScoreRequest.class)))
                 .thenReturn(ResponseEntity.ok(mockScoreResponse));
     }
 

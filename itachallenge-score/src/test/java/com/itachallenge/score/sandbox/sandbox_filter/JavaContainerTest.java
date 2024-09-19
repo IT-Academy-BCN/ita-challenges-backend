@@ -1,6 +1,7 @@
 package com.itachallenge.score.sandbox.sandbox_filter;
 
-import com.itachallenge.score.sandbox.sandbox_container.JavaSandboxContainer;
+import com.itachallenge.score.filter.Filter;
+import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,10 +13,10 @@ import org.slf4j.LoggerFactory;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
-class JavaContainerFilterTest {
+class JavaContainerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(JavaContainerFilterTest.class);
-    private JavaContainerFilter javaContainerFilter;
+    private static final Logger log = LoggerFactory.getLogger(JavaContainerTest.class);
+    private JavaContainer javaContainer;
     private JavaSandboxContainer javaSandboxContainer;
     private Filter nextFilter;
 
@@ -23,9 +24,9 @@ class JavaContainerFilterTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         javaSandboxContainer = mock(JavaSandboxContainer.class);
-        javaContainerFilter = new JavaContainerFilter(javaSandboxContainer);
+        javaContainer = new JavaContainer(javaSandboxContainer);
         nextFilter = mock(Filter.class);
-        javaContainerFilter.setNext(nextFilter);
+        javaContainer.setNext(nextFilter);
     }
 
     @DisplayName("Test apply - Code contains only valid characters, next filter should be called")
@@ -35,7 +36,7 @@ class JavaContainerFilterTest {
         String expectedCode = "Hello, World!";
         when(nextFilter.apply(validCode, expectedCode)).thenReturn(new ExecutionResultDto());
 
-        ExecutionResultDto result = javaContainerFilter.apply(validCode, expectedCode);
+        ExecutionResultDto result = javaContainer.apply(validCode, expectedCode);
         log.info("Result: {}", result);
 
         // Verify that the next filter was called
@@ -55,7 +56,7 @@ class JavaContainerFilterTest {
         // Mock the container to throw an exception when startContainer is called
         doThrow(new RuntimeException("Container start failed")).when(javaSandboxContainer).startContainer();
 
-        ExecutionResultDto result = javaContainerFilter.apply(validCode, "expectedCode");
+        ExecutionResultDto result = javaContainer.apply(validCode, "expectedCode");
 
         // Verify that the result indicates failure
         assertTrue(result.getMessage().contains("Error starting sandbox container"), "Error message should indicate container start failure");

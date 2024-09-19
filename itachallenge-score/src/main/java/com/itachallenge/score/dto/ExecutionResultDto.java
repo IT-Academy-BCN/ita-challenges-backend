@@ -17,6 +17,7 @@ public class ExecutionResultDto {
     private boolean compiled;
     private boolean execution;
     private boolean resultCodeMatch;
+    private boolean passedAllFilters;
     private String message;
 
     @JsonCreator
