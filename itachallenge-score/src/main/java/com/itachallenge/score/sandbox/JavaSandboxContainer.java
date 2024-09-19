@@ -51,13 +51,6 @@ public class JavaSandboxContainer implements DockerContainerHelper {
 
 
     @Override
-    public void stopContainer(GenericContainer<?> container) {
-        if (container.isRunning()) {
-            container.stop();
-            log.info("Container stopped");
-        }
-    }
-
     public void startContainer() {
         if (!javaContainer.isRunning()) {
             javaContainer.start();
@@ -67,6 +60,7 @@ public class JavaSandboxContainer implements DockerContainerHelper {
         }
     }
 
+    @Override
     public void stopContainer() {
         if (javaContainer.isRunning()) {
             javaContainer.stop();

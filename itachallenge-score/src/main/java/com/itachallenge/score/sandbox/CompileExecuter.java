@@ -74,7 +74,7 @@ public class CompileExecuter {
             return executionResultDto;
 
         } finally {
-            javaSandboxContainer.stopContainer(sandboxContainer);
+            javaSandboxContainer.stopContainer();
         }
     }
 }

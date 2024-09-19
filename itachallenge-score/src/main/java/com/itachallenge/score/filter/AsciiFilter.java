@@ -17,24 +17,25 @@ public class AsciiFilter implements Filter {
     private Filter next;
 
     public AsciiFilter() {
-
         allowedChars.set(0, ASCII_SIZE);
         addSpecialChars();
     }
 
     @Override
     public ExecutionResultDto apply(String code) {
+        ExecutionResultDto executionResultDto = new ExecutionResultDto();
+        if (code == null || code.isEmpty()) {
+            executionResultDto.setCompiled(false);
+            executionResultDto.setMessage("Code is empty");
+            return executionResultDto;
+        }
 
         for (int i = 0; i < code.length(); i++) {
-            char currentChar = code.charAt(i);
-            if (!isValidChar(currentChar)) {
-                String errorMessage = String.format("ASCII FILTER ERROR: Invalid character '%s' in code", currentChar);
-                log.error(errorMessage);
-
-                ExecutionResultDto executionResultDto = new ExecutionResultDto();
+            char c = code.charAt(i);
+            if (!isValidChar(c)) {
+                log.error("ASCII FILTER ERROR: Invalid character '{}' at index {} in code", c, i);
                 executionResultDto.setCompiled(false);
-                executionResultDto.setExecution(false);
-                executionResultDto.setMessage(errorMessage);
+                executionResultDto.setMessage("ASCII FILTER ERROR: Invalid character '" + c + "' at index " + i + " in code");
                 return executionResultDto;
             }
         }
@@ -43,8 +44,9 @@ public class AsciiFilter implements Filter {
             return next.apply(code);
         }
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setPassedAllFilters(true);
+        executionResultDto.setCompiled(true);
+        executionResultDto.setExecution(true);
+        executionResultDto.setMessage("Code passed ASCII filter");
         return executionResultDto;
     }
 
@@ -58,14 +60,12 @@ public class AsciiFilter implements Filter {
     }
 
     private void addSpecialChars() {
-
         allowedChars.set('á');
         allowedChars.set('é');
         allowedChars.set('í');
         allowedChars.set('ó');
         allowedChars.set('ú');
         allowedChars.set('ñ');
-
         allowedChars.set('Á');
         allowedChars.set('É');
         allowedChars.set('Í');
