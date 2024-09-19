@@ -16,4 +16,7 @@ public class ScoreResponseDto {
 
     @JsonProperty(value="score", index = 0)
     private Integer score;
+
+    @JsonProperty(value="errors", index = 1)
+    private Integer errors;
 }

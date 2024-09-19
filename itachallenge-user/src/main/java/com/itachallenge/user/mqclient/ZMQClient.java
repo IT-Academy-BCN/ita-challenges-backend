@@ -31,17 +31,18 @@ public class ZMQClient {
         this.SOCKET_ADDRESS = socketAddress;
     }
 
-    public CompletableFuture<Object> sendMessage(Object message, Class clazz){
+    public CompletableFuture<Object> sendMessage(Object message, Class clazz) {
 
-        CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
+        return CompletableFuture.supplyAsync(() -> {
 
-            ZContext context = new ZContext();
-            ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+            ZContext context1 = new ZContext();
+            ZMQ.Socket socket = context1.createSocket(ZMQ.REQ);
+
             socket.connect(SOCKET_ADDRESS);
 
             Optional<byte[]> request = Optional.empty();
             try {
-                request = Optional.of(objectSerializer.serialize(message));
+                request = Optional.of(ObjectSerializer.serialize(message));
             }catch (JsonProcessingException jpe){
                 log.error(jpe.getMessage());
             }
@@ -50,13 +51,12 @@ public class ZMQClient {
             byte[] reply = socket.recv(0);
             Optional<Object> response = Optional.empty();
             try {
-                response = Optional.of(objectSerializer.deserialize(reply, clazz));
+                response = Optional.of(ObjectSerializer.deserialize(reply, clazz));
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
             return response.orElse(null);
 
         }, executorService);
-        return future;
     }
 }

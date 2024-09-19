@@ -10,20 +10,9 @@ import reactor.core.publisher.Flux;
 @Component
 public class ConverterDocumentToDto {
 
-    public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserSolutionDocument> just) {
-        return just.map(this::toUserScoreDto);
+    public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserScoreDocument> just) {
+        return just.map(this::fromUserScoreDocumentToUserScoreDto);
     }
-
-   /* private UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
-        return UserScoreDto.builder()
-                .challengeId(userScoreDocument.getChallengeId())
-                .languageID(userScoreDocument.getLanguageId())
-                .userId(userScoreDocument.getUserId())
-                .solutions(userScoreDocument.getSolutionDocument())
-                .build();
-    }
-}*/
-
 
     public UserScoreDto fromUserScoreDocumentToUserScoreDto(UserSolutionDocument userSolutionDocument) {
         return UserScoreDto.builder()
@@ -32,15 +21,6 @@ public class ConverterDocumentToDto {
                 .userId(userSolutionDocument.getUserId())
                 .solutions(userSolutionDocument.getSolutionDocument())
                 .build();
-    }
-
-    private UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
-    return UserScoreDto.builder()
-            .challengeId(userScoreDocument.getChallengeId())
-            .languageID(userScoreDocument.getLanguageId())
-            .userId(userScoreDocument.getUserId())
-            .solutions(userScoreDocument.getSolutionDocument())
-            .build();
     }
 
     public Flux<UserSolutionDto> fromUserSolutionDocumentToUserSolutionDto(UserSolutionDocument document) {

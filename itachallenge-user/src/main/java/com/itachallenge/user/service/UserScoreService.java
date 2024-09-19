@@ -7,18 +7,21 @@ import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-
-// nueva clase
+@Service
 public class UserScoreService implements IUserScoreService{
-    @Autowired
-    private IUserSolutionRepository userSolutionRepository;
-    @Autowired
-    private ConverterDocumentToDto converter;
 
+    private final IUserSolutionRepository userSolutionRepository;
+    private final ConverterDocumentToDto converter;
+
+    public UserScoreService(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
+        this.userSolutionRepository = userSolutionRepository;
+        this.converter = converter;
+    }
 
 
 /*
