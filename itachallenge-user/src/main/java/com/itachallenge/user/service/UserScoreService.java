@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
+
+// nueva clase
 public class UserScoreService implements IUserScoreService{
     @Autowired
     private IUserSolutionRepository userSolutionRepository;
@@ -24,7 +26,7 @@ public class UserScoreService implements IUserScoreService{
         SolutionScoreDto dto = new SolutionScoreDto();
         dto.setChallengeId(UUID.fromString(solution.getChallengeId().toString()));
         dto.setLanguageId(UUID.fromString(solution.getLanguageId().toString()));
-        dto.setSolutionText(solution.getSolutionDocument().get(0).getSolutionText());
+       // dto.setSolutionText(solution.getSolutionDocument().get(0).getSolutionText());
         dto.setScore(solution.getScore());
         return dto;
     }
