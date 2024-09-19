@@ -179,4 +179,49 @@ class CodeProcessingManagerTest {
         assertEquals(50, responseEntity.getBody().getScore());
         assertEquals("Code compiled and executed, but result doesn't match: [9, 5, 4, 3, 1, 1]", responseEntity.getBody().getCompilation_Message());
     }
+    @DisplayName("Test filterChain passes all filters")
+    @Test
+    void testFilterChainPassesAllFilters() {
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                codeToCompile
+        );
+
+        ExecutionResultDto executionResultDto = new ExecutionResultDto();
+        executionResultDto.setPassedAllFilters(true);
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
+
+        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        log.info("Response entity: {}", responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(100, responseEntity.getBody().getScore());
+        assertEquals("Code compiled and executed, and result match: 5432", responseEntity.getBody().getCompilation_Message());
+    }
+
+
+    @DisplayName("Test filterChain fails a filter")
+    @Test
+    void testFilterChainFailsFilter() {
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                codeToCompile
+        );
+
+        ExecutionResultDto executionResultDto = new ExecutionResultDto();
+        executionResultDto.setPassedAllFilters(false);
+        executionResultDto.setMessage("Filter failed");
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
+
+        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        log.info("Response entity: {}", responseEntity);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(0, responseEntity.getBody().getScore());
+        assertEquals("Filter error: Filter failed", responseEntity.getBody().getCompilation_Message());
+    }
 }

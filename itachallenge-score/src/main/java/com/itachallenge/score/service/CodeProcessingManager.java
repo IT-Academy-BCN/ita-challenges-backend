@@ -30,7 +30,9 @@ public class CodeProcessingManager {
 
         ExecutionResultDto executionResultDto = filterChain.apply(sourceCode);
 
-        if (executionResultDto.isPassedAllFilters()) {
+        if (!executionResultDto.isPassedAllFilters()) {
+            executionResultDto.setMessage("Filter error: " + executionResultDto.getMessage());
+        } else if (executionResultDto.isPassedAllFilters()) {
             executionResultDto = compileExecuter.executeCode(sourceCode);
         }
 
@@ -46,24 +48,27 @@ public class CodeProcessingManager {
         return ResponseEntity.ok(scoreResponse);
     }
 
-public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
-    if (!executionResultDto.isCompiled()) {
-        executionResultDto.setMessage("Compilation error: " + executionResultDto.getMessage());
-        return 0;
+    public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
+        if (!executionResultDto.isCompiled()) {
+            if (!executionResultDto.getMessage().startsWith("Filter error:")) {
+                executionResultDto.setMessage("Compilation error: " + executionResultDto.getMessage());
+            }
+            return 0;
+        }
+        if (!executionResultDto.isExecution()) {
+            executionResultDto.setMessage("Execution error: " + executionResultDto.getMessage());
+            return 25;
+        }
+        if (executionResultDto.getMessage().equals(resultExpected)) {
+            executionResultDto.setMessage("Code compiled and executed, and result match: " + executionResultDto.getMessage());
+            return 100;
+        }
+        if (executionResultDto.getMessage().contains(resultExpected)) {
+            executionResultDto.setMessage("Code compiled and executed, and result partially match: " + executionResultDto.getMessage());
+            return 75;
+        }
+        executionResultDto.setMessage("Code compiled and executed, but result doesn't match: " + executionResultDto.getMessage());
+        return 50;
     }
-    if (!executionResultDto.isExecution()) {
-        executionResultDto.setMessage("Execution error: " + executionResultDto.getMessage());
-        return 25;
-    }
-    if (executionResultDto.getMessage().equals(resultExpected)) {
-        executionResultDto.setMessage("Code compiled and executed, and result match: " + executionResultDto.getMessage());
-        return 100;
-    }
-    if (executionResultDto.getMessage().contains(resultExpected)) {
-        executionResultDto.setMessage("Code compiled and executed, and result partially match: " + executionResultDto.getMessage());
-        return 75;
-    }
-    executionResultDto.setMessage("Code compiled and executed, but result doesn't match: " + executionResultDto.getMessage());
-    return 50;
-}
+
 }
