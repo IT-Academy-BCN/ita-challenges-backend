@@ -10,23 +10,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class CodeProcessingManager {
 
     @Qualifier("createFilterChain") // Specify the bean to be injected
     private final Filter filterChain;
 
+    private final CompileExecuter compileExecuter;
+
     @Autowired
-    CompileExecuter compileExecuter;
-
-
-    public CodeProcessingManager(@Qualifier("createFilterChain") Filter filterChain) {
+    public CodeProcessingManager(@Qualifier("createFilterChain") Filter filterChain, CompileExecuter compileExecuter) {
         this.filterChain = filterChain;
+        this.compileExecuter = compileExecuter;
     }
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
-
         String sourceCode = scoreRequest.getSolutionText();
         String resultExpected = "5432"; // TODO: Change to dynamic result from the challenge UUID
 
@@ -46,11 +44,9 @@ public class CodeProcessingManager {
         scoreResponse.setScore(score);
 
         return ResponseEntity.ok(scoreResponse);
-
     }
 
-    public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
-
+public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
     if (!executionResultDto.isCompiled()) {
         executionResultDto.setMessage("Compilation error: " + executionResultDto.getMessage());
         return 0;

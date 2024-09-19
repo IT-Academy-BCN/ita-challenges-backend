@@ -1,9 +1,6 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.filter.Filter;
-import com.itachallenge.score.filter.FilterChainSetup;
-import com.itachallenge.score.filter.UnescapeFilter;
 import com.itachallenge.score.sandbox.CompileExecuter;
 import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +10,6 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class FilterChainSetupTest {
 
@@ -32,19 +28,16 @@ class FilterChainSetupTest {
 
     @Test
     void testCreateFilterChain() {
-        Filter filter = filterChainSetup.createFilterChain( compileExecuter, javaSandboxContainer);
+        Filter filter = filterChainSetup.createFilterChain();
 
         assertNotNull(filter, "The filter chain should not be null");
         assertTrue(filter instanceof UnescapeFilter, "The first filter should be an UnescapeFilter");
-
-        // Mock the behavior of the filters
-        when(javaContainer.apply("step1", "step2")).thenReturn(new ExecutionResultDto(true, "step3"));
 
 
         // Apply the filter chain to verify the order
         String inputCode = "step1";
 
-        ExecutionResultDto result = filter.apply(inputCode, "step2");
+        ExecutionResultDto result = filter.apply(inputCode);
 
         // Verify that the result is not null
         assertNotNull(result, "The result should not be null");

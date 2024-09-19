@@ -1,9 +1,7 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.sandbox.CompileExecuter;
 import com.itachallenge.score.service.CodeProcessingManager;
-import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class CompileExecutionFilterTest {
+public class CompileExecuterTest {
 
     @Autowired
     private CompileExecuter compileExecuter;
@@ -28,7 +26,7 @@ public class CompileExecutionFilterTest {
         String sourceCode = "System.out.println(\"Hello, World!\");\n";
         String codeResult = "Hello, World!";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
@@ -40,7 +38,7 @@ public class CompileExecutionFilterTest {
         String sourceCode = "System.out.println(\"Bad Hello, World!\");\n";
         String codeResult = "Hello, World!";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
@@ -52,7 +50,7 @@ public class CompileExecutionFilterTest {
         String sourceCode = "System.out.println(\"Hello, World!\")\n";  // Missing semicolon
         String codeResult = "Hello, World!";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         Assertions.assertFalse(resultDto.isCompiled());
         assertTrue(resultDto.getMessage().startsWith("Compiled error:"));
@@ -67,7 +65,7 @@ public class CompileExecutionFilterTest {
                 """;
         String codeResult = "Hello, World!";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
@@ -82,7 +80,7 @@ public class CompileExecutionFilterTest {
                 """;
         String codeResult = "5";  // Expected result
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
@@ -97,7 +95,7 @@ public class CompileExecutionFilterTest {
                 """;
         String codeResult = "5";  // Expected result
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
@@ -133,7 +131,7 @@ public class CompileExecutionFilterTest {
 
         String codeResult = "1 2 3 4 5 ";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         System.out.println(resultDto.getMessage());
         assertTrue(resultDto.isCompiled(), "Código no compilado correctamente.");
@@ -157,7 +155,7 @@ public class CompileExecutionFilterTest {
                 """;
         String codeResult = "1 2 3 4 5 ";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
@@ -168,7 +166,7 @@ public class CompileExecutionFilterTest {
         String sourceCode = "System.out.println(\"Hello, World!\");\n";
         String codeResult = "1 2 3 4 5 ";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
@@ -180,7 +178,7 @@ public class CompileExecutionFilterTest {
         String sourceCode = "while(true) {}";
         String codeResult = "Hello, World!\n";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
         assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
         assertTrue(resultDto.getMessage().startsWith("Execution failed: Code execution timed out"));
@@ -189,6 +187,7 @@ public class CompileExecutionFilterTest {
     @Test
     void sortingCodeTest() {
         String sourceCode = """
+                
                 int number = Integer.parseInt(args[0]);
                 String numberStr = Integer.toString(number);
                 List<Character> chars = new ArrayList<>();
@@ -204,7 +203,7 @@ public class CompileExecutionFilterTest {
                 """;
         String codeResult = "1234";
 
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode, codeResult);
+        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());

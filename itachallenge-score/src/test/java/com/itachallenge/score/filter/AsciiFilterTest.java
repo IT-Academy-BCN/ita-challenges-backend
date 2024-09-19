@@ -1,8 +1,6 @@
-package com.itachallenge.score.sandbox.sandbox_filter;
+package com.itachallenge.score.filter;
 
 import com.itachallenge.score.dto.ExecutionResultDto;
-import com.itachallenge.score.filter.AsciiFilter;
-import com.itachallenge.score.filter.Filter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +41,7 @@ class AsciiFilterTest {
         MockFilter nextFilter = new MockFilter();
         filter.setNext(nextFilter);
 
-        ExecutionResultDto result = filter.apply(asciiValid, null);
+        ExecutionResultDto result = filter.apply(asciiValid);
 
         // Verify that the result indicates success and the next filter was called
         assertEquals(asciiValid, MockFilter.lastInput, "The ASCII string should pass through the filter unchanged");
@@ -57,21 +55,21 @@ class AsciiFilterTest {
         Filter nextFilter = mock(Filter.class);
         filter.setNext(nextFilter);
 
-        ExecutionResultDto result = filter.apply(asciiInvalid, null);
+        ExecutionResultDto result = filter.apply(asciiInvalid);
 
         String expectedMessage = "Invalid character 'β' in code";
         assertEquals(expectedMessage, result.getMessage(), "The result should contain the expected error message");
         assertEquals(false, result.isCompiled(), "The result should indicate that the code did not compile");
 
         // Verify that the next filter was not called
-        verify(nextFilter, never()).apply(anyString(), anyString());
+        verify(nextFilter, never()).apply(anyString());
     }
 
     static class MockFilter implements Filter {
         static String lastInput;
 
         @Override
-        public ExecutionResultDto apply(String input, String codeExpected) {
+        public ExecutionResultDto apply(String input) {
             lastInput = input;
             ExecutionResultDto result = new ExecutionResultDto();
             result.setCompiled(true);

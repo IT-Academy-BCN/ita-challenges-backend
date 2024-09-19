@@ -1,7 +1,5 @@
-package com.itachallenge.score.sandbox.sandbox_container;
+package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.sandbox.CustomClassLoader;
-import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import org.junit.jupiter.api.Test;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
