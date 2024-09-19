@@ -185,7 +185,7 @@ class ChallengeIntegrationTest {
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class)
                 .contains(new ChallengeDto[]{})
-                .hasSize(2);
+                .hasSize(1);
     }
 
     @Test

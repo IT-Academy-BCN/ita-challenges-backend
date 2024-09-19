@@ -1,7 +1,7 @@
 spring:
   application:
     name: itachallenge-challenge
-    version: 1.2.0-RELEASE
+    version: 2.0.2-RELEASE
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
@@ -39,7 +39,7 @@ logging:
   level:
     root: INFO
     "[org.springframework]": ERROR
-    "[com.businessassistantbcn]": INFO
+    "[com.itachallenge]": INFO
   pattern:
     # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"

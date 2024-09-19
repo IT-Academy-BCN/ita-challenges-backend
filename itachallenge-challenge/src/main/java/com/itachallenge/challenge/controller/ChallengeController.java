@@ -175,17 +175,17 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
 
             })
-    public Flux<ChallengeDto> getAllChallenges
-            (@RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
-             @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
-                     limit) {
-        return challengeService.getAllChallenges((Integer.parseInt(offset)), Integer.parseInt(limit));
+
+    public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(
+            @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
+            @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
+        return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
     @GetMapping("/challenges/")
     @Operation(
-            operationId = "Get only the challenges on a page.",
-            summary = "Get to see challenges on a page and their levels, details and their available languages.",
+            operationId = "Get challenges on a page by language and difficulty, language or difficulty.",
+            summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
@@ -193,10 +193,13 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters"),
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageAndDifficulty
-            (@RequestParam @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage,
-             @RequestParam @ValidGenericPattern(pattern = STRING_PATTERN, message = INVALID_PARAM) String difficulty) {
-        return challengeService.getChallengesByLanguageAndDifficulty(idLanguage, difficulty);
+
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
+            @RequestParam Optional<String> idLanguage,
+            @RequestParam Optional<String> level,
+            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
+            @RequestParam(defaultValue = "-1") int limit) {
+        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
     }
 
     @GetMapping("/language")
@@ -223,11 +226,12 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge,
-                                                            @PathVariable("idLanguage") String idLanguage) {
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
+                                                                    idChallenge, @PathVariable("idLanguage") String idLanguage) {
         return challengeService.getSolutions(idChallenge, idLanguage);
 
     }
+
     @PostMapping("/solution")
     @Operation(
             operationId = "Add solution to a chosen chosen challenge.",

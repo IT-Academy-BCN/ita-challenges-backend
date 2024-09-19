@@ -19,8 +19,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.util.*;
 
@@ -177,6 +175,20 @@ class GlobalExceptionHandlerTest {
                     assertEquals(OK_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Resource not found"));
+    }
+
+    @Test
+    void testHandleNotFoundException() {
+        // Arrange
+        NotFoundException notFoundException = new NotFoundException("Whatever not found");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleNotFoundException(notFoundException);
+
+        // Assert
+        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Whatever not found"));
     }
 
     @Test
