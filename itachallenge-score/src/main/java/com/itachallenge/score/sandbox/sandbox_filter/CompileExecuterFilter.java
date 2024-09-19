@@ -35,8 +35,13 @@ public class CompileExecuterFilter implements Filter {
             javaSandboxContainer.startContainer();
         }
 
+        // Split the code into main and methods
+        String[] parts = splitCodeIntoMainAndMethods(code);
+        String mainCode = parts[0];
+        String methodsCode = parts.length > 1 ? parts[1] : "";
 
-        String completeCode = String.format(codeTemplate, code);
+        // Complete the code with the template
+        String completeCode = String.format(codeTemplate, mainCode, methodsCode);
         log.info("Executing code:\n {}", completeCode);
 
         try {
@@ -48,7 +53,6 @@ public class CompileExecuterFilter implements Filter {
 
             ExecutionResultDto executionResultDto = new ExecutionResultDto();
 
-
             if (compileResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(false);
                 executionResultDto.setExecution(false);
@@ -56,10 +60,9 @@ public class CompileExecuterFilter implements Filter {
                 return executionResultDto;
             }
 
-            // If the code is compiled, execute it
+            // Execute the code
             String runCommand = "java -cp /app Main";
             Container.ExecResult execResult = sandboxContainer.execInContainer("sh", "-c", runCommand);
-
 
             if (execResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(true);
@@ -85,6 +88,14 @@ public class CompileExecuterFilter implements Filter {
         } finally {
             javaSandboxContainer.stopContainer(sandboxContainer);
         }
+    }
+
+    private String[] splitCodeIntoMainAndMethods(String code) {
+
+        int mainEndIndex = code.indexOf("}") + 1;
+        String mainCode = code.substring(0, mainEndIndex);
+        String methodsCode = code.substring(mainEndIndex).trim();
+        return new String[]{mainCode, methodsCode};
     }
 
 

@@ -3,9 +3,11 @@ package com.itachallenge.score.sandbox.sandbox_filter;
 import com.itachallenge.score.dto.ExecutionResultDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.util.BitSet;
 
+@Component
 public class AsciiFilter implements Filter {
 
     private static final int ASCII_SIZE = 128;
