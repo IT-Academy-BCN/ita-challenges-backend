@@ -7,7 +7,7 @@ import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
+import com.itachallenge.challenge.exception.NotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
@@ -172,7 +172,7 @@ class ChallengeServiceImpTest {
 
         // Assert
         StepVerifier.create(result)
-                .expectError(ResourceNotFoundException.class)
+                .expectError(NotFoundException.class)
                 .verify();
 
         verify(challengeRepository).findAllByResourcesContaining(resourceId);

@@ -13,8 +13,6 @@ import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.exception.LanguageNotFoundException;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -86,7 +84,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .hasElements()
                             .flatMap(result -> {
                                 if (Boolean.FALSE.equals(result)) {
-                                    return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found"));
+                                    return Mono.error(new NotFoundException("Resource with id " + resourceId + " not found"));
                                 }
 
                                 return challengesToUpdate
@@ -185,7 +183,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
                     return languageRepository.findByIdLanguage(languageId)
-                            .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
@@ -215,7 +213,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
 
                     return languageRepository.findByIdLanguage(languageId)
-                            .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
+                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMap(challenge -> {
@@ -297,7 +295,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                                 return response;
                                             });
                                 } else {
-                                    return Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId)));
+                                    return Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId)));
                                 }
                             });
                 });

@@ -164,20 +164,6 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleResourceNotFoundException() {
-        // Arrange
-        ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
-
-        // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
-
-        // Assert
-                    assertEquals(OK_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Resource not found"));
-    }
-
-    @Test
     void testHandleNotFoundException() {
         // Arrange
         NotFoundException notFoundException = new NotFoundException("Whatever not found");

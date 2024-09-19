@@ -3,7 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
+import com.itachallenge.challenge.exception.NotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
@@ -134,7 +134,7 @@ class ChallengeControllerTest {
         String resourceId = "invalidResourceId";
 
         when(challengeService.removeResourcesByUuid(resourceId))
-                .thenReturn(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found")));
+                .thenReturn(Mono.error(new NotFoundException("Resource with id " + resourceId + " not found")));
 
         // Act & Assert
         webTestClient.patch()
