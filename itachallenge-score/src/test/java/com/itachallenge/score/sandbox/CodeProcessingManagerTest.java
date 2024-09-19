@@ -56,7 +56,7 @@ class CodeProcessingManagerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
-        assertEquals("5432", responseEntity.getBody().getCompilationMessage());
+        assertEquals("5432", responseEntity.getBody().getCompilation_Message());
         verify(javaSandboxContainer, times(1)).stopContainer();
     }
 
@@ -79,7 +79,7 @@ class CodeProcessingManagerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
-        assertEquals("Compilation failed", responseEntity.getBody().getCompilationMessage());
+        assertEquals("Compilation failed", responseEntity.getBody().getCompilation_Message());
         verify(javaSandboxContainer, times(1)).stopContainer();
     }
 }

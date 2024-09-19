@@ -44,7 +44,7 @@ public class CompileExecuter {
             if (compileResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(false);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Compiled error: \n" + compileResult.getStderr().trim());
+                executionResultDto.setMessage(compileResult.getStderr().trim());
                 return executionResultDto;
             }
 
@@ -55,7 +55,7 @@ public class CompileExecuter {
             if (execResult.getExitCode() != 0) {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(false);
-                executionResultDto.setMessage("Execution error: " + execResult.getStderr().trim());
+                executionResultDto.setMessage(execResult.getStderr().trim());
             } else {
                 executionResultDto.setCompiled(true);
                 executionResultDto.setExecution(true);

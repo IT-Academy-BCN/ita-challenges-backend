@@ -18,14 +18,12 @@ import static org.mockito.Mockito.when;
 class FilterChainSetupTest {
 
     private FilterChainSetup filterChainSetup;
-    private JavaContainer javaContainer;
     private CompileExecuter compileExecuter;
     private JavaSandboxContainer javaSandboxContainer;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        javaContainer = mock(JavaContainer.class);
         compileExecuter = mock(CompileExecuter.class);
         javaSandboxContainer = mock(JavaSandboxContainer.class);
 
@@ -34,7 +32,7 @@ class FilterChainSetupTest {
 
     @Test
     void testCreateFilterChain() {
-        Filter filter = filterChainSetup.createFilterChain(javaContainer, compileExecuter, javaSandboxContainer);
+        Filter filter = filterChainSetup.createFilterChain( compileExecuter, javaSandboxContainer);
 
         assertNotNull(filter, "The filter chain should not be null");
         assertTrue(filter instanceof UnescapeFilter, "The first filter should be an UnescapeFilter");
