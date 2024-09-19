@@ -1,10 +1,15 @@
 package com.itachallenge.user.helper;
 
+import com.itachallenge.user.document.ErrorsDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserScoreDto;
+import com.itachallenge.user.dtos.UserSolScoreDto;
 import com.itachallenge.user.dtos.UserSolutionDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.stream.Collectors;
 
 
 @Component
@@ -52,4 +57,18 @@ public class ConverterDocumentToDto {
                 .solutionText(document.getSolutionDocument().get(0).getSolutionText())
                 .build());
     }
+
+    public UserSolScoreDto fromUserSolutionDocumentToUserSolScoreDto(UserSolutionDocument userSolutionDocument)
+    {
+        return UserSolScoreDto.builder()
+                .userId(userSolutionDocument.getUserId())
+                .challengeId(userSolutionDocument.getChallengeId())
+                .languageId(userSolutionDocument.getLanguageId())
+                .solutionId(userSolutionDocument.getSolutionDocument().get(0).getUuid())
+                .status(userSolutionDocument.getStatus())
+                .score(userSolutionDocument.getScore())
+                .errors(userSolutionDocument.getErrors())
+                .build();
+    }
+
 }

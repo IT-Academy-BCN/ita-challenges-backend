@@ -39,10 +39,13 @@ public class UserSolutionDocument {
     @Field("score")
     private int score;
 
-//    @Field("errors")
-//    private String errors;
+    @Field("errors")
+    private List<ErrorsDocument> errors;
 
     @Field("solution")
     private List<SolutionDocument> solutionDocument;
 
+//    public UUID getSolutionId() {
+//        return solutionDocument.isEmpty() ? null : solutionDocument.get(0).getUuid();
+//    }
 }

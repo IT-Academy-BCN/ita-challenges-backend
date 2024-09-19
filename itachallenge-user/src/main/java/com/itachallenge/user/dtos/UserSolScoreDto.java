@@ -3,9 +3,11 @@ package com.itachallenge.user.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.user.document.ErrorsDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
 import lombok.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -34,6 +36,7 @@ public class UserSolScoreDto {
     @JsonProperty(value = "score")
     private Integer score;
 
-//    @JsonProperty(value = "errors")
-//    private String errors;
+    @JsonProperty(value = "errors")
+    private List<ErrorsDocument> errors;
+
 }

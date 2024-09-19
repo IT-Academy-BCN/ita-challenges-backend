@@ -1,10 +1,7 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.user.dtos.SolutionScoreDto;
-import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;

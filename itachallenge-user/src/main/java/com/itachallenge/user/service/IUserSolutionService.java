@@ -14,11 +14,5 @@ public interface IUserSolutionService {
     Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto);
     Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked);
     Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid);
-
-//    Flux<SolutionScoreDto> getScore(String idUser, String idChallenge, String idSolution);
-//    Mono<SolutionScoreDto> getScore(String idUser, String idChallenge, String idSolution);
-
-//     Mono<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution);
-//Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution);
-Mono<Integer> getScore(String idUser, String idChallenge, String idSolution);
+    Mono<UserSolScoreDto> getScoreFromScoreMicro(String idUser, String idChallenge, String idSolution);
 }

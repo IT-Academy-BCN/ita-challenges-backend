@@ -210,7 +210,17 @@
     "bookmarked": true,
     "status": "ENDED",
     "score": 0,
-    "errors": "Example of errors found while scoring the solution.",
+    "errors": [
+      {
+        "error_description": "<identifier> expected"
+      },
+      {
+        "error_description": "Test.java:1: '{' expected"
+      },
+      {
+        "error_description": "Test.java:7: cannot find symbol"
+      }
+    ],
     "solution":[
       {
         "_id" :  {
@@ -287,7 +297,17 @@
     "bookmarked": true,
     "status": "ENDED",
     "score": 0,
-    "errors": "Example of errors found while scoring the solution.",
+    "errors": [
+      {
+        "error_description": "<identifier> expected"
+      },
+      {
+        "error_description":  "Test.java:1: cannot find symbol"
+      },
+      {
+        "error_description": "Test.java:7: '{' expected"
+      }
+    ],
     "solution":[
       {
         "_id" :  {
