@@ -55,5 +55,5 @@
 * Daniel Diaz Diaz - https://github.com/invictuzzzzz
 * Marcos Leandro Pagliaruzza - https://github.com/MarLea11
 * Joan Caballero Portolés - https://github.com/JoanCaballero
-
+* Andreia Sofia Sousa Ribeiro - https://github.com/Asousa12
 
