@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.user.enums.ChallengeStatus;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-//@Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@AllArgsConstructor//(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter

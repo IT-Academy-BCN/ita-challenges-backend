@@ -14,18 +14,29 @@ import java.util.UUID;
 public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSolutionDocument, UUID> {
 
     Mono<UserSolutionDocument> findByUuid(UUID uuid);
+
     Flux<UserSolutionDocument> findByUserId(UUID userId);
-    Flux<UserSolutionDocument> findByChallengeId(UUID challengeId);
+
+    Flux<UserSolutionDocument> findByChallengeId(UUID challengeId)
+            ;
+
     Flux<UserSolutionDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
+
     Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID userId, UUID challengeId, UUID languageId);
+
     Flux<UserSolutionDocument> findByLanguageId(UUID languageId);
+
     Flux<UserSolutionDocument> findByBookmarked(Boolean bookmarked);
+
     Flux<UserSolutionDocument> findByScore(int score);
+
     Flux<UserSolutionDocument> findByStatus(ChallengeStatus status);
+
     Flux<UserSolutionDocument> findByChallengeIdAndStatus(UUID challengeId, ChallengeStatus status);
+
     Mono<Boolean> existsByUuid(UUID uuid);
+
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
 
-//    Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndStatus(UUID userId, UUID challengeId, ChallengeStatus status);
-    Flux<UserSolutionDocument> findByUserIdAndChallengeIdAndStatus(UUID userId, UUID challengeId, ChallengeStatus status);
+    Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndStatus(UUID userId, UUID challengeId, ChallengeStatus status);
 }

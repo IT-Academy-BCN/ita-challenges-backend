@@ -1,17 +1,16 @@
 package com.itachallenge.user.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import com.itachallenge.user.enums.ChallengeStatus;
+import lombok.*;
 
-@Component
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class UserSolutionScoreDto {
 
     @JsonProperty(value ="uuid_user")
@@ -26,8 +25,13 @@ public class UserSolutionScoreDto {
     @JsonProperty(value ="solution_text")
     private String solutionText;
 
+    @JsonProperty(value = "status")
+    private ChallengeStatus status;
+
     @JsonProperty(value = "score")
     private int score;
 
+    @JsonProperty(value = "errors")
+    private String errors;
 
 }

@@ -18,10 +18,12 @@ public interface IUserSolutionService {
     Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid);
 
 /* de rama 533b
+
    // Flux<SolutionScoreDto> getScore(String idUser, String idChallenge, String idSolution);
 //    Mono<SolutionScoreDto> getScore(String idUser, String idChallenge, String idSolution);
 
 //     Mono<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution);
 //Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution);
-Mono<Integer> getScore(String idUser, String idChallenge, String idSolution);
-} */
+Mono<Integer> getScore(String idUser, String idChallenge, String idSolution);*/
+
+}
