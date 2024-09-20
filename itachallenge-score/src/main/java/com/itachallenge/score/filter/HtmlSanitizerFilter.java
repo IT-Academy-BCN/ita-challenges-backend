@@ -29,7 +29,7 @@ public ExecutionResult apply(String code) {
         executionResult.setMessage(errorMessage);
         return executionResult;
     }
-    log.info("Sanitized code: " + sanitizedCode);
+    log.info("Sanitized code: {}", sanitizedCode);
 
     // Go to the next filter
     if (next != null) {

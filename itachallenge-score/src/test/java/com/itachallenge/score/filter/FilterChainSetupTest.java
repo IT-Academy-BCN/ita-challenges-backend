@@ -1,28 +1,20 @@
 package com.itachallenge.score.filter;
 
 import com.itachallenge.score.dto.ExecutionResult;
-import com.itachallenge.score.sandbox.CompileExecuter;
-import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 
 class FilterChainSetupTest {
 
     private FilterChainSetup filterChainSetup;
-    private CompileExecuter compileExecuter;
-    private JavaSandboxContainer javaSandboxContainer;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        compileExecuter = mock(CompileExecuter.class);
-        javaSandboxContainer = mock(JavaSandboxContainer.class);
-
         filterChainSetup = new FilterChainSetup();
     }
 

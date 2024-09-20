@@ -47,10 +47,7 @@ public class CodeProcessingManager {
     }
 
     public int calculateScore(ExecutionResult executionResult, String resultExpected) {
-        if (executionResult == null) {
-            executionResult = new ExecutionResult(false, "No execution result");
-            return 0;
-        }
+
         if (!executionResult.isCompiled()) {
             if (executionResult.getMessage().isEmpty()) {
                 executionResult.setMessage("Compilation error: " + executionResult.getMessage());

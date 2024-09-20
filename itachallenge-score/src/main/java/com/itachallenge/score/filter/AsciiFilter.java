@@ -20,35 +20,34 @@ public class AsciiFilter implements Filter {
         allowedChars.set(0, ASCII_SIZE);
         addSpecialChars();
     }
-
-    @Override
-    public ExecutionResult apply(String code) {
-        ExecutionResult executionResult = new ExecutionResult();
-        if (code == null || code.isEmpty()) {
-            executionResult.setCompiled(false);
-            executionResult.setMessage("Code is empty");
-            return executionResult;
-        }
-
-        for (int i = 0; i < code.length(); i++) {
-            char c = code.charAt(i);
-            if (!isValidChar(c)) {
-                log.error("ASCII FILTER ERROR: Invalid character '{}' at index {} in code", c, i);
-                executionResult.setCompiled(false);
-                executionResult.setMessage("ASCII FILTER ERROR: Invalid character '" + c + "' at index " + i + " in code");
-                return executionResult;
-            }
-        }
-
-        if (next != null) {
-            return next.apply(code);
-        }
-
-        executionResult.setCompiled(true);
-        executionResult.setExecution(true);
-        executionResult.setMessage("Code passed ASCII filter");
+@Override
+public ExecutionResult apply(String code) {
+    ExecutionResult executionResult = new ExecutionResult();
+    if (code == null || code.isEmpty()) {
+        executionResult.setCompiled(false);
+        executionResult.setMessage("Code is empty");
         return executionResult;
     }
+
+    for (int i = 0; i < code.length(); i++) {
+        char c = code.charAt(i);
+        if (!isValidChar(c)) {
+            log.error("ASCII FILTER ERROR: Invalid character '{}' at index {} in code", c, i);
+            executionResult.setCompiled(false);
+            executionResult.setMessage("ASCII FILTER ERROR: Invalid character '" + c + "' at index " + i + " in code");
+            return executionResult;
+        }
+    }
+
+    if (next != null) {
+        return next.apply(code);
+    }
+
+    executionResult.setCompiled(true);
+    executionResult.setExecution(true);
+    executionResult.setMessage("Code passed ASCII filter");
+    return executionResult;
+}
 
     private boolean isValidChar(char charCode) {
         return allowedChars.get(charCode);

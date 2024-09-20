@@ -3,18 +3,17 @@ package com.itachallenge.score.sandbox;
 import com.itachallenge.score.dto.ExecutionResult;
 import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.yml")
-public class CompileExecuterTest {
+class CompileExecuterTest {
 
     @Autowired
     private CompileExecuter compileExecuter;
@@ -52,7 +51,7 @@ public class CompileExecuterTest {
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
-        Assertions.assertFalse(resultDto.getMessage().startsWith("Hello, World!"));
+        assertFalse(resultDto.getMessage().startsWith("Hello, World!"));
     }
 
     @Test
@@ -60,7 +59,7 @@ public class CompileExecuterTest {
         String sourceCode = "System.out.println(\"Hello, World!\"";  // Missing closing parenthesis
         ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
-        Assertions.assertFalse(resultDto.isCompiled());
+        assertFalse(resultDto.isCompiled());
         assertTrue(resultDto.getMessage().contains("error"));
     }
 
@@ -70,7 +69,7 @@ public class CompileExecuterTest {
         ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
-        Assertions.assertFalse(resultDto.isExecution());
+        assertFalse(resultDto.isExecution());
         assertTrue(resultDto.getMessage().contains("Exception"));
     }
 
@@ -81,6 +80,6 @@ public class CompileExecuterTest {
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
-        Assertions.assertFalse(resultDto.getMessage().equals("Hello, World!"));
+        assertNotEquals("Hello, World!", resultDto.getMessage());
     }
 }
