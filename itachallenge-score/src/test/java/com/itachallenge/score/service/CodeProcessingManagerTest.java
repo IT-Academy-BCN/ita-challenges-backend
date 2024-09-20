@@ -2,7 +2,7 @@ package com.itachallenge.score.service;
 
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.CompileExecuter;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,14 +69,14 @@ class CodeProcessingManagerTest {
                 codeToCompile
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setPassedAllFilters(true);
-        executionResultDto.setCompiled(true);
-        executionResultDto.setExecution(true);
-        executionResultDto.setMessage("5432");
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setPassedAllFilters(true);
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("5432");
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
-        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
@@ -95,17 +95,17 @@ class CodeProcessingManagerTest {
                 "int number = 1," // Code that will cause compilation/runtime error because it doesn't have ";" at the end
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setCompiled(false);
-        executionResultDto.setMessage("Compilation failed");
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(false);
+        executionResult.setMessage("Compilation failed");
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
-        assertEquals("Compilation error: Compilation failed", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Compilation failed", responseEntity.getBody().getCompilation_Message());
     }
 
     @DisplayName("Test processCode execution failure")
@@ -117,13 +117,13 @@ class CodeProcessingManagerTest {
                 codeToCompile
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setCompiled(true);
-        executionResultDto.setExecution(false);
-        executionResultDto.setMessage("Execution failed");
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(true);
+        executionResult.setExecution(false);
+        executionResult.setMessage("Execution failed");
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
-        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
@@ -141,13 +141,13 @@ class CodeProcessingManagerTest {
                 codeToCompile
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setCompiled(true);
-        executionResultDto.setExecution(true);
-        executionResultDto.setMessage("-543298"); // Partial match
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("-543298"); // Partial match
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
-        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
@@ -165,13 +165,13 @@ class CodeProcessingManagerTest {
                 codeToCompile
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setCompiled(true);
-        executionResultDto.setExecution(true);
-        executionResultDto.setMessage("[9, 5, 4, 3, 1, 1]"); // No match
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("[9, 5, 4, 3, 1, 1]"); // No match
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
-        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+        when(compileExecuter.executeCode(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
@@ -188,10 +188,14 @@ class CodeProcessingManagerTest {
                 codeToCompile
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setPassedAllFilters(true);
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setPassedAllFilters(true);
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("All filters passed");
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(codeToCompile)).thenReturn(executionResult);
+        when(compileExecuter.executeCode(codeToCompile)).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
@@ -211,11 +215,11 @@ class CodeProcessingManagerTest {
                 codeToCompile
         );
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setPassedAllFilters(false);
-        executionResultDto.setMessage("Filter failed");
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setPassedAllFilters(false);
+        executionResult.setMessage("Filter failed");
 
-        when(filterChain.apply(any(String.class))).thenReturn(executionResultDto);
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 

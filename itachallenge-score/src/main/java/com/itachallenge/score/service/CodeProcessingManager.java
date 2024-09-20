@@ -2,7 +2,7 @@ package com.itachallenge.score.service;
 
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.CompileExecuter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +28,10 @@ public class CodeProcessingManager {
         String sourceCode = scoreRequest.getSolutionText();
         String resultExpected = "5432"; // TODO: Change to dynamic result from the challenge UUID
 
-        ExecutionResultDto executionResultDto = filterChain.apply(sourceCode);
+        ExecutionResult executionResult = filterChain.apply(sourceCode);
 
-        if (executionResultDto.isPassedAllFilters()) {
-            executionResultDto = compileExecuter.executeCode(sourceCode);
+        if (executionResult.isPassedAllFilters()) {
+            executionResult = compileExecuter.executeCode(sourceCode);
         }
 
         ScoreResponse scoreResponse = new ScoreResponse();
@@ -39,33 +39,37 @@ public class CodeProcessingManager {
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
         scoreResponse.setExpected_Result(resultExpected);
-        int score = calculateScore(executionResultDto, resultExpected);
-        scoreResponse.setCompilation_Message(executionResultDto.getMessage());
+        int score = calculateScore(executionResult, resultExpected);
+        scoreResponse.setCompilation_Message(executionResult.getMessage());
         scoreResponse.setScore(score);
 
         return ResponseEntity.ok(scoreResponse);
     }
 
-    public int calculateScore(ExecutionResultDto executionResultDto, String resultExpected) {
-        if (!executionResultDto.isCompiled()) {
-            if (executionResultDto.getMessage().isEmpty()) {
-                executionResultDto.setMessage("Compilation error: " + executionResultDto.getMessage());
+    public int calculateScore(ExecutionResult executionResult, String resultExpected) {
+        if (executionResult == null) {
+            executionResult = new ExecutionResult(false, "No execution result");
+            return 0;
+        }
+        if (!executionResult.isCompiled()) {
+            if (executionResult.getMessage().isEmpty()) {
+                executionResult.setMessage("Compilation error: " + executionResult.getMessage());
             }
             return 0;
         }
-        if (!executionResultDto.isExecution()) {
-            executionResultDto.setMessage("Execution error: " + executionResultDto.getMessage());
+        if (!executionResult.isExecution()) {
+            executionResult.setMessage("Execution error: " + executionResult.getMessage());
             return 25;
         }
-        if (executionResultDto.getMessage().equals(resultExpected)) {
-            executionResultDto.setMessage("Code compiled and executed, and result match: " + executionResultDto.getMessage());
+        if (executionResult.getMessage().equals(resultExpected)) {
+            executionResult.setMessage("Code compiled and executed, and result match: " + executionResult.getMessage());
             return 100;
         }
-        if (executionResultDto.getMessage().contains(resultExpected)) {
-            executionResultDto.setMessage("Code compiled and executed, and result partially match: " + executionResultDto.getMessage());
+        if (executionResult.getMessage().contains(resultExpected)) {
+            executionResult.setMessage("Code compiled and executed, and result partially match: " + executionResult.getMessage());
             return 75;
         }
-        executionResultDto.setMessage("Code compiled and executed, but result doesn't match: " + executionResultDto.getMessage());
+        executionResult.setMessage("Code compiled and executed, but result doesn't match: " + executionResult.getMessage());
         return 50;
     }
 

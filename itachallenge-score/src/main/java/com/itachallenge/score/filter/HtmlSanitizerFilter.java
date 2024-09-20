@@ -1,6 +1,6 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ public class HtmlSanitizerFilter implements Filter{
     private Filter next;
 
 @Override
-public ExecutionResultDto apply(String code) {
+public ExecutionResult apply(String code) {
     PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
     String sanitizedCode;
     try {
@@ -23,11 +23,11 @@ public ExecutionResultDto apply(String code) {
         String errorMessage = String.format("HtmlSanitizerFilter error: %s", e.getMessage());
         log.error(errorMessage);
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setCompiled(false);
-        executionResultDto.setExecution(false);
-        executionResultDto.setMessage(errorMessage);
-        return executionResultDto;
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(false);
+        executionResult.setExecution(false);
+        executionResult.setMessage(errorMessage);
+        return executionResult;
     }
     log.info("Sanitized code: " + sanitizedCode);
 
@@ -36,9 +36,9 @@ public ExecutionResultDto apply(String code) {
         return next.apply(sanitizedCode);
     }
 
-    ExecutionResultDto executionResultDto = new ExecutionResultDto();
-    executionResultDto.setPassedAllFilters(true);
-    return executionResultDto;
+    ExecutionResult executionResult = new ExecutionResult();
+    executionResult.setPassedAllFilters(true);
+    return executionResult;
 }
 
     @Override

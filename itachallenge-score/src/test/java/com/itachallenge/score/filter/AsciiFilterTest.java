@@ -1,6 +1,6 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,7 @@ class AsciiFilterTest {
         MockFilter nextFilter = new MockFilter();
         filter.setNext(nextFilter);
 
-        ExecutionResultDto result = filter.apply(asciiValid);
+        ExecutionResult result = filter.apply(asciiValid);
 
         assertEquals(asciiValid, MockFilter.lastInput, "The ASCII string should pass through the filter unchanged");
         assertEquals(true, result.isCompiled(), "The result should indicate that the code compiled successfully");
@@ -47,7 +47,7 @@ class AsciiFilterTest {
         Filter nextFilter = mock(Filter.class);
         filter.setNext(nextFilter);
 
-        ExecutionResultDto result = filter.apply(asciiInvalid);
+        ExecutionResult result = filter.apply(asciiInvalid);
 
         String expectedMessage = "ASCII FILTER ERROR: Invalid character 'β' at index 17 in code";
         assertEquals(expectedMessage, result.getMessage(), "The result should contain the expected error message");
@@ -63,7 +63,7 @@ class AsciiFilterTest {
         Filter nextFilter = mock(Filter.class);
         filter.setNext(nextFilter);
 
-        ExecutionResultDto result = filter.apply("");
+        ExecutionResult result = filter.apply("");
 
         assertEquals(false, result.isCompiled(), "The result should indicate the code is empty");
         assertEquals("Code is empty", result.getMessage(), "The result should contain the expected error message");
@@ -77,7 +77,7 @@ class AsciiFilterTest {
         filter.setNext(nextFilter);
 
         String specialChars = "áéíóúñÁÉÍÓÚÑ";
-        ExecutionResultDto result = filter.apply(specialChars);
+        ExecutionResult result = filter.apply(specialChars);
 
         verify(nextFilter).apply(specialChars);
 
@@ -91,7 +91,7 @@ class AsciiFilterTest {
         filter.setNext(nextFilter);
 
         String mixedChars = "Hello, World! β";
-        ExecutionResultDto result = filter.apply(mixedChars);
+        ExecutionResult result = filter.apply(mixedChars);
 
         String expectedMessage = "ASCII FILTER ERROR: Invalid character 'β' at index 14 in code";
         assertEquals(expectedMessage, result.getMessage(), "The result should contain the expected error message");
@@ -107,7 +107,7 @@ class AsciiFilterTest {
         filter.setNext(nextFilter);
 
         String extendedAscii = "Hello, World! \u00A9";
-        ExecutionResultDto result = filter.apply(extendedAscii);
+        ExecutionResult result = filter.apply(extendedAscii);
 
         String expectedMessage = "ASCII FILTER ERROR: Invalid character '©' at index 14 in code";
         assertEquals(expectedMessage, result.getMessage(), "The result should contain the expected error message");
@@ -119,9 +119,9 @@ class AsciiFilterTest {
         static String lastInput;
 
         @Override
-        public ExecutionResultDto apply(String input) {
+        public ExecutionResult apply(String input) {
             lastInput = input;
-            ExecutionResultDto result = new ExecutionResultDto();
+            ExecutionResult result = new ExecutionResult();
             result.setCompiled(true);
             return result;
         }

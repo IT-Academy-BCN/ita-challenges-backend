@@ -1,6 +1,6 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -51,9 +51,9 @@ class UnescapeFilterTest {
         static String lastInput;
 
         @Override
-        public ExecutionResultDto apply(String input) {
+        public ExecutionResult apply(String input) {
             lastInput = input;
-            return new ExecutionResultDto();
+            return new ExecutionResult();
         }
 
         @Override

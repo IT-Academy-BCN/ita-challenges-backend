@@ -1,6 +1,6 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import com.itachallenge.score.sandbox.CompileExecuter;
 import com.itachallenge.score.sandbox.JavaSandboxContainer;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ class FilterChainSetupTest {
         // Apply the filter chain to verify the order
         String inputCode = "step1";
 
-        ExecutionResultDto result = filter.apply(inputCode);
+        ExecutionResult result = filter.apply(inputCode);
 
         // Verify that the result is not null
         assertNotNull(result, "The result should not be null");

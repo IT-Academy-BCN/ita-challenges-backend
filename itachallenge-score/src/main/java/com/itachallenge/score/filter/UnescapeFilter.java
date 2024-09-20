@@ -1,6 +1,6 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ public class UnescapeFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(UnescapeFilter.class);
 
 @Override
-public ExecutionResultDto apply(String input) {
+public ExecutionResult apply(String input) {
     String code;
     try {
         code = UnescapeJava.unescapeJavaCode(input);
@@ -20,11 +20,11 @@ public ExecutionResultDto apply(String input) {
         String errorMessage = String.format("UnescapeFilter error: %s", e.getMessage());
         log.error(errorMessage);
 
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
-        executionResultDto.setCompiled(false);
-        executionResultDto.setExecution(false);
-        executionResultDto.setMessage(errorMessage);
-        return executionResultDto;
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(false);
+        executionResult.setExecution(false);
+        executionResult.setMessage(errorMessage);
+        return executionResult;
     }
 
     // Go to the next filter
@@ -32,9 +32,9 @@ public ExecutionResultDto apply(String input) {
         return next.apply(code);
     }
 
-    ExecutionResultDto executionResultDto = new ExecutionResultDto();
-    executionResultDto.setPassedAllFilters(true);
-    return executionResultDto;
+    ExecutionResult executionResult = new ExecutionResult();
+    executionResult.setPassedAllFilters(true);
+    return executionResult;
 }
 
     @Override

@@ -1,10 +1,10 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 
 public interface Filter {
 
-    ExecutionResultDto apply(String input);
+    ExecutionResult apply(String input);
 
     void setNext(Filter next);
 }

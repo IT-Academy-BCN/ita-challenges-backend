@@ -1,6 +1,6 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -38,7 +38,7 @@ public class CompileExecuterTest {
     @Test
     void testCompileAndRunCode() {
         String sourceCode = "System.out.println(\"Hello, World!\");";
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
+        ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
@@ -48,7 +48,7 @@ public class CompileExecuterTest {
     @Test
     void testCompileAndRunCodeResultNotMatch() {
         String sourceCode = "System.out.println(\"Bad Hello, World!\");";
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
+        ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
@@ -58,7 +58,7 @@ public class CompileExecuterTest {
     @Test
     void testCompileAndRunCodeCompilationError() {
         String sourceCode = "System.out.println(\"Hello, World!\"";  // Missing closing parenthesis
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
+        ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
         Assertions.assertFalse(resultDto.isCompiled());
         assertTrue(resultDto.getMessage().contains("error"));
@@ -67,7 +67,7 @@ public class CompileExecuterTest {
     @Test
     void testCompileAndRunCodeExecutionError() {
         String sourceCode = "int num = 10; int div = 0; System.out.println(num / div);";  // Division by zero
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
+        ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         Assertions.assertFalse(resultDto.isExecution());
@@ -77,7 +77,7 @@ public class CompileExecuterTest {
     @Test
     void testCompileAndRunCodeResultNotEqual() {
         String sourceCode = "System.out.println(\"Goodbye, World!\");";
-        ExecutionResultDto resultDto = compileExecuter.executeCode(sourceCode);
+        ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
 
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());

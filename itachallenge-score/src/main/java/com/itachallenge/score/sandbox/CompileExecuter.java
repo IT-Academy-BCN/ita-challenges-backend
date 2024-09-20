@@ -1,6 +1,6 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class CompileExecuter {
     @Value("${code.execution.template}")
     private String codeTemplate;
 
-    public ExecutionResultDto executeCode(String code) {
+    public ExecutionResult executeCode(String code) {
 
         GenericContainer<?> sandboxContainer = javaSandboxContainer.getContainer();
         if (!sandboxContainer.isRunning()) {
@@ -39,13 +39,13 @@ public class CompileExecuter {
             String compileCommand = "javac " + codeFilePath;
             Container.ExecResult compileResult = sandboxContainer.execInContainer("sh", "-c", compileCommand);
 
-            ExecutionResultDto executionResultDto = new ExecutionResultDto();
+            ExecutionResult executionResult = new ExecutionResult();
 
             if (compileResult.getExitCode() != 0) {
-                executionResultDto.setCompiled(false);
-                executionResultDto.setExecution(false);
-                executionResultDto.setMessage(compileResult.getStderr().trim());
-                return executionResultDto;
+                executionResult.setCompiled(false);
+                executionResult.setExecution(false);
+                executionResult.setMessage(compileResult.getStderr().trim());
+                return executionResult;
             }
 
             // Execute the code
@@ -53,25 +53,25 @@ public class CompileExecuter {
             Container.ExecResult execResult = sandboxContainer.execInContainer("sh", "-c", runCommand);
 
             if (execResult.getExitCode() != 0) {
-                executionResultDto.setCompiled(true);
-                executionResultDto.setExecution(false);
-                executionResultDto.setMessage(execResult.getStderr().trim());
+                executionResult.setCompiled(true);
+                executionResult.setExecution(false);
+                executionResult.setMessage(execResult.getStderr().trim());
             } else {
-                executionResultDto.setCompiled(true);
-                executionResultDto.setExecution(true);
-                executionResultDto.setMessage(execResult.getStdout().trim());
+                executionResult.setCompiled(true);
+                executionResult.setExecution(true);
+                executionResult.setMessage(execResult.getStdout().trim());
             }
 
-            return executionResultDto;
+            return executionResult;
 
         } catch (Exception e) {
             log.error("Error executing code", e);
 
-            ExecutionResultDto executionResultDto = new ExecutionResultDto();
-            executionResultDto.setCompiled(false);
-            executionResultDto.setExecution(false);
-            executionResultDto.setMessage("Error: " + e.getMessage().trim());
-            return executionResultDto;
+            ExecutionResult executionResult = new ExecutionResult();
+            executionResult.setCompiled(false);
+            executionResult.setExecution(false);
+            executionResult.setMessage("Error: " + e.getMessage().trim());
+            return executionResult;
 
         } finally {
             javaSandboxContainer.stopContainer();

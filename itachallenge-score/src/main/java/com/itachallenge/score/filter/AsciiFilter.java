@@ -1,6 +1,6 @@
 package com.itachallenge.score.filter;
 
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.dto.ExecutionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -22,21 +22,21 @@ public class AsciiFilter implements Filter {
     }
 
     @Override
-    public ExecutionResultDto apply(String code) {
-        ExecutionResultDto executionResultDto = new ExecutionResultDto();
+    public ExecutionResult apply(String code) {
+        ExecutionResult executionResult = new ExecutionResult();
         if (code == null || code.isEmpty()) {
-            executionResultDto.setCompiled(false);
-            executionResultDto.setMessage("Code is empty");
-            return executionResultDto;
+            executionResult.setCompiled(false);
+            executionResult.setMessage("Code is empty");
+            return executionResult;
         }
 
         for (int i = 0; i < code.length(); i++) {
             char c = code.charAt(i);
             if (!isValidChar(c)) {
                 log.error("ASCII FILTER ERROR: Invalid character '{}' at index {} in code", c, i);
-                executionResultDto.setCompiled(false);
-                executionResultDto.setMessage("ASCII FILTER ERROR: Invalid character '" + c + "' at index " + i + " in code");
-                return executionResultDto;
+                executionResult.setCompiled(false);
+                executionResult.setMessage("ASCII FILTER ERROR: Invalid character '" + c + "' at index " + i + " in code");
+                return executionResult;
             }
         }
 
@@ -44,10 +44,10 @@ public class AsciiFilter implements Filter {
             return next.apply(code);
         }
 
-        executionResultDto.setCompiled(true);
-        executionResultDto.setExecution(true);
-        executionResultDto.setMessage("Code passed ASCII filter");
-        return executionResultDto;
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("Code passed ASCII filter");
+        return executionResult;
     }
 
     private boolean isValidChar(char charCode) {
