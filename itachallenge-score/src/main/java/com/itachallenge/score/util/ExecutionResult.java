@@ -1,4 +1,4 @@
-package com.itachallenge.score.dto;
+package com.itachallenge.score.util;
 
 public class ExecutionResult {
 

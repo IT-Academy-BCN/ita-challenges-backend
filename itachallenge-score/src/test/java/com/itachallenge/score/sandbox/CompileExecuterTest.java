@@ -1,6 +1,6 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.dto.ExecutionResult;
+import com.itachallenge.score.util.ExecutionResult;
 import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

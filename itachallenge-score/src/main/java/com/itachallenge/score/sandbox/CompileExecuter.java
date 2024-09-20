@@ -1,6 +1,6 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.dto.ExecutionResult;
+import com.itachallenge.score.util.ExecutionResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;

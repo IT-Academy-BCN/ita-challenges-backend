@@ -2,7 +2,7 @@ package com.itachallenge.score.service;
 
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.dto.ExecutionResult;
+import com.itachallenge.score.util.ExecutionResult;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.CompileExecuter;
 import org.junit.jupiter.api.BeforeEach;
