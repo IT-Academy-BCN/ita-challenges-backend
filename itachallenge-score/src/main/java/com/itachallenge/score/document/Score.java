@@ -5,11 +5,9 @@ import lombok.*;
 import java.util.UUID;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class Score {
 
     private UUID scoreID;

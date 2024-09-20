@@ -24,7 +24,7 @@ class FilterChainSetupTest {
 
         assertNotNull(filter, "The filter chain should not be null");
         assertTrue(filter instanceof HtmlSanitizerFilter, "The first filter should be an HtmlSanitizerFilter");
-        
+
         // Apply the filter chain to verify the order
         String inputCode = "step1";
 

@@ -5,11 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 class UnescapeFilterTest {
-
 
     @DisplayName("Test unescape valid")
     @Test
@@ -26,26 +26,33 @@ class UnescapeFilterTest {
         assertEquals(expectedOutput, MockFilter.lastInput, "The unescaped code matches the expected output");
     }
 
-
     @DisplayName("Test unescape with unsupported escape sequence")
     @Test
     void testUnescapeWithUnsupportedEscape() {
         UnescapeFilter filter = new UnescapeFilter();
         MockFilter nextFilter = new MockFilter();
-        Filter nextFilterMock = mock(Filter.class); // Create a mock filter only to verify that it was not called
+        Filter nextFilterMock = mock(Filter.class);
         filter.setNext(nextFilter);
 
         String escapedInput = "Hello \\u00AAworld";
-        String expectedOutput = "Hello \\u00AAworld"; //Same as input because the escape sequence is not supported
+        String expectedOutput = "Hello \\u00AAworld";
 
         filter.apply(escapedInput);
 
         assertEquals(expectedOutput, MockFilter.lastInput, "The unescaped code matches the expected output");
-
-//        //Verify that the next filter was not called
-           verify(nextFilterMock, never()).apply(anyString());
+        verify(nextFilterMock, never()).apply(anyString());
     }
 
+@DisplayName("Test unescape filter finished message")
+@Test
+void testUnescapeFilterFinishedMessage() {
+    UnescapeFilter filter = new UnescapeFilter();
+
+    String escapedInput = "Hello \\u003Cworld\\u003E";
+    ExecutionResult result = filter.apply(escapedInput);
+
+    assertEquals("UnescapeFilter: Finished unescaping", result.getMessage(), "The message should indicate the filter finished unescaping");
+}
 
     static class MockFilter implements Filter {
         static String lastInput;
@@ -53,7 +60,11 @@ class UnescapeFilterTest {
         @Override
         public ExecutionResult apply(String input) {
             lastInput = input;
-            return new ExecutionResult();
+            ExecutionResult result = new ExecutionResult();
+            result.setCompiled(true);
+            result.setExecution(true);
+            result.setMessage("MockFilter: Processed");
+            return result;
         }
 
         @Override

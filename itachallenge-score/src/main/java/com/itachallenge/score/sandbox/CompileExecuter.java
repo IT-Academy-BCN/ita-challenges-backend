@@ -14,9 +14,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class CompileExecuter {
 
     private static final Logger log = getLogger(CompileExecuter.class.getName());
-
-    @Autowired
     private JavaSandboxContainer javaSandboxContainer;
+
+    public CompileExecuter(JavaSandboxContainer javaSandboxContainer) {
+        this.javaSandboxContainer = javaSandboxContainer;
+    }
 
     @Value("${code.execution.template}")
     private String codeTemplate;

@@ -13,46 +13,35 @@ public class HtmlSanitizerFilter implements Filter {
     private static final Logger log = LoggerFactory.getLogger(HtmlSanitizerFilter.class);
     private Filter next;
 
- @Override
-public ExecutionResult apply(String code) {
-    PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
-    String sanitizedCode;
-    ExecutionResult executionResult = new ExecutionResult();
+    @Override
+    public ExecutionResult apply(String code) {
+        PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+        ExecutionResult executionResult = new ExecutionResult();
 
-    if (code == null) {
-        executionResult.setCompiled(false);
-        executionResult.setExecution(false);
-        executionResult.setMessage("Code is null");
-        if (next != null) {
-            return next.apply(code);
+        if (code == null) {
+            executionResult.setCompiled(false);
+            executionResult.setExecution(false);
+            executionResult.setMessage("Code is null");
+            if (next != null) {
+                return next.apply(code);
+            }
+            return executionResult;
         }
+
+        String sanitizedCode = policy.sanitize(code);
+        log.info("Sanitized code: {}", sanitizedCode);
+
+        // Go to the next filter
+        if (next != null) {
+            return next.apply(sanitizedCode);
+        }
+
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("Code passed HTML sanitizer");
         return executionResult;
     }
 
-    try {
-        sanitizedCode = policy.sanitize(code);
-    } catch (Exception e) {
-        String errorMessage = String.format("HtmlSanitizerFilter error: %s", e.getMessage());
-        log.error(errorMessage);
-
-        executionResult.setCompiled(false);
-        executionResult.setExecution(false);
-        executionResult.setMessage(errorMessage);
-        return executionResult;
-    }
-    log.info("Sanitized code: {}", sanitizedCode);
-
-    // Go to the next filter
-    if (next != null) {
-        return next.apply(sanitizedCode);
-    }
-
-    executionResult.setPassedAllFilters(true);
-    executionResult.setCompiled(true);
-    executionResult.setExecution(true);
-    executionResult.setMessage("Code passed HTML sanitizer");
-    return executionResult;
-}
     @Override
     public void setNext(Filter next) {
         this.next = next;

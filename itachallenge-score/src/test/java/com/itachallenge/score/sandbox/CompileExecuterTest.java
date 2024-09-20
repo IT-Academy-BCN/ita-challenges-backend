@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Testcontainers
 @SpringBootTest
 @TestPropertySource(locations = "classpath:application.yml")
 class CompileExecuterTest {
@@ -81,5 +83,15 @@ class CompileExecuterTest {
         assertTrue(resultDto.isCompiled());
         assertTrue(resultDto.isExecution());
         assertNotEquals("Hello, World!", resultDto.getMessage());
+    }
+
+    @Test
+    void testExecutionErrorHandling() {
+        String sourceCode = "public class Main { public static void main(String[] args) { throw new RuntimeException(\"Test Exception\"); } }";
+        ExecutionResult resultDto = compileExecuter.executeCode(sourceCode);
+
+        assertFalse(resultDto.isCompiled());
+        assertFalse(resultDto.isExecution());
+        assertTrue(resultDto.getMessage().contains("Exception"));
     }
 }

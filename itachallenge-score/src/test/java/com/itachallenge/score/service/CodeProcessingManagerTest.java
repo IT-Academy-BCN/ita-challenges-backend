@@ -179,6 +179,7 @@ class CodeProcessingManagerTest {
         assertEquals(50, responseEntity.getBody().getScore());
         assertEquals("Code compiled and executed, but result doesn't match: [9, 5, 4, 3, 1, 1]", responseEntity.getBody().getCompilation_Message());
     }
+
     @DisplayName("Test filterChain passes all filters")
     @Test
     void testFilterChainPassesAllFilters() {

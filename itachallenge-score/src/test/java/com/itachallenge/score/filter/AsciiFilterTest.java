@@ -10,22 +10,22 @@ import static org.mockito.Mockito.*;
 class AsciiFilterTest {
 
     String asciiValid = """
-        String numbers = "3,1,4,1,5,9";
-        int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
-        Arrays.sort(numArray);
-        System.out.println(Arrays.toString(numArray));
-    """;
-
-    String asciiInvalid = """
-        public class βain {
-            public static void main(String[] args) {
-                String numbers = "©, 3,1,4,1,5,9";
+                String numbers = "3,1,4,1,5,9";
                 int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
                 Arrays.sort(numArray);
                 System.out.println(Arrays.toString(numArray));
-            }
-        }
-    """;
+            """;
+
+    String asciiInvalid = """
+                public class βain {
+                    public static void main(String[] args) {
+                        String numbers = "©, 3,1,4,1,5,9";
+                        int[] numArray = Arrays.stream(numbers.split(",")).mapToInt(Integer::parseInt).toArray();
+                        Arrays.sort(numArray);
+                        System.out.println(Arrays.toString(numArray));
+                    }
+                }
+            """;
 
     @DisplayName("Test filter valid - Code contains only valid characters, chain of filters done.")
     @Test
@@ -69,26 +69,27 @@ class AsciiFilterTest {
         assertEquals("Code is empty", result.getMessage(), "The result should contain the expected error message");
     }
 
-  @DisplayName("Test filter with only special characters")
-@Test
-void testFilterOnlySpecialChars() {
-    AsciiFilter filter = new AsciiFilter();
-    Filter nextFilter = mock(Filter.class);
-    filter.setNext(nextFilter);
+    @DisplayName("Test filter with only special characters")
+    @Test
+    void testFilterOnlySpecialChars() {
+        AsciiFilter filter = new AsciiFilter();
+        Filter nextFilter = mock(Filter.class);
+        filter.setNext(nextFilter);
 
-    String specialChars = "áéíóúñÁÉÍÓÚÑ";
-    ExecutionResult expectedResult = new ExecutionResult();
-    expectedResult.setCompiled(true);
-    expectedResult.setExecution(true);
-    expectedResult.setMessage("Code passed ASCII filter");
+        String specialChars = "áéíóúñÁÉÍÓÚÑ";
+        ExecutionResult expectedResult = new ExecutionResult();
+        expectedResult.setCompiled(true);
+        expectedResult.setExecution(true);
+        expectedResult.setMessage("Code passed ASCII filter");
 
-    when(nextFilter.apply(specialChars)).thenReturn(expectedResult);
+        when(nextFilter.apply(specialChars)).thenReturn(expectedResult);
 
-    ExecutionResult result = filter.apply(specialChars);
+        ExecutionResult result = filter.apply(specialChars);
 
-    assertEquals(expectedResult, result, "The result should not be null and should match the expected result");
-    verify(nextFilter).apply(specialChars);
-}
+        assertEquals(expectedResult, result, "The result should not be null and should match the expected result");
+        verify(nextFilter).apply(specialChars);
+    }
+
     @DisplayName("Test filter with mix of valid and invalid characters")
     @Test
     void testFilterMixValidInvalidChars() {

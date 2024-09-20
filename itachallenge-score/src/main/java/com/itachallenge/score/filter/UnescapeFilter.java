@@ -11,31 +11,30 @@ public class UnescapeFilter implements Filter {
     private Filter next;
     private static final Logger log = LoggerFactory.getLogger(UnescapeFilter.class);
 
-@Override
-public ExecutionResult apply(String input) {
-    String code;
-    try {
-        code = UnescapeJava.unescapeJavaCode(input);
-    } catch (Exception e) {
-        String errorMessage = String.format("UnescapeFilter error: %s", e.getMessage());
-        log.error(errorMessage);
+    @Override
+    public ExecutionResult apply(String input) {
+        String code = UnescapeJava.unescapeJavaCode(input);
+
+        if (code == null) {
+            String errorMessage = "UnescapeFilter error: Unescaped code is null";
+            log.error(errorMessage);
+
+            ExecutionResult executionResult = new ExecutionResult();
+            executionResult.setCompiled(false);
+            executionResult.setExecution(false);
+            executionResult.setMessage(errorMessage);
+            return executionResult;
+        }
+
+        // Go to the next filter
+        if (next != null) {
+            return next.apply(code);
+        }
 
         ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setCompiled(false);
-        executionResult.setExecution(false);
-        executionResult.setMessage(errorMessage);
+        executionResult.setMessage("UnescapeFilter: Finished unescaping");
         return executionResult;
     }
-
-    // Go to the next filter
-    if (next != null) {
-        return next.apply(code);
-    }
-
-    ExecutionResult executionResult = new ExecutionResult();
-    executionResult.setPassedAllFilters(true);
-    return executionResult;
-}
 
     @Override
     public void setNext(Filter next) {
