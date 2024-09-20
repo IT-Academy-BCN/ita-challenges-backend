@@ -192,7 +192,7 @@ class CodeProcessingManagerTest {
         executionResult.setPassedAllFilters(true);
         executionResult.setCompiled(true);
         executionResult.setExecution(true);
-        executionResult.setMessage("All filters passed");
+        executionResult.setMessage("5432");
 
         when(filterChain.apply(codeToCompile)).thenReturn(executionResult);
         when(compileExecuter.executeCode(codeToCompile)).thenReturn(executionResult);
