@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.sandbox_container;
+package com.itachallenge.score.sandbox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     public GenericContainer<?> createContainer(String imageName) {
         try {
             GenericContainer<?> container = new GenericContainer<>(imageName);
-            container.withFileSystemBind("/tmp/app", "/app");  // Verifica que esta ruta sea la correcta
+            container.withFileSystemBind("/tmp/app", "/app");
             return container;
         } catch (Exception e) {
             log.error("Error creating container", e);
@@ -51,13 +51,6 @@ public class JavaSandboxContainer implements DockerContainerHelper {
 
 
     @Override
-    public void stopContainer(GenericContainer<?> container) {
-        if (container.isRunning()) {
-            container.stop();
-            log.info("Container stopped");
-        }
-    }
-
     public void startContainer() {
         if (!javaContainer.isRunning()) {
             javaContainer.start();
@@ -67,6 +60,7 @@ public class JavaSandboxContainer implements DockerContainerHelper {
         }
     }
 
+    @Override
     public void stopContainer() {
         if (javaContainer.isRunning()) {
             javaContainer.stop();

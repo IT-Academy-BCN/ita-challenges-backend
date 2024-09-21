@@ -1,10 +1,8 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.component.CodeExecutionService;
-import com.itachallenge.score.sandbox.CodeExecutionManager;
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.dto.ExecutionResultDto;
+import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +24,7 @@ import static org.mockito.Mockito.when;
 class ScoreControllerTest {
 
     @MockBean
-    private CodeExecutionManager codeExecutionManager;
-
-    @MockBean
-    private CodeExecutionService codeExecutionService;
+    private CodeProcessingManager codeProcessingManager;
 
     @Autowired
     private WebTestClient webTestClient;
@@ -43,25 +38,18 @@ class ScoreControllerTest {
 
     @BeforeEach
     void setUp() {
-        ExecutionResultDto mockExecutionResult = new ExecutionResultDto();
-        mockExecutionResult.setMessage("Compilation successful");
-
-        when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
-                .thenReturn(mockExecutionResult);
-
         mockScoreResponse = new ScoreResponse();
         mockScoreResponse.setUuidChallenge(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         mockScoreResponse.setUuidLanguage(UUID.fromString("456f7890-e89b-12d3-a456-426614174000"));
         mockScoreResponse.setSolutionText("Example text");
         mockScoreResponse.setScore(99);
 
-        when(codeExecutionManager.processCode(any(ScoreRequest.class)))
+        when(codeProcessingManager.processCode(any(ScoreRequest.class)))
                 .thenReturn(ResponseEntity.ok(mockScoreResponse));
     }
 
     @Test
     void getVersionTest() {
-
         webTestClient.get()
                 .uri("/itachallenge/api/v1/score/version")
                 .exchange()
@@ -79,7 +67,7 @@ class ScoreControllerTest {
                 "Example text"
         );
 
-        webTestClient.post().uri(ScoreControllerTest.CONTROLLER_URL)
+        webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(scoreRequest)
                 .exchange()

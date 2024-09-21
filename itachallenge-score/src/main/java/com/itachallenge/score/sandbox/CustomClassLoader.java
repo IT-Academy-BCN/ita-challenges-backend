@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.sandbox_container;
+package com.itachallenge.score.sandbox;
 
 import java.util.List;
 import java.util.regex.Matcher;

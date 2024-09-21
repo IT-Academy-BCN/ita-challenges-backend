@@ -11,7 +11,7 @@ jar {
         )
     }
 }
-jacoco{
+jacoco {
     toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
@@ -21,7 +21,6 @@ group = 'ita.challenges'
 repositories {
     mavenCentral()
 }
-
 
 
 dependencies {
@@ -45,7 +44,8 @@ dependencies {
     implementation 'org.apache.httpcomponents:httpclient:4.5.13'
     implementation 'org.codehaus.janino:janino:3.1.6'
     implementation 'org.testcontainers:junit-jupiter:1.16.3'
-
+    implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20211018.1'
+    implementation 'org.owasp.esapi:esapi:2.5.4.0'
     // Borrado docker-java ya que no es necesario con la versión actual de testcontainers
 
     //testing
