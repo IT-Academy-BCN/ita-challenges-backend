@@ -20,8 +20,8 @@ public class ScoreResponse {
     @JsonProperty("solution_text")
     private String solutionText;
     private int score;
-    private String compilation_Message;
-    private String expected_Result;
+    private String compilationMessage;
+    private String expectedResult;
 
 }
 

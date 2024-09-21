@@ -3,12 +3,8 @@ package com.itachallenge.score.filter;
 import com.itachallenge.score.util.ExecutionResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.owasp.html.PolicyFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
 class HtmlSanitizerFilterTest {
 

@@ -3,7 +3,6 @@ package com.itachallenge.score.sandbox;
 import com.itachallenge.score.util.ExecutionResult;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
@@ -23,6 +22,9 @@ public class CompileExecuter {
     @Value("${code.execution.template}")
     private String codeTemplate;
 
+    @Value("${code.execution.filepath:/app/Main.java}")
+    private String codeFilePath;
+
     public ExecutionResult executeCode(String code) {
 
         GenericContainer<?> sandboxContainer = javaSandboxContainer.getContainer();
@@ -35,7 +37,6 @@ public class CompileExecuter {
         log.info("Executing code:\n {}", completeCode);
 
         try {
-            String codeFilePath = "/app/Main.java";
             javaSandboxContainer.copyFileToContainer(sandboxContainer, completeCode, codeFilePath);
 
             String compileCommand = "javac " + codeFilePath;
@@ -66,6 +67,10 @@ public class CompileExecuter {
 
             return executionResult;
 
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); 
+            log.error("Thread was interrupted", e);
+            throw new RuntimeException("Thread was interrupted", e);
         } catch (Exception e) {
             log.error("Error executing code", e);
 

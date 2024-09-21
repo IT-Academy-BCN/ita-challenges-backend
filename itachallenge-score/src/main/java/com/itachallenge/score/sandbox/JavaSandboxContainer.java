@@ -20,19 +20,29 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     private final GenericContainer<?> javaContainer;
 
     public JavaSandboxContainer() {
-        javaContainer = createContainer(JAVA_SANDBOX_IMAGE);
+        javaContainer = createAndRunContainer(JAVA_SANDBOX_IMAGE);
         log.info("Java Sandbox Container created");
     }
 
     @Override
-    public GenericContainer<?> createContainer(String imageName) {
-        try {
-            GenericContainer<?> container = new GenericContainer<>(imageName);
+    public GenericContainer<?> createAndRunContainer(String imageName) {
+
+        try (GenericContainer<?> container = new GenericContainer<>(imageName)) {
             container.withFileSystemBind("/tmp/app", "/app");
+            container.start();
+
+            // Execute commands and copy files
+            copyFileToContainer(container, "file content", "/app/file.txt");
+            executeCommand(container, "sh", "-c", "echo Hello World");
+
             return container;
         } catch (Exception e) {
             log.error("Error creating container", e);
             return null;
+        } finally {
+            if (javaContainer != null && javaContainer.isRunning()) {
+                javaContainer.stop();
+            }
         }
     }
 
@@ -49,14 +59,11 @@ public class JavaSandboxContainer implements DockerContainerHelper {
         log.error("stderr: {}", result.getStderr());
     }
 
-
     @Override
     public void startContainer() {
         if (!javaContainer.isRunning()) {
             javaContainer.start();
             log.info("Java Sandbox Container started");
-        } else {
-            log.warn("Java Sandbox Container is already running");
         }
     }
 
@@ -65,8 +72,6 @@ public class JavaSandboxContainer implements DockerContainerHelper {
         if (javaContainer.isRunning()) {
             javaContainer.stop();
             log.info("Java Sandbox Container stopped");
-        } else {
-            log.warn("Java Sandbox Container is not running");
         }
     }
 

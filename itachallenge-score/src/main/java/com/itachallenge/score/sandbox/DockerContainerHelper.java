@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface DockerContainerHelper {
 
-    GenericContainer<?> createContainer(String imageName);
+    GenericContainer<?> createAndRunContainer(String imageName);
 
     void copyFileToContainer(GenericContainer<?> container, String fileContent, String containerPath) throws IOException, InterruptedException;
 
