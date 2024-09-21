@@ -55,7 +55,8 @@ public class JavaSandboxContainer extends GenericContainer<JavaSandboxContainer>
 
     @Override
     public void executeCommand(GenericContainer<?> container, String... command) throws IOException, InterruptedException {
-        Container.ExecResult result = container.execInContainer(command);
+        Container.ExecResult execResult = container.execInContainer(command);
+        log.info("Command executed in container: {}", execResult.getStdout());
     }
 
     @Override
