@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class JavaSandboxContainer implements DockerContainerHelper {
+public class JavaSandboxContainer extends GenericContainer<JavaSandboxContainer> implements DockerContainerHelper {
 
     private static final Logger log = LoggerFactory.getLogger(JavaSandboxContainer.class);
     private static final String JAVA_SANDBOX_IMAGE = "openjdk:11-jdk-slim-sid";
@@ -36,7 +36,8 @@ public class JavaSandboxContainer implements DockerContainerHelper {
             executeCommand(container, "sh", "-c", "echo Hello World");
 
             return container;
-        } catch (Exception e) {
+        } catch (InterruptedException | IOException e) {
+            Thread.currentThread().interrupt();
             log.error("Error creating container", e);
             return null;
         } finally {
@@ -55,8 +56,6 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     @Override
     public void executeCommand(GenericContainer<?> container, String... command) throws IOException, InterruptedException {
         Container.ExecResult result = container.execInContainer(command);
-        log.info("stdout: {}", result.getStdout());
-        log.error("stderr: {}", result.getStderr());
     }
 
     @Override
@@ -75,8 +74,8 @@ public class JavaSandboxContainer implements DockerContainerHelper {
         }
     }
 
-    public GenericContainer<?> getContainer() {
-        return javaContainer;
+    public GenericContainer<JavaSandboxContainer> getContainer() {
+        return (GenericContainer<JavaSandboxContainer>) javaContainer;
     }
 
     public static List<String> getProhibitedClasses() {
