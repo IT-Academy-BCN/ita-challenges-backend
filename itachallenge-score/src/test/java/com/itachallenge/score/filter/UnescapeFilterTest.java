@@ -4,7 +4,7 @@ import com.itachallenge.score.util.ExecutionResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -42,16 +42,27 @@ class UnescapeFilterTest {
         verify(nextFilterMock, never()).apply(anyString());
     }
 
-@DisplayName("Test unescape filter finished message")
-@Test
-void testUnescapeFilterFinishedMessage() {
-    UnescapeFilter filter = new UnescapeFilter();
+    @DisplayName("Test unescape filter finished message")
+    @Test
+    void testUnescapeFilterFinishedMessage() {
+        UnescapeFilter filter = new UnescapeFilter();
 
-    String escapedInput = "Hello \\u003Cworld\\u003E";
-    ExecutionResult result = filter.apply(escapedInput);
+        String escapedInput = "Hello \\u003Cworld\\u003E";
+        ExecutionResult result = filter.apply(escapedInput);
 
-    assertEquals("UnescapeFilter: Finished unescaping", result.getMessage(), "The message should indicate the filter finished unescaping");
-}
+        assertEquals("UnescapeFilter: Finished unescaping", result.getMessage(), "The message should indicate the filter finished unescaping");
+    }
+
+    @Test
+    void testUnescapeFilterNullInput() {
+        UnescapeFilter filter = new UnescapeFilter();
+
+        ExecutionResult result = filter.apply(null);
+
+        assertEquals("UnescapeFilter error: Unescaped code is null", result.getMessage(), "The message should indicate the filter received a null input");
+        assertFalse(result.isCompiled(), "The result should indicate the code was not compiled");
+        assertFalse(result.isExecution(), "The result should indicate the code was not executed");
+    }
 
     static class MockFilter implements Filter {
         static String lastInput;

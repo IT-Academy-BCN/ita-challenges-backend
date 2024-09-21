@@ -25,7 +25,7 @@ public class JavaSandboxContainer extends GenericContainer<JavaSandboxContainer>
     }
 
     @Override
-    public GenericContainer<?> createAndRunContainer(String imageName) {
+    public GenericContainer<JavaSandboxContainer> createAndRunContainer(String imageName) {
 
         try (GenericContainer<?> container = new GenericContainer<>(imageName)) {
             container.withFileSystemBind("/tmp/app", "/app");
@@ -35,7 +35,7 @@ public class JavaSandboxContainer extends GenericContainer<JavaSandboxContainer>
             copyFileToContainer(container, "file content", "/app/file.txt");
             executeCommand(container, "sh", "-c", "echo Hello World");
 
-            return container;
+            return (GenericContainer<JavaSandboxContainer>) container;
         } catch (InterruptedException | IOException e) {
             Thread.currentThread().interrupt();
             log.error("Error creating container", e);
