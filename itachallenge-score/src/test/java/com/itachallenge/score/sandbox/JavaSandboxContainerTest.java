@@ -3,13 +3,17 @@ package com.itachallenge.score.sandbox;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+@Testcontainers
 class JavaSandboxContainerTest {
 
     private JavaSandboxContainer container;
@@ -44,6 +48,21 @@ class JavaSandboxContainerTest {
     }
 
     @Test
+    void testFailCreateContainer() {
+        JavaSandboxContainer mockContainer = Mockito.mock(JavaSandboxContainer.class);
+        doThrow(new RuntimeException("Mocked exception")).when(mockContainer).createContainer("invalid-image");
+
+        assertThrows(RuntimeException.class, () -> {
+            mockContainer.createContainer("invalid-image");
+            mockContainer.startContainer();
+        }, "Should throw exception");
+
+        verify(mockContainer, times(1)).createContainer("invalid-image");
+        verify(mockContainer, never()).startContainer();
+
+    }
+
+    @Test
     void testCopyFileToContainer() throws IOException, InterruptedException {
         container.startContainer();
         String fileContent = "Hello, World!";
@@ -61,10 +80,20 @@ class JavaSandboxContainerTest {
     void testExecuteCommand() throws IOException, InterruptedException {
         container.startContainer();
         String command = "echo Hello, World!";
-        Container.ExecResult result = container.getContainer().execInContainer("sh", "-c", command);
+        String failedCommand = "sh -c 'echo Hello, World! && exit 1'";
 
+        // Execute the successful command
+        Container.ExecResult result = container.getContainer().execInContainer("sh", "-c", command);
         assertEquals("Hello, World!", result.getStdout().trim(), "Command output should match");
+        assertEquals("", result.getStderr().trim(), "Command error should be empty");
+
+        // Execute the failing command
+        Container.ExecResult failedResult = container.getContainer().execInContainer("sh", "-c", failedCommand);
+        System.out.println("Failed command stderr: " + failedResult.getStderr().trim());
+        assertEquals("Hello, World!", failedResult.getStdout().trim(), "Command output should match");
+        assertEquals(1, failedResult.getExitCode(), "Command exit code should be 1");
     }
+
 
     @Test
     void testGetProhibitedClasses() {
