@@ -1,0 +1,2 @@
+JAVA_VERSION="21.0.2"
+MODULES="java.base java.compiler jdk.internal.opt jdk.zipfs jdk.compiler"

@@ -1,7 +1,7 @@
 FROM bellsoft/liberica-openjdk-alpine:17.0.1
 
-# Create a custom JDK image including only necessary modules
-RUN jlink --module-path $JAVA_HOME/jmods --add-modules java.base,java.logging --output /opt/custom-jdk --strip-debug --no-man-pages --no-header-files --compress=2
+# Copy the custom JDK from the root of the score directory
+COPY /score/custom-jdk /opt/custom-jdk
 
 # Set JAVA_HOME to the custom JDK
 ENV JAVA_HOME=/opt/custom-jdk
