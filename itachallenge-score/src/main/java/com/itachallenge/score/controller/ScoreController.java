@@ -6,7 +6,6 @@ import com.itachallenge.score.document.ScoreResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,6 @@ public class ScoreController {
 
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
 
-    @Autowired
     private CodeProcessingManager codeProcessingManager;
 
     @Value("${spring.application.version}")
@@ -29,6 +27,10 @@ public class ScoreController {
 
     @Value("${spring.application.name}")
     private String appName;
+
+    public ScoreController(CodeProcessingManager codeProcessingManager) {
+        this.codeProcessingManager = codeProcessingManager;
+    }
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")

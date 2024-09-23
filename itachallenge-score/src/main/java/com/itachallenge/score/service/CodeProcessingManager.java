@@ -38,9 +38,9 @@ public class CodeProcessingManager {
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
-        scoreResponse.setExpected_Result(resultExpected);
+        scoreResponse.setExpectedResult(resultExpected);
         int score = calculateScore(executionResult, resultExpected);
-        scoreResponse.setCompilation_Message(executionResult.getMessage());
+        scoreResponse.setCompilationMessage(executionResult.getMessage());
         scoreResponse.setScore(score);
 
         return ResponseEntity.ok(scoreResponse);

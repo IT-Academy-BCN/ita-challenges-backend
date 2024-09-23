@@ -29,8 +29,8 @@ class JavaSandboxContainerTest {
     }
 
     @Test
-    void testCreateContainer() {
-        GenericContainer<?> newContainer = container.createContainer("openjdk:11-jdk-slim-sid");
+    void testCreateAndExecuteContainer() {
+        GenericContainer<?> newContainer = container.createAndRunContainer("openjdk:11-jdk-slim-sid");
         assertNotNull(newContainer, "Container should be created");
     }
 
@@ -47,20 +47,19 @@ class JavaSandboxContainerTest {
         assertFalse(container.getContainer().isRunning(), "Container should be stopped");
     }
 
-    @Test
-    void testFailCreateContainer() {
-        JavaSandboxContainer mockContainer = Mockito.mock(JavaSandboxContainer.class);
-        doThrow(new RuntimeException("Mocked exception")).when(mockContainer).createContainer("invalid-image");
+@Test
+void testFailCreateAndExecuteContainer() {
 
-        assertThrows(RuntimeException.class, () -> {
-            mockContainer.createContainer("invalid-image");
-            mockContainer.startContainer();
-        }, "Should throw exception");
+    JavaSandboxContainer mockContainer = Mockito.mock(JavaSandboxContainer.class);
+    doThrow(new RuntimeException("Mocked exception")).when(mockContainer).createAndRunContainer("invalid-image");
 
-        verify(mockContainer, times(1)).createContainer("invalid-image");
-        verify(mockContainer, never()).startContainer();
+    assertThrows(RuntimeException.class, () -> {
+        mockContainer.createAndRunContainer("invalid-image");
+    }, "Should throw exception");
 
-    }
+    verify(mockContainer, times(1)).createAndRunContainer("invalid-image");
+    verify(mockContainer, never()).startContainer();
+}
 
     @Test
     void testCopyFileToContainer() throws IOException, InterruptedException {
@@ -75,6 +74,8 @@ class JavaSandboxContainerTest {
 
         assertEquals(fileContent, output, "File content should match");
     }
+
+
 
     @Test
     void testExecuteCommand() throws IOException, InterruptedException {
@@ -93,7 +94,6 @@ class JavaSandboxContainerTest {
         assertEquals("Hello, World!", failedResult.getStdout().trim(), "Command output should match");
         assertEquals(1, failedResult.getExitCode(), "Command exit code should be 1");
     }
-
 
     @Test
     void testGetProhibitedClasses() {

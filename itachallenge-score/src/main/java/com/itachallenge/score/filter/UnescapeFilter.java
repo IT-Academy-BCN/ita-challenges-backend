@@ -1,39 +1,31 @@
 package com.itachallenge.score.filter;
 
 import com.itachallenge.score.util.ExecutionResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UnescapeFilter implements Filter {
 
     private Filter next;
-    private static final Logger log = LoggerFactory.getLogger(UnescapeFilter.class);
 
     @Override
     public ExecutionResult apply(String input) {
-        String code = UnescapeJava.unescapeJavaCode(input);
-
-        if (code == null) {
-            String errorMessage = "UnescapeFilter error: Unescaped code is null";
-            log.error(errorMessage);
-
-            ExecutionResult executionResult = new ExecutionResult();
-            executionResult.setCompiled(false);
-            executionResult.setExecution(false);
-            executionResult.setMessage(errorMessage);
-            return executionResult;
+        ExecutionResult result = new ExecutionResult();
+        if (input == null) {
+            result.setCompiled(false);
+            result.setExecution(false);
+            result.setMessage("UnescapeFilter error: Unescaped code is null");
+            return result;
         }
 
-        // Go to the next filter
+        String unescapedCode = UnescapeJava.unescapeJavaCode(input);
+        result.setCompiled(true);
+        result.setExecution(true);
+        result.setMessage("UnescapeFilter: Finished unescaping");
+
         if (next != null) {
-            return next.apply(code);
+            return next.apply(unescapedCode);
         }
 
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setMessage("UnescapeFilter: Finished unescaping");
-        return executionResult;
+        return result;
     }
 
     @Override

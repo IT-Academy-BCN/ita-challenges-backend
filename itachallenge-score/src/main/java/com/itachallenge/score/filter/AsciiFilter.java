@@ -46,6 +46,7 @@ public class AsciiFilter implements Filter {
 
         executionResult.setCompiled(true);
         executionResult.setExecution(true);
+        executionResult.setPassedAllFilters(true);
         executionResult.setMessage("Code passed ASCII filter");
         return executionResult;
     }

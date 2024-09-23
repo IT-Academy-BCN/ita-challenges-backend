@@ -83,7 +83,7 @@ class CodeProcessingManagerTest {
         log.info("Response entity: {}", responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
-        assertEquals("Code compiled and executed, and result match: 5432", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Code compiled and executed, and result match: 5432", responseEntity.getBody().getCompilationMessage());
     }
 
     @DisplayName("Test processCode compilation failure")
@@ -105,7 +105,7 @@ class CodeProcessingManagerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
-        assertEquals("Compilation failed", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Compilation failed", responseEntity.getBody().getCompilationMessage());
     }
 
     @DisplayName("Test processCode execution failure")
@@ -129,7 +129,7 @@ class CodeProcessingManagerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(25, responseEntity.getBody().getScore());
-        assertEquals("Execution error: Execution failed", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Execution error: Execution failed", responseEntity.getBody().getCompilationMessage());
     }
 
     @DisplayName("Test processCode partial match")
@@ -153,7 +153,7 @@ class CodeProcessingManagerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(75, responseEntity.getBody().getScore());
-        assertEquals("Code compiled and executed, and result partially match: -543298", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Code compiled and executed, and result partially match: -543298", responseEntity.getBody().getCompilationMessage());
     }
 
     @DisplayName("Test processCode no match")
@@ -177,7 +177,7 @@ class CodeProcessingManagerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(50, responseEntity.getBody().getScore());
-        assertEquals("Code compiled and executed, but result doesn't match: [9, 5, 4, 3, 1, 1]", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Code compiled and executed, but result doesn't match: [9, 5, 4, 3, 1, 1]", responseEntity.getBody().getCompilationMessage());
     }
 
     @DisplayName("Test filterChain passes all filters")
@@ -203,7 +203,7 @@ class CodeProcessingManagerTest {
         log.info("Response entity: {}", responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
-        assertEquals("Code compiled and executed, and result match: 5432", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Code compiled and executed, and result match: 5432", responseEntity.getBody().getCompilationMessage());
     }
 
 
@@ -227,6 +227,6 @@ class CodeProcessingManagerTest {
         log.info("Response entity: {}", responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
-        assertEquals("Filter failed", responseEntity.getBody().getCompilation_Message());
+        assertEquals("Filter failed", responseEntity.getBody().getCompilationMessage());
     }
 }

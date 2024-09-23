@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class JavaSandboxContainer implements DockerContainerHelper {
+public class JavaSandboxContainer extends GenericContainer<JavaSandboxContainer> implements DockerContainerHelper {
 
     private static final Logger log = LoggerFactory.getLogger(JavaSandboxContainer.class);
     private static final String JAVA_SANDBOX_IMAGE = "openjdk:11-jdk-slim-sid";
@@ -20,19 +20,30 @@ public class JavaSandboxContainer implements DockerContainerHelper {
     private final GenericContainer<?> javaContainer;
 
     public JavaSandboxContainer() {
-        javaContainer = createContainer(JAVA_SANDBOX_IMAGE);
+        javaContainer = createAndRunContainer(JAVA_SANDBOX_IMAGE);
         log.info("Java Sandbox Container created");
     }
 
     @Override
-    public GenericContainer<?> createContainer(String imageName) {
-        try {
-            GenericContainer<?> container = new GenericContainer<>(imageName);
+    public GenericContainer<JavaSandboxContainer> createAndRunContainer(String imageName) {
+
+        try (GenericContainer<?> container = new GenericContainer<>(imageName)) {
             container.withFileSystemBind("/tmp/app", "/app");
-            return container;
-        } catch (Exception e) {
+            container.start();
+
+            // Execute commands and copy files
+            copyFileToContainer(container, "file content", "/app/file.txt");
+            executeCommand(container, "sh", "-c", "echo Hello World");
+
+            return (GenericContainer<JavaSandboxContainer>) container;
+        } catch (InterruptedException | IOException e) {
+            Thread.currentThread().interrupt();
             log.error("Error creating container", e);
             return null;
+        } finally {
+            if (javaContainer != null && javaContainer.isRunning()) {
+                javaContainer.stop();
+            }
         }
     }
 
@@ -44,19 +55,15 @@ public class JavaSandboxContainer implements DockerContainerHelper {
 
     @Override
     public void executeCommand(GenericContainer<?> container, String... command) throws IOException, InterruptedException {
-        Container.ExecResult result = container.execInContainer(command);
-        log.info("stdout: {}", result.getStdout());
-        log.error("stderr: {}", result.getStderr());
+        Container.ExecResult execResult = container.execInContainer(command);
+        log.info("Command executed in container: {}", execResult.getStdout());
     }
-
 
     @Override
     public void startContainer() {
         if (!javaContainer.isRunning()) {
             javaContainer.start();
             log.info("Java Sandbox Container started");
-        } else {
-            log.warn("Java Sandbox Container is already running");
         }
     }
 
@@ -65,13 +72,11 @@ public class JavaSandboxContainer implements DockerContainerHelper {
         if (javaContainer.isRunning()) {
             javaContainer.stop();
             log.info("Java Sandbox Container stopped");
-        } else {
-            log.warn("Java Sandbox Container is not running");
         }
     }
 
-    public GenericContainer<?> getContainer() {
-        return javaContainer;
+    public GenericContainer<JavaSandboxContainer> getContainer() {
+        return (GenericContainer<JavaSandboxContainer>) javaContainer;
     }
 
     public static List<String> getProhibitedClasses() {
