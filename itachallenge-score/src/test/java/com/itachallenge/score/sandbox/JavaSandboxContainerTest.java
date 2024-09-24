@@ -47,19 +47,21 @@ class JavaSandboxContainerTest {
         assertFalse(container.getContainer().isRunning(), "Container should be stopped");
     }
 
-@Test
-void testFailCreateAndExecuteContainer() {
 
-    JavaSandboxContainer mockContainer = Mockito.mock(JavaSandboxContainer.class);
-    doThrow(new RuntimeException("Mocked exception")).when(mockContainer).createAndRunContainer("invalid-image");
 
-    assertThrows(RuntimeException.class, () -> {
-        mockContainer.createAndRunContainer("invalid-image");
-    }, "Should throw exception");
+    @Test
+    void testFailCreateAndExecuteContainer() {
 
-    verify(mockContainer, times(1)).createAndRunContainer("invalid-image");
-    verify(mockContainer, never()).startContainer();
-}
+        JavaSandboxContainer mockContainer = Mockito.mock(JavaSandboxContainer.class);
+        doThrow(new RuntimeException("Mocked exception")).when(mockContainer).createAndRunContainer("invalid-image");
+
+        assertThrows(RuntimeException.class, () -> {
+            mockContainer.createAndRunContainer("invalid-image");
+        }, "Should throw exception");
+
+        verify(mockContainer, times(1)).createAndRunContainer("invalid-image");
+        verify(mockContainer, never()).startContainer();
+    }
 
     @Test
     void testCopyFileToContainer() throws IOException, InterruptedException {
@@ -74,7 +76,6 @@ void testFailCreateAndExecuteContainer() {
 
         assertEquals(fileContent, output, "File content should match");
     }
-
 
 
     @Test

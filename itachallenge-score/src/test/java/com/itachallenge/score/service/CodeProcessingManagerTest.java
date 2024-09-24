@@ -229,4 +229,27 @@ class CodeProcessingManagerTest {
         assertEquals(0, responseEntity.getBody().getScore());
         assertEquals("Filter failed", responseEntity.getBody().getCompilationMessage());
     }
+
+
+    @DisplayName("Test processCode compilation failure with empty message")
+    @Test
+    void testProcessCodeCompilationFailureWithEmptyMessage() {
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "int number = 1," // Code that will cause compilation/runtime error because it doesn't have ";" at the end
+        );
+
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(false);
+        executionResult.setMessage("");
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+
+        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(0, responseEntity.getBody().getScore());
+        assertEquals("Compilation error: ", responseEntity.getBody().getCompilationMessage());
+    }
 }
