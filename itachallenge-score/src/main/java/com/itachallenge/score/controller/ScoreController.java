@@ -47,6 +47,8 @@ public class ScoreController {
         return Mono.just(ResponseEntity.ok(response));
     }
 
+
+    @Operation(summary = "Endpoint to execute the code and calculate the score")
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
         return Mono.just(scoreRequest)

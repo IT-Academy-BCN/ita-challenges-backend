@@ -70,7 +70,7 @@ class CodeProcessingManagerTest {
         );
 
         ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setPassedAllFilters(true);
+        executionResult.setSuccess(true);
         executionResult.setCompiled(true);
         executionResult.setExecution(true);
         executionResult.setMessage("5432");
@@ -190,7 +190,7 @@ class CodeProcessingManagerTest {
         );
 
         ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setPassedAllFilters(true);
+        executionResult.setSuccess(true);
         executionResult.setCompiled(true);
         executionResult.setExecution(true);
         executionResult.setMessage("5432");
@@ -217,7 +217,7 @@ class CodeProcessingManagerTest {
         );
 
         ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setPassedAllFilters(false);
+        executionResult.setSuccess(false);
         executionResult.setMessage("Filter failed");
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);

@@ -1,28 +1,31 @@
 package com.itachallenge.score.util;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExecutionResultTest {
 
     @Test
     void testConstructor() {
-        ExecutionResult result = new ExecutionResult(true, "Compilation successful");
+        ExecutionResult result = new ExecutionResult(true, true, true, "Compilation successful");
+        assertTrue(result.isSuccess());
         assertTrue(result.isCompiled());
+        assertTrue(result.isExecution());
         assertEquals("Compilation successful", result.getMessage());
     }
 
     @Test
-    void testIsResultCodeMatch() {
-        ExecutionResult result = new ExecutionResult(true, "Compilation successful");
-        result.setResultCodeMatch(true);
-        assertTrue(result.isResultCodeMatch());
-    }
+    void testSettersAndGetters() {
+        ExecutionResult result = new ExecutionResult();
+        result.setSuccess(true);
+        result.setCompiled(true);
+        result.setExecution(true);
+        result.setMessage("Test message");
 
-    @Test
-    void testSetResultCodeMatch() {
-        ExecutionResult result = new ExecutionResult(true, "Compilation successful");
-        result.setResultCodeMatch(false);
-        assertFalse(result.isResultCodeMatch());
+        assertTrue(result.isSuccess());
+        assertTrue(result.isCompiled());
+        assertTrue(result.isExecution());
+        assertEquals("Test message", result.getMessage());
     }
 }

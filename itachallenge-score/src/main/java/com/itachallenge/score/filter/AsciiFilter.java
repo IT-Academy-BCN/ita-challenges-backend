@@ -34,7 +34,6 @@ public class AsciiFilter implements Filter {
             char c = code.charAt(i);
             if (!isValidChar(c)) {
                 log.error("ASCII FILTER ERROR: Invalid character '{}' at index {} in code", c, i);
-                executionResult.setCompiled(false);
                 executionResult.setMessage("ASCII FILTER ERROR: Invalid character '" + c + "' at index " + i + " in code");
                 return executionResult;
             }
@@ -44,9 +43,7 @@ public class AsciiFilter implements Filter {
             return next.apply(code);
         }
 
-        executionResult.setCompiled(true);
-        executionResult.setExecution(true);
-        executionResult.setPassedAllFilters(true);
+        executionResult.setSuccess(true);
         executionResult.setMessage("Code passed ASCII filter");
         return executionResult;
     }

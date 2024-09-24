@@ -56,8 +56,6 @@ class HtmlSanitizerFilterTest {
         String validHtml = "<p>This is a paragraph.</p>";
         ExecutionResult result = filter.apply(validHtml);
 
-        assertTrue(result.isCompiled(), "The code should be compiled");
-        assertTrue(result.isExecution(), "The code should be executed");
         assertEquals("Code passed HTML sanitizer", result.getMessage(), "The message should indicate that the code passed the HTML sanitizer");
     }
 }

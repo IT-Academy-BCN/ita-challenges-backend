@@ -30,7 +30,7 @@ public class CodeProcessingManager {
 
         ExecutionResult executionResult = filterChain.apply(sourceCode);
 
-        if (executionResult.isPassedAllFilters()) {
+        if (executionResult.isSuccess()) {
             executionResult = compileExecuter.executeCode(sourceCode);
         }
 

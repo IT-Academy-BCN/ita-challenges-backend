@@ -19,8 +19,6 @@ public class HtmlSanitizerFilter implements Filter {
         ExecutionResult executionResult = new ExecutionResult();
 
         if (code == null) {
-            executionResult.setCompiled(false);
-            executionResult.setExecution(false);
             executionResult.setMessage("Code is null");
             if (next != null) {
                 return next.apply(code);
@@ -36,8 +34,7 @@ public class HtmlSanitizerFilter implements Filter {
             return next.apply(sanitizedCode);
         }
 
-        executionResult.setCompiled(true);
-        executionResult.setExecution(true);
+
         executionResult.setMessage("Code passed HTML sanitizer");
         return executionResult;
     }
