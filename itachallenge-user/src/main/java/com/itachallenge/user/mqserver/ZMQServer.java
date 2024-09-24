@@ -20,15 +20,15 @@ import java.util.Optional;
 public class ZMQServer {
 
     private final ZContext context;
-    private final String SOCKET_ADDRESS;
+    private final String SERVER_SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
     @Autowired
     ObjectSerializer objectSerializer;
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address_server}") String socketAddress){
         this.context = context;
-        this.SOCKET_ADDRESS = socketAddress;
+        this.SERVER_SOCKET_ADDRESS = socketAddress;
     }
 
     @PostConstruct

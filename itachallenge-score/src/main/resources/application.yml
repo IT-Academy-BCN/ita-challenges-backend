@@ -25,7 +25,9 @@ management:
   security:
     enabled: false
 
-
+zeromq:
+  socket:
+    address_client: tcp://*:5556
 
 
 logging:
