@@ -1,10 +1,16 @@
 package com.itachallenge.score.controller;
 
+import com.itachallenge.score.component.CodeExecutionService;
 import com.itachallenge.score.document.ScoreRequest;
+import com.itachallenge.score.document.ScoreResponse;
+import com.itachallenge.score.dto.ExecutionResultDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -13,6 +19,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @WebFluxTest(ScoreController.class)
 @ActiveProfiles("test")
@@ -24,7 +33,83 @@ class ScoreControllerTest {
     @Autowired
     private Environment env;
 
+    @MockBean
+    private CodeExecutionService codeExecutionService;
+
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
+
+    @BeforeEach
+    void setUp() {
+        ExecutionResultDto mockExecutionResult = new ExecutionResultDto();
+        mockExecutionResult.setMessage("Compilation successful");
+        when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
+                .thenReturn(mockExecutionResult);
+    }
+
+    @Test
+    void createScoreSuccessful() {
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "int number = 1;"
+        );
+
+        webTestClient.post().uri(CONTROLLER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(scoreRequest)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ScoreResponse.class)
+                .consumeWith(response -> {
+                    assert response.getResponseBody().getScore() == 99;
+                    assert response.getResponseBody().getCompilationMessage().equals("Compilation successful");
+                });
+    }
+
+    @Test
+    void createScoreWithEmptySourceCode() {
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                ""
+        );
+
+        webTestClient.post().uri(CONTROLLER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(scoreRequest)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ScoreResponse.class)
+                .consumeWith(response -> {
+                    assert response.getResponseBody().getScore() == 99;
+                    assert response.getResponseBody().getCompilationMessage().equals("Compilation successful");
+                });
+    }
+
+    @Test
+    void createScoreCompilationFailure() {
+        ExecutionResultDto mockExecutionResult = new ExecutionResultDto();
+        mockExecutionResult.setMessage("Compilation failed");
+        when(codeExecutionService.compileAndRunCode(any(String.class), any(String.class)))
+                .thenReturn(mockExecutionResult);
+
+        ScoreRequest scoreRequest = new ScoreRequest(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                "int number = 1 / 0;" // Code that will cause compilation/runtime error
+        );
+
+        webTestClient.post().uri(CONTROLLER_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(scoreRequest)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ScoreResponse.class)
+                .consumeWith(response -> {
+                    assert response.getResponseBody().getScore() == 99;
+                    assert response.getResponseBody().getCompilationMessage().equals("Compilation failed");
+                });
+    }
 
     @Test
     void testCreateScore() {

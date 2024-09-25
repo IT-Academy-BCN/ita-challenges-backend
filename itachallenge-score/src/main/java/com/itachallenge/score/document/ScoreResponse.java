@@ -18,5 +18,7 @@ public class ScoreResponse {
     @JsonProperty("solution_text")
     private String solutionText;
     private int score;
+    private String compilationMessage;
+
 }
 
