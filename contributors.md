@@ -57,5 +57,6 @@
 * Marine Achinian - https://github.com/MarineAvramova
 * Joan Caballero Portolés - https://github.com/JoanCaballero
 * Andreia Sofia Sousa Ribeiro - https://github.com/Asousa12
+* Jorge Monzó Pérez - https://github.com/tommer1375
 
 
