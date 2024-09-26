@@ -22,7 +22,7 @@ public class ScoreRequestDto {
     @JsonProperty(value="id_solution", index = 1)
     private UUID solutionId;
 
-    @JsonProperty(value="id_user", index = 2)
-    private UUID userId;
+    @JsonProperty(value = "language", index = 1)
+    private UUID languageID;
 
 }

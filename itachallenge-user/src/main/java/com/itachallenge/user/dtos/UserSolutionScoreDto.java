@@ -25,13 +25,7 @@ public class UserSolutionScoreDto {
     @JsonProperty(value ="solution_text")
     private String solutionText;
 
-    @JsonProperty(value = "status")
-    private ChallengeStatus status;
-
     @JsonProperty(value = "score")
     private int score;
-
-    @JsonProperty(value = "errors")
-    private String errors;
 
 }

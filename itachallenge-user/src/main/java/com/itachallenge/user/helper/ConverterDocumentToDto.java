@@ -10,16 +10,16 @@ import reactor.core.publisher.Flux;
 @Component
 public class ConverterDocumentToDto {
 
-    public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserScoreDocument> just) {
-        return just.map(this::fromUserScoreDocumentToUserScoreDto);
+    public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserSolutionDocument> just) {
+        return just.map(this::toUserScoreDto);
     }
 
-    public UserScoreDto fromUserScoreDocumentToUserScoreDto(UserSolutionDocument userSolutionDocument) {
+    public UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
         return UserScoreDto.builder()
-                .challengeId(userSolutionDocument.getChallengeId())
-                .languageID(userSolutionDocument.getLanguageId())
-                .userId(userSolutionDocument.getUserId())
-                .solutions(userSolutionDocument.getSolutionDocument())
+                .challengeId(userScoreDocument.getChallengeId())
+                .languageID(userScoreDocument.getLanguageId())
+                .userId(userScoreDocument.getUserId())
+                .solutions(userScoreDocument.getSolutionDocument())
                 .build();
     }
 
