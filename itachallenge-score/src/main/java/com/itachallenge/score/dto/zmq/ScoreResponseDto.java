@@ -10,10 +10,10 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 public class ScoreResponseDto {
 
-    @JsonProperty(value="score", index = 0)
     private Integer score;
+
+    private String errors;
 }

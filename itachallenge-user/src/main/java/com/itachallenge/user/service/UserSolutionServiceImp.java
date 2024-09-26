@@ -4,7 +4,6 @@ import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
-import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -23,7 +22,6 @@ import java.util.UUID;
 public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
-    private static final String CHALLENGE_NOT_FOUND = "Challenge with Id %s of the User Id %s not found";
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
 
@@ -149,37 +147,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
         return userSolutionRepository.findByUserId(userUuid)
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
-    }
-
-
-    @Override
-//    public Flux<UserSolScoreDto> getScore(String idUser, String idChallenge, String idSolution)
-    public Mono<Integer> getScore(String idUser, String idChallenge, String idSolution)
-//    public Mono<SolutionScoreDto> getScore(String idUser, String idChallenge, String idSolution)
-    {
-        UUID uuidUser = UUID.fromString(idUser);
-        UUID uuidChallenge = UUID.fromString(idChallenge);
-        UUID uuidSolution = UUID.fromString(idSolution);
-        ChallengeStatus statusReadyToScore = ChallengeStatus.STARTED;
-
-        return Mono.just(4);
-
-//        return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
-//                .filter(u -> u.getStatus().equals(statusReadyToScore) && u.getSolutionDocument().get(0).getUuid().equals(uuidSolution))
-//                .map(req -> {
-//                    UserSolScoreDto scoreReq = new UserSolScoreDto();
-//                    scoreReq.setUserId(uuidUser);
-//                    scoreReq.setChallengeId(uuidChallenge);
-//                    scoreReq.setLanguageId(req.getLanguageId());
-//                    scoreReq.setSolutionId(uuidSolution);
-//                    scoreReq.setStatus(req.getStatus());
-//                    scoreReq.setScore(req.getScore());
-//                    return scoreReq;
-//                });
-
-
-
-
     }
 }
 
