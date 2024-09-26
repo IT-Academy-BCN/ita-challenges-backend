@@ -12,17 +12,12 @@ import java.util.UUID;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
-@Getter
-@Setter
+@Data
 public class ScoreRequestDto {
 
-    @JsonProperty(value="id_challenge", index = 0)
     private UUID challengeId;
 
-    @JsonProperty(value="id_solution", index = 1)
-    private UUID solutionId;
-
-    @JsonProperty(value = "language", index = 1)
     private UUID languageID;
 
+    private UUID solutionId;
 }
