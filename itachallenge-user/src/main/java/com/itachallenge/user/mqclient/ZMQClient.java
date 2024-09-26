@@ -37,13 +37,12 @@ public class ZMQClient {
 
             ZContext context1 = new ZContext();
             ZMQ.Socket socket = context1.createSocket(ZMQ.REQ);
-
             socket.connect(SOCKET_ADDRESS);
 
             Optional<byte[]> request = Optional.empty();
             try {
                 request = Optional.of(ObjectSerializer.serialize(message));
-            }catch (JsonProcessingException jpe){
+            } catch (JsonProcessingException jpe){
                 log.error(jpe.getMessage());
             }
             socket.send(request.orElse(new byte[0]), 0);
