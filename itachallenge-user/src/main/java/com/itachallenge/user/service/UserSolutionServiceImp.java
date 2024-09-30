@@ -29,6 +29,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private static final String CHALLENGE_NOT_FOUND = "Challenge with Id %s of the User Id %s not found";
+    private static final String CHALLENGE_ALREADY_SCORED = "Challenge with Id %s of the User Id %s is already scored";
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
 
@@ -160,27 +161,23 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     @Override
     public Mono<UserSolScoreDto> getScoreFromScoreMicro(String idUser, String idChallenge, String idSolution)
     {
-//        UUID uuidUser = UUID.fromString(idUser);
-//        UUID uuidChallenge = UUID.fromString(idChallenge);
-//        UUID uuidSolution = UUID.fromString(idSolution);
-        ChallengeStatus statusReadyToScore = ChallengeStatus.STARTED;
-/*
+        UUID uuidUser = UUID.fromString(idUser);
+        UUID uuidChallenge = UUID.fromString(idChallenge);
+        UUID uuidSolution = UUID.fromString(idSolution);
+
         return this.userSolutionRepository.findByUserIdAndChallengeId(uuidUser, uuidChallenge)
-                .filter(u -> u.getStatus().equals(statusReadyToScore) && u.getSolutionDocument().get(0).getUuid().equals(uuidSolution))
+                .filter(userSolutionDocument -> userSolutionDocument.getSolutionDocument().get(0).getUuid().equals(uuidSolution))
                 .next()
-                .map(req -> {
-                    UserSolScoreDto scoreReq = new UserSolScoreDto();
-                    scoreReq.setUserId(uuidUser);
-                    scoreReq.setChallengeId(uuidChallenge);
-                    scoreReq.setLanguageId(req.getLanguageId());
-                    scoreReq.setSolutionId(uuidSolution);
-                    scoreReq.setStatus(req.getStatus());
-                    scoreReq.setScore(req.getScore());
-                    scoreReq.setErrors(req.getErrors());
-                    return scoreReq;
-                });
-                */
-/* */
+                .flatMap(userSolutionDocument -> {
+                    if(userSolutionDocument.getStatus().equals(ChallengeStatus.ENDED))
+                    {
+                        return Mono.error(new ChallengeAlreadyScored(CHALLENGE_ALREADY_SCORED));
+                    }
+                    return Mono.just(converter.fromUserSolutionDocumentToUserSolScoreDto(userSolutionDocument));
+                })
+                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND, idChallenge, idUser))));
+
+/*  Result we need to see
         UUID uuidUser = UUID.fromString("76f906d8-8d02-4a61-892e-83744b685fd2");
         UUID uuidChallenge = UUID.fromString("866853b8-ae7d-4daf-8c82-5e6f653e0fc1");
         UUID uuidSolution = UUID.fromString("47fa6202-61d5-4de8-9fa1-6f5e4d82a4a0");
@@ -202,7 +199,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         scoreReq.setErrors(errors);
 
         return Mono.just(scoreReq);
-
+*/
     }
 }
 
