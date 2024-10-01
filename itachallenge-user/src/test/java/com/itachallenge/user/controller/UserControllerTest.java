@@ -250,7 +250,7 @@ class UserControllerTest {
 
         UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
                 userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText(), 13);
+                userSolutionDto.getSolutionText(), 13, "xxx");
 
         when(userSolutionService.addSolution(userSolutionDto))
                 .thenReturn(Mono.just(expectedResponse));
@@ -268,6 +268,7 @@ class UserControllerTest {
                     assert dto.getChallengeId() != null;
                     assert dto.getLanguageId() != null;
                     assert dto.getScore() >= 0;
+                    assert dto.getErrors() != null;
 
                     verify(userSolutionService).addSolution(userSolutionDto);
                 });
