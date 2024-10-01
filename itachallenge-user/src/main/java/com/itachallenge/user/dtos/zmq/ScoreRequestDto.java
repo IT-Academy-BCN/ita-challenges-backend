@@ -1,23 +1,25 @@
 package com.itachallenge.user.dtos.zmq;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class ScoreRequestDto {
 
-    private UUID challengeId;
+    private UUID uuidChallenge;
 
-    private UUID languageID;
+    private UUID uuidLanguage;
 
-    private UUID solutionId;
+    private String solutionText;
 }

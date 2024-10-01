@@ -1,6 +1,6 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.dto.ScoreRequest;
+import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -25,7 +25,7 @@ class ScoreControllerTest {
 
     @Test
     void testCreateScore() {
-        ScoreRequest scoreRequest = new ScoreRequest(
+        ScoreRequestDto scoreRequestDto = new ScoreRequestDto(
                 UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
                 UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
                 "texto de ejemplo"
@@ -33,7 +33,7 @@ class ScoreControllerTest {
 
         webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(scoreRequest)
+                .bodyValue(scoreRequestDto)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
