@@ -51,14 +51,19 @@ public class ZMQServer {
                     log.error(e.getMessage());
                 }
 
-                // Pendiente modificar para que muestre lo que se pide
                 log.info("Received: [" + (ScoreRequestDto)request.get() + "]");
                 ScoreResponseDto dto = new ScoreResponseDto();
-
-                // Pendiente lógica para que devuelva el score + errors
                 dto.setScore(99);
                 dto.setErrors("xxx");
+/* private UUID uuidChallenge;
 
+    private UUID uuidLanguage;
+
+    private String solutionText;
+
+    private int score;
+
+    private String errors;*/
                 Optional<byte[]> response = Optional.empty();
                 try {
                     response = Optional.of(objectSerializer.serialize(dto));
