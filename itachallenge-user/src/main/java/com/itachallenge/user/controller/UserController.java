@@ -2,7 +2,6 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -28,8 +27,7 @@ import java.util.*;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    @Autowired
-    IServiceChallengeStatistics serviceChallengeStatistics;
+
     @Autowired
     private IUserSolutionService userScoreService;
 
@@ -55,7 +53,7 @@ public class UserController {
         Mono<List<ChallengeStatisticsDto>> elements = null;
 
         if (!challengeIds.isEmpty()) {
-            elements = serviceChallengeStatistics.getChallengeStatistics(challengeIds);
+            elements = userScoreService.getChallengeStatistics(challengeIds);
         }
 
         return elements;
@@ -108,7 +106,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<Map<String, Long>>> getBookmarkCountByIdChallenge(
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
-        return serviceChallengeStatistics.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
+        return userScoreService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
                 .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
 
@@ -129,7 +127,7 @@ public class UserController {
             @GenericUUIDValid(message = "Invalid UUID for challenge")
             String idChallenge) {
 
-        return serviceChallengeStatistics.getChallengeUsersPercentage(UUID.fromString(idChallenge))
+        return userScoreService.getChallengeUsersPercentage(UUID.fromString(idChallenge))
                 .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
                 .map(ResponseEntity::ok);
     }

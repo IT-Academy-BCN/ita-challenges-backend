@@ -25,6 +25,7 @@ import reactor.test.StepVerifier;
 
 import static org.mockito.Mockito.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -267,6 +268,71 @@ class UserSolutionServiceImpTest {
 
         StepVerifier.create(resultFlux)
                 .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengeStatistics() {
+        List<UUID> challengeIds;
+        List<ChallengeStatisticsDto> challengeList;
+        Mono<List<ChallengeStatisticsDto>> result;
+
+        challengeIds = Arrays.asList(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID());
+
+        result = userSolutionService.getChallengeStatistics(challengeIds);
+        challengeList = result.block();
+
+        assertNotNull(challengeList);
+        assertEquals(challengeIds.size(), challengeList.size());
+    }
+
+    @DisplayName("Should return number of BookmarkedTrue by idChallenge")
+    @Test
+    void testGetBookmarkCountByIdChallenge(){
+        UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
+        boolean isBookmarked = true;
+        long expectedValue = 2L;
+
+        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
+        UserSolutionDocument userSolutionDocument2 = new UserSolutionDocument();
+        userSolutionDocument.setChallengeId(idChallenge);
+        userSolutionDocument2.setChallengeId(idChallenge);
+        userSolutionDocument.setBookmarked(true);
+        userSolutionDocument2.setBookmarked(true);
+
+        when(userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, isBookmarked))
+                .thenReturn(Mono.just(2L));
+
+        Mono<Long> resultMono = userSolutionService.getBookmarkCountByIdChallenge(idChallenge);
+
+        StepVerifier.create(resultMono)
+                .expectNext(expectedValue)
+                .verifyComplete();
+
+    }
+
+    @Test
+    void getChallengeUsersPercentageTest() {
+
+        List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
+        UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
+        float expectedValue = 100f;
+
+        List<UserSolutionDocument> userSolutions = Arrays.asList(
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
+        );
+
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
+                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.STARTED).toList()));
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.fromIterable(
+                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.ENDED).toList()));
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.fromIterable(userSolutions));
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectNext(expectedValue)
                 .verifyComplete();
     }
 }
