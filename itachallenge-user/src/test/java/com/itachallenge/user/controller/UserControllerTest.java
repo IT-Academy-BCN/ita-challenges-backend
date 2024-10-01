@@ -10,17 +10,19 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -37,12 +39,16 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
 class UserControllerTest {
     @Autowired
     private WebTestClient webTestClient;
 
     @Autowired
     UserController userController;
+
+    @Autowired
+    Environment env;
 
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
@@ -181,6 +187,25 @@ class UserControllerTest {
     }
 
     @Test
+    void getChallengeUserPercentageTest() {
+        UUID challengeId = UUID.randomUUID();
+        float percentage = 75.0f;
+        ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
+
+        when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeUserPercentageStatisticDto.class)
+                .value(responseDto -> {
+                    assertEquals(expectedDto.getChallengeId(), responseDto.getChallengeId());
+                    assertEquals(expectedDto.getPercentage(), responseDto.getPercentage());
+                });
+    }
+
+    @Test
     void markOrAddBookmark() {
 
         BookmarkRequestDto bookmarkRequestDto = new BookmarkRequestDto();
@@ -295,6 +320,8 @@ class UserControllerTest {
 
     @Test
     void getVersionTest() {
+        String expectedVersion = env.getProperty("spring.application.version"); // Obtiene la versión desde el archivo application-test.yml
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/version")
                 .exchange()
@@ -302,6 +329,35 @@ class UserControllerTest {
                 .expectBody()
                 .jsonPath("$.application_name").isEqualTo("itachallenge-user")
                 .jsonPath("$.version").isEqualTo("1.0-SNAPSHOT");
+    }
+
+    @Test
+    void getAllSolutionsByIdUser() {
+        String URI_TEST = "/{idUser}/challenges/solutions";
+        UUID userId = UUID.randomUUID();
+
+        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
+                .userId(userId.toString())
+                .challengeId(UUID.randomUUID().toString())
+                .languageId(UUID.randomUUID().toString())
+                .status("STARTED")
+                .solutionText("Sample Solution")
+                .build();
+
+        when(userSolutionService.showAllUserSolutions(userId)).thenReturn(Flux.just(userSolutionDto));
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, userId.toString())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserSolutionDto.class)
+                .value(solutions -> {
+                    assertNotNull(solutions);
+                    assertEquals(1, solutions.size());
+                    UserSolutionDto solution = solutions.get(0);
+                    assertEquals(userId.toString(), solution.getUserId());
+                    assertEquals("Sample Solution", solution.getSolutionText());
+                });
     }
 
 }

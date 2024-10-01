@@ -12,7 +12,7 @@ jar {
     }
 }
 jacoco{
-    toolVersion = '0.8.8'
+    toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
 
@@ -30,8 +30,8 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.4'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    implementation 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.1.0'
@@ -39,6 +39,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
+    implementation 'org.testcontainers:testcontainers:1.17.6'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.testcontainers:junit-jupiter:1.16.3'
+    // Borrado docker-java ya que no es necesario con la versión actual de testcontainers
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
@@ -52,6 +56,7 @@ dependencies {
     testImplementation group: 'io.projectreactor', name: 'reactor-test', version: '3.1.0.RELEASE'
     testImplementation group: 'org.testcontainers', name: 'mongodb', version: '1.17.6'
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.6'
+
 }
 
 

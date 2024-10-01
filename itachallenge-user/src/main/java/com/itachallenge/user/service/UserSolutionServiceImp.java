@@ -41,7 +41,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .collectList()
                 .map(userScoreDtos -> {
                     SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                    solutionUserDto.setInfo(0, 1, 0, userScoreDtos.toArray(new UserScoreDto[0]));
+                    int count = userScoreDtos.size();
+                    solutionUserDto.setInfo(0, 1, count, userScoreDtos.toArray(new UserScoreDto[0]));
                     return solutionUserDto;
                 });
     }
@@ -69,15 +70,15 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-            .map(savedDocument -> UserSolutionScoreDto.builder()
-                    .userId(String.valueOf(savedDocument.getUserId()))
-                    .languageId(String.valueOf(savedDocument.getLanguageId()))
-                    .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                    .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                    .score(savedDocument.getScore())
-                    .build())
-            .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
-            .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
+                .map(savedDocument -> UserSolutionScoreDto.builder()
+                        .userId(String.valueOf(savedDocument.getUserId()))
+                        .languageId(String.valueOf(savedDocument.getLanguageId()))
+                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                        .score(savedDocument.getScore())
+                        .build())
+                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
+                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
@@ -94,6 +95,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 })
                 .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
     }
+
     private Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
         UserSolutionDocument newDocument = UserSolutionDocument.builder()
                 .uuid(UUID.randomUUID())
@@ -109,7 +111,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
-                    if(existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
+                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
                         return Mono.error(new UnmodifiableSolutionException("Existing solution has status ENDED"));
                     }
                     existingSolution.setSolutionDocument(solutionDocuments);
@@ -131,14 +133,21 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
+
         ChallengeStatus challengeStatus = null;
 
         if(status == null || status.isEmpty()) {
             challengeStatus = ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase("ENDED")) {
+        } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
             challengeStatus = ChallengeStatus.ENDED;
-        }
+    }
         return challengeStatus;
     }
 
+    public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
+        return userSolutionRepository.findByUserId(userUuid)
+                .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
+    }
+
 }
+
