@@ -27,6 +27,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,6 +50,7 @@ class UserSolutionServiceImpTest {
     private UUID challengeUuid;
     private UUID languageUuid;
     private int mockScore;
+    private String errors;
     private UserSolutionDto userSolutionDto;
     private UserSolutionDocument userSolutionDocument;
 
@@ -62,6 +64,7 @@ class UserSolutionServiceImpTest {
         challengeUuid = UUID.fromString(idChallenge);
         languageUuid = UUID.fromString(idLanguage);
         mockScore = 13;
+        errors = "xxx";
         userSolutionDto = UserSolutionDto.builder()
                 .userId(idUser)
                 .challengeId(idChallenge)
@@ -93,7 +96,7 @@ class UserSolutionServiceImpTest {
                 .thenReturn(Mono.just(userSolutionDocument));
 
         assertNotNull(userSolutionDocument);
-        assert(userSolutionDocument.isBookmarked());
+        assert (userSolutionDocument.isBookmarked());
         assert (userSolutionDocument.getUserId().equals(userId));
         assert (userSolutionDocument.getLanguageId().equals(languageId));
         assert (userSolutionDocument.getChallengeId().equals(challengeId));
@@ -113,6 +116,7 @@ class UserSolutionServiceImpTest {
                 .status(ChallengeStatus.ENDED)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
                 .score(mockScore)
+                .errors(errors)
                 .build();
         when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
         UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
@@ -149,7 +153,8 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == mockScore)
+                                && userSolutionScoreDto.getScore() == mockScore
+                                && Objects.equals(userSolutionScoreDto.getErrors(), errors))
                 .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
@@ -214,7 +219,7 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodifiableSolutionException
-                        && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
+                                && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
@@ -228,9 +233,9 @@ class UserSolutionServiceImpTest {
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
-            .expectErrorMatches(
-                    throwable -> throwable instanceof IllegalArgumentException
-                        && throwable.getMessage().equals("Status not allowed")).verify();
+                .expectErrorMatches(
+                        throwable -> throwable instanceof IllegalArgumentException
+                                && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
     }
@@ -288,7 +293,7 @@ class UserSolutionServiceImpTest {
 
     @DisplayName("Should return number of BookmarkedTrue by idChallenge")
     @Test
-    void testGetBookmarkCountByIdChallenge(){
+    void testGetBookmarkCountByIdChallenge() {
         UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
         boolean isBookmarked = true;
         long expectedValue = 2L;
@@ -319,8 +324,8 @@ class UserSolutionServiceImpTest {
         float expectedValue = 100f;
 
         List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, errors, solutionField),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, errors, solutionField)
         );
 
         when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(

@@ -28,4 +28,6 @@ public class UserSolutionScoreDto {
     @JsonProperty(value = "score")
     private int score;
 
+    @JsonProperty(value = "errors")
+    private String errors;
 }
