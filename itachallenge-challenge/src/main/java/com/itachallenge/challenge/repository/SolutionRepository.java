@@ -13,4 +13,5 @@ public interface SolutionRepository extends ReactiveMongoRepository<SolutionDocu
     Mono<SolutionDocument> findByUuid(UUID uuid);
 
     Mono<Void> deleteByUuid(UUID uuid);
+
 }
