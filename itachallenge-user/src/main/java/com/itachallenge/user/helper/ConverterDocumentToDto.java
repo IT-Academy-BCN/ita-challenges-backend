@@ -6,7 +6,6 @@ import com.itachallenge.user.dtos.UserSolutionDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-
 @Component
 public class ConverterDocumentToDto {
 
