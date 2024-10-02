@@ -42,4 +42,5 @@ public class UserSolutionDocument {
 
     @Field("solution")
     private List<SolutionDocument> solutionDocument;
+
 }
