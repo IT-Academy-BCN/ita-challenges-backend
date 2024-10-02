@@ -23,12 +23,12 @@ public class DockerExecutorTest {
 
     private GenericContainer<?> javaContainer;
 
-    @BeforeEach
-    public void setUp() {
-        javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:21"))
-                .withCommand("sh", "-c", "while true; do sleep 1000; done");
-        javaContainer.start();
-    }
+@BeforeEach
+public void setUp() {
+    javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:21"))
+            .withCommand("sh", "-c", "while true; do sleep 1000; done");
+    javaContainer.start();
+}
 
     @Test
     public void testExecuteDockerCommandWithValidCode() throws IOException, InterruptedException {

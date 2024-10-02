@@ -40,7 +40,7 @@ class CodeProcessingManagerTest {
     private CodeProcessingManager codeProcessingManager;
 
     @Container
-    private GenericContainer<?> javaExecutorContainer = new GenericContainer<>("java-executor")
+    private GenericContainer<?> javaExecutorContainer = new GenericContainer<>("openjdk:21")
             .withExposedPorts(8080);
 
     private String codeToCompile;
