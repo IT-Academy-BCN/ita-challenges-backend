@@ -25,7 +25,6 @@ public class DockerExecutorTest {
 
     @BeforeEach
     public void setUp() {
-
         javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:21"))
                 .withCommand("sh", "-c", "while true; do sleep 1000; done");
         javaContainer.start();
@@ -33,10 +32,8 @@ public class DockerExecutorTest {
 
     @Test
     public void testExecuteDockerCommandWithValidCode() throws IOException, InterruptedException {
-
         String javaCode = "System.out.println(99);";
         ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
-
 
         assertTrue(result.isCompiled());
         assertTrue(result.isExecution());
@@ -45,7 +42,6 @@ public class DockerExecutorTest {
 
     @Test
     public void testExecuteDockerCommandWithNullCode() throws IOException, InterruptedException {
-
         ExecutionResult result = dockerExecutor.executeDockerCommand(null);
 
         assertFalse(result.isCompiled());
@@ -55,12 +51,8 @@ public class DockerExecutorTest {
 
     @Test
     public void testExecuteDockerCommandWithInvalidCode() throws IOException, InterruptedException {
-
         String javaCode = "invalid code";
-
-
         ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
-
 
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
@@ -68,11 +60,8 @@ public class DockerExecutorTest {
     }
 
     @Test
-    public void testExecuteDockerCommandWithLongRunningCode() throws IOException, InterruptedException {
-
+    public void testExecuteDockerCommandWithInfiniteLoop() throws IOException, InterruptedException {
         String javaCode = "while(true) {}";
-
-
         ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
 
         assertFalse(result.isCompiled());
@@ -82,33 +71,11 @@ public class DockerExecutorTest {
 
     @Test
     public void testExecuteDockerCommandWithSyntaxError() throws IOException, InterruptedException {
-
         String javaCode = "System.out.println(\"Hello World\"";
-
-
         ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
-
 
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
         assertTrue(result.getMessage().contains("Execution failed"));
-    }
-
-    @Test
-    public void testExecuteDockerCommandWithInfiniteLoop() throws IOException, InterruptedException {
-
-        String javaCode = "while(true) {}";
-        ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
-
-        assertFalse(result.isCompiled());
-        assertFalse(result.isExecution());
-        assertTrue(result.getMessage().contains("Execution timed out"));
-    }
-
-    @BeforeEach
-    public void tearDown() {
-        if (javaContainer != null) {
-            javaContainer.stop();
-        }
     }
 }

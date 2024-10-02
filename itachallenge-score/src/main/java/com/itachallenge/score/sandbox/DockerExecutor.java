@@ -1,4 +1,3 @@
-// DockerExecutor.java
 package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.util.ExecutionResult;
@@ -22,7 +21,7 @@ public class DockerExecutor {
     private static final Logger log = LoggerFactory.getLogger(DockerExecutor.class);
     private static final String codeTemplate = "public class Main { public static void main(String[] args) { %s } }";
     private static final long TIMEOUT_SECONDS = 5;
-    private String dockerImageName = "openjdk:21"; // Default Docker image name
+    private String dockerImageName = "openjdk:21"; 
 
     public ExecutionResult executeDockerCommand(String javaCode) throws IOException, InterruptedException {
         ExecutionResult executionResult = new ExecutionResult();
