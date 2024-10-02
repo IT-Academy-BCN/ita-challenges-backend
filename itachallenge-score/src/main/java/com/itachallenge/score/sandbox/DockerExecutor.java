@@ -20,11 +20,9 @@ import java.util.concurrent.*;
 public class DockerExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(DockerExecutor.class);
-    private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }";
+    private static final String codeTemplate = "public class Main { public static void main(String[] args) { %s } }";
     private static final long TIMEOUT_SECONDS = 5;
-    private String dockerImageName = "openjdk:21";
-    private String containerName = "java-executor-container-" + UUID.randomUUID();
-    private String osName = System.getProperty("os.name").toLowerCase();
+    private String dockerImageName = "openjdk:21"; // Default Docker image name
 
     public ExecutionResult executeDockerCommand(String javaCode) throws IOException, InterruptedException {
         ExecutionResult executionResult = new ExecutionResult();
@@ -35,18 +33,18 @@ public class DockerExecutor {
             executionResult.setMessage("Java code is null");
             return executionResult;
         }
-        String formattedCode = String.format(CODE_TEMPLATE, javaCode);
+        String formattedCode = String.format(codeTemplate, javaCode);
         formattedCode = formattedCode.replace("\"", "\\\"");
-
-        String command = String.format("docker run --rm --name %s %s \"%s\"", containerName, dockerImageName, formattedCode);
+        String containerName = "java-executor-container-" + UUID.randomUUID();
+        String command = String.format("docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java Main\"", containerName, dockerImageName, formattedCode);
 
         log.info("Executing command: {}", command);
 
-
+        // Clean up any leftover containers
         cleanUpContainers("java-executor-container-");
 
         ProcessBuilder processBuilder;
-        if (osName.contains("win")) {
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
             processBuilder = new ProcessBuilder("cmd.exe", "/c", command);
         } else {
             processBuilder = new ProcessBuilder("sh", "-c", command);
@@ -79,8 +77,8 @@ public class DockerExecutor {
             executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             future.cancel(true);
-
-
+            // Get the container ID
+            String osName = System.getProperty("os.name").toLowerCase();
             Process getContainerIdProcess;
             if (osName.contains("win")) {
                 getContainerIdProcess = new ProcessBuilder("cmd.exe", "/c", "docker ps -q --filter name=" + containerName).start();
@@ -90,7 +88,7 @@ public class DockerExecutor {
             BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getInputStream()));
             String containerId = containerIdReader.readLine();
             if (containerId != null && !containerId.isEmpty()) {
-
+                // Kill the container
                 if (osName.contains("win")) {
                     new ProcessBuilder("cmd.exe", "/c", "docker kill " + containerId).start().waitFor();
                 } else {
@@ -110,6 +108,7 @@ public class DockerExecutor {
     }
 
     private void cleanUpContainers(String namePattern) throws IOException, InterruptedException {
+        String osName = System.getProperty("os.name").toLowerCase();
         Process listContainersProcess;
         if (osName.contains("win")) {
             listContainersProcess = new ProcessBuilder("cmd.exe", "/c", "docker ps -a -q --filter name=" + namePattern).start();
