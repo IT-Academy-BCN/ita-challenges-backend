@@ -32,7 +32,7 @@ class UserScoreServiceImpTest {
     @Mock
     private ConverterDocumentToDto converter;
     @InjectMocks
-    private UserScoreService userScoreService;
+    private UserSolutionServiceImp userSolutionServiceImp;
 
     private UserSolutionDocument userSolutionDocument;
 
@@ -46,9 +46,9 @@ class UserScoreServiceImpTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-         userId = UUID.randomUUID();
-         idLanguage = UUID.randomUUID();
-         idChallenge = UUID.randomUUID();
+        userId = UUID.randomUUID();
+        idLanguage = UUID.randomUUID();
+        idChallenge = UUID.randomUUID();
 
         SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), "solutionText1");
         SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), "solutionText2");
@@ -69,7 +69,7 @@ class UserScoreServiceImpTest {
         expectedSolutionUserDto.setInfo(0, 1, 0, new UserScoreDto[]{userScoreDto});
     }
 
-    /*@Test
+    @Test
     void getUserScoreByUserId() {
         when(userSolutionRepository.findByUserId(any(UUID.class)).thenReturn(Flux.just(userSolutionDocument)));
         when(converter.fromUserScoreDocumentToUserScoreDto(any(UserSolutionDocument.class))).thenAnswer(invocation -> {
@@ -78,12 +78,12 @@ class UserScoreServiceImpTest {
         });
 
         // Llama al método del servicio para obtener el resultado
-        Mono<SolutionUserDto<UserScoreDto>> result = userScoreService.getUserScoreByUserId(userId.toString(), idChallenge.toString(), idLanguage.toString());
+        Mono<SolutionUserDto<UserScoreDto>> result = userSolutionServiceImp.getUserScoreByUserId(userId.toString(), idChallenge.toString(), idLanguage.toString());
 
         // Verifica el resultado esperado utilizando StepVerifier
         StepVerifier.create(result)
                 .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
                 .expectComplete()
                 .verify();
-    }*/
+    }
 }

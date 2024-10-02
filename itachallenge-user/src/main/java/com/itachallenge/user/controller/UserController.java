@@ -2,6 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
+import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -37,7 +39,6 @@ public class UserController {
     @Value("${spring.application.name}")
     private String appName;
 
-
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
@@ -59,7 +60,6 @@ public class UserController {
         return elements;
     }
 
-
     @GetMapping(path = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
             summary = "obtains all the solutions to a challenge with the given language and user.",
@@ -68,6 +68,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
             }
     )
+
     public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
@@ -77,7 +78,7 @@ public class UserController {
 
     @PutMapping(path = "/solution")
     @Operation(
-            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
+            summary = "perform a solution, adding challenge, language, user, status and the corresponding solution text.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
                             mediaType = "application/json")}),
@@ -87,6 +88,7 @@ public class UserController {
                             content = {@Content(schema = @Schema())})
             }
     )
+
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
 
@@ -104,6 +106,7 @@ public class UserController {
                     @ApiResponse(responseCode = "404", description = "Challenge not found", content = {@Content(schema = @Schema())})
             }
     )
+
     public Mono<ResponseEntity<Map<String, Long>>> getBookmarkCountByIdChallenge(
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
         return userScoreService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
@@ -112,7 +115,7 @@ public class UserController {
 
     @GetMapping(path = "/statistics/percent/{idChallenge}")
     @Operation(
-            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty(started and ended in solutionUser) .",
+            summary = "Percentage for a challenge idChallenge when users challengeUserStatus is not empty (started and ended in solutionUser).",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = Float.class),
                             mediaType = "application/json")}),
@@ -122,6 +125,7 @@ public class UserController {
                             content = {@Content(schema = @Schema())})
             }
     )
+
     public Mono<ResponseEntity<ChallengeUserPercentageStatisticDto>> challengeUserPercentageStatistic(
             @PathVariable("idChallenge")
             @GenericUUIDValid(message = "Invalid UUID for challenge")
@@ -140,6 +144,7 @@ public class UserController {
                     @ApiResponse(responseCode = "400", description = "Invalid input")
             }
     )
+
     public Mono<ResponseEntity<BookmarkRequestDto>> markOrAddBookmark(
 
             @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
@@ -165,13 +170,13 @@ public class UserController {
                     )
             }
     )
+
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
         Map<String, String> response = new HashMap<>();
         response.put("application_name", appName);
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
-
 
     @GetMapping(path = "/{idUser}/challenges/solutions")
     @Operation(
@@ -183,6 +188,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
+
     public Mono<ResponseEntity<List<UserSolutionDto>>> getAllSolutionsByIdUser(
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser) {
         UUID userUuid = UUID.fromString(idUser);
