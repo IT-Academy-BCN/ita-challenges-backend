@@ -22,7 +22,7 @@ public class CodeProcessingManager {
     @Qualifier("createFilterChain") // Specify the bean to be injected
     private final Filter filterChain;
 
-    @Autowired
+
     private DockerExecutor dockerExecutor;
 
     @Autowired
