@@ -297,7 +297,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                                 return response;
                                             });
                                 } else {
-                                    return Mono.error(new LanguageNotFoundException("Language " + idLanguage + " not found in Challenge " + idChallenge));
+                                    return Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId)));
                                 }
                             });
                 });
