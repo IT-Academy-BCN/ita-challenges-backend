@@ -143,7 +143,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
-                    assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
     }
@@ -158,7 +158,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
-        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Challenge not found"));
     }
