@@ -33,7 +33,6 @@ logging:
     root: INFO
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
-    com.itachallenge.score.component.CodeExecutionService: INFO
   pattern:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
@@ -44,11 +43,3 @@ validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-code:
-  execution:
-    template: |
-      public class Main {
-          public static void main(String[] args) {
-              %s
-          }
-      }
