@@ -1,28 +1,37 @@
+// CodeProcessingManager.java
 package com.itachallenge.score.service;
 
 import com.itachallenge.score.document.ScoreRequest;
 import com.itachallenge.score.document.ScoreResponse;
-import com.itachallenge.score.util.ExecutionResult;
 import com.itachallenge.score.filter.Filter;
-import com.itachallenge.score.sandbox.CompileExecuter;
+import com.itachallenge.score.sandbox.DockerExecutor;
+import com.itachallenge.score.util.ExecutionResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+import java.io.IOException;
+
+@Component
 public class CodeProcessingManager {
 
+    private static final Logger log = LoggerFactory.getLogger(CodeProcessingManager.class);
     @Qualifier("createFilterChain") // Specify the bean to be injected
     private final Filter filterChain;
 
-    private final CompileExecuter compileExecuter;
+    @Autowired
+    private DockerExecutor dockerExecutor;
 
     @Autowired
-    public CodeProcessingManager(@Qualifier("createFilterChain") Filter filterChain, CompileExecuter compileExecuter) {
+    public CodeProcessingManager(@Qualifier("createFilterChain") Filter filterChain, DockerExecutor dockerExecutor) {
         this.filterChain = filterChain;
-        this.compileExecuter = compileExecuter;
+        this.dockerExecutor = dockerExecutor;
     }
+
+
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
         String sourceCode = scoreRequest.getSolutionText();
@@ -31,7 +40,11 @@ public class CodeProcessingManager {
         ExecutionResult executionResult = filterChain.apply(sourceCode);
 
         if (executionResult.isSuccess()) {
-            executionResult = compileExecuter.executeCode(sourceCode);
+            try {
+                executionResult = dockerExecutor.executeDockerCommand(sourceCode);
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         ScoreResponse scoreResponse = new ScoreResponse();
@@ -40,34 +53,35 @@ public class CodeProcessingManager {
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
         scoreResponse.setExpectedResult(resultExpected);
         int score = calculateScore(executionResult, resultExpected);
-        scoreResponse.setCompilationMessage(executionResult.getMessage());
+        scoreResponse.setCompilationMessage(executionResult.getMessage().trim());
         scoreResponse.setScore(score);
 
+        log.info("Code processed successfully: {}", scoreResponse.getCompilationMessage());
         return ResponseEntity.ok(scoreResponse);
     }
 
     public int calculateScore(ExecutionResult executionResult, String resultExpected) {
+        String trimmedMessage = executionResult.getMessage().trim();
 
         if (!executionResult.isCompiled()) {
-            if (executionResult.getMessage().isEmpty()) {
-                executionResult.setMessage("Compilation error: " + executionResult.getMessage());
+            if (trimmedMessage.isEmpty()) {
+                executionResult.setMessage("Compilation error: " + trimmedMessage);
             }
             return 0;
         }
         if (!executionResult.isExecution()) {
-            executionResult.setMessage("Execution error: " + executionResult.getMessage());
+            executionResult.setMessage("Execution error: " + trimmedMessage);
             return 25;
         }
-        if (executionResult.getMessage().equals(resultExpected)) {
-            executionResult.setMessage("Code compiled and executed, and result match: " + executionResult.getMessage());
+        if (trimmedMessage.equals(resultExpected)) {
+            executionResult.setMessage("Code compiled and executed, and result match: " + trimmedMessage);
             return 100;
         }
-        if (executionResult.getMessage().contains(resultExpected)) {
-            executionResult.setMessage("Code compiled and executed, and result partially match: " + executionResult.getMessage());
+        if (trimmedMessage.contains(resultExpected)) {
+            executionResult.setMessage("Code compiled and executed, and result partially match: " + trimmedMessage);
             return 75;
         }
-        executionResult.setMessage("Code compiled and executed, but result doesn't match: " + executionResult.getMessage());
+        executionResult.setMessage("Code compiled and executed, but result doesn't match: " + trimmedMessage);
         return 50;
     }
-
 }
