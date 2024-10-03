@@ -1,17 +1,14 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.document.ScoreRequest;
+import com.itachallenge.score.dto.ScoreRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 @WebFluxTest(ScoreController.class)
