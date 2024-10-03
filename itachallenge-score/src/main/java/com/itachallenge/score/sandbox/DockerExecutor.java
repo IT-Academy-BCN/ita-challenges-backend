@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -26,7 +27,13 @@ public class DockerExecutor {
     private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }";
     private static final long TIMEOUT_SECONDS = 5;
 
+    @Value("${commands.windows}")
+    private String windowsCommand;
 
+    @Value("${commands.unix}")
+    private String unixCommand;
+
+    private boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
     public ExecutionResult execute(String javaCode) throws IOException, InterruptedException {
         ExecutionResult executionResult = new ExecutionResult();
@@ -60,7 +67,6 @@ public class DockerExecutor {
             BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getInputStream()));
             String containerId = containerIdReader.readLine();
             if (containerId != null && !containerId.isEmpty()) {
-
                 createProcessBuilder("docker kill " + containerId).start().waitFor();
             }
             String message = "Execution timed out after " + TIMEOUT_SECONDS + " seconds";
@@ -79,10 +85,11 @@ public class DockerExecutor {
     }
 
     private ProcessBuilder createProcessBuilder(String command) {
-        if (System.getProperty("os.name").toLowerCase().contains("win")) {
-            return new ProcessBuilder("cmd.exe", "/c", command);
+
+        if (isWindows) {
+            return new ProcessBuilder(windowsCommand, "/c", command);
         } else {
-            return new ProcessBuilder("sh", "-c", command);
+            return new ProcessBuilder(unixCommand, "-c", command);
         }
     }
 

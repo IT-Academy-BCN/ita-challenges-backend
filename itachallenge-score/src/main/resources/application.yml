@@ -25,6 +25,10 @@ management:
   security:
     enabled: false
 
+commands:
+  windows: "cmd.exe"
+  unix: "sh"
+
 
 
 
