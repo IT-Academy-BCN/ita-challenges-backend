@@ -9,11 +9,15 @@ public class FilterChainSetup {
     @Bean
     public Filter createFilterChain() {
         Filter escapeFilter = new UnescapeFilter();
-        Filter asciiFilter = new AsciiFilter();
         Filter htemSanitizerFilter = new HtmlSanitizerFilter();
+        Filter asciiFilter = new AsciiFilter();
+        Filter keywordFilter = new KeywordFilter();
+        Filter securityFilter = new SecurityFilter();
 
         htemSanitizerFilter.setNext(escapeFilter);
         escapeFilter.setNext(asciiFilter);
+        asciiFilter.setNext(keywordFilter);
+        keywordFilter.setNext(securityFilter);
 
         return htemSanitizerFilter;
     }

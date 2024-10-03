@@ -19,10 +19,14 @@ import java.util.concurrent.*;
 public class DockerExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(DockerExecutor.class);
+
+    private static final String DOCKER_IMAGE_NAME = "openjdk:21"; //Change that image to the one you want to use
+    private static final String CONTAINER = "java-executor-container";
+
     private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }";
     private static final long TIMEOUT_SECONDS = 5;
-    private String dockerImageName = "openjdk:21";
-    private String containerName = "java-executor-container";
+
+
 
     public ExecutionResult execute(String javaCode) throws IOException, InterruptedException {
         ExecutionResult executionResult = new ExecutionResult();
@@ -35,12 +39,10 @@ public class DockerExecutor {
         }
         String formattedCode = String.format(CODE_TEMPLATE, javaCode);
         formattedCode = formattedCode.replace("\"", "\\\"");
-        String command = String.format("docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java Main\"", containerName, dockerImageName, formattedCode);
+        String command = String.format("docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java Main\"", CONTAINER, DOCKER_IMAGE_NAME, formattedCode);
 
         log.info("Executing command: {}", command);
-
-        // Clean up any leftover containers
-        cleanUpContainers(containerName);
+        cleanUpContainers(CONTAINER);
 
         ProcessBuilder processBuilder = createProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
@@ -54,11 +56,11 @@ public class DockerExecutor {
         } catch (TimeoutException e) {
             future.cancel(true);
             // Get the container ID
-            Process getContainerIdProcess = createProcessBuilder("docker ps -q --filter name=" + containerName).start();
+            Process getContainerIdProcess = createProcessBuilder("docker ps -q --filter name=" + CONTAINER).start();
             BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getInputStream()));
             String containerId = containerIdReader.readLine();
             if (containerId != null && !containerId.isEmpty()) {
-                // Kill the container
+
                 createProcessBuilder("docker kill " + containerId).start().waitFor();
             }
             String message = "Execution timed out after " + TIMEOUT_SECONDS + " seconds";
@@ -104,7 +106,7 @@ public class DockerExecutor {
         return executionResult;
     }
 
-    private void cleanUpContainers(String namePattern) throws IOException, InterruptedException {
+    public void cleanUpContainers(String namePattern) throws IOException, InterruptedException {
         Process listContainersProcess = createProcessBuilder("docker ps -a -q --filter name=" + namePattern).start();
         BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(listContainersProcess.getInputStream()));
         String containerId;

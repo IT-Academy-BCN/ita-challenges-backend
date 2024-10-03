@@ -27,7 +27,7 @@ public class HtmlSanitizerFilter implements Filter {
         }
 
         String sanitizedCode = policy.sanitize(code);
-        log.info("Sanitized code: {}", sanitizedCode);
+        log.info("Code passed HTML sanitizer");
 
         // Go to the next filter
         if (next != null) {

@@ -1,12 +1,10 @@
-// CodeProcessingManager.java
 package com.itachallenge.score.service;
-
 
 import com.itachallenge.score.dto.ScoreRequest;
 import com.itachallenge.score.dto.ScoreResponse;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.DockerExecutor;
-import com.itachallenge.score.sandbox.exception.DockerExcecutionException;
+import com.itachallenge.score.sandbox.exception.DockerExecutionException;
 import com.itachallenge.score.sandbox.exception.ExecutionTimedOutException;
 import com.itachallenge.score.util.ExecutionResult;
 import org.slf4j.Logger;
@@ -25,7 +23,6 @@ public class CodeProcessingManager {
     @Qualifier("createFilterChain") // Specify the bean to be injected
     private final Filter filterChain;
 
-
     private DockerExecutor dockerExecutor;
 
     @Autowired
@@ -34,11 +31,21 @@ public class CodeProcessingManager {
         this.dockerExecutor = dockerExecutor;
     }
 
-
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
         String sourceCode = scoreRequest.getSolutionText();
         String resultExpected = "5432"; // TODO: Change to dynamic result from the challenge UUID
         ExecutionResult executionResult = filterChain.apply(sourceCode);
+
+        if (!executionResult.isSuccess()) {
+            ScoreResponse scoreResponse = new ScoreResponse();
+            scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
+            scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
+            scoreResponse.setSolutionText(scoreRequest.getSolutionText());
+            scoreResponse.setExpectedResult(resultExpected);
+            scoreResponse.setCompilationMessage(executionResult.getMessage().trim());
+            scoreResponse.setScore(0);
+            return ResponseEntity.ok(scoreResponse);
+        }
 
         if (executionResult.isSuccess()) {
             try {
@@ -47,7 +54,7 @@ public class CodeProcessingManager {
                 throw new ExecutionTimedOutException("Execution timed out");
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new DockerExcecutionException("Execution interrupted", e);
+                throw new DockerExecutionException("Execution interrupted", e);
             }
         }
 

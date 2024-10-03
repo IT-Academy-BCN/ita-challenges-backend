@@ -1,7 +1,8 @@
 package com.itachallenge.score.controller;
 
-import com.itachallenge.score.document.ScoreRequest;
-import com.itachallenge.score.document.ScoreResponse;
+
+import com.itachallenge.score.dto.ScoreRequest;
+import com.itachallenge.score.dto.ScoreResponse;
 import com.itachallenge.score.service.CodeProcessingManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

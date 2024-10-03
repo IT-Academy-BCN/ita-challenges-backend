@@ -43,7 +43,7 @@ public class AsciiFilter implements Filter {
             return next.apply(code);
         }
 
-        executionResult.setSuccess(true);
+
         executionResult.setMessage("Code passed ASCII filter");
         return executionResult;
     }

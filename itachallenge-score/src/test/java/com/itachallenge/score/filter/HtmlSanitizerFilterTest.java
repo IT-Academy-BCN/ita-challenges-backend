@@ -45,9 +45,7 @@ class HtmlSanitizerFilterTest {
         String sanitizedHtml = filter.sanitize(null);
         assertEquals("", sanitizedHtml, "The sanitized HTML should be an empty string");
         assertEquals("Code is null", result.getMessage(), "The message should be 'Code is null'");
-
     }
-
 
     @DisplayName("Test apply method when code passes HTML sanitizer")
     @Test
@@ -55,7 +53,6 @@ class HtmlSanitizerFilterTest {
         HtmlSanitizerFilter filter = new HtmlSanitizerFilter();
         String validHtml = "<p>This is a paragraph.</p>";
         ExecutionResult result = filter.apply(validHtml);
-
         assertEquals("Code passed HTML sanitizer", result.getMessage(), "The message should indicate that the code passed the HTML sanitizer");
     }
 }
