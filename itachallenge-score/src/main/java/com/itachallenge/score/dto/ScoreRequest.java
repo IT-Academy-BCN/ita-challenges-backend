@@ -1,4 +1,4 @@
-package com.itachallenge.score.document;
+package com.itachallenge.score.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

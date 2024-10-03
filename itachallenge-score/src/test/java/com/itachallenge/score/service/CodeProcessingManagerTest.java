@@ -79,7 +79,7 @@ class CodeProcessingManagerTest {
         executionResult.setMessage("5432");
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
-        when(dockerExecutor.executeDockerCommand(any(String.class))).thenReturn(executionResult);
+        when(dockerExecutor.execute(any(String.class))).thenReturn(executionResult);
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 

@@ -31,9 +31,9 @@ public void setUp() {
 }
 
     @Test
-    public void testExecuteDockerCommandWithValidCode() throws IOException, InterruptedException {
+    public void testExecuteWithValidCode() throws IOException, InterruptedException {
         String javaCode = "System.out.println(99);";
-        ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
+        ExecutionResult result = dockerExecutor.execute(javaCode);
 
         assertTrue(result.isCompiled());
         assertTrue(result.isExecution());
@@ -41,8 +41,8 @@ public void setUp() {
     }
 
     @Test
-    public void testExecuteDockerCommandWithNullCode() throws IOException, InterruptedException {
-        ExecutionResult result = dockerExecutor.executeDockerCommand(null);
+    public void testExecuteWithNullCode() throws IOException, InterruptedException {
+        ExecutionResult result = dockerExecutor.execute(null);
 
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
@@ -50,9 +50,9 @@ public void setUp() {
     }
 
     @Test
-    public void testExecuteDockerCommandWithInvalidCode() throws IOException, InterruptedException {
+    public void testExecuteWithInvalidCode() throws IOException, InterruptedException {
         String javaCode = "invalid code";
-        ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
+        ExecutionResult result = dockerExecutor.execute(javaCode);
 
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
@@ -60,9 +60,9 @@ public void setUp() {
     }
 
     @Test
-    public void testExecuteDockerCommandWithInfiniteLoop() throws IOException, InterruptedException {
+    public void testExecuteWithInfiniteLoop() throws IOException, InterruptedException {
         String javaCode = "while(true) {}";
-        ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
+        ExecutionResult result = dockerExecutor.execute(javaCode);
 
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
@@ -70,9 +70,9 @@ public void setUp() {
     }
 
     @Test
-    public void testExecuteDockerCommandWithSyntaxError() throws IOException, InterruptedException {
+    public void testExecuteWithSyntaxError() throws IOException, InterruptedException {
         String javaCode = "System.out.println(\"Hello World\"";
-        ExecutionResult result = dockerExecutor.executeDockerCommand(javaCode);
+        ExecutionResult result = dockerExecutor.execute(javaCode);
 
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
