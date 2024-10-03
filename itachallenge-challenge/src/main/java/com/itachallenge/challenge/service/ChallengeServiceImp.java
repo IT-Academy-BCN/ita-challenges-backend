@@ -117,7 +117,10 @@ public class ChallengeServiceImp implements IChallengeService {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
                             .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
+                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)
+                                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found for language " + idLanguage.get())))
+                            )
+                    );
         } else if (idLanguage.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
