@@ -1,4 +1,4 @@
-package com.itachallenge.score.document;
+package com.itachallenge.score.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -9,14 +9,15 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScoreResponse {
+public class ScoreRequest {
     //atributos
     @JsonProperty("uuid_challenge")
     private UUID uuidChallenge;
+
     @JsonProperty("uuid_language")
     private UUID uuidLanguage;
+
     @JsonProperty("solution_text")
     private String solutionText;
-    private int score;
 }
 
