@@ -21,7 +21,7 @@ public class KeywordFilter implements Filter {
 
     public void setDisallowed(List<String> disallowed) {
         this.disallowed = disallowed;
-        log.info("Disallowed keywords set: " + disallowed);
+        log.info("Disallowed keywords set: {}", disallowed);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class CodeProcessingManager {
 
     private static final Logger log = LoggerFactory.getLogger(CodeProcessingManager.class);
 
-    @Qualifier("createFilterChain") 
+    @Qualifier("createFilterChain")
     private final Filter filterChain;
 
     private DockerExecutor dockerExecutor;

@@ -21,14 +21,13 @@ public class UnescapeFilter implements Filter {
         }
 
         String unescapedCode = UnescapeJava.unescapeJavaCode(input);
-        result.setMessage("UnescapeFilter: Finished unescaping");
 
         if (next != null) {
             return next.apply(unescapedCode);
         }
 
         result.setMessage("UnescapeFilter: Finished unescaping");
-        log.info("UnescapeFilter: Finished unescaping");
+        log.info("Code passed unescape filter");
         return result;
     }
 
