@@ -4,6 +4,7 @@ import com.itachallenge.score.sandbox.exception.ExecutionTimedOutException;
 import com.itachallenge.score.util.ExecutionResult;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.concurrent.*;
 
+@Setter
 @Getter
 @NoArgsConstructor
 @Component
@@ -24,8 +26,8 @@ public class DockerExecutor {
     private static final String DOCKER_IMAGE_NAME = "openjdk:21"; //Change that image to the one you want to use
     private static final String CONTAINER = "java-executor-container";
 
-    private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }";
-    private static final long TIMEOUT_SECONDS = 5;
+    private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }"; //Can't parameterize this string.
+    private static final long TIMEOUT_SECONDS = 5; //Lifetime of the container
 
     @Value("${commands.windows}")
     private String windowsCommand;
@@ -51,7 +53,7 @@ public class DockerExecutor {
         log.info("Executing command: {}", command);
         cleanUpContainers(CONTAINER);
 
-        ProcessBuilder processBuilder = createProcessBuilder(command);
+        ProcessBuilder processBuilder = createProcessBuilder(command, isWindows ? windowsCommand : unixCommand);
         processBuilder.redirectErrorStream(true);
 
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -62,12 +64,11 @@ public class DockerExecutor {
             executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
         } catch (TimeoutException e) {
             future.cancel(true);
-            // Get the container ID
-            Process getContainerIdProcess = createProcessBuilder("docker ps -q --filter name=" + CONTAINER).start();
+            Process getContainerIdProcess = createProcessBuilder("docker ps -q --filter name=" + CONTAINER, isWindows ? windowsCommand : unixCommand).start();
             BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getInputStream()));
             String containerId = containerIdReader.readLine();
             if (containerId != null && !containerId.isEmpty()) {
-                createProcessBuilder("docker kill " + containerId).start().waitFor();
+                createProcessBuilder("docker kill " + containerId, isWindows ? windowsCommand : unixCommand).start().waitFor();
             }
             String message = "Execution timed out after " + TIMEOUT_SECONDS + " seconds";
             executionResult.setCompiled(false);
@@ -84,43 +85,47 @@ public class DockerExecutor {
         return executionResult;
     }
 
-    private ProcessBuilder createProcessBuilder(String command) {
-
-        if (isWindows) {
-            return new ProcessBuilder(windowsCommand, "/c", command);
-        } else {
-            return new ProcessBuilder(unixCommand, "-c", command);
-        }
+    private ProcessBuilder createProcessBuilder(String command, String shellCommand) {
+        return new ProcessBuilder(shellCommand, isWindows ? "/c" : "-c", command);
     }
 
-    private ExecutionResult executeCommand(ProcessBuilder processBuilder, ExecutionResult executionResult) throws IOException, InterruptedException {
-        Process process = processBuilder.start();
-        StringBuilder output = new StringBuilder();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
-        }
-        int exitCode = process.waitFor();
-        executionResult.setCompiled(exitCode == 0);
-        executionResult.setExecution(exitCode == 0);
-        executionResult.setMessage(output.toString().trim());
-
-        if (exitCode != 0) {
-            executionResult.setMessage("Execution failed with exit code: " + exitCode + ". Output: " + output.toString().trim());
-        }
-        return executionResult;
-    }
-
-    public void cleanUpContainers(String namePattern) throws IOException, InterruptedException {
-        Process listContainersProcess = createProcessBuilder("docker ps -a -q --filter name=" + namePattern).start();
+    public void cleanUpContainers(String containerName) throws IOException, InterruptedException {
+        Process listContainersProcess = createProcessBuilder("docker ps -a -q --filter name=" + containerName, isWindows ? windowsCommand : unixCommand).start();
         BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(listContainersProcess.getInputStream()));
         String containerId;
         while ((containerId = containerIdReader.readLine()) != null) {
             if (!containerId.isEmpty()) {
-                createProcessBuilder("docker rm -f " + containerId).start().waitFor();
+                createProcessBuilder("docker rm -f " + containerId, isWindows ? windowsCommand : unixCommand).start().waitFor();
             }
         }
+    }
+
+
+    private ExecutionResult executeCommand(ProcessBuilder processBuilder, ExecutionResult executionResult) {
+        try {
+            Process process = processBuilder.start();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder output = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append("\n");
+            }
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                executionResult.setCompiled(true);
+                executionResult.setExecution(true);
+                executionResult.setMessage(output.toString().trim());
+            } else {
+                executionResult.setCompiled(false);
+                executionResult.setExecution(false);
+                executionResult.setMessage("Execution failed with exit code " + exitCode);
+            }
+        } catch (IOException | InterruptedException e) {
+            executionResult.setCompiled(false);
+            executionResult.setExecution(false);
+            executionResult.setMessage("Execution failed: " + e.getMessage());
+            Thread.currentThread().interrupt();
+        }
+        return executionResult;
     }
 }

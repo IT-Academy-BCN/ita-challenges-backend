@@ -20,7 +20,8 @@ import java.io.IOException;
 public class CodeProcessingManager {
 
     private static final Logger log = LoggerFactory.getLogger(CodeProcessingManager.class);
-    @Qualifier("createFilterChain") // Specify the bean to be injected
+
+    @Qualifier("createFilterChain")
     private final Filter filterChain;
 
     private DockerExecutor dockerExecutor;
@@ -74,25 +75,22 @@ public class CodeProcessingManager {
     public int calculateScore(ExecutionResult executionResult, String resultExpected) {
         String trimmedMessage = executionResult.getMessage().trim();
 
-        if (!executionResult.isCompiled()) {
-            if (trimmedMessage.isEmpty()) {
-                executionResult.setMessage("Compilation error: " + trimmedMessage);
-            }
-            return 0;
-        }
         if (!executionResult.isExecution()) {
-            executionResult.setMessage("Execution error: " + trimmedMessage);
+            return 0;
+        } else if (executionResult.isExecution() && trimmedMessage.isEmpty()) {
+            executionResult.setMessage("Code compiled and executed, but result is empty");
             return 25;
-        }
-        if (trimmedMessage.equals(resultExpected)) {
+        } else if (executionResult.isExecution() && !trimmedMessage.equals(resultExpected)) {
+            executionResult.setMessage("Code compiled and executed, but result doesn't match: " + trimmedMessage);
+            return 50;
+        } else if (trimmedMessage.contains(resultExpected)) {
+            executionResult.setMessage("Code compiled and executed, and result partially match: " + trimmedMessage);
+            return 75;
+        } else if (trimmedMessage.equals(resultExpected)) {
             executionResult.setMessage("Code compiled and executed, and result match: " + trimmedMessage);
             return 100;
         }
-        if (trimmedMessage.contains(resultExpected)) {
-            executionResult.setMessage("Code compiled and executed, and result partially match: " + trimmedMessage);
-            return 75;
-        }
-        executionResult.setMessage("Code compiled and executed, but result doesn't match: " + trimmedMessage);
-        return 50;
+          return 0;
+
     }
 }

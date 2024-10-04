@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.BitSet;
 
-@Component
+@Component("asciiFilter")
 public class AsciiFilter implements Filter {
 
     private static final int ASCII_SIZE = 128;
@@ -45,6 +45,7 @@ public class AsciiFilter implements Filter {
 
 
         executionResult.setMessage("Code passed ASCII filter");
+        log.info("Code passed ASCII filter");
         return executionResult;
     }
 

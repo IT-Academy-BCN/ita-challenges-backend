@@ -1,4 +1,3 @@
-// CodeProcessingManagerTest.java
 package com.itachallenge.score.service;
 
 import com.itachallenge.score.dto.ScoreRequest;

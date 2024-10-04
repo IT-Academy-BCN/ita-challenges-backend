@@ -1,8 +1,14 @@
 package com.itachallenge.score.filter;
 
 import com.itachallenge.score.util.ExecutionResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+@Component("unescapeFilter")
 public class UnescapeFilter implements Filter {
+
+    private static final Logger log = LoggerFactory.getLogger(UnescapeFilter.class);
 
     private Filter next;
 
@@ -21,6 +27,8 @@ public class UnescapeFilter implements Filter {
             return next.apply(unescapedCode);
         }
 
+        result.setMessage("UnescapeFilter: Finished unescaping");
+        log.info("UnescapeFilter: Finished unescaping");
         return result;
     }
 

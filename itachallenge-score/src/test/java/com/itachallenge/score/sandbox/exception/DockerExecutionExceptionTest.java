@@ -1,4 +1,3 @@
-// DockerExecutionExceptionTest.java
 package com.itachallenge.score.sandbox.exception;
 
 import org.junit.jupiter.api.Test;

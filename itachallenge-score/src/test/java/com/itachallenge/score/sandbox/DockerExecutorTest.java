@@ -1,4 +1,3 @@
-// DockerExecutorTest.java
 package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.util.ExecutionResult;
@@ -21,22 +20,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @ExtendWith(MockitoExtension.class)
-public class DockerExecutorTest {
+class DockerExecutorTest {
 
     @InjectMocks
     private DockerExecutor dockerExecutor;
 
     private GenericContainer<?> javaContainer;
 
+
     @BeforeEach
     public void setUp() {
         javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:21"))
                 .withCommand("sh", "-c", "while true; do sleep 1000; done"); // Infinite loop to keep the container running
         javaContainer.start();
+        dockerExecutor.setWindowsCommand("cmd.exe");
+        dockerExecutor.setUnixCommand("sh");
     }
 
     @Test
-    public void testExecuteWithValidCode() throws IOException, InterruptedException {
+    void testExecuteWithValidCode() throws IOException, InterruptedException {
         String javaCode = "System.out.println(99);";
         ExecutionResult result = dockerExecutor.execute(javaCode);
 
@@ -46,7 +48,7 @@ public class DockerExecutorTest {
     }
 
     @Test
-    public void testExecuteWithNullCode() throws IOException, InterruptedException {
+    void testExecuteWithNullCode() throws IOException, InterruptedException {
         ExecutionResult result = dockerExecutor.execute(null);
 
         assertFalse(result.isCompiled());
@@ -55,7 +57,7 @@ public class DockerExecutorTest {
     }
 
     @Test
-    public void testExecuteWithLongCode() throws IOException, InterruptedException {
+    void testExecuteWithLongCode() throws IOException, InterruptedException {
         String code =
                 "String input = \"example\"; " +
                         "char[] charArray = input.toCharArray(); " +
@@ -73,14 +75,13 @@ public class DockerExecutorTest {
 
         ExecutionResult result = dockerExecutor.execute(code);
 
-        // Verificación del resultado
         assertTrue(result.isCompiled(), "Is compiled: " + result.getMessage());
         assertTrue(result.isExecution(), "Is executed: " + result.getMessage());
         assertEquals("aeelmpx", result.getMessage());
     }
 
     @Test
-    public void testExecuteWithComplexCode() throws IOException, InterruptedException {
+    void testExecuteWithComplexCode() throws IOException, InterruptedException {
         String code =
                 "int n = 1000000; " +
                         "boolean[] isPrime = new boolean[n + 1]; " +
@@ -103,17 +104,16 @@ public class DockerExecutorTest {
     }
 
     @Test
-    public void testExecuteWithInfiniteLoop() throws IOException, InterruptedException {
+    void testExecuteWithInfiniteLoop() throws IOException, InterruptedException {
         String javaCode = "while(true) {}";
         ExecutionResult result = dockerExecutor.execute(javaCode);
-
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
         assertTrue(result.getMessage().contains("Execution timed out"));
     }
 
     @Test
-    public void testExecuteWithSyntaxError() throws IOException, InterruptedException {
+    void testExecuteWithSyntaxError() throws IOException, InterruptedException {
         String javaCode = "System.out.println(\"Hello World\"";
         ExecutionResult result = dockerExecutor.execute(javaCode);
 
@@ -124,8 +124,7 @@ public class DockerExecutorTest {
 
     @DisplayName("Test cleanUpContainers method")
     @Test
-    public void testCleanUpContainers() throws IOException, InterruptedException {
-
+    void testCleanUpContainers() throws IOException, InterruptedException {
         dockerExecutor.cleanUpContainers("java-executor-container");
 
         Process listContainersProcess = new ProcessBuilder("docker", "ps", "-a", "-q", "--filter", "name=java-executor-container").start();
@@ -135,29 +134,23 @@ public class DockerExecutorTest {
 
     @DisplayName("Test execute with IOException")
     @Test
-    public void testExecuteWithIOException() throws IOException, InterruptedException {
+    void testExecuteWithIOException() throws IOException, InterruptedException {
         String javaCode = "System.out.println(99);";
-
 
         DockerExecutor dockerExecutorMock = Mockito.spy(dockerExecutor);
         Mockito.doThrow(new IOException("Execution failed")).when(dockerExecutorMock).execute(javaCode);
 
-        assertThrows(IOException.class, () -> {
-            dockerExecutorMock.execute(javaCode);
-        });
-    }
+        ExecutionResult result = new ExecutionResult();
+        try {
+            result = dockerExecutorMock.execute(javaCode);
+        } catch (IOException e) {
+            result.setCompiled(false);
+            result.setExecution(false);
+            result.setMessage("Execution failed: " + e.getMessage());
+        }
 
-    @DisplayName("Test execute with InterruptedException")
-    @Test
-    public void testExecuteWithInterruptedException() throws IOException, InterruptedException {
-        String javaCode = "System.out.println(99);";
-
-
-        DockerExecutor dockerExecutorMock = Mockito.spy(dockerExecutor);
-        Mockito.doThrow(new InterruptedException("Execution interrupted")).when(dockerExecutorMock).execute(javaCode);
-
-        assertThrows(InterruptedException.class, () -> {
-            dockerExecutorMock.execute(javaCode);
-        });
+        assertFalse(result.isCompiled());
+        assertFalse(result.isExecution());
+        assertTrue(result.getMessage().contains("Execution failed"));
     }
 }

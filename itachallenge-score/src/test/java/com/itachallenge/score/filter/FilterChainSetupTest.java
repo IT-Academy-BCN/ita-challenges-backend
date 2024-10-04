@@ -4,18 +4,23 @@ import com.itachallenge.score.util.ExecutionResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 class FilterChainSetupTest {
 
+
+
+    @Autowired
     private FilterChainSetup filterChainSetup;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        filterChainSetup = new FilterChainSetup();
     }
 
     @Test
@@ -25,12 +30,10 @@ class FilterChainSetupTest {
         assertNotNull(filter, "The filter chain should not be null");
         assertTrue(filter instanceof HtmlSanitizerFilter, "The first filter should be an HtmlSanitizerFilter");
 
-        // Apply the filter chain to verify the order
-        String inputCode = "step1";
+        String inputCode = "asdf";
 
         ExecutionResult result = filter.apply(inputCode);
 
-        // Verify that the result is not null
         assertNotNull(result, "The result should not be null");
     }
 }
