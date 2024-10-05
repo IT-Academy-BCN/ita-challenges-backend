@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FilterChainSetupTest {
 
 
-
     @Autowired
     private FilterChainSetup filterChainSetup;
 

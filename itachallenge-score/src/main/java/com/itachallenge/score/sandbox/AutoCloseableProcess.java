@@ -1,4 +1,3 @@
-// AutoCloseableProcess.java
 package com.itachallenge.score.sandbox;
 
 import java.io.IOException;

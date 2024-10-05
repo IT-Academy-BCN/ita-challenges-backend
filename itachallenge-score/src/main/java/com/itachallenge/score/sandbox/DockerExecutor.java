@@ -1,4 +1,3 @@
-// DockerExecutor.java
 package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.exception.ExecutionTimedOutException;
@@ -38,55 +37,55 @@ public class DockerExecutor {
 
     private boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
 
-public ExecutionResult execute(String javaCode) throws IOException, InterruptedException {
-    ExecutionResult executionResult = new ExecutionResult();
+    public ExecutionResult execute(String javaCode) throws IOException, InterruptedException {
+        ExecutionResult executionResult = new ExecutionResult();
 
-    if (javaCode == null) {
-        executionResult.setCompiled(false);
-        executionResult.setExecution(false);
-        executionResult.setMessage("Java code is null");
-        return executionResult;
-    }
-    String formattedCode = String.format(CODE_TEMPLATE, javaCode);
-    formattedCode = formattedCode.replace("\"", "\\\"");
-    String command = String.format("docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java Main\"", CONTAINER, DOCKER_IMAGE_NAME, formattedCode);
-
-    log.info("Executing command: {}", command);
-    cleanUpContainers(CONTAINER);
-
-    ProcessBuilder processBuilder = createProcessBuilder(command, isWindows ? windowsCommand : unixCommand);
-    processBuilder.redirectErrorStream(true);
-
-    try (AutoCloseableExecutor autoCloseableExecutor = new AutoCloseableExecutor(Executors.newSingleThreadExecutor())) {
-        ExecutorService executor = autoCloseableExecutor.getExecutorService();
-        ExecutionResult finalExecutionResult = executionResult;
-        Future<ExecutionResult> future = executor.submit(() -> executeCommand(processBuilder, finalExecutionResult));
-
-        try {
-            executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            try (AutoCloseableProcess getContainerIdProcess = new AutoCloseableProcess(createProcessBuilder("docker ps -q --filter name=" + CONTAINER, isWindows ? windowsCommand : unixCommand).start());
-                 BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getProcess().getInputStream()))) {
-                String containerId = containerIdReader.readLine();
-                if (containerId != null && !containerId.isEmpty()) {
-                    try (AutoCloseableProcess killProcess = new AutoCloseableProcess(createProcessBuilder("docker kill " + containerId, isWindows ? windowsCommand : unixCommand).start())) {
-                        killProcess.getProcess().waitFor();
-                    }
-                }
-            }
-            String message = "Execution timed out after " + TIMEOUT_SECONDS ;
+        if (javaCode == null) {
             executionResult.setCompiled(false);
             executionResult.setExecution(false);
-            executionResult.setMessage(message);
-        } catch (ExecutionException | InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ExecutionTimedOutException("Execution was interrupted after " + TIMEOUT_SECONDS);
+            executionResult.setMessage("Java code is null");
+            return executionResult;
         }
+        String formattedCode = String.format(CODE_TEMPLATE, javaCode);
+        formattedCode = formattedCode.replace("\"", "\\\"");
+        String command = String.format("docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java Main\"", CONTAINER, DOCKER_IMAGE_NAME, formattedCode);
+
+        log.info("Executing command: {}", command);
+        cleanUpContainers(CONTAINER);
+
+        ProcessBuilder processBuilder = createProcessBuilder(command, isWindows ? windowsCommand : unixCommand);
+        processBuilder.redirectErrorStream(true);
+
+        try (AutoCloseableExecutor autoCloseableExecutor = new AutoCloseableExecutor(Executors.newSingleThreadExecutor())) {
+            ExecutorService executor = autoCloseableExecutor.getExecutorService();
+            ExecutionResult finalExecutionResult = executionResult;
+            Future<ExecutionResult> future = executor.submit(() -> executeCommand(processBuilder, finalExecutionResult));
+
+            try {
+                executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
+            } catch (TimeoutException e) {
+                future.cancel(true);
+                try (AutoCloseableProcess getContainerIdProcess = new AutoCloseableProcess(createProcessBuilder("docker ps -q --filter name=" + CONTAINER, isWindows ? windowsCommand : unixCommand).start());
+                     BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getProcess().getInputStream()))) {
+                    String containerId = containerIdReader.readLine();
+                    if (containerId != null && !containerId.isEmpty()) {
+                        try (AutoCloseableProcess killProcess = new AutoCloseableProcess(createProcessBuilder("docker kill " + containerId, isWindows ? windowsCommand : unixCommand).start())) {
+                            killProcess.getProcess().waitFor();
+                        }
+                    }
+                }
+                String message = "Execution timed out after " + TIMEOUT_SECONDS;
+                executionResult.setCompiled(false);
+                executionResult.setExecution(false);
+                executionResult.setMessage(message);
+            } catch (ExecutionException | InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new ExecutionTimedOutException("Execution was interrupted after " + TIMEOUT_SECONDS);
+            }
+        }
+        return executionResult;
     }
-    return executionResult;
-}
 
     private ProcessBuilder createProcessBuilder(String command, String shellCommand) {
         return new ProcessBuilder(shellCommand, isWindows ? "/c" : "-c", command);
