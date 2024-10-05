@@ -1,5 +1,6 @@
 package com.itachallenge.score.sandbox.exception;
 
+import com.itachallenge.score.exception.ExecutionTimedOutException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.Assert.assertEquals;

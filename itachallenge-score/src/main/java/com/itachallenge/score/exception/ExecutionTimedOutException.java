@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.exception;
+package com.itachallenge.score.exception;
 
 public class ExecutionTimedOutException extends RuntimeException{
     public ExecutionTimedOutException(String message) {

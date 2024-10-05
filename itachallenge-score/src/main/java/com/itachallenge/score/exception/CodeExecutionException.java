@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.exception;
+package com.itachallenge.score.exception;
 
 public class CodeExecutionException extends RuntimeException {
 

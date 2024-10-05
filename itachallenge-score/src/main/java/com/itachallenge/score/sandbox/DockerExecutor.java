@@ -1,6 +1,6 @@
 package com.itachallenge.score.sandbox;
 
-import com.itachallenge.score.sandbox.exception.ExecutionTimedOutException;
+import com.itachallenge.score.exception.ExecutionTimedOutException;
 import com.itachallenge.score.util.ExecutionResult;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
