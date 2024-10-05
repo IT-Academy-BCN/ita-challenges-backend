@@ -4,6 +4,15 @@ En el proyecto actual se usa Docker para la creación de un contenedor con el fi
 Antes de pasar el código a ejecución, se pasa por una serie de filtros utilizando el patrón de diseño Chain of Responsibility, para asegurar que el código pueda ser ejecutado de forma segura.
 La comparación de los resultados ahora mismo está hardcodeada, en el futuro se tendrá que modificar añadiendo un repositorio con los resultados esperados para cada UUID de ejercicio y lenguaje.
 
+Para probar en postman, el body de la petición debería ser así:
+```json
+{
+"uuid_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+"uuid_language": "660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+"solution_text": "int numero = 2345; int[] conteoDigitos = new int[10]; while (numero > 0) { int digito = numero % 10; conteoDigitos[digito]++; numero /= 10; } int resultado = 0; for (int i = 9; i >= 0; i--) { while (conteoDigitos[i] > 0) { resultado = resultado * 10 + i; conteoDigitos[i]--; } } System.out.println(resultado);"
+}
+```
+
 ## Chain of Responsibility
 
 #### UnescapeFilter 

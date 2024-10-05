@@ -5,6 +5,15 @@ This project uses Docker to create a container to run the project in isolation. 
 Before passing the code to execution, it goes through a series of filters using the Chain of Responsibility design pattern, to ensure that the code can be executed safely.
 The comparison of the results is currently hardcoded, in the future it will have to be modified by adding a repository with the expected results for each exercise UUID and language.
 
+To test in Postman, the request body should be as follows:
+```json
+{
+  "uuid_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+  "uuid_language": "660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+  "solution_text": "int numero = 2345; int[] conteoDigitos = new int[10]; while (numero > 0) { int digito = numero % 10; conteoDigitos[digito]++; numero /= 10; } int resultado = 0; for (int i = 9; i >= 0; i--) { while (conteoDigitos[i] > 0) { resultado = resultado * 10 + i; conteoDigitos[i]--; } } System.out.println(resultado);"
+}
+```
+
 
 ## Chain of Responsibility
 
