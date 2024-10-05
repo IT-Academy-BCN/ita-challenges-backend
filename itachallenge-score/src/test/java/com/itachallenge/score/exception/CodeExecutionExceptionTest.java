@@ -1,9 +1,8 @@
 package com.itachallenge.score.exception;
 
-import com.itachallenge.score.exception.CodeExecutionException;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CodeExecutionExceptionTest {
 
