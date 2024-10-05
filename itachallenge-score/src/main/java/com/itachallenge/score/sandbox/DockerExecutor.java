@@ -56,33 +56,34 @@ public class DockerExecutor {
         ProcessBuilder processBuilder = createProcessBuilder(command, isWindows ? windowsCommand : unixCommand);
         processBuilder.redirectErrorStream(true);
 
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        ExecutionResult finalExecutionResult = executionResult;
-        Future<ExecutionResult> future = executor.submit(() -> executeCommand(processBuilder, finalExecutionResult));
+        try (ExecutorService executor = Executors.newSingleThreadExecutor()){
+            ExecutionResult finalExecutionResult = executionResult;
+            Future<ExecutionResult> future = executor.submit(() -> executeCommand(processBuilder, finalExecutionResult));
 
-        try {
-            executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-        } catch (TimeoutException e) {
-            future.cancel(true);
-            Process getContainerIdProcess = createProcessBuilder("docker ps -q --filter name=" + CONTAINER, isWindows ? windowsCommand : unixCommand).start();
-            BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getInputStream()));
-            String containerId = containerIdReader.readLine();
-            if (containerId != null && !containerId.isEmpty()) {
-                createProcessBuilder("docker kill " + containerId, isWindows ? windowsCommand : unixCommand).start().waitFor();
+            try {
+                executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+            } catch (TimeoutException e) {
+                future.cancel(true);
+                Process getContainerIdProcess = createProcessBuilder("docker ps -q --filter name=" + CONTAINER, isWindows ? windowsCommand : unixCommand).start();
+                BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getInputStream()));
+                String containerId = containerIdReader.readLine();
+                if (containerId != null && !containerId.isEmpty()) {
+                    createProcessBuilder("docker kill " + containerId, isWindows ? windowsCommand : unixCommand).start().waitFor();
+                }
+                String message = "Execution timed out after " + TIMEOUT_SECONDS + " seconds";
+                executionResult.setCompiled(false);
+                executionResult.setExecution(false);
+                executionResult.setMessage(message);
+            } catch (ExecutionException e) {
+                throw new ExecutionTimedOutException(executionResult.getMessage());
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new ExecutionTimedOutException("Execution was interrupted after " + TIMEOUT_SECONDS + " seconds");
+            } finally {
+                executor.shutdown();
             }
-            String message = "Execution timed out after " + TIMEOUT_SECONDS + " seconds";
-            executionResult.setCompiled(false);
-            executionResult.setExecution(false);
-            executionResult.setMessage(message);
-        } catch (ExecutionException e) {
-            throw new ExecutionTimedOutException(executionResult.getMessage());
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ExecutionTimedOutException("Execution was interrupted after " + TIMEOUT_SECONDS + " seconds");
-        } finally {
-            executor.shutdown();
+            return executionResult;
         }
-        return executionResult;
     }
 
     private ProcessBuilder createProcessBuilder(String command, String shellCommand) {
