@@ -109,7 +109,7 @@ class DockerExecutorTest {
         ExecutionResult result = dockerExecutor.execute(javaCode);
         assertFalse(result.isCompiled());
         assertFalse(result.isExecution());
-        assertTrue(result.getMessage().contains("Execution timed out"));
+        assertEquals("Execution failed: TIMED OUT EXECUTION", result.getMessage());
     }
 
     @Test

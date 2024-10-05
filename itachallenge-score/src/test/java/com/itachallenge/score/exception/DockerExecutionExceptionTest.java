@@ -1,4 +1,4 @@
-package com.itachallenge.score.sandbox.exception;
+package com.itachallenge.score.exception;
 
 import com.itachallenge.score.exception.DockerExecutionException;
 import org.junit.jupiter.api.Test;

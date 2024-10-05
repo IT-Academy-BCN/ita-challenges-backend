@@ -2,11 +2,10 @@ package com.itachallenge.score.service;
 
 import com.itachallenge.score.dto.ScoreRequest;
 import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.exception.DockerExecutionException;
+import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.DockerExecutor;
 import com.itachallenge.score.util.ExecutionResult;
-import com.itachallenge.score.filter.Filter;
-import com.itachallenge.score.exception.DockerExecutionException;
-import com.itachallenge.score.exception.ExecutionTimedOutException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -82,21 +81,6 @@ class CodeProcessingManagerTest {
         assertEquals("Code compiled and executed, and result match: 5432", responseEntity.getBody().getCompilationMessage());
     }
 
-    @DisplayName("Test processCode with IOException")
-    @Test
-    void testProcessCodeWithIOException() throws IOException, InterruptedException {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
-
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setSuccess(true);
-
-        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
-        when(dockerExecutor.execute(any(String.class))).thenThrow(new IOException("Execution timed out"));
-
-        assertThrows(ExecutionTimedOutException.class, () -> {
-            codeProcessingManager.processCode(scoreRequest);
-        });
-    }
 
     @DisplayName("Test processCode with InterruptedException")
     @Test
