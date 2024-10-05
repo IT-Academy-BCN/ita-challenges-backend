@@ -2,6 +2,7 @@
 
 En el proyecto actual se usa Docker para la creación de un contenedor con el fin de ejecutar el proyecto de forma aislada. Actualmente se está utilizando una imagen "openjdk:21" para la ejecución del proyecto, en el futuro se cambiará por una imagen custom, capando librerías y módulos que no se necesiten para la ejecución del proyecto.
 Antes de pasar el código a ejecución, se pasa por una serie de filtros utilizando el patrón de diseño Chain of Responsibility, para asegurar que el código pueda ser ejecutado de forma segura.
+La comparación de los resultados ahora mismo está hardcodeada, en el futuro se tendrá que modificar añadiendo un repositorio con los resultados esperados para cada UUID de ejercicio y lenguaje.
 
 ## Chain of Responsibility
 
@@ -84,7 +85,7 @@ Este método es el punto de entrada principal para procesar el código del usuar
 2. **Verificación de Éxito**: Verifica si la aplicación de filtros fue exitosa.
 3. **Ejecución del Código**: Si la aplicación de filtros fue exitosa, utiliza `DockerExecutor` para ejecutar el código en un contenedor Docker.
 4. **Manejo de Excepciones**: Maneja excepciones como `IOException` e `InterruptedException` para asegurar que el contenedor se elimine en caso de error.
-5. **Generación de Respuesta**: Genera una respuesta `ScoreResponse` basada en el resultado de la ejecución del código.
+5. **Calculación de la puntuación**: Calcula la puntuación del código del usuario basada en el resultado de la ejecución.
 
 ##### `calculateScore`
 
