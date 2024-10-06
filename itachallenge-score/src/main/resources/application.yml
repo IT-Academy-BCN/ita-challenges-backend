@@ -24,6 +24,7 @@ management:
   security:
     enabled: false
 
+
 logging:
   level:
     root: INFO
@@ -39,12 +40,12 @@ validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-# Command to run sandbox
+#Command to run sandbox
 commands:
   windows: "cmd.exe"
   unix: "sh"
 
-# Security Filter
+#Security Filter
 security:
   harmfulPatterns:
     - "System.exit"
@@ -52,6 +53,7 @@ security:
     - "ProcessBuilder"
     - "java.io.File"
     - "java.nio.file.Files"
+
 
 # Keyword Filter
 keyword:
