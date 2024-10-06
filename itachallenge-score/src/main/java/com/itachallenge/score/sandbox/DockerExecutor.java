@@ -23,7 +23,7 @@ public class DockerExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(DockerExecutor.class);
 
-    private static final String DOCKER_IMAGE_NAME = "openjdk:21"; //Change that image to the one you want to use
+    private static final String DOCKER_IMAGE_NAME = "openjdk:11-slim"; //Change that image to the one you want to use
     private static final String CONTAINER = "java-executor-container";
 
     private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }"; //Can't parameterize this string.
@@ -46,9 +46,15 @@ public class DockerExecutor {
             executionResult.setMessage("Java code is null");
             return executionResult;
         }
+
         String formattedCode = String.format(CODE_TEMPLATE, javaCode);
         formattedCode = formattedCode.replace("\"", "\\\"");
-        String command = String.format("docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java Main\"", CONTAINER, DOCKER_IMAGE_NAME, formattedCode);
+
+  
+        String command = String.format(
+                "docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java -Djava.security.manager -Djava.security.policy=/usr/app/restrictive.policy Main\"",
+                CONTAINER, DOCKER_IMAGE_NAME, formattedCode
+        );
 
         log.info("Executing command: {}", command);
         cleanUpContainers(CONTAINER);
@@ -106,22 +112,22 @@ public class DockerExecutor {
     private ExecutionResult executeCommand(ProcessBuilder processBuilder, ExecutionResult executionResult) {
         try {
             Process process = processBuilder.start();
+            StringBuilder output = new StringBuilder();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-                StringBuilder output = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
                     output.append(line).append("\n");
                 }
-                int exitCode = process.waitFor();
-                if (exitCode == 0) {
-                    executionResult.setCompiled(true);
-                    executionResult.setExecution(true);
-                    executionResult.setMessage(output.toString().trim());
-                } else {
-                    executionResult.setCompiled(false);
-                    executionResult.setExecution(false);
-                    executionResult.setMessage("Execution failed with exit code " + exitCode);
-                }
+            }
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                executionResult.setCompiled(true);
+                executionResult.setExecution(true);
+                executionResult.setMessage(output.toString().trim());
+            } else {
+                executionResult.setCompiled(false);
+                executionResult.setExecution(false);
+                executionResult.setMessage("Execution failed with exit code " + exitCode + ". Output: " + output.toString().trim());
             }
         } catch (IOException | InterruptedException e) {
             executionResult.setCompiled(false);
@@ -131,4 +137,5 @@ public class DockerExecutor {
         }
         return executionResult;
     }
+
 }
