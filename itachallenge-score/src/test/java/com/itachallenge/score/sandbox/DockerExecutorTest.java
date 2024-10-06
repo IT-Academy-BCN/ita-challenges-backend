@@ -30,7 +30,7 @@ class DockerExecutorTest {
 
     @BeforeEach
     public void setUp() {
-        javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:21"))
+        javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:11-slim"))
                 .withCommand("sh", "-c", "while true; do sleep 1000; done"); // Infinite loop to keep the container running
         javaContainer.start();
         dockerExecutor.setWindowsCommand("cmd.exe");

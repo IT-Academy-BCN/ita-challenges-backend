@@ -50,14 +50,13 @@ public class DockerExecutor {
         String formattedCode = String.format(CODE_TEMPLATE, javaCode);
         formattedCode = formattedCode.replace("\"", "\\\"");
 
-  
+
         String command = String.format(
                 "docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java -Djava.security.manager -Djava.security.policy=/usr/app/restrictive.policy Main\"",
                 CONTAINER, DOCKER_IMAGE_NAME, formattedCode
         );
 
         log.info("Executing command: {}", command);
-        cleanUpContainers(CONTAINER);
 
         ProcessBuilder processBuilder = createProcessBuilder(command, isWindows ? windowsCommand : unixCommand);
         processBuilder.redirectErrorStream(true);
@@ -89,6 +88,8 @@ public class DockerExecutor {
                 Thread.currentThread().interrupt();
                 throw new ExecutionTimedOutException("Execution was interrupted after " + TIMEOUT_SECONDS);
             }
+        } finally {
+            cleanUpContainers(CONTAINER);
         }
         return executionResult;
     }
