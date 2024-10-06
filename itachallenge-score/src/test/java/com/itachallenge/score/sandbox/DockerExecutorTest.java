@@ -27,7 +27,6 @@ class DockerExecutorTest {
 
     private GenericContainer<?> javaContainer;
 
-
     @BeforeEach
     public void setUp() {
         javaContainer = new GenericContainer<>(DockerImageName.parse("openjdk:11-slim"))
@@ -35,6 +34,10 @@ class DockerExecutorTest {
         javaContainer.start();
         dockerExecutor.setWindowsCommand("cmd.exe");
         dockerExecutor.setUnixCommand("sh");
+        dockerExecutor.setDockerImageName("openjdk:11-slim");
+        dockerExecutor.setContainerName("java-executor-container");
+        dockerExecutor.setCodeTemplate("public class Main { public static void main(String[] args) { %s } }");
+        dockerExecutor.setTimeoutSeconds(5);
     }
 
     @Test

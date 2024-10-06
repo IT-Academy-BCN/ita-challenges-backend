@@ -1,7 +1,9 @@
 ### Notas para el compilador
 
-En el proyecto actual se usa Docker para la creación de un contenedor con el fin de ejecutar el proyecto de forma aislada. Actualmente se está utilizando una imagen "openjdk:21" para la ejecución del proyecto, en el futuro se cambiará por una imagen custom, capando librerías y módulos que no se necesiten para la ejecución del proyecto.
-Antes de pasar el código a ejecución, se pasa por una serie de filtros utilizando el patrón de diseño Chain of Responsibility, para asegurar que el código pueda ser ejecutado de forma segura.
+En el proyecto actual se usa Docker para la creación de un contenedor con el fin de ejecutar el proyecto de forma aislada. Actualmente se está utilizando una imagen `"openjdk:11-slim"` para la ejecución del proyecto.
+El código del usuario es recibido en un endpoint de tipo POST, y se recibe un JSON con el UUID del ejercicio, el UUID del lenguaje y el código del usuario.
+Antes de pasar el código a ejecución, se pasa por una serie de filtros utilizando el patrón de diseño `Chain of Responsibility`, para asegurar que el código pueda ser ejecutado de forma segura.
+Una vez que el código ha pasado los filtros, se ejecuta en un contenedor `Docker`, donde aparte se ejecuta con un comando donde aplica un `restrictive.policy` para evitar que el código pueda hacer daño al sistema.
 La comparación de los resultados ahora mismo está hardcodeada, en el futuro se tendrá que modificar añadiendo un repositorio con los resultados esperados para cada UUID de ejercicio y lenguaje.
 
 Para probar en postman, el body de la petición debería ser así:

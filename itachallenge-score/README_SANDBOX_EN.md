@@ -1,8 +1,10 @@
  ### Note to the compiler: This file is a sandbox for the translation of the README.md file. Please do not delete it.
 
 
-This project uses Docker to create a container to run the project in isolation. Currently, an "openjdk:21" image is being used to run the project, in the future it will be changed to a custom image, capping libraries and modules that are not needed for the project to run.
-Before passing the code to execution, it goes through a series of filters using the Chain of Responsibility design pattern, to ensure that the code can be executed safely.
+This project uses Docker to create a container to run the project in isolation. Currently, an `"openjdk:11-slim"` image is being used to run the project.
+The user's code is received in a POST endpoint, and a JSON with the UUID of the exercise, the UUID of the language, and the user's code is received.
+Before passing the code to execution, it goes through a series of filters using the `Chain of Responsibility` design pattern, to ensure that the code can be executed safely.
+Once the code has passed the filters, it is executed in a `Docker` container, where it is executed with a command that applies a restrictive `security.policy` to prevent the code from causing harm to the system.
 The comparison of the results is currently hardcoded, in the future it will have to be modified by adding a repository with the expected results for each exercise UUID and language.
 
 To test in Postman, the request body should be as follows:

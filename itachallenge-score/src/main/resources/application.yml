@@ -24,7 +24,6 @@ management:
   security:
     enabled: false
 
-
 logging:
   level:
     root: INFO
@@ -40,12 +39,12 @@ validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-#Command to run sandbox
+# Command to run sandbox
 commands:
   windows: "cmd.exe"
   unix: "sh"
 
-#Security Filter
+# Security Filter
 security:
   harmfulPatterns:
     - "System.exit"
@@ -53,7 +52,6 @@ security:
     - "ProcessBuilder"
     - "java.io.File"
     - "java.nio.file.Files"
-
 
 # Keyword Filter
 keyword:
@@ -63,3 +61,10 @@ keyword:
     - "interface"
     - "enum"
     - "package"
+
+# Docker Executor
+docker:
+  image-name: "openjdk:11-slim"
+  container-name: "java-executor-container"
+  code-template: "public class Main { public static void main(String[] args) { %s } }"
+  timeout-seconds: 5

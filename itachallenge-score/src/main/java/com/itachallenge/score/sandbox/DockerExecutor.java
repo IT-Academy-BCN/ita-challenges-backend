@@ -23,11 +23,17 @@ public class DockerExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(DockerExecutor.class);
 
-    private static final String DOCKER_IMAGE_NAME = "openjdk:11-slim"; //Change that image to the one you want to use
-    private static final String CONTAINER = "java-executor-container";
+    @Value("${docker.image-name}")
+    private String dockerImageName;
 
-    private static final String CODE_TEMPLATE = "public class Main { public static void main(String[] args) { %s } }"; //Can't parameterize this string.
-    private static final long TIMEOUT_SECONDS = 5; //Lifetime of the container
+    @Value("${docker.container-name}")
+    private String containerName;
+
+    @Value("${docker.code-template}")
+    private String codeTemplate;
+
+    @Value("${docker.timeout-seconds}")
+    private long timeoutSeconds;
 
     @Value("${commands.windows}")
     private String windowsCommand;
@@ -47,13 +53,20 @@ public class DockerExecutor {
             return executionResult;
         }
 
-        String formattedCode = String.format(CODE_TEMPLATE, javaCode);
+        String formattedCode;
+        try {
+            formattedCode = String.format(codeTemplate, javaCode);
+        } catch (NullPointerException e) {
+            executionResult.setCompiled(false);
+            executionResult.setExecution(false);
+            executionResult.setMessage("Code template is null");
+            return executionResult;
+        }
         formattedCode = formattedCode.replace("\"", "\\\"");
-
 
         String command = String.format(
                 "docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java -Djava.security.manager -Djava.security.policy=/usr/app/restrictive.policy Main\"",
-                CONTAINER, DOCKER_IMAGE_NAME, formattedCode
+                containerName, dockerImageName, formattedCode
         );
 
         log.info("Executing command: {}", command);
@@ -67,11 +80,11 @@ public class DockerExecutor {
             Future<ExecutionResult> future = executor.submit(() -> executeCommand(processBuilder, finalExecutionResult));
 
             try {
-                executionResult = future.get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+                executionResult = future.get(timeoutSeconds, TimeUnit.SECONDS);
 
             } catch (TimeoutException e) {
                 future.cancel(true);
-                try (AutoCloseableProcess getContainerIdProcess = new AutoCloseableProcess(createProcessBuilder("docker ps -q --filter name=" + CONTAINER, isWindows ? windowsCommand : unixCommand).start());
+                try (AutoCloseableProcess getContainerIdProcess = new AutoCloseableProcess(createProcessBuilder("docker ps -q --filter name=" + containerName, isWindows ? windowsCommand : unixCommand).start());
                      BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getProcess().getInputStream()))) {
                     String containerId = containerIdReader.readLine();
                     if (containerId != null && !containerId.isEmpty()) {
@@ -80,16 +93,16 @@ public class DockerExecutor {
                         }
                     }
                 }
-                String message = "Execution timed out after " + TIMEOUT_SECONDS;
+                String message = "Execution timed out after " + timeoutSeconds;
                 executionResult.setCompiled(false);
                 executionResult.setExecution(false);
                 executionResult.setMessage(message);
             } catch (ExecutionException | InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new ExecutionTimedOutException("Execution was interrupted after " + TIMEOUT_SECONDS);
+                throw new ExecutionTimedOutException("Execution was interrupted after " + timeoutSeconds);
             }
         } finally {
-            cleanUpContainers(CONTAINER);
+            cleanUpContainers(containerName);
         }
         return executionResult;
     }
@@ -138,5 +151,4 @@ public class DockerExecutor {
         }
         return executionResult;
     }
-
 }

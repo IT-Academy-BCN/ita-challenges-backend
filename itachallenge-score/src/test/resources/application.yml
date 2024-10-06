@@ -5,7 +5,6 @@ spring:
   jmx:
     enabled: true
 
-
 springdoc:
   swagger-ui:
     path: "/swagger-ui-custom.html"
@@ -25,8 +24,6 @@ management:
   security:
     enabled: false
 
-
-
 logging:
   level:
     root: INFO
@@ -42,22 +39,21 @@ validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-
-# Commands to run Sandbox
+# Command to run sandbox
 commands:
   windows: "cmd.exe"
   unix: "sh"
 
-  #  Security FilterTEST
+# Security Filter
 security:
-  harmful-patterns:
+  harmfulPatterns:
     - "System.exit"
     - "Runtime.getRuntime().exec"
     - "ProcessBuilder"
     - "java.io.File"
     - "java.nio.file.Files"
 
-# KeywordFilterTEST
+# Keyword Filter
 keyword:
   disallowed:
     - "import"
@@ -65,3 +61,4 @@ keyword:
     - "interface"
     - "enum"
     - "package"
+
