@@ -20,6 +20,7 @@ public class User {
     @MongoId
     @Field(name = "uuid")
     private UUID uuid;
+
     @Field(name = "name")
     private String name;
 
