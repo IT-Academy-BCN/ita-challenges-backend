@@ -60,9 +60,9 @@ class ChallengeServiceImpCacheTest {
             String key = invocation.getArgument(0);
             ChallengeDto value = invocation.getArgument(1);
             return null;
-        }).when(cache).put(anyString(), any(ChallengeDto.class));
+        }).when(cache).put(anyString(), any(ChallengeDto.class));*/
 
-         */
+
 
         // Simular el comportamiento del repositorio y del convertidor
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
