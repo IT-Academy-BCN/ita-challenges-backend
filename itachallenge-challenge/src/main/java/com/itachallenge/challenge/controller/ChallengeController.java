@@ -87,11 +87,13 @@ public class ChallengeController {
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
-        log.info((userService.isPresent() ? userService.get() : NO_SERVICE)
+
+        log.info((userService.isPresent() ? "User service available" : NO_SERVICE)
                 .concat(System.lineSeparator())
-                .concat(optChallengeService.isPresent() ? optChallengeService.get() : NO_SERVICE)
+                .concat(optChallengeService.isPresent() ? "Challenge service available" : NO_SERVICE)
                 .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? scoreService.get() : NO_SERVICE));
+                .concat(scoreService.isPresent() ? "Score service available" : NO_SERVICE));
+
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -138,10 +140,13 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
+
         return challengeService.updateResourceByUuid(idResource, updates)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
                 .onErrorResume(ResourceNotFoundException.class, e -> Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage()))));
+
     }
+
 
 
     @DeleteMapping("/resources/{idResource}")
