@@ -33,9 +33,7 @@ class UserScoreServiceImpTest {
     private ConverterDocumentToDto converter;
     @InjectMocks
     private UserSolutionServiceImp userSolutionServiceImp;
-
     private UserSolutionDocument userSolutionDocument;
-
     private UUID userId;
     private UUID idChallenge;
     private UUID idLanguage;
@@ -45,6 +43,10 @@ class UserScoreServiceImpTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void getUserScoreByUserId() {
 
         userId = UUID.randomUUID();
         idLanguage = UUID.randomUUID();
@@ -59,31 +61,26 @@ class UserScoreServiceImpTest {
                 .userId(userId)
                 .challengeId(idChallenge)
                 .languageId(idLanguage)
+                .bookmarked(true)
                 .status(ChallengeStatus.STARTED)
                 .solutionDocument(solutionDocumentList)
                 .score(1)
+                .errors("xxx")
                 .build();
 
         userScoreDto = new UserScoreDto();
         expectedSolutionUserDto = new SolutionUserDto<>();
         expectedSolutionUserDto.setInfo(0, 1, 0, new UserScoreDto[]{userScoreDto});
-    }
 
-    @Test
-    void getUserScoreByUserId() {
-        when(userSolutionRepository.findByUserId(any(UUID.class)).thenReturn(Flux.just(userSolutionDocument)));
-        when(converter.fromUserScoreDocumentToUserScoreDto(any(UserSolutionDocument.class))).thenAnswer(invocation -> {
-            UserSolutionDocument doc = invocation.getArgument(0);
-            return Flux.just(new UserScoreDto(doc.getUserId(), doc.getChallengeId(), doc.getLanguageId()));
-        });
+        when(userSolutionRepository.findByUserId(userId)).thenReturn(Flux.just(userSolutionDocument));
+        when(converter.fromUserScoreDocumentToUserScoreDto(any())).thenReturn(Flux.just(userScoreDto));
 
-        // Llama al método del servicio para obtener el resultado
-        Mono<SolutionUserDto<UserScoreDto>> result = userSolutionServiceImp.getUserScoreByUserId(userId.toString(), idChallenge.toString(), idLanguage.toString());
+        Mono<SolutionUserDto<UserScoreDto>> result = userSolutionServiceImp.getChallengeById(userId.toString(), idChallenge.toString(), idLanguage.toString());
 
-        // Verifica el resultado esperado utilizando StepVerifier
         StepVerifier.create(result)
                 .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
                 .expectComplete()
                 .verify();
+        }
+
     }
-}

@@ -94,5 +94,4 @@ class UserScoreRepositoryTest {
                 .expectNextCount(2)
                 .verifyComplete();
     }
-
 }
