@@ -3,37 +3,26 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.RelatedDto;
-import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.exception.BadUUIDException;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.exception.LanguageNotFoundException;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
+import com.itachallenge.challenge.repository.SolutionRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-
-
 
 
 @Service
@@ -102,7 +91,8 @@ public class ChallengeServiceImp implements IChallengeService {
                 .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", id))
                 .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
     }
-    private Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge,UUID resourceId) {
+
+    private Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge, UUID resourceId) {
         challenge.setResources(challenge.getResources().stream()
                 .filter(s -> !s.equals(resourceId))
                 .collect(Collectors.toSet()));
@@ -270,6 +260,28 @@ public class ChallengeServiceImp implements IChallengeService {
                         })
                 );
     }
+
+    @Override
+    public Mono<String> updateResourceByUuid(String id, Map<String, Object> updates) {
+        return validateUUID(id)
+                .flatMap(resourceId -> challengeRepository.findByUuid(resourceId)
+                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found")))
+                        .flatMap(resource -> {
+                            updates.forEach((key, value) -> {
+                                Field field = ReflectionUtils.findField(resource.getClass(), key);
+                                if (field != null) {
+                                    field.setAccessible(true);
+                                    ReflectionUtils.setField(field, resource, value);
+                                }
+                            });
+                            return challengeRepository.save(resource);
+                        })
+                        .then(Mono.just("Resource updated successfully"))
+                )
+                .doOnSuccess(resultDto -> log.info("Resource updated with ID: {}", id))
+                .doOnError(error -> log.error("Error occurred while updating resource: {}", error.getMessage()));
+    }
+
     @Override
     public Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage) {
 

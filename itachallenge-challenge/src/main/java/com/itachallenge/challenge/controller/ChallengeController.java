@@ -22,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -126,25 +125,28 @@ public class ChallengeController {
                 .map(dto -> ResponseEntity.ok().body(dto));
     }
 
-
-    @DeleteMapping("/resources/{idResource}")
+    //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
+    @PatchMapping("/resources/{idResource}")
     @Operation(
-            operationId = "Get the information from a chosen resource.",
-            summary = "Get to see the resource and all its related parameters.",
-            description = "Sending the ID Resource through the URI to retrieve it from the database.",
+            operationId = "Update the information of a chosen resource.",
+            summary = "Update the resource and its related parameters.",
+            description = "Sending the ID Resource through the URI and the fields to be updated in the request body.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "400", description = "Incorrect UUID")
             }
     )
-    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
-        return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
+    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
+        return challengeService.updateResourceByUuid(idResource, updates)
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
+                .onErrorResume(ResourceNotFoundException.class, e -> {
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
+                });
     }
 
-    //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
-    @PatchMapping("/resources/{idResource}")
+
+    @DeleteMapping("/resources/{idResource}")
     @Operation(
             operationId = "Remove resource from all Challenges from Resource Id.",
             summary = "Remove resource from all Challenges from Resource Id.",
@@ -155,7 +157,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Incorrect UUID")
             }
     )
-    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
+    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap("message", response)))
                 .onErrorResume(ResourceNotFoundException.class, e -> {
