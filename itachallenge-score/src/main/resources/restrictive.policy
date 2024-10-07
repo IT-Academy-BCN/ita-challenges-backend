@@ -1,20 +1,11 @@
 grant {
 
-    // Allows writing to any file, necessary to create Main.java
-    permission java.io.FilePermission "<<ALL FILES>>", "write";
+    //Allows permission to read and write files in the /usr/app directory
+    permission java.io.FilePermission "/usr/app/Main.java", "write";
 
-    // Allows reading the system property line.separator
+    // Allows permission to read and write files in the /usr/app directory
     permission java.util.PropertyPermission "line.separator", "read";
 
-    // Allows accessing declared members in classes
+    // Allows permission to read and write files in the /usr/app directory
     permission java.lang.RuntimePermission "accessDeclaredMembers";
-
-    // Allows suppressing access checks in reflection
-    permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
-
-    // Allows executing other processes (javac, java)
-    permission java.lang.RuntimePermission "exec";
-
-    // Additional permission to write to the specific directory
-    permission java.io.FilePermission "/usr/app/Main.java", "write";
 };
