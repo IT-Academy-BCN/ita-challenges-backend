@@ -5,7 +5,6 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +35,7 @@ public class ChallengeController {
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
+    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
     private static final String MESSAGE = "message";
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
@@ -159,8 +158,7 @@ public class ChallengeController {
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
 
         return challengeService.updateResourceByUuid(idResource, updates)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
-                .onErrorResume(ResourceNotFoundException.class, e -> Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage()))));
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
 
     }
 
@@ -179,8 +177,7 @@ public class ChallengeController {
     )
     public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap(MESSAGE, response)))
-                .onErrorResume(ResourceNotFoundException.class, e -> Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage()))));
+                .map(response -> ResponseEntity.ok(Collections.singletonMap(MESSAGE, response)));
     }
 
     @GetMapping("/challenges")
