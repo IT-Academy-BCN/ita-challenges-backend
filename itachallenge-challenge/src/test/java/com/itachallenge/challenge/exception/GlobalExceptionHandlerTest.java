@@ -20,15 +20,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -203,6 +202,18 @@ class GlobalExceptionHandlerTest {
                     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Invalid Id format"));
+    }
+
+    @Test
+    void testHandleLanguageNotFoundException() {
+
+        LanguageNotFoundException exception = new LanguageNotFoundException("Language not found");
+
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleLanguageNotFoundException(exception);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        String responseBody = responseEntity.getBody().getMessage();
+        assertTrue(responseBody.contains("Language not found"));
     }
 
 }

@@ -135,7 +135,7 @@ class ChallengeServiceImpTest {
         StepVerifier.create(result)
                 .expectErrorMatches(error ->
                         error instanceof ChallengeNotFoundException
-                        && error.getMessage().equals("Challenge with id " + id + " not found.")
+                                && error.getMessage().equals("Challenge with id " + id + " not found.")
                 );
     }
 
@@ -707,4 +707,87 @@ class ChallengeServiceImpTest {
                 })
                 .verifyComplete();
     }
+
+    @Test
+    void updateResourceByUuid_Success() {
+        // Arrange
+        String resourceId = UUID.randomUUID().toString();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("fieldName", "newValue");
+
+        ChallengeDocument resource = new ChallengeDocument();
+        resource.setUuid(UUID.fromString(resourceId));
+
+        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(resource));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(resource));
+
+        // Act
+        Mono<String> result = challengeService.updateResourceByUuid(resourceId, updates);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNext("Resource updated successfully")
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).findByUuid(any(UUID.class));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+    }
+
+    @Test
+    void updateResourceByUuid_ResourceNotFound() {
+        // Arrange
+        String resourceId = UUID.randomUUID().toString();
+        Map<String, Object> updates = new HashMap<>();
+
+        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.empty());
+
+        // Act
+        Mono<String> result = challengeService.updateResourceByUuid(resourceId, updates);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(ResourceNotFoundException.class)
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(any(UUID.class));
+        verify(challengeRepository, times(0)).save(any(ChallengeDocument.class));
+    }
+
+    @Test
+    void updateResourceByUuid_InvalidUUID() {
+
+        String invalidUUID = "invalidUUID";
+        Map<String, Object> updates = new HashMap<>();
+
+
+        Mono<String> result = challengeService.updateResourceByUuid(invalidUUID, updates);
+
+        StepVerifier.create(result)
+                .expectError(BadUUIDException.class)
+                .verify();
+
+        verify(challengeRepository, times(0)).findByUuid(any(UUID.class));
+        verify(challengeRepository, times(0)).save(any(ChallengeDocument.class));
+    }
+
+    @Test
+    void updateChallenge_Success() {
+
+        UUID resourceId = UUID.randomUUID();
+        Set<UUID> resources = new HashSet<>();
+        resources.add(resourceId);
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setResources(resources);
+
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challenge));
+
+        Mono<ChallengeDocument> result = challengeService.updateChallenge(challenge, resourceId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(updatedChallenge -> updatedChallenge.getResources().isEmpty())
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+    }
+
 }

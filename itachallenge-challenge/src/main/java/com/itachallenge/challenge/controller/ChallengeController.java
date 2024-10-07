@@ -37,7 +37,7 @@ public class ChallengeController {
     private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-    private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
+    private static final String MESSAGE = "message";
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
@@ -50,7 +50,7 @@ public class ChallengeController {
     @Autowired
     IChallengeService challengeService;
 
-    //TODO - pending externalize to service layer (internal comms)
+
     @Autowired
     ZMQClient zmqClient;
     @Autowired
@@ -70,7 +70,7 @@ public class ChallengeController {
     public String test() {
         log.info("** Saludos desde el logger **");
 
-        Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
+        Optional<String> optChallengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
                 .map(Object::toString);
@@ -89,7 +89,7 @@ public class ChallengeController {
         log.info("Scanning micros:");
         log.info((userService.isPresent() ? userService.get() : NO_SERVICE)
                 .concat(System.lineSeparator())
-                .concat(challengeService.isPresent() ? challengeService.get() : NO_SERVICE)
+                .concat(optChallengeService.isPresent() ? optChallengeService.get() : NO_SERVICE)
                 .concat(System.lineSeparator())
                 .concat(scoreService.isPresent() ? scoreService.get() : NO_SERVICE));
 
@@ -99,7 +99,7 @@ public class ChallengeController {
 
         zmqClient.sendMessage(challengeInputDto, StatisticsResponseDto.class)
                 .thenAccept(response ->
-                        log.info("[ Response: " + ((StatisticsResponseDto) response).getPercent() + " ]"))
+                        log.info("[ Response: {}", ((StatisticsResponseDto) response).getPercent() + " ]"))
                 .exceptionally(e -> {
                     log.error(e.getMessage());
                     return null;
@@ -141,7 +141,7 @@ public class ChallengeController {
         return challengeService.updateResourceByUuid(idResource, updates)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
                 .onErrorResume(ResourceNotFoundException.class, e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage())));
                 });
     }
 
@@ -159,9 +159,9 @@ public class ChallengeController {
     )
     public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("message", response)))
+                .map(response -> ResponseEntity.ok(Collections.singletonMap(MESSAGE, response)))
                 .onErrorResume(ResourceNotFoundException.class, e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
+                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage())));
                 });
     }
 

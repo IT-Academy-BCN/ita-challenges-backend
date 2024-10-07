@@ -38,6 +38,8 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 
+    private static final String NOT_FOUND = "not found";
+
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
@@ -75,7 +77,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .hasElements()
                             .flatMap(result -> {
                                 if (Boolean.FALSE.equals(result)) {
-                                    return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found"));
+                                    return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND));
                                 }
 
                                 return challengesToUpdate
@@ -92,7 +94,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
     }
 
-    private Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge, UUID resourceId) {
+    public Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge, UUID resourceId) {
         challenge.setResources(challenge.getResources().stream()
                 .filter(s -> !s.equals(resourceId))
                 .collect(Collectors.toSet()));
@@ -118,7 +120,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
         } else if (level.isPresent()) {
             challenges = challengeRepository.findByLevel(level.get())
-                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found")));
+                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + NOT_FOUND)));
         } else {
             challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
                     .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
@@ -265,12 +267,11 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<String> updateResourceByUuid(String id, Map<String, Object> updates) {
         return validateUUID(id)
                 .flatMap(resourceId -> challengeRepository.findByUuid(resourceId)
-                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found")))
+                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND    )))
                         .flatMap(resource -> {
                             updates.forEach((key, value) -> {
                                 Field field = ReflectionUtils.findField(resource.getClass(), key);
                                 if (field != null) {
-                                    field.setAccessible(true);
                                     ReflectionUtils.setField(field, resource, value);
                                 }
                             });
