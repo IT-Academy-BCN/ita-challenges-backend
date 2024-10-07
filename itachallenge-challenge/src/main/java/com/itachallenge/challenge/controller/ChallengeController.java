@@ -99,7 +99,7 @@ public class ChallengeController {
 
         zmqClient.sendMessage(challengeInputDto, StatisticsResponseDto.class)
                 .thenAccept(response ->
-                        log.info("[ Response: " + ((StatisticsResponseDto) response).getPercent() + " ]"))
+                        log.info("[ Response: {}" , ((StatisticsResponseDto) response).getPercent() + " ]"))
                 .exceptionally(e -> {
                     log.error(e.getMessage());
                     return null;
@@ -140,9 +140,7 @@ public class ChallengeController {
     public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
         return challengeService.updateResourceByUuid(idResource, updates)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)))
-                .onErrorResume(ResourceNotFoundException.class, e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage())));
-                });
+                .onErrorResume(ResourceNotFoundException.class, e -> Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage()))));
     }
 
 
@@ -160,9 +158,7 @@ public class ChallengeController {
     public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
                 .map(response -> ResponseEntity.ok(Collections.singletonMap(MESSAGE, response)))
-                .onErrorResume(ResourceNotFoundException.class, e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage())));
-                });
+                .onErrorResume(ResourceNotFoundException.class, e -> Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap(MESSAGE, e.getMessage()))));
     }
 
     @GetMapping("/challenges")

@@ -58,6 +58,7 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
 
+
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -164,10 +165,8 @@ public class ChallengeServiceImp implements IChallengeService {
         return countMono.zipWith(challengeDtoFlux.collectList(), (totalCount, challenges) -> {
             ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
             return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
-        }).onErrorResume(e -> {
-            // Manejo de errores, por ejemplo, devolver un GenericResultDto vacío o un error específico.
-            return Mono.just(new GenericResultDto<>(offset, limit, 0, new ChallengeDto[0]));
-        });
+        }).onErrorResume(e -> Mono.just(new GenericResultDto<>(offset, limit, 0, new ChallengeDto[0])));
+
     }
 
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
