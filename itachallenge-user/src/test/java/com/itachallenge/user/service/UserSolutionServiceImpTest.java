@@ -158,7 +158,7 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
                                 && userSolutionScoreDto.getScore() == mockScore
-                                && Objects.equals(userSolutionScoreDto.getErrors(), errors))
+                                && userSolutionScoreDto.getErrors().equals(errors))
                 .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }

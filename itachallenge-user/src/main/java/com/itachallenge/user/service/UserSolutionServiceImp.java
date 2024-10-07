@@ -118,6 +118,9 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
+        if (solutionDocuments == null || solutionDocuments.isEmpty()) {
+            return Mono.error(new IllegalArgumentException("Solution documents must not be empty"));
+        }
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
