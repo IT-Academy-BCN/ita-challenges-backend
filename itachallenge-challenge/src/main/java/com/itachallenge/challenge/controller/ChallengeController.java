@@ -88,11 +88,28 @@ public class ChallengeController {
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
 
-        log.info((userService.isPresent() ? "User service available" : NO_SERVICE)
-                .concat(System.lineSeparator())
-                .concat(optChallengeService.isPresent() ? "Challenge service available" : NO_SERVICE)
-                .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? "Score service available" : NO_SERVICE));
+        StringBuilder logMessage = new StringBuilder("Scanning micros:");
+
+        if (userService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("User service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        if (optChallengeService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("Challenge service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        if (scoreService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("Score service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        String logMessageStr = logMessage.toString();
+        log.info(logMessageStr);
 
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
