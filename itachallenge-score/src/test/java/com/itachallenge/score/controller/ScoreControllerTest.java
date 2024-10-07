@@ -40,7 +40,8 @@ class ScoreControllerTest {
                 .jsonPath("$.uuid_challenge").isEqualTo("123e4567-e89b-12d3-a456-426614174000")
                 .jsonPath("$.uuid_language").isEqualTo("456f7890-e89b-12d3-a456-426614174000")
                 .jsonPath("$.solution_text").isEqualTo("texto de ejemplo")
-                .jsonPath("$.score").isEqualTo(99);
+                .jsonPath("$.score").isEqualTo(99)
+                .jsonPath("$.errors").isEqualTo("xxx");
 
     }
 
@@ -58,4 +59,3 @@ class ScoreControllerTest {
     }
 
 }
-
