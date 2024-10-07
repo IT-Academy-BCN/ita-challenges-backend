@@ -38,6 +38,7 @@ public class ScoreController {
                     scoreResponseDto.setUuidLanguage(req.getUuidLanguage());
                     scoreResponseDto.setSolutionText(req.getSolutionText());
                     scoreResponseDto.setScore(99);//TODO
+                    scoreResponseDto.setErrors("xxx");//TODO
                     return ResponseEntity.ok(scoreResponseDto);
                 });
     }
