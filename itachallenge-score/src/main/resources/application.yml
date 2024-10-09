@@ -68,5 +68,12 @@ keyword:
 docker:
   image-name: "openjdk:11-slim"
   container-name: "java-executor-container"
-  code-template: "public class Main { public static void main(String[] args) { %s } }"
+  code-template:
+    "import java.util.List;
+    import java.util.ArrayList;
+    public class Main { 
+      public static void main(String[] args) { 
+      %s 
+      } 
+    }"
   timeout-seconds: 5

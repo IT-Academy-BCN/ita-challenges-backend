@@ -32,8 +32,11 @@ public class CodeProcessingManager {
     }
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
-        String sourceCode = scoreRequest.getSolutionText();
-        String resultExpected = "5432"; // TODO: Change to dynamic result from the challenge UUID
+
+        String sourceCode = scoreRequest.getSolutionText(); //CODE USER FROM JSON
+        String[] arguments = {"5", "7"}; // PARAMETER "IN" FROM THE CHALLENGE
+        String resultExpected = "12"; //PARAMETER "OUT" FROM THE CHALLENGE
+
         ExecutionResult executionResult = filterChain.apply(sourceCode);
 
         if (!executionResult.isSuccess()) {
@@ -49,7 +52,7 @@ public class CodeProcessingManager {
 
         if (executionResult.isSuccess()) {
             try {
-                executionResult = dockerExecutor.execute(sourceCode);
+                executionResult = dockerExecutor.execute(sourceCode, arguments);
             } catch (IOException e) {
                 ScoreResponse scoreResponse = new ScoreResponse();
                 scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
@@ -64,6 +67,7 @@ public class CodeProcessingManager {
                 throw new DockerExecutionException("Execution interrupted", e);
             }
         }
+
 
         ScoreResponse scoreResponse = new ScoreResponse();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
