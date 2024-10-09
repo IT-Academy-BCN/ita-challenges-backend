@@ -17,8 +17,7 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
 
     Flux<UserSolutionDocument> findByUserId(UUID userId);
 
-    Flux<UserSolutionDocument> findByChallengeId(UUID challengeId)
-            ;
+    Flux<UserSolutionDocument> findByChallengeId(UUID challengeId);
 
     Flux<UserSolutionDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
 

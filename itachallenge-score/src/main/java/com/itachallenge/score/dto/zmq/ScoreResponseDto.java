@@ -24,7 +24,9 @@ public class ScoreResponseDto {
     @JsonProperty("solution_text")
     private String solutionText;
 
+    @JsonProperty("score")
     private int score;
 
+    @JsonProperty("errors")
     private String errors;
 }
