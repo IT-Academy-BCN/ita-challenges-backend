@@ -355,6 +355,4 @@ class UserControllerTest {
                     assertEquals("Sample Solution", solution.getSolutionText());
                 });
     }
-
-
 }

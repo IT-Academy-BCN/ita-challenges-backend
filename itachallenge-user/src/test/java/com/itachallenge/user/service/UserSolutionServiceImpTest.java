@@ -6,7 +6,6 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
-import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,10 +40,6 @@ class UserSolutionServiceImpTest {
     IUserSolutionRepository userSolutionRepository;
     @Mock
     private ConverterDocumentToDto converter;
-
-    @Mock
-    private ZMQClient zmqClient;
-
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -80,8 +74,10 @@ class UserSolutionServiceImpTest {
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .status(ChallengeStatus.ENDED)
+                .score(mockScore)
+                .errors(errors)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
-                .score(mockScore).build();
+                .build();
 
     }
 
@@ -123,7 +119,7 @@ class UserSolutionServiceImpTest {
                 .errors(errors)
                 .build();
         when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter, zmqClient);
+        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
 
         Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
 
@@ -182,8 +178,9 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == 13)
-                .verifyComplete();
+                                && userSolutionScoreDto.getScore() == 13
+                                && userSolutionScoreDto.getErrors().equals("xxx"))
+                                .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
 
@@ -206,7 +203,8 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == 13)
+                                && userSolutionScoreDto.getScore() == 13
+                                && userSolutionScoreDto.getErrors().equals(errors))
                 .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }

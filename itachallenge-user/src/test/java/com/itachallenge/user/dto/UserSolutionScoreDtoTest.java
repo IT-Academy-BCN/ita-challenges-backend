@@ -17,6 +17,7 @@ class UserSolutionScoreDtoTest {
             .languageId("validLanguageId")
             .solutionText("Valid solution text")
             .score(80)
+            .errors("Valid errors text")
             .build();
 }
     @Test
@@ -27,5 +28,6 @@ class UserSolutionScoreDtoTest {
         assertEquals("validLanguageId", userSolutionScoreDto.getLanguageId());
         assertEquals("Valid solution text", userSolutionScoreDto.getSolutionText());
         assertEquals(80, userSolutionScoreDto.getScore());
+        assertEquals("Valid errors text", userSolutionScoreDto.getErrors());
     }
 }

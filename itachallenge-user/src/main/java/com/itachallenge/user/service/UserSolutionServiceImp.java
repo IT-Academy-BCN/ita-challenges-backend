@@ -3,13 +3,10 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
-import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
-import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +18,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,14 +26,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
-    private final ZMQClient zmqClient;
     SecureRandom random = new SecureRandom();
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter, ZMQClient zmqClient) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
         this.userSolutionRepository = userSolutionRepository;
         this.converter = converter;
-        this.zmqClient = zmqClient;
     }
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
@@ -118,9 +112,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
-        if (solutionDocuments == null || solutionDocuments.isEmpty()) {
-            return Mono.error(new IllegalArgumentException("Solution documents must not be empty"));
-        }
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
@@ -131,27 +122,18 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     return userSolutionRepository.save(existingSolution);
                 })
                 .switchIfEmpty(Mono.defer(() -> {
-                    ScoreRequestDto scoreRequestDto = new ScoreRequestDto(challengeUuid, languageUuid, solutionDocuments.get(0).getSolutionText());
-                    return Mono.fromFuture(() -> getScoreResponse(scoreRequestDto))
-                            .flatMap(scoreResponseDto -> {
-                                UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                                        .uuid(UUID.randomUUID())
-                                        .userId(userUuid)
-                                        .challengeId(challengeUuid)
-                                        .languageId(languageUuid)
-                                        .status(challengeStatus)
-                                        .score(scoreResponseDto.getScore())
-                                        .errors(scoreResponseDto.getErrors())
-                                        .solutionDocument(solutionDocuments)
-                                        .build();
-                                return userSolutionRepository.save(userSolutionDocument);
-                            });
+                    UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                            .uuid(UUID.randomUUID())
+                            .userId(userUuid)
+                            .challengeId(challengeUuid)
+                            .languageId(languageUuid)
+                            .status(challengeStatus)
+                            .score(13) // TODO: GET SCORE FROM SCORE MICRO VIA ZMQ
+                            .errors("xxx") // TODO: GET ERRORS FROM SCORE MICRO VIA ZMQ
+                            .solutionDocument(solutionDocuments)
+                            .build();
+                    return userSolutionRepository.save(userSolutionDocument);
                 }));
-    }
-
-    private CompletableFuture<ScoreResponseDto> getScoreResponse(ScoreRequestDto scoreRequestDto) {
-        return zmqClient.sendMessage(scoreRequestDto, ScoreResponseDto.class)
-                .thenApply(ScoreResponseDto.class::cast);
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
@@ -233,4 +215,3 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 }
-
