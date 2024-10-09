@@ -39,7 +39,6 @@ class ConverterDocumentToDtoTest {
     SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
     UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid_1, idUser, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 90, "xxx", solutionDocumentList);
-
     SolutionDocument solutionDocument = new SolutionDocument();
     UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
 
