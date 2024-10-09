@@ -17,7 +17,7 @@ class DetailTest {
             descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción del Test");
             descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció del Test");
             descriptionMap.put(Locale.ENGLISH, "Test Description");
-        DetailDocument detail = new DetailDocument(descriptionMap, null, null);
+        DetailDocument detail = new DetailDocument();
         assertEquals(descriptionMap, detail.getDescription());
     }
 
@@ -34,7 +34,7 @@ class DetailTest {
             exampleMap2.put(Locale.ENGLISH, "Example 2");
         examples.add(new ExampleDocument(uuid_1,exampleMap1));
         examples.add(new ExampleDocument(uuid_2,exampleMap2));
-        DetailDocument detail = new DetailDocument(null, examples, null);
+        DetailDocument detail = new DetailDocument();
         assertEquals(examples, detail.getExamples());
     }
 
@@ -44,7 +44,7 @@ class DetailTest {
             notesMap.put(Locale.forLanguageTag("ES"), "Nota de prueba");
             notesMap.put(Locale.forLanguageTag("CA"), "Nota de prova");
             notesMap.put(Locale.ENGLISH, "Test Note");
-        DetailDocument detail = new DetailDocument(null, null, notesMap);
+        DetailDocument detail = new DetailDocument();
         assertEquals(notesMap, detail.getNotes());
     }
 }

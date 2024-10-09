@@ -9,21 +9,29 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
+@Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
 @Getter
 @Setter
+@EqualsAndHashCode
 public class ChallengeDto {
 
     @JsonProperty(value = "id_challenge", index = 0)
     private UUID challengeId;
 
-    @JsonProperty(value = "challenge_title", index = 1)
-    private Map<Locale, String> title;
+    @JsonProperty(value = "uuid_language", index = 1)
+    private UUID uuidLanguage;
 
     @JsonProperty(index = 2)
+    private List<SolutionDto> solutions;
+
+    @JsonProperty(value = "challenge_title", index = 3)
+    private Map<Locale, String> title;
+
+    @JsonProperty(index = 4)
     private String level;
 
     /**
@@ -33,25 +41,25 @@ public class ChallengeDto {
      * los datos de LocalDateTime a String
      * al formato requerido en el .json
      */
-    @JsonProperty(value = "creation_date", index = 3)
+    @JsonProperty(value = "creation_date", index = 5)
     private String creationDate;
 
-    @JsonProperty(value = "detail", index = 4)
+    @JsonProperty(value = "detail", index = 6)
     private DetailDocument detail;
 
-    @JsonProperty(index = 5)
+    @JsonProperty(index = 7)
     private Integer popularity;
 
-    @JsonProperty(index = 6)
+    @JsonProperty(index = 8)
     private Float percentage;
 
-    @JsonProperty(index = 7)
+    @JsonProperty(index = 9)
     private Set<LanguageDto> languages;
 
-    @JsonProperty(index = 8)
-    private List<UUID> solutions;
-
-    @JsonProperty(index = 9)
+    @JsonProperty(index = 11)
     private List<TestingValueDto> testingValues;
+
+
+
 
 }

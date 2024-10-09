@@ -2,7 +2,6 @@ package com.itachallenge.challenge.integration;
 
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +27,6 @@ import java.util.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -95,7 +93,7 @@ class ChallengeIntegrationTest {
             notesMap.put(Locale.forLanguageTag("CA"), "Detail note en català");
             notesMap.put(Locale.ENGLISH, "Detail note in english");
 
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleList, notesMap);
+        DetailDocument detail = new DetailDocument();
 
         Map<Locale, String> title1 = new HashMap<>();
             title1.put(Locale.forLanguageTag("ES"), "Loops");

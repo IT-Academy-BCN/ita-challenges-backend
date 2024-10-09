@@ -11,6 +11,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class LanguageDocument {
 
     @Id

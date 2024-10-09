@@ -3,6 +3,7 @@ package com.itachallenge.challenge.helper;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.TestingValueDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +38,8 @@ class ChallengeDocumentToDtoConverterTest {
         UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
-        UUID solutionsRandomId = UUID.randomUUID();
+        UUID solutionsRandomId1 = UUID.randomUUID();
+        UUID solutionsRandomId2 = UUID.randomUUID();
         UUID resourcesRandomId = UUID.randomUUID();
         UUID relatedChallengesRandomId = UUID.randomUUID();
 
@@ -67,7 +69,7 @@ class ChallengeDocumentToDtoConverterTest {
         notesMap.put(Locale.forLanguageTag("ES"), "Notas");
         notesMap.put(Locale.forLanguageTag("CA"), "Notes");
         notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument();
 
         Integer popularity = 0;
         Float percentage = 0.0f;
@@ -84,27 +86,31 @@ class ChallengeDocumentToDtoConverterTest {
 
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
-                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId), testingValuesDoc);
+                List.of(solutionsRandomId1, solutionsRandomId2), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId), testingValuesDoc);
 
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2),
-                List.of(solutionsRandomId), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId), testingValuesDoc);
+                List.of(solutionsRandomId1, solutionsRandomId2), Set.of(resourcesRandomId), Set.of(relatedChallengesRandomId), testingValuesDoc);
 
         List<TestingValueDto> testingValuesDto1 = getMockedTestingValues(challengeDoc1.getTestingValues());
         List<TestingValueDto> testingValuesDto2 = getMockedTestingValues(challengeDoc2.getTestingValues());
 
+        SolutionDto solutionDto1 = new SolutionDto(solutionsRandomId1, "Solution 1", languageRandomId1);
+        SolutionDto solutionDto2 = new SolutionDto(solutionsRandomId2, "Solution 2", languageRandomId2);
+
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
-                List.of(solutionsRandomId),
+                List.of(solutionDto1, solutionDto2),
                 testingValuesDto1,
                 popularity, percentage);
 
         challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
-                List.of(solutionsRandomId),
+                List.of(solutionDto1, solutionDto2),
                 testingValuesDto2,
                 popularity, percentage);
     }
+
 
     @Test
     @DisplayName("Conversion from ChallengeDocument to ChallengeDto. Testing 'convertDocumentToDto' method.")
@@ -149,7 +155,7 @@ class ChallengeDocumentToDtoConverterTest {
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
-                                               List<UUID> solutions, List<TestingValueDto> testingValues, Integer popularity, Float percentage) {
+                                               List<SolutionDto> solutions, List<TestingValueDto> testingValues, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
@@ -157,10 +163,11 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getDetail()).thenReturn(detail);
         when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
         when(challengeDocMocked.getLanguages()).thenReturn(languages);
-        when(challengeDocMocked.getSolutions()).thenReturn(solutions);
+        when(challengeDocMocked.getSolutions()).thenReturn(solutions);  // Ajustar el tipo aquí
         when(challengeDocMocked.getTestingValues()).thenReturn(testingValues);
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         return challengeDocMocked;
     }
+
 }

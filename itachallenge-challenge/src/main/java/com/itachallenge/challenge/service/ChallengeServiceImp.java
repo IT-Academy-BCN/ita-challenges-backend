@@ -172,7 +172,8 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+
+    public Mono<GenericResultDto<ChallengeDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
@@ -183,20 +184,26 @@ public class ChallengeServiceImp implements IChallengeService {
 
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
-                                    .flatMap(solutionId -> solutionRepository.findById(solutionId))
-                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                    .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
-                            )
-                            .collectList()
-                            .map(solutions -> {
-                                GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
-                                return resultDto;
+                            .flatMap(challenge -> {
+                                return challengeRepository.aggregateChallengesWithSolutions(challengeId, languageId)
+                                        .flatMap(solution -> Mono.just(solutionConverter.convertDocumentToDto(solution, SolutionDto.class)))
+                                        .collectList()
+                                        .map(solutions -> {
+                                            // Creamos el ChallengeDto y lo llenamos con los datos correspondientes
+                                            ChallengeDto challengeDto = new ChallengeDto();
+                                            challengeDto.setChallengeId(challengeId);
+                                            challengeDto.setUuidLanguage(languageId);
+                                            challengeDto.setSolutions(solutions);
+
+
+                                            // Creamos el GenericResultDto con la lista de ChallengeDto
+                                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                            resultDto.setInfo(0, -1, solutions.size(), List.of(challengeDto).toArray(new ChallengeDto[0]));
+                                            return resultDto;
+                                        });
                             });
                 });
     }
-
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
