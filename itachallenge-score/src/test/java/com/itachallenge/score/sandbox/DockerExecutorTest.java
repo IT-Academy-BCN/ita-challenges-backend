@@ -2,6 +2,7 @@ package com.itachallenge.score.sandbox;
 
 import com.itachallenge.score.util.ExecutionResult;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 @Testcontainers
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
-class ChallengeTests {
+class DockerExecutorTest {
 
     @InjectMocks
     private DockerExecutor dockerExecutor;
@@ -81,7 +82,9 @@ class ChallengeTests {
             "26, false"
     })
     void testYoureASquare(int input, boolean expectedOutput) throws Exception {
-        String sourceCode = "int input = Integer.parseInt(args[0]); " +
+
+        String sourceCode =
+                "int input = Integer.parseInt(args[0]); " +
                             "boolean result = Math.sqrt(input) % 1 == 0;" +
                             "System.out.println(result);";
         String[] args = {String.valueOf(input)};
@@ -91,10 +94,12 @@ class ChallengeTests {
         assertEquals(String.valueOf(expectedOutput), executionResult.getMessage().trim());
     }
 
+    @DisplayName("In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out.")
     @ParameterizedTest
     @CsvSource({
             "1,2,a,b, '[1,2]'",
-            "3,4,c,d, '[3,4]'",
+            "1,2,a,b, '[1,2]'",
+
             "5,6,e,f, '[5,6]'"
     })
     void testListFiltering(int a, int b, String c, String d, String expectedOutput) throws Exception {
