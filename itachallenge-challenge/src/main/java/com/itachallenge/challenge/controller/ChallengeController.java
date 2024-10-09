@@ -208,7 +208,7 @@ public class ChallengeController {
         return challengeService.getAllLanguages();
     }
 
-    @GetMapping("/solution/{idChallenge}/language/{idLanguage}")
+    @GetMapping("/solution/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
             operationId = "Get the solutions from a chosen challenge and language.",
             summary = "Get to see the Solution id, text and language.",
