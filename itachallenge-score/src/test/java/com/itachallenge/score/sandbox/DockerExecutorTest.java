@@ -46,9 +46,20 @@ class DockerExecutorTest {
     })
     void testRearrangeToGrow(int input, int expectedOutput) throws Exception {
         String sourceCode =
-                            "int input = Integer.parseInt(args[0]); " +
-                            "String result = new StringBuilder(String.valueOf(input)).reverse().toString();" +
-                            "System.out.println(result);";
+            "int input = Integer.parseInt(args[0]); " +
+            "String inputString = String.valueOf(input); " +
+            "char[] inputArray = inputString.toCharArray(); " +
+            "for (int i = 0; i < inputArray.length; i++) { " +
+            "    for (int j = i + 1; j < inputArray.length; j++) { " +
+            "        if (inputArray[i] < inputArray[j]) { " +
+            "            char temp = inputArray[i]; " +
+            "            inputArray[i] = inputArray[j]; " +
+            "            inputArray[j] = temp; " +
+            "        } " +
+            "    } " +
+            "} " +
+            "System.out.println(new String(inputArray));";
+
 
         String[] args = {String.valueOf(input)};
         ExecutionResult executionResult = dockerExecutor.execute(sourceCode, args);
@@ -59,32 +70,46 @@ class DockerExecutorTest {
 
     @ParameterizedTest
     @CsvSource({
-            "1,2,3,4,5, 5",
-            "10,20,30,40,50, 50",
-            "-1,-2,-3,-4,-5, -1"
+            "1,2,3,4,5, 5, 1",
+            "1,2,-3,4,5, 5, -3",
+            "1,9,3,4,-5, 9, -5"
     })
-    void testSearchingForExtremes(String input, int expectedOutput) throws Exception {
-        String sourceCode = "String[] inputs = args[0].split(\",\"); " +
-                            "int max = Integer.MIN_VALUE; " +
-                            "for (String s : inputs) { max = Math.max(max, Integer.parseInt(s)); }" +
-                            "System.out.println(max);";
-        String[] args = {input};
+    void testSearchingForExtremes(int a, int b, int c, int d, int e,  int expectedMax, int expectedMin) throws Exception {
+        String sourceCode =
+                "String[] inputs = args[0].split(\",\"); " +
+                        "int a = Integer.parseInt(inputs[0]); " +
+                        "int b = Integer.parseInt(inputs[1]); " +
+                        "int c = Integer.parseInt(inputs[2]); " +
+                        "int d = Integer.parseInt(inputs[3]); " +
+                        "int e = Integer.parseInt(inputs[4]); " +
+                        "int max = Math.max(Math.max(Math.max(Math.max(a, b), c), d), e); " +
+                        "int min = Math.min(Math.min(Math.min(Math.min(a, b), c), d), e); " +
+
+                        "System.out.println(max + \",\" + min);";
+
+        String[] args = {String.format("%d,%d,%d,%d,%d", a, b, c, d, e)};
         ExecutionResult executionResult = dockerExecutor.execute(sourceCode, args);
+
         assertEquals(true, executionResult.isCompiled());
         assertEquals(true, executionResult.isExecution());
-        assertEquals(String.valueOf(expectedOutput), executionResult.getMessage().trim());
+
+        String[] output = executionResult.getMessage().trim().split(",");
+        assertEquals(String.valueOf(expectedMax), output[0].trim());
+        assertEquals(String.valueOf(expectedMin), output[1].trim());
     }
+
+
 
     @ParameterizedTest
     @CsvSource({
-            "16, true",
-            "25, true",
-            "26, false"
+            "3, false",
+            "-1, false",
+            "0, true"
     })
     void testYoureASquare(int input, boolean expectedOutput) throws Exception {
 
         String sourceCode =
-                "int input = Integer.parseInt(args[0]); " +
+                            "int input = Integer.parseInt(args[0]); " +
                             "boolean result = Math.sqrt(input) % 1 == 0;" +
                             "System.out.println(result);";
         String[] args = {String.valueOf(input)};
@@ -98,8 +123,7 @@ class DockerExecutorTest {
     @ParameterizedTest
     @CsvSource({
             "1,2,a,b, '[1,2]'",
-            "1,2,a,b, '[1,2]'",
-
+            "12341,542,pepe,asdf, '[12341,542]'",
             "5,6,e,f, '[5,6]'"
     })
     void testListFiltering(int a, int b, String c, String d, String expectedOutput) throws Exception {
