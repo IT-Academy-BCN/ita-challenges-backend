@@ -115,8 +115,9 @@ public class ChallengeServiceImp implements IChallengeService {
         if (idLanguage.isPresent() && level.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
+                    .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
+                    .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found for language " + idLanguage.get())))));
         } else if (idLanguage.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
@@ -130,9 +131,9 @@ public class ChallengeServiceImp implements IChallengeService {
                     .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
         }
 
-        Flux<ChallengeDocument> finalChallenges = challenges;
-        return challenges.count().flatMap(total -> {
-            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
+        Flux<ChallengeDocument> cachedChallenges = challenges.cache();
+        return cachedChallenges.count().flatMap(total -> {
+            Flux<ChallengeDocument> pagedChallenges = cachedChallenges.skip(offset);
             if (limit != -1) {
                 pagedChallenges = pagedChallenges.take(limit);
             }

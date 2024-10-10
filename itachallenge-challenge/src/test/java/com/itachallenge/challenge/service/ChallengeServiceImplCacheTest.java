@@ -1,13 +1,17 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.config.CacheConfig;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 
+import com.itachallenge.challenge.repository.SolutionRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +19,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -22,12 +30,14 @@ import reactor.test.StepVerifier;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class ChallengeServiceImpCacheTest {
+@SpringBootTest(classes = {CacheConfig.class})
+public class ChallengeServiceImplCacheTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
@@ -36,11 +46,29 @@ class ChallengeServiceImpCacheTest {
     private LanguageRepository languageRepository;
 
     @Mock
+    private SolutionRepository solutionRepository;
+
+    @Mock
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
+
     @Mock
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
+
+    @Mock
+    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+
     @InjectMocks
     private ChallengeServiceImp challengeService;
+
+    @Autowired
+    private CacheManager cacheManager;
+
+    @BeforeEach
+    void setUp() {
+        Cache cache = cacheManager.getCache("challenges");
+        assertThat(cache).as("Cache 'challenges' should not be null").isNotNull(); // Ensure cache exists
+        cache.clear();
+    }
 
     @DisplayName("Cache - getChallengeById")
     @Test
@@ -52,18 +80,6 @@ class ChallengeServiceImpCacheTest {
         challengeDto.setChallengeId(challengeId);
         challengeDto.setLevel("EASY");
 
-        /*Cache cache = mock(Cache.class);
-        when(cacheManager.getCache(anyString())).thenReturn(cache);
-        when(cache.get(anyString(), eq(ChallengeDto.class))).thenReturn(null).thenReturn(challengeDto);
-        doAnswer(invocation -> {
-            String key = invocation.getArgument(0);
-            ChallengeDto value = invocation.getArgument(1);
-            return null;
-        }).when(cache).put(anyString(), any(ChallengeDto.class));*/
-
-
-
-        // Simular el comportamiento del repositorio y del convertidor
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
         when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
 
@@ -105,16 +121,6 @@ class ChallengeServiceImpCacheTest {
         LanguageDto languageDto2 = new LanguageDto(uuid2, "Python");
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
-        /*Cache cache = mock(Cache.class);
-        when(cacheManager.getCache(anyString())).thenReturn(cache);
-        when(cache.get(anyString(), eq(GenericResultDto.class))).thenReturn(null).thenReturn(new GenericResultDto<>(0, 2, 2, expectedLanguages));
-        doAnswer(invocation -> {
-            String key = invocation.getArgument(0);
-            GenericResultDto<LanguageDto> value = invocation.getArgument(1);
-            return null;
-        }).when(cache).put(anyString(), any(GenericResultDto.class));
-        */
-
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
         when(languageConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(languageDto1, languageDto2));
 
@@ -140,6 +146,7 @@ class ChallengeServiceImpCacheTest {
 
         verifyNoMoreInteractions(languageRepository, languageConverter);
     }
+
     @DisplayName("Cache - getAllChallenges")
     @Test
     void getAllChallenges_cacheTest() {
@@ -161,15 +168,7 @@ class ChallengeServiceImpCacheTest {
         ChallengeDto challengeDto3 = new ChallengeDto();
         ChallengeDto challengeDto4 = new ChallengeDto();
 
-        /*Cache cache = mock(Cache.class);
-        when(cacheManager.getCache(anyString())).thenReturn(cache);
-        when(cache.get(anyString(), eq(GenericResultDto.class))).thenReturn(null).thenReturn(new GenericResultDto<>(offset, limit, 4, new ChallengeDto[]{challengeDto1, challengeDto2, challengeDto3, challengeDto4}));
-        doAnswer(invocation -> {
-            String key = invocation.getArgument(0);
-            GenericResultDto<ChallengeDto> value = invocation.getArgument(1);
-            return null;
-        }).when(cache).put(anyString(), any(GenericResultDto.class));*/
-
+        when(challengeRepository.count()).thenReturn(Mono.just(4L));
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
                 .thenReturn(Flux.just(challenge1, challenge2, challenge3, challenge4));
         when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any()))
@@ -184,6 +183,7 @@ class ChallengeServiceImpCacheTest {
                 .expectComplete()
                 .verify();
 
+        verify(challengeRepository, times(1)).count();
         verify(challengeRepository, times(1)).findAllByUuidNotNullExcludingTestingValues();
         verify(challengeConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
 
@@ -224,15 +224,6 @@ class ChallengeServiceImpCacheTest {
         relatedDto3.setChallengeId(relatedId3);
         List<ChallengeDto> expectedRelated = List.of(relatedDto1, relatedDto2, relatedDto3);
 
-        /*Cache cache = mock(Cache.class);
-        when(cacheManager.getCache(anyString())).thenReturn(cache);
-        when(cache.get(anyString(), eq(GenericResultDto.class))).thenReturn(null).thenReturn(new GenericResultDto<>(offset, limit, 3, expectedRelated.toArray(new ChallengeDto[0])));
-        doAnswer(invocation -> {
-            String key = invocation.getArgument(0);
-            GenericResultDto<ChallengeDto> value = invocation.getArgument(1);
-            return null;
-        }).when(cache).put(anyString(), any(GenericResultDto.class));*/
-
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(challengeRepository.findByUuid(related2.getUuid())).thenReturn(Mono.just(related2));
         when(challengeRepository.findByUuid(related3.getUuid())).thenReturn(Mono.just(related3));
@@ -263,4 +254,104 @@ class ChallengeServiceImpCacheTest {
         verifyNoMoreInteractions(challengeRepository);
     }
 
+    //TODO - Add more tests for caching(challengesByLanguageOrDifficulty, solutions, testingParams)
+
+    @DisplayName("Cache - getChallengesByLanguageOrDifficulty")
+    @Test
+    void testGetChallengesByLanguageOrDifficulty_cacheTest(){
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();
+        String level = "EASY";
+        int offset = 0;
+        int limit = 2;
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getCount()).isEqualTo(1);
+                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
+                })
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage));
+        verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
+
+        // Act - Cached Results
+        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+
+        // Assert - Cached Results
+        StepVerifier.create(resultCached)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getCount()).isEqualTo(1);
+                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
+                })
+                .verifyComplete();
+
+        verifyNoMoreInteractions(challengeRepository, challengeConverter);
+    }
+
+    @DisplayName("Cache - getSolutions")
+    @Test
+    void testGetChallengeSolutions_cacheTest(){
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
+
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(UUID.fromString(challengeStringId));
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
+        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
+        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
+        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
+        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+
+        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
+        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
+        when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
+
+        // Act
+        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getOffset()).isZero();
+                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
+                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
+                    return true;
+                })
+                .verifyComplete();
+
+        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
+        verify(solutionRepository, times(2)).findById(any(UUID.class));
+        verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
+
+        // Act - Cached Results
+        Mono<GenericResultDto<SolutionDto>> resultCached = challengeService.getSolutions(challengeStringId, languageStringId);
+
+        // Assert - Cached Results
+        StepVerifier.create(resultCached)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getCount()).isEqualTo(2);
+                    assertThat(actualResult.getResults()).containsExactly(solutionDto1, solutionDto2);
+                })
+                .verifyComplete();
+
+        verifyNoMoreInteractions(challengeRepository, challengeConverter);
+    }
 }
