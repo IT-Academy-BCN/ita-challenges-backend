@@ -185,7 +185,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
-                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
+                                    .filter(solution -> solution.getIdLanguage().equals(languageId) && solution.getIdChallenge().equals(challengeId))
                                     .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
                             )
                             .collectList()
@@ -199,7 +199,9 @@ public class ChallengeServiceImp implements IChallengeService {
 
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
-
+        if (solutionDto.getIdChallenge() == null) {
+            return Mono.error(new BadUUIDException("Challenge ID cannot be null"));
+        }
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));
         Mono<UUID> languageIdMono = validateUUID(String.valueOf(solutionDto.getIdLanguage()));
 
@@ -210,11 +212,11 @@ public class ChallengeServiceImp implements IChallengeService {
 
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-
                             .flatMap(challenge -> {
                                 SolutionDocument solutionDocument = new SolutionDocument();
                                 solutionDocument.setSolutionText(solutionDto.getSolutionText());
                                 solutionDocument.setIdLanguage(languageId);
+                                solutionDocument.setIdChallenge(challengeId); // Add this line
                                 solutionDocument.setUuid(UUID.randomUUID());
 
                                 return solutionRepository.save(solutionDocument)
@@ -230,14 +232,11 @@ public class ChallengeServiceImp implements IChallengeService {
                                                 Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solutionDocument),
                                                         SolutionDto.class)))
                                         .map(solution -> {
-                                            GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                            resultDto.setInfo(0, 1, 1, new SolutionDto[]{solution});
                                             solution.setIdChallenge(challengeId);
                                             return solution;
                                         });
                             });
                 });
-
     }
 
     @Override

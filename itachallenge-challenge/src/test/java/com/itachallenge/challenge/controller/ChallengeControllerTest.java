@@ -221,18 +221,16 @@ class ChallengeControllerTest {
 
     @Test
     void getSolutions_ValidIds_SolutionsReturned() {
-        // Arrange
-        String idChallenge = "valid-challenge-id";
-        String idLanguage = "valid-language-id";
+        String idChallenge = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
+        String idLanguage = "1e047ea2-b787-49e7-acea-d79e92be3909";
 
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
         when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
-        // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .uri("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)
