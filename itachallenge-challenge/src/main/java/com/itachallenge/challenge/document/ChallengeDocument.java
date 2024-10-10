@@ -48,4 +48,5 @@ public class ChallengeDocument {
     @Field(name="testing_values")
     private List<TestingValueDocument> testingValues;
 
+
 }
