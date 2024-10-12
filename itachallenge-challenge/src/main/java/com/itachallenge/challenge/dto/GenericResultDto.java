@@ -11,7 +11,6 @@ public class GenericResultDto<T> {
     private int count;
     private int offset;
     private int limit;
-
     private T[] results;
 
     public GenericResultDto() {}

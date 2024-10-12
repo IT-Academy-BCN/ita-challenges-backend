@@ -1,11 +1,13 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -200,8 +202,19 @@ class ChallengeControllerTest {
     @Test
     void getAllLanguages_LanguagesExist_LanguagesReturned() {
         // Arrange
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+
+        LanguageDto languageDto1 = new LanguageDto();
+        languageDto1.setIdLanguage(id1);
+        languageDto1.setLanguageName("English");
+
+        LanguageDto languageDto2 = new LanguageDto();
+        languageDto2.setIdLanguage(id2);
+        languageDto2.setLanguageName("Spanish");
+
         GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new LanguageDto[]{new LanguageDto(), new LanguageDto()});
+        expectedResult.setInfo(2, 0, 2, new LanguageDto[]{languageDto1, languageDto2});
 
         when(challengeService.getAllLanguages()).thenReturn(Mono.just(expectedResult));
 
@@ -210,37 +223,46 @@ class ChallengeControllerTest {
                 .uri("/itachallenge/api/v1/challenge/language")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
+                .expectBody(new ParameterizedTypeReference<GenericResultDto<LanguageDto>>() {})
                 .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
+                    assertNotNull(dto);
+                    assertEquals(2, dto.getCount());
+                    assertNotNull(dto.getResults());
+                    assertEquals(2, dto.getResults().length);
+                    assertNotNull(dto.getResults()[0].getIdLanguage());
+                    assertNotNull(dto.getResults()[0].getLanguageName());
+                    assertNotNull(dto.getResults()[1].getIdLanguage());
+                    assertNotNull(dto.getResults()[1].getLanguageName());
                 });
     }
 
     @Test
     void getSolutions_ValidIds_SolutionsReturned() {
-        // Arrange
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
 
+        SolutionDto solutionDto1 = new SolutionDto(UUID.randomUUID(), UUID.randomUUID(), "Solution 1");
+        SolutionDto solutionDto2 = new SolutionDto(UUID.randomUUID(), UUID.randomUUID(), "Solution 2");
+
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        expectedResult.setInfo(2, 0, 2, new SolutionDto[]{solutionDto1, solutionDto2});
 
         when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
-        // Act & Assert
         webTestClient.get()
                 .uri("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
+                .expectBody(new ParameterizedTypeReference<GenericResultDto<SolutionDto>>() {})
                 .value(dto -> {
                     assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
+                    assertEquals(2, dto.getCount());
+                    assertNotNull(dto.getResults());
+                    assertEquals(2, dto.getResults().length);
+                    assertNotNull(dto.getResults()[0].getUuid());
+                    assertNotNull(dto.getResults()[0].getSolutionText());
+                    assertNotNull(dto.getResults()[1].getUuid());
+                    assertNotNull(dto.getResults()[1].getSolutionText());
                 });
     }
 

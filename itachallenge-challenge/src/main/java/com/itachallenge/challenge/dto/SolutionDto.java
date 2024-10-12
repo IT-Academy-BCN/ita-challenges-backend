@@ -67,11 +67,6 @@ public class SolutionDto {
         return Objects.hash(uuid, solutionText, idLanguage);
     }
 
-    public void setChallengeId(String invalidChallengeId) {
 
-    }
-
-    public void setLanguageId(String validLanguageId) {
-    }
 
 }
