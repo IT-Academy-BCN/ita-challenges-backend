@@ -3,17 +3,23 @@ package com.itachallenge.score.sandbox;
 import com.itachallenge.score.util.ExecutionResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import static org.junit.Assert.assertEquals;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @ExtendWith(MockitoExtension.class)
@@ -176,5 +182,56 @@ class DockerExecutorTest {
         assertEquals(true, executionResult.isCompiled());
         assertEquals(true, executionResult.isExecution());
         assertEquals(String.valueOf(expectedOutput), executionResult.getMessage().trim());
+    }
+
+    @DisplayName("Test execute with IOException")
+    @Test
+    void testExecuteWithIOException() throws IOException, InterruptedException {
+        String javaCode = "System.out.println(99);";
+
+        DockerExecutor dockerExecutorMock = Mockito.spy(dockerExecutor);
+        Mockito.doThrow(new IOException("Execution failed")).when(dockerExecutorMock).execute(javaCode, new String[0]);
+
+        ExecutionResult result = new ExecutionResult();
+        try {
+            result = dockerExecutorMock.execute(javaCode, new String[0]);
+        } catch (IOException e) {
+            result.setCompiled(false);
+            result.setExecution(false);
+            result.setMessage("Execution failed: " + e.getMessage());
+        }
+
+        assertFalse(result.isCompiled());
+        assertFalse(result.isExecution());
+        assertTrue(result.getMessage().contains("Execution failed"));
+    }
+
+    @Test
+    void testExecuteWithInfiniteLoop() throws IOException, InterruptedException {
+        String javaCode = "while(true) {}";
+        ExecutionResult result = dockerExecutor.execute(javaCode, new String[0]);
+        assertFalse(result.isCompiled());
+        assertFalse(result.isExecution());
+        assertEquals("Execution failed: TIMED OUT EXECUTION", result.getMessage());
+    }
+
+    @Test
+    void testExecuteWithSyntaxError() throws IOException, InterruptedException {
+        String javaCode = "System.out.println(\"Hello World\"";
+        ExecutionResult result = dockerExecutor.execute(javaCode, new String[0]);
+
+        assertFalse(result.isCompiled());
+        assertFalse(result.isExecution());
+        assertTrue(result.getMessage().contains("Execution failed"));
+    }
+
+    @DisplayName("Test cleanUpContainers method")
+    @Test
+    void testCleanUpContainers() throws IOException, InterruptedException {
+        dockerExecutor.cleanUpContainers("java-executor-container");
+
+        Process listContainersProcess = new ProcessBuilder("docker", "ps", "-a", "-q", "--filter", "name=java-executor-container").start();
+        BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(listContainersProcess.getInputStream()));
+        assertNull(containerIdReader.readLine());
     }
 }
