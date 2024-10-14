@@ -65,7 +65,6 @@ public class DockerExecutor {
         formattedCode = formattedCode.replace("\"", "\\\"");
 
 
-
         String argsBuilder = buildExecutionArguments(args);
         String command = String.format(
                 "docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java -Djava.security.manager -Djava.security.policy=/usr/app/restrictive.policy Main %s\"",
@@ -98,15 +97,14 @@ public class DockerExecutor {
         return executionResult;
     }
 
-    private void handleTimeout(String containerName, ExecutionResult executionResult) throws IOException, InterruptedException {
-        // Intenta obtener el ID del contenedor que sigue ejecutándose
+    private void handleTimeout(String containerName, ExecutionResult executionResult) throws IOException, InterruptedException {// Intenta obtener el ID del contenedor que sigue ejecutándose
         try (AutoCloseableProcess getContainerIdProcess = new AutoCloseableProcess(
                 createProcessBuilder("docker ps -q --filter name=" + containerName, isWindows ? windowsCommand : unixCommand).start());
              BufferedReader containerIdReader = new BufferedReader(new InputStreamReader(getContainerIdProcess.getProcess().getInputStream()))) {
 
             String containerId = containerIdReader.readLine();
 
-            // Si el contenedor sigue en ejecución, intenta matarlo
+
             if (containerId != null && !containerId.isEmpty()) {
                 try (AutoCloseableProcess killProcess = new AutoCloseableProcess(
                         createProcessBuilder("docker kill " + containerId, isWindows ? windowsCommand : unixCommand).start())) {
@@ -115,7 +113,6 @@ public class DockerExecutor {
             }
         }
 
-        // Actualiza el resultado con el mensaje de timeout
         String message = "Execution timed out after " + timeoutSeconds + " seconds.";
         executionResult.setCompiled(false);
         executionResult.setExecution(false);
@@ -167,12 +164,13 @@ public class DockerExecutor {
         }
         return executionResult;
     }
+
     public String buildExecutionArguments(String[] args) {
-    StringBuilder argsBuilder = new StringBuilder();
-    for (String arg : args) {
-        argsBuilder.append(arg).append(" ");
+        StringBuilder argsBuilder = new StringBuilder();
+        for (String arg : args) {
+            argsBuilder.append(arg).append(" ");
+        }
+        return argsBuilder.toString().trim();
     }
-    return argsBuilder.toString().trim();
-}
 
 }
