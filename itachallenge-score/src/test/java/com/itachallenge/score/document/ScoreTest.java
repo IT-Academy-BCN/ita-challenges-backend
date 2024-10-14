@@ -1,4 +1,4 @@
-package document;
+package com.itachallenge.score.document;
 
 import com.itachallenge.score.document.Score;
 import org.junit.jupiter.api.BeforeEach;
