@@ -60,3 +60,4 @@
 * I. Michel - https://github.com/i-michel
 * Jorge Monzó Pérez - https://github.com/tommer1375
 * Nuria Grau Horta - https://github.com/nuriagrau
+* Augustin Nae - https://github.com/auguNa
