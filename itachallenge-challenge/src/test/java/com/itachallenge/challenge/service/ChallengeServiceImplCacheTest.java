@@ -4,12 +4,12 @@ import com.itachallenge.challenge.config.CacheConfig;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
-
 import com.itachallenge.challenge.repository.SolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,6 +55,9 @@ class ChallengeServiceImplCacheTest {
 
     @Mock
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+
+    @Mock
+    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -108,9 +111,53 @@ class ChallengeServiceImplCacheTest {
 
     }
 
-    @DisplayName("Cache - getAllLanguage")
+    @DisplayName("Cache - getChallengesByLanguageOrDifficulty")
     @Test
-    void getAllLanguages_cacheTest() { // No esta funcionando.
+    void testGetChallengesByLanguageOrDifficulty_cacheTest(){
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();
+        String level = "EASY";
+        int offset = 0;
+        int limit = 2;
+
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
+
+        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
+
+        // Act
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getCount()).isEqualTo(1);
+                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
+                })
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage));
+        verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
+
+        // Act - Cached Results
+        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+
+        // Assert - Cached Results
+        StepVerifier.create(resultCached)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getCount()).isEqualTo(1);
+                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
+                })
+                .verifyComplete();
+
+        verifyNoMoreInteractions(challengeRepository, challengeConverter);
+    }
+
+    @DisplayName("Cache - getAllLanguages")
+    @Test
+    void getAllLanguages_cacheTest() {
         // Arrange
         UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
@@ -195,6 +242,62 @@ class ChallengeServiceImplCacheTest {
 
         verifyNoMoreInteractions(challengeRepository, challengeConverter);
     }
+
+    @DisplayName("Cache - getSolutions")
+    @Test
+    void testGetChallengeSolutions_cacheTest(){
+        // Arrange
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
+
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(UUID.fromString(challengeStringId));
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
+        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
+        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
+        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
+        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+
+        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
+        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
+        when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
+        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
+
+        // Act
+        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNextMatches(resultDto -> {
+                    assertThat(resultDto.getOffset()).isZero();
+                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
+                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
+                    return true;
+                })
+                .verifyComplete();
+
+        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
+        verify(solutionRepository, times(2)).findById(any(UUID.class));
+        verify(solutionConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
+
+        // Act - Cached Results
+        Mono<GenericResultDto<SolutionDto>> resultCached = challengeService.getSolutions(challengeStringId, languageStringId);
+
+        // Assert - Cached Results
+        StepVerifier.create(resultCached)
+                .assertNext(actualResult -> {
+                    assertThat(actualResult.getCount()).isEqualTo(2);
+                    assertThat(actualResult.getResults()).containsExactly(solutionDto1, solutionDto2);
+                })
+                .verifyComplete();
+
+        verifyNoMoreInteractions(challengeRepository, challengeConverter);
+    }
+
     @DisplayName("Cache - getRelatedChallenges")
     @Test
     void testGetRelatedChallenges_cacheTest() {
@@ -253,104 +356,77 @@ class ChallengeServiceImplCacheTest {
         verifyNoMoreInteractions(challengeRepository);
     }
 
-    //TODO - Add more tests for caching(challengesByLanguageOrDifficulty, solutions, testingParams)
-
-    @DisplayName("Cache - getChallengesByLanguageOrDifficulty")
+    @DisplayName("Cache - getTestingParams")
     @Test
-    void testGetChallengesByLanguageOrDifficulty_cacheTest(){
+    void testGetTestingParams_cacheTest() {
         // Arrange
-        String idLanguage = UUID.randomUUID().toString();
-        String level = "EASY";
-        int offset = 0;
-        int limit = 2;
-
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
         ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDocument.setUuid(challengeId);
+        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
+        TestingValueDocument testingValueDocument = new TestingValueDocument(Collections.singletonList("input"), Collections.singletonList("output"));
+        challengeDocument.setTestingValues(Collections.singletonList(testingValueDocument));
 
-        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
+        TestingValueDto testingValueDto = TestingValueDto.builder()
+                .inParam(Collections.singletonList("input"))
+                .outParam(Collections.singletonList("output"))
+                .build();
+
+        List<TestingValueDto> expectedTestingValues = Collections.singletonList(testingValueDto);
+
+        Map<String, Object> expectedResult = new LinkedHashMap<>();
+        expectedResult.put("uuid_challenge", challengeId.toString());
+        expectedResult.put("uuid_language", languageId.toString());
+        expectedResult.put("test_params", expectedTestingValues);
+
+        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class)).thenReturn(testingValueDto);
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
 
         // Assert
         StepVerifier.create(result)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(1);
-                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
+                .assertNext(response -> {
+                    assertThat(response).containsEntry("uuid_challenge", challengeId.toString());
+                    assertThat(response).containsEntry("uuid_language", languageId.toString());
+                    Object testParamsObject = response.get("test_params");
+                    if (testParamsObject instanceof List) {
+                        List<?> testParamsList = (List<?>) testParamsObject;
+                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
+                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
+                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
+                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
+                        }
+                    }
                 })
-                .verifyComplete();
+                .expectComplete()
+                .verify();
 
-        verify(challengeRepository, times(1)).findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage));
-        verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
-
-        // Act - Cached Results
-        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
-
-        // Assert - Cached Results
-        StepVerifier.create(resultCached)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(1);
-                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
-                })
-                .verifyComplete();
-
-        verifyNoMoreInteractions(challengeRepository, challengeConverter);
-    }
-
-    @DisplayName("Cache - getSolutions")
-    @Test
-    void testGetChallengeSolutions_cacheTest(){
-        // Arrange
-        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
-        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
-        UUID languageId = UUID.fromString(languageStringId);
-        UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
-        UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
-
-        ChallengeDocument challenge = new ChallengeDocument();
-        challenge.setUuid(UUID.fromString(challengeStringId));
-        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
-        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
-        challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
-        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
-        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
-        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
-
-        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
-        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
-        when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
-        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
+        verify(challengeRepository, times(1)).findByUuid(challengeId);
+        verify(testingValueConverter, times(1)).convertDocumentToDto(testingValueDocument, TestingValueDto.class);
 
         // Act
-        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+        Mono<Map<String, Object>> resultCached = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
 
         // Assert
-        StepVerifier.create(resultMono)
-                .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isZero();
-                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
-                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
-                    return true;
-                })
-                .verifyComplete();
-
-        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
-        verify(solutionRepository, times(2)).findById(any(UUID.class));
-        verify(solutionConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
-
-        // Act - Cached Results
-        Mono<GenericResultDto<SolutionDto>> resultCached = challengeService.getSolutions(challengeStringId, languageStringId);
-
-        // Assert - Cached Results
         StepVerifier.create(resultCached)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(2);
-                    assertThat(actualResult.getResults()).containsExactly(solutionDto1, solutionDto2);
+                .assertNext(response -> {
+                    assertThat(response).containsEntry("uuid_challenge", challengeId.toString());
+                    assertThat(response).containsEntry("uuid_language", languageId.toString());
+                    Object testParamsObject = response.get("test_params");
+                    if (testParamsObject instanceof List) {
+                        List<?> testParamsList = (List<?>) testParamsObject;
+                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
+                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
+                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
+                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
+                        }
+                    }
                 })
-                .verifyComplete();
-
-        verifyNoMoreInteractions(challengeRepository, challengeConverter);
+                .expectComplete()
+                .verify();
+        verifyNoMoreInteractions(challengeRepository, testingValueConverter);
     }
 }

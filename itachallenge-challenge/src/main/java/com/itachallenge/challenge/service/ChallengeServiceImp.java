@@ -157,7 +157,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null") // Falta aplicar durabilidad de caché
+    @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
 
