@@ -396,7 +396,7 @@ void addSolutionIfValidSolutionThenSolutionAdded_test() {
                     assertEquals("Sample Solution", solution.getSolutionText());
                 });
     }
-    @Test
+    @Test //Marine Achinian 16.45 on 15/10/2024 .
     void testGetSolutionScore() {
         // Задаем фиктивные данные
         UUID userId = UUID.randomUUID();
@@ -436,5 +436,45 @@ void addSolutionIfValidSolutionThenSolutionAdded_test() {
         // Проверяем, что метод сервиса был вызван
         verify(userSolutionService).getSolutionScore(userId, challengeId, solutionId);
     }
+    @Test //Marine Achinian 16.59 on 15/10/2024 . Testing new endpoint (Integration test)
+    @DisplayName("Integration Test for GET /itachallenge/api/v1/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    void testGetSolutionScoreIntegration() {
+        // Задаем фиктивные данные
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+        UUID solutionId = UUID.randomUUID();
 
+        UserSolutionScoreDto expectedResponse = UserSolutionScoreDto.builder()
+                .userId(userId.toString())
+                .challengeId(challengeId.toString())
+                .languageId(UUID.randomUUID().toString())
+                .solutionId(solutionId.toString())
+                .status("STARTED")
+                .score(100)
+                .errors("No errors")
+                .build();
+
+        // Мокаем поведение сервиса
+        when(userSolutionService.getSolutionScore(userId, challengeId, solutionId))
+                .thenReturn(Mono.just(expectedResponse));
+
+        // Выполняем GET-запрос и проверяем результат
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score", userId, challengeId, solutionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserSolutionScoreDto.class)
+                .value(response -> {
+                    assertNotNull(response);
+                    assertEquals(expectedResponse.getUserId(), response.getUserId());
+                    assertEquals(expectedResponse.getChallengeId(), response.getChallengeId());
+                    assertEquals(expectedResponse.getSolutionId(), response.getSolutionId());
+                    assertEquals(expectedResponse.getStatus(), response.getStatus());
+                    assertEquals(expectedResponse.getScore(), response.getScore());
+                    assertEquals(expectedResponse.getErrors(), response.getErrors());
+                });
+
+        // Проверяем, что метод сервиса был вызван
+        verify(userSolutionService).getSolutionScore(userId, challengeId, solutionId);
+    }
 }
