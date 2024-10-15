@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 import org.junit.jupiter.api.extension.ExtendWith;
-
+import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,23 +40,22 @@ class ZMQClientTest {
     @Test
     void testSendMessage() throws Exception {
 
-        // Mockear el comportamiento del ZMQ.Socket
         when(zContextMock.createSocket(ZMQ.REQ)).thenReturn(socketMock);
 
-        // Simula respuesta del servidor
         when(socketMock.recv(0)).thenReturn("Server response".getBytes());
 
-        // Simula la serialización y deserialización
         when(objectSerializerMock.serialize(message)).thenReturn(serializedMessage);
         when(objectSerializerMock.deserialize("Server response".getBytes(), String.class)).thenReturn("Server response");
+        System.out.println("Serialized message: " + Arrays.toString(serializedMessage));
 
-        // Ejecutar el método sendMessage
         CompletableFuture<Object> responseFuture = zmqClient.sendMessage(message, String.class);
+        responseFuture.get();
 
-        // Verificar que el mensaje fue enviado correctamente
         verify(socketMock).send(serializedMessage, 0);
+        responseFuture.thenAccept(result -> System.out.println("Response from future: " + result));
 
-        // Verificar que la respuesta sea la esperada
+        verify(socketMock, times(1)).send(serializedMessage, 0);
+
         assertEquals("Server response", responseFuture.get());
     }
 }
