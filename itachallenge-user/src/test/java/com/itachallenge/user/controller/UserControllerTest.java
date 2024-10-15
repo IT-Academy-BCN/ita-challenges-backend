@@ -231,40 +231,82 @@ class UserControllerTest {
         assertEquals(bookmarkRequestDto, responseEntity.getBody());
     }
 
-    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 200 OK")
-    @Test
-    void addSolutionIfValidSolutionThenSolutionAdded_test() {
-        String URI_TEST = "/solution";
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
-        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
-        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setSolutionText("This is a test solution");
+//    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 200 OK")
+//    @Test
+//    void addSolutionIfValidSolutionThenSolutionAdded_test() {
+//        String URI_TEST = "/solution";
+//        UserSolutionDto userSolutionDto = new UserSolutionDto();
+//        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
+//        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
+//        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+//        userSolutionDto.setSolutionText("This is a test solution");
+//
+//        UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
+//                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
+//                userSolutionDto.getSolutionText(), 13);
+//
+//        when(userSolutionService.addSolution(userSolutionDto))
+//                .thenReturn(Mono.just(expectedResponse));
+//
+//        webTestClient.put()
+//                .uri(CONTROLLER_URL + URI_TEST)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(userSolutionDto)
+//                .exchange()
+//                .expectStatus().isEqualTo(HttpStatus.OK)
+//                .expectBody(UserSolutionScoreDto.class)
+//                .value(dto -> {
+//                    assert dto != null;
+//                    assert dto.getUserId() != null;
+//                    assert dto.getChallengeId() != null;
+//                    assert dto.getLanguageId() != null;
+//                    assert dto.getScore() >= 0;
+//
+//                    verify(userSolutionService).addSolution(userSolutionDto);
+//                });
+//    }
+@DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 200 OK")
+@Test
+void addSolutionIfValidSolutionThenSolutionAdded_test() {
+    String URI_TEST = "/solution";
+    UserSolutionDto userSolutionDto = new UserSolutionDto();
+    userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
+    userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
+    userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+    userSolutionDto.setSolutionText("This is a test solution");
 
-        UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
-                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText(), 13);
+    // Используем билдер для создания объекта UserSolutionScoreDto
+    UserSolutionScoreDto expectedResponse = UserSolutionScoreDto.builder()
+            .userId(userSolutionDto.getUserId())
+            .challengeId(userSolutionDto.getChallengeId())
+            .languageId(userSolutionDto.getLanguageId())
+            .solutionText(userSolutionDto.getSolutionText())
+            .score(13) // Пример значения для score
+            .solutionId("550e8400-e29b-41d4-a716-446655440004") // Установите значение для solutionId
+            .status("STARTED") // Установите значение для status
+            .errors("No errors") // Установите значение для errors
+            .build();
 
-        when(userSolutionService.addSolution(userSolutionDto))
-                .thenReturn(Mono.just(expectedResponse));
+    when(userSolutionService.addSolution(userSolutionDto))
+            .thenReturn(Mono.just(expectedResponse));
 
-        webTestClient.put()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(userSolutionDto)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectBody(UserSolutionScoreDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getUserId() != null;
-                    assert dto.getChallengeId() != null;
-                    assert dto.getLanguageId() != null;
-                    assert dto.getScore() >= 0;
+    webTestClient.put()
+            .uri(CONTROLLER_URL + URI_TEST)
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(userSolutionDto)
+            .exchange()
+            .expectStatus().isEqualTo(HttpStatus.OK)
+            .expectBody(UserSolutionScoreDto.class)
+            .value(dto -> {
+                assert dto != null;
+                assert dto.getUserId() != null;
+                assert dto.getChallengeId() != null;
+                assert dto.getLanguageId() != null;
+                assert dto.getScore() >= 0;
 
-                    verify(userSolutionService).addSolution(userSolutionDto);
-                });
-    }
+                verify(userSolutionService).addSolution(userSolutionDto);
+            });
+}
 
     @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
     @Test
@@ -354,4 +396,45 @@ class UserControllerTest {
                     assertEquals("Sample Solution", solution.getSolutionText());
                 });
     }
+    @Test
+    void testGetSolutionScore() {
+        // Задаем фиктивные данные
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+        UUID solutionId = UUID.randomUUID();
+
+        UserSolutionScoreDto expectedResponse = UserSolutionScoreDto.builder()
+                .userId(userId.toString())
+                .challengeId(challengeId.toString())
+                .languageId(UUID.randomUUID().toString())
+                .solutionId(solutionId.toString())
+                .status("STARTED")
+                .score(100)
+                .errors("No errors")
+                .build();
+
+        // Мокаем поведение сервиса
+        when(userSolutionService.getSolutionScore(userId, challengeId, solutionId))
+                .thenReturn(Mono.just(expectedResponse));
+
+        // Выполняем GET-запрос и проверяем результат
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score", userId, challengeId, solutionId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserSolutionScoreDto.class)
+                .value(response -> {
+                    assertNotNull(response);
+                    assertEquals(expectedResponse.getUserId(), response.getUserId());
+                    assertEquals(expectedResponse.getChallengeId(), response.getChallengeId());
+                    assertEquals(expectedResponse.getSolutionId(), response.getSolutionId());
+                    assertEquals(expectedResponse.getStatus(), response.getStatus());
+                    assertEquals(expectedResponse.getScore(), response.getScore());
+                    assertEquals(expectedResponse.getErrors(), response.getErrors());
+                });
+
+        // Проверяем, что метод сервиса был вызван
+        verify(userSolutionService).getSolutionScore(userId, challengeId, solutionId);
+    }
+
 }

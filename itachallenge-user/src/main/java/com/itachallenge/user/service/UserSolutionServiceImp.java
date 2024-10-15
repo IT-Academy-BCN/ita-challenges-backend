@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -194,6 +195,37 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         return percentage;
     }
+
+    @Override
+    public Mono<UserSolutionScoreDto> getSolutionScore(UUID idUser, UUID idChallenge, UUID idSolution) {
+        return userSolutionRepository.findByUserIdAndChallengeId(idUser, idChallenge)
+                .filter(userSolution -> userSolution.getSolutionDocument().stream()
+                        .anyMatch(solution -> solution.getUuid().equals(idSolution)))
+                .singleOrEmpty()
+                .flatMap(userSolution -> {
+                    SolutionDocument solutionDocument = userSolution.getSolutionDocument().stream()
+                            .filter(solution -> solution.getUuid().equals(idSolution))
+                            .findFirst()
+                            .orElseThrow(() -> new NoSuchElementException("Solution not found"));
+
+                    // Создаем UserSolutionScoreDto с необходимыми данными
+                    UserSolutionScoreDto userSolutionScoreDto = UserSolutionScoreDto.builder()
+                            .userId(userSolution.getUserId().toString())
+                            .challengeId(userSolution.getChallengeId().toString())
+                            .languageId(userSolution.getLanguageId().toString())
+                            .solutionId(solutionDocument.getUuid().toString()) // Установите идентификатор решения
+                            .status(userSolution.getStatus().name()) // Установите статус задачи
+                            .solutionText(solutionDocument.getSolutionText())
+                            .score(userSolution.getScore())
+                            .errors("No errors") // Замените на фактические ошибки, если они есть
+                            .build();
+
+                    return Mono.just(userSolutionScoreDto);
+                })
+                .switchIfEmpty(Mono.error(new NoSuchElementException("No matching solution found")));
+    }
+
+
 
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
