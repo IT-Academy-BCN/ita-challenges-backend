@@ -59,3 +59,4 @@
 * Andreia Sofia Sousa Ribeiro - https://github.com/Asousa12
 * I. Michel - https://github.com/i-michel
 * Jorge Monzó Pérez - https://github.com/tommer1375
+* https://github.com/florinato
