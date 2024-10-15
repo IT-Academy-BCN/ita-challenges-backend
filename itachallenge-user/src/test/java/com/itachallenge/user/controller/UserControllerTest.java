@@ -439,7 +439,7 @@ void addSolutionIfValidSolutionThenSolutionAdded_test() {
     @Test //Marine Achinian 16.59 on 15/10/2024 . Testing new endpoint (Integration test)
     @DisplayName("Integration Test for GET /itachallenge/api/v1/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
     void testGetSolutionScoreIntegration() {
-        // Задаем фиктивные данные
+        //
         UUID userId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
         UUID solutionId = UUID.randomUUID();
@@ -476,5 +476,19 @@ void addSolutionIfValidSolutionThenSolutionAdded_test() {
 
         // Проверяем, что метод сервиса был вызван
         verify(userSolutionService).getSolutionScore(userId, challengeId, solutionId);
+    }
+
+    @Test
+    @DisplayName("Integration Test for invalid UUID in GET /itachallenge/api/v1/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    void testGetSolutionScoreWithInvalidUUID() {
+        // Используем заведомо некорректный UUID
+        String invalidUserId = "invalid-uuid";
+        UUID challengeId = UUID.randomUUID();
+        UUID solutionId = UUID.randomUUID();
+
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score", invalidUserId, challengeId, solutionId)
+                .exchange()
+                .expectStatus().isBadRequest(); // Ожидаем код ошибки 400
     }
 }
