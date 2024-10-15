@@ -18,13 +18,15 @@ public class ZMQClient {
 
     private final ZContext context;
     private final String SOCKET_ADDRESS;
+    private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQClient.class);
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress) {
+    public ZMQClient(ZContext context, @Value("${zeromq.socket.address}") String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+        this.objectSerializer = objectSerializer;
     }
 
     public CompletableFuture<Object> sendMessage(Object message, Class clazz) {
@@ -33,13 +35,12 @@ public class ZMQClient {
 
             Optional<Object> response = Optional.empty();
 
-            try (ZContext context1 = new ZContext();
-                 ZMQ.Socket socket = context1.createSocket(ZMQ.REQ)) {
+            try (ZMQ.Socket socket = context.createSocket(ZMQ.REQ)) {
                 socket.connect(SOCKET_ADDRESS);
 
                 Optional<byte[]> request = Optional.empty();
                 try {
-                    request = Optional.of(ObjectSerializer.serialize(message));
+                    request = Optional.of(objectSerializer.serialize(message));
                 } catch (JsonProcessingException jpe) {
                     log.error("Error serializing message: {}", jpe.getMessage(), jpe);
                 }
@@ -51,7 +52,7 @@ public class ZMQClient {
                 }
 
                 try {
-                    response = Optional.of(ObjectSerializer.deserialize(reply, clazz));
+                    response = Optional.of(objectSerializer.deserialize(reply, clazz));
                 } catch (IOException e) {
                     log.error("Error deserializing reply: {}", e.getMessage(), e);
                 }
