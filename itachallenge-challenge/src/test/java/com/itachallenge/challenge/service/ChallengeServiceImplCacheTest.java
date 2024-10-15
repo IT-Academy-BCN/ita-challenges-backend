@@ -30,14 +30,13 @@ import reactor.test.StepVerifier;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = {CacheConfig.class})
-public class ChallengeServiceImplCacheTest {
+class ChallengeServiceImplCacheTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
@@ -339,7 +338,7 @@ public class ChallengeServiceImplCacheTest {
 
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(solutionRepository, times(2)).findById(any(UUID.class));
-        verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
+        verify(solutionConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
 
         // Act - Cached Results
         Mono<GenericResultDto<SolutionDto>> resultCached = challengeService.getSolutions(challengeStringId, languageStringId);
