@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class ZMQServer {
     @Autowired
     ObjectSerializer objectSerializer;
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress){
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress) {
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
     }
@@ -36,7 +37,7 @@ public class ZMQServer {
         new Thread(this::run).start();
     }
 
-    public void run(){
+    public void run() {
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REP);
             socket.bind("tcp://*:5555");
@@ -46,27 +47,25 @@ public class ZMQServer {
 
                 Optional<Object> request = Optional.empty();
                 try {
-                    request = Optional.of(objectSerializer.deserialize(reply, ScoreRequestDto.class));
+                    request = Optional.of(ObjectSerializer.deserialize(reply, ScoreRequestDto.class));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
 
-                log.info("Received: [" + (ScoreRequestDto)request.get() + "]");
-                ScoreResponseDto dto = new ScoreResponseDto();
-                dto.setScore(99);
-                dto.setErrors("xxx");
-/* private UUID uuidChallenge;
+                log.info("Received: [" + request.get() + "]");
+                ScoreRequestDto requestDto = (ScoreRequestDto) request.get();
 
-    private UUID uuidLanguage;
+                ScoreResponseDto responseDto = ScoreResponseDto.builder()
+                        .uuidChallenge(requestDto.getUuidChallenge())
+                        .uuidLanguage(requestDto.getUuidLanguage())
+                        .solutionText(requestDto.getSolutionText())
+                        .score(99) //TODO calculate actual score
+                        .errors("xxx") //TODO calculate actual errors
+                        .build();
 
-    private String solutionText;
-
-    private int score;
-
-    private String errors;*/
                 Optional<byte[]> response = Optional.empty();
                 try {
-                    response = Optional.of(objectSerializer.serialize(dto));
+                    response = Optional.of(ObjectSerializer.serialize(responseDto));
                 } catch (JsonProcessingException e) {
                     log.error(e.getMessage());
                 }
