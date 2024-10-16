@@ -31,7 +31,6 @@ class ZMQServerTest {
     private ZMQServer zmqServer;
 
     private ScoreRequestDto scoreRequestDto;
-    private ScoreResponseDto scoreResponseDto;
     private byte[] requestBytes;
     private byte[] responseBytes;
 
@@ -45,7 +44,7 @@ class ZMQServerTest {
                 .solutionText("Solution Text Test")
                 .build();
 
-        scoreResponseDto = ScoreResponseDto.builder()
+        ScoreResponseDto scoreResponseDto = ScoreResponseDto.builder()
                 .uuidChallenge(scoreRequestDto.getUuidChallenge())
                 .uuidLanguage(scoreRequestDto.getUuidLanguage())
                 .solutionText(scoreRequestDto.getSolutionText())
@@ -59,32 +58,25 @@ class ZMQServerTest {
 
     @Test
     void testRun() throws Exception {
-        // Simular el mensaje recibido por el servidor
+
         when(socketMock.recv(0)).thenReturn(requestBytes);
 
-        // Simular la deserialización del mensaje recibido
         when(objectSerializerMock.deserialize(requestBytes, ScoreRequestDto.class))
                 .thenReturn(scoreRequestDto);
 
         when(objectSerializerMock.serialize(any(ScoreResponseDto.class))).thenReturn(responseBytes);
 
-        // Simular la serialización del mensaje de respuesta;
         when(objectSerializerMock.serialize(any(ScoreResponseDto.class))).thenReturn(responseBytes);
 
-        // Ejecutar el método run en un hilo separado para imitar el comportamiento real
         Thread serverThread = new Thread(() -> zmqServer.run());
         serverThread.start();
 
-        // Asegurarse de que el hilo del servidor tiene tiempo para procesar
         Thread.sleep(1000);  // Mayor tiempo de espera para permitir que recv() sea llamado
 
-        // Verificar que el servidor haya recibido el mensaje
         verify(socketMock).recv(0);
 
-        // Verificar que el servidor haya enviado una respuesta
         verify(socketMock).send(responseBytes, 0);
 
-        // Interrumpir el hilo del servidor para evitar que continúe corriendo indefinidamente
         serverThread.interrupt();
     }
 }
