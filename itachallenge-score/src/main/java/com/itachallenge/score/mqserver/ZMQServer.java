@@ -21,14 +21,13 @@ public class ZMQServer {
 
     private final ZContext context;
     private final String SOCKET_ADDRESS;
+    private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
-    @Autowired
-    ObjectSerializer objectSerializer;
-
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress) {
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+        this.objectSerializer = objectSerializer;
     }
 
     @PostConstruct
@@ -38,16 +37,15 @@ public class ZMQServer {
     }
 
     public void run() {
-        try (ZContext context = new ZContext()) {
-            ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind("tcp://*:5555");
+        try (ZMQ.Socket socket = context.createSocket(ZMQ.REP)) {
+            socket.bind(SOCKET_ADDRESS);
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
 
                 Optional<Object> request = Optional.empty();
                 try {
-                    request = Optional.of(ObjectSerializer.deserialize(reply, ScoreRequestDto.class));
+                    request = Optional.of(objectSerializer.deserialize(reply, ScoreRequestDto.class));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
@@ -65,7 +63,7 @@ public class ZMQServer {
 
                 Optional<byte[]> response = Optional.empty();
                 try {
-                    response = Optional.of(ObjectSerializer.serialize(responseDto));
+                    response = Optional.of(objectSerializer.serialize(responseDto));
                 } catch (JsonProcessingException e) {
                     log.error(e.getMessage());
                 }
