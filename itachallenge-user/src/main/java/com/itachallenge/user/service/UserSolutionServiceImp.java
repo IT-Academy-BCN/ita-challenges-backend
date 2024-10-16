@@ -3,13 +3,17 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
+import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
+import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -23,15 +27,18 @@ import java.util.stream.Collectors;
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
 
+    @Autowired
+    private ZMQClient zmqClient;
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
     SecureRandom random = new SecureRandom();
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter, ZMQClient zmqClient) {
         this.userSolutionRepository = userSolutionRepository;
         this.converter = converter;
+        this.zmqClient = zmqClient;
     }
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
@@ -121,19 +128,40 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     existingSolution.setStatus(challengeStatus);
                     return userSolutionRepository.save(existingSolution);
                 })
+//TODO: Testing is needed and the whole STATUS issue needs to be managed.
                 .switchIfEmpty(Mono.defer(() -> {
+                    ScoreResponseDto data = (ScoreResponseDto) getDataFromMicroScore(challengeUuid, languageUuid, (solutionDocuments.get(0).getSolutionText()));
                     UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
                             .uuid(UUID.randomUUID())
                             .userId(userUuid)
                             .challengeId(challengeUuid)
                             .languageId(languageUuid)
                             .status(challengeStatus)
-                            .score(13) // TODO: GET SCORE FROM SCORE MICRO VIA ZMQ
-                            .errors("xxx") // TODO: GET ERRORS FROM SCORE MICRO VIA ZMQ
+                            .score(data.getScore())
+                            .errors(data.getErrors())
                             .solutionDocument(solutionDocuments)
                             .build();
                     return userSolutionRepository.save(userSolutionDocument);
                 }));
+    }
+
+    private Object getDataFromMicroScore (UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
+
+        ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
+        final ScoreResponseDto[] responseDto = new ScoreResponseDto[1];
+
+        zmqClient.sendMessage(request, ScoreResponseDto.class)
+                .thenAccept(response -> {
+                    responseDto[0] = (ScoreResponseDto) response;
+                    log.info(String.format("[ Response - Score: %d - Errors: %s ]",
+                            responseDto[0].getScore(),
+                            responseDto[0].getErrors()));
+                })
+                .exceptionally(e -> {
+                    log.error(e.getMessage());
+                    return null;
+                });
+        return responseDto[0];
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {

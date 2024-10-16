@@ -3,9 +3,11 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
+import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -28,6 +31,7 @@ import static org.mockito.Mockito.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,6 +44,8 @@ class UserSolutionServiceImpTest {
     IUserSolutionRepository userSolutionRepository;
     @Mock
     private ConverterDocumentToDto converter;
+    @Mock
+    private ZMQClient zmqClient;
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
 
@@ -48,7 +54,7 @@ class UserSolutionServiceImpTest {
     private UUID challengeUuid;
     private UUID languageUuid;
     private int mockScore;
-    private String errors;
+    private String mockErrors;
     private UserSolutionDto userSolutionDto;
     private UserSolutionDocument userSolutionDocument;
 
@@ -62,7 +68,7 @@ class UserSolutionServiceImpTest {
         challengeUuid = UUID.fromString(idChallenge);
         languageUuid = UUID.fromString(idLanguage);
         mockScore = 13;
-        errors = "xxx";
+        mockErrors = "xxx";
         userSolutionDto = UserSolutionDto.builder()
                 .userId(idUser)
                 .challengeId(idChallenge)
@@ -75,7 +81,7 @@ class UserSolutionServiceImpTest {
                 .languageId(languageUuid)
                 .status(ChallengeStatus.ENDED)
                 .score(mockScore)
-                .errors(errors)
+                .errors(mockErrors)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
                 .build();
 
@@ -116,10 +122,10 @@ class UserSolutionServiceImpTest {
                 .status(ChallengeStatus.ENDED)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
                 .score(mockScore)
-                .errors(errors)
+                .errors(mockErrors)
                 .build();
         when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
+        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter, zmqClient);
 
         Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
 
@@ -145,6 +151,14 @@ class UserSolutionServiceImpTest {
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
 
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
+        scoreResponseDto.setScore(mockScore);
+        scoreResponseDto.setErrors(mockErrors);
+
+        CompletableFuture<Object> completableFuture = CompletableFuture.completedFuture(scoreResponseDto);
+
+        when(zmqClient.sendMessage(any(), any()))
+                .thenReturn(completableFuture);
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
@@ -154,7 +168,7 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
                                 && userSolutionScoreDto.getScore() == mockScore
-                                && userSolutionScoreDto.getErrors().equals(errors))
+                                && userSolutionScoreDto.getErrors().equals(mockErrors))
                 .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
@@ -170,6 +184,15 @@ class UserSolutionServiceImpTest {
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
 
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
+        scoreResponseDto.setScore(mockScore);
+        scoreResponseDto.setErrors(mockErrors);
+
+        CompletableFuture<Object> completableFuture = CompletableFuture.completedFuture(scoreResponseDto);
+
+        when(zmqClient.sendMessage(any(), any()))
+                .thenReturn(completableFuture);
+
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
@@ -178,8 +201,8 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == 13
-                                && userSolutionScoreDto.getErrors().equals("xxx"))
+                                && userSolutionScoreDto.getScore() == mockScore
+                                && userSolutionScoreDto.getErrors().equals(mockErrors))
                                 .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
@@ -204,7 +227,7 @@ class UserSolutionServiceImpTest {
                                 && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
                                 && userSolutionScoreDto.getSolutionText().equals(solutionText)
                                 && userSolutionScoreDto.getScore() == 13
-                                && userSolutionScoreDto.getErrors().equals(errors))
+                                && userSolutionScoreDto.getErrors().equals(mockErrors))
                 .verifyComplete();
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
@@ -326,8 +349,8 @@ class UserSolutionServiceImpTest {
         float expectedValue = 100f;
 
         List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, errors, solutionField),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, errors, solutionField)
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, mockErrors, solutionField),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, mockErrors, solutionField)
         );
 
         when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
@@ -341,5 +364,33 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(result)
                 .expectNext(expectedValue)
                 .verifyComplete();
+    }
+
+    @Test // Michel: refactoring all tests in 1 single class
+    void getUserScoreByUserId() {
+
+        UUID userId = UUID.randomUUID();
+        UUID idLanguage = UUID.randomUUID();
+        UUID idChallenge = UUID.randomUUID();
+
+        SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), "solutionText1");
+        SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), "solutionText2");
+        SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), "solutionText3");
+        List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
+
+        UserSolutionDocument userSolutionDoc = new UserSolutionDocument(UUID.randomUUID(), userId, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 1, "x", solutionDocumentList);
+        UserScoreDto userScoreDto = new UserScoreDto();
+        SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
+        expectedSolutionUserDto.setInfo(0, 1, 0, new UserScoreDto[]{userScoreDto});
+
+        when(userSolutionRepository.findByUserId(userId)).thenReturn(Flux.just(userSolutionDoc));
+        when(converter.fromUserScoreDocumentToUserScoreDto(any())).thenReturn(Flux.just(userScoreDto));
+
+        Mono<SolutionUserDto<UserScoreDto>> result = userSolutionService.getChallengeById(userId.toString(), idChallenge.toString(), idLanguage.toString());
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
+                .expectComplete()
+                .verify();
     }
 }
