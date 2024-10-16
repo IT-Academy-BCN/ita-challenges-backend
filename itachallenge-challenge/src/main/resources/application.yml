@@ -9,7 +9,8 @@ spring:
     enabled: true
   data:
     mongodb:
-      uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin
+      #uri: mongodb://admin_challenge:BYBcMJEEWw5egRUo@localhost:27017/challenges?authSource=admin
+      uri: mongodb://test_challenge:SBM55CTYA8Ui32yC@87.106.229.175:27017/challenges?authSource=admin
       uuid-representation: standard
 
 springdoc:

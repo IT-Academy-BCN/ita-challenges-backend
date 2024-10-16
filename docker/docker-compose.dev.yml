@@ -2,7 +2,7 @@ version: '3.8'
 
 x-custom-metadata:
 
-  version: 1.17
+  version: 1.17.1
   last-updated: 2024-10-15
 
 services:
@@ -66,8 +66,8 @@ services:
     ports:
         - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_TEST_USERNAME}'
-      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_TEST_PASSWORD}'
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_ROOT_TEST_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_ROOT_TEST_PASSWORD}'
       MONGO_INITDB_DATABASE: '${MONGODB_TEST_DATABASE}'
     volumes:
       - itachallenge_mongodb_data-test:/var/lib/mongodb
@@ -167,6 +167,7 @@ services:
 
 volumes:
   itachallenge_mongodb_data-dev:
+  itachallenge_mongodb_data-test:
 
 networks:
     apisix-dev:
