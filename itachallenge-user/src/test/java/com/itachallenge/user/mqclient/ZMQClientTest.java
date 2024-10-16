@@ -9,8 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.zeromq.ZMQException;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -33,14 +36,13 @@ class ZMQClientTest {
 
     @BeforeEach
     void setUp() {
+        when(zContextMock.createSocket(ZMQ.REQ)).thenReturn(socketMock);
         message = "Test message";
         serializedMessage = "Serialized message".getBytes();
     }
 
     @Test
     void testSendMessage() throws Exception {
-
-        when(zContextMock.createSocket(ZMQ.REQ)).thenReturn(socketMock);
 
         when(socketMock.recv(0)).thenReturn("Server response".getBytes());
 

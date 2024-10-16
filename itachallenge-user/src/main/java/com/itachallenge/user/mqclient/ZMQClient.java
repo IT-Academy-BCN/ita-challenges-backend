@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
+import org.zeromq.ZMQException;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -33,33 +34,40 @@ public class ZMQClient {
 
         return CompletableFuture.supplyAsync(() -> {
 
+            if (message == null) {
+                throw new IllegalArgumentException("Message cannot be null");
+            }
+
             Optional<Object> response = Optional.empty();
 
             try (ZMQ.Socket socket = context.createSocket(ZMQ.REQ)) {
                 socket.connect(SOCKET_ADDRESS);
 
                 Optional<byte[]> request = Optional.empty();
+
                 try {
                     request = Optional.of(objectSerializer.serialize(message));
                 } catch (JsonProcessingException jpe) {
                     log.error("Error serializing message: {}", jpe.getMessage(), jpe);
+                    throw new RuntimeException("Serialization error", jpe);
                 }
                 socket.send(request.orElse(new byte[0]), 0);
 
                 byte[] reply = socket.recv(0);
                 if (reply == null) {
-                    log.error("Received null reply from ZeroMQ");
+                    throw new ZMQException("Received null reply from ZeroMQ", -1);
                 }
 
                 try {
                     response = Optional.of(objectSerializer.deserialize(reply, clazz));
                 } catch (IOException e) {
                     log.error("Error deserializing reply: {}", e.getMessage(), e);
+                    throw new RuntimeException("Deserialization error", e);
                 }
 
-            } catch (Exception e) {
+            } catch (ZMQException e) {
                 log.error("Error in ZMQClient sendMessage: {}", e.getMessage(), e);
-
+                throw new RuntimeException("ZMQ communication error", e);
             }
 
             return response.orElse(null);
