@@ -8,4 +8,6 @@ sonar {
         property "sonar.organization", "it-academy-bcn"
         property "sonar.host.url", "https://sonarcloud.io"
     }
+
+
 }

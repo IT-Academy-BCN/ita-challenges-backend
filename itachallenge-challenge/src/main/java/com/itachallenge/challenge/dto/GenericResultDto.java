@@ -8,26 +8,25 @@ import org.springframework.stereotype.Component;
 @Getter @Setter
 public class GenericResultDto<T> {
 
+    private int count;
     private int offset;
     private int limit;
-    private int count;
-
     private T[] results;
 
     public GenericResultDto() {}
 
-    public GenericResultDto(int offset, int limit, int count, T[] results) {
+    public GenericResultDto(int count,int offset, int limit, T[] results) {
+        this.count = count;
         this.offset = offset;
         this.limit = limit;
-        this.count = count;
         this.results = results;
     }
 
 
-    public void setInfo(int offset, int limit, int count, T[] results) {
+    public void setInfo(int count,int offset, int limit, T[] results) {
+        this.count = count;
         this.offset = offset;
         this.limit = limit;
-        this.count = count;
         this.results = results;
     }
 }
