@@ -1,6 +1,8 @@
 package com.itachallenge.score.controller;
+
 import com.itachallenge.score.dto.ScoreRequest;
 import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.service.CodeProcessingManager;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,29 +20,23 @@ public class ScoreController {
 
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
 
+    private CodeProcessingManager codeProcessingManager;
+
     @Value("${spring.application.version}")
     private String version;
 
     @Value("${spring.application.name}")
     private String appName;
 
+    public ScoreController(CodeProcessingManager codeProcessingManager) {
+        this.codeProcessingManager = codeProcessingManager;
+    }
+
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
         log.info("** Saludos desde el logger **");
         return "Hello from ITA Score!!!";
-    }
-    @PostMapping(value = "/score")
-    public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
-        return Mono.just(scoreRequest)
-                .map(req -> {
-                    ScoreResponse scoreResponse = new ScoreResponse();
-                    scoreResponse.setUuidChallenge(req.getUuidChallenge());
-                    scoreResponse.setUuidLanguage(req.getUuidLanguage());
-                    scoreResponse.setSolutionText(req.getSolutionText());
-                    scoreResponse.setScore(99);//TODO
-                    return ResponseEntity.ok(scoreResponse);
-                });
     }
 
     @GetMapping("/version")
@@ -52,5 +48,10 @@ public class ScoreController {
     }
 
 
+    @Operation(summary = "Endpoint to execute the code and calculate the score")
+    @PostMapping(value = "/score")
+    public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
+        return Mono.just(scoreRequest)
+                .map(req -> codeProcessingManager.processCode(req));
+    }
 }
-
