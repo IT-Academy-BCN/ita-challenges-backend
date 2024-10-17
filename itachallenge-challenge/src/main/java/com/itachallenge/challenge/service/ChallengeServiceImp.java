@@ -22,6 +22,8 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -63,7 +65,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
-
+    @Cacheable (value = "challenges", key="#id", unless="#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -74,6 +76,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
     public Mono<String> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
@@ -106,6 +109,7 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeRepository.save(challenge);
     }
 
+    @Cacheable(value = "challengesByLanguageOrDifficulty", key = "{#idLanguage, #level, #offset, #limit}", unless = "#result == null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
         Flux<ChallengeDocument> challenges;
@@ -113,8 +117,9 @@ public class ChallengeServiceImp implements IChallengeService {
         if (idLanguage.isPresent() && level.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)));
+                    .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
+                    .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found for language " + idLanguage.get())))));
         } else if (idLanguage.isPresent()) {
             challenges = validateUUID(idLanguage.get())
                     .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
@@ -128,9 +133,9 @@ public class ChallengeServiceImp implements IChallengeService {
                     .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
         }
 
-        Flux<ChallengeDocument> finalChallenges = challenges;
-        return challenges.count().flatMap(total -> {
-            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
+        Flux<ChallengeDocument> cachedChallenges = challenges.cache();
+        return cachedChallenges.count().flatMap(total -> {
+            Flux<ChallengeDocument> pagedChallenges = cachedChallenges.skip(offset);
             if (limit != -1) {
                 pagedChallenges = pagedChallenges.take(limit);
             }
@@ -144,6 +149,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    @Cacheable (value = "allLanguages")
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
@@ -153,6 +159,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
 
@@ -172,6 +179,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
+    @Cacheable (value="solutions", key="{#idChallenge, #idLanguage}", unless="#result==null")
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -186,18 +194,21 @@ public class ChallengeServiceImp implements IChallengeService {
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
                                     .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                    .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
                             )
                             .collectList()
-                            .map(solutions -> {
+                            .flatMap(solutions ->
+                                solutionConverter.convertDocumentFluxToDtoFlux(Flux.fromIterable(solutions), SolutionDto.class)
+                                        .collectList()
+                            )
+                            .map(solutionDtos -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                resultDto.setInfo(0, solutionDtos.size(), solutionDtos.size(), solutionDtos.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });
     }
 
-
+    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));
@@ -239,7 +250,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
 
     }
-
+    @Cacheable (value="relatedChallenges", key="{#id, #offset, #limit}", unless="#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
 
@@ -260,6 +271,7 @@ public class ChallengeServiceImp implements IChallengeService {
                         })
                 );
     }
+    @Cacheable (value="testingParams", key="{#idChallenge, #idLanguage}", unless="#result==null")
     @Override
     public Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage) {
 
@@ -301,7 +313,7 @@ public class ChallengeServiceImp implements IChallengeService {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
         if (!validUUID) {
-            log.warn("Invalid ID format: {}", id);
+            log.warn("Invalid ID format.");
             return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
         }
 
