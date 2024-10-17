@@ -12,15 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
-
-import java.io.IOException;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ZMQServerTest {
-
+//TODO: NO FUNCIONA
     @Mock
     private ZContext zContextMock;
     @Mock
@@ -29,8 +27,8 @@ class ZMQServerTest {
     private ObjectSerializer objectSerializerMock;
     @InjectMocks
     private ZMQServer zmqServer;
-
     private ScoreRequestDto scoreRequestDto;
+    private ScoreResponseDto scoreResponseDto;
     private byte[] requestBytes;
     private byte[] responseBytes;
 
@@ -44,7 +42,7 @@ class ZMQServerTest {
                 .solutionText("Solution Text Test")
                 .build();
 
-        ScoreResponseDto scoreResponseDto = ScoreResponseDto.builder()
+        scoreResponseDto = ScoreResponseDto.builder()
                 .uuidChallenge(scoreRequestDto.getUuidChallenge())
                 .uuidLanguage(scoreRequestDto.getUuidLanguage())
                 .solutionText(scoreRequestDto.getSolutionText())
@@ -52,31 +50,30 @@ class ZMQServerTest {
                 .errors("xxx")
                 .build();
 
-            requestBytes = objectSerializerMock.serialize(scoreRequestDto);
-            responseBytes = objectSerializerMock.serialize(scoreResponseDto);
+        requestBytes = objectSerializerMock.serialize(scoreRequestDto);
+        responseBytes = objectSerializerMock.serialize(scoreResponseDto);
     }
 
     @Test
     void testRun() throws Exception {
 
-        when(socketMock.recv(0)).thenReturn(requestBytes);
+        when(socketMock.recv(0))
+                .thenReturn(requestBytes)
+                .thenReturn(null);
 
         when(objectSerializerMock.deserialize(requestBytes, ScoreRequestDto.class))
                 .thenReturn(scoreRequestDto);
-
-        when(objectSerializerMock.serialize(any(ScoreResponseDto.class))).thenReturn(responseBytes);
-
         when(objectSerializerMock.serialize(any(ScoreResponseDto.class))).thenReturn(responseBytes);
 
         Thread serverThread = new Thread(() -> zmqServer.run());
         serverThread.start();
 
-        Thread.sleep(1000);  // Mayor tiempo de espera para permitir que recv() sea llamado
+        Thread.sleep(500);
 
         verify(socketMock).recv(0);
-
         verify(socketMock).send(responseBytes, 0);
 
         serverThread.interrupt();
+        serverThread.join();
     }
 }
