@@ -22,6 +22,7 @@ import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -64,7 +65,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
-    @Cacheable (value = "challenge", key="#id", unless="#result==null")
+    @Cacheable (value = "challenges", key="#id", unless="#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -75,6 +76,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
+    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
     public Mono<String> removeResourcesByUuid(String id) {
         return validateUUID(id)
                 .flatMap(resourceId -> {
@@ -206,7 +208,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-
+    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));

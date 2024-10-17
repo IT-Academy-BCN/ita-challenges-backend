@@ -67,9 +67,12 @@ class ChallengeServiceImplCacheTest {
 
     @BeforeEach
     void setUp() {
-        Cache cache = cacheManager.getCache("challenges");
-        assertThat(cache).as("Cache 'challenges' should not be null").isNotNull(); // Ensure cache exists
-        cache.clear();
+        Collection<String> cacheNames = cacheManager.getCacheNames();
+        for (String cacheName : cacheNames) {
+            Cache cache = cacheManager.getCache(cacheName);
+            assertThat(cache).as("Cache '" + cacheName + "' should not be null").isNotNull();
+            cache.clear();
+        }
     }
 
     @DisplayName("Cache - getChallengeById")

@@ -3,7 +3,6 @@ package com.itachallenge.challenge.config;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCache;
-import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -66,8 +65,8 @@ public class CacheConfig {
         }
 
         private boolean isExpired(Object key) {
-            Long expirationTime = expirationMap.get(key);
-            return expirationTime == null || System.currentTimeMillis() > expirationTime;
+            Long expirationTime2 = expirationMap.get(key);
+            return expirationTime2 == null || System.currentTimeMillis() > expirationTime2;
         }
     }
 }
