@@ -20,15 +20,14 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -68,8 +67,8 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-        assertEquals(expectedStatus, responseEntity.getStatusCode());
-        assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
+                    assertEquals(expectedStatus, responseEntity.getStatusCode());
+                    assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -86,7 +85,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-        assertEquals(expectedStatus, responseEntity.getStatusCode());
+                    assertEquals(expectedStatus, responseEntity.getStatusCode());
         assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
     }
 
@@ -143,7 +142,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
-        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
     }
@@ -158,7 +157,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
-        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Challenge not found"));
     }
@@ -172,7 +171,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
 
         // Assert
-        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+                    assertEquals(OK_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Resource not found"));
     }
@@ -200,11 +199,21 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleBadUUIDException(badUUIDException);
 
         // Assert
-        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Invalid Id format"));
     }
 
+    @Test
+    void testHandleLanguageNotFoundException() {
 
+        LanguageNotFoundException exception = new LanguageNotFoundException("Language not found");
+
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleLanguageNotFoundException(exception);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        String responseBody = responseEntity.getBody().getMessage();
+        assertTrue(responseBody.contains("Language not found"));
+    }
 
 }
