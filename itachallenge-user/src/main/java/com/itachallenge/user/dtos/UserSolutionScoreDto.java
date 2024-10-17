@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,5 +31,6 @@ public class UserSolutionScoreDto {
     @JsonProperty(value = "score")
     private int score;
 
-
+    @JsonProperty(value = "errors")
+    private List<String> errors;
 }
