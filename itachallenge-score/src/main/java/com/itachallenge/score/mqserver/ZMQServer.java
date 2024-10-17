@@ -37,13 +37,14 @@ public class ZMQServer {
     }
 
     public void run() {
-        try (ZMQ.Socket socket = context.createSocket(ZMQ.REP)) {
-            socket.bind(SOCKET_ADDRESS);
+        try (ZContext context = new ZContext()) {
+            ZMQ.Socket socket = context.createSocket(ZMQ.REP);
+            socket.bind("tcp://*:5555");
 
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
-
                 Optional<Object> request = Optional.empty();
+
                 try {
                     request = Optional.of(objectSerializer.deserialize(reply, ScoreRequestDto.class));
                 } catch (IOException e) {
@@ -69,6 +70,7 @@ public class ZMQServer {
                 }
 
                 socket.send(response.orElse(new byte[0]), 0);
+
             }
         }
     }
