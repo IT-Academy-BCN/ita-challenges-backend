@@ -192,5 +192,30 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+    @GetMapping("/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    @Operation(
+            summary = "Retrieve the score of a user's solution for a specific challenge.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved solution score", content = {@Content(schema = @Schema(implementation = UserSolutionScoreDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID format", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "404", description = "Solution not found", content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<UserSolutionScoreDto>> getSolutionScore(
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
+            @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
+            @PathVariable("idSolution") @GenericUUIDValid(message = "Invalid UUID for solution") String idSolution) {
 
+        try {
+            UUID userUuid = UUID.fromString(idUser);
+            UUID challengeUuid = UUID.fromString(idChallenge);
+            UUID solutionUuid = UUID.fromString(idSolution);
+
+            return userScoreService.getSolutionScore(userUuid, challengeUuid, solutionUuid)
+                    .map(ResponseEntity::ok)
+                    .defaultIfEmpty(ResponseEntity.notFound().build());
+        } catch (IllegalArgumentException e) {
+            return Mono.just(ResponseEntity.badRequest().build());
+        }
+    }
 }

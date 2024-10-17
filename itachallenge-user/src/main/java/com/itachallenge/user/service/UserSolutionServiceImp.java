@@ -195,6 +195,15 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return percentage;
     }
 
+    @Override
+    public Mono<UserSolutionScoreDto> getSolutionScore(UUID userId, UUID challengeId, UUID solutionId) {
+        return userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(userId, challengeId, solutionId)
+                .flatMap(converter::fromUserSolutionDocumentToUserSolutionScoreDto)
+                .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Solution not found")));
+    }
+
+
+
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
     }

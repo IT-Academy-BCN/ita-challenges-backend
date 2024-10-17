@@ -25,8 +25,14 @@ public class UserSolutionScoreDto {
     @JsonProperty(value ="uuid_language")
     private String languageId;
 
+    @JsonProperty(value ="uuid_solution")
+    private String solutionId;
+
     @JsonProperty(value ="solution_text")
     private String solutionText;
+
+    @JsonProperty(value ="status")  // Ensure this field is present
+    private String status;
 
     @JsonProperty(value = "score")
     private int score;
