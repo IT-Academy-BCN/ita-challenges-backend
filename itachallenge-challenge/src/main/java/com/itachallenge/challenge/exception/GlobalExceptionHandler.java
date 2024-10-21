@@ -42,16 +42,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleConstraintViolation(ConstraintViolationException ex) {
         String constraintMessage = ex.getConstraintViolations()
                 .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
-        return ResponseEntity.ok().body(new MessageDto(constraintMessage));
+        return ResponseEntity.badRequest().body(new MessageDto(constraintMessage));
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<MessageDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(LanguageNotFoundException.class)
+    public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
         return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
