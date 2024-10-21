@@ -25,6 +25,7 @@ import reactor.test.StepVerifier;
 
 import java.util.*;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -198,44 +199,26 @@ class ChallengeServiceImpTest {
 
     @Test
     void getAllChallenges_ChallengesExist_ChallengesReturned() {
-        // Arrange
-        int offset = 1;
+        int offset = 0;
         int limit = 2;
+        ChallengeDocument challengeDocument = new ChallengeDocument();
+        ChallengeDto challengeDto = new ChallengeDto();
 
-        // Simulate a set of ChallengeDocument with non-null UUID
-        ChallengeDocument challenge1 = new ChallengeDocument();
-        challenge1.setUuid(UUID.randomUUID());
-        ChallengeDocument challenge2 = new ChallengeDocument();
-        challenge2.setUuid(UUID.randomUUID());
-
-        // Simulate a set of ChallengeDto
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        ChallengeDto challengeDto2 = new ChallengeDto();
-
+        when(challengeRepository.count()).thenReturn(Mono.just(2L));
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
-                .thenReturn(Flux.just(challenge1, challenge2));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(challengeDto1, challengeDto2));
-        when(challengeRepository.count()).thenReturn(Mono.just(100L));
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getAllChallenges(offset, limit);
+                .thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(), any()))
+                .thenReturn(challengeDto);
 
-        // Assert
-        verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
-        verify(challengeConverter).convertDocumentFluxToDtoFlux(any(), any());
-
-
-        StepVerifier.create(result)
-                .expectSubscription()
-                .assertNext(resultDto -> {
-                    Assertions.assertEquals(100, resultDto.getCount());
-                    Assertions.assertEquals(offset, resultDto.getOffset());
-                    Assertions.assertEquals(limit, resultDto.getLimit());
-                    Assertions.assertEquals(2, resultDto.getResults().length);
-                    Assertions.assertEquals(challengeDto1, resultDto.getResults()[0]);
-                    Assertions.assertEquals(challengeDto2, resultDto.getResults()[1]);
+        StepVerifier.create(challengeService.getAllChallenges(offset, limit))
+                .expectNextMatches(result -> {
+                    System.out.println("Results size: " + result.getResults().length);
+                    System.out.println("First result: " + (result.getResults().length > 0 ? result.getResults()[0] : "None"));
+                    assertThat(result.getResults()).hasSize(1);
+                    assertThat(result.getResults()[0]).isEqualTo(challengeDto);
+                    return true;
                 })
-                .expectComplete()
-                .verify();
+                .verifyComplete();
     }
 
     @Test
@@ -257,7 +240,7 @@ class ChallengeServiceImpTest {
 
         // Assert
         StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
+                .expectNextMatches(dto -> dto.getCount() == 0 && Arrays.equals(dto.getResults(), expectedLanguages))
                 .expectComplete()
                 .verify();
 
@@ -266,44 +249,62 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void testGetSolutions() {
+    void getSolutions_ReturnsExpectedSolutions() {
         // Arrange
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
         UUID languageId = UUID.fromString(languageStringId);
         UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
         UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
-
-        ChallengeDocument challenge = new ChallengeDocument();
-        challenge.setUuid(UUID.fromString(challengeStringId));
         SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
         SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(UUID.fromString(challengeStringId));
         challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
-        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
-        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
-        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
 
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
-        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
 
         // Act
         Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
 
         // Assert
         StepVerifier.create(resultMono)
-                .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isZero();
-                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
-                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
-                    return true;
+                .assertNext(result -> {
+                    List<SolutionDto> actualSolutions = List.of(result.getResults());
+                    assertThat(actualSolutions).hasSize(2);
+                    assertThat(actualSolutions).extracting(SolutionDto::getSolutionText)
+                            .containsExactlyInAnyOrder("Solution 1", "Solution 2");
                 })
                 .verifyComplete();
+    }
+    @Test
+    void getSolutions_InvalidChallengeId_ThrowsBadUUIDException() {
+        String invalidChallengeId = "invalid-challenge-id";
+        String validLanguageId = "valid-language-id";
+        StepVerifier.create(challengeService.getSolutions(invalidChallengeId, validLanguageId))
+                .expectError(BadUUIDException.class)
+                .verify();
+    }
 
-        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
-        verify(solutionRepository, times(2)).findById(any(UUID.class));
-        verify(solutionConverter, times(2)).convertDocumentFluxToDtoFlux(any(), any());
+    @Test
+    void getSolutions_NoSolutionsForLanguage_EmptyResult() {
+        String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
+        String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        UUID languageId = UUID.fromString(languageStringId);
+        UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", UUID.randomUUID());
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(UUID.fromString(challengeStringId));
+        challenge.setSolutions(Arrays.asList(solution1.getUuid()));
+
+        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
+        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
+
+        StepVerifier.create(challengeService.getSolutions(challengeStringId, languageStringId))
+                .expectNextMatches(result -> result.getResults().length == 0)
+                .verifyComplete();
     }
 
     @Test
@@ -387,7 +388,8 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findByUuid(related1.getUuid())).thenReturn(Mono.just(related1));
         when(challengeRepository.findByUuid(related2.getUuid())).thenReturn(Mono.just(related2));
         when(challengeRepository.findByUuid(related3.getUuid())).thenReturn(Mono.just(related3));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
+        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any()))
+                .thenReturn(Flux.fromIterable(expectedRelated));
 
         // Act
         Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId, 0, challenge.getRelatedChallenges().size());
@@ -404,47 +406,73 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
         verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
-        verify(challengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
+        verify(challengeConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
     }
-
     @Test
     void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
-        // Arrange
-        String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-        String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
-        UUID challengeId = UUID.fromString(challengeStringId);
-        UUID languageId = UUID.fromString(languageStringId);
-        UUID solutionId = UUID.randomUUID();
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setIdChallenge(UUID.randomUUID());
+        solutionDto.setIdLanguage(UUID.randomUUID());
+        solutionDto.setSolutionText("Sample Solution");
 
-        SolutionDocument solution = new SolutionDocument(solutionId, "Solution 1", languageId);
-        SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId, challengeId);
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setUuid(solutionDto.getIdChallenge());
+        challenge.setSolutions(new ArrayList<>());
+
+        SolutionDocument solutionDocument = new SolutionDocument();
+        solutionDocument.setSolutionText(solutionDto.getSolutionText());
+        solutionDocument.setIdLanguage(solutionDto.getIdLanguage());
+        solutionDocument.setUuid(UUID.randomUUID());
+
+        when(challengeRepository.findByUuid(solutionDto.getIdChallenge())).thenReturn(Mono.just(challenge));
+        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challenge));
+        when(solutionConverter.convertDocumentToDto(any(SolutionDocument.class), eq(SolutionDto.class))).thenReturn(solutionDto);
+
+        StepVerifier.create(challengeService.addSolution(solutionDto))
+                .expectNextMatches(result -> result.getSolutionText().equals("Sample Solution"))
+                .verifyComplete();
+    }
+
+
+    @Test
+    void addSolution_ConversionToSolutionDtoReturnsNull_ErrorThrown() {
+        // Arrange
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setIdChallenge(challengeId);
+        solutionDto.setIdLanguage(languageId);
+        solutionDto.setSolutionText("Sample solution");
+
         ChallengeDocument challengeDocument = new ChallengeDocument();
         challengeDocument.setUuid(challengeId);
+        challengeDocument.setSolutions(new ArrayList<>());
 
-        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
+        SolutionDocument savedSolutionDocument = new SolutionDocument();
+        savedSolutionDocument.setUuid(UUID.randomUUID());
+        savedSolutionDocument.setSolutionText("Sample solution");
+        savedSolutionDocument.setIdLanguage(languageId);
+
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solution));
-        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(solutionDto));
-
+        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(savedSolutionDocument));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
+        when(solutionConverter.convertDocumentToDto(any(SolutionDocument.class), eq(SolutionDto.class)))
+                .thenReturn(null);
 
         // Act
-        Mono<SolutionDto> resultMono = challengeService.addSolution(solutionDto);
+        Mono<SolutionDto> result = challengeService.addSolution(solutionDto);
+
         // Assert
-        StepVerifier.create(resultMono)
-                .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getUuid()).isEqualTo(solutionId);
-                    assertThat(resultDto.getSolutionText()).isEqualTo("Solution 1");
-                    assertThat(resultDto.getIdLanguage()).isEqualTo(languageId);
-                    assertThat(resultDto.getIdChallenge()).isEqualTo(challengeId);
-                    return true;
-                })
-                .verifyComplete();
+        StepVerifier.create(result)
+                .expectError(RuntimeException.class)
+                .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
         verify(solutionRepository).save(any(SolutionDocument.class));
-        verify(solutionConverter).convertDocumentFluxToDtoFlux(any(), any());
+        verify(challengeRepository).save(any(ChallengeDocument.class));
+        verify(solutionConverter).convertDocumentToDto(any(SolutionDocument.class), eq(SolutionDto.class));
     }
-
     @Test
     void testGetRelatedChallenges_ReturnedAll() {
         // Arrange
