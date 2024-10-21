@@ -16,7 +16,7 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByUserId(UUID userId);
     Flux<UserSolutionDocument> findByChallengeId(UUID challengeId);
 
-    Flux<UserSolutionDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
+    //Flux<UserSolutionDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
     Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID userId, UUID challengeId, UUID languageId);
     Flux<UserSolutionDocument> findByLanguageId(UUID languageId);
     Flux<UserSolutionDocument> findByBookmarked(Boolean bookmarked);
@@ -25,5 +25,6 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByChallengeIdAndStatus(UUID challengeId, ChallengeStatus status);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
-    Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndSolutionId(UUID userId, UUID challengeId, UUID solutionId);
+    Mono<UserSolutionDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
+    //Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndSolutionId(UUID userId, UUID challengeId, UUID solutionId);
 }

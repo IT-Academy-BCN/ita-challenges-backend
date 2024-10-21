@@ -38,8 +38,9 @@ class ConverterDocumentToDtoTest {
     SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), solutionText1);
     SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2);
+    List<String> errors = Collections.emptyList();
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
-    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid_1, idUser, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 90, solutionDocumentList);
+    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid_1, idUser, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 90, solutionDocumentList, errors);
 
     SolutionDocument solutionDocument = new SolutionDocument();
     UserSolutionDocument userSolutionDocument = new UserSolutionDocument();

@@ -3,6 +3,7 @@ package com.itachallenge.user.document;
 import com.itachallenge.user.enums.ChallengeStatus;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
     SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
-    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus,score, solutionDocumentList);
+    List<String> errors = Collections.emptyList();
+    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus,score, solutionDocumentList, errors);
 
     @Test
     void getUuid(){

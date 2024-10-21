@@ -1,5 +1,6 @@
 package com.itachallenge.user.helper;
 
+import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionDto;
@@ -36,7 +37,7 @@ public class ConverterDocumentToDto {
                 .build());
     }
 
-    public Mono<UserSolutionScoreDto> fromUserSolutionDocumentToUserSolutionScoreDto(UserSolutionDocument document) {
+  /*  public Mono<UserSolutionScoreDto> fromUserSolutionDocumentToUserSolutionScoreDto(UserSolutionDocument document) {
         return Mono.just(UserSolutionScoreDto.builder()
                 .userId(document.getUserId().toString())
                 .challengeId(document.getChallengeId().toString())
@@ -47,5 +48,17 @@ public class ConverterDocumentToDto {
                 .score(document.getScore())
                 .errors(document.getErrors()) // Assuming errors is a List<String>
                 .build());
-    }
+    }*/  // комменитрую этот метод чтобы попробовать другой пониже
+  public UserSolutionScoreDto fromUserSolutionDocumentToUserSolutionScoreDto(UserSolutionDocument document, SolutionDocument solution) {
+      return UserSolutionScoreDto.builder()
+              .userId(document.getUserId().toString())
+              .challengeId(document.getChallengeId().toString())
+              .languageId(document.getLanguageId().toString())
+              .solutionId(solution.getUuid().toString())
+              .solutionText(solution.getSolutionText())
+              .status(document.getStatus().name())
+              .score(document.getScore())
+              .errors(document.getErrors()) // Assuming errors is a List<String>
+              .build();
+  }
 }

@@ -241,9 +241,18 @@ class UserControllerTest {
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
         userSolutionDto.setSolutionText("This is a test solution");
 
-        UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
+        /*UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
                 userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText(), 13);
+                userSolutionDto.getSolutionText(), 13);*/ //прокомментирвала  чтобы проверить паттерн билдинг
+        UserSolutionScoreDto expectedResponse = UserSolutionScoreDto.builder()
+                .userId(userSolutionDto.getUserId())
+                .challengeId(userSolutionDto.getChallengeId())
+                .languageId(userSolutionDto.getLanguageId())
+                .solutionText(userSolutionDto.getSolutionText())
+                .score(13)
+                .status("ENDED") // Add missing fields
+                .errors(Collections.emptyList()) // Example for errors field
+                .build();
 
         when(userSolutionService.addSolution(userSolutionDto))
                 .thenReturn(Mono.just(expectedResponse));

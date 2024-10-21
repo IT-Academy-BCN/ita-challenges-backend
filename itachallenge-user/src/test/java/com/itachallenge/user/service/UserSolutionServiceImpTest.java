@@ -26,6 +26,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -316,10 +317,10 @@ class UserSolutionServiceImpTest {
         List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
         UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
         float expectedValue = 100f;
-
+        List<String> errors = Collections.emptyList();
         List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField, errors),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField, errors)
         );
 
         when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
