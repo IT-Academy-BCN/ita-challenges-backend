@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
@@ -25,6 +27,7 @@ import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -219,15 +222,30 @@ class ChallengeControllerTest {
                 });
     }
 
-    @Test
+    /*@Test
     void getSolutions_ValidIds_SolutionsReturned() {
         // Arrange
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
 
-        GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        // Crear los objetos necesarios para el stub
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID solutionId1 = UUID.randomUUID();
+        UUID solutionId2 = UUID.randomUUID();
 
+        SolutionDto solutionDto1 = new SolutionDto(solutionId1, "Solution 1", languageId);
+        SolutionDto solutionDto2 = new SolutionDto(solutionId2, "Solution 2", languageId);
+
+        ChallengeDto challengeDto = ChallengeDto.builder()
+                .challengeId(challengeId)
+                .solutions(Arrays.asList(solutionDto1, solutionDto2))
+                .build();
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new ChallengeDto[]{challengeDto});
+
+        // Configurar el stub del servicio
         when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
         // Act & Assert
@@ -242,7 +260,88 @@ class ChallengeControllerTest {
                     assert dto.getResults() != null;
                     assert dto.getResults().length == 2;
                 });
+    }*/
+    /*@Test
+    void getSolutions_ValidIds_SolutionsReturned() {
+        WebTestClient.ResponseSpec responseSpec = webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/{challengeId}/language/{languageId}",
+                        "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68", "660e1b18-0c0a-4262-a28a-85de9df6ac5f")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType("application/json");
+
+        // Printing response body for debugging
+        responseSpec.expectBody(String.class).consumeWith(response -> {
+            String responseBody = response.getResponseBody();
+            System.out.println("Response Body: " + responseBody);
+        });
+
+
+        responseSpec.expectBody(ChallengeDto[].class).value(challengeDtos -> {
+            // Verifying that the response is not null
+            assertNotNull("The response body was null.", challengeDtos);
+            ChallengeDto expected = ChallengeDto.builder()
+                    .challengeId(UUID.fromString("3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"))
+                    .uuidLanguage(UUID.fromString("660e1b18-0c0a-4262-a28a-85de9df6ac5f"))
+                    .solutions(List.of(
+                            SolutionDto.builder()
+                                    .uuid(UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5"))
+                                    .solutionText("Solution 1")
+                                    .idLanguage(UUID.fromString("660e1b18-0c0a-4262-a28a-85de9df6ac5f"))
+                                    .idChallenge(null)
+                                    .build(),
+                            SolutionDto.builder()
+                                    .uuid(UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5"))
+                                    .solutionText("Solution 2")
+                                    .idLanguage(UUID.fromString("75a74089-99bb-468d-ae71-b8c0b97ce6b3"))
+                                    .idChallenge(null)
+                                    .build()
+                    ))
+                    // inicializar otros campos necesarios
+                    .build();
+
+            assertArrayEquals(new ChallengeDto[]{expected}, challengeDtos);
+        });
+    }*/
+    @Test
+    void getSolutions_ValidIds_SolutionsReturned() {
+        // Arrange
+        String challengeStringId = "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68";
+        String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+
+        // Crear JSON esperado
+        String expectedJson = "{ \"offset\": 0, \"limit\": -1, \"count\": 2, \"results\": [ { \"id_challenge\": \"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68\", \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\", \"solutions\": [ { \"uuid_solution\": \"0864463e-eb7c-4bb3-b8bc-766d71ab38b5\", \"solution_text\": \"Solution 1\" }, { \"uuid_solution\": \"75a74089-99bb-468d-ae71-b8c0b97ce6b3\", \"solution_text\": \"Solution 2\" } ] } ] }";
+
+        // Crear DTO esperado
+        ChallengeDto expectedChallengeDto = new ChallengeDto();
+        expectedChallengeDto.setChallengeId(UUID.fromString(challengeStringId));
+        expectedChallengeDto.setUuidLanguage(UUID.fromString(languageStringId));
+        expectedChallengeDto.setSolutions(Arrays.asList(
+                new SolutionDto(UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5"), "Solution 1", UUID.fromString(languageStringId)),
+                new SolutionDto(UUID.fromString("75a74089-99bb-468d-ae71-b8c0b97ce6b3"), "Solution 2", UUID.fromString(languageStringId))
+        ));
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, -1, 2, new ChallengeDto[]{expectedChallengeDto});
+
+        // Configurar mocks
+        when(challengeService.getSolutions(challengeStringId, languageStringId)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", challengeStringId, languageStringId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class) // Obtener el cuerpo como String
+                .value(responseBody -> {
+                    assertNotNull(responseBody);
+                    assertEquals(expectedJson, responseBody);
+                });
+
+        // Verificar interacciones con mocks
+        verify(challengeService).getSolutions(challengeStringId, languageStringId);
     }
+
 
     @Test
     void getChallengesByLanguageOrDifficultyTest() {
@@ -282,6 +381,61 @@ class ChallengeControllerTest {
                     assertEquals(level, result.getResults()[0].getLevel());
                 });
     }
+    /*@Test
+    void getSolutions_ValidIds_SolutionsReturned() {
+        // Arrange
+        String idChallenge = "valid-challenge-id";
+        String idLanguage = "valid-language-id";
+
+        // Crear UUIDs de prueba
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID solutionId1 = UUID.randomUUID();
+        UUID solutionId2 = UUID.randomUUID();
+
+        // Crear objetos SolutionDto
+        SolutionDto solutionDto1 = new SolutionDto(solutionId1, "Solution 1", languageId);
+        SolutionDto solutionDto2 = new SolutionDto(solutionId2, "Solution 2", languageId);
+
+        // Crear objeto ChallengeDto
+        ChallengeDto challengeDto = ChallengeDto.builder()
+                .challengeId(challengeId)
+                .solutions(Arrays.asList(solutionDto1, solutionDto2))
+                .build();
+
+        // Crear objeto GenericResultDto
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, -1, 2, new ChallengeDto[]{challengeDto});
+
+        // Configurar el stub del servicio
+        when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)  // Ajustar el tipo aquí si es necesario
+                .value(dto -> {
+                    assertNotNull(dto);  // Asegúrate de que el DTO no sea nulo
+                    assertTrue(dto instanceof GenericResultDto);  // Verifica el tipo
+                    GenericResultDto<ChallengeDto> resultDto = (GenericResultDto<ChallengeDto>) dto; // Conversión explícita
+
+                    assertEquals(0, resultDto.getOffset());
+                    assertEquals(-1, resultDto.getLimit()); // Verifica el límite
+                    assertEquals(2, resultDto.getCount()); // Verifica el conteo
+                    assertNotNull(resultDto.getResults());
+                    assertEquals(1, resultDto.getResults().length); // Debe haber un solo ChallengeDto
+
+                    ChallengeDto resultChallengeDto = resultDto.getResults()[0];
+                    assertEquals(challengeId, resultChallengeDto.getChallengeId());
+                    assertNotNull(resultChallengeDto.getSolutions());
+                    assertEquals(2, resultChallengeDto.getSolutions().size());
+                    assertEquals("Solution 1", resultChallengeDto.getSolutions().get(0).getSolutionText());
+                    assertEquals("Solution 2", resultChallengeDto.getSolutions().get(1).getSolutionText());
+                });
+    }*/
+
 
     @Test
     void AddSolution_validIdChallenge_validIdLanguage() {

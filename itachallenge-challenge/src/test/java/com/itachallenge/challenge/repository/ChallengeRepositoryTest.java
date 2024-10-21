@@ -91,7 +91,7 @@ class ChallengeRepositoryTest {
 
         List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
-        DetailDocument detail = new DetailDocument(description, exampleList, note);
+        DetailDocument detail = new DetailDocument();
         List<TestingValueDocument> testingValues = Arrays.asList(
                 new TestingValueDocument(Arrays.asList("input1", "input2"), Arrays.asList("output1")),
                 new TestingValueDocument(Arrays.asList("input3", "input4"), Arrays.asList("output2"))
