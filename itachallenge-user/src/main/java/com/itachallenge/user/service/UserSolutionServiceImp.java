@@ -34,6 +34,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         this.converter = converter;
     }
 
+    //@Cacheable
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
         UUID userUuid = UUID.fromString(idUser);
         UUID challengeUuid = UUID.fromString(idChallenge);
@@ -151,6 +152,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
 
+    //@Cacheable
     @Override
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
 
@@ -171,11 +173,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Mono.just(challengesList);
     }
 
+    //@Cacheable
     @Override
     public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
         return userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, true);
     }
 
+    //@Cacheable
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
 
@@ -196,10 +200,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return percentage;
     }
 
+    //@Cacheable
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
     }
 
+    //@Cacheable
     private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
         List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
                 .filter(us -> challengeId.equals(us.getChallengeId()))
