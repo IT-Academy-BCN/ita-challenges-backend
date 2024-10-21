@@ -21,10 +21,11 @@ import java.util.UUID;
 @Setter
 public class SolutionDto {
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
-    private static final String STRING_PATTERN = "^.{1,500}$";  //max 500 characters    @Id
+    private static final String STRING_PATTERN = "^.{1,500}$";
 
     @JsonProperty(value = "id_solution", index = 0)
     private UUID uuid;
+
 
     //@ValidGenericPattern(pattern = STRING_PATTERN, message = "Solution text cannot be empty")
     @NotEmpty(message = "cannot be empty")
@@ -35,6 +36,7 @@ public class SolutionDto {
     @JsonProperty(value = "uuid_language", index = 2)
     private UUID idLanguage;
 
+    @Getter
     @ValidUUID(message = "Invalid UUID")
     @JsonProperty(value = "uuid_challenge", index = 3)
     private UUID idChallenge;

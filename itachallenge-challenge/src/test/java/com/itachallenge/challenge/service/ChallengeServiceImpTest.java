@@ -273,11 +273,13 @@ class ChallengeServiceImpTest {
         UUID languageId = UUID.fromString(languageStringId);
         UUID solutionId1 = UUID.fromString("c8a5440d-6466-463a-bccc-7fefbe9396e4");
         UUID solutionId2 = UUID.fromString("0864463e-eb7c-4bb3-b8bc-766d71ab38b5");
+        UUID challengeId = UUID.fromString(challengeStringId);
+
 
         ChallengeDocument challenge = new ChallengeDocument();
         challenge.setUuid(UUID.fromString(challengeStringId));
-        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
-        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
+        SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId, challengeId);
+        SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId, challengeId);
         challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
         SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
         SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
@@ -416,7 +418,7 @@ class ChallengeServiceImpTest {
         UUID languageId = UUID.fromString(languageStringId);
         UUID solutionId = UUID.randomUUID();
 
-        SolutionDocument solution = new SolutionDocument(solutionId, "Solution 1", languageId);
+        SolutionDocument solution = new SolutionDocument(solutionId, "Solution 1", languageId, challengeId);
         SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId, challengeId);
         ChallengeDocument challengeDocument = new ChallengeDocument();
         challengeDocument.setUuid(challengeId);

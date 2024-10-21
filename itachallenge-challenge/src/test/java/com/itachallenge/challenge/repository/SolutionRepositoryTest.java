@@ -57,8 +57,9 @@ class SolutionRepositoryTest {
 
         solutionRepository.deleteAll().block();
 
-        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", uuidLang1);
-        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", uuidLang2);
+        UUID uuidChallenge = UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296");
+        SolutionDocument solution = new SolutionDocument(uuid_1, "Solution Text 1", uuidLang1, uuidChallenge);
+        SolutionDocument solution2 = new SolutionDocument(uuid_2, "Solution Text 2", uuidLang2, uuidChallenge);
 
         solutionRepository.saveAll(Flux.just(solution, solution2)).blockLast();
 
