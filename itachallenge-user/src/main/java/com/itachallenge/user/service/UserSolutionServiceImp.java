@@ -170,6 +170,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         if (status == null || status.isEmpty()) {
             challengeStatus = ChallengeStatus.STARTED;
+
+        } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
+            challengeStatus = ChallengeStatus.EMPTY;
+        }
+          else if (status.equalsIgnoreCase(ChallengeStatus.SCORE_PENDING.getValue())) {
+        challengeStatus = ChallengeStatus.SCORE_PENDING;
+
         } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
             challengeStatus = ChallengeStatus.ENDED;
         }
