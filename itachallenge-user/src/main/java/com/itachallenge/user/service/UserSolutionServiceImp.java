@@ -64,8 +64,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
         String status = userSolutionDto.getStatus();
-        ChallengeStatus challengeStatus;
+        ChallengeStatus challengeStatus = determineChallengeStatus(status);
         List<SolutionDocument> solutionDocuments;
+
+        if (challengeStatus == null) {
+            log.error("POST operation failed due to invalid challenge status parameter");
+            return Mono.error(new IllegalArgumentException("Status not allowed"));
+        }
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
@@ -73,12 +78,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
-        challengeStatus = determineChallengeStatus(status);
 
-        if (challengeStatus == null) {
-            log.error("POST operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status not allowed"));
-        }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
                 .map(savedDocument -> UserSolutionScoreDto.builder()
                         .userId(String.valueOf(savedDocument.getUserId()))
