@@ -2,8 +2,8 @@ version: '3.8'
 
 x-custom-metadata:
 
-  version: 1.14.4
-  last-updated: 2024-04-30
+  version: 1.17.1
+  last-updated: 2024-10-15
 
 services:
   consul-server1:
@@ -59,6 +59,20 @@ services:
       apisix-dev:
         ipv4_address: 172.18.0.5
 
+  mongodb-test-development:
+    container_name: mongodb-test-development
+    image: mongo:5.0.9
+    restart: always
+    ports:
+        - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: '${MONGODB_ROOT_TEST_USERNAME}'
+      MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_ROOT_TEST_PASSWORD}'
+      MONGO_INITDB_DATABASE: '${MONGODB_TEST_DATABASE}'
+    volumes:
+      - itachallenge_mongodb_data-test:/var/lib/mongodb
+      - ${MONGODB_TEST_SCRIPTS_DIR}:/tmp/data/
+
   itachallenge-challenge:
     image: '${REGISTRY_NAME}:itachallenge-challenge-${MICROSERVICE_TAG}'
     container_name: 'itachallenge-${MICROSERVICE_TAG}-dev'
@@ -66,7 +80,9 @@ services:
     depends_on:
       -  itachallenge-mongodb
     environment:
+      - 'JAVA_OPTS=-Xmx1024m'
       - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}?authSource=admin'
+      - 'logging.level.com.itachallenge=ERROR'
     networks:
       apisix-dev:
         ipv4_address: 172.18.0.6
@@ -151,6 +167,7 @@ services:
 
 volumes:
   itachallenge_mongodb_data-dev:
+  itachallenge_mongodb_data-test:
 
 networks:
     apisix-dev:

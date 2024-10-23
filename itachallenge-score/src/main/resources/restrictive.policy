@@ -1,0 +1,11 @@
+grant {
+
+    //Allows permission to read and write files in the /usr/app directory
+    permission java.io.FilePermission "/usr/app/Main.java", "write";
+
+    // Allows permission to read and write files in the /usr/app directory
+    permission java.util.PropertyPermission "line.separator", "read";
+
+    // Allows permission to read and write files in the /usr/app directory
+    permission java.lang.RuntimePermission "accessDeclaredMembers";
+};
