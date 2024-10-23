@@ -80,7 +80,7 @@ services:
     depends_on:
       -  itachallenge-mongodb
     environment:
-      - 'JAVA_OPTS=-Xmx512m'
+      - 'JAVA_OPTS=-Xmx1024m'
       - 'spring.data.mongodb.uri=mongodb://${MONGODB_CHALLENGE_USERNAME}:${MONGODB_CHALLENGE_PASSWORD}@172.18.0.5:${MONGODB_CONTAINER_PORT}/${MONGODB_CHALLENGE_DATABASE}?authSource=admin'
       - 'logging.level.com.itachallenge=ERROR'
     networks:

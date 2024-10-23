@@ -27,7 +27,6 @@ management:
 
 
 
-
 logging:
   level:
     root: INFO
@@ -43,3 +42,26 @@ validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
+
+# Commands to run Sandbox
+commands:
+  windows: "cmd.exe"
+  unix: "sh"
+
+  #  Security FilterTEST
+security:
+  harmful-patterns:
+    - "System.exit"
+    - "Runtime.getRuntime().exec"
+    - "ProcessBuilder"
+    - "java.io.File"
+    - "java.nio.file.Files"
+
+# KeywordFilterTEST
+keyword:
+  disallowed:
+    - "import"
+    - "class"
+    - "interface"
+    - "enum"
+    - "package"
