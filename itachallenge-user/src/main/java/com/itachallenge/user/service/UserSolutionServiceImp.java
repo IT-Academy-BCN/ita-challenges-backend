@@ -165,22 +165,18 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
-
-        ChallengeStatus challengeStatus = null;
-
         if (status == null || status.isEmpty()) {
-            challengeStatus = ChallengeStatus.STARTED;
-
+            return ChallengeStatus.STARTED;
         } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
-            challengeStatus = ChallengeStatus.EMPTY;
-        }
-          else if (status.equalsIgnoreCase(ChallengeStatus.SCORE_PENDING.getValue())) {
-        challengeStatus = ChallengeStatus.SCORE_PENDING;
-
+            return ChallengeStatus.EMPTY;
+        } else if (status.equalsIgnoreCase(ChallengeStatus.SENDED.getValue())) {
+            return ChallengeStatus.SENDED;
+        } else if (status.equalsIgnoreCase(ChallengeStatus.SCORE_PENDING.getValue())) {
+            return ChallengeStatus.SCORE_PENDING;
         } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
-            challengeStatus = ChallengeStatus.ENDED;
+            return ChallengeStatus.ENDED;
         }
-        return challengeStatus;
+        return null;
     }
 
     public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
