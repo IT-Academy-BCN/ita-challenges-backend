@@ -41,6 +41,6 @@ public class UserSolutionDocument {
     private List<SolutionDocument> solutionDocument;
 
     @Field("errors")
-    private List<String> errors;
+    private String errors;
 
 }

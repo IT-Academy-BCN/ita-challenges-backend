@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
     SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
-    List<String> errors = Collections.emptyList();
+    String errors = "Error";
     UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus,score, solutionDocumentList, errors);
 
     @Test
@@ -57,4 +57,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     void getSolutionDocumentList(){
         assertEquals(solutionDocumentList, userScoreDocument.getSolutionDocument());
     }
+    @Test
+    void getErrors(){ assertEquals(errors, userScoreDocument.getErrors());}
 }

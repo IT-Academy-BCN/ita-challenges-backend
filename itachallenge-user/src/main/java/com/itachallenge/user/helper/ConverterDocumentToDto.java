@@ -24,6 +24,7 @@ public class ConverterDocumentToDto {
             .languageID(userScoreDocument.getLanguageId())
             .userId(userScoreDocument.getUserId())
             .solutions(userScoreDocument.getSolutionDocument())
+            .errors(userScoreDocument.getErrors()) // add errors
             .build();
     }
 
@@ -36,29 +37,4 @@ public class ConverterDocumentToDto {
                 .solutionText(document.getSolutionDocument().get(0).getSolutionText())
                 .build());
     }
-
-  /*  public Mono<UserSolutionScoreDto> fromUserSolutionDocumentToUserSolutionScoreDto(UserSolutionDocument document) {
-        return Mono.just(UserSolutionScoreDto.builder()
-                .userId(document.getUserId().toString())
-                .challengeId(document.getChallengeId().toString())
-                .languageId(document.getLanguageId().toString())
-                .solutionId(document.getUuid().toString())
-                .solutionText(document.getSolutionDocument().get(0).getSolutionText()) // Assuming there's at least one solution text
-                .status(document.getStatus().toString())
-                .score(document.getScore())
-                .errors(document.getErrors()) // Assuming errors is a List<String>
-                .build());
-    }*/  // комменитрую этот метод чтобы попробовать другой пониже
-  public UserSolutionScoreDto fromUserSolutionDocumentToUserSolutionScoreDto(UserSolutionDocument document, SolutionDocument solution) {
-      return UserSolutionScoreDto.builder()
-              .userId(document.getUserId().toString())
-              .challengeId(document.getChallengeId().toString())
-              .languageId(document.getLanguageId().toString())
-              .solutionId(solution.getUuid().toString())
-              .solutionText(solution.getSolutionText())
-              .status(document.getStatus().name())
-              .score(document.getScore())
-              .errors(document.getErrors()) // Assuming errors is a List<String>
-              .build();
-  }
 }

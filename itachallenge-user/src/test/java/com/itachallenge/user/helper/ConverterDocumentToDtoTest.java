@@ -38,7 +38,7 @@ class ConverterDocumentToDtoTest {
     SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), solutionText1);
     SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), solutionText2);
     SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), solutionText2);
-    List<String> errors = Collections.emptyList();
+    String errors = "Error";
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
     UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid_1, idUser, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 90, solutionDocumentList, errors);
 
@@ -63,7 +63,8 @@ class ConverterDocumentToDtoTest {
         return userScoreDto.getUserId().equals(userScoreDocument.getUserId()) &&
                 userScoreDto.getChallengeId().equals(userScoreDocument.getChallengeId()) &&
                 userScoreDto.getSolutions().equals(userScoreDocument.getSolutionDocument()) &&
-                userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId());
+                userScoreDto.getLanguageID().equals(userScoreDocument.getLanguageId()) &&
+                userScoreDto.getErrors().equals(userScoreDocument.getErrors());
     }
 
     @DisplayName("Convert an object UserSolutionDocument to an object UserSolutionDto")

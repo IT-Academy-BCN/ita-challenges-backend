@@ -44,13 +44,13 @@ class UserScoreServiceImpTest {
         UUID userId = UUID.randomUUID();
         UUID idLanguage = UUID.randomUUID();
         UUID idChallenge = UUID.randomUUID();
-        List<String> errors = Collections.emptyList();
+
         SolutionDocument solutionDocument1 = new SolutionDocument(UUID.randomUUID(), "solutionText1");
         SolutionDocument solutionDocument2 = new SolutionDocument(UUID.randomUUID(), "solutionText2");
         SolutionDocument solutionDocument3 = new SolutionDocument(UUID.randomUUID(), "solutionText3");
         List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2, solutionDocument3);
 
-        UserSolutionDocument userScoreDocument = new UserSolutionDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true, ChallengeStatus.STARTED,1,solutionDocumentList, errors );
+        UserSolutionDocument userScoreDocument = new UserSolutionDocument(UUID.randomUUID(),userId, idChallenge, idLanguage,true, ChallengeStatus.STARTED,1,solutionDocumentList, "Error 1");
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
         expectedSolutionUserDto.setInfo(0,1,0, new UserScoreDto[]{userScoreDto});

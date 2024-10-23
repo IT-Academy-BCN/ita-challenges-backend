@@ -26,7 +26,7 @@ import reactor.test.StepVerifier;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -55,20 +55,22 @@ class UserSolutionServiceImpTest {
 
     @BeforeEach
     void setUp() {
-        String idUser = "550e8400-e29b-41d4-a716-446655440001";
-        String idChallenge = "550e8400-e29b-41d4-a716-446655440002";
-        String idLanguage = "550e8400-e29b-41d4-a716-446655440003";
+        String idUser = "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79";
+        String idChallenge = "5c1a97e5-1cca-4144-9981-2de1fb73b178";
+        String idLanguage = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
         solutionText = "This is a test started solution";
         userUuid = UUID.fromString(idUser);
         challengeUuid = UUID.fromString(idChallenge);
         languageUuid = UUID.fromString(idLanguage);
         mockScore = 13;
+
         userSolutionDto = UserSolutionDto.builder()
                 .userId(idUser)
                 .challengeId(idChallenge)
                 .languageId(idLanguage)
                 .status("ENDED")
                 .solutionText(solutionText).build();
+
         userSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
@@ -317,10 +319,10 @@ class UserSolutionServiceImpTest {
         List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
         UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
         float expectedValue = 100f;
-        List<String> errors = Collections.emptyList();
+
         List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField, errors),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField, errors)
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField, "Error 1"),
+                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField, "Error 1")
         );
 
         when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
@@ -335,4 +337,5 @@ class UserSolutionServiceImpTest {
                 .expectNext(expectedValue)
                 .verifyComplete();
     }
+
 }

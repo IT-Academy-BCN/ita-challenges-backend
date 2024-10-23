@@ -196,26 +196,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     @Override
-    public Mono<UserSolutionScoreDto> getSolutionScore(UUID userId, UUID challengeId, UUID solutionId) {
-        return userSolutionRepository.findByUserIdAndChallengeId(userId, challengeId)
-                .flatMap(userSolutionDocument -> {
-                    // Filter solutions to find the one with the specific solution ID
-                    return userSolutionDocument.getSolutionDocument().stream()
-                            .filter(solution -> solution.getUuid().equals(solutionId))
-                            .findFirst()
-                            .map(solution -> {
-                                // Use the converter to convert to UserSolutionScoreDto
-                                return converter.fromUserSolutionDocumentToUserSolutionScoreDto(userSolutionDocument, solution);
-                            })
-                            .map(Mono::just)
-                            .orElseGet(() -> Mono.error(new ChallengeNotFoundException("Решение не найдено")));
-                });
+    public Mono<UserScoreDto> getSolutionScore(UUID userId, UUID challengeId, UUID solutionId) {
+        return userSolutionRepository.findByUserIdAndChallengeIdAndUuid(userId, challengeId, solutionId)
+                .flatMap(userSolutionDocument -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userSolutionDocument)).next())
+                .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Solution not found")));
     }
-        /*return userSolutionRepository.findByUserIdAndChallengeIdAndSolutionId(userId, challengeId, solutionId)
-                .flatMap(converter::fromUserSolutionDocumentToUserSolutionScoreDto)
-                .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Solution not found")));*/
-
-
 
 
     private Flux<UserSolutionDocument> getUserSolutions() {

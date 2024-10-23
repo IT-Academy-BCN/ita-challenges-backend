@@ -65,7 +65,7 @@ class UserScoreRepositoryTest {
         String solutionText1 = "Ipsum.. 1";
         String solutionText2 = "Ipsum.. 2";
 
-        List<String> errors = Collections.emptyList();
+        String errors = "Error";
 
         SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
         SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);

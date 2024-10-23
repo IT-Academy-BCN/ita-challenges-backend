@@ -31,7 +31,7 @@ public class UserSolutionScoreDto {
     @JsonProperty(value ="solution_text")
     private String solutionText;
 
-    @JsonProperty(value ="status")  // Ensure this field is present
+    @JsonProperty(value ="status")
     private String status;
 
     @JsonProperty(value = "score")
