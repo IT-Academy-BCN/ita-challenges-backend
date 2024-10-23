@@ -145,23 +145,21 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 }));
     }
 
-    private Object getDataFromMicroScore (UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
-
+    private CompletableFuture<ScoreResponseDto> getDataFromMicroScore (UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
-        final ScoreResponseDto[] responseDto = new ScoreResponseDto[1];
 
-        zmqClient.sendMessage(request, ScoreResponseDto.class)
-                .thenAccept(response -> {
-                    responseDto[0] = (ScoreResponseDto) response;
+        return zmqClient.sendMessage(request, ScoreResponseDto.class)
+                .thenApply(response -> {
+                    ScoreResponseDto responseDto = (ScoreResponseDto) response;
                     log.info(String.format("[ Response - Score: %d - Errors: %s ]",
-                            responseDto[0].getScore(),
-                            responseDto[0].getErrors()));
+                            responseDto.getScore(),
+                            responseDto.getErrors()));
+                    return responseDto;
                 })
                 .exceptionally(e -> {
                     log.error(e.getMessage());
                     return null;
                 });
-        return responseDto[0];
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
