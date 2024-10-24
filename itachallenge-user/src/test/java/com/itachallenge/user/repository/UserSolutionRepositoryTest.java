@@ -60,6 +60,11 @@ public class UserSolutionRepositoryTest {
     private static int all;
     private static UUID testSolutionDocumentUuid;
 
+    private UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120001");
+    private UUID userId1 = UUID.fromString("442b8e6e-5d57-4d12-9be2-3ff4f26e7d79");
+    private UUID challengeId1 = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
+    private UUID languageId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
+
     @BeforeAll
     public static void deserializeJson() throws IOException {
 
@@ -118,6 +123,11 @@ public class UserSolutionRepositoryTest {
     void setup(){
 
         userSolutionRepository.deleteAll();
+        SolutionDocument solutionDocument = new SolutionDocument(UUID.randomUUID(), "Sample Solution Text");
+        List<SolutionDocument> solutionDocuments = List.of(solutionDocument);
+
+        UserSolutionDocument userSolutionDocument = new UserSolutionDocument(
+                uuid_1, userId1, challengeId1, languageId1, true, ChallengeStatus.STARTED, 90, solutionDocuments, "Error");
 
         userSolutionRepository.saveAll(Flux.fromIterable(userSolutions)).blockLast();
     }
@@ -260,4 +270,15 @@ public class UserSolutionRepositoryTest {
                 .verify();
 
     }
+   /* @DisplayName("Find UserSolutionDocument by UserId, ChallengeId and Uuid")
+    @Test
+    void findByUserIdAndChallengeIdAndUuidTest() {
+        Mono<UserSolutionDocument> result = userSolutionRepository.findByUserIdAndChallengeIdAndUuid(userId1, challengeId1, uuid_1);
+
+        StepVerifier.create(result)
+                .expectNextMatches(document -> document.getUserId().equals(userId1)
+                        && document.getChallengeId().equals(challengeId1)
+                        && document.getUuid().equals(uuid_1))
+                .verifyComplete();
+    }*/
 }
