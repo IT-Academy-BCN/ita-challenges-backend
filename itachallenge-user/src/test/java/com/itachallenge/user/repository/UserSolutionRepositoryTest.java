@@ -3,9 +3,13 @@ package com.itachallenge.user.repository;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.service.UserSolutionServiceImp;
 import org.junit.jupiter.api.*;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -26,6 +30,7 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
+import static org.mockito.Mockito.when;
 
 @DataMongoTest
 @Testcontainers
@@ -123,11 +128,6 @@ public class UserSolutionRepositoryTest {
     void setup(){
 
         userSolutionRepository.deleteAll();
-        SolutionDocument solutionDocument = new SolutionDocument(UUID.randomUUID(), "Sample Solution Text");
-        List<SolutionDocument> solutionDocuments = List.of(solutionDocument);
-
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument(
-                uuid_1, userId1, challengeId1, languageId1, true, ChallengeStatus.STARTED, 90, solutionDocuments, "Error");
 
         userSolutionRepository.saveAll(Flux.fromIterable(userSolutions)).blockLast();
     }
@@ -148,6 +148,7 @@ public class UserSolutionRepositoryTest {
                 solutions -> assertEquals(solutions.getUuid(), testUuid),
                 () -> fail("Solutions with ID " + testUuid + " not found"));
     }
+
 
     @DisplayName("Exists by UUID test")
     @Test
@@ -270,7 +271,7 @@ public class UserSolutionRepositoryTest {
                 .verify();
 
     }
-   /* @DisplayName("Find UserSolutionDocument by UserId, ChallengeId and Uuid")
+    @DisplayName("Find UserSolutionDocument by UserId, ChallengeId and Uuid")
     @Test
     void findByUserIdAndChallengeIdAndUuidTest() {
         Mono<UserSolutionDocument> result = userSolutionRepository.findByUserIdAndChallengeIdAndUuid(userId1, challengeId1, uuid_1);
@@ -280,5 +281,5 @@ public class UserSolutionRepositoryTest {
                         && document.getChallengeId().equals(challengeId1)
                         && document.getUuid().equals(uuid_1))
                 .verifyComplete();
-    }*/
+    }
 }

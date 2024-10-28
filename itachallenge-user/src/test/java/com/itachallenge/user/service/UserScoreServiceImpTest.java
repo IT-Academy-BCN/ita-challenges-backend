@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.SolutionUserDto;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,10 +34,59 @@ class UserScoreServiceImpTest {
     @Mock
     private ConverterDocumentToDto converter;
 
+
+
+    //добавила  5 полей
+    private UUID userId;
+    private UUID challengeId;
+    private UUID solutionId;
+    private UserSolutionDocument userSolutionDocument;
+    private UserScoreDto userScoreDto;
+
     @BeforeEach
     void setUp(){
         MockitoAnnotations.openMocks(this);
+        userId = UUID.randomUUID();
+        challengeId = UUID.randomUUID();
+        solutionId = UUID.randomUUID();
+
+        // Создаем тестовые объекты
+        userSolutionDocument = new UserSolutionDocument();
+        userScoreDto = new UserScoreDto();
+
+        // Настраиваем моки
+        when(userScoreRepository.findByUserIdAndChallengeIdAndUuid(userId, challengeId, solutionId))
+                .thenReturn(Mono.just(userSolutionDocument));
+        when(converter.fromUserScoreDocumentToUserScoreDto(any()))
+                .thenReturn(Flux.just(userScoreDto));
     }
+    @Test
+    void testGetSolutionScore_Success() {
+        // Вызываем метод
+        Mono<UserScoreDto> resultMono = userScoreService.getSolutionScore(userId, challengeId, solutionId);
+
+        // Проверяем результат
+        StepVerifier.create(resultMono)
+                .expectNext(userScoreDto)
+                .verifyComplete();
+    }
+
+    @Test
+    void testGetSolutionScore_NotFound() {
+        // Настраиваем моки для отсутствия данных
+        when(userScoreRepository.findByUserIdAndChallengeIdAndUuid(userId, challengeId, solutionId))
+                .thenReturn(Mono.empty());
+
+        // Вызываем метод
+        Mono<UserScoreDto> resultMono = userScoreService.getSolutionScore(userId, challengeId, solutionId);
+
+        // Проверяем результат на ошибку
+        StepVerifier.create(resultMono)
+                .expectErrorMatches(throwable -> throwable instanceof ChallengeNotFoundException &&
+                        throwable.getMessage().equals("Solution not found"))
+                .verify();
+    }
+
 
     @Test
     void getUserScoreByUserId (){
