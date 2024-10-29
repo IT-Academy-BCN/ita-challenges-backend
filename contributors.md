@@ -62,4 +62,4 @@
 * Augustin Nae - https://github.com/auguNa
 * Nuria Grau Horta - https://github.com/nuriagrau
 * Nicusor Ceban - https://github.com/nikulet
-* Carlos Galan - https://github.com/camilo-arthuro
+* María Eugenia Torres - https://github.com/Eugenia72
