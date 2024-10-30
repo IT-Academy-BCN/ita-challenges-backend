@@ -190,8 +190,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return ChallengeStatus.STARTED;
         } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
             return ChallengeStatus.EMPTY;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.SENDED.getValue())) {
-            return ChallengeStatus.SENDED;
+        } else if (status.equalsIgnoreCase(ChallengeStatus.SENT.getValue())) {
+            return ChallengeStatus.SENT;
         } else if (status.equalsIgnoreCase(ChallengeStatus.SCORE_PENDING.getValue())) {
             return ChallengeStatus.SCORE_PENDING;
         } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
