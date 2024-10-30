@@ -27,3 +27,4 @@ public class ScoreRequestDto {
     @JsonProperty("solution_text")
     private String solutionText;
 }
+
