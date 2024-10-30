@@ -64,8 +64,17 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
         String status = userSolutionDto.getStatus();
-        ChallengeStatus challengeStatus;
+        ChallengeStatus challengeStatus = determineChallengeStatus(status);
         List<SolutionDocument> solutionDocuments;
+
+        if (challengeStatus == null || challengeStatus.equals(ChallengeStatus.ENDED)) {
+            log.error("POST operation failed due to invalid challenge status parameter");
+            return Mono.error(new IllegalArgumentException("Status not allowed"));
+        }
+
+        if (challengeStatus.equals(ChallengeStatus.EMPTY)) {
+            challengeStatus = ChallengeStatus.STARTED;
+        }
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
@@ -73,12 +82,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
-        challengeStatus = determineChallengeStatus(status);
 
-        if (challengeStatus == null) {
-            log.error("POST operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status not allowed"));
-        }
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
                 .map(savedDocument -> UserSolutionScoreDto.builder()
                         .userId(String.valueOf(savedDocument.getUserId()))
@@ -119,49 +123,66 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
-        return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
-                .flatMap(existingSolution -> {
-                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error(new UnmodifiableSolutionException("Existing solution has status ENDED"));
-                    }
-                    existingSolution.setSolutionDocument(solutionDocuments);
-                    existingSolution.setStatus(challengeStatus);
-                    return userSolutionRepository.save(existingSolution);
-                })
-//TODO: Testing is needed and the whole STATUS issue needs to be managed.
-                .switchIfEmpty(Mono.defer(() -> {
-                    ScoreResponseDto data = (ScoreResponseDto) getDataFromMicroScore(challengeUuid, languageUuid, (solutionDocuments.get(0).getSolutionText()));
-                    UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                            .uuid(UUID.randomUUID())
-                            .userId(userUuid)
-                            .challengeId(challengeUuid)
-                            .languageId(languageUuid)
-                            .status(challengeStatus)
-                            .score(data.getScore())
-                            .errors(data.getErrors())
-                            .solutionDocument(solutionDocuments)
-                            .build();
-                    return userSolutionRepository.save(userSolutionDocument);
-                }));
+       if (challengeStatus == ChallengeStatus.EMPTY) {
+           challengeStatus = ChallengeStatus.STARTED;
+       }
+
+       return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
+               .flatMap(existingSolution -> {
+                   if (existingSolution.getStatus().equals(ChallengeStatus.ENDED) || existingSolution.getStatus().equals(ChallengeStatus.SCORE_PENDING)) {
+                       return Mono.error(new UnmodifiableSolutionException("Cannot modofy solution with status ENDED or SCORE_PENDING"));
+                   }
+                   existingSolution.setSolutionDocument(solutionDocuments);
+                   existingSolution.setStatus(challengeStatus);
+                   return userSolutionRepository.save(existingSolution);
+               })
+
+               .switchIfEmpty(Mono.defer(() -> {
+                   UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                           .uuid(UUID.randomUUID())
+                           .userId(userUuid)
+                           .challengeId(challengeUuid)
+                           .languageId(languageUuid)
+                           .solutionDocument(solutionDocuments)
+                           .build();
+                   if (challengeStatus == ChallengeStatus.SENT) {
+                       userSolutionDocument.setStatus(ChallengeStatus.SCORE_PENDING);
+                       return userSolutionRepository.save(userSolutionDocument)
+                               .thenCompose(savedDocument ->
+                                       getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.get(0).getSolutionText())
+                                               .thenApply(data -> {
+                                                   savedDocument.setStatus(ChallengeStatus.ENDED);
+                                                   savedDocument.setScore(data.getScore());
+                                                   savedDocument.setErrors(data.getErrors());
+                                                   return userSolutionRepository.save(savedDocument).toFuture();
+                                               })
+                               )
+                               .doOnError(e -> {
+                                   log.error("Error updating solution status", e);
+                                   throw new RuntimeException("Error updating solution status", e);
+                               });
+                   } else {
+                       userSolutionDocument.setStatus(challengeStatus);
+                       return userSolutionRepository.save(userSolutionDocument);
+                   }
+               }));
     }
 
-    private Object getDataFromMicroScore (UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
-
+    private CompletableFuture<ScoreResponseDto> getDataFromMicroScore (UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
-        final ScoreResponseDto[] responseDto = new ScoreResponseDto[1];
 
-        zmqClient.sendMessage(request, ScoreResponseDto.class)
-                .thenAccept(response -> {
-                    responseDto[0] = (ScoreResponseDto) response;
+        return zmqClient.sendMessage(request, ScoreResponseDto.class)
+                .thenApply(response -> {
+                    ScoreResponseDto responseDto = (ScoreResponseDto) response;
                     log.info(String.format("[ Response - Score: %d - Errors: %s ]",
-                            responseDto[0].getScore(),
-                            responseDto[0].getErrors()));
+                            responseDto.getScore(),
+                            responseDto.getErrors()));
+                    return responseDto;
                 })
                 .exceptionally(e -> {
                     log.error(e.getMessage());
                     return null;
                 });
-        return responseDto[0];
     }
 
     private ChallengeStatus determineChallengeStatus(String status) {
