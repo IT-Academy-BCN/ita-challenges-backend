@@ -27,4 +27,12 @@ public class UserScoreDto {
     @JsonProperty(value = "solutions", index = 4)
     private List<SolutionDocument> solutions;
 
+    @JsonProperty("status")
+    private String status;
+
+    @JsonProperty("score")
+    private int score;
+
+    @JsonProperty("errors")
+    private String errors;
 }
