@@ -37,18 +37,12 @@ public class ScoreController {
         log.info("** Saludos desde el logger **");
         return "Hello from ITA Score!!!";
     }
+
+    @Operation(summary = "Endpoint to execute the code and calculate the score")
     @PostMapping(value = "/score")
-    public Mono<ResponseEntity<ScoreResponseDto>> createScore(@RequestBody ScoreRequestDto scoreRequestDto) {
-        return Mono.just(scoreRequestDto)
-                .map(req -> {
-                    ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
-                    scoreResponseDto.setUuidChallenge(req.getUuidChallenge());
-                    scoreResponseDto.setUuidLanguage(req.getUuidLanguage());
-                    scoreResponseDto.setSolutionText(req.getSolutionText());
-                    scoreResponseDto.setScore(99);//TODO
-                    scoreResponseDto.setErrors("xxx");//TODO
-                    return ResponseEntity.ok(scoreResponseDto);
-                });
+    public Mono<ResponseEntity<ScoreResponseDto>> createScore(@RequestBody ScoreRequestDto scoreRequest) {
+        return Mono.just(scoreRequest)
+                .map(req -> codeProcessingManager.processCode(req));
     }
 
     @GetMapping("/version")
@@ -57,13 +51,5 @@ public class ScoreController {
         response.put("application_name", appName);
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
-    }
-
-
-    @Operation(summary = "Endpoint to execute the code and calculate the score")
-    @PostMapping(value = "/score")
-    public Mono<ResponseEntity<ScoreResponseDto>> createScore(@RequestBody ScoreRequestDto scoreRequest) {
-        return Mono.just(scoreRequest)
-                .map(req -> codeProcessingManager.processCode(req));
     }
 }

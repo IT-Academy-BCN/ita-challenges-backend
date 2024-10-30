@@ -75,7 +75,7 @@ class ScoreControllerTest {
                 .jsonPath("$.uuid_challenge").isEqualTo(mockScoreResponse.getUuidChallenge().toString())
                 .jsonPath("$.uuid_language").isEqualTo(mockScoreResponse.getUuidLanguage().toString())
                 .jsonPath("$.solution_text").isEqualTo(mockScoreResponse.getSolutionText())
-                .jsonPath("$.score").isEqualTo(mockScoreResponse.getScore());
+                .jsonPath("$.score").isEqualTo(mockScoreResponse.getScore())
                 .jsonPath("$.errors").isEqualTo(mockScoreResponse.getScore());
     }
 }

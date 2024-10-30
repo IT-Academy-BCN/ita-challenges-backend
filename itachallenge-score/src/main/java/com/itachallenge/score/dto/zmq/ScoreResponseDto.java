@@ -29,4 +29,10 @@ public class ScoreResponseDto {
 
     @JsonProperty("errors")
     private String errors;
+
+    @JsonProperty("Compilation message")
+    private String compilationMessage;
+
+    @JsonProperty("Expected result")
+    private String expectedResult;
 }

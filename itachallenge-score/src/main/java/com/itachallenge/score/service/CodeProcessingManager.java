@@ -1,7 +1,7 @@
 package com.itachallenge.score.service;
 
-import com.itachallenge.score.dto.ScoreRequest;
-import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.dto.zmq.ScoreRequestDto;
+import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.exception.DockerExecutionException;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.DockerExecutor;
@@ -31,7 +31,7 @@ public class CodeProcessingManager {
         this.dockerExecutor = dockerExecutor;
     }
 
-    public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
+    public ResponseEntity<ScoreResponseDto> processCode(ScoreRequestDto scoreRequest) {
 
         String sourceCode = scoreRequest.getSolutionText(); //CODE USER FROM JSON
         String[] arguments = {"5", "7"}; // PARAMETER "IN" FROM THE CHALLENGE
@@ -40,7 +40,7 @@ public class CodeProcessingManager {
         ExecutionResult executionResult = filterChain.apply(sourceCode);
 
         if (!executionResult.isSuccess()) {
-            ScoreResponse scoreResponse = new ScoreResponse();
+            ScoreResponseDto scoreResponse = new ScoreResponseDto();
             scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
             scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
             scoreResponse.setSolutionText(scoreRequest.getSolutionText());
@@ -54,7 +54,7 @@ public class CodeProcessingManager {
             try {
                 executionResult = dockerExecutor.execute(sourceCode, arguments);
             } catch (IOException e) {
-                ScoreResponse scoreResponse = new ScoreResponse();
+                ScoreResponseDto scoreResponse = new ScoreResponseDto();
                 scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
                 scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
                 scoreResponse.setSolutionText(scoreRequest.getSolutionText());
@@ -69,7 +69,7 @@ public class CodeProcessingManager {
         }
 
 
-        ScoreResponse scoreResponse = new ScoreResponse();
+        ScoreResponseDto scoreResponse = new ScoreResponseDto();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
