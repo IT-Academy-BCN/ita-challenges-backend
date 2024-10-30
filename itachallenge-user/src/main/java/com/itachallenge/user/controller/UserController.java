@@ -193,4 +193,22 @@ public class UserController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score")
+    @Operation(
+            summary = "Retrieve a user's solution score",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved solution score", content = @Content(schema = @Schema(implementation = UserScoreDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Solution not found", content = @Content(schema = @Schema()))
+            }
+    )
+    public Mono<ResponseEntity<UserScoreDto>> getUserSolutionScore(
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
+            @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
+            @PathVariable("idSolution") @GenericUUIDValid(message = "Invalid UUID for solution") String idSolution) {
+
+        return userScoreService.getSolutionScore(idUser, idChallenge, idSolution)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
 }
