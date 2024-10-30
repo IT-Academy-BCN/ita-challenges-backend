@@ -1,5 +1,6 @@
 package com.itachallenge.user.controller;
 
+import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
@@ -48,7 +49,7 @@ class UserControllerTest {
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/user";
 
     @MockBean
-    IUserSolutionService userSolutionService;
+    private IUserSolutionService userSolutionService;
 
     @BeforeEach
     public void setUp() {
@@ -353,5 +354,77 @@ class UserControllerTest {
                     assertEquals(userId.toString(), solution.getUserId());
                     assertEquals("Sample Solution", solution.getSolutionText());
                 });
+    }
+
+    @DisplayName("GET /solution/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score - Success")
+    @Test
+    void getUserSolutionScore_Success() {
+        // Arrange: Create mock data for UserScoreDto
+        UUID userId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID solutionId = UUID.randomUUID();
+
+        // Create mock SolutionDocument
+        SolutionDocument mockSolutionDocument = SolutionDocument.builder()
+                .uuid(solutionId)
+                .solutionText("Sample solution text")
+                .build();
+
+        // Create a list of solutions
+        List<SolutionDocument> solutionsList = Collections.singletonList(mockSolutionDocument);
+
+        UserScoreDto mockUserScoreDto = UserScoreDto.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageID(languageId)
+                .solutions(solutionsList)
+                .status("COMPLETED")
+                .score(95)
+                .errors(null)
+                .build();
+
+        // Mock the service call
+        when(userSolutionService.getSolutionScore(anyString(), anyString(), anyString()))
+                .thenReturn(Mono.just(mockUserScoreDto));
+
+        // Act & Assert: Call the endpoint and verify response
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score",
+                        userId.toString(), challengeId.toString(), solutionId.toString())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserScoreDto.class)
+                .value(response -> {
+                    assert response != null;
+                    //assert response.getUserId().equals(userId);
+                    //assert response.getChallengeId().equals(challengeId);
+                    assertEquals(userId, response.getUserId());
+                    assertEquals(challengeId, response.getChallengeId());
+                    // Check if the first solution in the list matches the expected solution ID
+                    assertEquals(solutionId, response.getSolutions().get(0).getUuid());
+
+                    assertEquals(languageId, response.getLanguageID());  // Correctly compare with language ID
+
+                    assertEquals("COMPLETED", response.getStatus());
+                    assertEquals(95, response.getScore());
+                    assertNull(response.getErrors());
+                });
+
+    }
+
+    @DisplayName("GET /solution/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score - Not Found")
+    @Test
+    void getUserSolutionScore_NotFound() {
+        // Arrange: Mock service to return an empty Mono (simulating not found)
+        when(userSolutionService.getSolutionScore(anyString(), anyString(), anyString()))
+                .thenReturn(Mono.empty());
+
+        // Act & Assert: Call the endpoint and expect 404 Not Found
+        webTestClient.get()
+                .uri(CONTROLLER_URL + "/solution/user/{idUser}/challenge/{idChallenge}/solution/{idSolution}/score",
+                        UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID())
+                .exchange()
+                .expectStatus().isNotFound();
     }
 }
