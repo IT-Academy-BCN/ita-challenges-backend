@@ -1,0 +1,1704 @@
+[33ma84e6249[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature#579v01[m[33m, [m[1;31morigin/feature#579v02[m[33m, [m[1;31morigin/feature#579v01[m[33m, [m[1;31morigin/feature#579v0[m[33m, [m[1;31morigin/feature#579[m[33m, [m[1;32mfeature#579v0[m[33m, [m[1;32mfeature#579[m[33m)[m Merge branch 'develop' into feature#579
+[33m8e18b6b2[m Document deleted
+[33m91fc26ef[m Update
+[33m1a1eeb28[m Merge branch 'develop' into feature#579
+[33m0cff2d16[m[33m ([m[1;31morigin/feature#533version4[m[33m, [m[1;31morigin/develop[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdevelop[m[33m)[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33m2ee5a453[m Deleting unused file
+[33mb4afe03e[m Merge pull request #620 from IT-Academy-BCN/eugenia
+[33m35f5d0d1[m[33m ([m[1;31morigin/eugenia[m[33m)[m contributors_eugenia
+[33m478b63a7[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-2.0.3-RELEASE[m[33m)[m Upgrading to 2.0.3-RELEASE
+[33m9f43bc18[m Merge branch 'develop' into feature#565
+[33m44da202f[m Updating Xmx to Java Execution at Challenge Micro
+[33md1eeb5de[m Adding new Status
+[33mbcd52236[m final1
+[33m91f97a43[m[33m ([m[1;31morigin/feature#609[m[33m)[m Merge branch 'develop' into feature#568v3
+[33mdcdc1eff[m Falta zmqserver test
+[33m7e9a5858[m .
+[33m6c98b500[m Merge branch 'develop' into feature#579
+[33mca0a3908[m zmqservertest
+[33m02f667a5[m Refactoring UserSolutionServiceImpTest to 1 single class and adding previous erased persistence code
+[33m194ebacd[m Refactoring UserSolutionRepositoryTest in only 1 class BUT detached HEAD
+[33m14e29f20[m Added credentials to access DEV remote platform MONGODB
+[33m4fe8cb6f[m ok
+[33me4fe2fd5[m Merge branch 'develop' into feature#579
+[33m1d0ad095[m Merge pull request #605 from IT-Academy-BCN/NicoDEV
+[33mac139997[m[33m ([m[1;31morigin/NicoDEV[m[33m)[m Update contributors
+[33m2b68bc50[m Merge pull request #604 from IT-Academy-BCN/Augustin
+[33mc18baffb[m[33m ([m[1;31morigin/Augustin[m[33m)[m Resolved merge conflict in contributors.md
+[33mab914c71[m Final details in ZMQServer class
+[33m57a3bdc5[m contributors.md updated
+[33m0b7931c6[m contributors.md updated
+[33mc917b719[m contributors.md updated
+[33m1a3e4a3f[m contributors.md updated
+[33m56bebc5a[m ZmqClient test
+[33m5d83af39[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33mace227e5[m Added DB Mongo to Develop
+[33m4a68e2a8[m ObjectSerializer no static
+[33m5091a0c7[m contributors.md updated
+[33m7cfadbb7[m Merge pull request #602 from IT-Academy-BCN/dev-nuria
+[33mdaa7ab14[m[33m ([m[1;31morigin/dev-nuria[m[33m)[m added Nuria Grau as contributor
+[33m03833ab2[m Repository test done
+[33m025a856c[m[33m ([m[1;31morigin/feature#568v3[m[33m)[m upgrade more test
+[33m7be1a752[m move to the correct package
+[33m7dd1b3ae[m Upgrade testing
+[33m37f83e5a[m Repository test
+[33m62eb92a5[m resolving test to use []arghs how paramether to blackbox
+[33m20a0a3f0[m Cleaning
+[33m121f335d[m added test
+[33md254c8f0[m ok
+[33m25c09fb8[m Old tests are OK again
+[33me251e7ec[m Merge branch 'develop' into feature#579
+[33m9eb4976f[m Doing testing
+[33ma5a0c607[m[33m ([m[1;31morigin/feature#533version1[m[33m)[m Merge branch 'develop' into feature#593
+[33me96017c3[m refactor policy
+[33m13ee8006[m fixing tests
+[33m95df8c5c[m zeromq dependency
+[33m6d22cf15[m Fixing test errors
+[33ma9a3036a[m Refactor application.yml to application-test.yml
+[33mb0e8f056[m Added more parametrized values in DockerExecutor and fix test. Change mds to refactor image used in the sandbox and explain, restrictive.policy
+[33mb416c414[m Refactor test to use openjdk 11 slim
+[33m7526e750[m Added a restrictive.policy, and modify command to apply
+[33m1a2e99b5[m Añadido tambien ejemplo para el postman
+[33m65c8068d[m Añadidos md ES y EN para la explicación del Sandbox y su uso.
+[33m04974657[m Change postman_collection, now had a code to execute
+[33m8328ae92[m Remove useless imports
+[33m04db9c47[m Added Autocloseable clases to ensure process
+[33mbeb1eb14[m Fix try with resources
+[33me781f295[m Added GlobalHandlerException
+[33ma8098f43[m Refactor logs to clean issues in sonar
+[33m07b601a3[m fix
+[33m24ecbd8a[m Added more test and refactor to clean issues
+[33mcfb01de3[m Added path to security hotspot
+[33mde7b9987[m Added more filters and test
+[33m6ad45d8a[m Refactor DockerExecutor
+[33me6bd9e0a[m Fix a image default to test in CodeProcessingManagerTest
+[33ma4ab9d12[m Try fix a image default to test
+[33m7f2a340c[m Use a default image to testcontainers
+[33m7ff1cf3d[m Try to fix
+[33m860abb52[m Zmq config + User Micro service layer methods zmq, testing needed
+[33ma00a3038[m test
+[33mdf5aa2ce[m Merge branch 'refs/heads/develop' into feature#568h
+[33m953ff3c9[m Docker integration done
+[33me5c88d53[m Docker integration done
+[33mf0effad4[m test
+[33mb4ed78fd[m Fixing tests
+[33m5355af9d[m Merge branch 'feature#593' into feature#579
+[33m424dd1f6[m Fixing dtos
+[33m3fa95d21[m Fixing dtos
+[33m5095b77d[m Refactoring Document to dtos
+[33m3dfbb824[m Refactoring: renaming documents to dtos
+[33ma9b06889[m Delete UserSolScoreDto.java
+[33m2ea6f6fe[m changes pre-refactoring service
+[33m8672b49d[m user micro refactoring
+[33m29d4f55a[m wrong service classes deleted
+[33me92aaa9c[m Merge branch 'develop' into feature#579
+[33me41332f9[m Merge pull request #587 from IT-Academy-BCN/imichel
+[33m4fd56ad2[m Merge branch 'develop' into imichel
+[33m5f27767c[m Merge pull request #588 from IT-Academy-BCN/jorgemonzo
+[33maf5a3836[m Add test to exception and upgrade test in codeprecessingmanager
+[33m9b90111c[m Refactor ExecutionResult and testing
+[33m10d475f3[m Refactor JavaSandboxContainer and fix testing
+[33m44312e07[m Last commit
+[33mfdaceed5[m Refactor code to change a wildcard type
+[33m0423e1b5[m Added some test and refactor code to clean issues
+[33m38d1e217[m Try upgrade coverage
+[33mc2942511[m Upgrade coverage testing and refactor some methods
+[33m3c9bba6e[m All testing done
+[33m5e92c8c5[m Cleaning issues sonarLint
+[33m44432942[m Fix test in CodeProcessingManagerTest
+[33m7b6f9499[m Try fix test in CodeProcessingManagerTest
+[33m7f3bc4ba[m Refactor test in ASCIIFilterTest and FilterChainSetupTest
+[33mac06a7a1[m JavaSandboxContainerTest done
+[33mfc49a572[m Refactor chain Filters and Manager
+[33m9111d5dc[m CodeProcessingManagerTest done
+[33me3b5c565[m Added codeProcessingManagerTest, but need 2 test to try filterpass
+[33md6982186[m Aterrizando
+[33m27c4fac8[m Upgrade ScoreResponse
+[33ma9b070ca[m Refactor Code
+[33md718e57d[m Resolver conflicto en contributors.md
+[33m77c1dcc3[m Añadir mi nombre y GitHub a contributors.md
+[33mb0a63d69[m Merge branch 'develop' into feature#579
+[33me4b28a69[m pruebas
+[33me30133ca[m Merge branch 'develop' into imichel
+[33m28f71911[m[33m ([m[1;31morigin/feature#462[m[33m)[m Merge pull request #586 from IT-Academy-BCN/Marine
+[33m167e1936[m Merge pull request #585 from IT-Academy-BCN/Asousa12-patch-1
+[33m858cc042[m Update branch with dev
+[33me6551b38[m Merge branch 'refs/heads/develop' into feature#568h
+[33ma24ec80d[m Merge remote-tracking branch 'origin/feature#533b' into feature#579
+[33me385761f[m Merge remote-tracking branch 'origin/feature#533' into feature#579
+[33mf95cc158[m Fix and add test
+[33m6c4fee03[m Refactor CompilerExecuter
+[33m5f73efde[m Upgrade filter chain
+[33maea0a6a5[m Update filterExecuter
+[33m0f3a2483[m Refactor code to use TestContainer, need set mssg to postman
+[33mc3a78b19[m Refactor code to use TestContainer, need set mssg to postman
+[33m1cfa0ec7[m DELETE JANINO and only USE testContainer
+[33mba32cac8[m Adding my name and github to contributors.md
+[33m5ee13588[m[33m ([m[1;31morigin/feature#568d[m[33m)[m Code executy in test Container
+[33m21b0e86f[m Merge branch 'develop' into Marine
+[33m90a64ef6[m Update contributors.md
+[33m7db39b71[m Update contributors.md
+[33m5491ddca[m Añadir mi nombre y GitHub a contributors.md
+[33m17386160[m Merge pull request #582 from IT-Academy-BCN/JoanCaballero
+[33me7d93284[m contributors.md nom i github afegits
+[33med44ae80[m Revert "Change Autowired to constructor"
+[33m2495cead[m Change Autowired to constructor
+[33md333046a[m Cleaning issues Sonar
+[33mf78902b5[m Testing en el Sandbox
+[33m281eb272[m[33m ([m[1;31morigin/feature#568e[m[33m)[m testing fix
+[33mdebabc38[m Fix
+[33m46ca5c19[m Refactor Sandbox
+[33mf9d79421[m Merge branch 'feature#568d' into feature#568e
+[33mcad8518d[m Change @Autowired for a Inyection Dependency Constructor, for a better and solid code
+[33m443ccce0[m Fix test JavaContainer
+[33m6de16810[m Refactor lowerCamelCase
+[33m399ff923[m Fix issues SonarLint
+[33mb8645b6d[m Added CodeExecutionManagerTest
+[33md9afdb0a[m Delete SimpleValidate Class, better use BitSet to validate ASCII
+[33m7745c3f4[m Fix ScoreControllerTest
+[33m08b52b8b[m Refactor packages sandbox
+[33mc62a27fb[m Fix ScoreContrellerTest
+[33m1a09f1cc[m Clean ScoreController, because the logic now is in Manager
+[33mec3dddb1[m Import changes of branch 568e
+[33m07cd9200[m Fix of chains and springboot injections
+[33m9658092d[m Added comments in JavaContainerFilterTest
+[33m9c22a6e6[m Added comments in JavaContainerFilterTest
+[33m08c61bd9[m Repair UnescapeFilterTest
+[33mc5f100a0[m Merge remote-tracking branch 'origin/feature#568d' into feature#568d
+[33m2835c9e1[m Refactor testing in Filter Package
+[33mcfcd31d8[m Small fix
+[33mf43fd723[m Revert "Squashed commit of the following:"
+[33m74938920[m Squashed commit of the following:
+[33m750092e7[m Refactor: Implement chain of responsibility for code execution with optimized handling of ExecutionResultDto
+[33m09c8cd22[m Refactor: Implement chain of responsibility for code execution with optimized handling of ExecutionResultDto
+[33me192fdcd[m Great refactor and clean Code to Controller Score
+[33m2ed0f8b4[m Adding some test
+[33m946d3fc8[m Added Filters to JavaContainer, Compile, Execute, and refactor Controller
+[33mb81f9e51[m USE OF SANDBOX in Controller + NO DB EN SCORE
+[33mfb83e466[m Comment
+[33m5f9357da[m CustomClassLoader
+[33m6c032656[m alpine java sandbox dockerfile addition
+[33m388ba483[m[33m ([m[1;31morigin/feature#568b[m[33m)[m Fix more issues old code..
+[33m5d4bf277[m Fix more and more issues old code..
+[33m67f47fa0[m Fix more issues old code..
+[33m5f07a3ad[m Fix more issues old code..
+[33m7b9910c0[m Fixing issues to Sonar
+[33mf40168ca[m Fixing issues to Sonar
+[33m4429b323[m Fix Filter Class, added @Bean
+[33m536ff60c[m Added testing
+[33mfd24de3d[m Refactor
+[33m923730c8[m Added a pattern Chain of Responsibility to validate the input
+[33m1ca38762[m Added a pattern Chain of Responsibility to validate the input
+[33m67c5c4f1[m fix issue
+[33mecd01c94[m -Added a 2 options to filter ASCII chars.
+[33m5d22717f[m[33m ([m[1;31morigin/feature#568[m[33m)[m Add TODOLIST
+[33m7519d36b[m Adding a calculateScore method for better legibility
+[33mec27d6e3[m Fixing db script - errors field
+[33m679cfe42[m Adding errors field to solution element at db -collection solutions
+[33m91d1b3bc[m working on methods
+[33m69ed793e[m add field errors to collection solutions
+[33m321d0cf3[m phase 1: testing
+[33mfa19e397[m[33m ([m[1;31morigin/feature#536a[m[33m)[m Merge branch 'develop' into feature#536a
+[33m605c3eec[m Added template in config file (testing)
+[33ma49ee771[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#533b
+[33m3835e1bf[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.16.1[m[33m)[m docker-compose-1.16.1: Increasing memory size of Challenge Micro
+[33m249eb450[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#533b
+[33m2a58ec25[m phase 1: controller & service methods
+[33mf371b4b2[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.15.0[m[33m)[m Trace level included at docker-compose to overwrite tracing level in micros development
+[33mb0c9b6c4[m Fixed indentation
+[33m0224be54[m Resolve conflicts with develop branch & update libraries as develop branch
+[33m7e918dbb[m Fixed CodeExecutionService
+[33m45397db1[m Merge branch 'refs/heads/develop' into feature#533b
+[33m57c1b7aa[m Merge branch 'develop' into feature#536a
+[33m269548be[m[33m ([m[1;31morigin/feature#565[m[33m)[m Merge branch 'develop' into feature#565
+[33m0d2bab63[m Postman updated: latest version of User endpoints
+[33mcbbe3572[m Merge branch 'develop' into feature#535
+[33m2380fe76[m[33m ([m[1;33mtag: [m[1;33mitachallenge-user-2.2.0-RELEASE[m[33m)[m itachallenge-user-2.2.0-RELEASE
+[33m01d7e3c6[m clean branch and merge into develop
+[33md19acd39[m Merge branch 'develop' into feature#552
+[33m91ce3e6b[m Merge branch 'refs/heads/develop' into feature#535
+[33m53f31fcc[m Merge branch 'feature#550' into develop
+[33mb020da0a[m Dockerfile modified for manual build
+[33ma0ccbc2e[m itachallenge-user-2.2.0-RELEASE
+[33mdf440f97[m Fix issue
+[33m6c5875a5[m Fixing testing in UserSolutionServiceImpTest
+[33m4329eef9[m Merge updates in branch feature#535
+[33m3fc0361a[m pull merge develop to feature 535
+[33m29c1de2f[m Added Test to function getChallengeById
+[33m69c057e5[m Added Test to function getChallengeById
+[33m29769407[m Merge branch 'refs/heads/develop' into feature#533b
+[33md0d60182[m Merge branch 'develop' into feature#551
+[33m2efd4dc1[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-2.0.2-RELEASE[m[33m)[m itachallenge-challenge-2.0.2-RELEASE
+[33m4afa3b73[m Merge branch 'develop' into feature#479c
+[33ma8016e4c[m[33m ([m[1;33mtag: [m[1;33mitachallenge-user-2.1.0-RELEASE[m[33m)[m itachallenge-user-2.1.0-RELEASE
+[33mae8e266c[m Merge branch 'develop' into feature#385
+[33mfeaf1106[m Added getAllSolutionsByIdUser endpoint FIX Test#4
+[33m3d91e842[m Added getAllSolutionsByIdUser endpoint FIX Test#3
+[33m9b84f3aa[m Added getAllSolutionsByIdUser endpoint FIX Test#2
+[33m54856082[m phase1 modify controller, service & create repository plus Test repo method
+[33m0cfe5390[m[33m ([m[1;31morigin/feature#533a[m[33m, [m[1;31morigin/feature#533[m[33m)[m Change method addScore from Flux to Mono and insted return SolutionDocument return Integer to get only the score and not all object. Add test in UserControllerTest
+[33mbcfd86fa[m[33m ([m[1;31morigin/feature#565g[m[33m)[m upgraded version from 17 to 21
+[33m50041f48[m Feature #550 finished
+[33m3f91da9c[m Added getAllSolutionsByIdUser endpoint FIX Test
+[33mfbef7b2f[m Added getAllSolutionsByIdUser endpoint
+[33mb1ed2bec[m Merge remote-tracking branch 'origin/feature#533' into feature#533
+[33me33bc83d[m Merge branch 'refs/heads/feature#533' into feature#533a
+[33m5c0b7560[m Add spaces to clear code in UserSolutionServiceImp
+[33m6a177174[m I have done git revert but when I went to the previous commit I saw that it was not correct
+[33m2a485359[m Revert "In UserScoreService I have removed the addScore method and the same for IUserScoreService"
+[33m10472466[m merge develop
+[33m586f16ef[m merge develop
+[33mbf9b1f9c[m Merge branch 'refs/heads/feature#533a' into feature#533
+[33mc9734d9f[m In UserScoreService I have removed the addScore method and the same for IUserScoreService
+[33mb34c3f3b[m Adding GUIDELINES notes about updating working branch with develop
+[33m5da4bfdf[m Merge branch 'develop' into feature#536a
+[33m6f311b29[m Merge branch 'develop' into feature#477-integration
+[33m7be0e291[m Merge branch 'refs/heads/feature#533b' into feature#533a
+[33ma5b2c693[m Merge remote-tracking branch 'origin/feature#533b' into feature#533b
+[33ma24e7a56[m modify method in serviceImp and related files
+[33mb306c965[m delete mqserver in micro score becasue there are problems to compile.
+[33m40d903ee[m delete mqserver in micro score becasue there are problems to compile. Add dependency in build.gradle but don't run, I delete this and build.gradle as initial
+[33m471fea7b[m Merge branch 'refs/heads/develop' into feature#533
+[33mdc296640[m Merge branch 'refs/heads/develop' into feature#533b
+[33m2384b5f5[m Merge branch 'refs/heads/develop' into feature#533a
+[33m280b1c2d[m itachallenge-challenge-2.0.1-RELEASE
+[33m81ea97a6[m Merge branch 'develop' into feature#516
+[33m6b450e75[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#533b
+[33m2ce9ef56[m add test
+[33m88f76ad3[m changes to make testing
+[33mb6017923[m changes to make testing
+[33me4e67a74[m Added GUIDELINES explanation to control CRLF ending lines & encoding UTF-8
+[33ma936dd3c[m Merge branch 'develop' into feature#536a
+[33m4e9ae371[m[33m ([m[1;31morigin/feature#536x[m[33m)[m Janino implementation
+[33mfbecc578[m add class SolutionNotFoundException, testing and ammends of controller
+[33md2849772[m Merge remote-tracking branch 'origin/develop' into feature#533b
+[33mef089b4e[m FEATURE#552
+[33m20433a05[m FEATURE#552
+[33mae7963fa[m FEATURE#552
+[33me5fa2fd1[m FEATURE#552
+[33m7c3a5020[m add user zmq-dtos, SolutionScoreDto & UserSolScoreDto. Modify UserController, Service and Repository
+[33md4941bf1[m Delete itachallenge-user/src/test/java/com/itachallenge/user/controller/UserControllerTest.java
+[33mccf3d83f[m Merge pull request #562 from IT-Academy-BCN/feature#upgradeToJava21
+[33m41757ff7[m Testing again
+[33m20629d54[m Using Gradle instead Wrapper
+[33me79a820e[m Testing pipeline with Gradle 8.8
+[33m849705eb[m Fixing CI pipeline
+[33m71420f43[m Looking for Gradle cache...
+[33ma4431434[m Upgrading Gradle Wrapper to 8.8
+[33m284f69b6[m Upgrading Jacoco to v 0.8.11
+[33m35e90233[m Upgraded to Java 21
+[33me299a370[m add attribbute solutionId in UserScoreDto
+[33m2e7d4525[m Merge branch 'refs/heads/feature#533b' into feature#533
+[33m6661544d[m fix bug, count always shows 0
+[33mb23a7e7a[m starting phase 1
+[33m081085e9[m Merge pull request #554 from IT-Academy-BCN/MarcosContributor
+[33mdd710fa7[m Merge branch 'develop' into MarcosContributor
+[33m1e3da88c[m Merge pull request #553 from IT-Academy-BCN/Update-Contributors.md-Andres-Allegue
+[33mbe421096[m Merge branch 'develop' into Update-Contributors.md-Andres-Allegue
+[33m2d1d5c45[m Merge pull request #548 from IT-Academy-BCN/updateContributors/DaniDD
+[33mfb711bb5[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33m165953fe[m[33m ([m[1;33mtag: [m[1;33mitachallenge-all-2.0.0-RELEASE[m[33m)[m Upgraded to Java 21 & Gradle 8.8
+[33m69a339d3[m added myself to contributors
+[33m756070c9[m Update contributors.md to add new contributor's name
+[33mfca000bd[m revertir el atributo como estabasolo uuid en solutionDocument
+[33m0003f372[m Added to contributors.md following the guidelines
+[33m440b75c0[m Add idSolution on ScoreRequestDto
+[33md8d62e5d[m En el solution document el id_solution estaba puesto solo como uuid por no ser descriptivo de a que pertencia.
+[33m19c35432[m[33m ([m[1;31morigin/feature#536n[m[33m)[m Merge branch 'Feature#305b' into feature#536a
+[33me50ef578[m Add ZMQServer, helper, ZMQdtos
+[33m72998bb9[m Add ZMQClient
+[33made03fb1[m Modified ChallengeServiceImpTest getAllChallenges_ChallengeExist_ChallengesReturned(=
+[33m47ae261c[m merge
+[33maf3e0664[m testing
+[33m982ae01d[m Merge pull request #538 from IT-Academy-BCN/germanmedina
+[33m7eefea22[m[33m ([m[1;31morigin/germanmedina[m[33m)[m Merge branch 'develop' into germanmedina
+[33ma65ecd7b[m Merge branch 'refs/heads/develop' into feature#479c
+[33m033d9a61[m Modified integration test
+[33mda653219[m Merge pull request #537 from IT-Academy-BCN/Montse
+[33m5e05d997[m Adding my name to contributors
+[33mf597a579[m[33m ([m[1;31morigin/Montse[m[33m)[m Update contributors.md
+[33mc6585f69[m merge
+[33m6edfd546[m update
+[33mcc4e9db5[m Added script solutions.json to load test data to user micro, user solutions sended
+[33mea4d57d2[m Modified method getAllChallendes in ChallengeServiceImp
+[33m6bae8e76[m modified repository and method with endpoint /challenges
+[33me32121a9[m Merge branch 'feature#479c' of github.com:IT-Academy-BCN/ita-challenges-backend into feature#479c
+[33mc575d33a[m Fixing & loading parameters to count query
+[33m60b20a6c[m Merge branch 'develop' into feature#479c
+[33m776c2645[m Merge branch 'refs/heads/develop' into feature#479c
+[33mad5f2e5a[m update
+[33mb2db758e[m modified test ChallengeServiceImpTest
+[33mc61becaa[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33m52d1acd6[m Added some explanations about tasks levels
+[33macb4f8d1[m Merge branch 'develop' into feature#479c
+[33mc212205c[m Merge pull request #532 from IT-Academy-BCN/develop_ezequiel
+[33mf1691686[m Added own name/github user
+[33mddf48aac[m Added own name/github
+[33m91612ab2[m Merge branch 'develop' into feature#479c
+[33m672eaa95[m Merge pull request #529 from IT-Academy-BCN/develop_enrique
+[33mab1db48e[m modified test to match changes from flux to mono in endpoint challenges
+[33mcc07b129[m merge
+[33m977a5cbf[m first version
+[33me76655ed[m[33m ([m[1;31morigin/develop_enrique[m[33m)[m added to contributors
+[33m2672c427[m Merge branch 'develop' into develop_enrique
+[33m14eb6146[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33m3cac248c[m Added testing notes to GUIDELINES
+[33mff9d085e[m Add GenericResultDTO to endpoint /challenges
+[33m70e088a0[m Merge pull request #528 from IT-Academy-BCN/AinohaBarcia-patch-1
+[33m12a9582b[m[33m ([m[1;31morigin/AinohaBarcia-patch-1[m[33m)[m Update GUIDELINES_CA.md
+[33md06c7a7a[m Added section Working with git to Guidelines
+[33m93bbe2e2[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-1.7.0-RELEASE[m[33m)[m itachallenge-challenge-1.7.0-RELEASE
+[33m60f195c8[m[33m ([m[1;31morigin/feature#519[m[33m)[m Update field note to notes
+[33m1f9fa03f[m Merge branch 'develop' into feature#519
+[33m637aca20[m Update "note" to "notes" in DetailDocument
+[33m28d37f8a[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33m789cc2ac[m Merge pull request #525 from IT-Academy-BCN/Nuria-Fernandez
+[33m617ba8a5[m Update contributors.md
+[33m7e705378[m Added to contributor
+[33m4032d94d[m faltaba una llave
+[33md3207fd3[m Merge branch 'develop' into feature#519
+[33m26d631f9[m merging version changes
+[33m6fb090e2[m Added exmples and notes to challenges.json
+[33ma8cc520e[m Merge remote-tracking branch 'origin/feature#519' into feature#519
+[33mbfed5fdd[m Merge branch 'feature#519' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#519
+[33m40337402[m Update challenges.json
+[33mcea9a97e[m Merge remote-tracking branch 'origin/feature#519' into feature#519
+[33m7c532cf0[m Merge branch 'feature#519' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#519
+[33m5ce28fc6[m Update challenges.json
+[33m279d2cdc[m Merge branch 'feature#519' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#519
+[33m04b91379[m Merge remote-tracking branch 'origin/feature#519' into feature#519
+[33m25a4641d[m correction of challenge scripts
+[33m13279e36[m Merge remote-tracking branch 'origin/feature#519' into feature#519
+[33mefd9bcf2[m Correccion de retos Christian
+[33m7672d085[m Commit 2
+[33m9655fb42[m Update challenges.json
+[33m98e55bb6[m Merge branch 'feature#519' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#519
+[33m9022419f[m Update challenges.json
+[33m390fb0d5[m Merge remote-tracking branch 'origin/feature#519' into feature#519
+[33m064faca1[m Commit 1
+[33m5f51fb1d[m correction of challenge scripts
+[33m6d1ddb17[m 3 ulitmos challenges
+[33mf38dfec0[m Correccion de scripts
+[33ma0a02a7b[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-1.6.0-RELEASE[m[33m)[m itachallenge-challenge-1.6.0-RELEASE
+[33m620085c8[m Added query in findByLevelAndLanguages_IdLanguage and findByLanguages_IdLanguage
+[33m08f1850d[m Merge branch 'feature#474' into develop
+[33m85fc21c5[m Fixing merge errors
+[33m9ef2501a[m Merge branch 'develop' into feature#497
+[33m29d79e50[m Merge branch 'develop' into feauture#513
+[33m5aaccd2a[m Added tiny format changes
+[33me7f84d58[m[33m ([m[1;31morigin/Feature#477[m[33m)[m Merge branch 'develop' into Feature#477
+[33m5b6d3688[m Merge branch 'feature#370b' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#370b
+[33m7ad1df61[m Merge branch 'develop' into feature#370b
+[33me57c00b3[m Correcting required programs in the readme and guidelines
+[33m8106bf37[m Update README.md
+[33mffadb5a5[m Update README.md
+[33m43569bbc[m Merge branch 'feature#370b' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#370b
+[33mdc4652b1[m Update README.md
+[33m4294575b[m License modified table of contents
+[33m278c9da8[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33m09fe5be9[m License added to table of contents
+[33m24a20199[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33mf84e0b3b[m update usage information and links in the working flow
+[33m81fbd30a[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33m3516f0d8[m refactored discover bug FAQ and license link
+[33mbf18b914[m contact information
+[33m40e1989f[m Merge branch 'develop' into feauture#513
+[33me4b36660[m readme link contributors
+[33m159684ae[m Update ChallengeServiceImpTest.java
+[33me5c8acb5[m Update ChallengeControllerTest.java
+[33m51fa90ec[m Update ChallengeController.java
+[33m36cb0488[m Update ChallengeServiceImp.java
+[33m024000c9[m Update IChallengeService.java
+[33mb52f3856[m added faq to setup project
+[33m19073c64[m readme link contributors
+[33mbb6419f4[m "Added commands for cmd and PowerShell, Linux, etc.
+[33me0d4bf52[m[33m ([m[1;31morigin/feature#512[m[33m)[m Added latest version of Postman requests
+[33ma9e3d3b4[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33m2f6c68be[m added 2 FAQ's
+[33m0e579765[m readme link contributors
+[33mffde68a5[m Update README.md
+[33ma5b377d5[m aplicando correcciones de mergeo
+[33m66978bcb[m Fixed commands
+[33m1f28a449[m Changed commands for gradle wrapper
+[33ma22bcea6[m Merge branch 'develop' into feature#370b
+[33m4b63d46a[m Update README.md
+[33m79d25ce1[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-1.5.0-RELEASE[m[33m)[m itachallenges-challenge 1.5.0-RELEASE
+[33mf792b3d8[m Update README.md
+[33ma8546d64[m Merge branch 'feature#370b' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#370b
+[33mbcc94d90[m Update README.md
+[33m9e776a6f[m Update GUIDELINES.md
+[33mdc8da7d0[m Fixed command format
+[33me232c051[m Indexed the procedure points
+[33mc25561ee[m Fixed link to guidelines
+[33mbf82ac09[m Extended Procedure in README.md
+[33m80451dc2[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33mf4eb4469[m Merge branch 'feature#370b' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#370b
+[33m7415ac21[m Update README.md
+[33m993b5a8a[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33m800c6324[m license added to README.md
+[33m0199b247[m readme first contributors
+[33m86c4c909[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33mfe55b74b[m Merge branch 'develop' into feature#370b
+[33m60acd981[m Merge branch 'develop' into feature#370b
+[33mfc606def[m Merge branch 'develop' into oriolContributorMD
+[33mfcd1f3b1[m itachallenge-challenge-1.4.0-RELEASE
+[33mddcf4226[m Added Required programs in README.md
+[33m7fe05d64[m Merge remote-tracking branch 'origin/feature#370b' into feature#370b
+[33m9251a7a0[m Merge branch 'develop' into feature#397
+[33mabc7c158[m Merge branch 'develop' of github.com:IT-Academy-BCN/ita-challenges-backend into develop
+[33m219955a5[m Modifying dates on challenges.json
+[33m9a3f9501[m merge
+[33m9b3236d3[m usage
+[33m8659189a[m Merge branch 'develop' into feature#370b
+[33me1e19982[m readme first contributors
+[33mdc49246c[m Fixed Installation
+[33m8bba5d5f[m resolviendo mergeo
+[33m9dd8ca66[m Merge pull request #509 from IT-Academy-BCN/AinohaBarcia
+[33me7b4f86a[m Add Installation info in README.md
+[33ma069927f[m Update Description for README.md
+[33m9a8b54bb[m resolviendo mergeo
+[33mbedd5103[m adding new ontributor
+[33m7f81a961[m contributors actualized
+[33m13b98519[m fix tests findAllByUuidNotNullExcludingTestingValues
+[33m68359990[m query
+[33m4ced9b80[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.14.4[m[33m)[m docker-compose-2.15.0
+[33m8f555a23[m Merge branch 'develop' into feature#385
+[33m3d8309d1[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.14.2[m[33m)[m docker-compose-1.14.2
+[33m0e7b8c84[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.14.1[m[33m)[m docker-compose-1.14.1
+[33mfd51efe7[m[33m ([m[1;33mtag: [m[1;33mitachallenge-document-1.0.1-RELEASE[m[33m, [m[1;33mtag: [m[1;33mdocker-compose-1.14.0[m[33m)[m Externalized redirections config values at Document micro
+[33m0792a066[m Merge branch 'develop' into feature#397
+[33m54aad16a[m Merge branch 'develop' into feature#385
+[33mf7871456[m Added environments to Postman
+[33m92dc52c6[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.13.2[m[33m)[m Adding custom configuration to access user db
+[33m694f5a45[m Merge branch 'develop' into feature#385
+[33mc49a7c7a[m Merge branch 'develop' into feature#397
+[33m8c218e50[m Update ChallengeServiceImpTest.java
+[33m732d26f1[m[33m ([m[1;33mtag: [m[1;33mitachallenge-user-1.0.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mitachallenge-score-1.0.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mitachallenge-document-1.0.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mitachallenge-auth-1.0.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mdocker-compose-1.13.0[m[33m)[m Uploaded several versions of all micros
+[33m35285338[m determineChallengeStatus method reversed and refactored string to getValue
+[33m324fda63[m try to change determine ChallengeStatus for properly receive empty status
+[33m0518d336[m ajustes sonarlint
+[33med22cd35[m actualizadas las clases de test para que se ajuste el version al application.yml de los test
+[33ma291dd85[m Merge branch 'develop' into feature#474
+[33m0116e6f1[m Ending automatic semi-deployment
+[33mcf9af7e0[m Versioning Challenge micro
+[33m4579c5ac[m Upgrading generation of Docker image
+[33m9f309496[m Renaming task
+[33mac028172[m Updating configs at workflow
+[33m6c0b0b04[m 1.0.5-RELEASE
+[33m2a19dfd8[m itachallenge-mock-1.0.5-RELEASE
+[33m9fde87ac[m Improving pipelines of deployment
+[33m1dfb1967[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-1.3.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mdocker-compose-1.0.9[m[33m)[m Ending automatic semi-deployment
+[33m587a20cb[m Update ChallengeServiceImpTest.java
+[33m02206519[m adapt GlobalExceptionHandlerTest.java
+[33mcbf40560[m added marc sanchez moreno to contributors.md
+[33m59205bf5[m Versioning Challenge micro
+[33m511c8921[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#477
+[33mef985a6a[m[33m ([m[1;31morigin/workflow[m[33m)[m Upgrading generation of Docker image
+[33m578e3a11[m changes the not found status case for 200 OK
+[33m2224e2e0[m Update ChallengeServiceImpTest.java
+[33m24b6dd7f[m Update ChallengeControllerTest.java
+[33m93ed6cc8[m Update ChallengeServiceImp.java
+[33m315617ed[m Merge branch 'develop' into workflow
+[33m62a953fe[m añadido application.yml a test de document y getVersion refactorizado a ResponseEntity
+[33m5be628d4[m Merge branch 'develop' into feature#397
+[33m213a7d24[m changed string literals in determineChallengeStatus
+[33m539da39c[m Merge branch 'develop' into feature#385
+[33m1d95fa09[m enhance getChallengeUsersPercentage sequence of method; uses flux of list and flux error to canalize exception
+[33m25a55f63[m Postman Collection renewed
+[33m4c4cedba[m Added pageable parameters output
+[33mf6a440a5[m increment test coverage by testing new exception
+[33mcfc86732[m Fixing script db
+[33mc6f2cde6[m develops the case to handle ChallengeNotFound
+[33mf556625c[m added to contributors.md and fixed bug with null status determineChallengeStatus
+[33m0dbc9f33[m mejorando covertura de test
+[33mb27297a0[m Merge branch 'feature#321' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#321
+[33mf790fe5d[m mejorando test para pasar covertura y solucionando isues sonarcloud
+[33ma505b1fd[m Merge branch 'develop' into feature#321
+[33m210c1758[m mergeado a develop
+[33m91ddab44[m test corregidos
+[33m552a9c87[m Refactor getChallengesByLanguageOrDifficulty()
+[33m9f029f8a[m Update ChallengeServiceImpTest.java
+[33m9918171c[m Merge branch 'develop' into feature#397
+[33m4323041d[m Update ChallengeControllerTest.java
+[33mdc3b81c6[m Update ChallengeServiceImp.java
+[33me978c6d3[m Update ChallengeController.java
+[33m68557cee[m Merge branch 'develop' into feature#385
+[33mefa6c3d5[m Update GlobalExceptionHandlerTest.java
+[33m489359a4[m Update GlobalExceptionHandler.java
+[33m66ece3a3[m Create NotFoundException.java
+[33md620ec72[m added to contributors.md and fixed bug determineChallangeStatus
+[33m756a5005[m Merge branch 'develop' into gerard-branch-contributor
+[33m72b4a279[m Gerard added to contributors.md
+[33mebdb4a63[m[33m ([m[1;31morigin/feature[m[33m)[m Merge pull request #480 from IT-Academy-BCN/MarcSantasusana
+[33m295c84b3[m eliminacion de clase de test para adecuacion a develop
+[33me7baa454[m mergeo finalizado
+[33m77b9f0fa[m[33m ([m[1;31morigin/MarcSantasusana[m[33m)[m add name to contributors.md
+[33m93f867f0[m resolviendo conflictos de mergeo
+[33m56dd5003[m follows the action process here: https://github.com/IT-Academy-BCN/ita-challenges-backend/issues/385#issuecomment-2069484974
+[33mcc44483d[m Merge branch 'develop' into feature#385
+[33m530d70c8[m Added Postman Collection revised
+[33mf401b816[m[33m ([m[1;31morigin/feature#384[m[33m)[m Merge branch 'develop' into feature#384
+[33m3922775b[m Fixed testFindByStatus to fit new data
+[33m5ef22033[m Fixed typo in testing data for micro user (user_score.json)
+[33m3a3502b1[m Merge branch 'develop' into feature#451
+[33ma975ec22[m Merge branch 'feature#466' into develop
+[33m020cb76f[m Merge branch 'develop' into feature#384
+[33mefcab3b7[m[33m ([m[1;31morigin/feature#451[m[33m)[m Merge branch 'develop' into feature#451
+[33mf73451db[m Fixing URLs at Mock Controller
+[33mb6b0764c[m Merge branch 'develop' into feature#437
+[33m27fd26b0[m Filtrado funciona, se realizaron ajustes en getChallengesByLanguageOrDifficulty tanto del controlador como del servicio y los test asociados
+[33me9a30a37[m Merge branch 'develop' into feature#397
+[33mfb929179[m[33m ([m[1;31morigin/feature#450[m[33m)[m Merge branch 'develop' into feature#450
+[33m0743f9e0[m Se ajusto validación de campo status permitiendo solo 'EMPTY', 'STARTED', o 'ENDED'. se establecio bookmarked en true para registros con status 'EMPTY' para el archivo user_score.json
+[33m7e61edb2[m Merge branch 'develop' into feature#384
+[33m446079dc[m Merge branch 'develop' into feature#451
+[33mff079ed3[m Added some changes to test challenge results
+[33mf25aff9b[m Merge branch 'develop' into feature#384
+[33mc016d5a5[m Merge branch 'develop' into feature#451
+[33m421e6a70[m Added main sections to REadme, its necessary improve it
+[33mede23f67[m Adding new sections to README.md
+[33m8ac1016d[m Tuning Readme
+[33m550a4019[m Renaming task
+[33m36ed8bc4[m[33m ([m[1;31morigin/feature#437[m[33m)[m Reviewed DocumentController
+[33m08886c5d[m Merge branch 'develop' into feature#437
+[33mbc4229f6[m Merge remote-tracking branch 'origin/feature#437' into feature#437
+[33mabca6b66[m Return to last PR
+[33m41e3523d[m Merge branch 'develop' into workflow
+[33m1c002dae[m resolviendo mergeo de contribuitors
+[33ma816e759[m Cambio de nombre de atributo id_example y example_text
+[33m8401bd39[m[33m ([m[1;31morigin/feature#536[m[33m, [m[1;31morigin/Feature#305b[m[33m)[m Merge branch 'develop' into Feature#305b
+[33md4da686d[m Merge pull request #467 from IT-Academy-BCN/branch-christian
+[33m8c619d21[m Update CodeExecutionService.java
+[33m8ff4c712[m Reviewed DocumentController
+[33mb5022380[m Reviewed DocumentController
+[33m4b55f869[m Merge branch 'develop' into feature#437
+[33md0604845[m Added Christian user to Contributor file
+[33m8b014c5b[m Merge branch 'develop' into Feature#305b
+[33m8c13af2c[m Merge branch 'develop' into feature#451
+[33m9f58ab8b[m Merge branch 'develop' into feature#384
+[33mef7c05ea[m Merge branch 'develop' into feature#385
+[33m60c7d1b1[m includes the getChallengeUsersPercentage method refactor to avoid using block() method on its private invocations on service level; adjust wording on its interface declaration
+[33mfe00b3c8[m updates ServiceChallengeStatistics interface and UserControllerTest after updating latest develop branch; all test passed
+[33m0e9666b9[m Merge branch 'develop' into Feature#305b
+[33m8178d958[m refactorizando ChallengeDocumentToDtoConverterTest
+[33m341cb382[m Merge remote-tracking branch 'origin/develop' into feature#385
+[33m663f2353[m test method name refactor
+[33mdb721a3b[m refactor of getChallengeUserPercentageTest() on UserControllerTest and getChallengeUsersPercentageTest() on ServiceChallengeStatisticsTest
+[33m805b786e[m Adjusted case "challenge id not found" to return Bad Request, in order to maintain internal consistency within the micro. Should be refactored across the controller.
+[33mfbc24624[m[33m ([m[1;31morigin/juanmaMesa[m[33m)[m merges with branch feature#recoverDocumentTest for compatibility proposes; it restablished CorsConfig.java files, ports configuration for localhost test, and testLogging configuration on build gradle file; build and automatic and manual swagger navegation test passed
+[33mfd208fcf[m Merge branch 'feature#recoverDocumentTests' into feature#392
+[33mba9011e2[m Se han agregado 21 elementos más de datos de pruebas en el archivo user_score.json
+[33md0fe344b[m Test for ChallengeServiceImp de getTestingParamsByChallengeIdAndLanguageId_validId_ChallengeFound()
+[33m72384c0e[m Review of SocreControllerTest and UserControllerTest
+[33md76ea600[m Review of AuthControllerTest and ChallengeControllerTest
+[33m4a8b64af[m Reviewed UserControllerTest
+[33mb4538e8d[m Added test GET /version endpoint to UserControllerTest
+[33mfecccf7f[m Added GET /version endpoint to DocumentController and test GET /version endpoint to ScoreControllerTest
+[33mc578f188[m Added test GET /version endpoint to AuthControllerTest.java
+[33m2e4f4324[m[33m ([m[1;31morigin/feature#recoverDocumentTests[m[33m)[m Updating Document Micro to recover old state
+[33m4cc6fcb7[m TestingValueDtoTest añadido
+[33m9bac3590[m Added test GET /version endpoint to ChallengeControllerTest.java
+[33mc4392e78[m Modified tests according to the changes
+[33m3f236fb0[m Modified ChallengeSarviceImp.getChallengeById to return error on id not found
+[33m59effd5c[m Refactored ChallengeController.getChallengeById to return Mono
+[33mcb2bf246[m Added GET /version endpoint to UserController.
+[33mfed434dc[m Added GET /version endpoint to ScoreController.
+[33m4fd66805[m Resuelto conflictos en el merge de ChallengeServiceImp.java
+[33mece46aa0[m Added GET /version endpoint to MockController.
+[33m1cdb839f[m añadido nombre a contribuitors, refactorizados los test,añadido test en ChallengeTest y ChallengeServiceImpTest
+[33md40f9d04[m Merge branch 'develop' into feature#321
+[33m9526b2eb[m Added GET /version endpoint to AuthController.
+[33m7a4eef87[m Added GET /version endpoint to AuthController.
+[33me1c48c77[m Added GET /version endpoint to ChallengeController.
+[33m7ca99199[m Ernesto added to contributors.md
+[33m6ab4d3e6[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-1.2.0-RELEASE[m[33m)[m itachallenge-challenge-1.2.0-RELEASE
+[33me179a614[m Merge branch 'develop' into Feature#305b
+[33mfecdc7c0[m Merge branch 'develop' into feature#384
+[33ma57f452f[m Added Manel to contributors.md
+[33m036750ff[m Merge branch 'develop' into workflow
+[33mcc7cd397[m Merged develop into feature#384
+[33m2c0cd201[m Merged feature#381 by Luisa Sans
+[33m5ef47de2[m Moved tests from UserDocumentControllerTest (deleted) to UserControllerTest
+[33m17d911e2[m Merge branch 'feature#386' into develop
+[33m59aaa7eb[m Modified error messages to fit specifications
+[33m8613c909[m Fixed error response body on IllegalArgumentException and UnmodifiableSolutionException as a DTO instead of plain String
+[33m6087f560[m Changed HTTP status to 409 CONFLICT on POST failure due to challenge status already being ENDED
+[33mcea45e14[m Created custom exception to handle POST failure due to challenge status already being ENDED
+[33mf272b155[m Added logging to service method
+[33me7f1e926[m Merge remote-tracking branch 'origin/feature#384' into feature#384
+[33m08f7c694[m Cleaned comments and unused imports
+[33ma30cdd78[m Cleaned comments and unused imports
+[33mcc35b689[m Deleted redundant test class
+[33mf6890e0e[m Changed HTTP response on success from 202 to 200
+[33mca581aca[m Updated Swagger documentation
+[33ma942a8e9[m Removed unrelated changes
+[33m2e081265[m Completed and polished tests
+[33mc9dee6dc[m Improved exception handling
+[33m185ca5b1[m Updated JSON documents to meet the new Uppercase constraint for field 'status'
+[33m85f373bd[m Updated addSolution to pass tests
+[33m31be6efc[m Updated Service tests
+[33m8952da32[m Updated Controller tests
+[33m096bb836[m adds exclusively the code related to feature 385 in a new branch based latest develop branch. Test, build, and manual swagger test running and passed as expected; more info: https://github.com/IT-Academy-BCN/ita-challenges-backend/issues/385#issuecomment-2003599911
+[33mf00d339a[m Implemented addSolution and auxiliary methods
+[33m9d6063d7[m resolviendo conflictos en ChallengeController
+[33mc586e6f5[m Merge from develop, branch updated
+[33maafccf47[m Simplified method parameters to accept DTO
+[33m82059235[m Update GlobalExceptionHandlerTest.java
+[33m074da510[m Assigned String values to enum ChallengeStatus
+[33m67f10658[m Update contributors.md
+[33m070d0d4f[m add ResourceNotFoundException
+[33m64b3dc48[m Update ChallengeControllerTest.java
+[33md5f950b3[m Merge branch 'develop' into feature#397
+[33m76c21347[m Filtrado por parámetros IdLanguages y level corregido
+[33meeb1fa2f[m add test removeResourcesByUuid_InvalidFormatId_ReturnsBadUUIDException()
+[33m32a0a492[m Refactor removeResourcesByUuid to delete .block()
+[33ma79ff458[m Updating configs at workflow
+[33m1a59d12a[m Update @ApiResponse Swagger to 200 when ID not found
+[33mf3e6bd11[m 1.0.5-RELEASE
+[33m2028b0ef[m itachallenge-mock-1.0.5-RELEASE
+[33m951d0f98[m Improving pipelines of deployment
+[33m67f21106[m Undid unnecessary changes to configuration files
+[33m9bd821bd[m Update ChallengeController.java
+[33m08a56789[m cleans up extra code that is out of the scope of feature required: code related to challengeUserPercentageStatistic new endpoint implementation on controller and service layers, and its relative tests was removed; automation, build and manual test runs success after changes
+[33mb172dc38[m Cleaned unused imports
+[33m0f8ec4a1[m Removed out of scope changes in IUserSolutionService
+[33m34601389[m Removed out of scope changes in UserSolutionScoreTest
+[33me508ed2d[m Removed out of scope changes in ZMQServer
+[33m01aa0617[m Removed out of scope changes in UserControllerTest
+[33m3a777748[m Update languageDtoTest and challengeDtoTest
+[33m9c6da9b4[m Revert "Merge branch 'develop' into feature#381"
+[33ma3309833[m Merge branch 'develop' into feature#381
+[33m0f13bb6c[m Merge branch 'develop' into Feature#392
+[33m8672b3ab[m Adding README
+[33md95ac40f[m changes 'error' to 'message' for consistency; updates ApiResponse annotation metadata for documentation
+[33m346542b0[m Prototype: show microservice version
+[33m82cee377[m updates contributors.md after first PR
+[33mc307e70d[m Resolve conflicts in feature#384
+[33m17477a29[m create processSolution modif. addSolution create //saveSolution
+[33m80274776[m add apiName to title
+[33m66993289[m add String normalizeLineEndings(String json) to rightSerializationTest
+[33m18ff84a7[m rectificacion en .gitattributes y docker-compose.dev.yml y desactivar un test corregido en feature#385
+[33m3ce8e37f[m Corrigiendo el mensaje de salida de un String a  JSON al invocar /itachallenge/api/v1/challenge/challenges/{idChallenge}
+[33m9213c927[m[33m ([m[1;31morigin/feature#386-reverted[m[33m)[m Updated tests
+[33m53e9c7ed[m Changed JPA repo naming and implicitly states boolean for bookmarked
+[33m58dd7e21[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33me75bfdd6[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#381
+[33m3409e0f7[m Added testing methods and refactored Delete request
+[33m765f2b5e[m Merge branch 'develop' into Feature#392
+[33mff8769e6[m Eliminate test for externalDocs
+[33mc8e6b76b[m Added branch #321featureTestParams commits
+[33m54659677[m Reused and updated service method for patch request
+[33m48f9d107[m Merge branch 'feature#412' into develop
+[33m7d3ee003[m añadiendo nombre y usuario al archivo contributors
+[33m2e852de8[m Merge pull request #428 from IT-Academy-BCN/Alicia
+[33m08778367[m Modif. swith case for apidocs/apiName.
+[33m904269d3[m add DefaultApi class
+[33m6b2dafa1[m Eliminate externalDocs.
+[33me7f2b7c1[m Added patchResourcesById to challenge controller
+[33m35a2eab3[m Added Alicia to contributors.md
+[33md38b5a75[m Centralized documentation for ITA Challenges APIs.
+[33md290f8c8[m Applied DirtiesContext annotation to every RepoTest class
+[33m07b1a2fd[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#394
+[33me930ef49[m Diagnosed the conflicting line and possible solition
+[33m818d7ff0[m Merge branch 'Feature#392' of https://github.com/IT-Academy-BCN/ita-challenges-backend into Feature#392
+[33m51558817[m Merge branch 'develop' into Feature#392
+[33me993ba2f[m Merge branch 'workflow' into develop
+[33mee593fb6[m Modifying nginx container config
+[33mc5b301cd[m Merge branch 'develop' into Feature#392
+[33ma6c07ee9[m Segundo commit: circuit breaker para que servicio document sea tolerante a posibles fallos en los microservicios
+[33mda44463a[m Primer commit: 4 servicios auth, challenge, score, user se muestran en document si previamente se los levanta
+[33mb958f9eb[m Renaming Guidelines setting Locale standard
+[33m91a0a336[m Merge pull request #425 from IT-Academy-BCN/Gabriela
+[33mf045e143[m New CI
+[33m6111698a[m Loading vars....
+[33me76877d4[m Starting new pipeline...
+[33m1301dcf6[m Añadiendo mi nombre Gabriela a contributors.md
+[33m6a995fd4[m Uploading new image....
+[33m1944437c[m Merge branch 'develop' into workflow
+[33mec58e174[m ReAdded Mockito eq() due to conflicts
+[33m2bc23b5e[m Removed Mockito eq()
+[33m680db8f6[m Added test getChallengesByLanguageAndDifficulty in service layer
+[33mdbc92f03[m Controller test for getChallengesByLanguageAndDifficulty working
+[33mac980458[m Centralización de Swagger Documents fase1 test
+[33m5089c9f7[m Centralización de Swagger Documents
+[33m1f2f7708[m Centralización de Swagger Documents
+[33m5128e99f[m Response in Json now, modified test accordingly
+[33ma9fe0888[m Modified tests
+[33me5647f86[m Implemented offset and limit and resolved bug on method
+[33m5cbdf1c3[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#397
+[33mb96da89e[m Deleted unnecessary userDocumentControllerTest and centralized tests
+[33m5a2e60bf[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#385
+[33m7a909bdb[m Fixing test
+[33m7583755d[m Upgrading docker-compose
+[33m5db1ef0b[m 1st Docker version Nginx Front
+[33m4a7e063a[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33mb34d40e6[m Merge branch 'feature#386' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33mabcb6500[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.0.6[m[33m)[m Upgrading docker-compose
+[33mb9a0ec46[m 1st Docker version Nginx Front
+[33m5e085127[m Added some TODOs in test methods that were calling actual service Layer and added MockBean
+[33m94c59861[m Refactorized service method ChallengeByDifficultyandLanguage
+[33m3e764fc8[m Creación de endpoint GET /itachallenge/api/v1/user/statistics/percent/{idChallenge} + Service + Repository + test
+[33m0eb420c2[m Development: avoiding testing prototype ZMQ
+[33m0b690b24[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#385
+[33mc1cb4193[m adding tests
+[33m80085a73[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33md0ab047f[m return status OK if challange not found
+[33m3ac14487[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#397
+[33m2664bca5[m Some config changes
+[33m88191d0f[m resolved conflict2
+[33m492b7f01[m Deleting files
+[33m8aa10abe[m resolved conflict
+[33m14b815ef[m Merge branch 'feature#398' into develop
+[33m1673621e[m Saving files before refreshing line endings
+[33m18e23e0f[m Merge pull request #407 from IT-Academy-BCN/#391bugidexception
+[33md4d76246[m Merge branch 'develop' into feature#372
+[33m0430316f[m resolving errores
+[33me03db277[m Merge branch 'develop' into feature#395
+[33mdd44f7f7[m checked tests, ok
+[33ma5bdf1f1[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#395
+[33m34a142ba[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33mb526c21e[m peleando con tests
+[33m7908881c[m peleando con tests
+[33mf3b57da4[m Merge branch 'develop' into feature#398
+[33mb8bc9c1a[m adding tests
+[33mebc02489[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#384
+[33m33adca19[m Merge remote-tracking branch 'origin/develop' into #391bugidexception
+[33mbb30100e[m Merge remote-tracking branch 'origin/develop' into feature19#FINAL
+[33maab7d9f4[m Fixing tests: Added ZeroMQ beans to broken tests
+[33ma8b9ae7d[m Merge branch 'develop' into feature#398
+[33mabecf99d[m adding UUID format check, return JSON format
+[33m3fce5010[m Solved bug on UserControllerTest about wrong injection
+[33m269db6f2[m Merge remote-tracking branch 'origin/develop' into #391bugidexception
+[33m8f2e4339[m Merge remote-tracking branch 'origin/develop' into feature19#FINAL
+[33mbf79180b[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33m86532419[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#395
+[33m1ff2ec96[m End of ZMQ Config & prototype
+[33m49aa1236[m Ok ZMQClient, pending testing
+[33m1abac474[m Adding complex types to comms between Challenge & User
+[33mcff274fa[m Solved bug with test in UserControllerTest
+[33m4897ad86[m TEsting ZeroMQ
+[33m15687b94[m Initial config ZMQServer & Client
+[33m1ad8783d[m Changed Autowired for Mock in UserControllerTest
+[33ma33e9331[m Merge branch 'develop' into workflow
+[33mb6561cf6[m Merge branch 'develop' into feature#398
+[33m2c286f34[m add Bookmark Service and BookmarkRequestDto
+[33m8c945100[m add Bookmark Service and BookmarkRequestDto
+[33m5f060aa8[m Merge remote-tracking branch 'origin/develop' into feature19#FINAL
+[33ma0057e33[m Merge remote-tracking branch 'origin/develop' into #391bugidexception
+[33mf1f562cb[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33mcf5331fb[m Changed service methods to ServiceChallengeStatistics
+[33m95f80d14[m Modifiying paths
+[33m9975bc8f[m Swagger central config
+[33ma3a39a7c[m Added BadUUIDException to GlobalExceptionHandler
+[33m5bec01e5[m Format json
+[33m145d0a01[m Added Reactive Feign Client
+[33ma07b07e2[m Changed return type Mono to Flux and added Service layer logic
+[33mbbc6fe8e[m Swagger of Document Micro is ok
+[33meb0f83ed[m Swagger ok at Challenges
+[33m583c1e47[m Modificación endpoint PUT /itachallenge/api/v1/user/solution #384
+[33m1586ea9e[m Set the return type of all methods to Flux
+[33mf79ee9a0[m try to make friends with Sonar v2
+[33m09e3fa6b[m try to make friends with Sonar
+[33mb75849a7[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#386
+[33m7270cb92[m Line ending normalization CRLF to LF. Won't let me pull if not
+[33m0df1a3be[m Merge branch 'develop' into feature#372
+[33m6828468f[m try to commit
+[33m71f77673[m Merge branch 'feature#395' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#395
+[33ma295e28a[m Solved integration test conflict
+[33m41890d18[m Deleted commented method
+[33m03b25ebd[m Refactored getChallengeById Service and Controller layers with tests
+[33maa8b891c[m Merge remote-tracking branch 'origin/develop' into feature19#FINAL
+[33m2be69f67[m Added Postman ITA-Challenges Collection
+[33meef58d16[m add tests webClient with MockWebServer
+[33maa5ed7bb[m Deleting images
+[33m818be8dd[m fixed tests
+[33m139d0716[m Deleted commented method
+[33mca03ec2a[m Merge branch 'feature#395' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#395
+[33mece104ec[m Refactored getChallengeById Service and Controller layers with tests
+[33m0efeda22[m exchanged relatedDto to challengeDto
+[33m3cb88692[m Merge branch 'develop' into workflow
+[33me0120eda[m Upgrading Jacocos config
+[33me40b7789[m Testing SonarQ
+[33m340e691b[m Merge remote-tracking branch 'origin/develop' into feature19#FINAL
+[33m7417bcdf[m Endpoint /bookmarks/{idChallenge} functional
+[33m151312f7[m Deleting files
+[33m8cfc6e04[m Creación de endpoint GET /itachallenge/api/v1/user/statistics/percent/{idChallenge}
+[33m3598e9ee[m Feature 323
+[33m86095b54[m Feature 323
+[33m9b43374a[m Deleted some unnecessary comments
+[33me0eb77d4[m Added controller methods and respective test
+[33m44104126[m Added getBookmarkCountByIdChallenge and Test for UserSolutionServiceImp
+[33m16b8ad82[m Added countBookmarkedTrueByChallengeId and Test for IUserSolutionRepository
+[33m73a28a71[m Added ZeroMQ Server to Usr Micro
+[33m2be55393[m Merge branch 'develop' into feature#372
+[33m2752571c[m Cleaning code
+[33m27003b8b[m fixed small bugs
+[33m93d135b6[m Fixed Spring Cloud Gateway config
+[33md23e4f78[m Added itachallenge-document & itachallenge-challenge Swagger config
+[33m29186c34[m Deleting Redis components
+[33m951f805f[m validacion de token funciona ahora
+[33m85227103[m sigo peleando con webClient
+[33m1e0bd3e5[m Merge branch 'develop' into feature19#FINAL
+[33m7e39c958[m clean code
+[33m08701455[m fixed bug for passing null object into args
+[33m38bebbe6[m working with webClient, no works with token correctly
+[33m7660a37c[m add notes to README_COMPILER
+[33m47a3b3eb[m Add separate execution thread to protect from infinite loops
+[33m6fc37afc[m Merge branch 'feature#340' into develop
+[33mbde0bac1[m Working in testing v3 160124
+[33m8dbc639c[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#372
+[33me3c0e7f4[m Merge branch 'develop' into Feature#305b
+[33mfce527a8[m Add String[] args cast
+[33m47423957[m Corregido el ChallengeDocumentToChallengeDto y el json expected
+[33m527f3270[m Starting Tests v1 150124
+[33m15061d5e[m Small changes readme and challenges.json
+[33m749f8453[m Corregido el ChallengeDocumentToChallengeDto
+[33mbefeabcf[m Adding config changes to avoid wrong end lines
+[33mf37c2337[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#372
+[33m4d3fae52[m Fixing wrong folders
+[33m948950e7[m add validate challenge status
+[33mbd70703b[m include the status parameter in the input JSON
+[33m61082ba7[m This commit entails the fixing of feature 19
+[33m3c8355fc[m Some modifs at Challenge test load
+[33medd3e74d[m Merge branch 'develop' into workflow
+[33m449a3068[m Tests added
+[33mbe757c3d[m Add test for args injection
+[33m18880a2c[m Fixing tests
+[33m69e607d1[m Using Locale CA instead CAT
+[33mc5b7ad19[m Merge branch 'develop' into Feature#305b
+[33m6172f550[m Add String[] args
+[33mcf6ce7c8[m Corregido el "CAT" por "CA" y otros errores
+[33m51379cad[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#372
+[33m9256cec7[m Fixing all v2 100123
+[33m2b35a377[m Change challenge status modified by user: empty instead medium
+[33m3ad34e05[m Adding notes
+[33m964099e9[m Merge branch 'develop' into Feature#305b
+[33m4178c7e5[m compileAndRunCode Split in methods
+[33m486be452[m Merge pull request #383 from IT-Academy-BCN/branch-fethi
+[33m43e43448[m fixed CodeExecutionService
+[33m3d637275[m add fethi to contributors
+[33m3fa59322[m Solucionados tests, a falta de revisión por compañero.
+[33m2da7fe7a[m Proxy añadida  y url de validación de tokens parametrizada v1 09012024
+[33m30159274[m Added logger
+[33m71b9f650[m Tuning code
+[33mf90f4da8[m Merge branch 'develop' into Feature#305b
+[33mc4387c57[m Some improvements0
+[33m578c272d[m Fix: delete {
+[33mc9bc6ee1[m Adding endpoint validation to Auth
+[33m808000a5[m Added Auth micro
+[33m7949ada0[m Added name and github to contributors.md
+[33m8c1d0105[m Add code explanation
+[33mb66192e2[m Merge branch 'develop' into workflow
+[33m60e27496[m Clean code
+[33mabc205eb[m README_COMPILADOR añadido
+[33m002f609c[m Fix: delete {
+[33mda6172c5[m Adding endpoint validation to Auth
+[33mb8905c59[m Added Auth micro
+[33mad40ccfa[m[33m ([m[1;31morigin/Feature#374[m[33m)[m Merge pull request #376 from IT-Academy-BCN/arnau
+[33mfc813931[m Added name and github to contributors.md
+[33md33650e1[m Merge branch 'develop' into Feature#305b
+[33m220742a2[m Fix: Testing Gradle vars into CI
+[33m7aff1952[m Testing Gradle vars into CI
+[33m535c4ff8[m Merge branch 'develop' into workflow
+[33m596b9372[m Merge branch 'feature#323' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#323
+[33m6552bb94[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#323
+[33m82b65cc9[m Modifying Dockerfile
+[33md5048f42[m Synchronizing versions...
+[33mceaf068c[m Fixing env vars
+[33m3dc1aab3[m Relocating jar.....
+[33mb443510f[m Locating the lost jar
+[33m51bce06d[m clean code and cleaned tests
+[33m996095e3[m Validations reviewed
+[33m708af31f[m Merge branch 'feature#348' into develop
+[33m06e85fe7[m Merge branch 'feature#227' into develop
+[33mc92fd4df[m Added Spring Config to avoid insert _class att at MongoDB
+[33mfded6fdd[m clean notes
+[33m31f06d4d[m clean imports
+[33m04b5cfc7[m delete unused files
+[33m621770ff[m first commit
+[33m06206f6f[m Relocating files....
+[33m104193b8[m One test more
+[33m5878926a[m Added context into build
+[33m0d7d25ff[m Build and deployyy
+[33mde8c35d8[m Printing values again
+[33mf77bf537[m Printing values
+[33m8dd50d1f[m Tuning load of vars
+[33m54f9d9fd[m Relocating config files... again
+[33m184ac7fc[m Relocating config files
+[33m4278faf0[m[33m ([m[1;31morigin/feature#348[m[33m)[m Add files via upload
+[33m8653abd8[m Relocating file
+[33meae36874[m Added load of vars
+[33md3a29bf4[m Added checkout code to avoid losing of vars
+[33m2507a5e2[m Revisado commit anterior ya que había métodos que no hacen falta como el findByTitle(). Revisado testing.
+[33m130b4d32[m Testing load of vars
+[33m194c6ebb[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m Merge branch 'develop' into workflow
+[33m4ca8f2f1[m Merge branch 'pr_346' into develop
+[33m42afc148[m Merge branch 'feature#323' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#323
+[33mc997b6c9[m Merge branch 'pr_356' into develop
+[33m80e96ccf[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#227
+[33m65e80c56[m Over and over again
+[33m31e51af5[m One more change
+[33mcfa45c5a[m More changes
+[33m7df44a02[m Improving reading of vars....
+[33m183def54[m Uploaded, cleaned and bright code
+[33m12fe1e36[m Testing new process .....
+[33m4077c105[m Searching a file.....
+[33m1859f3f8[m Fixing load of vars....
+[33m92f70be4[m Loading......
+[33m8c22df7a[m Fixing load vars
+[33m4fd376dd[m Uploaded exceptions tests
+[33m852faa07[m Fixing error
+[33m946147b1[m Adding vars to testing Dockerhub
+[33m7d14a42d[m Testing upload image to DockerHub
+[33m3c0bf8e8[m Uploaded dtos tests
+[33mb868edf1[m solucionado el build
+[33m2c1a43c3[m 305
+[33m1222ca9f[m Added fix
+[33m09ef8452[m Fixing sh invocation
+[33m631dfa5f[m Test
+[33m19011b53[m Testing pipeline
+[33m34611319[m 305
+[33m32173a06[m[33m ([m[1;31morigin/feature#322[m[33m)[m test add to GlobalExceptionHandler
+[33m780f9de4[m Update GlobalExceptionHandler.java
+[33mdd4ba7cd[m Update GlobalExceptionHandler.java
+[33m4155ca4a[m Update GlobalExceptionHandler.java
+[33mc2a0d48c[m Update GlobalExceptionHandler.java
+[33mf0288fbd[m Merge branch 'develop' into feature#322
+[33mae3931d8[m Update load-data.sh
+[33m07216789[m Validation issues fixed
+[33mecbbdf5d[m Adding workflows
+[33ma56065e1[m Test workflow
+[33me3dafb3c[m Fixing errors
+[33maa2f9712[m Adding workflows
+[33md69d5d5b[m Eliminado IScoreControllerTest.java
+[33mec1a1ed6[m[33m ([m[1;33mtag: [m[1;33mitachallenge-challenge-1.1.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mdocker-compose-1.0.5[m[33m)[m Removing CORS at dev
+[33mc8d81dd4[m Atributos tipo String traducibles (4x) mapeados con clave=Locale y valor cada texto en su idioma (ES, CA, EN). Repository sólo cambiado método de búsqueda por título (el resto no son afectados por la traducción). Tests actualizados.
+[33m9a8007b9[m fixed issue load-data.sh
+[33m5da86947[m Refactoring Docker config files
+[33m0ecd2051[m Custom names in DEV
+[33md126649c[m Atributos tipo String traducibles (4x) mapeados con clave=Locale y valor cada texto en su idioma (ES, CA, EN). Repository sólo cambiado método de búsqueda por título (el resto no son afectados por la traducción). Tests actualizados.
+[33mdaa5933d[m translate english to spanish
+[33m5cf2ce68[m changes for correct persistence
+[33m20d7548c[m Merge pull request #355 from IT-Academy-BCN/353-añadir-nombre-a-contributosmd
+[33md6ac44f8[m Merge branch 'develop' into 353-añadir-nombre-a-contributosmd
+[33m4c960b84[m Merge pull request #354 from IT-Academy-BCN/feature#352
+[33m74377eb3[m Add files via upload
+[33m65c8f78b[m[33m ([m[1;31morigin/feature#352[m[33m)[m Añadir nombre a Contributors.md#352
+[33m441149db[m cambios
+[33m33897384[m Fixed and updated service, controller and tests
+[33mde29d860[m Updated 071223
+[33madfe3d69[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#227
+[33me117df58[m Update UserSolutionScoreTest.java
+[33m732f49fe[m added validation in controller, exception handler, controller tests
+[33ma0475407[m Updated controllerTest for reviewing
+[33m41a1ec4c[m Fixing config DEV & PRO
+[33m39008bff[m Updating GUIDELINES, fixing Mongodb initial config
+[33m6a5ed7fe[m Updated & Working less some test
+[33m83818fdb[m Añadiendo cambios y nuevos archivos en la rama feature#323
+[33m477bbfdd[m Merge branch 'feature#227' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#227
+[33m35fc0df4[m update 291123
+[33m99ebbb87[m Merge branch 'develop' into feature#227
+[33mb4c8d4b1[m Update ChallengeControllerTest.java
+[33m9b8ca8a4[m Update ChallengeRepositoryTest.java
+[33m99f0c358[m Update ChallengeControllerTest.java
+[33m82e03dae[m test para BadRequestException
+[33m1d645c0f[m Merge branch 'develop' into feature#322
+[33m890c18c0[m Fix image name on script & url connection database
+[33m499acf00[m delete log in ChallengeServiceTest
+[33m45b7c991[m endpoint done, add testing
+[33m88ddcdf5[m Adding encrypted credentials
+[33m98446ad2[m Deleting file config
+[33mb87c0e2e[m Adding credential files
+[33m86cb4fc1[m Modiying credentials
+[33m2575ac2c[m Optimizing deployments pre
+[33m2a94ab0d[m Upgrade Apisix version/distro to 3.7.0-Redhat Refactoring Apisix Upstreams
+[33m78eceaec[m Campo locale añadido a capa Repo + tests
+[33mdccb2b1a[m Merge pull request #342 from IT-Academy-BCN/feature#339
+[33mc2497891[m Deleting unnecessary file
+[33m81420509[m Guidelines modified: Included steps to load data at MongoDB
+[33m57eb64bd[m Actualizado estructura del JSON challenges
+[33m09bc4865[m Merge branch 'feature#307' into develop
+[33m2999ed65[m Modifying script to include locale
+[33md4511ebb[m * Config changes at docker-compose * Include modifications at challenges.json database (UNSTABLE)
+[33m3454a909[m Merge pull request #338 from IT-Academy-BCN/natalia
+[33m6c9b0c24[m Controller, service and repo
+[33mbcc4f25e[m[33m ([m[1;31morigin/natalia[m[33m)[m Agrego mi nombre y dire de Github a contributors.md
+[33mb463b75c[m Merge pull request #337 from IT-Academy-BCN/christian_ita-challenges-backend_#333
+[33mb6b3c56c[m Resuelto conflictos de fusión
+[33m9a9bf2c0[m Resuelto conflictos de fusión
+[33mbadf4dbf[m Resuelto conflictos de fusión
+[33m56656e05[m Agregar mi nombre y mi link de Github a contributors.md
+[33m67de8b1b[m Merge branch 'develop' into christian_ita-challenges-backend_#333
+[33m5e25efa1[m Merge pull request #336 from IT-Academy-BCN/feature#334
+[33m3c666f05[m Añadir mi nombre a contribuitors.md
+[33md5c7875d[m updated contributors.md
+[33m466363cd[m[33m ([m[1;31morigin/feature#334[m[33m)[m afegir nom JC
+[33m5a966d44[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#227
+[33mf61d65c9[m update feature#227
+[33mb8bf721d[m Merge branch 'feature#323' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#323
+[33m9a481595[m Se ha areglado el error de escritura con Json y Java para que sean competible,he arglado ScoreResponse, ScoreRequest y he retirado el metodo de controller
+[33mbe1ad798[m userSolutionScore PostMapping
+[33m57c6b8a1[m fixed bug
+[33ma1db2707[m Merge branch 'feature#304' into develop
+[33m414c8e40[m Fix PKs duplicated
+[33mc4e85d6f[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.0.2[m[33m, [m[1;31morigin/release[m[33m)[m Fixing CHANGELOG
+[33m1f84019e[m Fix config issues: 	- Docker image Challenge (version) 	- MongoDB Access Port (from another Docker container) 	- Added routes /GET to access Challenge container
+[33m43414a93[m[33m ([m[1;33mtag: [m[1;33mdocker-compose-1.0.1[m[33m)[m Fix to avoid POST requests to Mock Service
+[33md2545d62[m contrucion de controller,ScoreRequest, ScoreResponse,Test
+[33m46e1a35e[m Adding some explanations & configs to deploy Docker microservices locally
+[33meca494cc[m[33m ([m[1;33mtag: [m[1;33mitachallenge-mock-1.0.0-RELEASE[m[33m, [m[1;33mtag: [m[1;33mdocker-compose-1.0[m[33m)[m Mock - Start prod env
+[33m25fba5ea[m[33m ([m[1;31morigin/feature#304[m[33m)[m challenge, solution json updated
+[33meb2e65b8[m[33m ([m[1;31morigin/feature#307[m[33m)[m fixing imports on ChallengeServiceImpTest.java
+[33m0ec3f8a8[m Merge branch 'develop' into feature#304
+[33m1a751f91[m Adding my name in contributorsmd
+[33m605fa3da[m Update contributors.md
+[33mec476bb2[m getRelatedChallenges test implemented in service layer
+[33m2da1a984[m getRelatedChallenges implemented in service layer
+[33md5223a03[m RelatedDto added from feature#19e
+[33m97d6c858[m Customizing Docker network
+[33m1c2d8573[m Removed ErrorResponseMessage exception in favor of using MessageDto.
+[33m52a05cb5[m json challenge
+[33mea0f870b[m Alberto
+[33m2a3945b5[m Merge pull request #324 from IT-Academy-BCN/000kathya
+[33m1b64c6d5[m añadir contributors kathya
+[33m199d79d8[m Merge branch 'DamJava' into develop
+[33m28fed36e[m Adding my name in contributorsmd
+[33mb1ed08ab[m Update contributors.md
+[33m8a9191ec[m Merge branch 'feature#19d-2' into develop
+[33m671f4686[m update challenges.md file with some examples
+[33m6fa0729a[m Refactoring to add reactive request with offset and limit.
+[33m4345813a[m Merge branch 'develop' into feature#296
+[33mce24c8be[m Customizing Docker network
+[33m5abf2e3c[m solutionin_out entendido
+[33m971b4ef1[m Challenge readme
+[33m60f21579[m Challenge markdown
+[33mca3dda36[m Added new challenges to challenges.json
+[33mb3edfbe9[m getRelatedChallenges test implemented in service layer
+[33m6ed78fd3[m getRelatedChallenges implemented in service layer
+[33m60006b21[m RelatedDto added from feature#19e
+[33mb3043667[m Challenge with only one Languages - Java
+[33me30a5139[m Merge branch 'feature#89b' into develop
+[33md7f3d69d[m Merge branch 'feature_new#95' into develop
+[33md8a15218[m Refactoring some var names
+[33mfddef6b4[m Removed ErrorResponseMessage exception in favor of using MessageDto.
+[33ma79674ea[m Merge branch 'develop' into feature#95_integration
+[33m3e684a20[m Merge branch 'feature#185' into develop
+[33m0667849e[m Modiying user/README.md instead RedisREADME.md and deleting
+[33m0829d5a8[m UserSolutionDocumentRepository tests implemented
+[33m648ffb28[m Typo correction
+[33mbcc23e8c[m Type correction
+[33m8ad67719[m Type correction
+[33m2aab5ec1[m Merge branch 'feature#19d' into develop
+[33m0b7f4624[m UserSolutionRepository implemented
+[33m48c90a0f[m Typo and naming
+[33m2d0df15c[m Typo correction
+[33m62301d97[m Merge branch 'featureController#21' into develop
+[33m17ee7099[m Copied user_score.json to test dummy data
+[33mf6597d02[m Merge branch 'develop' into feature#21
+[33m255a4a94[m Fixing levels at ChallengeREpositoryTest to use real names
+[33m2e445210[m challenges.json "related" are now consistent
+[33m01680e48[m Renaming UserScoreService to UserSolutionService
+[33m3049643d[m Renaming UserScoreDocument to UserSolutionDocument
+[33mcd35582a[m Fixing status & refactoring classname Converter
+[33m730db396[m Fixed an expected message in GlobalExceptionHandlerTest.
+[33md2b124ab[m Merge branch 'develop' into feature_new#95_integration
+[33m9c564080[m Merge branch 'develop' into feature#228b
+[33mf56c5d59[m Merge branch 'develop' into featureController#21
+[33mac9a759d[m Added ChallengeController with field validation using ValidGenericPattern annotation.
+[33mcbc02364[m Added ValidGenericPattern annotation and GenericPatternValidatorTest to validate fields and params.
+[33mc733aa0c[m Added MessageDto to return simple messages.
+[33m62a58cc6[m Merge branch 'develop' into feature#mongo_docker
+[33m7baaa2c3[m OK APISIX. Necesario configurar lo siguiente: 	- apisix_standalone.yml. Acceso a puerto interno 	- Válida llamada en http://172.18.0.8:9080/test 	- Válida llamada en http://172.18.0.9:8762/test 	- Válida llamada en http://127.0.0.1:7779/test
+[33ma567f015[m restored previous name property
+[33m51d0f06f[m challenge repository and test done
+[33m39bb0d56[m Modifed handleConstraintViolation response in GlobalExceptionHandler.
+[33m2784bac4[m trying other options without success
+[33mc00a0e33[m Fixed isValid method in GenericPatternValidator and added aditional tests.
+[33m03448845[m Removed unnecessary DocumentToDtoConverter.
+[33m5b1bedd1[m trying other options without success
+[33m7fa70333[m repository working
+[33m4e15d7a4[m Adding test to GenericPatternValidatorTest.
+[33mdfeaaf45[m Modified ErrorResponseMessageDto to remove statusCode from the response.
+[33m04149365[m Merge remote-tracking branch 'origin/feature#21' into feature#21
+[33mafe1b4a2[m test check
+[33mcd20664a[m Fixed expected value from null to Optional.empty in failedReadResourceTestk() in ResourceHelperTest file.
+[33m965a0f33[m Fixed some code smells.
+[33md8944ec1[m Merge branch 'develop' into feature_new#95
+[33m182f6dea[m Fixed mongo:uri with authSource=admin in application.yml.
+[33mb8791dea[m Fixed mongodb.uri with authSource=admin in application.yml.
+[33m892e4dce[m Merge branch 'develop' into feature#228b
+[33m35966ec3[m Refactor controller and service to use 'offset' and 'limit' instead of 'page' and 'size' parameters.
+[33m85989402[m Fixed GenericPatternValidator to accept any custom pattern.
+[33m58ddb0b4[m Updated GenericUUIDValid adding pattern() as an optional value.
+[33mba7e2aa8[m Modified db username in load-data.sh
+[33m86a3d9a2[m Refactoring -> GenericDocumentToDtoConverter => DocumentToDtoConverter
+[33m0fd491e3[m UserScoreNotFoundException has been deleted.
+[33m44da9c07[m Merge branch 'develop' into feature#228b
+[33mf0dcbe8c[m Fixing DBs
+[33me84be2af[m Fixing DBs
+[33m1d293804[m Moved ErrorMessage and ErrorResponseMessage from exceptions to dto
+[33m176ff85a[m Replaced URLValidator with Custom GenericPatternValidator and ValidGenericPattern annotation.
+[33m847a06a4[m Merge branch 'develop' into feature_new#95
+[33m3e263ca5[m Fixing params to route Apisix
+[33mca9e376a[m Merge branch 'develop' into feature#21
+[33m637668ce[m recovered some testing methods in ServiceImpl
+[33m256c85cd[m trying to beat SonarCloud3
+[33m36f1008e[m trying to beat SonarCloud2
+[33ma5aba540[m trying to beat SonarCloud
+[33m0a4881bf[m little update
+[33m32c0684d[m resolving merge conflicts
+[33mba78f51b[m Merge remote-tracking branch 'origin/feature#170' into feature#170
+[33mf6742a49[m working generic mapper
+[33mdc125c5e[m Added a generic UUID validator and annotation for parameter validation in the controller.
+[33mb4593aeb[m solutionSize attribute has been removed from UserScoreDto.
+[33m1889fab7[m Stable network Docker
+[33m6800991c[m Docker stable networking
+[33m70ea523a[m json value names updated
+[33md42d5f22[m Testing update
+[33m4bad4add[m Lombok Getter/setter to Data
+[33m037281a3[m Added UserScoreRepositoryTest.java
+[33m08e496cb[m Added GlobalExceptionHandlerTest.java
+[33m83dc07ea[m Added ConstraintViolationException to GlobalExceptionHandler
+[33mdc89b705[m Added ErrorResponseDtoTest.java
+[33m4b2c15ba[m Modified ErrorResponse to ErrorResponseDto
+[33mb0622793[m Repository methods name changed
+[33m595ab97b[m Merge branch 'develop' into feature#170
+[33m7c9d2bc1[m Added validator for MongoBD UUID parameters in userController.
+[33m17f8c235[m Pending external access from network
+[33mba539f9f[m Document/Dto field names changed
+[33m1446697e[m Added apisix config
+[33m0938a28a[m Embedding status relationship
+[33m1b061513[m Generic Converter done
+[33me212d897[m Removed non-reactive monodb dependency from build.gradle.
+[33m8a17401c[m Renamed 'challenges' collection to 'solutions' in the 'users' db.
+[33mafd097cf[m Merge branch 'develop'into feature#228b
+[33m943a3c00[m Generic Converter done
+[33m15aab6fc[m UNSTABLE: adding Docker configs
+[33m9919c1b9[m Merge branch 'develop' into feature#mongo_docker
+[33m89b8448d[m Updated with develop and ChallengeMapper improved
+[33m7da06fda[m Merge branch 'feature#228dario' into feature#228b
+[33m856c9701[m Deleted files SolutionDto and SolutionsUserDto from micro-score.
+[33m8bc4ef1f[m Resolving sonarcloud conflicts
+[33mbfb1b2df[m Merge pull request #277 from IT-Academy-BCN/josep-olive-diaz
+[33m7dc8b9b7[m Testing SonarCloud Action v3 caused by non existing attribute distribution Java
+[33m01d91580[m Merge branch 'develop' into feature#228dario
+[33m362b3107[m Udpate contributors.md with new user
+[33m152cb336[m Added my name and GitHub to contributors
+[33m796fd53f[m Fixing sonarqube version
+[33m526dbab4[m Updated section 2: Import data into MongoDB
+[33mdc66161a[m Merge branch 'pr_272' into develop
+[33mea34b86c[m Merge branch 'pr_236' into develop
+[33m89f1115b[m Update contributors.md new member MiquelDebon
+[33m18768d89[m Adjusted SolutionDocument for the new arguments in the Test files.
+[33madeb25db[m Modified user_score.json to include unique 'solution' field and SolutionDocument to fix idLanguage redundancy.
+[33m59eb16c1[m Modified mongo-init and load-data to work with the 'users.challenges' collection.
+[33me65b9810[m Removed chech-filter.bat and duplicate files xxx2
+[33mc363c923[m Moved load-data.bat to mongodb-init-bat
+[33m808540c1[m Added ChallengeDocumentToDtoConverterTest and testing
+[33m37d69d81[m Merge branch 'develop' into feature#170
+[33md1c531b9[m test built2
+[33m424207cb[m Added some challenges
+[33m0b9e093e[m Change sonarqube settings to start CI
+[33m6e46de9b[m Merge branch 'develop' into feature#228dario
+[33me21444ed[m Added micro mock to test Apisix Gateway
+[33me4aff72f[m Changed ReactiveMongoRepository to ReactiveSortingRepository
+[33m3e0be34b[m Modifying conn params - pending configure Mongo to access from external IP
+[33m02b17097[m folder renamed
+[33m8397284b[m link added
+[33m1c8735b1[m readme updated
+[33m740ec39f[m redis scripts and readme
+[33mbf9e29f8[m Refactor endpoint GET
+[33m108c4828[m Refactor endpoint GET
+[33m6062e7be[m Added UrlParamsValidator
+[33mf27b68f9[m Refactor name Classes
+[33mad66dd41[m Modified ChallengeServiceImp
+[33mfc6609a7[m Adding notes of fixes
+[33m494d47a7[m Modified ChallengeServiceImp
+[33m902bf887[m Added ChallengeConverter
+[33mbb2a5d89[m Merge branch 'develop' into feature#170
+[33mb456d638[m Modified LanguageConverterDto and ChallengeServiceImp + Test
+[33ma9cb68a5[m Added optimized config to start with Docker
+[33m497b2aa8[m Merge branch 'develop' into feature#170
+[33m01237b1f[m Add dependency to build.gradle and ModelMapperConfig.java
+[33mf9e945e2[m Added all essential elements to working with Apache Apisix
+[33m6a2da94b[m Added Apisix & etcd to docker-compose
+[33mefd0abe3[m Added Miguel Manzano to contributors.md
+[33m1b17d9be[m Updated Imports ConverterAbstract
+[33m575aabab[m Updated Imports ChallengeConverterDto
+[33ma56fef42[m Fixing expl.
+[33m16485fe5[m Adding some explanations about Consul and its config
+[33ma8a00c0d[m Modified ErrorMessage()
+[33mc9c87580[m Added testErrorMessage()
+[33mfda157ec[m Added testHandleMethodArgumentNotValidException()
+[33m1d46ece1[m Added testHandleMethodArgumentNotValidException()
+[33m761dac32[m Added changes
+[33m521a8ab4[m Arreglados algunos code smells y también agregué el test a la clase UserScoreDto
+[33m884dae10[m Arreglados algunos code smells y también agregué el test a la clase UserScoreDto
+[33mf9eafa34[m Modified title (ITA Score to ITA User)
+[33m00e23085[m Modified ErrorMessage
+[33mc401677d[m Added ErrorMessage
+[33m11354920[m Added required = false in @RequestParam getChallengesByPage
+[33m3ffb6f78[m Deleted required = false in @RequestParam getChallengesByPage
+[33mb97a2f0d[m Modified GlobalExceptionHandler
+[33md00e3742[m Removed public from class ChallengeIntegrationTest
+[33m5f9e9b78[m Added Integration Tests getChallengesByPage
+[33m0f5fd23a[m Added test endopoint getChallengesByPage
+[33m6323bf39[m Removing existing Gateway
+[33m8a79fec1[m Added PageParametersDtoTest
+[33m4ef26a29[m Added getChallengesByPageTest() in ChallengeServiceImpTest
+[33mb06b5039[m Bug fixed
+[33me14376cd[m Eliminé el método de prueba
+[33m701cbd21[m Agregado el test de la clase Converter y se agrego el calculo del size del array de solutions
+[33m403aba3b[m Agregado el test de la clase Converter y se agrego el calculo del size del array de solutions
+[33mab987713[m Added findAllByPageTest() in ChallengeRepositoryTest
+[33md33eea41[m Agregado el test de la capa Exception
+[33m1d4bfaa4[m Agregados los test de la capa exception
+[33m01e9f845[m Added defaultPageParameters in application.yml
+[33m5cdc9da7[m Added @Valid and HandleMethodArgumentNotValidException
+[33mc6788d49[m Default values running
+[33mae9f506d[m Added Changes
+[33m36217200[m Agregados los test de la capa controller
+[33mc395d40f[m Agregados los test de la capa controller
+[33m38f1afaa[m Agregados los test de la capa service
+[33m6171312b[m Tested with Pageable in ReactiveRepository
+[33m19452ebf[m Agregados los test de la capa document y modificado el test de la capa respository
+[33m3c8c8713[m Agregados los test de la capa document y modificado el test de la capa respository
+[33me1fa9882[m Added endopoint in Controller
+[33mcec9c7c5[m Added getChallengesPaginated in IService
+[33m8c1ee2d3[m Added getChallengesPaginated in Service
+[33m7e2f258c[m Added findChallengesPaginated in Repository
+[33m16d3dc57[m Added PagingParametersDto
+[33m0577019f[m Agregué el control de excepciones
+[33mee989aa6[m Adapté la colección e incluí el manejo de base de datos en los archivos de configuración. Capas Controller y Service funcionando y probadas con Swagger
+[33m968e7d2e[m Hechas las capas Controller, Service y Helper. También se hicieron los Documents y Dtos necesarios
+[33m7ad3f44d[m Hechas las capas Controller, Service y Helper. También se hicieron los Documents y Dtos necesarios
+[33m78b75bee[m Repository para metodo findByUserId
+[33m0cf55be6[m Correcciones de parámetros vacíos y testing
+[33m70fe27df[m merge from develop
+[33m3a4e5688[m user_score.json
+[33m4bb3735f[m mas avances
+[33m9be123d9[m avanzando
+[33m23f024c8[m change uri ControllerTest
+[33mc59a5d90[m Merge branch 'develop' into feature#21
+[33md01c7ea4[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into develop
+[33m6d4e6862[m arreglos
+[33me61ca577[m Added user solutions to dummy data0
+[33mbe66ec4d[m merging develop conflicts
+[33mc73f425c[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into develop
+[33mf21b19ff[m respositoryTest
+[33m7386fe76[m corregir code smell
+[33m8a42e9aa[m arreglar code smells
+[33m257f553e[m merge from develop
+[33m9b7b0853[m pull from origin develop
+[33mb5146cd9[m añadir test en ChallengeControlerTest i swagger en ChallengeController
+[33m412c4771[m "merging develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#170
+[33m28669858[m Fix: smoke tests not working
+[33mc287f541[m merge from develop
+[33m38dc4ae5[m nuevas modificaciones from pull
+[33m71df4720[m merging feature#21_isma
+[33m79904277[m merging develop
+[33mf4b465e1[m testing
+[33m07fb1fe9[m merging branch develop
+[33m4ebbba94[m merging develop
+[33ma01c6ae9[m Service layer + test + validators
+[33m3d67ee1a[m clase ChallengeServiceImpTest
+[33m6b2d3506[m "merging with develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#170
+[33md0dcd633[m Added prototype micros invocations
+[33m9bfa5430[m solving security hotspots
+[33m28996c24[m solving conflicts with latest changes in develop
+[33m13898085[m solving conflicts with latest changes in develop
+[33m93fa06e2[m solving conflicts with latest changes in develop
+[33m77953e65[m solving conflicts with latest changes in develop
+[33m23094292[m merging with develop
+[33m0123f8ab[m solve conflicts from develop
+[33medb7f189[m merge from develop
+[33m94dfc059[m modificar solutions.json
+[33m2492a186[m Fixing user_score script
+[33me1a8f0a5[m Merge branch 'pr_233' into develop
+[33m6f27deb2[m Renaming & adding todo note
+[33m9259cc30[m Merge branch 'pr_231' into develop
+[33m043ad2cc[m Fixing scripts & commands to load data at Mongo
+[33ma3dd436a[m solving test error
+[33m37661b34[m merge from develop
+[33m2fd9d25a[m corregir solutions.json
+[33mf6f80aa8[m "merging with develop" :wq Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#170
+[33m8f20a082[m Fixing solution definition
+[33m27903470[m endopoint solutions
+[33mc6d12bd0[m Merge remote-tracking branch 'origin/feature#99' into feature#99
+[33m9ef0728f[m Construidos los test a los metodos findById, findAll y deleteById
+[33m8e16521c[m Construidos los test a los metodos findById, findAll y deleteById
+[33m02723bb1[m Delete integrationTests.java
+[33mf1ab5dce[m Integration test in progress
+[33m6f564938[m Merge remote-tracking branch 'origin/develop' into feature#99
+[33mac7193c2[m merge from develop
+[33meb6e0ded[m merge from origin
+[33m07d9abf9[m endpoint solutions
+[33mf2327116[m "merging with develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#170
+[33mc99acd3f[m Fixing Guidelines
+[33m2afb6384[m Merge branch 'pr_218' into develop
+[33m58f945a3[m Fixing markdown nomenclator
+[33mb7fd7206[m "integrating develop changes" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#170
+[33m8383a15b[m Adding some explanations
+[33m5b1ccd66[m FIX: Customizing Mongodb config
+[33mf3ca685c[m merging develop
+[33m91ea2f8f[m pull from origin develop
+[33m28174380[m endpoint languages
+[33me40e6c3c[m "merging develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#170
+[33m8aa38791[m Fixing README.md
+[33m79a44a8c[m add Swagger
+[33ma008eed2[m modificaiones en service y repositorio
+[33m6e0c0a21[m feature 170, brand new converter done
+[33m7d66662c[m converter done
+[33m9d37d6f8[m Merge branch 'feature#186' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#186
+[33m819eef7c[m Modify itachallenge-user README.md
+[33m433aebbc[m add dni field
+[33m3ff7cf2c[m create lambda and errors
+[33m6b48ec94[m changes
+[33m5691bdd9[m End of service layer
+[33m6e5fdfd9[m add auth
+[33m934bd2fb[m Merge branch 'feature#21_isma' into feature#21_josep
+[33m4268ae37[m Merge branch 'feature#21_isma' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#21_isma
+[33m925c5bb8[m Add level options to application.yml
+[33m7f46b896[m filters methods
+[33mb939535b[m After merge with develop
+[33m2d0b4cd2[m merging with develop
+[33m3a37f4c1[m pull from origin develop
+[33m0485ebd6[m Merge branch 'develop' into feature#21_josep
+[33mb709da69[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into develop
+[33mda8087df[m actu para merge develop
+[33m6659b06a[m Repository: add 2 methods
+[33m11294e81[m Merge branch 'develop' into feature#186
+[33mcb98a161[m Merge branch 'pr_220' into develop
+[33mbdd11f3b[m Normalizing att.
+[33mc58720dc[m Merge branch 'feature#21_isma' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#21_isma
+[33m1d498490[m Add Set<string>
+[33m59cbf19b[m modificación findByLanguages_LanguageNameInAndLevelIn
+[33m51956fb7[m pruebas de endpoint filtrado
+[33m1e940293[m sampleDtoConverter test passed
+[33m7ea6cd3b[m nous mod altres
+[33mf0b01ce0[m Merge branch 'develop' into feature#186
+[33m95f3ffe3[m Modifying & normalize level challenges
+[33m1c433e16[m deactivate consul
+[33m1ca58422[m consul enabled false
+[33m024e0148[m Merge branch 'develop' into feature#186
+[33m533d7239[m Merge branch 'develop' into feature#182
+[33mc738bd7f[m grammar corrections
+[33m849ff13b[m enable false
+[33mce90d5a5[m consul enable true
+[33ma3b80297[m add space
+[33m8c87a190[m merge develop
+[33m9cb98ea8[m "merging develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into modifyingConverter
+[33m89896f99[m changing gradle
+[33m78d77012[m clases ChallengeControlerTest i ChallengeServiceImpTest
+[33m14e0bf4f[m Added more Gateway configs
+[33me3311b89[m implementing reactive Flux
+[33mb485b8e6[m discard changes
+[33mfa5e05f0[m Added config & micro API Gateway
+[33m7fe5d23e[m The last commit
+[33mfbbca4cf[m Solved some errors, in english version
+[33me4e6e0a3[m Merge branch 'feature#182' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#182
+[33m4ac40cbd[m Commit of end of english translate
+[33m1fb19802[m language modifications
+[33m2508b57e[m Merge branch 'develop' into feature#182
+[33m434fd42d[m add spanish languague
+[33mabb2ce5e[m added catalan language
+[33m93d5f7ca[m actu conflicts
+[33m482cd7f7[m End commit
+[33me30cdec0[m corregir swagger
+[33m3259aaa6[m changes
+[33m3d066c24[m modify test classes
+[33maa8c493c[m swagger annotations
+[33ma0daed0f[m porfin solucionado
+[33mbc9ee641[m merge
+[33m1a38236d[m per arreglar merge
+[33m65bab329[m Corregido problemas con git
+[33m08fe9384[m "merging develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into modifyingConverter
+[33mce7a0e04[m micro challenge
+[33m79f26610[m fix code smells
+[33m47e74793[m finish tests
+[33mf93eb9de[m Finish Reactive Crud
+[33m03dff917[m Integration test in progress
+[33m8a217427[m Merge branch 'develop' into feature#186
+[33m1b4e7ae8[m Fixing wrong format of Challenges UUIDs
+[33mbc150102[m End work procedure  2.2 Git configurations
+[33ma6fe9cfa[m make it reactive (not finished)
+[33m572e1550[m converter test
+[33m87a126e2[m Added Challenge Output Definition
+[33m9ebfb116[m Merge branch 'develop' into feature#186
+[33ma7a29019[m finish connection
+[33maf843f12[m "merging changes" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into modifyingConverter
+[33mdb7e12fc[m Updating Languages & Challenges definition
+[33m19e2b9c8[m updates
+[33m97182c9a[m add config
+[33m7e3ff11e[m updates
+[33m573caaa5[m Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into develop
+[33m7caaaffc[m Renaming Guideline files
+[33m74014d92[m Added new developer
+[33m6367c02e[m Merge pull request #202 from IT-Academy-BCN/anniakuz
+[33m27bb8577[m Merge branch 'develop' into feature#186
+[33m5eb859de[m Update contributors
+[33m077ada17[m Languages files created
+[33mc6b8350e[m End part LIBRARIES USED
+[33m0c0d94a9[m Merge pull request #203 from IT-Academy-BCN/feature#182_a
+[33medab9c92[m Merge branch 'feature#182' into feature#182_a
+[33m9f8abec6[m resolved conflicts
+[33ma774cb8d[m title 3, 6 & 7 modifieds
+[33m4cdc2c60[m After merge point Project's links
+[33m89cb35f7[m End: Project's links
+[33m9c97e32d[m Merge branch 'develop' into feature#182_a
+[33m16ca1d34[m converter samples
+[33m0abc0b83[m Merge branch 'feature#182' into feature#182_josep_2
+[33mf97fd081[m cambios al añadir el procedimiento
+[33m8ba54983[m Pre-merge with main 182
+[33m5610db1d[m End point project's link
+[33m6f6f8087[m "merging develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into modifyingConverter
+[33m9dbbaf6d[m Fixing solutions.json
+[33m0f9fa871[m afegir work procedures
+[33m0b0113e4[m "merging with develop" Merge branch 'develop' of https://github.com/IT-Academy-BCN/ita-challenges-backend into modifyingConverter
+[33m415fcab4[m add work procedures
+[33m8f164532[m añadir link metodologia scrum
+[33m59dd01fc[m actu
+[33m14cd64a4[m Recommended programs
+[33m2a95e8c9[m explicaciones pull request
+[33m42181355[m Final merge to resolve merge conflicts
+[33me2ddd566[m first commit
+[33m7682c105[m Improving data model
+[33mc35b33c0[m Improving challenges.json
+[33m4aac8ba3[m Modifying languages.json
+[33md26d8e65[m Adding Annia Kuzmina as a new contributor
+[33mc43b1227[m Merge branch 'feature#182_josep' into feature#182
+[33mb8a503e9[m To done more easy merge
+[33m2da0d0bd[m Added user_score script
+[33m374c2030[m gestionar tarjetas
+[33m4d00e970[m Fixing ChallengeControllerTest -> HttpStatus
+[33mc537e4f4[m Merge pull request #199 from IT-Academy-BCN/milos
+[33ma13315a1[m End DEFINITIONS OF METHOD, CLASS, ETC...
+[33mf8c95a15[m Fixing HTTP Status
+[33m76b8d5a1[m explicar pull a contributors
+[33m2bb12b32[m arreglos
+[33m03491c0f[m Update contributors.md
+[33m1ab16d86[m merging with develop
+[33m211b4ce2[m building tests
+[33mf69f125d[m Merge branch 'develop' into feature#182_josep
+[33mb0bf92d5[m Final de dia
+[33m2b5e5ae8[m add last changes
+[33ma34a9cc4[m solving conflicts
+[33mc6d9f8f6[m solving conflicts with another branch
+[33mde678563[m Program requires
+[33m03b7dcbf[m empiezo apartado como trabajar con una tarjeta
+[33m309ed9ec[m generic converter class
+[33me2f65f5f[m adapt json to follow original structure
+[33m7981a54a[m work procedures
+[33mb913eec7[m arreglos
+[33m3a392784[m Normalización de Url's
+[33m536353ad[m fix tests and change json
+[33m7b12e4b0[m Fix Documents
+[33m0b67779f[m fix conflicts
+[33m1f3036e6[m Merge branch 'develop' into feature#182_a
+[33m5209a3f0[m Main Index
+[33mfa560d41[m Added gitignore to base directory
+[33ma4c8ab9e[m Adding security to load Mongodb data
+[33m9f604104[m Improving some definitions
+[33m75238a17[m Merge branch 'pr_180' into develop
+[33mbf675618[m estructura para empezar
+[33m77b652fd[m Merge branch 'pr_177' into develop
+[33ma07f8dd7[m Renaming package
+[33m9eef1854[m challenge test passed
+[33m2a83aa8b[m cambios
+[33m707ecdaf[m añadidas convenciones
+[33m73317f29[m ejemplo archivo .MD
+[33m2f0168b1[m provant
+[33m12ba8a9d[m method typing changes
+[33m906df829[m new branch
+[33m42e75ed6[m focus
+[33m23b3d876[m change method typing + testing
+[33maba6044a[m change method typing + testing
+[33m4def56f5[m Disabled Consul self registry
+[33mb36835a3[m Modify maxLength test
+[33mfd1f4ee7[m Pre merge develop
+[33m6c8782c0[m Commit pre merge develop
+[33mbed96e85[m Merge branch 'develop' into feature#110_1
+[33mfaa6b865[m Refactoring packages
+[33md3d9823a[m Cleaning code
+[33m16b50404[m Readme notes
+[33m210f11ac[m Merge branch 'feature#consul' into develop
+[33m8e982875[m Refactoring: Improving Document names
+[33m97f356c1[m Refactoring: Improving Document names
+[33m3767e7da[m Merging from develop
+[33md3aab8c6[m Merge branch 'pr_166' into develop
+[33m76d182db[m Configs
+[33m6146f984[m To adapt sonar requerimetns II
+[33m2dd72a23[m Merge branch 'develop' into feature#110_1
+[33ma5897472[m More configs changes
+[33mc92bb539[m final
+[33m88e28ff3[m minor change
+[33med4ff459[m testing converter. Modifying test from Challenge test, once language attribute changed
+[33mdba6b9a6[m Added Consul configs
+[33m4514cf65[m Added dependencies & sample code
+[33m6fac2324[m Merge branch 'develop' into feature#20_a
+[33m8ee99c07[m Resource naming update
+[33m728950d8[m Cleaning build.gradle
+[33m05ec9c7d[m actu merge develop
+[33mcaa153df[m Merge branch 'develop' into feature#20_a
+[33mb6911736[m Merge pull request #162 from IT-Academy-BCN/dario
+[33m8cab23ca[m merging with develop
+[33m386d962a[m changes
+[33m251f5f0b[m contributor DR
+[33mac7158c6[m To suit Sonar's requerimets
+[33m5d31fbfc[m Solved error on filter with url witout query
+[33mfdef59f2[m Modify the controller's test
+[33mc016f28e[m Finish
+[33m27c80246[m Renaming directories
+[33mb5a952c0[m Merge branch 'develop' into feature#20_a
+[33m77b4caea[m Update GET Challenges/idChallenge + Service Layer
+[33mb9075b24[m Merge pull request #148 from IT-Academy-BCN/ZAnderson
+[33m91e236a7[m update contributors
+[33mbfff8442[m modified merge conflicts
+[33m80f130c9[m code modifications
+[33me22db1f4[m Tunning build.gradle
+[33m39c48a71[m Merge branch 'develop' into pr_138
+[33m9b04d489[m Tuning build.gradle & adding / remove dependencies
+[33m4ce140c1[m Build.gradle updated
+[33m237b0843[m Merge remote-tracking branch 'origin/develop' into feature#24b
+[33m2f1bf8be[m application.yml upgraded
+[33m872be5b5[m Updating build.gradle and DockerFile + Updating Documents
+[33mfbd25f4a[m Merge branch 'pr_133' into develop
+[33mbebf60e7[m Merge branch 'pr_131' into develop
+[33m9d83967d[m Renaming dummies for testing
+[33m840b59ec[m added testing dependencies
+[33m5fb17629[m added dependencies
+[33md2ab08ec[m fixed issues .class
+[33md8322123[m Small changes
+[33m29e973bc[m Build.gradle and DockerFile renew
+[33m2105e424[m tested dtos as inners classes in proxy test
+[33m59e84a56[m clean code
+[33maf773497[m Merge remote-tracking branch 'origin/develop' into feature#22_proxy_itawiki
+[33mb2b80ba0[m fixed ita-wiki dtos issue
+[33m4166c248[m actu develop
+[33mc2d16ddf[m clean code
+[33m8ced457e[m Merge remote-tracking branch 'origin/develop' into feature#41_final
+[33m77b7e743[m fixed dtos
+[33m8675bd85[m Ending merge of creating scripts Mongo
+[33m8a28ec72[m Merge pull request #129 from IT-Academy-BCN/gimenocarlos
+[33mba5df84e[m fix build interface Service
+[33m20bf3488[m Change in call to the Service from the Interface
+[33mb8e6c2ee[m Update contributors.md
+[33me79e629c[m added Sonar testing and fixes
+[33m8183fc23[m GET Challenges/idChallenge + Service Layer#20
+[33m55fbabbd[m deleting files
+[33md882135d[m Merge remote-tracking branch 'origin/develop' into feature#22_proxy_itawiki
+[33mf775e1d8[m included in contributors.md
+[33mbb3a65c3[m Adding Challenges Resources definition
+[33m90ad8bb4[m Dependency depuration
+[33m47815ec9[m Updated Develop
+[33m3d7ea464[m cambios
+[33m8b2f3ab0[m cambios
+[33mb5115892[m Merge pull request #124 from IT-Academy-BCN/AlbertMartin
+[33m6a0e32c4[m Update contributors.md
+[33m57ce85ec[m Changing challenges.json
+[33ma78225e0[m Changing challenges.json
+[33me3654503[m Changing challenges.json
+[33m70c22496[m Merge remote-tracking branch 'origin/feature#109' into feature#109
+[33mef1e2b9c[m Changing challenges.json
+[33mcf3732b9[m implemented #22 tests
+[33mfef016fa[m implemented #22 code
+[33m7f4212ef[m Changing challenges.json
+[33md5e7bdb2[m Changes challenges.json
+[33m064eefbd[m All relateds by UUID
+[33mb709a5ed[m All relateds by Id
+[33m329554b0[m uuids solutions
+[33m6fd394c9[m changes id_challenge
+[33m01af6c4e[m Changing challenges.json
+[33m92c47326[m Changes challenges.json
+[33m1649f364[m All relateds by UUID
+[33mafe5ed41[m All relateds by Id
+[33md6c5aeb0[m fixing issues
+[33md621d0ce[m fixing issues
+[33m1896775f[m Tunning Resource Helper
+[33mbacf8f49[m Tuning ResourceHelper
+[33m113e5312[m Merge branch 'pr_75' into develop
+[33me998678d[m Fixing test
+[33ma2d2260e[m feature#58 resource helper V1
+[33mdb01b0ba[m LocaDateTime field updated
+[33mf89306be[m Merge pull request #117 from IT-Academy-BCN/PedroTejeroDiez
+[33mb2d1f339[m Merge branch 'feature#109' of https://github.com/IT-Academy-BCN/ita-challenges-backend into feature#109
+[33m282a659d[m Merge branch 'pr_104' into develop
+[33me3efe8ce[m Deleting unused dependencies
+[33m3b248cf6[m adding my data to contributors.md
+[33me90041aa[m changes id_challenge
+[33mc9f1d1fb[m uuids solutions
+[33mef1c8f59[m Fixing Date Format Mask
+[33m7c560a59[m Adding UUID fields
+[33m2156d19e[m passing sonar coverage. Adding test for User and Score Controllers
+[33m87551071[m passing sonar 2
+[33m5b7a92a9[m passing sonar
+[33m4ff27694[m final DTO y test
+[33m046f855e[m resolve .class
+[33mb9d70b87[m Merge pull request #96 from IT-Academy-BCN/AnnaFedoraeva-patch-1
+[33ma23d8308[m Update contributors.md
+[33m45ef28d3[m Refactoring load files to Docker
+[33m41ed8799[m Refactoring MongoDB config files & locations
+[33m400c35bf[m Documents Tests Added
+[33mb36ff47b[m Code Smell and coverage depuration
+[33m13e4d44d[m Solution Repository + Tests
+[33m840088c3[m first commit
+[33m8e2eba35[m Actualizando rama
+[33mdf511fb5[m Merge remote-tracking branch 'origin/develop' into feature#23
+[33m55ec6839[m Merge remote-tracking branch 'origin/develop' into feature#24a
+[33mc1d323b2[m Language Repository + LaguageRepository Tests: testDb, findAll, existsById, findById, deleteById + Documents Update
+[33mbdfa1cbc[m Testing PR
+[33m2506b1ac[m Test with Gradle 8 + sonarqube
+[33mf1c17529[m Challenge Repository Tests: FindAll, ExistsByUUID, FindByUUID, DeleteByUUID, FindByLevel, FindByTitle
+[33md360ef47[m Documents annotations and renaming
+[33m3a78783c[m Repository delete changes
+[33ma5c93051[m ChallengeRespository Tests: setUp, testDB, existsByUuidTest, findByUuidTest, findByLevelTest, findByChallengeTitleTest
+[33m427d9c59[m Added plugin sonar 4.0
+[33mf333de47[m Testing Sonar
+[33m5a894092[m Ending configs
+[33m983a5eed[m Some changes
+[33md2152a9b[m Repository layer updated with develop branch 29/05: dockerfile runs, but error with java file class version
+[33ma8ac3e20[m Repository Layer Tests
+[33mc28c2cfc[m last changes
+[33me552140a[m Added some explanations
+[33mbd7cea6b[m Adding some Docker configs
+[33m4a3d9e78[m Added git-crypt config
+[33m05abc814[m Ending of User & Score configs
+[33mf7362b77[m add load-data.sh
+[33m1c2dd1c7[m Merge pull request #48 from IT-Academy-BCN/PauSansa
+[33m748e7c73[m Merge branch 'develop' into PauSansa
+[33md043e7ce[m Update contributors.md
+[33m6b7dfe0b[m Merge pull request #47 from IT-Academy-BCN/carlajuani-patch-1
+[33m64968d04[m New micros
+[33m6106292b[m Update contributors.md
+[33md57e48a1[m Update contributors.md
+[33m6fe180c3[m Added score & user modules
+[33m87ea721e[m Adding README
+[33me9453268[m Cambiando id_language
+[33m3a5d2984[m Adding Popularity att
+[33mcc078a3f[m collections to DB
+[33m7c211da2[m collections to DB
+[33mfbc06991[m Adding data to database
+[33m86e97e77[m Merge branch 'pr_31' into develop
+[33mb847aec5[m Merge pull request #32 from IT-Academy-BCN/IsmaelTortosa
+[33mb353ba72[m Update contributors.md
+[33m31b58596[m Update contributors.md
+[33mc7d50f7c[m añadido colaborador
+[33m1118fd0f[m Swagger
+[33mcb3988f5[m añadido colaborador
+[33m431db04e[m añadido colaborador
+[33m6de1c555[m Merge branch 'pr_16' into develop
+[33m725c7622[m Cleaning json
+[33mfbdffdcb[m Modifiyng data-challenge_new.json
+[33mb6b1dbab[m Added Apache Commons Dependency
+[33mb0599020[m Merge remote-tracking branch 'origin/develop' into pilar
+[33m108b6e80[m JSON new structure
+[33m1893b6b8[m Modifiyng data-challenge.json
+[33m49671d2d[m Adding data-challenge.json
+[33ma9d0a199[m Adding static-challenge.json
+[33m9027f55a[m Fixing testing to execute build on PR
+[33m7d9390c7[m Fixing config
+[33m00b5bea6[m Testing sonar&PRs
+[33mb725ca70[m Adding some resources
+[33m84f53207[m Added contributors.md
+[33m526106af[m Initial structure
+[33mac5be6ac[m Initial commit
