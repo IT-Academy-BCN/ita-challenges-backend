@@ -145,7 +145,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                            .languageId(languageUuid)
                            .solutionDocument(solutionDocuments)
                            .build();
-                   if (challengeUuid == ChallengeStatus.SENT) {
+                   if (challengeStatus == ChallengeStatus.SENT) {
                        userSolutionDocument.setStatus(ChallengeStatus.SCORE_PENDING);
                        return userSolutionRepository.save(userSolutionDocument)
                                .thenCompose(savedDocument ->
