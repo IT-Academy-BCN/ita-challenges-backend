@@ -196,6 +196,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return percentage;
     }
 
+    @Override
+    public Mono<UserScoreDto> getSolutionScore(String idUser, String idChallenge, String idSolution) {
+        return null;
+    }
+
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
     }
