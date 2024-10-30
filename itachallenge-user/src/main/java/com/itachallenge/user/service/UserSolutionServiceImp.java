@@ -68,7 +68,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         ChallengeStatus challengeStatus = determineChallengeStatus(status);
         List<SolutionDocument> solutionDocuments;
 
-        if (challengeStatus == null || challengeStatus.equals(ChallengeStatus.ENDED)) {
+        if (challengeStatus == null) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
@@ -124,48 +124,44 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
-       if (challengeStatus == ChallengeStatus.EMPTY) {
-           challengeStatus = ChallengeStatus.STARTED;
-       }
 
        return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                .flatMap(existingSolution -> {
                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED) || existingSolution.getStatus().equals(ChallengeStatus.SCORE_PENDING)) {
-                       return Mono.error(new UnmodifiableSolutionException("Cannot modofy solution with status ENDED or SCORE_PENDING"));
+                       return Mono.error(new UnmodifiableSolutionException("Cannot modify solution with status ENDED or SCORE_PENDING"));
                    }
-                   existingSolution.setSolutionDocument(solutionDocuments);
-                   existingSolution.setStatus(challengeStatus);
-                   return userSolutionRepository.save(existingSolution);
+                   if (challengeStatus == ChallengeStatus.STARTED) {
+                       existingSolution.setSolutionDocument(solutionDocuments);
+                       existingSolution.setStatus(challengeStatus);
+                       return userSolutionRepository.save(existingSolution);
+                   }
+                   return Mono.empty();
                })
 
                .switchIfEmpty(Mono.defer(() -> {
-                   UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                           .uuid(UUID.randomUUID())
-                           .userId(userUuid)
-                           .challengeId(challengeUuid)
-                           .languageId(languageUuid)
-                           .solutionDocument(solutionDocuments)
-                           .build();
                    if (challengeStatus == ChallengeStatus.SENT) {
-                       userSolutionDocument.setStatus(ChallengeStatus.SCORE_PENDING);
-                       return userSolutionRepository.save(userSolutionDocument)
-                               .thenCompose(savedDocument ->
-                                       getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.get(0).getSolutionText())
-                                               .thenApply(data -> {
-                                                   savedDocument.setStatus(ChallengeStatus.ENDED);
-                                                   savedDocument.setScore(data.getScore());
-                                                   savedDocument.setErrors(data.getErrors());
-                                                   return userSolutionRepository.save(savedDocument).toFuture();
-                                               })
-                               )
+                       UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                               .uuid(UUID.randomUUID())
+                               .userId(userUuid)
+                               .challengeId(challengeUuid)
+                               .languageId(languageUuid)
+                               .solutionDocument(solutionDocuments)
+                               .status(ChallengeStatus.SCORE_PENDING)
+                               .build();
+
+                       return Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.get(0).getSolutionText())
+                               .thenCompose(data -> {
+                                   userSolutionDocument.setStatus(ChallengeStatus.ENDED);
+                                   userSolutionDocument.setScore(data.getScore());
+                                   userSolutionDocument.setErrors(data.getErrors());
+                                   return userSolutionRepository.save(userSolutionDocument).toFuture();
+                               }))
                                .doOnError(e -> {
-                                   log.error("Error updating solution status", e);
-                                   throw new RuntimeException("Error updating solution status", e);
+                                   log.error("Error updating solution status");
+                                   throw new RuntimeException("Error updating solution status");
                                });
-                   } else {
-                       userSolutionDocument.setStatus(challengeStatus);
-                       return userSolutionRepository.save(userSolutionDocument);
                    }
+                   return Mono.empty();
                }));
     }
 
@@ -174,15 +170,14 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         return zmqClient.sendMessage(request, ScoreResponseDto.class)
                 .thenApply(response -> {
-                    ScoreResponseDto responseDto = (ScoreResponseDto) response;
                     log.info(String.format("[ Response - Score: %d - Errors: %s ]",
-                            responseDto.getScore(),
-                            responseDto.getErrors()));
-                    return responseDto;
+                            response.getScore(),
+                            response.getErrors()));
+                    return response;
                 })
                 .exceptionally(e -> {
                     log.error(e.getMessage());
-                    return null;
+                    return new ScoreResponseDto();
                 });
     }
 
