@@ -92,7 +92,13 @@
 
 <hr/>
 
-### 2.1.2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
+### 2.1.2. Configuración para acceso a MongoDB
+
+Puede trabajar con MongoDB de dos formas: accediendo a una base de datos creada en localhost (su propia máquina), o bien accediendo a una base de datos remota creada con fines de desarrollo.
+Recomendamos utilizar la base de datos remota de desarrollo para evitar problemas con los datos.
+Para acceder, debe utilizar las credenciales proporcionadas en application.yml de cada microservicio.
+Por lo general, esos archivos contienen las URL a las que debe acceder para conectarse a MongoDB remoto.
+Sin embargo, si desea trabajar con su MongoDB local, puede seguir los siguientes pasos:
 
 1. Asegúrate de tener las MongoDB Tools instaladas. Si aún no las tienes, ve al apartado de “Programas necesarios” y sigue las instrucciones proporcionadas para descargarlas en tu sistema operativo.
 
