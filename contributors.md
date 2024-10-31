@@ -64,3 +64,4 @@
 * Nicusor Ceban - https://github.com/nikulet
 * María Eugenia Torres - https://github.com/Eugenia72
 * Carlos Galan - https://github.com/camilo-arthuro
+* David Urpina -https://github.com/eqqbq
