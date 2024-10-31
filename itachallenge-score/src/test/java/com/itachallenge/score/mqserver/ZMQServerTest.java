@@ -4,76 +4,93 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import java.util.UUID;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+public class ZMQServerTest {
 
-@ExtendWith(MockitoExtension.class)
-class ZMQServerTest {
-//TODO: NO FUNCIONA
     @Mock
-    private ZContext zContextMock;
-    @Mock
-    private ZMQ.Socket socketMock;
-    @Mock
-    private ObjectSerializer objectSerializerMock;
+    private ObjectSerializer objectSerializer;
+
     @InjectMocks
     private ZMQServer zmqServer;
-    private ScoreRequestDto scoreRequestDto;
-    private ScoreResponseDto scoreResponseDto;
-    private byte[] requestBytes;
-    private byte[] responseBytes;
+
+    private AutoCloseable closeable;
 
     @BeforeEach
-    void setUp() throws JsonProcessingException {
-        when(zContextMock.createSocket(ZMQ.REP)).thenReturn(socketMock);
+    public void setUp() {
+        closeable = MockitoAnnotations.openMocks(this);
+        zmqServer.init(); // Inicia el servidor
+    }
 
-        scoreRequestDto = ScoreRequestDto.builder()
-                .uuidChallenge(UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa"))
-                .uuidLanguage(UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909"))
-                .solutionText("Solution Text Test")
-                .build();
-
-        scoreResponseDto = ScoreResponseDto.builder()
-                .uuidChallenge(scoreRequestDto.getUuidChallenge())
-                .uuidLanguage(scoreRequestDto.getUuidLanguage())
-                .solutionText(scoreRequestDto.getSolutionText())
-                .score(99)
-                .errors("xxx")
-                .build();
-
-        requestBytes = objectSerializerMock.serialize(scoreRequestDto);
-        responseBytes = objectSerializerMock.serialize(scoreResponseDto);
+    @AfterEach
+    public void tearDown() throws Exception {
+        zmqServer.cleanup(); // Limpia el servidor
+        closeable.close();
     }
 
     @Test
-    void testRun() throws Exception {
+    public void testServerStarts() {
+        // Verifica que el servidor se haya iniciado correctamente
+        assertTrue(zmqServer.isRunning()); // Asegúrate de tener un método isRunning() en ZMQServer
+    }
 
-        when(socketMock.recv(0))
-                .thenReturn(requestBytes)
-                .thenReturn(null);
+    @Test
+    public void testHandleRequest() throws Exception {
+        // Simula un objeto ScoreRequestDto con UUIDs válidos
+        ScoreRequestDto requestDto = ScoreRequestDto.builder()
+                .uuidChallenge(UUID.randomUUID())
+                .uuidLanguage(UUID.randomUUID())
+                .solutionText("test-solution")
+                .build();
 
-        when(objectSerializerMock.deserialize(requestBytes, ScoreRequestDto.class))
-                .thenReturn(scoreRequestDto);
-        when(objectSerializerMock.serialize(any(ScoreResponseDto.class))).thenReturn(responseBytes);
+        // Simula la serialización
+        byte[] serializedRequest = objectSerializer.serialize(requestDto);
+        when(objectSerializer.deserialize(any(byte[].class), eq(ScoreRequestDto.class))).thenReturn(requestDto);
 
-        Thread serverThread = new Thread(() -> zmqServer.run());
-        serverThread.start();
+        // Crea un socket para enviar el mensaje
+        try (ZContext context = new ZContext()) {
+            ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+            socket.connect("tcp://localhost:5555"); // Conéctate al servidor
 
-        Thread.sleep(500);
+            // Envía el mensaje
+            socket.send(serializedRequest);
 
-        verify(socketMock).recv(0);
-        verify(socketMock).send(responseBytes, 0);
+            // Espera la respuesta
+            byte[] reply = socket.recv(0);
 
-        serverThread.interrupt();
-        serverThread.join();
+            // Simula la respuesta esperada
+            ScoreResponseDto expectedResponse = ScoreResponseDto.builder()
+                    .uuidChallenge(requestDto.getUuidChallenge())
+                    .uuidLanguage(requestDto.getUuidLanguage())
+                    .solutionText(requestDto.getSolutionText())
+                    .score(99) // Aquí puedes calcular el puntaje real
+                    .errors("xxx") // Aquí puedes calcular los errores reales
+                    .build();
+
+            // Simula la serialización de la respuesta
+            byte[] serializedResponse = objectSerializer.serialize(expectedResponse);
+            when(objectSerializer.serialize(any(ScoreResponseDto.class))).thenReturn(serializedResponse);
+
+            // Verifica que la respuesta sea la esperada
+            assertEquals(serializedResponse, reply);
+        }
+    }
+
+    @Test
+    public void testServerStops() {
+        zmqServer.cleanup(); // Detiene el servidor
+        assertFalse(zmqServer.isRunning()); // Asegúrate de tener un método isRunning() en ZMQServer
     }
 }
