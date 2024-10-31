@@ -89,7 +89,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         .userId(String.valueOf(savedDocument.getUserId()))
                         .languageId(String.valueOf(savedDocument.getLanguageId()))
                         .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                        .solutionText(savedDocument.getSolutionDocument().getFirst().getSolutionText())
                         .score(savedDocument.getScore())
                         .errors(savedDocument.getErrors())
                         .build())
@@ -149,7 +149,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                                .status(ChallengeStatus.SCORE_PENDING)
                                .build();
 
-                       return Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.get(0).getSolutionText())
+                       return Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getSolutionText())
                                .thenCompose(data -> {
                                    userSolutionDocument.setStatus(ChallengeStatus.ENDED);
                                    userSolutionDocument.setScore(data.getScore());
@@ -165,15 +165,16 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                }));
     }
 
-    private CompletableFuture<ScoreResponseDto> getDataFromMicroScore (UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
+    private CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
 
         return zmqClient.sendMessage(request, ScoreResponseDto.class)
                 .thenApply(response -> {
+                    ScoreResponseDto responseDto = (ScoreResponseDto) response;
                     log.info(String.format("[ Response - Score: %d - Errors: %s ]",
-                            response.getScore(),
-                            response.getErrors()));
-                    return response;
+                            responseDto.getScore(),
+                            responseDto.getErrors()));
+                    return responseDto;
                 })
                 .exceptionally(e -> {
                     log.error(e.getMessage());
