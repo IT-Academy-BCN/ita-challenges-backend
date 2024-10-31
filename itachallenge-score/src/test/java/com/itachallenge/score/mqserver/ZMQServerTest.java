@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+
+import java.util.Arrays;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -59,6 +61,19 @@ public class ZMQServerTest {
         byte[] serializedRequest = objectSerializer.serialize(requestDto);
         when(objectSerializer.deserialize(any(byte[].class), eq(ScoreRequestDto.class))).thenReturn(requestDto);
 
+        // Simula la respuesta esperada
+        ScoreResponseDto expectedResponse = ScoreResponseDto.builder()
+                .uuidChallenge(requestDto.getUuidChallenge())
+                .uuidLanguage(requestDto.getUuidLanguage())
+                .solutionText(requestDto.getSolutionText())
+                .score(99) // Aquí puedes calcular el puntaje real
+                .errors("xxx") // Aquí puedes calcular los errores reales
+                .build();
+
+        // Serializa la respuesta esperada
+        byte[] serializedResponse = objectSerializer.serialize(expectedResponse);
+        when(objectSerializer.serialize(any(ScoreResponseDto.class))).thenReturn(serializedResponse);
+
         // Crea un socket para enviar el mensaje
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
@@ -67,24 +82,18 @@ public class ZMQServerTest {
             // Envía el mensaje
             socket.send(serializedRequest);
 
-            // Espera la respuesta
-            byte[] reply = socket.recv(0);
+            byte[] reply = socket.recv(5000);
 
-            // Simula la respuesta esperada
-            ScoreResponseDto expectedResponse = ScoreResponseDto.builder()
-                    .uuidChallenge(requestDto.getUuidChallenge())
-                    .uuidLanguage(requestDto.getUuidLanguage())
-                    .solutionText(requestDto.getSolutionText())
-                    .score(99) // Aquí puedes calcular el puntaje real
-                    .errors("xxx") // Aquí puedes calcular los errores reales
-                    .build();
+            if (reply == null) {
+                throw new RuntimeException("Timeout waiting for response from server");
+            }
 
-            // Simula la serialización de la respuesta
-            byte[] serializedResponse = objectSerializer.serialize(expectedResponse);
-            when(objectSerializer.serialize(any(ScoreResponseDto.class))).thenReturn(serializedResponse);
+// Imprime para depuración
+            System.out.println("Serialized Response: " + Arrays.toString(serializedResponse));
+            System.out.println("Reply: " + Arrays.toString(reply));
 
-            // Verifica que la respuesta sea la esperada
-            assertEquals(serializedResponse, reply);
+// Verifica que la respuesta sea la esperada
+            assertArrayEquals(serializedResponse, reply); // Cambia a assertArrayEquals para comparar arreglos de bytes
         }
     }
 

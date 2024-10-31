@@ -30,6 +30,7 @@ public class ZMQClient {
         this.objectSerializer = objectSerializer;
     }
 
+
     public CompletableFuture<Object> sendMessage(Object message, Class clazz) {
 
         return CompletableFuture.supplyAsync(() -> {
