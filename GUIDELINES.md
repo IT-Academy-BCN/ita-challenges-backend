@@ -570,7 +570,7 @@ The following programs are required to work on the project:
 
 - **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
+- **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 21.0.3 of the JDK which is the one used in this project. You can download [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) from the official website.
 
 - **Gradle 8.8**
 
