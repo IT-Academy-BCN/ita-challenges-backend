@@ -34,7 +34,7 @@ management:
 
 zeromq:
   socket:
-    address: tcp://*:5555
+    address: tcp://*:5556
 
 logging:
   level:

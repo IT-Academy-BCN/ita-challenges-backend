@@ -2,6 +2,9 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
+import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
+import com.itachallenge.user.mqclient.clientZMQ;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -20,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Validated
@@ -27,6 +31,9 @@ import java.util.*;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
+    @Autowired
+    private clientZMQ zmqClient;
 
     @Autowired
     private IUserSolutionService userScoreService;
@@ -37,6 +44,25 @@ public class UserController {
     @Value("${spring.application.name}")
     private String appName;
 
+    @Operation(summary = "Test ZMQ Communication")
+    @ApiResponse(responseCode = "200", description = "Communication successful")
+    @GetMapping(value = "/test/zmq")
+    public Mono<ScoreResponseDto> testZmqCommunication() {
+        // Create a dummy request with example parameters for testing
+        ScoreRequestDto requestDto = new ScoreRequestDto();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("exampleParameter", 42);
+        requestDto.setUserId(UUID.randomUUID());
+        requestDto.setChallengeId(UUID.randomUUID());
+        requestDto.setParameters(parameters);
+
+        // Send request to ZeroMQ client and retrieve response asynchronously
+        CompletableFuture<ScoreResponseDto> responseFuture = zmqClient.sendScoreRequest(requestDto);
+
+        return Mono.fromFuture(responseFuture)
+                .doOnSuccess(response -> log.info("Received ZMQ response: {}", response))
+                .doOnError(error -> log.error("Error in ZMQ communication: {}", error.getMessage()));
+    }
 
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
@@ -178,9 +204,9 @@ public class UserController {
             summary = "Retrieves all user challenges solutions and their status.",
             description = "Retrieves all user-contributed solutions for all challenges and their status (whether they've finished completing them or not).",
             responses = {
-            @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully", content = {@Content(array = @ArraySchema(schema = @Schema(implementation = UserSolutionDto.class)), mediaType = "application/json")}),
-            @ApiResponse(responseCode = "400", description = "Invalid UUID for user"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully", content = {@Content(array = @ArraySchema(schema = @Schema(implementation = UserSolutionDto.class)), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID for user"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
     public Mono<ResponseEntity<List<UserSolutionDto>>> getAllSolutionsByIdUser(

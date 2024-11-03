@@ -31,7 +31,7 @@ logging:
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-score.log
@@ -55,7 +55,7 @@ security:
     - "java.nio.file.Files"
 
 
-# Keyword Filter
+  # Keyword Filter
 keyword:
   disallowed:
     - "import"
@@ -77,3 +77,8 @@ docker:
       } 
     }"
   timeout-seconds: 5
+
+mqserver:
+  score:
+    address: tcp://localhost:5555
+

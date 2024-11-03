@@ -47,6 +47,7 @@ dependencies {
     implementation 'org.testcontainers:junit-jupiter:1.16.3'
     implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20211018.1'
     implementation 'org.owasp.esapi:esapi:2.5.4.0'
+    implementation 'org.zeromq:jeromq:0.5.4'
 
 
 
