@@ -63,7 +63,7 @@
 # 2. WORK PROCEDURES
 
 ## 2.1 First things to do in the project
-### 2.1.1. Add your name and GitHub to the  contributors.md file
+### 2.1.1. Add your name and GitHub User to contributors.md file
 
 1. Clone the ita-challenges-backend repository from GitHub to your local system:
 
@@ -94,7 +94,14 @@
 
 <hr/>
 
-### 2.1.2. Import data into MongoDB (Example for micro itachallenge-challenge data)
+### 2.1.2. Configuring MongoDB access
+
+You can work with MongoDB in two ways: accessing to a database located at localhost (your machine) or accessing to remote database created with developing purposes.
+We recommend to use the remote develop database to avoid problems with the data.
+To access, you should use the credentials provided at application.yml of each microservice. 
+Ussually, those files contain url's you need to access to remote MongoDB.
+
+However, if you want to work with your local MongoDB, you can follow the following steps:
 
 1. Make sure you have the MongoDB Tools installed. If you don't already have them, go the "Required programs" section and folow the instructions provided to download them to your operting system.
 
@@ -563,7 +570,7 @@ The following programs are required to work on the project:
 
 - **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
+- **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 21.0.3 of the JDK which is the one used in this project. You can download [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) from the official website.
 
 - **Gradle 8.8**
 
