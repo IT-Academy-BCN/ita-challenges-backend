@@ -91,9 +91,11 @@
 
 <hr/>
 
-### 2.1.2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
+### 2.1.2. Configuració per l'accés a MongoDB
 
-1. Assegureu-vos de tenir les MongoDB Tools instal·lades. Si encara no en tens, vés a l'apartat de “Programes necessaris” i segueix les instruccions proporcionades per descarregar-les al sistema operatiu.
+Podeu treballar amb MongoDB de dues maneres: accedint a una base de dades creada en localhost (a la vostra pròpia màquina), o bé accedint a una base de dades remota creada amb finalitats de desenvolupament. Recomanem utilitzar la base de dades remota de desenvolupament per a evitar problemes amb les dades. Per accedir-hi, heu d'utilitzar les credencials proporcionades en application.yml de cada microservei. En general, aquests arxius contenen els URL a les quals heu d'accedir per a connectar-vos a MongoDB en remot. No obstant això, si desitgeu treballar amb el vostre MongoDB local, podeu seguir els següents passos:
+
+1. Assegureu-vos de tenir les MongoDB Tools instal·lades. Si encara no les tens, vés a l'apartat de “Programes necessaris” i segueix les instruccions proporcionades per descarregar-les al sistema operatiu.
 
 
 2. Ara que tens les MongoDB Tools instal·lades, obre la terminal de MongoDB executant la següent ordre:
