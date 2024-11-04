@@ -68,6 +68,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         ChallengeStatus challengeStatus = determineChallengeStatus(status);
         List<SolutionDocument> solutionDocuments;
 
+
         if (challengeStatus == null) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
@@ -123,7 +124,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.save(newDocument).thenReturn(newDocument);
     }
 
-    private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
+    public Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
 
        return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                .flatMap(existingSolution -> {
@@ -165,7 +166,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                }));
     }
 
-    private CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
+    public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
 
         return zmqClient.sendMessage(request, ScoreResponseDto.class)

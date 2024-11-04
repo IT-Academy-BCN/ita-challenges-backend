@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
+import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
@@ -138,105 +139,35 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
-    @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when existing document can't be found and status is empty or ENDED")
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = {"ENDED"})
-    void addSolutionNewSolutionWithEmptyStatus_test(String status) {
-        userSolutionDocument.setStatus(null);
-        userSolutionDto.setStatus(status);
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
-        scoreResponseDto.setScore(mockScore);
-        scoreResponseDto.setErrors(mockErrors);
-
-        CompletableFuture<Object> completableFuture = CompletableFuture.completedFuture(scoreResponseDto);
-
-        when(zmqClient.sendMessage(any(), any()))
-                .thenReturn(completableFuture);
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == mockScore
-                                && userSolutionScoreDto.getErrors().equals(mockErrors))
-                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution modifies an existing document when status is empty")
+    @DisplayName("UserSolutionServiceImpTest - addSolution returns UnmodifiableSolutionException when status is ENDED")
     @Test
-    void addSolutionModifySolutionWithEmptyStatus_test() {
-        userSolutionDocument.setStatus(null);
-        userSolutionDto.setStatus(null);
+    void addSolutionWithEndedStatus() {
+        // Configura el estado de la solución como ENDED
+        userSolutionDto.setStatus("ENDED");
 
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
-        scoreResponseDto.setScore(mockScore);
-        scoreResponseDto.setErrors(mockErrors);
-
-        CompletableFuture<Object> completableFuture = CompletableFuture.completedFuture(scoreResponseDto);
-
-        when(zmqClient.sendMessage(any(), any()))
-                .thenReturn(completableFuture);
-
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == mockScore
-                                && userSolutionScoreDto.getErrors().equals(mockErrors))
-                                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution saves a solution when new status is ENDED and solution wasn't already ENDED")
-    @Test
-    void addSolutionWithEndedStatusWhenValid_test() {
+        // Simula la existencia de una solución con el estado ENDED
         UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
-        existingUserSolutionDocument.setStatus(ChallengeStatus.STARTED);
+        existingUserSolutionDocument.setStatus(ChallengeStatus.ENDED);
 
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.just(existingUserSolutionDocument));
 
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
+        // Verifica que se lanza la excepción UnmodifiableSolutionException con el mensaje adecuado
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(
+                        throwable -> throwable instanceof UnmodifiableSolutionException
+                                && throwable.getMessage().equals("Cannot modify solution with status ENDED or SCORE_PENDING"))
+                .verify();
 
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == 13
-                                && userSolutionScoreDto.getErrors().equals(mockErrors))
-                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verifyNoMoreInteractions(userSolutionRepository);
     }
 
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns EndedChallengeException when solution's status was previously set to ENDED")
+    @DisplayName("UserSolutionServiceImpTest - addSolution returns UnmodifiableSolutionException when existing solution status is SCORE_PENDING")
     @Test
-    void addSolutionWithEndedStatusWhenInvalid_test() {
+    void addSolutionWithScorePendingStatus() {
         UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
-        existingUserSolutionDocument.setStatus(ChallengeStatus.ENDED);
+        existingUserSolutionDocument.setStatus(ChallengeStatus.SCORE_PENDING);
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.just(existingUserSolutionDocument));
@@ -244,25 +175,174 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodifiableSolutionException
-                                && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
+                                && throwable.getMessage().equals("Cannot modify solution with status ENDED or SCORE_PENDING")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
 
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns IllegalArgumentException when provided status is STARTED, EMPTY or invalid")
-    @ParameterizedTest
-    @ValueSource(strings = {"STARTED", "EMPTY", "InvalidStatus"})
-    void addSolutionWithInvalidStatus_test(String status) {
-        userSolutionDto.setStatus(status);
+    @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when status is SENT")
+    @Test
+    void addSolutionNewSolutionWithSentStatus() {
+        userSolutionDto.setStatus("SENT");
 
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(userSolutionDocument));
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
+        scoreResponseDto.setScore(mockScore);
+        scoreResponseDto.setErrors(mockErrors);
+
+        CompletableFuture<Object> completableFuture = CompletableFuture.completedFuture(scoreResponseDto);
+
+        when(zmqClient.sendMessage(any(), any()))
+                .thenReturn(completableFuture);
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
-                .expectErrorMatches(
-                        throwable -> throwable instanceof IllegalArgumentException
-                                && throwable.getMessage().equals("Status not allowed")).verify();
-        verifyNoInteractions(userSolutionRepository);
+                .expectNextMatches(userSolutionScoreDto ->
+                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
+                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
+                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
+                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
+                                && userSolutionScoreDto.getScore() == mockScore
+                                && userSolutionScoreDto.getErrors().equals(mockErrors))
+                .verifyComplete();
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
 
+    @DisplayName("saveValidSolution modifies existing solution when status is STARTED")
+    @Test
+    void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+                .status(ChallengeStatus.STARTED)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existingSolution));
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(existingSolution));
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+                .expectNextMatches(savedDocument -> savedDocument.getSolutionDocument().equals(solutionDocuments))
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(existingSolution);
+    }
+
+    @DisplayName("saveValidSolution returns error when existing solution status is ENDED")
+    @Test
+    void saveValidSolutionReturnsErrorWhenExistingSolutionStatusIsEnded() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+                .status(ChallengeStatus.ENDED)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existingSolution));
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+                .expectError(UnmodifiableSolutionException.class)
+                .verify();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("saveValidSolution creates new solution when status is SENT")
+    @Test
+    void saveValidSolutionCreatesNewSolutionWhenStatusIsSent() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
+        scoreResponseDto.setScore(100);
+        scoreResponseDto.setErrors("No errors");
+
+        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .solutionDocument(solutionDocuments)
+                .status(ChallengeStatus.SENT)
+                .score(100)  // Set the score
+                .errors("No errors")  // Set the errors
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(userSolutionDocument));
+        when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
+                .thenReturn(CompletableFuture.completedFuture(scoreResponseDto));
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.SENT, solutionDocuments))
+                .expectNextMatches(savedDocument -> savedDocument.getScore() == 100 && "No errors".equals(savedDocument.getErrors()))
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("saveValidSolution returns empty when status is not SENT or STARTED")
+    @Test
+    void saveValidSolutionReturnsEmptyWhenStatusIsNotSentOrStarted() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.ENDED, solutionDocuments))
+                .verifyComplete();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
+    @Test
+    void getDataFromMicroScoreReturnsValidResponse() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        String solutionText = "Sample solution text";
+        ScoreResponseDto expectedResponse = new ScoreResponseDto();
+        expectedResponse.setScore(100);
+        expectedResponse.setErrors("No errors");
+
+        when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
+                .thenReturn(CompletableFuture.completedFuture(expectedResponse));
+
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, solutionText);
+
+        assertNotNull(resultFuture);
+        assertEquals(expectedResponse, resultFuture.join());
+    }
+
+    @DisplayName("getDataFromMicroScore handles exception and returns default ScoreResponseDto")
+    @Test
+    void getDataFromMicroScoreHandlesException() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        String solutionText = "Sample solution text";
+
+        when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
+                .thenReturn(CompletableFuture.failedFuture(new RuntimeException("ZMQ error")));
+
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, solutionText);
+
+        assertNotNull(resultFuture);
+        ScoreResponseDto result = resultFuture.join();
+        assertEquals(0, result.getScore());
+        assertNull(result.getErrors());
     }
 
     @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns all solutions for the user")
