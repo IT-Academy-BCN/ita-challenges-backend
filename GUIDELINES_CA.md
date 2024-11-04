@@ -10,7 +10,7 @@
    2.2 [Configuracions de Git](#22-configuracions-git)\
    2.3 [Procediment diari](#23-procediment-diari)\
    2.4 [Procediment de treball amb targetes](#24-treball-amb-les-targetes)\
-   2.5 [Aspectes a tenir en compte en fer una PR](#25-aspectes-a-tenir-en-compte-a-lhora-de-fer-un-pr)\
+   2.5 [Aspectes a tenir en compte en fer una PR](#25-aspectes-a-tenir-en-compte-a-lhora-de-fer-un-pr)
    
    2.7 [Metodologia Scrum](#27-metodologia-scrum)
 
