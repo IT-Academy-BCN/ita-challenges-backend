@@ -1,5 +1,5 @@
 # Use an Alpine base image
-FROM alpine:latest
+FROM alpine:3.20
 
 # Install bash and curl
 RUN apk add --no-cache bash curl
