@@ -4,7 +4,6 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.UserSolutionServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -361,13 +360,13 @@ class UserControllerTest {
         String URI_TEST = "/{idUser}/challenges/language/{idLanguage}/statistics/totals";
         UUID idUser = UUID.randomUUID();
         UUID idLanguage = UUID.randomUUID();
-        ChallengeStatisticTotalDto challenges = new ChallengeStatisticTotalDto();
-
-        challenges.setCount(125);
-        challenges.setCompleted(100);
-        challenges.setSaved(23);
-        challenges.setScore_pending(50);
-        challenges.setPassed(50);
+        ChallengeStatisticTotalDto challenges = ChallengeStatisticTotalDto.builder()
+                .count(125)
+                .completed(100)
+                .saved(23)
+                .scorePending(50)
+                .passed(50)
+                .build();
 
         UserStatisticTotalDto mockDto = UserStatisticTotalDto.builder()
                 .userId(idUser)
@@ -388,7 +387,7 @@ class UserControllerTest {
                     assertEquals(125, userStatisticTotalDto.getChallenges().getCount());
                     assertEquals(100, userStatisticTotalDto.getChallenges().getCompleted());
                     assertEquals(23, userStatisticTotalDto.getChallenges().getSaved());
-                    assertEquals(50, userStatisticTotalDto.getChallenges().getScore_pending());
+                    assertEquals(50, userStatisticTotalDto.getChallenges().getScorePending());
                     assertEquals(50, userStatisticTotalDto.getChallenges().getPassed());
                 });
     }

@@ -1,10 +1,7 @@
 package com.itachallenge.user.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -13,7 +10,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
 public class UserStatisticTotalDto {
 
     @JsonProperty(value = "uuid_user")

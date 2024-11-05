@@ -3,7 +3,6 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IUserSolutionService;
-import com.itachallenge.user.service.UserSolutionServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
