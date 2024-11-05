@@ -4,6 +4,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.service.IUserSolutionService;
+import com.itachallenge.user.service.UserSolutionServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -352,6 +353,43 @@ class UserControllerTest {
                     UserSolutionDto solution = solutions.get(0);
                     assertEquals(userId.toString(), solution.getUserId());
                     assertEquals("Sample Solution", solution.getSolutionText());
+                });
+    }
+
+    @Test
+    void getUserTotalStatisticTest(){
+        String URI_TEST = "/{idUser}/challenges/language/{idLanguage}/statistics/totals";
+        UUID idUser = UUID.randomUUID();
+        UUID idLanguage = UUID.randomUUID();
+        ChallengeStatisticTotalDto challenges = new ChallengeStatisticTotalDto();
+
+        challenges.setCount(125);
+        challenges.setCompleted(100);
+        challenges.setSaved(23);
+        challenges.setScore_pending(50);
+        challenges.setPassed(50);
+
+        UserStatisticTotalDto mockDto = UserStatisticTotalDto.builder()
+                .userId(idUser)
+                .languageId(idLanguage)
+                .challenges(challenges)
+                .build();
+
+        when(userSolutionService.getUserTotalStatistic(idUser, idLanguage)).thenReturn(Mono.just(mockDto));
+        webTestClient.get()
+                .uri(CONTROLLER_URL + URI_TEST, idUser.toString(), idLanguage.toString())
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(UserStatisticTotalDto.class)
+                .value(userStatisticTotalDto -> {
+                    assertEquals(idUser, userStatisticTotalDto.getUserId());
+                    assertEquals(idLanguage, userStatisticTotalDto.getLanguageId());
+                    assertEquals(125, userStatisticTotalDto.getChallenges().getCount());
+                    assertEquals(100, userStatisticTotalDto.getChallenges().getCompleted());
+                    assertEquals(23, userStatisticTotalDto.getChallenges().getSaved());
+                    assertEquals(50, userStatisticTotalDto.getChallenges().getScore_pending());
+                    assertEquals(50, userStatisticTotalDto.getChallenges().getPassed());
                 });
     }
 }

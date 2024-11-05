@@ -3,6 +3,7 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IUserSolutionService;
+import com.itachallenge.user.service.UserSolutionServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -189,6 +190,16 @@ public class UserController {
 
         return userScoreService.showAllUserSolutions(userUuid)
                 .collectList()
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(path = "/{idUser}/challenges/language/{idLanguage}/statistics/totals")
+    public Mono<ResponseEntity<UserStatisticTotalDto>> getUserTotalStatistic(
+            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
+            @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage
+    ) {
+        return userScoreService.getUserTotalStatistic(UUID.fromString(idUser), UUID.fromString(idLanguage))
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

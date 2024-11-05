@@ -196,6 +196,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return percentage;
     }
 
+    @Override
+    public Mono<UserStatisticTotalDto> getUserTotalStatistic(UUID userId, UUID languageId) {
+        return null;
+    }
+
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
     }
@@ -211,5 +216,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         return Flux.fromIterable(userSolutionsChallenge);
     }
+
 }
 
