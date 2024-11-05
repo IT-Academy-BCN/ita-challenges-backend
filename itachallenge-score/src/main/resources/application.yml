@@ -13,6 +13,10 @@ springdoc:
     enable: true
     path: "/api-docs"
 
+zeromq:
+  socket:
+    address: tcp://*:5555
+
 server:
   port: 8763
 

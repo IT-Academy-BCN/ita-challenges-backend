@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -30,10 +31,12 @@ public class ZMQServerTest {
 
     private AutoCloseable closeable;
 
+
     @BeforeEach
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        zmqServer.init(); // Inicia el servidor
+        zmqServer = new ZMQServer("tcp://localhost:5555");
+        zmqServer.init(); // Initialize the server
     }
 
     @AfterEach
@@ -43,63 +46,64 @@ public class ZMQServerTest {
     }
 
     @Test
-    public void testServerStarts() {
-        // Verifica que el servidor se haya iniciado correctamente
-        assertTrue(zmqServer.isRunning()); // Asegúrate de tener un método isRunning() en ZMQServer
+    public void serverStartsSuccessfully() {
+        assertTrue(zmqServer.isRunning());
     }
 
     @Test
-    public void testHandleRequest() throws Exception {
-        // Simula un objeto ScoreRequestDto con UUIDs válidos
+    public void serverHandlesValidRequest() throws Exception {
         ScoreRequestDto requestDto = ScoreRequestDto.builder()
                 .uuidChallenge(UUID.randomUUID())
                 .uuidLanguage(UUID.randomUUID())
                 .solutionText("test-solution")
                 .build();
 
-        // Simula la serialización
         byte[] serializedRequest = objectSerializer.serialize(requestDto);
         when(objectSerializer.deserialize(any(byte[].class), eq(ScoreRequestDto.class))).thenReturn(requestDto);
 
-        // Simula la respuesta esperada
         ScoreResponseDto expectedResponse = ScoreResponseDto.builder()
                 .uuidChallenge(requestDto.getUuidChallenge())
                 .uuidLanguage(requestDto.getUuidLanguage())
                 .solutionText(requestDto.getSolutionText())
-                .score(99) // Aquí puedes calcular el puntaje real
-                .errors("xxx") // Aquí puedes calcular los errores reales
+                .score(100)
+                .errors(null)
+                .compilationMessage("Success")
+                .expectedResult("Expected Result")
                 .build();
 
-        // Serializa la respuesta esperada
         byte[] serializedResponse = objectSerializer.serialize(expectedResponse);
         when(objectSerializer.serialize(any(ScoreResponseDto.class))).thenReturn(serializedResponse);
 
-        // Crea un socket para enviar el mensaje
         try (ZContext context = new ZContext()) {
             ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
-            socket.connect("tcp://localhost:5555"); // Conéctate al servidor
+            socket.connect("tcp://localhost:5555");
 
-            // Envía el mensaje
             socket.send(serializedRequest);
-
             byte[] reply = socket.recv(5000);
 
-            if (reply == null) {
-                throw new RuntimeException("Timeout waiting for response from server");
-            }
-
-// Imprime para depuración
-            System.out.println("Serialized Response: " + Arrays.toString(serializedResponse));
-            System.out.println("Reply: " + Arrays.toString(reply));
-
-// Verifica que la respuesta sea la esperada
-            assertArrayEquals(serializedResponse, reply); // Cambia a assertArrayEquals para comparar arreglos de bytes
+            assertArrayEquals(serializedResponse, reply);
         }
     }
 
     @Test
-    public void testServerStops() {
-        zmqServer.cleanup(); // Detiene el servidor
-        assertFalse(zmqServer.isRunning()); // Asegúrate de tener un método isRunning() en ZMQServer
+    public void serverHandlesInvalidRequest() throws Exception {
+        byte[] invalidRequest = "invalid-request".getBytes();
+        when(objectSerializer.deserialize(any(byte[].class), eq(ScoreRequestDto.class))).thenThrow(new IOException("Deserialization error"));
+
+        try (ZContext context = new ZContext()) {
+            ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+            socket.connect("tcp://localhost:5555");
+
+            socket.send(invalidRequest);
+            byte[] reply = socket.recv(5000);
+
+            assertArrayEquals(new byte[0], reply);
+        }
+    }
+
+    @Test
+    public void serverStopsSuccessfully() {
+        zmqServer.cleanup();
+        assertFalse(zmqServer.isRunning());
     }
 }
