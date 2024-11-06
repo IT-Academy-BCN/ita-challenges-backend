@@ -44,26 +44,6 @@ public class UserController {
     @Value("${spring.application.name}")
     private String appName;
 
-    @Operation(summary = "Test ZMQ Communication")
-    @ApiResponse(responseCode = "200", description = "Communication successful")
-    @GetMapping(value = "/test/zmq")
-    public Mono<ScoreResponseDto> testZmqCommunication() {
-        // Create a dummy request with example parameters for testing
-        ScoreRequestDto requestDto = new ScoreRequestDto();
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("exampleParameter", 42);
-        requestDto.setUserId(UUID.randomUUID());
-        requestDto.setChallengeId(UUID.randomUUID());
-        requestDto.setParameters(parameters);
-
-        // Send request to ZeroMQ client and retrieve response asynchronously
-        CompletableFuture<ScoreResponseDto> responseFuture = zmqClient.sendScoreRequest(requestDto);
-
-        return Mono.fromFuture(responseFuture)
-                .doOnSuccess(response -> log.info("Received ZMQ response: {}", response))
-                .doOnError(error -> log.error("Error in ZMQ communication: {}", error.getMessage()));
-    }
-
     @Operation(summary = "Testing the App")
     @GetMapping(value = "/test")
     public String test() {
