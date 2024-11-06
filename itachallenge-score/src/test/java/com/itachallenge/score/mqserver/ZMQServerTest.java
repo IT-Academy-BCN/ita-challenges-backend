@@ -1,79 +1,152 @@
 package com.itachallenge.score.mqserver;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
-import java.util.UUID;
 
+import java.io.IOException;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-class ZMQServerTest {
-//TODO: NO FUNCIONA
-    @Mock
-    private ZContext zContextMock;
-    @Mock
+class ZMQServerTestTDD {
+
+    private ZContext contextMock;
     private ZMQ.Socket socketMock;
-    @Mock
     private ObjectSerializer objectSerializerMock;
-    @InjectMocks
     private ZMQServer zmqServer;
-    private ScoreRequestDto scoreRequestDto;
-    private ScoreResponseDto scoreResponseDto;
-    private byte[] requestBytes;
-    private byte[] responseBytes;
 
     @BeforeEach
-    void setUp() throws JsonProcessingException {
-        when(zContextMock.createSocket(ZMQ.REP)).thenReturn(socketMock);
+    void setUp() {
+        contextMock = mock(ZContext.class);
+        socketMock = mock(ZMQ.Socket.class);
+        objectSerializerMock = mock(ObjectSerializer.class);
 
-        scoreRequestDto = ScoreRequestDto.builder()
-                .uuidChallenge(UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa"))
-                .uuidLanguage(UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909"))
-                .solutionText("Solution Text Test")
-                .build();
+        when(contextMock.createSocket(SocketType.REP)).thenReturn(socketMock);
 
-        scoreResponseDto = ScoreResponseDto.builder()
-                .uuidChallenge(scoreRequestDto.getUuidChallenge())
-                .uuidLanguage(scoreRequestDto.getUuidLanguage())
-                .solutionText(scoreRequestDto.getSolutionText())
-                .score(99)
-                .errors("xxx")
-                .build();
+        String socketAddress = "tcp://127.0.0.1:5555";
+        zmqServer = new ZMQServer(contextMock, socketAddress, objectSerializerMock);
+    }
 
-        requestBytes = objectSerializerMock.serialize(scoreRequestDto);
-        responseBytes = objectSerializerMock.serialize(scoreResponseDto);
+    @AfterEach void tearDown() {
+        if (zmqServer != null) {
+            zmqServer.stop();
+        }
     }
 
     @Test
-    void testRun() throws Exception {
-
-        when(socketMock.recv(0))
-                .thenReturn(requestBytes)
-                .thenReturn(null);
-
-        when(objectSerializerMock.deserialize(requestBytes, ScoreRequestDto.class))
-                .thenReturn(scoreRequestDto);
-        when(objectSerializerMock.serialize(any(ScoreResponseDto.class))).thenReturn(responseBytes);
-
-        Thread serverThread = new Thread(() -> zmqServer.run());
-        serverThread.start();
+    void testServerInitialization() throws InterruptedException {
+        zmqServer.start();
 
         Thread.sleep(500);
 
-        verify(socketMock).recv(0);
-        verify(socketMock).send(responseBytes, 0);
+        verify(contextMock, times(1)).createSocket(SocketType.REP);
+        verify(socketMock, times(1)).bind("tcp://127.0.0.1:5555");
 
-        serverThread.interrupt();
-        serverThread.join();
+        zmqServer.stop();
+    }
+
+    @Test void testReceiveAndProcessMessage() throws Exception {
+        byte[] messageBytes = "test message".getBytes();
+        ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
+        ScoreResponseDto responseDto = ScoreResponseDto.builder()
+                .uuidChallenge(requestDto.getUuidChallenge())
+                .uuidLanguage(requestDto.getUuidLanguage())
+                .solutionText(requestDto.getSolutionText())
+                .score(99).errors("xxx")
+                .compilationMessage("Compilation Message Text")
+                .expectedResult("Expected Result Text")
+                .build();
+        byte[] responseBytes = "test response".getBytes();
+        when(socketMock.recv(0)).thenReturn(messageBytes);
+        when(objectSerializerMock.deserialize(messageBytes, ScoreRequestDto.class)).thenReturn(requestDto);
+        when(objectSerializerMock.serialize(responseDto)).thenReturn(responseBytes);
+
+        CountDownLatch latch = new CountDownLatch(1);
+        doAnswer(invocation -> {
+            latch.countDown();
+            return requestDto;
+        }).when(objectSerializerMock).deserialize(messageBytes, ScoreRequestDto.class);
+
+        zmqServer.start();
+
+        latch.await();
+
+        zmqServer.stop();
+
+        verify(socketMock, times(1)).recv(0);
+        verify(objectSerializerMock, times(1)).deserialize(messageBytes, ScoreRequestDto.class);
+        verify(objectSerializerMock, times(1)).serialize(responseDto);
+        verify(socketMock, times(1)).send(responseBytes, 0);
+    }
+
+    @Test
+    void testServerStop() throws InterruptedException {
+        zmqServer.start();
+
+        Thread.sleep(500);
+
+        zmqServer.stop();
+
+        Thread.sleep(500);
+        assertFalse(zmqServer.isRunning());
+    }
+
+    @Test
+    void testErrorHandlingDuringDeserialization() throws InterruptedException, IOException {
+        byte[] messageBytes = "test message".getBytes();
+
+        when(socketMock.recv(0)).thenReturn(messageBytes);
+        doThrow(new IOException("Deserialization failed")).when(objectSerializerMock).deserialize(messageBytes, ScoreRequestDto.class);
+
+        CountDownLatch latch = new CountDownLatch(1);
+        doAnswer(invocation -> {
+            latch.countDown();
+            throw new IOException("Deserialization failed");
+        }).when(objectSerializerMock).deserialize(messageBytes, ScoreRequestDto.class);
+
+        zmqServer.start();
+
+        latch.await();
+
+        zmqServer.stop();
+
+        verify(socketMock, never()).send(any(byte[].class), anyInt());
+        verify(objectSerializerMock, times(1)).deserialize(messageBytes, ScoreRequestDto.class);
+    }
+
+
+    @Test
+    void testErrorHandlingDuringSerialization() throws InterruptedException, IOException {
+        byte[] messageBytes = "test message".getBytes();
+        ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
+
+        when(socketMock.recv(0)).thenReturn(messageBytes);
+        when(objectSerializerMock.deserialize(messageBytes, ScoreRequestDto.class)).thenReturn(requestDto);
+
+        CountDownLatch latch = new CountDownLatch(1);
+        doAnswer(invocation -> {
+            latch.countDown();
+            throw new JsonProcessingException("Serialization failed") {};
+        }).when(objectSerializerMock).serialize(any(ScoreResponseDto.class));
+
+        zmqServer.start();
+
+        latch.await();
+
+        zmqServer.stop();
+
+        verify(socketMock, never()).send(any(byte[].class), anyInt());
+        verify(objectSerializerMock, times(1)).deserialize(messageBytes, ScoreRequestDto.class);
+        verify(objectSerializerMock, times(1)).serialize(any(ScoreResponseDto.class));
     }
 }

@@ -4,74 +4,90 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
-import jakarta.annotation.PostConstruct;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
-
+import org.springframework.stereotype.Component;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import java.io.IOException;
-import java.util.Optional;
+
+
 
 @Component
-public class ZMQServer {
+public class ZMQServer{
 
     private final ZContext context;
     private final String SOCKET_ADDRESS;
+
     private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
-    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress, ObjectSerializer objectSerializer) {
+    private volatile boolean running = true;
+
+    private Thread serverThread;
+
+    public ZMQServer(ZContext context, String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
         this.objectSerializer = objectSerializer;
     }
 
-    @PostConstruct
-    public void init() {
+    public void start() {
         log.info("Starting ZMQ Server");
-        new Thread(this::run).start();
+        serverThread = new Thread(this::run);
+        serverThread.start();
+    }
+
+    public void stop() {
+        running = false;
+        if (serverThread != null) {
+            serverThread.interrupt();
+        }
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     public void run() {
-        try (ZContext context = new ZContext()) {
-            ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind("tcp://*:5555");
+        try {
+            ZMQ.Socket socket = context.createSocket(SocketType.REP);
+            socket.bind(this.SOCKET_ADDRESS);
 
-            while (!Thread.currentThread().isInterrupted()) {
+            while (running && !Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
-                Optional<Object> request = Optional.empty();
+                if (reply == null) continue;
 
                 try {
-                    request = Optional.of(objectSerializer.deserialize(reply, ScoreRequestDto.class));
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                }
+                    ScoreRequestDto requestDto = objectSerializer.deserialize(reply, ScoreRequestDto.class);
+                    log.info("Received: [" + requestDto + "]");
 
-                log.info("Received: [" + request.get() + "]");
-                ScoreRequestDto requestDto = (ScoreRequestDto) request.get();
-
-                ScoreResponseDto responseDto = ScoreResponseDto.builder()
-                        .uuidChallenge(requestDto.getUuidChallenge())
-                        .uuidLanguage(requestDto.getUuidLanguage())
-                        .solutionText(requestDto.getSolutionText())
-                        .score(99) //TODO calculate actual score
-                        .errors("xxx") //TODO calculate actual errors
-                        .build();
-
-                Optional<byte[]> response = Optional.empty();
-                try {
-                    response = Optional.of(objectSerializer.serialize(responseDto));
+                    ScoreResponseDto responseDto = processRequest(requestDto);
+                    byte[] responseBytes = objectSerializer.serialize(responseDto);
+                    socket.send(responseBytes, 0);
                 } catch (JsonProcessingException e) {
-                    log.error(e.getMessage());
+                    log.error("Failed to serialize response", e);
+                } catch (IOException e) {
+                    log.error("Failed to deserialize message", e);
                 }
-
-                socket.send(response.orElse(new byte[0]), 0);
-
             }
+        } catch (Exception e) {
+            log.error("Unexpected error in ZMQServer", e);
+        } finally {
+            context.close();
         }
+    }
+
+    private ScoreResponseDto processRequest(ScoreRequestDto requestDto) {
+        return ScoreResponseDto.builder()
+                .uuidChallenge(requestDto.getUuidChallenge())
+                .uuidLanguage(requestDto.getUuidLanguage())
+                .solutionText(requestDto.getSolutionText())
+                .score(99)
+                .errors("xxx")
+                .compilationMessage("Compilation Message Text")
+                .expectedResult("Expected Result Text")
+                .build();
     }
 }
