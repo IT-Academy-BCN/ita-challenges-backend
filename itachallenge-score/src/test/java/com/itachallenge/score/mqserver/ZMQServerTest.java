@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
-class ZMQServerTestTDD {
+class ZMQServerTest {
 
     private ZContext contextMock;
     private ZMQ.Socket socketMock;
