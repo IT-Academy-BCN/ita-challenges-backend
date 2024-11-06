@@ -1,7 +1,7 @@
 package com.itachallenge.score.service;
 
-import com.itachallenge.score.dto.ScoreRequest;
-import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.dto.zmq.ScoreRequestDto;
+import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.exception.DockerExecutionException;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.DockerExecutor;
@@ -58,7 +58,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode successful")
     @Test
     void testProcessCodeSuccessful() throws IOException, InterruptedException {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
@@ -69,7 +69,7 @@ class CodeProcessingManagerTest {
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
         when(dockerExecutor.execute(any(String.class), any(String[].class))).thenReturn(executionResult);
 
-        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
@@ -79,7 +79,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode with InterruptedException")
     @Test
     void testProcessCodeWithInterruptedException() throws IOException, InterruptedException {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
@@ -150,7 +150,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode with filter failure")
     @Test
     void testProcessCodeWithFilterFailure() {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(false);
@@ -158,7 +158,7 @@ class CodeProcessingManagerTest {
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
 
-        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
