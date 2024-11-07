@@ -4,104 +4,90 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import lombok.Getter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
-import org.zeromq.ZMQException;
-
+import org.springframework.stereotype.Component;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import java.io.IOException;
-import java.util.Optional;
+
 
 
 @Component
-public class ZMQServer {
+public class ZMQServer{
 
-    private ZContext context;
+    private final ZContext context;
     private final String SOCKET_ADDRESS;
+
+    private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
 
-    @Autowired
-    ObjectSerializer objectSerializer;
+    private volatile boolean running = true;
 
-    public ZMQServer(@Value("${zeromq.socket.address}") String socketAddress){
+    private Thread serverThread;
+
+    public ZMQServer(ZContext context, String socketAddress, ObjectSerializer objectSerializer) {
+        this.context = context;
         this.SOCKET_ADDRESS = socketAddress;
+        this.objectSerializer = objectSerializer;
     }
 
-    @PostConstruct
-    public void init() {
-        log.debug("Initializing ZMQServer with SOCKET_ADDRESS: {}", SOCKET_ADDRESS);
-        if (SOCKET_ADDRESS == null || SOCKET_ADDRESS.isEmpty()) {
-            log.error("SOCKET_ADDRESS is not set");
-            return;
-        }
+    public void start() {
         log.info("Starting ZMQ Server");
-        context = new ZContext();
-        new Thread(this::run).start();
+        serverThread = new Thread(this::run);
+        serverThread.start();
     }
 
-    public void run(){
-        try (ZContext context = new ZContext()) {
-            ZMQ.Socket socket = context.createSocket(ZMQ.REP);
-            socket.bind(SOCKET_ADDRESS);
-
-            while (!Thread.currentThread().isInterrupted()) {
-                byte[] reply = socket.recv(0);
-
-                Optional<ScoreRequestDto> request = Optional.empty();
-                try {
-                    request = Optional.of(objectSerializer.deserialize(reply, ScoreRequestDto.class));
-                } catch (IOException e) {
-                    log.error(e.getMessage());
-                }
-
-                if (request.isPresent()) {
-                    log.info("Received: [" + request.get().getUuidChallenge() + "]");
-                    ScoreResponseDto responseDto = calculateScore(request.get());
-
-                    Optional<byte[]> response = Optional.empty();
-                    try {
-                        response = Optional.of(objectSerializer.serialize(responseDto));
-                    } catch (JsonProcessingException e) {
-                        log.error(e.getMessage());
-                    }
-
-                    socket.send(response.orElse(new byte[0]), 0);
-                }
-            }
-        } catch (ZMQException e) {
-            log.error("ZMQ Exception: " + e.getMessage());
-        } catch (Exception e) {
-            log.error("Exception: " + e.getMessage());
-        }
-    }
-
-    private ScoreResponseDto calculateScore(ScoreRequestDto request) {
-        // Implement your score calculation logic here
-        ScoreResponseDto response = new ScoreResponseDto();
-        response.setUuidChallenge(request.getUuidChallenge());
-        response.setUuidLanguage(request.getUuidLanguage());
-        response.setSolutionText(request.getSolutionText());
-        response.setScore(100); // Example score
-        response.setErrors(null);
-        response.setCompilationMessage("Success");
-        response.setExpectedResult("Expected Result");
-        return response;
-    }
-
-    public void cleanup() {
-        if (context != null) {
-            context.close();
+    public void stop() {
+        running = false;
+        if (serverThread != null) {
+            serverThread.interrupt();
         }
     }
 
     public boolean isRunning() {
-        return context != null && !context.isClosed();
+        return running;
+    }
+
+    public void run() {
+        try {
+            ZMQ.Socket socket = context.createSocket(SocketType.REP);
+            socket.bind(this.SOCKET_ADDRESS);
+
+            while (running && !Thread.currentThread().isInterrupted()) {
+                byte[] reply = socket.recv(0);
+                if (reply == null) continue;
+
+                try {
+                    ScoreRequestDto requestDto = objectSerializer.deserialize(reply, ScoreRequestDto.class);
+                    log.info("Received: [" + requestDto + "]");
+
+                    ScoreResponseDto responseDto = processRequest(requestDto);
+                    byte[] responseBytes = objectSerializer.serialize(responseDto);
+                    socket.send(responseBytes, 0);
+                } catch (JsonProcessingException e) {
+                    log.error("Failed to serialize response", e);
+                } catch (IOException e) {
+                    log.error("Failed to deserialize message", e);
+                }
+            }
+        } catch (Exception e) {
+            log.error("Unexpected error in ZMQServer", e);
+        } finally {
+            context.close();
+        }
+    }
+
+    private ScoreResponseDto processRequest(ScoreRequestDto requestDto) {
+        return ScoreResponseDto.builder()
+                .uuidChallenge(requestDto.getUuidChallenge())
+                .uuidLanguage(requestDto.getUuidLanguage())
+                .solutionText(requestDto.getSolutionText())
+                .score(99)
+                .errors("xxx")
+                .compilationMessage("Compilation Message Text")
+                .expectedResult("Expected Result Text")
+                .build();
     }
 }
