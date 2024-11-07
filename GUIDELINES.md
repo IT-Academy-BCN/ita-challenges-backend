@@ -222,6 +222,8 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 6. In case you need to review and fix some problems, update your local branch with the changes and push back to the corresponding remote branch.
 7. The pull request will be automatically updated with the new changes made to your branch.
 
+**IMPORTANT NOTE: A pull request is a request to include your code into the project. Don't wait for your PR to be accepted to start working on another card.**
+
 <hr/>
 
 ## 2.6 Working with git 

@@ -225,6 +225,9 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 6. En cas que hagis de revisar i corregir alguns problemes, actualitza la teva branca local amb els canvis i fes push novament a la branca remota corresponent.
 7. La pull request s'actualitzarà automàticament amb els nous canvis realitzats a la teva branca.
 
+
+**NOTA IMPORTANT**: Una Pull Request és una sol·licitud per a incloure el teu codi en el projecte. No esperis que el teu PR sigui acceptada per a començar a treballar en una altra card**
+
 <hr/>
 
 
