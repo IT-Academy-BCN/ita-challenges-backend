@@ -9,15 +9,24 @@ import java.io.IOException;
 @Component
 public class ObjectSerializer {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper;
 
-    // 15/10/2024 Michel: convierto a métodos por instancia en lugar de estáticos para que se pueda mockear esta clase
+    public ObjectSerializer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
 
     public byte[] serialize(Object obj) throws JsonProcessingException {
+        if (obj == null) {
+            throw new IllegalArgumentException("Cannot serialize a null object");
+        }
         return objectMapper.writeValueAsBytes(obj);
     }
 
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
-        return objectMapper.readValue(bytes, clazz);
+    public <T> T deserialize(byte[] src, Class<T> valueType) throws IOException {
+        if (src == null) {
+            throw new IllegalArgumentException("Cannot deserialize a null byte array");
+        }
+        return objectMapper.readValue(src, valueType);
     }
 }

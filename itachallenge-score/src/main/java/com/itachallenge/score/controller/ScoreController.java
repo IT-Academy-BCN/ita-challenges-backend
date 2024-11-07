@@ -41,8 +41,7 @@ public class ScoreController {
     @Operation(summary = "Endpoint to execute the code and calculate the score")
     @PostMapping(value = "/score")
     public Mono<ResponseEntity<ScoreResponseDto>> createScore(@RequestBody ScoreRequestDto scoreRequest) {
-        return Mono.just(scoreRequest)
-                .map(req -> codeProcessingManager.processCode(req));
+        return Mono.fromCallable(() -> codeProcessingManager.processCode(scoreRequest));
     }
 
     @GetMapping("/version")
