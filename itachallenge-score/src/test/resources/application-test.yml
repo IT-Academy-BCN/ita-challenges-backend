@@ -5,6 +5,9 @@ spring:
   jmx:
     enabled: true
 
+zeromq:
+  socket:
+    address: "tcp://127.0.0.1:5555"
 
 springdoc:
   swagger-ui:

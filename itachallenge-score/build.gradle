@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.6'
     id 'jacoco'
+    id "org.sonarqube" version "4.3.1.3277"
 }
 
 jar {
@@ -95,5 +96,13 @@ jacocoTestCoverageVerification {
 sonarqube {
     properties {
         property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "IT-Academy-BCN_ita-challenges-backend"
+        property "sonar.organization", "it-academy-bcn"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }
