@@ -22,6 +22,8 @@ import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
@@ -97,13 +99,13 @@ class ZMQServerTest {
 
         zmqServer.start();
 
-        latch.await();
+        latch.await(5, TimeUnit.SECONDS);
 
         zmqServer.stop();
 
         verify(socketMock, times(1)).recv(0);
         verify(objectSerializerMock, times(1)).deserialize(messageBytes, ScoreRequestDto.class);
-        verify(objectSerializerMock, times(1)).serialize(responseDto);
+        verify(objectSerializerMock, timeout(1000).times(1)).serialize(responseDto);
         verify(socketMock, times(1)).send(responseBytes, 0);
     }
 

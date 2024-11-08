@@ -88,6 +88,7 @@ public class ZMQServer{
     }
 
     private byte[] serializeMessage(ScoreResponseDto responseDto) throws JsonProcessingException {
+        log.info("Serializing response: [{}]", responseDto);
         return objectSerializer.serialize(responseDto);
     }
 
