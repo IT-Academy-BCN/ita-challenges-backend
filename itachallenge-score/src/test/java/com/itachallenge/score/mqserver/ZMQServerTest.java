@@ -11,7 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -28,6 +30,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @ExtendWith(MockitoExtension.class)
 @ContextConfiguration(classes = {ZMQConfig.class, ZMQServer.class})
+@TestPropertySource(locations = "classpath:application")
 class ZMQServerTest {
 
     @Mock
