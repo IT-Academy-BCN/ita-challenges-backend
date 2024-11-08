@@ -6,6 +6,10 @@ import com.itachallenge.score.helper.ObjectSerializer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -17,6 +21,12 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
+
+
+
+@ExtendWith(MockitoExtension.class)
+@SpringBootTest
+@PropertySource("classpath:application-test.yml")
 
 class ZMQServerTest {
 
