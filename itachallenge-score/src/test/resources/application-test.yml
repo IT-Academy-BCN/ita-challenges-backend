@@ -65,3 +65,12 @@ keyword:
     - "interface"
     - "enum"
     - "package"
+
+
+zeromq:
+  socket:
+    type: "REP"
+    address: "tcp://*:5555"
+    options:
+      linger: 0
+      receiveTimeout: 1000

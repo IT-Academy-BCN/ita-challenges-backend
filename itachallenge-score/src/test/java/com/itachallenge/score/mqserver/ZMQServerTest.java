@@ -43,7 +43,7 @@ class ZMQServerTest {
 
         when(contextMock.createSocket(SocketType.REP)).thenReturn(socketMock);
 
-        String socketAddress = "tcp://127.0.0.1:5555";
+        String socketAddress = "tcp://*:5555";
         zmqServer = new ZMQServer(contextMock, socketAddress, objectSerializerMock);
     }
 
@@ -60,7 +60,7 @@ class ZMQServerTest {
         Thread.sleep(500);
 
         verify(contextMock, times(1)).createSocket(SocketType.REP);
-        verify(socketMock, times(1)).bind("tcp://127.0.0.1:5555");
+        verify(socketMock, times(1)).bind("tcp://*:5555");
 
         zmqServer.stop();
     }
