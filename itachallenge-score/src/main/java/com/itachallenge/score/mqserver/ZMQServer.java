@@ -70,6 +70,7 @@ public class ZMQServer{
                     log.error("Failed to serialize response", e);
                 } catch (IOException e) {
                     log.error("Failed to deserialize message", e);
+                    stop();
                 }
             }
         } catch (Exception e) {

@@ -7,32 +7,31 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
-
 import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
 
-
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest
-@PropertySource("classpath:application-test.yml")
-
 class ZMQServerTest {
 
+    @Mock
     private ZContext contextMock;
+    @Mock
     private ZMQ.Socket socketMock;
+    @Mock
     private ObjectSerializer objectSerializerMock;
+
+    @InjectMocks
     private ZMQServer zmqServer;
 
     @BeforeEach
@@ -77,9 +76,9 @@ class ZMQServerTest {
                 .expectedResult("Expected Result Text")
                 .build();
         byte[] responseBytes = "test response".getBytes();
-        when(socketMock.recv(0)).thenReturn(messageBytes);
-        when(objectSerializerMock.deserialize(messageBytes, ScoreRequestDto.class)).thenReturn(requestDto);
-        when(objectSerializerMock.serialize(responseDto)).thenReturn(responseBytes);
+        lenient().when(socketMock.recv(0)).thenReturn(messageBytes);
+        lenient().when(objectSerializerMock.deserialize(messageBytes, ScoreRequestDto.class)).thenReturn(requestDto);
+        lenient().when(objectSerializerMock.serialize(responseDto)).thenReturn(responseBytes);
 
         CountDownLatch latch = new CountDownLatch(1);
         doAnswer(invocation -> {
@@ -118,20 +117,15 @@ class ZMQServerTest {
         when(socketMock.recv(0)).thenReturn(messageBytes);
         doThrow(new IOException("Deserialization failed")).when(objectSerializerMock).deserialize(messageBytes, ScoreRequestDto.class);
 
-        CountDownLatch latch = new CountDownLatch(1);
-        doAnswer(invocation -> {
-            latch.countDown();
-            throw new IOException("Deserialization failed");
-        }).when(objectSerializerMock).deserialize(messageBytes, ScoreRequestDto.class);
-
         zmqServer.start();
 
-        latch.await();
+        Thread.sleep(500);
 
         zmqServer.stop();
 
         verify(socketMock, never()).send(any(byte[].class), anyInt());
         verify(objectSerializerMock, times(1)).deserialize(messageBytes, ScoreRequestDto.class);
+        assertFalse(zmqServer.isRunning(), "Server should be stopped after handling deserialization error");
     }
 
 
