@@ -20,12 +20,9 @@ public class ZMQServer{
 
     private final ZContext context;
     private final String socketAddress;
-
     private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
-
     private volatile boolean running = true;
-
     private Thread serverThread;
 
     @Autowired
@@ -53,30 +50,44 @@ public class ZMQServer{
     }
 
     public void run() {
-        try (ZMQ.Socket socket = context.createSocket(SocketType.REP)){
+        ZMQ.Socket socket = context.createSocket(SocketType.REP);
+        try {
             socket.bind(this.socketAddress);
-
             while (running && !Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
                 if (reply == null) continue;
 
-                ScoreRequestDto requestDto = objectSerializer.deserialize(reply, ScoreRequestDto.class);
-                log.info("Received: [{}]", requestDto);
-
-                ScoreResponseDto responseDto = processRequest(requestDto);
-                byte[] responseBytes = objectSerializer.serialize(responseDto);
-                socket.send(responseBytes, 0);
+                processMessage(reply, socket);
             }
-        } catch (JsonProcessingException e) {
-        log.error("Failed to serialize response", e);
-         } catch (IOException e) {
-        log.error("Failed to deserialize message", e);
-        stop();
         } catch (Exception e) {
             log.error("Unexpected error in ZMQServer", e);
         } finally {
+            socket.close();
             context.close();
+            running = false;
         }
+    }
+
+    private void processMessage(byte[] reply, ZMQ.Socket socket) {
+        try {
+            ScoreRequestDto requestDto = deserializeMessage(reply);
+            log.info("Received: [{}]", requestDto);
+
+            ScoreResponseDto responseDto = processRequest(requestDto);
+            byte[] responseBytes = serializeMessage(responseDto);
+            socket.send(responseBytes, 0);
+        } catch (IOException e) {
+            log.error("Failed to process message", e);
+            stop();
+        }
+    }
+
+    private ScoreRequestDto deserializeMessage(byte[] message) throws IOException {
+        return objectSerializer.deserialize(message, ScoreRequestDto.class);
+    }
+
+    private byte[] serializeMessage(ScoreResponseDto responseDto) throws JsonProcessingException {
+        return objectSerializer.serialize(responseDto);
     }
 
     private ScoreResponseDto processRequest(ScoreRequestDto requestDto) {

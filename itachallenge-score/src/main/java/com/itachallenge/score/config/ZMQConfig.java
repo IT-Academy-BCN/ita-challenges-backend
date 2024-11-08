@@ -9,7 +9,7 @@ public class ZMQConfig {
 
     @Bean
     public ZContext zContext() {
-            return new ZContext();
+            return new ZContext(1);
         }
 
 }
