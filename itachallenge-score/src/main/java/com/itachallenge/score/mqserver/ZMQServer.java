@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -27,6 +28,7 @@ public class ZMQServer{
 
     private Thread serverThread;
 
+    @Autowired
     public ZMQServer(ZContext context, String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
         this.socketAddress = socketAddress;
