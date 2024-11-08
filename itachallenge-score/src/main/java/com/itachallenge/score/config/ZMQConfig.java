@@ -9,7 +9,11 @@ public class ZMQConfig {
 
     @Bean
     public ZContext zContext() {
-        return new ZContext(0);
+        return new ZContext(1);
+    }
+
+    @Bean public String socketAddress() {
+        return "tcp://*:5555";
     }
 }
 

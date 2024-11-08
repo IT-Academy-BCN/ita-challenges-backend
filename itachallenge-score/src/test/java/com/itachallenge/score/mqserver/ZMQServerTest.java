@@ -1,5 +1,6 @@
 package com.itachallenge.score.mqserver;
 
+import com.itachallenge.score.config.ZMQConfig;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
@@ -25,6 +27,7 @@ import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 
 @ExtendWith(MockitoExtension.class)
+@ContextConfiguration(classes = {ZMQConfig.class, ZMQServer.class})
 class ZMQServerTest {
 
     @Mock
