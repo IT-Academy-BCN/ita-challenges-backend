@@ -18,7 +18,7 @@ import java.io.IOException;
 public class ZMQServer{
 
     private final ZContext context;
-    private final String SOCKET_ADDRESS;
+    private final String socketAddress;
 
     private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
@@ -29,7 +29,7 @@ public class ZMQServer{
 
     public ZMQServer(ZContext context, String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
-        this.SOCKET_ADDRESS = socketAddress;
+        this.socketAddress = socketAddress;
         this.objectSerializer = objectSerializer;
     }
 
@@ -51,28 +51,25 @@ public class ZMQServer{
     }
 
     public void run() {
-        try {
-            ZMQ.Socket socket = context.createSocket(SocketType.REP);
-            socket.bind(this.SOCKET_ADDRESS);
+        try (ZMQ.Socket socket = context.createSocket(SocketType.REP)){
+            socket.bind(this.socketAddress);
 
             while (running && !Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
                 if (reply == null) continue;
 
-                try {
-                    ScoreRequestDto requestDto = objectSerializer.deserialize(reply, ScoreRequestDto.class);
-                    log.info("Received: [" + requestDto + "]");
+                ScoreRequestDto requestDto = objectSerializer.deserialize(reply, ScoreRequestDto.class);
+                log.info("Received: [{}]", requestDto);
 
-                    ScoreResponseDto responseDto = processRequest(requestDto);
-                    byte[] responseBytes = objectSerializer.serialize(responseDto);
-                    socket.send(responseBytes, 0);
-                } catch (JsonProcessingException e) {
-                    log.error("Failed to serialize response", e);
-                } catch (IOException e) {
-                    log.error("Failed to deserialize message", e);
-                    stop();
-                }
+                ScoreResponseDto responseDto = processRequest(requestDto);
+                byte[] responseBytes = objectSerializer.serialize(responseDto);
+                socket.send(responseBytes, 0);
             }
+        } catch (JsonProcessingException e) {
+        log.error("Failed to serialize response", e);
+         } catch (IOException e) {
+        log.error("Failed to deserialize message", e);
+        stop();
         } catch (Exception e) {
             log.error("Unexpected error in ZMQServer", e);
         } finally {
