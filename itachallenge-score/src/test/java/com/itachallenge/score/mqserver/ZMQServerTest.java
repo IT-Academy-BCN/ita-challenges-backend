@@ -10,18 +10,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.annotation.PropertySource;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 
 @ExtendWith(MockitoExtension.class)
+@PropertySource("classpath:application-test.yml")
 class ZMQServerTest {
 
     @Mock
@@ -46,17 +51,18 @@ class ZMQServerTest {
         zmqServer = new ZMQServer(contextMock, socketAddress, objectSerializerMock);
     }
 
-    @AfterEach void tearDown() {
+    @AfterEach
+    void tearDown() {
         if (zmqServer != null) {
             zmqServer.stop();
         }
     }
 
     @Test
-    void testServerInitialization() throws InterruptedException {
+    void testServerInitialization() {
         zmqServer.start();
 
-        Thread.sleep(500);
+        await().atMost(Duration.ofSeconds(2)).until(serverRunning());
 
         verify(contextMock, times(1)).createSocket(SocketType.REP);
         verify(socketMock, times(1)).bind("tcp://*:5555");
@@ -64,7 +70,8 @@ class ZMQServerTest {
         zmqServer.stop();
     }
 
-    @Test void testReceiveAndProcessMessage() throws Exception {
+    @Test
+    void testReceiveAndProcessMessage() throws Exception {
         byte[] messageBytes = "test message".getBytes();
         ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
         ScoreResponseDto responseDto = ScoreResponseDto.builder()
@@ -99,19 +106,20 @@ class ZMQServerTest {
     }
 
     @Test
-    void testServerStop() throws InterruptedException {
+    void testServerStop() {
         zmqServer.start();
 
-        Thread.sleep(500);
+        await().atMost(Duration.ofSeconds(2)).until(serverRunning());
 
         zmqServer.stop();
 
-        Thread.sleep(500);
+        await().atMost(Duration.ofSeconds(2)).until(serverStopped());
+
         assertFalse(zmqServer.isRunning());
     }
 
     @Test
-    void testErrorHandlingDuringDeserialization() throws InterruptedException, IOException {
+    void testErrorHandlingDuringDeserialization() throws IOException {
         byte[] messageBytes = "test message".getBytes();
 
         when(socketMock.recv(0)).thenReturn(messageBytes);
@@ -119,7 +127,7 @@ class ZMQServerTest {
 
         zmqServer.start();
 
-        Thread.sleep(500);
+        await().atMost(Duration.ofSeconds(2)).until(serverStopped());
 
         zmqServer.stop();
 
@@ -140,7 +148,8 @@ class ZMQServerTest {
         CountDownLatch latch = new CountDownLatch(1);
         doAnswer(invocation -> {
             latch.countDown();
-            throw new JsonProcessingException("Serialization failed") {};
+            throw new JsonProcessingException("Serialization failed") {
+            };
         }).when(objectSerializerMock).serialize(any(ScoreResponseDto.class));
 
         zmqServer.start();
@@ -152,5 +161,23 @@ class ZMQServerTest {
         verify(socketMock, never()).send(any(byte[].class), anyInt());
         verify(objectSerializerMock, times(1)).deserialize(messageBytes, ScoreRequestDto.class);
         verify(objectSerializerMock, times(1)).serialize(any(ScoreResponseDto.class));
+    }
+
+    private Callable<Boolean> serverStopped() {
+        return new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return !zmqServer.isRunning();
+            }
+        };
+
+    }
+
+    private Callable<Boolean> serverRunning() {
+        return new Callable<Boolean>() {
+            public Boolean call() throws Exception {
+                return zmqServer.isRunning();
+            }
+        };
+
     }
 }
