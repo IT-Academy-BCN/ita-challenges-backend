@@ -76,6 +76,51 @@ class CodeProcessingManagerTest {
         assertEquals("Code compiled and executed, and result match: 12", responseEntity.getBody().getCompilationMessage());
     }
 
+    @DisplayName("Test processCode with IOException")
+    @Test
+    void testProcessCodeWithIOException() throws IOException, InterruptedException {
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setSuccess(true);
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+        when(dockerExecutor.execute(any(String.class), any(String[].class))).thenThrow(new IOException("Execution timed out"));
+
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        ScoreResponseDto scoreResponse = responseEntity.getBody();
+        assertNotNull(scoreResponse, "Response body should not be null");
+        assertEquals(scoreRequest.getUuidChallenge(), scoreResponse.getUuidChallenge());
+        assertEquals(scoreRequest.getUuidLanguage(), scoreResponse.getUuidLanguage());
+        assertEquals(scoreRequest.getSolutionText(), scoreResponse.getSolutionText());
+        assertEquals("12", scoreResponse.getExpectedResult(), "Expected result should match");
+        assertEquals("Execution timed out: Execution timed out", scoreResponse.getCompilationMessage(), "Compilation message should match");
+        assertEquals(0, scoreResponse.getScore(), "Score should be 0");
+    }
+
+    @DisplayName("Test processCode with TIMED OUT message")
+    @Test
+    void testProcessCodeWithTimedOutMessage() throws IOException, InterruptedException {
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setSuccess(true);
+        executionResult.setMessage("Execution TIMED OUT");
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+
+        when(dockerExecutor.execute(any(String.class), any(String[].class))).thenThrow(new IOException("Execution timed out"));
+
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        ScoreResponseDto scoreResponse = responseEntity.getBody();
+        assertNotNull(scoreResponse, "Response body should not be null");
+
+        assertEquals("Execution TIMED OUT", executionResult.getMessage());
+    }
+
+
     @DisplayName("Test processCode with InterruptedException")
     @Test
     void testProcessCodeWithInterruptedException() throws IOException, InterruptedException {
@@ -91,6 +136,7 @@ class CodeProcessingManagerTest {
             codeProcessingManager.processCode(scoreRequest);
         });
     }
+
 
     @DisplayName("Test calculateScore with compilation error")
     @Test
@@ -177,4 +223,5 @@ class CodeProcessingManagerTest {
         assertEquals(0, score);
         assertEquals("Compilation error: ", executionResult.getMessage());
     }
+
 }

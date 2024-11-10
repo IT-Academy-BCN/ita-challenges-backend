@@ -6,14 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.zeromq.ZMQException;
 import java.util.Arrays;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -29,14 +27,12 @@ class ZMQClientTest {
     private ObjectSerializer objectSerializerMock;
     @InjectMocks
     private ZMQClient zmqClient;
-
-    private final String socketAddress = "tcp://localhost:5555";
     private Object message;
     private byte[] serializedMessage;
 
     @BeforeEach
     void setUp() {
-        when(zContextMock.createSocket(ZMQ.REQ)).thenReturn(socketMock);
+        when(zContextMock.createSocket(SocketType.REQ)).thenReturn(socketMock);
         message = "Test message";
         serializedMessage = "Serialized message".getBytes();
     }
