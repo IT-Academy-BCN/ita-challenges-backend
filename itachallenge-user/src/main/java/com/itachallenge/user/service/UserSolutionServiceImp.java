@@ -7,6 +7,7 @@ import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
+import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.mqclient.ZMQClient;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
 
-    @Autowired
+
     private ZMQClient zmqClient;
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
@@ -36,6 +37,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     SecureRandom random = new SecureRandom();
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
+    @Autowired
     public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter, ZMQClient zmqClient) {
         this.userSolutionRepository = userSolutionRepository;
         this.converter = converter;
@@ -158,8 +160,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                                    return userSolutionRepository.save(userSolutionDocument).toFuture();
                                }))
                                .doOnError(e -> {
-                                   log.error("Error updating solution status");
-                                   throw new RuntimeException("Error updating solution status");
+                                   log.error("Error updating solution status", e);
+                                   throw new SolutionNotFoundException("Error updating solution status");
                                });
                    }
                    return Mono.empty();
@@ -256,7 +258,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             challengeId) {
         List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
                 .filter(us -> challengeId.equals(us.getChallengeId()))
-                .collect(Collectors.toList());
+                .toList();
 
         if (userSolutionsChallenge.isEmpty()) {
             return Flux.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)));

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.helper.ObjectSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -18,18 +20,16 @@ import java.io.IOException;
 public class ZMQServer{
 
     private final ZContext context;
-    private final String SOCKET_ADDRESS;
-
+    private final String socketAddress;
     private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
-
     private volatile boolean running = true;
-
     private Thread serverThread;
 
-    public ZMQServer(ZContext context, String socketAddress, ObjectSerializer objectSerializer) {
+    @Autowired
+    public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
-        this.SOCKET_ADDRESS = socketAddress;
+        this.socketAddress = socketAddress;
         this.objectSerializer = objectSerializer;
     }
 
@@ -51,32 +51,45 @@ public class ZMQServer{
     }
 
     public void run() {
+        ZMQ.Socket socket = context.createSocket(SocketType.REP);
         try {
-            ZMQ.Socket socket = context.createSocket(SocketType.REP);
-            socket.bind(this.SOCKET_ADDRESS);
-
+            socket.bind(this.socketAddress);
             while (running && !Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
                 if (reply == null) continue;
 
-                try {
-                    ScoreRequestDto requestDto = objectSerializer.deserialize(reply, ScoreRequestDto.class);
-                    log.info("Received: [" + requestDto + "]");
-
-                    ScoreResponseDto responseDto = processRequest(requestDto);
-                    byte[] responseBytes = objectSerializer.serialize(responseDto);
-                    socket.send(responseBytes, 0);
-                } catch (JsonProcessingException e) {
-                    log.error("Failed to serialize response", e);
-                } catch (IOException e) {
-                    log.error("Failed to deserialize message", e);
-                }
+                processMessage(reply, socket);
             }
         } catch (Exception e) {
             log.error("Unexpected error in ZMQServer", e);
         } finally {
+            socket.close();
             context.close();
+            running = false;
         }
+    }
+
+    private void processMessage(byte[] reply, ZMQ.Socket socket) {
+        try {
+            ScoreRequestDto requestDto = deserializeMessage(reply);
+            log.info("Received: [{}]", requestDto);
+
+            ScoreResponseDto responseDto = processRequest(requestDto);
+            byte[] responseBytes = serializeMessage(responseDto);
+            socket.send(responseBytes, 0);
+        } catch (IOException e) {
+            log.error("Failed to process message", e);
+            stop();
+        }
+    }
+
+    private ScoreRequestDto deserializeMessage(byte[] message) throws IOException {
+        return objectSerializer.deserialize(message, ScoreRequestDto.class);
+    }
+
+    private byte[] serializeMessage(ScoreResponseDto responseDto) throws JsonProcessingException {
+        log.info("Serializing response: [{}]", responseDto);
+        return objectSerializer.serialize(responseDto);
     }
 
     private ScoreResponseDto processRequest(ScoreRequestDto requestDto) {
