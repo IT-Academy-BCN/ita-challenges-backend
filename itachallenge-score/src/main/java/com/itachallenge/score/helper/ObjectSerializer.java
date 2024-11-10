@@ -9,18 +9,20 @@ import java.io.IOException;
 @Component
 public class ObjectSerializer {
 
-    private final ObjectMapper objectMapper;
-
-    public ObjectSerializer(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    private ObjectMapper objectMapper = new ObjectMapper();
 
 
     public byte[] serialize(Object value) throws JsonProcessingException {
+        if (value == null) {
+            throw new IllegalArgumentException("Cannot serialize a null object");
+        }
         return objectMapper.writeValueAsBytes(value);
     }
 
     public <T> T deserialize(byte[] data, Class<T> valueType) throws IOException {
+        if (data == null) {
+            throw new IllegalArgumentException("Cannot deserialize a null byte array");
+        }
         return objectMapper.readValue(data, valueType);
     }
 }
