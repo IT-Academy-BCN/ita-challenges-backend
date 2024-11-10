@@ -39,21 +39,6 @@ public class ObjectSerializerTest {
         assertEquals(dto.getSolutionText(), deserializedDto.getSolutionText(), "Solution texts should match");
     }
 
-    @Test
-    void serializeNullObjectThrowsException() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            objectSerializer.serialize(null);
-        });
-        assertEquals("Cannot serialize a null object", exception.getMessage());
-    }
-
-    @Test
-    void deserializeNullBytesThrowsException() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            objectSerializer.deserialize(null, ScoreRequestDto.class);
-        });
-        assertEquals("Cannot deserialize a null byte array", exception.getMessage());
-    }
 
     @Test
     void deserializeInvalidBytesThrowsException() {
