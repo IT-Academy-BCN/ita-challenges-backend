@@ -284,7 +284,7 @@ class UserSolutionServiceImpTest {
 
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
-    
+
 
     @DisplayName("saveValidSolution returns empty Mono when no valid status is provided")
     @Test
