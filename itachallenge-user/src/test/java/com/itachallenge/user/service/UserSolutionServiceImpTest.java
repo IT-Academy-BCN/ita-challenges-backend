@@ -252,15 +252,15 @@ class UserSolutionServiceImpTest {
     @DisplayName("saveValidSolution creates new solution when status is SENT")
     @Test
     void saveValidSolutionCreatesNewSolutionWhenStatusIsSent() {
-        UUID localUserUuid = UUID.randomUUID();
-        UUID localChallengeUuid = UUID.randomUUID();
-        UUID localLanguageUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
         ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
         scoreResponseDto.setScore(100);
         scoreResponseDto.setErrors("No errors");
 
-        UserSolutionDocument localUserSolutionDocument = UserSolutionDocument.builder()
+        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
@@ -273,7 +273,7 @@ class UserSolutionServiceImpTest {
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(localUserSolutionDocument));
+                .thenReturn(Mono.just(userSolutionDocument));
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(scoreResponseDto));
 
@@ -287,15 +287,15 @@ class UserSolutionServiceImpTest {
     @DisplayName("saveValidSolution returns empty when status is not SENT or STARTED")
     @Test
     void saveValidSolutionReturnsEmptyWhenStatusIsNotSentOrStarted() {
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
 
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
                 .thenReturn(Mono.empty());
 
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.ENDED, solutionDocuments))
+        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.ENDED, solutionDocuments))
                 .verifyComplete();
 
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
@@ -306,7 +306,7 @@ class UserSolutionServiceImpTest {
     void getDataFromMicroScoreReturnsValidResponse() {
         UUID challengeId = UUID.randomUUID();
         UUID languageId = UUID.randomUUID();
-        String solutionText = "Sample solution text";
+        String localsolutionText = "Sample solution text";
         ScoreResponseDto expectedResponse = new ScoreResponseDto();
         expectedResponse.setScore(100);
         expectedResponse.setErrors("No errors");
@@ -314,7 +314,7 @@ class UserSolutionServiceImpTest {
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(expectedResponse));
 
-        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, solutionText);
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, localsolutionText);
 
         assertNotNull(resultFuture);
         assertEquals(expectedResponse, resultFuture.join());
@@ -325,12 +325,12 @@ class UserSolutionServiceImpTest {
     void getDataFromMicroScoreHandlesException() {
         UUID challengeId = UUID.randomUUID();
         UUID languageId = UUID.randomUUID();
-        String solutionText = "Sample solution text";
+        String localsolutionText = "Sample solution text";
 
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.failedFuture(new RuntimeException("ZMQ error")));
 
-        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, solutionText);
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, localsolutionText);
 
         assertNotNull(resultFuture);
         ScoreResponseDto result = resultFuture.join();
