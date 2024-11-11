@@ -14,11 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -215,20 +211,20 @@ class UserSolutionServiceImpTest {
     @DisplayName("saveValidSolution modifies existing solution when status is STARTED")
     @Test
     void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
         UserSolutionDocument existingSolution = UserSolutionDocument.builder()
                 .status(ChallengeStatus.STARTED)
                 .build();
 
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
                 .thenReturn(Mono.just(existingSolution));
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
                 .thenReturn(Mono.just(existingSolution));
 
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.STARTED, solutionDocuments))
                 .expectNextMatches(savedDocument -> savedDocument.getSolutionDocument().equals(solutionDocuments))
                 .verifyComplete();
 
@@ -238,36 +234,33 @@ class UserSolutionServiceImpTest {
     @DisplayName("saveValidSolution returns error when existing solution status is ENDED")
     @Test
     void saveValidSolutionReturnsErrorWhenExistingSolutionStatusIsEnded() {
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
         UserSolutionDocument existingSolution = UserSolutionDocument.builder()
                 .status(ChallengeStatus.ENDED)
                 .build();
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
                 .thenReturn(Mono.just(existingSolution));
-
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.STARTED, solutionDocuments))
                 .expectError(UnmodifiableSolutionException.class)
                 .verify();
-
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
 
     @DisplayName("saveValidSolution creates new solution when status is SENT")
     @Test
     void saveValidSolutionCreatesNewSolutionWhenStatusIsSent() {
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
         ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
         scoreResponseDto.setScore(100);
         scoreResponseDto.setErrors("No errors");
 
-        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+        UserSolutionDocument localUserSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
@@ -280,7 +273,7 @@ class UserSolutionServiceImpTest {
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
+                .thenReturn(Mono.just(localUserSolutionDocument));
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(scoreResponseDto));
 
