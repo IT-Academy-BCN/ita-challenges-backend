@@ -319,6 +319,7 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
 
+
     @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
     @Test
     void getDataFromMicroScoreReturnsValidResponse() {

@@ -243,7 +243,7 @@ class UserControllerTest {
 
         UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
                 userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText(), 13, "xxx");
+                userSolutionDto.getSolutionText(), 13, "xxx", "xxx");
 
         when(userSolutionService.addSolution(userSolutionDto))
                 .thenReturn(Mono.just(expectedResponse));

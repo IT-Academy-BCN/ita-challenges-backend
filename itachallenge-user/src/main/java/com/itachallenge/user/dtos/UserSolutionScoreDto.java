@@ -13,16 +13,17 @@ import lombok.*;
 @Setter
 public class UserSolutionScoreDto {
 
-    @JsonProperty(value ="uuid_user")
+
+    @JsonProperty(value = "uuid_user")
     private String userId;
 
-    @JsonProperty(value ="uuid_challenge")
+    @JsonProperty(value = "uuid_challenge")
     private String challengeId;
 
-    @JsonProperty(value ="uuid_language")
+    @JsonProperty(value = "uuid_language")
     private String languageId;
 
-    @JsonProperty(value ="solution_text")
+    @JsonProperty(value = "solution_text")
     private String solutionText;
 
     @JsonProperty(value = "score")
@@ -30,4 +31,9 @@ public class UserSolutionScoreDto {
 
     @JsonProperty(value = "errors")
     private String errors;
+
+    @JsonProperty(value = "status")
+    private String status;
+
+
 }
