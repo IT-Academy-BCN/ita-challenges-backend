@@ -35,7 +35,6 @@ public class ZMQClient {
     public CompletableFuture<Object> sendMessage(Object message, Class clazz) {
 
         return CompletableFuture.supplyAsync(() -> {
-
             if (message == null) {
                 throw new IllegalArgumentException("Message cannot be null");
             }
@@ -43,20 +42,19 @@ public class ZMQClient {
             byte[] request = serializeMessage(message);
 
             Optional<Object> response = Optional.empty();
-
             try (ZMQ.Socket socket = context.createSocket(SocketType.REQ)) {
                 socket.connect(SOCKET_ADDRESS);
                 socket.send(request, 0);
 
                 byte[] reply = socket.recv(0);
                 if (reply == null) {
-                    throw new ZMQException("Received null reply from ZeroMQ", -1);
+                    throw new ZMQException("Received null reply from ZeroMQ", ZMQ.Error.ETERM.getCode());
                 }
 
                 response = deserializeMessage(reply, clazz);
             } catch (ZMQException e) {
-                log.error("Error in ZMQClient sendMessage: {}", e.getMessage(), e);
-            }
+                throw new CompletionException(e);
+                }
 
             return response.orElse(null);
 
@@ -67,8 +65,7 @@ public class ZMQClient {
         try {
             return objectSerializer.serialize(message);
         } catch (JsonProcessingException e) {
-            log.error("Error serializing message: {}", e.getMessage(), e);
-            return new byte[0];
+            throw new CompletionException(e);
         }
     }
 
@@ -76,8 +73,7 @@ public class ZMQClient {
         try {
             return Optional.of(objectSerializer.deserialize(data, clazz));
         } catch (IOException e) {
-            log.error("Error deserializing reply: {}", e.getMessage(), e);
-            return Optional.empty();
+            throw new CompletionException(e);
         }
     }
 }
