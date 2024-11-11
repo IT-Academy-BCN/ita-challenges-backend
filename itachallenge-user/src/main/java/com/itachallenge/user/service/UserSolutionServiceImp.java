@@ -128,44 +128,44 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     public Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
 
-       return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
-               .flatMap(existingSolution -> {
-                   if (existingSolution.getStatus().equals(ChallengeStatus.ENDED) || existingSolution.getStatus().equals(ChallengeStatus.SCORE_PENDING)) {
-                       return Mono.error(new UnmodifiableSolutionException("Cannot modify solution with status ENDED or SCORE_PENDING"));
-                   }
-                   if (challengeStatus == ChallengeStatus.STARTED) {
-                       existingSolution.setSolutionDocument(solutionDocuments);
-                       existingSolution.setStatus(challengeStatus);
-                       return userSolutionRepository.save(existingSolution);
-                   }
-                   return Mono.empty();
-               })
+        return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
+                .flatMap(existingSolution -> {
+                    if (existingSolution.getStatus().equals(ChallengeStatus.ENDED) || existingSolution.getStatus().equals(ChallengeStatus.SCORE_PENDING)) {
+                        return Mono.error(new UnmodifiableSolutionException("Cannot modify solution with status ENDED or SCORE_PENDING"));
+                    }
+                    if (challengeStatus == ChallengeStatus.STARTED) {
+                        existingSolution.setSolutionDocument(solutionDocuments);
+                        existingSolution.setStatus(challengeStatus);
+                        return userSolutionRepository.save(existingSolution);
+                    }
+                    return Mono.empty();
+                })
 
-               .switchIfEmpty(Mono.defer(() -> {
-                   if (challengeStatus == ChallengeStatus.SENT) {
-                       UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                               .uuid(UUID.randomUUID())
-                               .userId(userUuid)
-                               .challengeId(challengeUuid)
-                               .languageId(languageUuid)
-                               .solutionDocument(solutionDocuments)
-                               .status(ChallengeStatus.SCORE_PENDING)
-                               .build();
+                .switchIfEmpty(Mono.defer(() -> {
+                    if (challengeStatus == ChallengeStatus.SENT) {
+                        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                                .uuid(UUID.randomUUID())
+                                .userId(userUuid)
+                                .challengeId(challengeUuid)
+                                .languageId(languageUuid)
+                                .solutionDocument(solutionDocuments)
+                                .status(ChallengeStatus.SCORE_PENDING)
+                                .build();
 
-                       return Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getSolutionText())
-                               .thenCompose(data -> {
-                                   userSolutionDocument.setStatus(ChallengeStatus.ENDED);
-                                   userSolutionDocument.setScore(data.getScore());
-                                   userSolutionDocument.setErrors(data.getErrors());
-                                   return userSolutionRepository.save(userSolutionDocument).toFuture();
-                               }))
-                               .doOnError(e -> {
-                                   log.error("Error updating solution status", e);
-                                   throw new SolutionNotFoundException("Error updating solution status");
-                               });
-                   }
-                   return Mono.empty();
-               }));
+                        return Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getSolutionText())
+                                        .thenCompose(data -> {
+                                            userSolutionDocument.setStatus(ChallengeStatus.ENDED);
+                                            userSolutionDocument.setScore(data.getScore());
+                                            userSolutionDocument.setErrors(data.getErrors());
+                                            return userSolutionRepository.save(userSolutionDocument).toFuture();
+                                        }))
+                                .doOnError(e -> {
+                                    log.error("Error updating solution status", e);
+                                    throw new SolutionNotFoundException("Error updating solution status");
+                                });
+                    }
+                    return Mono.empty();
+                }));
     }
 
     public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
@@ -185,7 +185,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-    private ChallengeStatus determineChallengeStatus(String status) {
+    public ChallengeStatus determineChallengeStatus(String status) {
         if (status == null || status.isEmpty()) {
             return ChallengeStatus.STARTED;
         } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
@@ -248,22 +248,5 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 }));
 
         return percentage;
-    }
-
-    private Flux<UserSolutionDocument> getUserSolutions() {
-        return userSolutionRepository.findAll();
-    }
-
-    private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID
-            challengeId) {
-        List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
-                .filter(us -> challengeId.equals(us.getChallengeId()))
-                .toList();
-
-        if (userSolutionsChallenge.isEmpty()) {
-            return Flux.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)));
-        }
-
-        return Flux.fromIterable(userSolutionsChallenge);
     }
 }

@@ -6,6 +6,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.mqclient.ZMQClient;
@@ -301,6 +302,23 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
 
+    @DisplayName("saveValidSolution returns empty when no valid status is provided")
+    @Test
+    void saveValidSolutionReturnsEmptyWhenNoValidStatusIsProvided() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.EMPTY, solutionDocuments))
+                .verifyComplete();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
     @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
     @Test
     void getDataFromMicroScoreReturnsValidResponse() {
@@ -478,6 +496,56 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
 
     }
+
+    @DisplayName("determineChallengeStatus returns STARTED when status is null")
+    @Test
+    void determineChallengeStatusReturnsStartedWhenStatusIsNull() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus(null);
+        assertEquals(ChallengeStatus.STARTED, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns STARTED when status is empty")
+    @Test
+    void determineChallengeStatusReturnsStartedWhenStatusIsEmpty() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("");
+        assertEquals(ChallengeStatus.STARTED, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns EMPTY when status is EMPTY")
+    @Test
+    void determineChallengeStatusReturnsEmptyWhenStatusIsEmpty() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("EMPTY");
+        assertEquals(ChallengeStatus.EMPTY, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns SENT when status is SENT")
+    @Test
+    void determineChallengeStatusReturnsSentWhenStatusIsSent() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("SENT");
+        assertEquals(ChallengeStatus.SENT, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns SCORE_PENDING when status is SCORE_PENDING")
+    @Test
+    void determineChallengeStatusReturnsScorePendingWhenStatusIsScorePending() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("SCORE_PENDING");
+        assertEquals(ChallengeStatus.SCORE_PENDING, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns ENDED when status is ENDED")
+    @Test
+    void determineChallengeStatusReturnsEndedWhenStatusIsEnded() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("ENDED");
+        assertEquals(ChallengeStatus.ENDED, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns null for unknown status")
+    @Test
+    void determineChallengeStatusReturnsNullForUnknownStatus() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("UNKNOWN");
+        assertNull(result);
+    }
+
 
     @Test
     void getChallengeUsersPercentageTest() {
