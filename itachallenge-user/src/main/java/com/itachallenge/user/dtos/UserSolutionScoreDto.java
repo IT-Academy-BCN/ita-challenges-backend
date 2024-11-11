@@ -2,7 +2,6 @@ package com.itachallenge.user.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.itachallenge.user.enums.ChallengeStatus;
 import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -31,9 +30,6 @@ public class UserSolutionScoreDto {
 
     @JsonProperty(value = "errors")
     private String errors;
-
-    @JsonProperty(value = "status")
-    private String status;
 
 
 }
