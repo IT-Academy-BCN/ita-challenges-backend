@@ -32,4 +32,5 @@ public class UserSolutionScoreDto {
     private String errors;
 
 
+
 }

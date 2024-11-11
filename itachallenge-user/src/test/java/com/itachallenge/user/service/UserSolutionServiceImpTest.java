@@ -82,6 +82,8 @@ class UserSolutionServiceImpTest {
                 .errors(mockErrors)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
                 .build();
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(any(UUID.class), any(UUID.class), any(UUID.class)))
+                .thenReturn(Mono.empty());
 
     }
 
@@ -231,6 +233,23 @@ class UserSolutionServiceImpTest {
 
         verify(userSolutionRepository).save(existingSolution);
     }
+
+    @Test
+    void addSolutionShouldThrowIllegalArgumentExceptionWhenChallengeStatusIsNull() {
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setChallengeId(UUID.randomUUID().toString());
+        userSolutionDto.setLanguageId(UUID.randomUUID().toString());
+        userSolutionDto.setUserId(UUID.randomUUID().toString());
+        userSolutionDto.setStatus(null); // Setting status to null
+
+        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
 
     @DisplayName("saveValidSolution returns error when existing solution status is ENDED")
     @Test

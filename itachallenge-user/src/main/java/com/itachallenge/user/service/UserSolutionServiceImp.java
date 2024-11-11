@@ -70,6 +70,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         ChallengeStatus challengeStatus = determineChallengeStatus(status);
         List<SolutionDocument> solutionDocuments;
 
+        if (userSolutionDto.getStatus() == null) {
+            log.error("POST operation failed due to invalid challenge status parameter");
+            return Mono.error(new IllegalArgumentException("Status not allowed"));
+        }
 
         if (challengeStatus == null) {
             log.error("POST operation failed due to invalid challenge status parameter");
