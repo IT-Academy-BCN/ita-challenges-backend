@@ -284,6 +284,24 @@ class UserSolutionServiceImpTest {
 
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
+    
+
+    @DisplayName("saveValidSolution returns empty Mono when no valid status is provided")
+    @Test
+    void saveValidSolutionReturnsEmptyMonoWhenNoValidStatusIsProvided() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.EMPTY, solutionDocuments))
+                .verifyComplete();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
 
     @DisplayName("saveValidSolution returns empty when status is not SENT or STARTED")
     @Test
