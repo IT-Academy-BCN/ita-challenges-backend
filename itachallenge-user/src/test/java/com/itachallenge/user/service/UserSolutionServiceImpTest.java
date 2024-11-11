@@ -250,6 +250,17 @@ class UserSolutionServiceImpTest {
                 .verify();
     }
 
+    @DisplayName("addSolution returns IllegalArgumentException when challenge status is null")
+    @Test
+    void addSolutionReturnsIllegalArgumentExceptionWhenChallengeStatusIsNull() {
+        userSolutionDto.setStatus(null);
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
 
     @DisplayName("saveValidSolution returns error when existing solution status is ENDED")
     @Test

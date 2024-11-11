@@ -86,7 +86,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
-                        .uuid(UUID.randomUUID())
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
@@ -96,7 +95,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         .userId(String.valueOf(savedDocument.getUserId()))
                         .languageId(String.valueOf(savedDocument.getLanguageId()))
                         .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionDocument().getFirst().getSolutionText())
+                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
+                        .status(savedDocument.getStatus().name()) // Ensure status is included in the DTO
                         .score(savedDocument.getScore())
                         .errors(savedDocument.getErrors())
                         .build())
@@ -131,7 +131,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     public Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
-
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if (existingSolution.getStatus().equals(ChallengeStatus.ENDED) || existingSolution.getStatus().equals(ChallengeStatus.SCORE_PENDING)) {
@@ -142,9 +141,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         existingSolution.setStatus(challengeStatus);
                         return userSolutionRepository.save(existingSolution);
                     }
-                    return Mono.empty();
+                    return Mono.just(existingSolution); // Return the existing solution if not modified
                 })
-
                 .switchIfEmpty(Mono.defer(() -> {
                     if (challengeStatus == ChallengeStatus.SENT) {
                         UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
@@ -156,17 +154,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                                 .status(ChallengeStatus.SCORE_PENDING)
                                 .build();
 
-                        return Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getSolutionText())
-                                        .thenCompose(data -> {
-                                            userSolutionDocument.setStatus(ChallengeStatus.ENDED);
-                                            userSolutionDocument.setScore(data.getScore());
-                                            userSolutionDocument.setErrors(data.getErrors());
-                                            return userSolutionRepository.save(userSolutionDocument).toFuture();
-                                        }))
-                                .doOnError(e -> {
-                                    log.error("Error updating solution status", e);
-                                    throw new SolutionNotFoundException("Error updating solution status");
-                                });
+                        return userSolutionRepository.save(userSolutionDocument);
                     }
                     return Mono.empty();
                 }));
