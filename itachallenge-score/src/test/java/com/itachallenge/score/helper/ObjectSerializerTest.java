@@ -74,4 +74,18 @@ class ObjectSerializerTest {
 
         assertTrue(exception instanceof IOException);
     }
+
+    @Test
+    void deserializeShouldThrowIllegalArgumentExceptionWhenClassIsNull() throws JsonProcessingException {
+        byte[] validBytes = objectSerializer.serialize(dto);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            objectSerializer.deserialize(validBytes, null);
+        });
+
+        assertEquals("Cannot deserialize to a null class type", exception.getMessage());
+    }
+
+
+
 }

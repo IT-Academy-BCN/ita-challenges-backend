@@ -23,6 +23,9 @@ public class ObjectSerializer {
         if (bytes == null) {
             throw new IllegalArgumentException("Cannot deserialize a null byte array");
         }
+        if (valueType == null) {
+            throw new IllegalArgumentException("Cannot deserialize to a null class type");
+        }
         return objectMapper.readValue(bytes, valueType);
     }
 }
