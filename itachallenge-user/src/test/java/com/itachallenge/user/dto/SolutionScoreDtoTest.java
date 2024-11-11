@@ -65,3 +65,4 @@ class SolutionScoreDtoTest {
         assertNull(dto.getSolutionId());
     }
 }
+
