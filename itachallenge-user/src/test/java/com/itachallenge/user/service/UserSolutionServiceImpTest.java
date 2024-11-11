@@ -389,6 +389,71 @@ class UserSolutionServiceImpTest {
         assertEquals(challengeIds.size(), challengeList.size());
     }
 
+    @DisplayName("markAsBookmarked updates existing document")
+    @Test
+    void markAsBookmarkedUpdatesExistingDocument() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        boolean bookmarked = true;
+
+        UserSolutionDocument existingDocument = UserSolutionDocument.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .bookmarked(false)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId))
+                .thenReturn(Mono.just(existingDocument));
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(existingDocument));
+
+        StepVerifier.create(userSolutionService.markAsBookmarked(challengeId.toString(), languageId.toString(), userId.toString(), bookmarked))
+                .expectNextMatches(document -> document.isBookmarked() == bookmarked)
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(existingDocument);
+    }
+
+    @DisplayName("markAsBookmarked creates new document if not found")
+    @Test
+    void markAsBookmarkedCreatesNewDocumentIfNotFound() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        boolean bookmarked = true;
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId))
+                .thenReturn(Mono.empty());
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(userSolutionService.markAsBookmarked(challengeId.toString(), languageId.toString(), userId.toString(), bookmarked))
+                .expectNextMatches(document -> document.isBookmarked() == bookmarked)
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("createAndSaveNewBookmark creates and saves new document")
+    @Test
+    void createAndSaveNewBookmarkCreatesAndSavesNewDocument() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        boolean bookmarked = true;
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(userSolutionService.createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked))
+                .expectNextMatches(document -> document.isBookmarked() == bookmarked)
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+
     @DisplayName("Should return number of BookmarkedTrue by idChallenge")
     @Test
     void testGetBookmarkCountByIdChallenge() {
