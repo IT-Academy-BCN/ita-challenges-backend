@@ -9,7 +9,7 @@ import java.io.IOException;
 @Component
 public class ObjectSerializer {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
 
     public byte[] serialize(Object obj) throws JsonProcessingException {

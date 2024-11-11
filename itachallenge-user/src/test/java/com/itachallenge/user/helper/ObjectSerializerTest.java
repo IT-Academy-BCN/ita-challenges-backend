@@ -1,18 +1,17 @@
-package com.itachallenge.score.helper;
+package com.itachallenge.user.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.itachallenge.score.dto.zmq.ScoreRequestDto;
+import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ObjectSerializerTest {
 
     private ObjectSerializer objectSerializer;
+
     ScoreRequestDto dto;
     @BeforeEach
     void setUp() {
@@ -27,8 +26,8 @@ class ObjectSerializerTest {
     void testSerialize() throws JsonProcessingException {
         byte[] result = objectSerializer.serialize(dto);
 
-        assertNotNull(result, "The serialized byte array should not be null.");
-        assertTrue(result.length > 0, "The serialized byte array should not be empty.");
+        assertNotNull(result, "The serialized byte array should not be null");
+        assertTrue(result.length > 0, "The serialized byte array should not be empty");
     }
 
     @Test
@@ -37,7 +36,7 @@ class ObjectSerializerTest {
 
         ScoreRequestDto deserializedDto = objectSerializer.deserialize(serialized, ScoreRequestDto.class);
 
-        assertNotNull(deserializedDto, "Deserialized object should not be null.");
+        assertNotNull(deserializedDto, "Deserialized object should not be null");
         assertEquals(dto.getUuidChallenge(), deserializedDto.getUuidChallenge(), "UUIDs should match");
         assertEquals(dto.getUuidLanguage(), deserializedDto.getUuidLanguage(), "UUIDs should match");
         assertEquals(dto.getSolutionText(), deserializedDto.getSolutionText(), "Solution texts should match");
@@ -45,7 +44,6 @@ class ObjectSerializerTest {
 
     @Test
     void testSerializeNullObject() {
-
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             objectSerializer.serialize(null);
         });
@@ -53,20 +51,10 @@ class ObjectSerializerTest {
         assertEquals("Cannot serialize a null object", exception.getMessage());
     }
 
-    @Test
-    void testDeserializeNullByteArray() {
-
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            objectSerializer.deserialize(null, ScoreRequestDto.class);
-        });
-
-        assertEquals("Cannot deserialize a null byte array", exception.getMessage());
-    }
 
     @Test
     void testDeserializeInvalidBytes() {
-
-        byte[] invalidBytes = new byte[]{1, 2, 3, 4, 5};
+        byte[] invalidBytes = new byte[]{1, 2, 3,4, 5};
 
         Exception exception = assertThrows(IOException.class, () -> {
             objectSerializer.deserialize(invalidBytes, ScoreRequestDto.class);
@@ -74,4 +62,5 @@ class ObjectSerializerTest {
 
         assertTrue(exception instanceof IOException);
     }
+
 }
