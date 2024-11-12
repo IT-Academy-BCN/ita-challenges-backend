@@ -6,7 +6,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
-import com.itachallenge.user.exception.SolutionNotFoundException;
+import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.mqclient.ZMQClient;
@@ -86,6 +86,7 @@ class UserSolutionServiceImpTest {
                 .thenReturn(Mono.empty());
 
     }
+
 
     @DisplayName("addSolution returns IllegalArgumentException when status is empty")
     @Test
@@ -352,6 +353,32 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
 
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("saveValidSolution returns existing solution when status is not modified")
+    @Test
+    void saveValidSolutionReturnsExistingSolutionWhenStatusIsNotModified() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.STARTED)
+                .solutionDocument(solutionDocuments)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existingSolution));
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.SENT, solutionDocuments))
+                .expectNext(existingSolution)
+                .expectComplete()
+                .verify();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
 
 
@@ -685,6 +712,53 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(result)
                 .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
                 .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("getChallengeUsersPercentage returns correct percentage when challenges are found")
+    @Test
+    void getChallengeUsersPercentageReturnsCorrectPercentageWhenChallengesAreFound() {
+        UUID challengeId = UUID.randomUUID();
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.just(new UserSolutionDocument()));
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.just(new UserSolutionDocument()));
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.just(new UserSolutionDocument(), new UserSolutionDocument()));
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectNext(100f)
+                .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("getChallengeUsersPercentage returns zero percentage when no challenges are found")
+    @Test
+    void getChallengeUsersPercentageReturnsZeroPercentageWhenNoChallengesAreFound() {
+        UUID challengeId = UUID.randomUUID();
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.just(new UserSolutionDocument(), new UserSolutionDocument()));
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectNext(0f)
+                .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("getChallengeUsersPercentage returns error when no challenges exist")
+    @Test
+    void getChallengeUsersPercentageReturnsErrorWhenNoChallengesExist() {
+        UUID challengeId = UUID.randomUUID();
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.empty());
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectError(ChallengeNotFoundException.class)
                 .verify();
     }
 }
