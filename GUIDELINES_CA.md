@@ -225,6 +225,9 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 6. En cas que hagis de revisar i corregir alguns problemes, actualitza la teva branca local amb els canvis i fes push novament a la branca remota corresponent.
 7. La pull request s'actualitzarà automàticament amb els nous canvis realitzats a la teva branca.
 
+
+**NOTA IMPORTANT**: Una Pull Request és una sol·licitud per a incloure el teu codi en el projecte. No esperis que el teu PR sigui acceptada per a començar a treballar en una altra card**
+
 <hr/>
 
 
@@ -563,7 +566,7 @@ Els programes següents són requerits per poder treballar en el projecte:
 
 - **Git**: Git és un sistema de control de versions distribuït àmpliament utilitzat en el desenvolupament de programari. Et permetrà col·laborar amb altres desenvolupadors i mantenir un historial de canvis al codi font. Pots descarregar [Git](https://git-scm.com/downloads) des de la web oficial.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 17.0.7 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) des del web oficial d'Oracle.
+- **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 21.0.3 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) des del web oficial d'Oracle.
 
 - **Gradle 8.8**
 
