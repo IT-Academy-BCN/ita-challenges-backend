@@ -49,4 +49,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.OK).body(new ErrorResponseDto(e.getMessage()));
     }
 
+    @ExceptionHandler(UserSolutionsNotFoundException.class)
+        public ResponseEntity<ErrorResponseDto> handleUserSolutionNotFoundException(UserSolutionsNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponseDto(e.getMessage()));
+    }
 }

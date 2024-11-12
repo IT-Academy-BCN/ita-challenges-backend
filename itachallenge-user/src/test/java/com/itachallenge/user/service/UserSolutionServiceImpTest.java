@@ -334,4 +334,51 @@ class UserSolutionServiceImpTest {
                 .expectNext(expectedValue)
                 .verifyComplete();
     }
+
+
+    @DisplayName("UserSolutionServiceImpTest - getUserStatisticsChallenges returns the ended and saved challenges " +
+            "from a specific user")
+    @Test
+    public void getUserStatisticsChallenges() {
+
+        String idUser = userUuid.toString();
+        String idLanguage = languageUuid.toString();
+
+        UserSolutionDocument solution1 = userSolutionDocument; // solution1.ChanllengeStatus = ENDED
+
+        UserSolutionDocument solution2 = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.STARTED)
+                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
+                .score(mockScore).build();
+
+        UserSolutionDocument solution3 =UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.ENDED)
+                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
+                .score(mockScore).build();
+
+        Flux<UserSolutionDocument> userSolutionsFlux = Flux.just(solution1, solution2, solution3);
+
+        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(userSolutionsFlux);
+
+        Mono<UserStatisticsDto> result = userSolutionService.getUserStatisticsChallenges(idLanguage, idUser);
+
+        StepVerifier.create(result)
+                .expectNextMatches(userStatisticsDto ->
+                    userStatisticsDto.getUserId().equals(idUser)
+                            && userStatisticsDto.getLanguageId().equals(idLanguage)
+                            && userStatisticsDto.getCompletedAndSavedChallenges() != null
+                            && userStatisticsDto.getCompletedAndSavedChallenges().getCompletedChallenge().size() == 2  // Esperamos 2 desafíos completados
+                            && userStatisticsDto.getCompletedAndSavedChallenges().getChallengesSaved().size() == 1 // Esperamos 1 desafío guardado
+                )
+                .verifyComplete();
+
+        verify(userSolutionRepository).findByUserId(userUuid);
+    }
+
 }

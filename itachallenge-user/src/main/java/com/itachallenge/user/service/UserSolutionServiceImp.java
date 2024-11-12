@@ -6,11 +6,11 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.exception.UserSolutionsNotFoundException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -138,11 +138,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         ChallengeStatus challengeStatus = null;
 
-        if(status == null || status.isEmpty()) {
+        if (status == null || status.isEmpty()) {
             challengeStatus = ChallengeStatus.STARTED;
         } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
             challengeStatus = ChallengeStatus.ENDED;
-    }
+        }
         return challengeStatus;
     }
 
@@ -156,16 +156,16 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
 
-        try{
+        try {
             for (UUID id : challengeIds) {
                 //TODO: missing check if UUID is correctly constructed.
 
                 //TODO: missing call repository for get statistics of challenge.
 
                 //TODO: delete below code when uppers todo are implemented.
-                challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat (100)));
+                challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat(100)));
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             //TODO: missing error control
         }
         return Mono.just(challengesList);
@@ -211,5 +211,43 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         return Flux.fromIterable(userSolutionsChallenge);
     }
+
+    public Mono<UserStatisticsDto> getUserStatisticsChallenges(String idLanguage, String idUser) {
+
+        UUID userUuid = UUID.fromString(idUser);
+        UUID languageUuid = UUID.fromString(idLanguage);
+
+        return userSolutionRepository.findByUserId(userUuid)
+                .filter(solution -> solution.getLanguageId().equals(languageUuid))
+                .collectList()
+                .flatMap(userSolutions -> {
+                    if (userSolutions == null ||userSolutions.isEmpty())
+                        return Mono.error(new UserSolutionsNotFoundException("No Solutions found"));
+
+                    UserCompletedAndSavedChallengeDto userCompletedChallengeAndSavedDto =
+                            new UserCompletedAndSavedChallengeDto(getUserCompletedChallengesDto(userSolutions),
+                                    getUserSavedChallenges(userSolutions));
+
+                    return Mono.just(new UserStatisticsDto(idUser,idLanguage,userCompletedChallengeAndSavedDto));
+                });
+        // Posible control de error: Error en el procesamiento reactivo
+        //        .onErrorMap(e -> new CustomProcessingException("Error processing user statistics", e));
+
+    }
+    private List<UserCompletedChallengeDto> getUserCompletedChallengesDto(List<UserSolutionDocument> userSolutions) {
+        return userSolutions.stream()
+                .filter(solution -> solution.getStatus() == ChallengeStatus.ENDED)
+                .map(converter::mapUserSolutionDocumentToUserCompletedChallengeDto)
+                .collect(Collectors.toList());
+    }
+    private List<String> getUserSavedChallenges(List<UserSolutionDocument> userSolutions) {
+    // if ChallengeStatus == STARTED --> the Challenge is Saved
+     return userSolutions.stream()
+            .filter(solution ->solution.getStatus()==ChallengeStatus.STARTED)
+            .map(solution ->solution.getChallengeId().
+            toString())  // Extraemos el challengeId como String
+            .collect(Collectors.toList());
+    }
+
 }
 

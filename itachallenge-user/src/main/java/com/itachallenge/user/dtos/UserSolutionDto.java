@@ -32,5 +32,9 @@ public class UserSolutionDto {
     @NotBlank(message = "Solution text is required")
     private String solutionText;
 
+    public UserSolutionDto(String idUser, String idLanguage) {
+        this.userId = idUser;
+        this.languageId = idLanguage;
     }
+}
 

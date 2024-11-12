@@ -59,7 +59,6 @@ public class UserController {
         return elements;
     }
 
-
     @GetMapping(path = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
             summary = "obtains all the solutions to a challenge with the given language and user.",

@@ -79,4 +79,6 @@ class ScoreControllerTest {
                 .jsonPath("$['Solution text']").isEqualTo(mockScoreResponse.getSolutionText())
                 .jsonPath("$['User Score']").isEqualTo(mockScoreResponse.getScore());
     }
+
+
 }
