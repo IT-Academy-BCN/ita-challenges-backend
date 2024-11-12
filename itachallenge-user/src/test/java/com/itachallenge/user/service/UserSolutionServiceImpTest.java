@@ -87,6 +87,17 @@ class UserSolutionServiceImpTest {
 
     }
 
+    @DisplayName("addSolution returns IllegalArgumentException when status is empty")
+    @Test
+    void addSolutionReturnsIllegalArgumentExceptionWhenStatusIsEmpty() {
+        userSolutionDto.setStatus("");
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
     @Test
     void markAsBookmarked() {
         UUID challengeId = UUID.fromString("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
@@ -235,12 +246,12 @@ class UserSolutionServiceImpTest {
     }
 
     @Test
-    void addSolutionShouldThrowIllegalArgumentExceptionWhenChallengeStatusIsNull() {
+    void testAddSolutionWithNullStatus() {
         UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setChallengeId(UUID.randomUUID().toString());
-        userSolutionDto.setLanguageId(UUID.randomUUID().toString());
-        userSolutionDto.setUserId(UUID.randomUUID().toString());
-        userSolutionDto.setStatus(null); // Setting status to null
+        userSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
+        userSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
+        userSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
+        userSolutionDto.setStatus(null); // Set status to null
 
         Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
 
@@ -250,9 +261,37 @@ class UserSolutionServiceImpTest {
                 .verify();
     }
 
+    @Test
+    void testAddSolutionWithInvalidStatus() {
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
+        userSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
+        userSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
+        userSolutionDto.setStatus("INVALID_STATUS"); // Set an invalid status
+
+        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
+
     @DisplayName("addSolution returns IllegalArgumentException when challenge status is null")
     @Test
     void addSolutionReturnsIllegalArgumentExceptionWhenChallengeStatusIsNull() {
+        userSolutionDto.setStatus(null);
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
+    @DisplayName("addSolution returns IllegalArgumentException when status is null")
+    @Test
+    void addSolutionReturnsIllegalArgumentExceptionWhenStatusIsNull() {
         userSolutionDto.setStatus(null);
 
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))

@@ -67,14 +67,14 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
         String status = userSolutionDto.getStatus();
-        ChallengeStatus challengeStatus = determineChallengeStatus(status);
         List<SolutionDocument> solutionDocuments;
 
-        if (userSolutionDto.getStatus() == null) {
+        if (status == null || status.isEmpty()) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
 
+        ChallengeStatus challengeStatus = determineChallengeStatus(status);
         if (challengeStatus == null) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
@@ -89,7 +89,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
-
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
                 .map(savedDocument -> UserSolutionScoreDto.builder()
                         .userId(String.valueOf(savedDocument.getUserId()))
@@ -103,12 +102,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
                 .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
-
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
         UUID challengeId = UUID.fromString(uuidChallenge);
         UUID languageId = UUID.fromString(uuidLanguage);
         UUID userId = UUID.fromString(uuidUser);
-
         return userSolutionRepository
                 .findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId)
                 .flatMap(userSolutionDocument -> {
@@ -117,7 +114,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 })
                 .switchIfEmpty(createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked));
     }
-
     public Mono<UserSolutionDocument> createAndSaveNewBookmark(UUID challengeId, UUID languageId, UUID userId, boolean bookmarked) {
         UserSolutionDocument newDocument = UserSolutionDocument.builder()
                 .uuid(UUID.randomUUID())
@@ -126,10 +122,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .languageId(languageId)
                 .bookmarked(bookmarked)
                 .build();
-
         return userSolutionRepository.save(newDocument).thenReturn(newDocument);
     }
-
     public Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
@@ -153,16 +147,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                                 .solutionDocument(solutionDocuments)
                                 .status(ChallengeStatus.SCORE_PENDING)
                                 .build();
-
                         return userSolutionRepository.save(userSolutionDocument);
                     }
                     return Mono.empty();
                 }));
     }
-
     public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
-
         return zmqClient.sendMessage(request, ScoreResponseDto.class)
                 .thenApply(response -> {
                     ScoreResponseDto responseDto = (ScoreResponseDto) response;
@@ -176,7 +167,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     return new ScoreResponseDto();
                 });
     }
-
     public ChallengeStatus determineChallengeStatus(String status) {
         if (status == null || status.isEmpty()) {
             return ChallengeStatus.STARTED;
@@ -191,23 +181,17 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         }
         return null;
     }
-
     public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
         return userSolutionRepository.findByUserId(userUuid)
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
-
     @Override
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
-
         List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
-
         try {
             for (UUID id : challengeIds) {
                 //TODO: missing check if UUID is correctly constructed.
-
                 //TODO: missing call repository for get statistics of challenge.
-
                 //TODO: delete below code when uppers todo are implemented.
                 challengesList.add(new ChallengeStatisticsDto(id, random.nextInt(1000), random.nextFloat(100)));
             }
@@ -216,21 +200,15 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         }
         return Mono.just(challengesList);
     }
-
     @Override
     public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
         return userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, true);
     }
-
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
-
         Mono<Long> startedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.STARTED).count();
-
         Mono<Long> endedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.ENDED).count();
-
         Mono<Long> allChallenges = userSolutionRepository.findByChallengeId(idChallenge).count();
-
         Mono<Float> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2)
                 .flatMap(sum -> allChallenges.flatMap(value3 -> {
                     if (value3 == 0) {
@@ -238,7 +216,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     }
                     return Mono.just((sum * 100f) / value3);
                 }));
-
         return percentage;
     }
 }
