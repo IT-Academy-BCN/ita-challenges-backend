@@ -14,10 +14,19 @@ public class ObjectSerializer {
     // 15/10/2024 Michel: convierto a métodos por instancia en lugar de estáticos para que se pueda mockear esta clase
 
     public byte[] serialize(Object obj) throws JsonProcessingException {
+        if (obj == null) {
+            throw new IllegalArgumentException("Cannot serialize a null object");
+        }
         return objectMapper.writeValueAsBytes(obj);
     }
 
-    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
-        return objectMapper.readValue(bytes, clazz);
+    public <T> T deserialize(byte[] bytes, Class<T> valueType) throws IOException {
+        if (bytes == null) {
+            throw new IllegalArgumentException("Cannot deserialize a null byte array");
+        }
+        if (valueType == null) {
+            throw new IllegalArgumentException("Cannot deserialize to a null class type");
+        }
+        return objectMapper.readValue(bytes, valueType);
     }
 }

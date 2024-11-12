@@ -6,6 +6,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
+import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.mqclient.ZMQClient;
@@ -81,7 +82,21 @@ class UserSolutionServiceImpTest {
                 .errors(mockErrors)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
                 .build();
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(any(UUID.class), any(UUID.class), any(UUID.class)))
+                .thenReturn(Mono.empty());
 
+    }
+
+
+    @DisplayName("addSolution returns IllegalArgumentException when status is empty")
+    @Test
+    void addSolutionReturnsIllegalArgumentExceptionWhenStatusIsEmpty() {
+        userSolutionDto.setStatus("");
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
     }
 
     @Test
@@ -211,44 +226,97 @@ class UserSolutionServiceImpTest {
     @DisplayName("saveValidSolution modifies existing solution when status is STARTED")
     @Test
     void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
         UserSolutionDocument existingSolution = UserSolutionDocument.builder()
                 .status(ChallengeStatus.STARTED)
                 .build();
 
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
                 .thenReturn(Mono.just(existingSolution));
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
                 .thenReturn(Mono.just(existingSolution));
 
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.STARTED, solutionDocuments))
                 .expectNextMatches(savedDocument -> savedDocument.getSolutionDocument().equals(solutionDocuments))
                 .verifyComplete();
 
         verify(userSolutionRepository).save(existingSolution);
     }
 
+    @Test
+    void testAddSolutionWithNullStatus() {
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
+        userSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
+        userSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
+        userSolutionDto.setStatus(null); // Set status to null
+
+        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
+    @Test
+    void testAddSolutionWithInvalidStatus() {
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
+        userSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
+        userSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
+        userSolutionDto.setStatus("INVALID_STATUS"); // Set an invalid status
+
+        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
+
+    @DisplayName("addSolution returns IllegalArgumentException when challenge status is null")
+    @Test
+    void addSolutionReturnsIllegalArgumentExceptionWhenChallengeStatusIsNull() {
+        userSolutionDto.setStatus(null);
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
+    @DisplayName("addSolution returns IllegalArgumentException when status is null")
+    @Test
+    void addSolutionReturnsIllegalArgumentExceptionWhenStatusIsNull() {
+        userSolutionDto.setStatus(null);
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().equals("Status not allowed"))
+                .verify();
+    }
+
+
     @DisplayName("saveValidSolution returns error when existing solution status is ENDED")
     @Test
     void saveValidSolutionReturnsErrorWhenExistingSolutionStatusIsEnded() {
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
         UserSolutionDocument existingSolution = UserSolutionDocument.builder()
                 .status(ChallengeStatus.ENDED)
                 .build();
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
                 .thenReturn(Mono.just(existingSolution));
-
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.STARTED, solutionDocuments))
                 .expectError(UnmodifiableSolutionException.class)
                 .verify();
-
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
 
@@ -287,9 +355,36 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
 
-    @DisplayName("saveValidSolution returns empty when status is not SENT or STARTED")
+    @DisplayName("saveValidSolution returns existing solution when status is not modified")
     @Test
-    void saveValidSolutionReturnsEmptyWhenStatusIsNotSentOrStarted() {
+    void saveValidSolutionReturnsExistingSolutionWhenStatusIsNotModified() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.STARTED)
+                .solutionDocument(solutionDocuments)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existingSolution));
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.SENT, solutionDocuments))
+                .expectNext(existingSolution)
+                .expectComplete()
+                .verify();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
+
+    @DisplayName("saveValidSolution returns empty Mono when no valid status is provided")
+    @Test
+    void saveValidSolutionReturnsEmptyMonoWhenNoValidStatusIsProvided() {
         UUID userUuid = UUID.randomUUID();
         UUID challengeUuid = UUID.randomUUID();
         UUID languageUuid = UUID.randomUUID();
@@ -298,18 +393,53 @@ class UserSolutionServiceImpTest {
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
 
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.ENDED, solutionDocuments))
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.EMPTY, solutionDocuments))
                 .verifyComplete();
 
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
+
+    @DisplayName("saveValidSolution returns empty when status is not SENT or STARTED")
+    @Test
+    void saveValidSolutionReturnsEmptyWhenStatusIsNotSentOrStarted() {
+        UUID localUserUuid = UUID.randomUUID();
+        UUID localChallengeUuid = UUID.randomUUID();
+        UUID localLanguageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.ENDED, solutionDocuments))
+                .verifyComplete();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("saveValidSolution returns empty when no valid status is provided")
+    @Test
+    void saveValidSolutionReturnsEmptyWhenNoValidStatusIsProvided() {
+        UUID userUuid = UUID.randomUUID();
+        UUID challengeUuid = UUID.randomUUID();
+        UUID languageUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.EMPTY, solutionDocuments))
+                .verifyComplete();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
 
     @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
     @Test
     void getDataFromMicroScoreReturnsValidResponse() {
         UUID challengeId = UUID.randomUUID();
         UUID languageId = UUID.randomUUID();
-        String solutionText = "Sample solution text";
+        String localsolutionText = "Sample solution text";
         ScoreResponseDto expectedResponse = new ScoreResponseDto();
         expectedResponse.setScore(100);
         expectedResponse.setErrors("No errors");
@@ -317,7 +447,7 @@ class UserSolutionServiceImpTest {
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(expectedResponse));
 
-        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, solutionText);
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, localsolutionText);
 
         assertNotNull(resultFuture);
         assertEquals(expectedResponse, resultFuture.join());
@@ -328,12 +458,12 @@ class UserSolutionServiceImpTest {
     void getDataFromMicroScoreHandlesException() {
         UUID challengeId = UUID.randomUUID();
         UUID languageId = UUID.randomUUID();
-        String solutionText = "Sample solution text";
+        String localsolutionText = "Sample solution text";
 
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.failedFuture(new RuntimeException("ZMQ error")));
 
-        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, solutionText);
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeId, languageId, localsolutionText);
 
         assertNotNull(resultFuture);
         ScoreResponseDto result = resultFuture.join();
@@ -392,6 +522,71 @@ class UserSolutionServiceImpTest {
         assertEquals(challengeIds.size(), challengeList.size());
     }
 
+    @DisplayName("markAsBookmarked updates existing document")
+    @Test
+    void markAsBookmarkedUpdatesExistingDocument() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        boolean bookmarked = true;
+
+        UserSolutionDocument existingDocument = UserSolutionDocument.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .bookmarked(false)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId))
+                .thenReturn(Mono.just(existingDocument));
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(existingDocument));
+
+        StepVerifier.create(userSolutionService.markAsBookmarked(challengeId.toString(), languageId.toString(), userId.toString(), bookmarked))
+                .expectNextMatches(document -> document.isBookmarked() == bookmarked)
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(existingDocument);
+    }
+
+    @DisplayName("markAsBookmarked creates new document if not found")
+    @Test
+    void markAsBookmarkedCreatesNewDocumentIfNotFound() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        boolean bookmarked = true;
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId))
+                .thenReturn(Mono.empty());
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(userSolutionService.markAsBookmarked(challengeId.toString(), languageId.toString(), userId.toString(), bookmarked))
+                .expectNextMatches(document -> document.isBookmarked() == bookmarked)
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+
+    @DisplayName("createAndSaveNewBookmark creates and saves new document")
+    @Test
+    void createAndSaveNewBookmarkCreatesAndSavesNewDocument() {
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        boolean bookmarked = true;
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(userSolutionService.createAndSaveNewBookmark(challengeId, languageId, userId, bookmarked))
+                .expectNextMatches(document -> document.isBookmarked() == bookmarked)
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+
     @DisplayName("Should return number of BookmarkedTrue by idChallenge")
     @Test
     void testGetBookmarkCountByIdChallenge() {
@@ -416,6 +611,56 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
 
     }
+
+    @DisplayName("determineChallengeStatus returns STARTED when status is null")
+    @Test
+    void determineChallengeStatusReturnsStartedWhenStatusIsNull() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus(null);
+        assertEquals(ChallengeStatus.STARTED, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns STARTED when status is empty")
+    @Test
+    void determineChallengeStatusReturnsStartedWhenStatusIsEmpty() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("");
+        assertEquals(ChallengeStatus.STARTED, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns EMPTY when status is EMPTY")
+    @Test
+    void determineChallengeStatusReturnsEmptyWhenStatusIsEmpty() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("EMPTY");
+        assertEquals(ChallengeStatus.EMPTY, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns SENT when status is SENT")
+    @Test
+    void determineChallengeStatusReturnsSentWhenStatusIsSent() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("SENT");
+        assertEquals(ChallengeStatus.SENT, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns SCORE_PENDING when status is SCORE_PENDING")
+    @Test
+    void determineChallengeStatusReturnsScorePendingWhenStatusIsScorePending() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("SCORE_PENDING");
+        assertEquals(ChallengeStatus.SCORE_PENDING, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns ENDED when status is ENDED")
+    @Test
+    void determineChallengeStatusReturnsEndedWhenStatusIsEnded() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("ENDED");
+        assertEquals(ChallengeStatus.ENDED, result);
+    }
+
+    @DisplayName("determineChallengeStatus returns null for unknown status")
+    @Test
+    void determineChallengeStatusReturnsNullForUnknownStatus() {
+        ChallengeStatus result = userSolutionService.determineChallengeStatus("UNKNOWN");
+        assertNull(result);
+    }
+
 
     @Test
     void getChallengeUsersPercentageTest() {
@@ -467,6 +712,53 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(result)
                 .expectNextMatches(dto -> Arrays.equals(dto.getResults(), expectedSolutionUserDto.getResults()))
                 .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("getChallengeUsersPercentage returns correct percentage when challenges are found")
+    @Test
+    void getChallengeUsersPercentageReturnsCorrectPercentageWhenChallengesAreFound() {
+        UUID challengeId = UUID.randomUUID();
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.just(new UserSolutionDocument()));
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.just(new UserSolutionDocument()));
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.just(new UserSolutionDocument(), new UserSolutionDocument()));
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectNext(100f)
+                .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("getChallengeUsersPercentage returns zero percentage when no challenges are found")
+    @Test
+    void getChallengeUsersPercentageReturnsZeroPercentageWhenNoChallengesAreFound() {
+        UUID challengeId = UUID.randomUUID();
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.just(new UserSolutionDocument(), new UserSolutionDocument()));
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectNext(0f)
+                .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("getChallengeUsersPercentage returns error when no challenges exist")
+    @Test
+    void getChallengeUsersPercentageReturnsErrorWhenNoChallengesExist() {
+        UUID challengeId = UUID.randomUUID();
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.empty());
+        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.empty());
+
+        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
+
+        StepVerifier.create(result)
+                .expectError(ChallengeNotFoundException.class)
                 .verify();
     }
 }

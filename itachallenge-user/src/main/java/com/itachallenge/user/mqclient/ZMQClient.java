@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQException;
@@ -34,45 +35,45 @@ public class ZMQClient {
     public CompletableFuture<Object> sendMessage(Object message, Class clazz) {
 
         return CompletableFuture.supplyAsync(() -> {
-
             if (message == null) {
                 throw new IllegalArgumentException("Message cannot be null");
             }
 
+            byte[] request = serializeMessage(message);
+
             Optional<Object> response = Optional.empty();
-
-            try (ZMQ.Socket socket = context.createSocket(ZMQ.REQ)) {
+            try (ZMQ.Socket socket = context.createSocket(SocketType.REQ)) {
                 socket.connect(SOCKET_ADDRESS);
-
-                Optional<byte[]> request = Optional.empty();
-
-                try {
-                    request = Optional.of(objectSerializer.serialize(message));
-                } catch (JsonProcessingException jpe) {
-                    log.error("Error serializing message: {}", jpe.getMessage(), jpe);
-                    throw new RuntimeException("Serialization error", jpe);
-                }
-                socket.send(request.orElse(new byte[0]), 0);
+                socket.send(request, 0);
 
                 byte[] reply = socket.recv(0);
                 if (reply == null) {
-                    throw new ZMQException("Received null reply from ZeroMQ", -1);
+                    throw new ZMQException("Received null reply from ZeroMQ", ZMQ.Error.ETERM.getCode());
                 }
 
-                try {
-                    response = Optional.of(objectSerializer.deserialize(reply, clazz));
-                } catch (IOException e) {
-                    log.error("Error deserializing reply: {}", e.getMessage(), e);
-                    throw new RuntimeException("Deserialization error", e);
-                }
-
+                response = deserializeMessage(reply, clazz);
             } catch (ZMQException e) {
-                log.error("Error in ZMQClient sendMessage: {}", e.getMessage(), e);
-                throw new RuntimeException("ZMQ communication error", e);
-            }
+                throw new CompletionException(e);
+                }
 
             return response.orElse(null);
 
         }, executorService);
+    }
+
+    private byte[] serializeMessage(Object message) {
+        try {
+            return objectSerializer.serialize(message);
+        } catch (JsonProcessingException e) {
+            throw new CompletionException(e);
+        }
+    }
+
+    private <T> Optional<T> deserializeMessage(byte[] data, Class<T> clazz) {
+        try {
+            return Optional.of(objectSerializer.deserialize(data, clazz));
+        } catch (IOException e) {
+            throw new CompletionException(e);
+        }
     }
 }
