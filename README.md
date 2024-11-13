@@ -55,7 +55,7 @@ It is important to make sure you have all these tools installed and configured c
 - **MongoDB**
 - **Docker**
 - **Java SE Development Kit 21.0.3**
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 See [GUIDELINES.md](GUIDELINES.md#61-required-programs) to learn how to install and configure these tools.
 
