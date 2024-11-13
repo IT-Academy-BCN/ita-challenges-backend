@@ -3,6 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
 
+### [itachallenge-challenge-2.0.4-RELEASE] - 2023-11-12
+* Issue #441b: Added Mongock to tracing database changes
+
 ### [itachallenge-challenge-1.6.0-RELEASE] - 2023-05-16
 * Issue #513: Fixed limit parameter at endpoint /GET Challenges filtered
 * Issue #510: Fixed pagination at endpoint /GET Challenges filtered
