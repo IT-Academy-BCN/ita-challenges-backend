@@ -567,7 +567,7 @@ The following programs are required to work on the project:
 
 - **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
 
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
