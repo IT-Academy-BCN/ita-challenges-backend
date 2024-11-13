@@ -52,6 +52,9 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'org.slf4j:slf4j-simple:1.7.32'
 
+    implementation "io.mongock:mongock:5.0.32"
+    implementation "io.mongock:mongock-springboot-v3:5.2.4"
+    implementation "io.mongock:mongodb-reactive-driver:5.2.4"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
@@ -64,6 +67,8 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
+    testImplementation group: 'io.github.hakky54', name: 'logcaptor', version: '2.9.3'
+
 
 
 

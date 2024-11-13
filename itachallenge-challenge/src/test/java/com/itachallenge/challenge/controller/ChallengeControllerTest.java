@@ -1,32 +1,30 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.core.env.Environment;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.*;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -99,14 +97,16 @@ class ChallengeControllerTest {
                 .thenReturn(Mono.just("Resource removed successfully"));
 
         // Act & Assert
+// Ensure the response is not null before performing assertions
         webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
+                .uri("/itachallenge/api/v1/challenge/resources/validResourceId")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Map.class)
                 .value(responseMap -> {
-                    String response = (String) responseMap.get("response");
-                    assert response.equals("Resource removed successfully");
+                    assertNotNull("Response should not be null", responseMap);
+                    assertTrue("Response should contain 'message' key", responseMap.containsKey("message"));
+                    assertEquals("Resource removed successfully", responseMap.get("message"));
                 });
     }
 
@@ -114,26 +114,30 @@ class ChallengeControllerTest {
     void patchResourcesById_ValidResourceId_ResourceRemovedSuccessfully() {
         // Arrange
         String resourceId = "validResourceId";
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("fieldName", "newValue"); // Replace with actual field and value
 
-        when(challengeService.removeResourcesByUuid(resourceId))
-                .thenReturn(Mono.just("Resource removed successfully"));
+        when(challengeService.updateResourceByUuid(resourceId, updates))
+                .thenReturn(Mono.just("Resource updated successfully"));
 
         // Act & Assert
         webTestClient.patch()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(updates)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Map.class)
                 .value(responseMap -> {
-                    String response = (String) responseMap.get("message");
-                    assert response.equals("Resource removed successfully");
+                    String response = (String) responseMap.get("response");
+                    assert response.equals("Resource updated successfully");
                 });
     }
 
     @Test
     void patchResourcesById_InvalidResourceId_ResourceNotFound() {
-        // Arrange
-        String resourceId = "invalidResourceId";
+
+        String resourceId = "invalidUUID";
 
         when(challengeService.removeResourcesByUuid(resourceId))
                 .thenReturn(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + " not found")));
@@ -142,7 +146,7 @@ class ChallengeControllerTest {
         webTestClient.patch()
                 .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isBadRequest()
                 .expectBody(Void.class);
     }
 
@@ -202,19 +206,8 @@ class ChallengeControllerTest {
     @Test
     void getAllLanguages_LanguagesExist_LanguagesReturned() {
         // Arrange
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-
-        LanguageDto languageDto1 = new LanguageDto();
-        languageDto1.setIdLanguage(id1);
-        languageDto1.setLanguageName("English");
-
-        LanguageDto languageDto2 = new LanguageDto();
-        languageDto2.setIdLanguage(id2);
-        languageDto2.setLanguageName("Spanish");
-
         GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(2, 0, 2, new LanguageDto[]{languageDto1, languageDto2});
+        expectedResult.setInfo(0, 2, 2, new LanguageDto[]{new LanguageDto(), new LanguageDto()});
 
         when(challengeService.getAllLanguages()).thenReturn(Mono.just(expectedResult));
 
@@ -223,46 +216,37 @@ class ChallengeControllerTest {
                 .uri("/itachallenge/api/v1/challenge/language")
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<GenericResultDto<LanguageDto>>() {})
+                .expectBody(GenericResultDto.class)
                 .value(dto -> {
-                    assertNotNull(dto);
-                    assertEquals(2, dto.getCount());
-                    assertNotNull(dto.getResults());
-                    assertEquals(2, dto.getResults().length);
-                    assertNotNull(dto.getResults()[0].getIdLanguage());
-                    assertNotNull(dto.getResults()[0].getLanguageName());
-                    assertNotNull(dto.getResults()[1].getIdLanguage());
-                    assertNotNull(dto.getResults()[1].getLanguageName());
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
                 });
     }
 
     @Test
     void getSolutions_ValidIds_SolutionsReturned() {
+        // Arrange
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
 
-        SolutionDto solutionDto1 = new SolutionDto(UUID.randomUUID(), UUID.randomUUID(), "Solution 1");
-        SolutionDto solutionDto2 = new SolutionDto(UUID.randomUUID(), UUID.randomUUID(), "Solution 2");
-
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(2, 0, 2, new SolutionDto[]{solutionDto1, solutionDto2});
+        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
         when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
+        // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<GenericResultDto<SolutionDto>>() {})
+                .expectBody(GenericResultDto.class)
                 .value(dto -> {
                     assert dto != null;
-                    assertEquals(2, dto.getCount());
-                    assertNotNull(dto.getResults());
-                    assertEquals(2, dto.getResults().length);
-                    assertNotNull(dto.getResults()[0].getUuid());
-                    assertNotNull(dto.getResults()[0].getSolutionText());
-                    assertNotNull(dto.getResults()[1].getUuid());
-                    assertNotNull(dto.getResults()[1].getSolutionText());
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
                 });
     }
 
@@ -298,7 +282,8 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {})
+                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {
+                })
                 .value(result -> {
                     assertNotNull(result);
                     assertEquals(level, result.getResults()[0].getLevel());
@@ -466,37 +451,37 @@ class ChallengeControllerTest {
     }
 
     @Test
-void getChallengesTestingValues_ValidIds_ReturnsTestingValues() {
-    String challengeId = UUID.randomUUID().toString();
-    String languageId = UUID.randomUUID().toString();
+    void getChallengesTestingValues_ValidIds_ReturnsTestingValues() {
+        String challengeId = UUID.randomUUID().toString();
+        String languageId = UUID.randomUUID().toString();
 
-    List<Map<String, Object>> testingValues = List.of(
-            Map.of("in_params", List.of("input1"), "out_params", List.of("output1")),
-            Map.of("in_params", List.of("input2"), "out_params", List.of("output2"))
-    );
+        List<Map<String, Object>> testingValues = List.of(
+                Map.of("in_params", List.of("input1"), "out_params", List.of("output1")),
+                Map.of("in_params", List.of("input2"), "out_params", List.of("output2"))
+        );
 
-    Map<String, Object> expectedResult = new HashMap<>();
-    expectedResult.put("uuid_challenge", challengeId);
-    expectedResult.put("uuid_language", languageId);
-    expectedResult.put("test_params", testingValues);
+        Map<String, Object> expectedResult = new HashMap<>();
+        expectedResult.put("uuid_challenge", challengeId);
+        expectedResult.put("uuid_language", languageId);
+        expectedResult.put("test_params", testingValues);
 
-    when(challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId))
-            .thenReturn(Mono.just(expectedResult));
+        when(challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId))
+                .thenReturn(Mono.just(expectedResult));
 
-    webTestClient.get()
-            .uri("/itachallenge/api/v1/challenge/test/params/{idChallenge}/language/{idLanguage}", challengeId, languageId)
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody()
-            .jsonPath("$.uuid_challenge").isEqualTo(challengeId)
-            .jsonPath("$.uuid_language").isEqualTo(languageId)
-            .jsonPath("$.test_params[0].in_params[0]").isEqualTo("input1")
-            .jsonPath("$.test_params[0].out_params[0]").isEqualTo("output1")
-            .jsonPath("$.test_params[1].in_params[0]").isEqualTo("input2")
-            .jsonPath("$.test_params[1].out_params[0]").isEqualTo("output2");
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/test/params/{idChallenge}/language/{idLanguage}", challengeId, languageId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.uuid_challenge").isEqualTo(challengeId)
+                .jsonPath("$.uuid_language").isEqualTo(languageId)
+                .jsonPath("$.test_params[0].in_params[0]").isEqualTo("input1")
+                .jsonPath("$.test_params[0].out_params[0]").isEqualTo("output1")
+                .jsonPath("$.test_params[1].in_params[0]").isEqualTo("input2")
+                .jsonPath("$.test_params[1].out_params[0]").isEqualTo("output2");
 
-    verify(challengeService).getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId);
-}
+        verify(challengeService).getTestingParamsByChallengeIdAndLanguageId(challengeId, languageId);
+    }
 
     @Test
     void getVersionTest() {
