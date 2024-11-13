@@ -1,2 +1,0 @@
-JAVA_VERSION="21.0.4"
-MODULES="java.base java.compiler java.logging java.xml java.prefs java.rmi java.transaction.xa java.sql jdk.charsets"
