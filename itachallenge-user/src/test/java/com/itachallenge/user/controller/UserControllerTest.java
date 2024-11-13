@@ -4,7 +4,6 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.service.IServiceChallengeStatistics;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -55,8 +54,6 @@ class UserControllerTest {
 
     @MockBean
     IUserSolutionService userSolutionService;
-    @MockBean
-    IServiceChallengeStatistics statisticsService;
 
     @BeforeEach
     public void setUp() {
@@ -162,7 +159,7 @@ class UserControllerTest {
         String URI_TEST = "/bookmarks/{idChallenge}";
         Long testCount = 1L;
 
-        when(statisticsService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
+        when(userSolutionService.getBookmarkCountByIdChallenge(VALID_MONGO_UUID))
                 .thenReturn(Mono.just(testCount));
 
         webTestClient.get()
@@ -193,7 +190,7 @@ class UserControllerTest {
         float percentage = 75.0f;
         ChallengeUserPercentageStatisticDto expectedDto = new ChallengeUserPercentageStatisticDto(challengeId, percentage);
 
-        when(statisticsService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
+        when(userSolutionService.getChallengeUsersPercentage(challengeId)).thenReturn(Mono.just(percentage));
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + "/statistics/percent/{idChallenge}", challengeId)
@@ -273,6 +270,7 @@ class UserControllerTest {
                     verify(userSolutionService).addSolution(userSolutionDto);
                 });
     }
+
     @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
     @Test
     void addSolutionIfInvalidValuesThenBadRequest_test() {
@@ -297,6 +295,7 @@ class UserControllerTest {
             verifyNoInteractions(userSolutionService);
         }
     }
+
     @DisplayName("UserDocumentControllerTest - addSolution - return 409 CONFLICT if Service returns UnmodifiableSolutionException")
     @Test
     void addSolutionServiceThrowsExceptionInternalServerError_test() {

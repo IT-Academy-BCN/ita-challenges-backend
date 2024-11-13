@@ -54,6 +54,15 @@
 * Andrés Allegue Zabala - https://github.com/Alalilacias
 * Daniel Diaz Diaz - https://github.com/invictuzzzzz
 * Marcos Leandro Pagliaruzza - https://github.com/MarLea11
-
-
-
+* Marine Achinian - https://github.com/MarineAvramova
+* Joan Caballero Portolés - https://github.com/JoanCaballero
+* Andreia Sofia Sousa Ribeiro - https://github.com/Asousa12
+* I. Michel - https://github.com/i-michel
+* Jorge Monzó Pérez - https://github.com/tommer1375
+* Augustin Nae - https://github.com/auguNa
+* Nuria Grau Horta - https://github.com/nuriagrau
+* Nicusor Ceban - https://github.com/nikulet
+* María Eugenia Torres - https://github.com/Eugenia72
+* Carlos Galan - https://github.com/camilo-arthuro
+* David Urpina -https://github.com/eqqbq
+* Hector Pozo -https://github.com/HectorPozoGuerrero

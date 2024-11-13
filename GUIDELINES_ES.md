@@ -92,7 +92,13 @@
 
 <hr/>
 
-### 2.1.2. Importar data en MongoDB (Ejemplo para data del micro itachallenge-challenge)
+### 2.1.2. Configuración para acceso a MongoDB
+
+Puede trabajar con MongoDB de dos formas: accediendo a una base de datos creada en localhost (su propia máquina), o bien accediendo a una base de datos remota creada con fines de desarrollo.
+Recomendamos utilizar la base de datos remota de desarrollo para evitar problemas con los datos.
+Para acceder, debe utilizar las credenciales proporcionadas en application.yml de cada microservicio.
+Por lo general, esos archivos contienen las URL a las que debe acceder para conectarse a MongoDB remoto.
+Sin embargo, si desea trabajar con su MongoDB local, puede seguir los siguientes pasos:
 
 1. Asegúrate de tener las MongoDB Tools instaladas. Si aún no las tienes, ve al apartado de “Programas necesarios” y sigue las instrucciones proporcionadas para descargarlas en tu sistema operativo.
 
@@ -221,6 +227,10 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 5. SonarCloud también va a analizar tu código. Te proporcionará información sobre los bugs, vulnerabilities, security hotspots y code smell. El converage debe ser igual o superior al 80.0%.
 6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
 7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
+
+
+**NOTA IMPORTANTE: Una Pull Request es una solicitud para incluir tu código en el proyecto. No esperes a que tu PR sea aceptada para empezar a trabajar en otra card**
+
 
 <hr/>
 
@@ -560,7 +570,7 @@ Los siguientes programas son requeridos para poder trabajar en el proyecto:
 
 - **Git**: Git es un sistema de control de versiones distribuido ampliamente utilizado en el desarrollo de software. Te permitirá colaborar con otros desarrolladores y mantener un historial de cambios en el código fuente. Puedes descargar [Git](https://git-scm.com/downloads) desde la web oficial.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 17.0.7 del JDK que es la que se usa en este proyecto. Puedes descargar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) desde la web oficial de Oracle.
+- **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 21.0.3 de JDK que es la que se usa en este proyecto. Puedes descargar [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) desde la web oficial de Oracle.
 
 - **Gradle 8.8**
 

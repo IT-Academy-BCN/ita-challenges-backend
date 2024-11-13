@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "9ae0e0c7-909a-41ca-9a88-5676d1f3552c",
+		"_postman_id": "84371448-40e6-4868-8e08-fdd41b671d14",
 		"name": "ITA-Challenges",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "1005741"
+		"_exporter_id": "33829380"
 	},
 	"item": [
 		{
@@ -1022,7 +1022,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\"uuid_challenge\": \"123e4567-e89b-12d3-a456-426614174000\",\n\"uuid_language\": \"12e4567-e89b-12d3-a456-426614174000\",\n\"solution_text\": \"\"\n}",
+							"raw": "{\n  \"uuid_challenge\": \"dcacb291-b4aa-4029-8e9b-284c8ca80296\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"solution_text\": \"int numero = 2345; int[] conteoDigitos = new int[10]; while (numero > 0) { int digito = numero % 10; conteoDigitos[digito]++; numero /= 10; } int resultado = 0; for (int i = 9; i >= 0; i--) { while (conteoDigitos[i] > 0) { resultado = resultado * 10 + i; conteoDigitos[i]--; } } System.out.println(resultado);\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1064,6 +1064,37 @@
 								"v1",
 								"score",
 								"version"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Execute code with infinite loop",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"uuid_challenge\": \"dcacb291-b4aa-4029-8e9b-284c8ca80296\",\r\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\r\n  \"solution_text\": \"int numero = 2345; int[] conteoDigitos = new int[10]; while (true) { while (numero > 0) { int digito = numero % 10; conteoDigitos[digito]++; numero /= 10; } int resultado = 0; for (int i = 9; i >= 0; i--) { while (conteoDigitos[i] > 0) { resultado = resultado * 10 + i; conteoDigitos[i]--; } } System.out.println(resultado); }\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ip}}:{{score_port}}/itachallenge/api/v1/score/score",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{score_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"score",
+								"score"
 							]
 						}
 					},
