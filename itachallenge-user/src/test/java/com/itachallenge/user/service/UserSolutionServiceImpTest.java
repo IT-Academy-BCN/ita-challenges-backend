@@ -334,8 +334,6 @@ class UserSolutionServiceImpTest {
                 .expectNext(expectedValue)
                 .verifyComplete();
     }
-<<<<<<< HEAD
-
 
     @DisplayName("UserSolutionServiceImpTest - getUserStatisticsChallenges returns the ended and saved challenges " +
             "from a specific user")
