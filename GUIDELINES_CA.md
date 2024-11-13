@@ -92,6 +92,11 @@
 <hr/>
 
 ### 2.1.2. Importar data a MongoDB (Exemple per a data del micro itachallenge-challenge)
+Podeu treballar amb MongoDB de dues maneres: accedint a una base de dades creada en localhost (a la vostra pròpia màquina), o bé accedint a una base de dades remota creada amb finalitats de desenvolupament.
+Recomanem utilitzar la base de dades remota de desenvolupament per a evitar problemes amb les dades.
+Per accedir-hi, heu d'utilitzar les credencials proporcionades en application.yml de cada microservei.
+En general, aquests arxius contenen els URL a les quals heu d'accedir per a connectar-vos a MongoDB en remot.
+No obstant això, si desitgeu treballar amb el vostre MongoDB local, podeu seguir els següents passos:
 
 1. Assegureu-vos de tenir les MongoDB Tools instal·lades. Si encara no en tens, vés a l'apartat de “Programes necessaris” i segueix les instruccions proporcionades per descarregar-les al sistema operatiu.
 
@@ -224,6 +229,9 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 5. SonarCloud també analitzarà el teu codi. Et proporcionarà informació sobre els bugs, vulnerabilities, security hotspots i code smell. El converage ha de ser igual o superior al 80,0%.
 6. En cas que hagis de revisar i corregir alguns problemes, actualitza la teva branca local amb els canvis i fes push novament a la branca remota corresponent.
 7. La pull request s'actualitzarà automàticament amb els nous canvis realitzats a la teva branca.
+
+
+**NOTA IMPORTANT**: Una Pull Request és una sol·licitud per a incloure el teu codi en el projecte. No esperis que el teu PR sigui acceptada per a començar a treballar en una altra card**
 
 <hr/>
 
@@ -563,9 +571,9 @@ Els programes següents són requerits per poder treballar en el projecte:
 
 - **Git**: Git és un sistema de control de versions distribuït àmpliament utilitzat en el desenvolupament de programari. Et permetrà col·laborar amb altres desenvolupadors i mantenir un historial de canvis al codi font. Pots descarregar [Git](https://git-scm.com/downloads) des de la web oficial.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 17.0.7 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) des del web oficial d'Oracle.
+- **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 21.0.3 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) des del web oficial d'Oracle.
 
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 
 És important assegurar-se de tenir totes aquestes eines instal·lades i configurades correctament abans de començar a treballar al projecte.
