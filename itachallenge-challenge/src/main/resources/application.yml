@@ -68,3 +68,7 @@ validation:
 
 messages:
   errorMessage: "Invalid values."
+
+# File location for storing test parameters
+file:
+  location: "./data/testparams"
