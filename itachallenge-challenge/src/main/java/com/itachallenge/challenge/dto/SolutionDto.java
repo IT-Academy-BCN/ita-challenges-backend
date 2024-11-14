@@ -37,7 +37,6 @@ public class SolutionDto {
     @JsonProperty(value = "uuid_challenge", index = 3)
     private UUID idChallenge;
 
-    @NotEmpty(message = "cannot be empty")
     @JsonProperty("solutions")
     private List<SolutionInfoDto> solutions;
 

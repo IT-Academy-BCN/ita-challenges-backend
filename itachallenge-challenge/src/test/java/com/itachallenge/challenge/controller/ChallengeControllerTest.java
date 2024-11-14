@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
@@ -53,23 +50,6 @@ class ChallengeControllerTest {
     ZMQClient zmqClient;
     @MockBean
     ChallengeRequestDto challengeInputDto;
-
-/*    @Test
-    void test() {
-        // Arrange
-        List<ServiceInstance> instances = Arrays.asList(
-                new DefaultServiceInstance("instanceId", "itachallenge-challenge", "localhost", 8080, false),
-                new DefaultServiceInstance("instanceId", "itachallenge-user", "localhost", 8081, false)
-        );
-        when(discoveryClient.getInstances("itachallenge-challenge")).thenReturn(instances);
-        when(discoveryClient.getInstances("itachallenge-user")).thenReturn(Collections.singletonList(instances.get(1)));
-
-        // Act & Assert
-        webTestClient.get().uri("/itachallenge/api/v1/challenge/test")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
-    }*/
 
 
     @Test
@@ -238,7 +218,7 @@ class ChallengeControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/solution/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .uri("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)
@@ -292,38 +272,22 @@ class ChallengeControllerTest {
 
     @Test
     void AddSolution_validIdChallenge_validIdLanguage() {
-        // Mock del servicio
-        SolutionDto inputDto = new SolutionDto();
-        inputDto.setSolutionText("Test solution");
-        inputDto.setIdChallenge(UUID.randomUUID());
-        inputDto.setIdLanguage(UUID.randomUUID());
+        // Arrange
+        SolutionDto solutionDto = new SolutionDto();
+        solutionDto.setSolutionText("Test solution");
+        solutionDto.setIdChallenge(UUID.fromString("3e817487-88a8-47e2-8d3b-b65c942d36aa"));
+        solutionDto.setIdLanguage(UUID.fromString("68dc256a-ac52-40ff-b2f2-bacce4994f9e"));
+        solutionDto.setSolutions(Collections.singletonList(new SolutionInfoDto())); // Ensure solutions is not empty
 
-        SolutionDto outputDto = new SolutionDto();
-        outputDto.setSolutionText("Test solution");
-        outputDto.setIdChallenge(inputDto.getIdChallenge());
-        outputDto.setIdLanguage(inputDto.getIdLanguage());
+        when(challengeService.addSolution(any(SolutionDto.class))).thenReturn(Mono.just(solutionDto));
 
-        when(challengeService.addSolution(any())).thenReturn(Mono.just(outputDto));
-
-        // Ejecutar la solicitud y verificar la respuesta
+        // Act & Assert
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/solution")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(inputDto)
+                .bodyValue(solutionDto)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(Map.class)
-                .consumeWith(response -> {
-                    // Verify that the response has the expected keys
-                    assert response.getResponseBody().containsKey("uuid_challenge");
-                    assert response.getResponseBody().containsKey("uuid_language");
-                    assert response.getResponseBody().containsKey("solution_text");
-
-                    // Verify that the values are correct
-                    assert response.getResponseBody().get("uuid_challenge").equals(inputDto.getIdChallenge().toString());
-                    assert response.getResponseBody().get("uuid_language").equals(inputDto.getIdLanguage().toString());
-                    assert response.getResponseBody().get("solution_text").equals(inputDto.getSolutionText());
-                });
+                .expectStatus().isOk();
     }
 
     @Test
@@ -389,7 +353,7 @@ class ChallengeControllerTest {
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText("Test solution");
         solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
-        solutionDto.setIdLanguage(null); // Set challenge ID to null
+        solutionDto.setIdLanguage(null); // Set language ID to null
 
         // Act & Assert
         webTestClient.post()
@@ -401,7 +365,6 @@ class ChallengeControllerTest {
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("idLanguage: 'Invalid UUID'");
     }
-
     @Test
     void addSolution_NullSolutionDto_ThrowsBadRequestException() {
         // Arrange

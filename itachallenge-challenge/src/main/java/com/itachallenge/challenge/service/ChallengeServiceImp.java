@@ -180,30 +180,34 @@ public class ChallengeServiceImp implements IChallengeService {
                     return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
-                                    .flatMap(solutionId -> solutionRepository.findById(solutionId))
-                                    .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                    .map(solution -> {
-                                        SolutionInfoDto solutionRequestDto = new SolutionInfoDto();
-                                        solutionRequestDto.setIdSolution(solution.getUuid());
-                                        solutionRequestDto.setSolutionText(solution.getSolutionText());
+                                    .flatMap(solutionId -> solutionRepository.findById(solutionId)
+                                            .filter(solution -> solution.getIdLanguage().equals(languageId))
+                                            .map(solution -> {
+                                                SolutionInfoDto solutionInfoDto = new SolutionInfoDto();
+                                                solutionInfoDto.setUuid(solution.getUuid());
+                                                solutionInfoDto.setSolutionText(solution.getSolutionText());
 
+                                                return solutionInfoDto;
+                                            })
+                                    )
+                                    .collectList()
+                                    .map(solutionInfoDtos -> {
                                         SolutionDto solutionDto = new SolutionDto();
-                                        solutionDto.setIdLanguage(solution.getIdLanguage());
+                                        solutionDto.setIdLanguage(languageId);
                                         solutionDto.setIdChallenge(challengeId);
-                                        solutionDto.setSolutions(Collections.singletonList(solutionRequestDto));
+                                        solutionDto.setSolutions(solutionInfoDtos); // Assuming this is a List<SolutionInfoDto>
 
                                         return solutionDto;
                                     })
                             )
                             .collectList()
-                            .map(solutions -> {
+                            .map(solutionDtos -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, -1, solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                resultDto.setInfo(0, -1, solutionDtos.size(), solutionDtos.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });
     }
-
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 

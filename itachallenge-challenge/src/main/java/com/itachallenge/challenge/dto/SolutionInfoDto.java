@@ -16,8 +16,8 @@ import java.util.UUID;
 public class SolutionInfoDto {
 
     @ValidUUID(message = "Invalid UUID")
-    @JsonProperty("id_solution")
-    private UUID idSolution;
+    @JsonProperty("uuid_solution")
+    private UUID uuid;
 
     @NotEmpty(message = "cannot be empty")
     @JsonProperty("solution_text")
