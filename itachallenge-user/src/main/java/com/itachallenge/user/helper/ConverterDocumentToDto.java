@@ -32,36 +32,4 @@ public class ConverterDocumentToDto {
                 .build());
     }
 
-//    public Flux<UserCompletedChallengeDto> fromUserSolutionDocumentToUserCompletedChallengeDto(UserSolutionDocument document) {
-    public UserCompletedChallengeDto mapUserSolutionDocumentToUserCompletedChallengeDto(UserSolutionDocument document) {
-
-        // vER MANEJO DE ERRORES
-//        if (document == null) {
-//            // Aquí podrías lanzar una excepción o retornar un DTO vacío
-//            throw new IllegalArgumentException("UserSolutionDocument cannot be null");
-//        }
-        return UserCompletedChallengeDto.builder()
-                .challengeId(document.getChallengeId().toString())
-                .score(document.getScore())
-                .build();
-//        );
-    }
-
-    public UserStatisticsDto mapUserSolutionsToUserStatisticsDto (UserCompletedAndSavedChallengeDto userCompletedChallengeAndSavedDto,
-                                                                  String idUser,
-                                                                  String idLanguage) {
-
-        UserStatisticsDto userStatisticsDto = new UserStatisticsDto();
-        userStatisticsDto.setUserId(idUser);
-        userStatisticsDto.setLanguageId(idLanguage);
-        userStatisticsDto.setCompletedAndSavedChallenges(userCompletedChallengeAndSavedDto);
-        return userStatisticsDto;
-
-//        UserStatisticsDto.builder()
-//                .userId(idUser)
-//                .languageId(idLanguage)
-//                .completedAndSavedChallenges(userCompletedChallengeAndSavedDto);
-
-    }
-
 }
