@@ -58,7 +58,6 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
 
-
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -178,19 +177,28 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID challengeId = tuple.getT1();
                     UUID languageId = tuple.getT2();
 
-                    return languageRepository.findByIdLanguage(languageId)
-                            .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
-                            .flatMap(language -> challengeRepository.findByUuid(challengeId))
+                    return challengeRepository.findByUuid(challengeId)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId))
                                     .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                    .flatMap(solution -> Mono.from(solutionConverter.convertDocumentFluxToDtoFlux(Flux.just(solution), SolutionDto.class)))
+                                    .map(solution -> {
+                                        SolutionInfoDto solutionRequestDto = new SolutionInfoDto();
+                                        solutionRequestDto.setIdSolution(solution.getUuid());
+                                        solutionRequestDto.setSolutionText(solution.getSolutionText());
+
+                                        SolutionDto solutionDto = new SolutionDto();
+                                        solutionDto.setIdLanguage(solution.getIdLanguage());
+                                        solutionDto.setIdChallenge(challengeId);
+                                        solutionDto.setSolutions(Collections.singletonList(solutionRequestDto));
+
+                                        return solutionDto;
+                                    })
                             )
                             .collectList()
                             .map(solutions -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, solutions.size(), solutions.size(), solutions.toArray(new SolutionDto[0]));
+                                resultDto.setInfo(0, -1, solutions.size(), solutions.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });
