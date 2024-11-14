@@ -573,7 +573,7 @@ Els programes següents són requerits per poder treballar en el projecte:
 
 - **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) és un conjunt d'eines necessàries per desenvolupar aplicacions en Java. Assegureu-vos de tenir instal·lada la versió 21.0.3 del JDK que és la que s'usa en aquest projecte. Podeu descarregar [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) des del web oficial d'Oracle.
 
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 
 És important assegurar-se de tenir totes aquestes eines instal·lades i configurades correctament abans de començar a treballar al projecte.
