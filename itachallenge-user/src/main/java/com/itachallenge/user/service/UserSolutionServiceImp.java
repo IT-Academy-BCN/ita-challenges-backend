@@ -11,6 +11,8 @@ import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -211,7 +213,51 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         return Flux.fromIterable(userSolutionsChallenge);
     }
-    
+
+    private Flux<UserSolutionDocument> getAllUserSolutions (UUID userUuid) throws DataAccessResourceFailureException {
+
+        return userSolutionRepository.findByUserId(userUuid)
+                .onErrorMap(DataAccessResourceFailureException.class, e -> {
+                    log.error("Resource failure while accessing the database for user: {}", userUuid, e);
+
+                    String message = String.format("Resource failure while accessing the database for user: %s", userUuid);
+                    return new DataAccessResourceFailureException(message, e);
+                });
+    }
+
+    public Mono<Integer> countOfUserCompletedChallenges (String idUser){
+
+        final Integer BBDD_ACCESS_ERROR = -1;
+
+        UUID userUuid = UUID.fromString(idUser);
+
+        try {
+//            Flux<UserSolutionDocument> userSolutions = getAllUserSolutions(userUuid);
+//            boolean t = userSolutions.filter(us -> us.getSolutionDocument().size() == 0);
+//
+//            Flux<UserSolutionDocument> userSolution = userSolutions.filter(us -> us.getSolutionDocument().size() == 0);
+
+            return getAllUserSolutions(userUuid)
+                    .filter(solution -> solution.getStatus() == (ChallengeStatus.ENDED))
+                    .map(solution -> solution.getChallengeId().toString())
+                    .collectList()
+                    .map(challengesList -> challengesList.size());
+        } catch (DataAccessResourceFailureException e){
+            return Mono.just(BBDD_ACCESS_ERROR);
+        }
+
+    }
+
+    public Mono<Integer> countOfChallengesExistingByUser (String idUser) {
+
+        UUID userUuid = UUID.fromString(idUser);
+
+        return getAllUserSolutions(userUuid)
+                .map(solution -> solution.getSolutionDocument().size())
+                .reduce(0,Integer::sum)
+                .defaultIfEmpty(0);;
+
+    }
 
 } 
 
