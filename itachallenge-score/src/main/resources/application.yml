@@ -77,3 +77,7 @@ docker:
       } 
     }"
   timeout-seconds: 5
+
+  # File location for storing test parameters (specific to Score Micro)
+  file:
+    location: "./data/testparams"   # Path where Score Micro will store testparams.txt
