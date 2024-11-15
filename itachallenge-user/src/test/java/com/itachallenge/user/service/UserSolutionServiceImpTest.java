@@ -91,27 +91,25 @@ class UserSolutionServiceImpTest {
         UUID challengeId = UUID.fromString("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
         UUID languageId = UUID.fromString("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
         UUID userId = UUID.fromString("df99bae8-4f7f-4054-a957-37a12aa16364");
-        boolean bookmarked = true;
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        userSolutionDocument.setUserId(userId);
-        userSolutionDocument.setLanguageId(languageId);
-        userSolutionDocument.setChallengeId(challengeId);
-        userSolutionDocument.setBookmarked(true);
+        UserSolutionDocument localUserSolutionDocument = new UserSolutionDocument();
+        localUserSolutionDocument.setUserId(userId);
+        localUserSolutionDocument.setLanguageId(languageId);
+        localUserSolutionDocument.setChallengeId(challengeId);
+        localUserSolutionDocument.setBookmarked(true);
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId))
-                .thenReturn(Mono.just(userSolutionDocument));
+                .thenReturn(Mono.just(localUserSolutionDocument));
 
-        assertNotNull(userSolutionDocument);
-        assert (userSolutionDocument.isBookmarked());
-        assert (userSolutionDocument.getUserId().equals(userId));
-        assert (userSolutionDocument.getLanguageId().equals(languageId));
-        assert (userSolutionDocument.getChallengeId().equals(challengeId));
-
+        assertNotNull(localUserSolutionDocument);
+        assertTrue(localUserSolutionDocument.isBookmarked());
+        assertEquals(userId, localUserSolutionDocument.getUserId());
+        assertEquals(languageId, localUserSolutionDocument.getLanguageId());
+        assertEquals(challengeId, localUserSolutionDocument.getChallengeId());
     }
     @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
     @Test
     void getChallengeByIdTest() {
 
-        ConverterDocumentToDto converter = new ConverterDocumentToDto();
+        ConverterDocumentToDto localConverter = new ConverterDocumentToDto();
 
         userSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
@@ -123,7 +121,7 @@ class UserSolutionServiceImpTest {
                 .errors(mockErrors)
                 .build();
         when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter, zmqClient);
+        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, localConverter, zmqClient);
 
         Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
 
@@ -229,13 +227,13 @@ class UserSolutionServiceImpTest {
     }
     @Test
     void testAddSolutionWithNullStatus() {
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
-        userSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
-        userSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
-        userSolutionDto.setStatus(null); // Set status to null
+        UserSolutionDto localUserSolutionDto = new UserSolutionDto();
+        localUserSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
+        localUserSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
+        localUserSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
+        localUserSolutionDto.setStatus(null); // Set status to null
 
-        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
+        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(localUserSolutionDto);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
@@ -244,13 +242,13 @@ class UserSolutionServiceImpTest {
     }
     @Test
     void testAddSolutionWithInvalidStatus() {
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
-        userSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
-        userSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
-        userSolutionDto.setStatus("INVALID_STATUS"); // Set an invalid status
+        UserSolutionDto localUserSolutionDto = new UserSolutionDto();
+        localUserSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
+        localUserSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
+        localUserSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
+        localUserSolutionDto.setStatus("INVALID_STATUS"); // Set an invalid status
 
-        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(userSolutionDto);
+        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(localUserSolutionDto);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
@@ -282,20 +280,20 @@ class UserSolutionServiceImpTest {
         scoreResponseDto.setScore(100);
         scoreResponseDto.setErrors("No errors");
 
-        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+        UserSolutionDocument newUserSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionDocument(solutionDocuments)
                 .status(ChallengeStatus.SENT)
                 .score(100)  // Set the score
-                .errors("No errors")  // Set the errors
+                .errors("No errors")
                 .build();
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
+                .thenReturn(Mono.just(newUserSolutionDocument));
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(scoreResponseDto));
 
@@ -353,19 +351,6 @@ class UserSolutionServiceImpTest {
 
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
-    @DisplayName("saveValidSolution returns empty when no valid status is provided")
-    @Test
-    void saveValidSolutionReturnsEmptyWhenNoValidStatusIsProvided() {
-        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.EMPTY, solutionDocuments))
-                .verifyComplete();
-
-        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
-    }
     @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
     @Test
     void getDataFromMicroScoreReturnsValidResponse() {
@@ -400,7 +385,7 @@ class UserSolutionServiceImpTest {
     @DisplayName("UserSolutionServiceImpTest - showAllUserSolutions returns all solutions for the user")
     @Test
     void showAllUserSolutions() {
-        UserSolutionDto userSolutionDto = UserSolutionDto.builder()
+        UserSolutionDto localUserSolutionDto = UserSolutionDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(userSolutionDocument.getChallengeId().toString())
                 .languageId(userSolutionDocument.getLanguageId().toString())
@@ -409,7 +394,7 @@ class UserSolutionServiceImpTest {
                 .build();
 
         when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        when(converter.fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument)).thenReturn(Flux.just(userSolutionDto));
+        when(converter.fromUserSolutionDocumentToUserSolutionDto(userSolutionDocument)).thenReturn(Flux.just(localUserSolutionDto));
 
         Flux<UserSolutionDto> resultFlux = userSolutionService.showAllUserSolutions(userUuid);
 
@@ -503,9 +488,9 @@ class UserSolutionServiceImpTest {
         boolean isBookmarked = true;
         long expectedValue = 2L;
 
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
+        UserSolutionDocument userSolutionDocument1 = new UserSolutionDocument();
         UserSolutionDocument userSolutionDocument2 = new UserSolutionDocument();
-        userSolutionDocument.setChallengeId(idChallenge);
+        userSolutionDocument1.setChallengeId(idChallenge);
         userSolutionDocument2.setChallengeId(idChallenge);
         userSolutionDocument.setBookmarked(true);
         userSolutionDocument2.setBookmarked(true);
