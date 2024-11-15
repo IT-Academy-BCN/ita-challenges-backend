@@ -274,11 +274,11 @@ class ChallengeServiceImpTest {
         // Assert
         StepVerifier.create(resultMono)
                 .assertNext(result -> {
-                    assertThat(result.getResults()).hasSize(1);
-                    SolutionDto solutionDto = result.getResults()[0];
-                    assertThat(solutionDto.getSolutions()).hasSize(2);
-                    assertThat(solutionDto.getSolutions().get(0).getSolutionText()).isEqualTo("Solution Text 1");
-                    assertThat(solutionDto.getSolutions().get(1).getSolutionText()).isEqualTo("Solution Text 2");
+                    assertThat(result.getResults()).hasSize(2);
+                    SolutionDto solutionDto1 = result.getResults()[0];
+                    SolutionDto solutionDto2 = result.getResults()[1];
+                    assertThat(solutionDto1.getSolutions().get(0).getSolutionText()).isEqualTo("Solution Text 1");
+                    assertThat(solutionDto2.getSolutions().get(0).getSolutionText()).isEqualTo("Solution Text 2");
                 })
                 .verifyComplete();
     }
@@ -386,6 +386,7 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(4)).findByUuid(any(UUID.class));
         verify(challengeConverter, times(3)).convertDocumentFluxToDtoFlux(any(), any());
     }
+
     @Test
     void testGetRelatedChallenges_ReturnedAll() {
         // Arrange

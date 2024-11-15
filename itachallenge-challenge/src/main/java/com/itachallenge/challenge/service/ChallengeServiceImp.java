@@ -40,6 +40,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String NOT_FOUND = "not found";
 
+
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
@@ -57,6 +58,10 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
+    public List<SolutionDto> createSolutionList() {
+        List<SolutionDto> solutions = new ArrayList<>();
+        return solutions;
+    }
 
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
@@ -183,22 +188,20 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId)
                                             .filter(solution -> solution.getIdLanguage().equals(languageId))
                                             .map(solution -> {
-                                                SolutionInfoDto solutionInfoDto = new SolutionInfoDto();
-                                                solutionInfoDto.setUuid(solution.getUuid());
-                                                solutionInfoDto.setSolutionText(solution.getSolutionText());
+                                                SolutionDto solutionDto = new SolutionDto();
+                                                solutionDto.setIdLanguage(languageId);
+                                                solutionDto.setIdChallenge(challengeId);
 
-                                                return solutionInfoDto;
+                                                List<SolutionDto> solutions = new ArrayList<>();
+                                                SolutionDto innerSolutionDto = new SolutionDto();
+                                                innerSolutionDto.setUuid(solution.getUuid()); // Set id_solution
+                                                innerSolutionDto.setSolutionText(solution.getSolutionText()); // Set solution_text
+                                                solutions.add(innerSolutionDto);
+
+                                                solutionDto.setSolutions(solutions);
+                                                return solutionDto;
                                             })
                                     )
-                                    .collectList()
-                                    .map(solutionInfoDtos -> {
-                                        SolutionDto solutionDto = new SolutionDto();
-                                        solutionDto.setIdLanguage(languageId);
-                                        solutionDto.setIdChallenge(challengeId);
-                                        solutionDto.setSolutions(solutionInfoDtos); // Assuming this is a List<SolutionInfoDto>
-
-                                        return solutionDto;
-                                    })
                             )
                             .collectList()
                             .map(solutionDtos -> {

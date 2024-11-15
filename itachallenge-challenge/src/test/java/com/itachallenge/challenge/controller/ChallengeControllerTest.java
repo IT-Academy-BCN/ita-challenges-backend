@@ -277,7 +277,7 @@ class ChallengeControllerTest {
         solutionDto.setSolutionText("Test solution");
         solutionDto.setIdChallenge(UUID.fromString("3e817487-88a8-47e2-8d3b-b65c942d36aa"));
         solutionDto.setIdLanguage(UUID.fromString("68dc256a-ac52-40ff-b2f2-bacce4994f9e"));
-        solutionDto.setSolutions(Collections.singletonList(new SolutionInfoDto())); // Ensure solutions is not empty
+        solutionDto.setSolutions(Collections.singletonList(new SolutionDto())); // Ensure solutions is not empty
 
         when(challengeService.addSolution(any(SolutionDto.class))).thenReturn(Mono.just(solutionDto));
 
