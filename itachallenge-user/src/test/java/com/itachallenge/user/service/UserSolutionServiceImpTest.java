@@ -15,6 +15,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -133,20 +135,28 @@ class UserSolutionServiceImpTest {
                         && solutionUserDto.getResults().length == 1)
                 .verifyComplete();
     }
+    @ParameterizedTest
+    @ValueSource(strings = { "", "null" })
+    void addSolutionReturnsIllegalArgumentExceptionWhenStatusIsNullOrEmpty(String status) {
+        if ("null".equals(status)) {
+            status = null;
+        }
+        userSolutionDto.setStatus(status);
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectError(IllegalArgumentException.class)
+                .verify();
+    }
     @DisplayName("UserSolutionServiceImpTest - addSolution returns UnmodifiableSolutionException when status is ENDED")
     @Test
     void addSolutionWithEndedStatus() {
-        // Configura el estado de la solución como ENDED
         userSolutionDto.setStatus("ENDED");
 
-        // Simula la existencia de una solución con el estado ENDED
         UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
         existingUserSolutionDocument.setStatus(ChallengeStatus.ENDED);
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.just(existingUserSolutionDocument));
 
-        // Verifica que se lanza la excepción UnmodifiableSolutionException con el mensaje adecuado
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodifiableSolutionException
