@@ -13,13 +13,12 @@ import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.testcontainers.containers.GenericContainer;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -49,9 +48,25 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
     @Mock
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter;
+    @Mock
+    private static GenericContainer<?> mongoContainer;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
+
+    @BeforeAll
+    static void setUpContainer() {
+        mongoContainer = new GenericContainer<>("mongo:4.0.10")
+                .withExposedPorts(27017);
+        mongoContainer.start();
+    }
+
+    @AfterAll
+    static void tearDownContainer() {
+        if (mongoContainer != null) {
+            mongoContainer.stop();
+        }
+    }
 
     @BeforeEach
     void setUp() {

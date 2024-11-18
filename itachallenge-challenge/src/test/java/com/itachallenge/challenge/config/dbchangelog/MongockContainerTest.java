@@ -2,9 +2,7 @@ package com.itachallenge.challenge.config.dbchangelog;
 
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
@@ -20,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest
-class MongockTestContainer {
+class MongockContainerTest {
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.0.10")
@@ -33,10 +31,15 @@ class MongockTestContainer {
     }
 
     private ReactiveMongoTemplate reactiveMongoTemplate;
-    private MongoClient mongoClient;
+    private static MongoClient mongoClient;
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
+
+    @BeforeAll
+    static void startContainer() {
+        mongoDBContainer.start();
+    }
 
     @BeforeEach
     void setUp() {
@@ -99,5 +102,13 @@ class MongockTestContainer {
     @AfterEach
     void tearDown() {
         reactiveMongoTemplate.dropCollection("mongockDemo").block();
+    }
+
+    @AfterAll
+    static void stopContainer() {
+        if (mongoClient != null) {
+            mongoClient.close();
+        }
+        mongoDBContainer.stop();
     }
 }
