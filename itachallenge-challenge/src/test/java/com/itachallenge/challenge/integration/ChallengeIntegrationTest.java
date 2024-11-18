@@ -3,6 +3,7 @@ package com.itachallenge.challenge.integration;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.service.ChallengeServiceImp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
