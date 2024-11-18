@@ -12,13 +12,13 @@ public enum ChallengeStatus {
         this.value = value;
     }
 
-    public static ChallengeStatus fromValue(String status) {
+    public static void fromValue(String status) {
         for (ChallengeStatus challengeStatus : ChallengeStatus.values()) {
             if (challengeStatus.value.equals(status)) {
-                return challengeStatus;
+                return;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Invalid challenge status value: " + status);
     }
 }
 
