@@ -17,6 +17,6 @@ public interface IUserSolutionService {
     Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds);
     Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge);
     Mono<Float> getChallengeUsersPercentage(UUID idChallenge);
-    Mono<Integer> countOfUserCompletedChallenges (String idUser);
+    Mono<Integer> countOfUserTotalChallenges(String idUser);
 
 }

@@ -214,9 +214,106 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 
+
+    // Prueba GitStatus
+
+    // CARD #623
+
     private Flux<UserSolutionDocument> getAllUserSolutions (UUID userUuid) throws DataAccessResourceFailureException {
 
         return userSolutionRepository.findByUserId(userUuid)
+                .onErrorResume(DataAccessResourceFailureException.class, e -> {
+                    log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
+                    return Flux.error(new DataAccessResourceFailureException("Error accessing the database for user: "
+                            + userUuid, e));
+                })
+                .onErrorResume(RuntimeException.class, e -> {
+                    log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
+                    return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: "
+                            + userUuid, e));
+                })
+                .onErrorResume(Exception.class, e -> {
+                    log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
+                    return Flux.error(new Exception("Unexpected error while fetching solutions for user: "
+                            + userUuid, e));
+
+                });
+    }
+
+    // 1) Count of user completed Challenges (status ENDED, SENT, SCORE_PENDING)
+
+    private Flux<UserSolutionDocument> getUserSolutionDocumentsFilteredByThreeStatus (String idUser, String status1
+            , String status2, String status3 ) throws DataAccessResourceFailureException {
+
+        UUID userUuid = UUID.fromString(idUser);
+        return userSolutionRepository.findAllByStatusInThree(userUuid, ChallengeStatus.ENDED,ChallengeStatus.SENT,
+                ChallengeStatus.SCORE_PENDING)
+                .onErrorResume(DataAccessResourceFailureException.class, e -> {
+                    log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
+                    return Flux.error(new DataAccessResourceFailureException("Error accessing the database for user: "
+                            + userUuid, e));
+                })
+                .onErrorResume(RuntimeException.class, e -> {
+                    log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
+                    return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: "
+                            + userUuid, e));
+                })
+                .onErrorResume(Exception.class, e -> {
+                    log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
+                    return Flux.error(new Exception("Unexpected error while fetching solutions for user: "
+                            + userUuid, e));
+
+                });
+    }
+
+//    Implementear UserCount en BBDD
+
+    public Mono<Integer> countOfUserTotalChallenges(String idUser) {
+
+        final Integer BBDD_ACCESS_ERROR = -1;
+
+        UUID userUuid = UUID.fromString(idUser);
+
+        return getAllUserSolutions(userUuid)
+                .filter(solution -> solution.getStatus() == (ChallengeStatus.ENDED))
+                .map(solution -> solution.getChallengeId().toString())
+                .collectList()
+                .map(challengesList -> challengesList.size())
+                .onErrorResume(RuntimeException.class, e -> {
+                    log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
+                    return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: " + userUuid, e));
+                })
+                .onErrorResume(DataAccessResourceFailureException.class, e -> {
+                    log.error("Database access failure for user {}: {}", userUuid, e.getMessage());
+                    return Mono.error(new DataAccessResourceFailureException("Database access failure for user: " + userUuid, e));
+                })
+                .onErrorResume(Exception.class, e -> {
+                    log.error("Unexpected error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
+                    return Mono.error(new Exception("Unexpected error while fetching user solutions for user: " + userUuid, e));
+                });
+
+    }
+
+
+
+//    2. Count of saved Challeges by user (status STARTED).
+
+//    VER posibles errores
+    public Mono<Integer> countOfChallengesExistingByUser (String idUser) {
+
+            UUID userUuid = UUID.fromString(idUser);
+
+            return getAllUserStartedChallenges(userUuid)
+                    .map(solution -> solution.getSolutionDocument().size())
+                    .reduce(0, Integer::sum)
+                    .defaultIfEmpty(0);
+
+        }
+
+    private Flux<UserSolutionDocument> getAllUserStartedChallenges (UUID userUuid) throws DataAccessResourceFailureException {
+
+        return userSolutionRepository.findByUserId(userUuid)
+                .filter( solution -> solution.getStatus() == (ChallengeStatus.STARTED) )
                 .onErrorMap(DataAccessResourceFailureException.class, e -> {
                     log.error("Resource failure while accessing the database for user: {}", userUuid, e);
 
@@ -225,40 +322,14 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
-    public Mono<Integer> countOfUserCompletedChallenges (String idUser){
+//    4. Count of challenges passed by user (ENDED, and needs approval as well).
 
-        final Integer BBDD_ACCESS_ERROR = -1;
+    private Flux<UsersTotalStatisticsDto> getUserTotalStatisticsDto (String idUser, String idLanguage) {
+        Integer allChallenges =
 
-        UUID userUuid = UUID.fromString(idUser);
-
-        try {
-//            Flux<UserSolutionDocument> userSolutions = getAllUserSolutions(userUuid);
-//            boolean t = userSolutions.filter(us -> us.getSolutionDocument().size() == 0);
-//
-//            Flux<UserSolutionDocument> userSolution = userSolutions.filter(us -> us.getSolutionDocument().size() == 0);
-
-            return getAllUserSolutions(userUuid)
-                    .filter(solution -> solution.getStatus() == (ChallengeStatus.ENDED))
-                    .map(solution -> solution.getChallengeId().toString())
-                    .collectList()
-                    .map(challengesList -> challengesList.size());
-        } catch (DataAccessResourceFailureException e){
-            return Mono.just(BBDD_ACCESS_ERROR);
-        }
+        return null;
 
     }
 
-    // Prubea
-    public Mono<Integer> countOfChallengesExistingByUser (String idUser) {
-
-        UUID userUuid = UUID.fromString(idUser);
-
-        return getAllUserSolutions(userUuid)
-                .map(solution -> solution.getSolutionDocument().size())
-                .reduce(0,Integer::sum)
-                .defaultIfEmpty(0);;
-
-    }
-
-} 
+}
 

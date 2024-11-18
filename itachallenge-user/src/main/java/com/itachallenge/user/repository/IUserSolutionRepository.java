@@ -2,6 +2,7 @@ package com.itachallenge.user.repository;
 
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -25,4 +26,8 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByChallengeIdAndStatus(UUID challengeId, ChallengeStatus status);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
+    @Query("{'userId': ?3, 'status': {$in: [?0, ?1, ?2]}}")
+    Flux<UserSolutionDocument> findAllByStatusInThree (UUID userId, ChallengeStatus status1, ChallengeStatus status2, ChallengeStatus status3);
+
+    Flux<UserSolutionDocument> findAllByStatusInThree(ChallengeStatus challengeStatus);
 }
