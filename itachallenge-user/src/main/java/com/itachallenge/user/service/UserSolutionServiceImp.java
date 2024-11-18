@@ -23,24 +23,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
 
-
+    private ChallengeStatus challengeStatus;
     private ZMQClient zmqClient;
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
     SecureRandom random = new SecureRandom();
-    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
     @Autowired
     public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter, ZMQClient zmqClient) {
         this.userSolutionRepository = userSolutionRepository;
         this.converter = converter;
         this.zmqClient = zmqClient;
+        this.challengeStatus = ChallengeStatus.EMPTY; // Initialize challengeStatus
     }
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
@@ -73,7 +72,9 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
 
-        ChallengeStatus challengeStatus = ChallengeStatus.fromValue(status);
+        if (challengeStatus.equals(ChallengeStatus.EMPTY)) {
+            challengeStatus = ChallengeStatus.STARTED;
+        }
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
@@ -162,7 +163,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.findByUserId(userUuid)
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
-    @Override
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
         List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
         try {
@@ -186,13 +186,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         Mono<Long> startedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.STARTED).count();
         Mono<Long> endedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.ENDED).count();
         Mono<Long> allChallenges = userSolutionRepository.findByChallengeId(idChallenge).count();
-        Mono<Float> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2)
+        return startedChallengesCount.zipWith(endedChallengesCount, Long::sum)
                 .flatMap(sum -> allChallenges.flatMap(value3 -> {
                     if (value3 == 0) {
                         return Mono.error(new ChallengeNotFoundException("Challenge's id " + idChallenge + " is not found"));
                     }
                     return Mono.just((sum * 100f) / value3);
                 }));
-        return percentage;
     }
 }
