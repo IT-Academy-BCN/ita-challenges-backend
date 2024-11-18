@@ -24,11 +24,6 @@ management:
   security:
     enabled: false
 
-zeromq:
-  socket:
-    address: tcp://*:5555
-  context:
-    threads: 1
 
 logging:
   level:
@@ -82,3 +77,9 @@ docker:
       } 
     }"
   timeout-seconds: 5
+
+  zeromq:
+    socket:
+      address: tcp://*:5555
+    context:
+      threads: 1
