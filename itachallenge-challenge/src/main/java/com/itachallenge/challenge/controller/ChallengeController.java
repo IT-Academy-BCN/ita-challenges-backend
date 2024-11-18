@@ -5,7 +5,6 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,11 +17,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -39,6 +36,7 @@ public class ChallengeController {
     private static final String INVALID_PARAM = "Invalid parameter";
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
     private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
+    private static final String MESSAGE = "message";
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
@@ -51,7 +49,7 @@ public class ChallengeController {
     @Autowired
     IChallengeService challengeService;
 
-    //TODO - pending externalize to service layer (internal comms)
+
     @Autowired
     ZMQClient zmqClient;
     @Autowired
@@ -71,7 +69,7 @@ public class ChallengeController {
     public String test() {
         log.info("** Saludos desde el logger **");
 
-        Optional<String> challengeService = discoveryClient.getInstances("itachallenge-challenge")
+        Optional<String> optChallengeService = discoveryClient.getInstances("itachallenge-challenge")
                 .stream()
                 .findAny()
                 .map(Object::toString);
@@ -88,11 +86,30 @@ public class ChallengeController {
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
-        log.info((userService.isPresent() ? userService.get() : NO_SERVICE)
-                .concat(System.lineSeparator())
-                .concat(challengeService.isPresent() ? challengeService.get() : NO_SERVICE)
-                .concat(System.lineSeparator())
-                .concat(scoreService.isPresent() ? scoreService.get() : NO_SERVICE));
+
+        StringBuilder logMessage = new StringBuilder("Scanning micros:");
+
+        if (userService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("User service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        if (optChallengeService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("Challenge service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        if (scoreService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("Score service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        String logMessageStr = logMessage.toString();
+        log.info(logMessageStr);
+
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -100,7 +117,7 @@ public class ChallengeController {
 
         zmqClient.sendMessage(challengeInputDto, StatisticsResponseDto.class)
                 .thenAccept(response ->
-                        log.info("[ Response: " + ((StatisticsResponseDto) response).getPercent() + " ]"))
+                        log.info("[ Response: {}" , ((StatisticsResponseDto) response).getPercent() + " ]"))
                 .exceptionally(e -> {
                     log.error(e.getMessage());
                     return null;
@@ -115,8 +132,9 @@ public class ChallengeController {
             summary = "Get to see the Challenge level, its details and the available languages.",
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
@@ -125,39 +143,41 @@ public class ChallengeController {
                 .map(dto -> ResponseEntity.ok().body(dto));
     }
 
-
-    @DeleteMapping("/resources/{idResource}")
-    @Operation(
-            operationId = "Get the information from a chosen resource.",
-            summary = "Get to see the resource and all its related parameters.",
-            description = "Sending the ID Resource through the URI to retrieve it from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
-        return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
-    }
-
     //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
     @PatchMapping("/resources/{idResource}")
+    @Operation(
+            operationId = "Update the information of a chosen resource.",
+            summary = "Update the resource and its related parameters.",
+            description = "Sending the ID Resource through the URI and the fields to be updated in the request body.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
+
+        return challengeService.updateResourceByUuid(idResource, updates)
+                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
+
+    }
+
+
+
+    @DeleteMapping("/resources/{idResource}")
     @Operation(
             operationId = "Remove resource from all Challenges from Resource Id.",
             summary = "Remove resource from all Challenges from Resource Id.",
             description = "Sending the ID Resource through the URI to patch the challenges.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
             }
     )
-    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource) {
+    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
         return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("message", response)))
-                .onErrorResume(ResourceNotFoundException.class, e -> {
-                    return Mono.just(ResponseEntity.status(HttpStatus.OK).body(Collections.singletonMap("message", e.getMessage())));
-                });
+                .map(response -> ResponseEntity.ok(Collections.singletonMap(MESSAGE, response)));
     }
 
     @GetMapping("/challenges")
@@ -166,7 +186,9 @@ public class ChallengeController {
             summary = "Get to see challenges on a page and their levels, details and their available languages.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")})
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters")
+
             })
 
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(
@@ -182,8 +204,9 @@ public class ChallengeController {
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Language with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "200", description = "Level not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The language with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters"),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
@@ -215,7 +238,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
@@ -231,8 +255,9 @@ public class ChallengeController {
             description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
     public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
@@ -253,7 +278,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
     public Mono<GenericResultDto<ChallengeDto>> getRelated
@@ -273,7 +299,7 @@ public class ChallengeController {
             description = "Sending the ID Challenge & ID Language returns the relevant challenge's testing values.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "400", description = "The Challenge Id & Language Id can't be null or empty.", content = {@Content(schema = @Schema())})
             }
     )
