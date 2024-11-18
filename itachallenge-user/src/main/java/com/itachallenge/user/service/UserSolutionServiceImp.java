@@ -7,7 +7,6 @@ import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
-import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.mqclient.ZMQClient;
@@ -74,15 +73,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
 
-        ChallengeStatus challengeStatus = determineChallengeStatus(status);
-        if (challengeStatus == null) {
-            log.error("POST operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status not allowed"));
-        }
-
-        if (challengeStatus.equals(ChallengeStatus.EMPTY)) {
-            challengeStatus = ChallengeStatus.STARTED;
-        }
+        ChallengeStatus challengeStatus = ChallengeStatus.fromValue(status);
 
         solutionDocuments = List.of(
                 SolutionDocument.builder()
@@ -166,20 +157,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     log.error(e.getMessage());
                     return new ScoreResponseDto();
                 });
-    }
-    public ChallengeStatus determineChallengeStatus(String status) {
-        if (status == null || status.isEmpty()) {
-            return ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
-            return ChallengeStatus.EMPTY;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.SENT.getValue())) {
-            return ChallengeStatus.SENT;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.SCORE_PENDING.getValue())) {
-            return ChallengeStatus.SCORE_PENDING;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
-            return ChallengeStatus.ENDED;
-        }
-        return null;
     }
     public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
         return userSolutionRepository.findByUserId(userUuid)

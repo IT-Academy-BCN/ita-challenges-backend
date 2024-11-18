@@ -12,4 +12,14 @@ public enum ChallengeStatus {
         this.value = value;
     }
 
+    public static ChallengeStatus fromValue(String status) {
+        for (ChallengeStatus challengeStatus : ChallengeStatus.values()) {
+            if (challengeStatus.value.equals(status)) {
+                return challengeStatus;
+            }
+        }
+        return null;
+    }
 }
+
+
