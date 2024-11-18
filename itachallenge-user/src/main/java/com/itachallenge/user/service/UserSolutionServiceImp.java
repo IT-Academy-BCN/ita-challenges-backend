@@ -248,6 +248,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     }
 
+    // Prubea
     public Mono<Integer> countOfChallengesExistingByUser (String idUser) {
 
         UUID userUuid = UUID.fromString(idUser);
