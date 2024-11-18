@@ -7,7 +7,6 @@ import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
 import com.itachallenge.user.dtos.zmq.ScoreResponseDto;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
-import com.itachallenge.user.exception.SolutionNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.mqclient.ZMQClient;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
@@ -35,7 +33,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
     SecureRandom random = new SecureRandom();
-    private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
     @Autowired
     public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter, ZMQClient zmqClient) {
@@ -185,7 +182,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.findByUserId(userUuid)
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
-    @Override
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
         List<ChallengeStatisticsDto> challengesList = new ArrayList<>();
         try {
@@ -209,13 +205,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         Mono<Long> startedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.STARTED).count();
         Mono<Long> endedChallengesCount = userSolutionRepository.findByChallengeIdAndStatus(idChallenge, ChallengeStatus.ENDED).count();
         Mono<Long> allChallenges = userSolutionRepository.findByChallengeId(idChallenge).count();
-        Mono<Float> percentage = startedChallengesCount.zipWith(endedChallengesCount, (value1, value2) -> value1 + value2)
+        return startedChallengesCount.zipWith(endedChallengesCount, Long::sum)
                 .flatMap(sum -> allChallenges.flatMap(value3 -> {
                     if (value3 == 0) {
                         return Mono.error(new ChallengeNotFoundException("Challenge's id " + idChallenge + " is not found"));
                     }
                     return Mono.just((sum * 100f) / value3);
                 }));
-        return percentage;
     }
 }

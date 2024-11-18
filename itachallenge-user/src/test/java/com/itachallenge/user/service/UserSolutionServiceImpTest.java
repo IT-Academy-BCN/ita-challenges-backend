@@ -107,6 +107,7 @@ class UserSolutionServiceImpTest {
         assertEquals(languageId, localUserSolutionDocument.getLanguageId());
         assertEquals(challengeId, localUserSolutionDocument.getChallengeId());
     }
+
     @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
     @Test
     void getChallengeByIdTest() {
@@ -142,6 +143,15 @@ class UserSolutionServiceImpTest {
             status = null;
         }
         userSolutionDto.setStatus(status);
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectError(IllegalArgumentException.class)
+                .verify();
+    }
+    @DisplayName("addSolution throws IllegalArgumentException when status is invalid")
+    @Test
+    void addSolutionThrowsIllegalArgumentExceptionWhenStatusIsInvalid() {
+        userSolutionDto.setStatus("INVALID_STATUS");
+
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectError(IllegalArgumentException.class)
                 .verify();
