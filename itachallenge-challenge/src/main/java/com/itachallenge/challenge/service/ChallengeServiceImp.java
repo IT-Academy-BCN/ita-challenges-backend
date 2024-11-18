@@ -13,7 +13,6 @@ import com.itachallenge.challenge.repository.SolutionRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import reactor.core.publisher.Flux;
@@ -41,27 +40,21 @@ public class ChallengeServiceImp implements IChallengeService {
     private static final String NOT_FOUND = "not found";
 
 
-    @Autowired
+
     private ChallengeRepository challengeRepository;
-    @Autowired
+
     private LanguageRepository languageRepository;
-    @Autowired
+
     private SolutionRepository solutionRepository;
-    @Autowired
+
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
-    @Autowired
+
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
-    @Autowired
+
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
-    @Autowired
+
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
-    public List<SolutionDto> createSolutionList() {
-        List<SolutionDto> solutions = new ArrayList<>();
-        return solutions;
-    }
 
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
