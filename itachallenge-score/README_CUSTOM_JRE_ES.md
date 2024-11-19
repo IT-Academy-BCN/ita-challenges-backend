@@ -1,4 +1,4 @@
-# Cómo Crear un JRE Personalizado desde Windows
+# Cómo crear un JRE personalizado desde Windows
 
 Este documento describe los pasos necesarios desde Windows para crear un JRE personalizado utilizando `jlink`.
 Todo el proceso se realiza dentro de un contenedor Docker, lo que te permitirá generar un JRE optimizado y compatible con el sistema operativo **Alpine Linux**, que es el que se utiliza en el **Sandbox** donde se ejecutará y probará el código del usuario.
