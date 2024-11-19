@@ -9,10 +9,10 @@ The first step is to create a new container using the official OpenJDK image to 
 Open the terminal and run the following command:
 
 ```bash
-docker run -it --rm openjdk:21-jdk /bin/bash
+docker docker run -it --rm bellsoft/liberica-openjdk-alpine:21 bash
 ```
 
-This command will start a container based on OpenJDK 21 with an interactive shell.
+This command will start a container based on BellSoft Liberica OpenJDK 21 on Alpine Linux with an interactive shell.
 If everything goes well, you’ll be inside the container. Using the ```--rm``` flag ensures the container will be automatically removed when you exit.
 
 ## **2. Create the custom JRE with jlink**

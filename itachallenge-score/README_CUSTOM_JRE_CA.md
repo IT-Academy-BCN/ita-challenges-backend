@@ -9,10 +9,10 @@ El primer pas és crear un nou contenidor utilitzant la imatge oficial d’OpenJ
 Per fer-ho, obre el terminal i executa l'ordre següent:
 
 ```bash
-docker run -it --rm openjdk:21-jdk /bin/bash
+docker run -it --rm bellsoft/liberica-openjdk-alpine:21 bash
 ```
 
-Aquesta instrucció aixecarà un contenidor basat en OpenJDK 21 amb una shell interactiva.
+Aquesta instrucció aixecarà un contenidor basat en BellSoft Liberica OpenJDK 21 sobre Alpine Linux i amb una shell interactiva.
 Si tot ha anat correctament, ja estaràs dins del contenidor. Gràcies al flag ```--rm```, aquest contenidor s’eliminarà automàticament quan surtis d’ell.
 
 ## **2. Crea el JRE personalitzat amb jlink**
