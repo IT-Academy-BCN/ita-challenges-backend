@@ -8,16 +8,16 @@ import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
+import org.apache.commons.lang3.function.TriFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -219,117 +219,114 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     // CARD #623
 
-    private Flux<UserSolutionDocument> getAllUserSolutions (UUID userUuid) throws DataAccessResourceFailureException {
+    /*
+        Add Method Description
 
-        return userSolutionRepository.findByUserId(userUuid)
-                .onErrorResume(DataAccessResourceFailureException.class, e -> {
-                    log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
-                    return Flux.error(new DataAccessResourceFailureException("Error accessing the database for user: "
-                            + userUuid, e));
-                })
-                .onErrorResume(RuntimeException.class, e -> {
-                    log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
-                    return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: "
-                            + userUuid, e));
-                })
-                .onErrorResume(Exception.class, e -> {
-                    log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
-                    return Flux.error(new Exception("Unexpected error while fetching solutions for user: "
-                            + userUuid, e));
+        Refactorizar DTO
+     */
 
-                });
-    }
+    // DUDA
 
-    // 1) Count of user completed Challenges (status ENDED, SENT, SCORE_PENDING)
+    // cuando tengo que declarar, en la interfaz, un metodo usado en el service?
 
-    private Flux<UserSolutionDocument> getUserSolutionDocumentsFilteredByThreeStatus (String idUser, String status1
-            , String status2, String status3 ) throws DataAccessResourceFailureException {
+    private Mono<UsersTotalStatisticsDto> getUserTotalStatistics(String idUser, String idLanguage) {
 
         UUID userUuid = UUID.fromString(idUser);
-        return userSolutionRepository.findAllByStatusInThree(userUuid, ChallengeStatus.ENDED,ChallengeStatus.SENT,
-                ChallengeStatus.SCORE_PENDING)
+        UUID languageUuid = UUID.fromString(idLanguage);
+
+        // Consultas a la base de datos usando el repositorio
+        List<ChallengeStatus> completedStatuses = Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING);
+        List<ChallengeStatus> scorePendingStatuses = Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING);
+
+
+        // Usamos el método centralizado para manejar los errores y hacer las consultas
+        Mono<Long> completedChallengesMono = countChallengesWithErrorHandling(
+                userSolutionRepository::countChallengesByStatusAndLanguage
+                , userUuid, languageUuid, completedStatuses);
+
+        Mono<Long> savedChallenesMono = countChallengesWithErrorHandling(
+                userSolutionRepository::countChallengesByStatusAndLanguage
+                , userUuid, languageUuid, Arrays.asList(ChallengeStatus.STARTED));
+
+        Mono<Long> scorePendingChallengesMono = countChallengesWithErrorHandling(
+                userSolutionRepository::countChallengesByStatusAndLanguage
+                , userUuid, languageUuid, scorePendingStatuses);
+
+        Mono<Long> passedChallengesMono = countChallengesWithErrorHandling(
+                userSolutionRepository::countByChallengeStatusAndLanguageAndScoreAmount
+                , userUuid, languageUuid, Arrays.asList(ChallengeStatus.ENDED));
+
+//        Mono<Long> completedChallengesMono = userSolutionRepository.countChallengesByStatusInThreeAndLanguage (
+//                userUuid, languageUuid, ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING )
+//                .onErrorReturn(-1L);;
+//        Mono<Long>  savedChallenesMono = userSolutionRepository.countChallengesByStatusAndLanguage(userUuid,
+//                languageUuid, ChallengeStatus.STARTED)
+//                .onErrorReturn(-1L);;
+//        Mono<Long>  scorePendingChallengesMono = userSolutionRepository.countChallengesByStatusInTwoAndLanguage(userUuid,
+//                languageUuid,ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)
+//                .onErrorReturn(-1L);;
+//        Mono<Long>  passedChallengesMono = userSolutionRepository.countByChallengeStatusAndLanguageAndScoreAmount(userUuid,
+//                languageUuid, ChallengeStatus.ENDED)
+//                .onErrorReturn(-1L);;
+
+        return Mono.zip(completedChallengesMono, savedChallenesMono, scorePendingChallengesMono, passedChallengesMono)
+                .map(tuple -> {
+                    // Obtener las cantidades de la tupla
+                    long saved = tuple.getT1();
+                    long completed = tuple.getT2();
+                    long scorePending = tuple.getT3();
+                    long passed = tuple.getT4();
+
+                    // Crear el DTO con los valores obtenidos
+                    UsersTotalStatisticsDto statisticsDto = new UsersTotalStatisticsDto();
+                    statisticsDto.setUserUuid(userUuid);
+                    statisticsDto.setLanguageUuid(languageUuid);
+
+                    // Asignar los valores a la clase interna ( ChallengesStatistics ) del DTO
+                    UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics();
+                    challengesStatistics.setSaved(saved);
+                    challengesStatistics.setCompleted(completed);
+                    challengesStatistics.setScorePending(scorePending);
+                    challengesStatistics.setPassed(passed);
+
+                    // Verificar si hubo algún error en las consultas (indicando que se retornó -1L)
+                    boolean errorOccurred = saved == -1L || completed == -1L || scorePending == -1L || passed == -1L;
+                    statisticsDto.setErrorOccurred(errorOccurred);
+
+                    // Asignamos el objeto ChallengesStatistics al DTO principal
+                    statisticsDto.setChallengesStatistics(challengesStatistics);
+
+                    return statisticsDto;
+                })
+                // Manejo de excepciones generales en caso de que algo falle en las consultas
                 .onErrorResume(DataAccessResourceFailureException.class, e -> {
                     log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
-                    return Flux.error(new DataAccessResourceFailureException("Error accessing the database for user: "
-                            + userUuid, e));
+                    return Mono.error(new DataAccessResourceFailureException("Error accessing the database for user: " + userUuid, e));
                 })
-                .onErrorResume(RuntimeException.class, e -> {
-                    log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
-                    return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: "
-                            + userUuid, e));
-                })
-                .onErrorResume(Exception.class, e -> {
-                    log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
-                    return Flux.error(new Exception("Unexpected error while fetching solutions for user: "
-                            + userUuid, e));
-
-                });
-    }
-
-//    Implementear UserCount en BBDD
-
-    public Mono<Integer> countOfUserTotalChallenges(String idUser) {
-
-        final Integer BBDD_ACCESS_ERROR = -1;
-
-        UUID userUuid = UUID.fromString(idUser);
-
-        return getAllUserSolutions(userUuid)
-                .filter(solution -> solution.getStatus() == (ChallengeStatus.ENDED))
-                .map(solution -> solution.getChallengeId().toString())
-                .collectList()
-                .map(challengesList -> challengesList.size())
                 .onErrorResume(RuntimeException.class, e -> {
                     log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
                     return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: " + userUuid, e));
                 })
-                .onErrorResume(DataAccessResourceFailureException.class, e -> {
-                    log.error("Database access failure for user {}: {}", userUuid, e.getMessage());
-                    return Mono.error(new DataAccessResourceFailureException("Database access failure for user: " + userUuid, e));
-                })
                 .onErrorResume(Exception.class, e -> {
-                    log.error("Unexpected error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
-                    return Mono.error(new Exception("Unexpected error while fetching user solutions for user: " + userUuid, e));
+                    log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
+                    return Mono.error(new Exception("Unexpected error while fetching solutions for user: " + userUuid, e));
                 });
 
+
+    }
+    // Método que centraliza las consultas del repositorio con manejo de errores
+    private Mono<Long> countChallengesWithErrorHandling(
+            TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repoMethod,
+            UUID userUuid,
+            UUID languageUuid,
+            List<ChallengeStatus> statuses) {
+
+        // Llamar al método del repositorio proporcionado, pasando los parámetros adecuados.
+        return repoMethod.apply(userUuid, languageUuid, statuses)
+                .onErrorReturn(-1L); // Si ocurre un error, devolvemos -1L.
     }
 
 
-
-//    2. Count of saved Challeges by user (status STARTED).
-
-//    VER posibles errores
-    public Mono<Integer> countOfChallengesExistingByUser (String idUser) {
-
-            UUID userUuid = UUID.fromString(idUser);
-
-            return getAllUserStartedChallenges(userUuid)
-                    .map(solution -> solution.getSolutionDocument().size())
-                    .reduce(0, Integer::sum)
-                    .defaultIfEmpty(0);
-
-        }
-
-    private Flux<UserSolutionDocument> getAllUserStartedChallenges (UUID userUuid) throws DataAccessResourceFailureException {
-
-        return userSolutionRepository.findByUserId(userUuid)
-                .filter( solution -> solution.getStatus() == (ChallengeStatus.STARTED) )
-                .onErrorMap(DataAccessResourceFailureException.class, e -> {
-                    log.error("Resource failure while accessing the database for user: {}", userUuid, e);
-
-                    String message = String.format("Resource failure while accessing the database for user: %s", userUuid);
-                    return new DataAccessResourceFailureException(message, e);
-                });
-    }
-
-//    4. Count of challenges passed by user (ENDED, and needs approval as well).
-
-    private Flux<UsersTotalStatisticsDto> getUserTotalStatisticsDto (String idUser, String idLanguage) {
-        Integer allChallenges =
-
-        return null;
-
-    }
 
 }
 

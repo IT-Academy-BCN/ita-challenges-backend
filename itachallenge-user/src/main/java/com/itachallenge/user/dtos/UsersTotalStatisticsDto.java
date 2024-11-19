@@ -16,14 +16,14 @@ import java.util.UUID;
 public class UsersTotalStatisticsDto {
 
     private UUID userUuid;
-    private String idLanguage;
+    private UUID languageUuid;
     private ChallengesStatistics challengesStatistics;
+    private boolean errorOccurred; // To indicate an Error has occurred
 
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ChallengesStatistics {
-        private long count; // Total de desafíos
         private long completed; // Desafíos completados (ENDED, SENT, SCORE_PENDING)
         private long saved; // Desafíos guardados (STARTED)
         private long scorePending; // Desafíos con puntuación pendiente (SENT, SCORE_PENDING)
