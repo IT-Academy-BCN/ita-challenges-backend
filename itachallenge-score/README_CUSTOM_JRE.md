@@ -1,28 +1,28 @@
-# Cómo Crear un JRE Personalizado desde Windows
+# How to create a custom JRE from Windows
 
-Este documento describe los pasos necesarios desde Windows para crear un JRE personalizado utilizando `jlink`.
-Todo el proceso se realiza dentro de un contenedor Docker, lo que te permitirá generar un JRE optimizado y compatible con el sistema operativo **Alpine Linux**, que es el que se utiliza en el **Sandbox** donde se ejecutará y probará el código del usuario.
+This document outlines the steps to create a custom JRE using ```jlink``` from Windows.
+The entire process is performed within a Docker container, enabling you to generate an optimized JRE compatible with **Alpine Linux**, the operating system used in the **Sandbox** where the user's code will be executed and tested.
 
-## **1. Levanta un contenedor Docker con OpenJDK**
+## **1. Start a Docker container with OpenJDK**
 
-El primer paso es crear un nuevo contenedor utilizando la imagen oficial de OpenJDK para configurar un entorno en el que puedas personalizar el JRE.
-Para ello, abre la terminal y ejecuta el siguiente comando:
+The first step is to create a new container using the official OpenJDK image to set up an environment where you can customize the JRE.
+Open the terminal and run the following command:
 
 ```bash
 docker run -it --rm openjdk:21-jdk /bin/bash
 ```
 
-Esto iniciará un contenedor basado en OpenJDK 21 con un shell interactivo.
-Si todo ha ido correctamente, estarás ya dentro del contenedor. Al usar el flag ```--rm```, este contenedor se eliminará automáticamente cuando salgas de él.
+This command will start a container based on OpenJDK 21 with an interactive shell.
+If everything goes well, you’ll be inside the container. Using the ```--rm``` flag ensures the container will be automatically removed when you exit.
 
-## **2. Crea el JRE personalizado con jlink**
+## **2. Create the custom JRE with jlink**
 
-Dentro del contenedor, genera el JRE personalizado siguiendo estos pasos:
+Inside the container, generate the custom JRE by following these steps:
 
-#### 2.1. Identifica los módulos necesarios
+#### 2.1. Identify the required modules
 
-Selecciona los módulos que quieres incluir en el JRE personalizado.
-Por ejemplo, estos son los módulos que se seleccionaron para crear el primer JRE personalizado del proyecto, aunque puede que necesites añadir o excluir alguno más:
+Select the modules you want to include in the custom JRE.
+For example, the following modules were selected for the initial custom JRE for the project. You may need to add or exclude others as required:
 
 - java.base
 - java.logging
@@ -32,9 +32,9 @@ Por ejemplo, estos son los módulos que se seleccionaron para crear el primer JR
 - jdk.charsets
 - java.desktop
 
-#### 2.2. Ejecuta el comando jlink
+#### 2.2. Run the jlink command
 
-Usa ```jlink``` para generar el JRE personalizado ejecutando este comando dentro del contenedor:
+Use ```jlink``` to generate the custom JRE by running the following command inside the container:
 
 ```bash
 jlink --module-path $JAVA_HOME/jmods \
@@ -43,81 +43,82 @@ jlink --module-path $JAVA_HOME/jmods \
 --output /custom-jre
 ```
 
-Esto creará un JRE personalizado con los módulos especificados en el directorio ```/custom-jre``` (dentro del contenedor). Puedes modificar el comando para añadir o excluir otros módulos, así como cambiar la ruta del directorio de salida si fuese necesario.
+This will create a custom JRE with the specified modules in the ```/custom-jre``` directory (inside the container). You can modify the command to add or exclude modules or change the output directory path if needed.
 
-## **3. Copia en tu máquina el JRE generado**
+## **3. Copy the generated JRE to your machine**
 
-Asegúrate de obtener una copia del JRE personalizado antes de destruir el contenedor, ya que el JRE se desturirá con él.
-Para copiar en tu sistema el JRE personalizado, debes seguir estos pasos:
+Make sure to copy the custom JRE to your system before destroying the container, as the JRE will be lost too once the container is deleted.
+Follow these steps to transfer the custom JRE:
 
-#### 3.1. Comprime el JRE dentro del contenedor
+#### 3.1. Compress the JRE inside the container
 
-Ejecuta el siguiente comando para crear un archivo comprimido del JRE y así facilitar su transferencia:
+Run the following command to create a compressed archive of the JRE for easier transfer:
 
 ```bash
 tar -czvf /custom-jre.tar.gz /custom-jre
 ```
 
-#### 3.2. Identifica el ID del contenedor
+#### 3.2. Identify the container ID
 
-Abre una **nueva terminal** para trabajar fuera del contenedor (sin cerrar la anterior) y verifica el ID de tu contenedor en ejecución con el siguiente comando:
+Open a **new terminal** (without closing the current one) and verify the ID of your running container using the following command:
 
 ```bash
 docker ps
 ```
-Este comando muestra un listado detallado de los contenedores en ejecución. Asegúrate de copiar el ID del contenedor donde has creado el JRE personalizado.
 
-#### 3.3. Copia en tu máquina el archivo comprimido del contenedor
+This command provides a detailed list of running containers. Copy the ID of the container where you created the custom JRE.
 
-**Desde la nueva terminal**, ejecuta el siguiente comando para copiar el archivo comprimido del contenedor en tu ordenador (sustituye ```<container_id>``` por el ID real que copiaste en el paso anterior y ```<path>``` por la ruta en la que quieras que se copie el archivo):
+#### 3.3. Copy the compressed file from the container to your machine
+
+**From the new terminal**, run the following command to copy the compressed file from the container to your computer (replace ```<container_id>``` with the actual container ID you copied before and ```<path>``` with the desired destination path):
 
 ```bash
 docker cp <container_id>:/custom-jre.tar.gz <path>
 ```
 
-Ejemplo:
+Example:
 
 ```bash
 docker cp 800a361bc05c:/custom-jre.tar.gz C:\Users\Michel\Desktop\custom-jre
 ```
 
-#### 3.4. Descomprime el archivo ```custom-jre.tar.gz``` en tu máquina
+#### 3.4. Decompress the ```custom-jre.tar.gz``` file on your machine
 
-Utiliza uno de estos dos métodos para descomprimir el archivo en tu ordenador:
+Use one of the following methods to extract the file:
 
-1. A través de la terminal:
+1. Using the terminal:
 
-**Desde la nueva terminal**, ejecuta el siguiente comando (modificando las rutas según corresponda):
+Run the following command **from the new terminal** (adjust paths as needed):
 
 ```bash
 tar -xvzf "compressed_file_path" -C "output_path"
 ```
 
-Ejemplo:
+Example:
 
 ```bash
 tar -xvzf "C:\Users\Michel\Desktop\custom-jre\custom-jre.tar.gz" -C "C:\Users\Michel\Desktop\custom-jre"
 ```
 
-2. Utilizando 7-Zip:
+2. Using 7-Zip:
 
-- Haz clic derecho sobre el archivo comprimido ```custom-jre.tar.gz```.
-- Selecciona "7-Zip > Extraer aquí". Se descomprimirá en el archivo ```custom-jre.tar```.
-- Repite el proceso sobre el archivo ```custom-jre.tar``` para obtener finalmente la carpeta descomprimida ```custom-jre```.
+- Right-click on the ```custom-jre.tar.gz``` file.
+- Select "7-Zip > Extract Here". This will extract the ```custom-jre.tar``` file.
+- Repeat the process for the ```custom-jre.tar``` file to obtain the final ```custom-jre``` folder.
 
-#### 3.5.  Verifica los módulos de tu JRE personalizado
+#### 3.5.  Verify the modules in your custom JRE
 
-Accede a la subcarpeta ```custom-jre\legal``` y verifica que se hayan incluido los módulos necesarios.
+Navigate to the ```custom-jre\legal``` folder and check that all the required modules are included.
 
-## **4. Finalizar y limpiar**
+## **4. Finalize and clean up**
 
-Si está todo correcto y no necesitas rehacer el JRE, regresa a la terminal anterior (es decir, dentro del contenedor) y ejecuta el comando ```exit```.
-Al salir del contenedor, este se eliminará automáticamente gracias al flag ```--rm``` que utilizamos en la creación del contenedor.
+If everything looks correct, so you don’t need to recreate the JRE, return to the previous terminal (inside the container) and run the ```exit``` command.
+Exiting the container will automatically delete it due to the ```--rm``` flag used when creating the container.
 
-## **Notas Adicionales**
+## **Additional notes**
 
-- Asegúrate de tener los permisos adecuados en tu sistema para poder ejecutar los comandos de Docker y descomprimir los archivos correctamente.
+- Ensure you have the necessary permissions on your system to execute Docker commands and extract files properly.
 
-- Este proceso puede repetirse tantas veces como haga falta en caso de que sea necesario crear un nuevo JRE o el resultado no haya sido el esperado.
+- This process can be repeated as many times as needed if you need to create a new JRE or adjust the results.
 
-- Si insertas el JRE personalizado en el proyecto, recuerda revisar todos los archivos del directorio y subdirectorios del JRE, pues es posible que alguno de ellos se haya añadido automáticamente al ```.gitignore```. Si fuera el caso, desde el IDE, haz clic derecho sobre el archivo en cuestión y selecciona "Git > Add" para que se añada al repositorio.
+- When adding the custom JRE to your project, do not forget to check all the files in the JRE directory and subdirectories. Some files may be automatically added to ```.gitignore```. If this happens, right-click the file in your IDE and select "Git > Add" to include it in the repository.

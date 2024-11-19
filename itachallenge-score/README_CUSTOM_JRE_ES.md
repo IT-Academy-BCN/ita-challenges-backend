@@ -47,7 +47,7 @@ Esto creará un JRE personalizado con los módulos especificados en el directori
 
 ## **3. Copia en tu máquina el JRE generado**
 
-Asegúrate de obtener una copia del JRE personalizado antes de destruir el contenedor, ya que el JRE se desturirá con él.
+Asegúrate de obtener una copia del JRE personalizado antes de destruir el contenedor, ya que el JRE también se destruirá con él.
 Para copiar en tu sistema el JRE personalizado, debes seguir estos pasos:
 
 #### 3.1. Comprime el JRE dentro del contenedor
@@ -65,6 +65,7 @@ Abre una **nueva terminal** para trabajar fuera del contenedor (sin cerrar la an
 ```bash
 docker ps
 ```
+
 Este comando muestra un listado detallado de los contenedores en ejecución. Asegúrate de copiar el ID del contenedor donde has creado el JRE personalizado.
 
 #### 3.3. Copia en tu máquina el archivo comprimido del contenedor
@@ -109,12 +110,12 @@ tar -xvzf "C:\Users\Michel\Desktop\custom-jre\custom-jre.tar.gz" -C "C:\Users\Mi
 
 Accede a la subcarpeta ```custom-jre\legal``` y verifica que se hayan incluido los módulos necesarios.
 
-## **4. Finalizar y limpiar**
+## **4. Finaliza y limpia**
 
 Si está todo correcto y no necesitas rehacer el JRE, regresa a la terminal anterior (es decir, dentro del contenedor) y ejecuta el comando ```exit```.
 Al salir del contenedor, este se eliminará automáticamente gracias al flag ```--rm``` que utilizamos en la creación del contenedor.
 
-## **Notas Adicionales**
+## **Notas adicionales**
 
 - Asegúrate de tener los permisos adecuados en tu sistema para poder ejecutar los comandos de Docker y descomprimir los archivos correctamente.
 
