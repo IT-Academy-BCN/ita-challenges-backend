@@ -40,7 +40,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String NOT_FOUND = "not found";
 
-
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
@@ -57,6 +56,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
+
+
 
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
@@ -206,6 +207,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             });
                 });
     }
+
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
