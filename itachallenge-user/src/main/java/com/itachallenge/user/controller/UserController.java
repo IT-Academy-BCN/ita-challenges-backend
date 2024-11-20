@@ -2,8 +2,6 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import com.itachallenge.user.dtos.*;
-import com.itachallenge.user.dtos.zmq.ScoreRequestDto;
-import com.itachallenge.user.mqclient.ZMQClient;
 import com.itachallenge.user.service.IUserSolutionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
