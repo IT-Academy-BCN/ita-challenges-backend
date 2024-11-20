@@ -17,28 +17,20 @@ import java.io.IOException;
 
 @Service
 public class CodeProcessingManager {
-
     private static final Logger log = LoggerFactory.getLogger(CodeProcessingManager.class);
-
     @Qualifier("createFilterChain")
     private final Filter filterChain;
-
     private DockerExecutor dockerExecutor;
-
     @Autowired
     public CodeProcessingManager(@Qualifier("createFilterChain") Filter filterChain, DockerExecutor dockerExecutor) {
         this.filterChain = filterChain;
         this.dockerExecutor = dockerExecutor;
     }
-
     public ResponseEntity<ScoreResponseDto> processCode(ScoreRequestDto scoreRequest) {
-
         String sourceCode = scoreRequest.getSolutionText(); //CODE USER FROM JSON
         String[] arguments = {"5", "7"}; // PARAMETER "IN" FROM THE CHALLENGE
         String resultExpected = "12"; //PARAMETER "OUT" FROM THE CHALLENGE
-
         ExecutionResult executionResult = filterChain.apply(sourceCode);
-
         if (!executionResult.isSuccess()) {
             ScoreResponseDto scoreResponse = new ScoreResponseDto();
             scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
@@ -49,7 +41,6 @@ public class CodeProcessingManager {
             scoreResponse.setScore(0);
             return ResponseEntity.ok(scoreResponse);
         }
-
         if (executionResult.isSuccess()) {
             try {
                 executionResult = dockerExecutor.execute(sourceCode, arguments);
@@ -67,8 +58,6 @@ public class CodeProcessingManager {
                 throw new DockerExecutionException("Execution interrupted", e);
             }
         }
-
-
         ScoreResponseDto scoreResponse = new ScoreResponseDto();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
@@ -83,12 +72,9 @@ public class CodeProcessingManager {
             log.info("Code processed successfully: {}", scoreResponse.getCompilationMessage());
         }
         return ResponseEntity.ok(scoreResponse);
-
     }
-
     public int calculateScore(ExecutionResult executionResult, String resultExpected) {
         String trimmedMessage = executionResult.getMessage().trim();
-
         if (!executionResult.isCompiled()) {
             if (trimmedMessage.isEmpty()) {
                 executionResult.setMessage("Compilation error: " + trimmedMessage);

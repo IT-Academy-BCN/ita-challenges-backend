@@ -1,7 +1,6 @@
 package com.itachallenge.score.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,25 +11,24 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ObjectSerializerTest {
-
     private ObjectSerializer objectSerializer;
-
+    ScoreRequestDto dto;
     @BeforeEach
     void setUp() {
-        objectSerializer = new ObjectSerializer(new ObjectMapper());
+        objectSerializer = new ObjectSerializer();
+        dto = new ScoreRequestDto();
+        dto.setUuidChallenge(UUID.randomUUID());
+        dto.setUuidLanguage(UUID.randomUUID());
+        dto.setSolutionText("Solution Text Test");
     }
-
     @Test
-    void serializeValidObject() throws JsonProcessingException {
-        ScoreRequestDto dto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
+    void testSerialize() throws JsonProcessingException {
         byte[] result = objectSerializer.serialize(dto);
         assertNotNull(result, "The serialized byte array should not be null.");
         assertTrue(result.length > 0, "The serialized byte array should not be empty.");
     }
-
     @Test
-    void deserializeValidBytes() throws IOException {
-        ScoreRequestDto dto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
+    void testDeserialize() throws IOException {
         byte[] serialized = objectSerializer.serialize(dto);
         ScoreRequestDto deserializedDto = objectSerializer.deserialize(serialized, ScoreRequestDto.class);
         assertNotNull(deserializedDto, "Deserialized object should not be null.");
@@ -38,14 +36,34 @@ class ObjectSerializerTest {
         assertEquals(dto.getUuidLanguage(), deserializedDto.getUuidLanguage(), "UUIDs should match");
         assertEquals(dto.getSolutionText(), deserializedDto.getSolutionText(), "Solution texts should match");
     }
-
-
     @Test
-    void deserializeInvalidBytesThrowsException() {
+    void testSerializeNullObject() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            objectSerializer.serialize(null);
+        });
+        assertEquals("Cannot serialize a null object", exception.getMessage());
+    }
+    @Test
+    void testDeserializeNullByteArray() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            objectSerializer.deserialize(null, ScoreRequestDto.class);
+        });
+        assertEquals("Cannot deserialize a null byte array", exception.getMessage());
+    }
+    @Test
+    void testDeserializeInvalidBytes() {
         byte[] invalidBytes = new byte[]{1, 2, 3, 4, 5};
         Exception exception = assertThrows(IOException.class, () -> {
             objectSerializer.deserialize(invalidBytes, ScoreRequestDto.class);
         });
         assertTrue(exception instanceof IOException);
+    }
+    @Test
+    void deserializeShouldThrowIllegalArgumentExceptionWhenClassIsNull() throws JsonProcessingException {
+        byte[] validBytes = objectSerializer.serialize(dto);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            objectSerializer.deserialize(validBytes, null);
+        });
+        assertEquals("Cannot deserialize to a null class type", exception.getMessage());
     }
 }

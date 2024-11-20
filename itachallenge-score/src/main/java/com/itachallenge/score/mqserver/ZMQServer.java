@@ -15,41 +15,34 @@ import org.slf4j.Logger;
 import java.io.IOException;
 
 
-
 @Component
 public class ZMQServer{
-
     private final ZContext context;
     private final String socketAddress;
     private final ObjectSerializer objectSerializer;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
     private volatile boolean running = true;
     private Thread serverThread;
-
     @Autowired
     public ZMQServer(ZContext context, @Value("${zeromq.socket.address}") String socketAddress, ObjectSerializer objectSerializer) {
         this.context = context;
         this.socketAddress = socketAddress;
         this.objectSerializer = objectSerializer;
     }
-
     public void start() {
         log.info("Starting ZMQ Server");
         serverThread = new Thread(this::run);
         serverThread.start();
     }
-
     public void stop() {
         running = false;
         if (serverThread != null) {
             serverThread.interrupt();
         }
     }
-
     public boolean isRunning() {
         return running;
     }
-
     public void run() {
         ZMQ.Socket socket = context.createSocket(SocketType.REP);
         try {
@@ -57,7 +50,6 @@ public class ZMQServer{
             while (running && !Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
                 if (reply == null) continue;
-
                 processMessage(reply, socket);
             }
         } catch (Exception e) {
@@ -68,12 +60,10 @@ public class ZMQServer{
             running = false;
         }
     }
-
     private void processMessage(byte[] reply, ZMQ.Socket socket) {
         try {
             ScoreRequestDto requestDto = deserializeMessage(reply);
             log.info("Received: [{}]", requestDto);
-
             ScoreResponseDto responseDto = processRequest(requestDto);
             byte[] responseBytes = serializeMessage(responseDto);
             socket.send(responseBytes, 0);
@@ -82,16 +72,13 @@ public class ZMQServer{
             stop();
         }
     }
-
     private ScoreRequestDto deserializeMessage(byte[] message) throws IOException {
         return objectSerializer.deserialize(message, ScoreRequestDto.class);
     }
-
     private byte[] serializeMessage(ScoreResponseDto responseDto) throws JsonProcessingException {
         log.info("Serializing response: [{}]", responseDto);
         return objectSerializer.serialize(responseDto);
     }
-
     private ScoreResponseDto processRequest(ScoreRequestDto requestDto) {
         return ScoreResponseDto.builder()
                 .uuidChallenge(requestDto.getUuidChallenge())
