@@ -9,11 +9,29 @@ El primer paso es crear un nuevo contenedor utilizando la imagen oficial de Open
 Para ello, abre la terminal y ejecuta el siguiente comando:
 
 ```bash
-docker run -it --rm bellsoft/liberica-openjdk-alpine:21 bash
+docker run -it --rm bellsoft/liberica-openjdk-alpine:21 sh
 ```
 
 Esto iniciará un contenedor basado en BellSoft Liberica OpenJDK 21 sobre Alpine Linux y con un shell interactivo.
 Si todo ha ido correctamente, estarás ya dentro del contenedor. Al usar el flag ```--rm```, este contenedor se eliminará automáticamente cuando salgas de él.
+
+A continuación, necesitarás añadir algunos módulos o herramientas básicas que no están disponibles por defecto en Alpine Linux. Ejecuta los siguientes comandos dentro del contenedor:
+
+1. Instala el shell bash, las utilidades binutils y los coreutils necesarios para realizar tareas de administración y manipulación de archivos con este comando:
+```bash
+apk add --no-cache bash binutils coreutils
+```
+
+2. Añade el OpenJDK 21 al contenedor con este comando, incluyendo módulos adicionales que no existen por defecto en la imagen de Alpine, pero que son necesarios para construir el JRE:
+```bash
+apk add openjdk21-jdk
+```
+
+3. Por último, configura las variables de entorno necesarias para que el JDK esté disponible en el contenedor utilizando el siguiente comando:
+```bash
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk
+export PATH=$JAVA_HOME/bin:$PATH
+```
 
 ## **2. Crea el JRE personalizado con jlink**
 
