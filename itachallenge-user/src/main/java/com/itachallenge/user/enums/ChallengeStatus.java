@@ -8,10 +8,17 @@ public enum ChallengeStatus {
 
     private final String value;
 
-
-
     ChallengeStatus(String value) {
         this.value = value;
+    }
+
+    public static ChallengeStatus fromValue(String status) {
+        for (ChallengeStatus challengeStatus : ChallengeStatus.values()) {
+            if (challengeStatus.value.equals(status)) {
+                return challengeStatus;
+            }
+        }
+        throw new IllegalArgumentException("Invalid challenge status value: " + status);
     }
 
 }
