@@ -30,4 +30,8 @@ public class UsersTotalStatisticsDto {
         private long passed; // Desafíos aprobados (ENDED and score >= 75)
     }
 
+    public boolean isErrorOccurred() {
+        return errorOccurred;
+    }
+
 }

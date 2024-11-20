@@ -6,6 +6,7 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.helper.BuildUserStatisticsDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.apache.commons.lang3.function.TriFunction;
@@ -28,6 +29,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
+
+    private final BuildUserStatisticsDto buildUserStatistics;
     SecureRandom random = new SecureRandom();
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
@@ -231,69 +234,38 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     // Commits en rama local al final del dia?gi
 
-    private Mono<UsersTotalStatisticsDto> getUserTotalStatistics(String idUser, String idLanguage) {
+    public Mono<UsersTotalStatisticsDto> getUserTotalStatistics(String idUser, String idLanguage) {
 
         UUID userUuid = UUID.fromString(idUser);
         UUID languageUuid = UUID.fromString(idLanguage);
 
         // Usamos el método centralizado para manejar los errores y hacer las consultas
         Mono<Long> completedChallengesMono = countChallengesWithErrorHandling(
-                userSolutionRepository::countChallengesByStatusAndLanguage
-                , userUuid, languageUuid, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
+                userSolutionRepository::countChallengesByStatusAndLanguage,
+                userUuid, languageUuid, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
 
         Mono<Long> savedChallenesMono = countChallengesWithErrorHandling(
-                userSolutionRepository::countChallengesByStatusAndLanguage
-                , userUuid, languageUuid, List.of(ChallengeStatus.STARTED));
+                userSolutionRepository::countChallengesByStatusAndLanguage,
+                userUuid, languageUuid, List.of(ChallengeStatus.STARTED));
 
         Mono<Long> scorePendingChallengesMono = countChallengesWithErrorHandling(
-                userSolutionRepository::countChallengesByStatusAndLanguage
-                , userUuid, languageUuid,  Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
+                userSolutionRepository::countChallengesByStatusAndLanguage,
+                userUuid, languageUuid,  Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
 
         Mono<Long> passedChallengesMono = countChallengesWithErrorHandling(
-                userSolutionRepository::countByChallengeStatusAndLanguageAndScoreAmount
-                , userUuid, languageUuid, List.of(ChallengeStatus.ENDED));
+                userSolutionRepository::countByChallengeStatusAndLanguageAndScoreAmount,
+                userUuid, languageUuid, List.of(ChallengeStatus.ENDED));
 
-//        Mono<Long> completedChallengesMono = userSolutionRepository.countChallengesByStatusInThreeAndLanguage (
-//                userUuid, languageUuid, ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING )
-//                .onErrorReturn(-1L);;
-//        Mono<Long>  savedChallenesMono = userSolutionRepository.countChallengesByStatusAndLanguage(userUuid,
-//                languageUuid, ChallengeStatus.STARTED)
-//                .onErrorReturn(-1L);;
-//        Mono<Long>  scorePendingChallengesMono = userSolutionRepository.countChallengesByStatusInTwoAndLanguage(userUuid,
-//                languageUuid,ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)
-//                .onErrorReturn(-1L);;
-//        Mono<Long>  passedChallengesMono = userSolutionRepository.countByChallengeStatusAndLanguageAndScoreAmount(userUuid,
-//                languageUuid, ChallengeStatus.ENDED)
-//                .onErrorReturn(-1L);;
 
         return Mono.zip(completedChallengesMono, savedChallenesMono, scorePendingChallengesMono, passedChallengesMono)
-                .map(tuple -> {
-                    // Obtener las cantidades de la tupla
-                    long saved = tuple.getT1();
-                    long completed = tuple.getT2();
-                    long scorePending = tuple.getT3();
-                    long passed = tuple.getT4();
+                .map(tuple -> fromUserTotalStatisticsToDto (userUuid, languageUuid, tuple))
+                .onErrorResume(DataAccessResourceFailureException.class, e -> {
+                    log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
+                    return Mono.error(new DataAccessResourceFailureException("Error accessing the database for user: " + userUuid, e));
+                });
 
-                    // Crear el DTO con los valores obtenidos
-                    UsersTotalStatisticsDto statisticsDto = new UsersTotalStatisticsDto();
-                    statisticsDto.setUserUuid(userUuid);
-                    statisticsDto.setLanguageUuid(languageUuid);
 
-                    // Asignar los valores a la clase interna ( ChallengesStatistics ) del DTO
-                    UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics();
-                    challengesStatistics.setSaved(saved);
-                    challengesStatistics.setCompleted(completed);
-                    challengesStatistics.setScorePending(scorePending);
-                    challengesStatistics.setPassed(passed);
 
-                    // Verificar si hubo algún error en las consultas (indicando que se retornó -1L)
-                    boolean errorOccurred = saved == -1L || completed == -1L || scorePending == -1L || passed == -1L;
-                    statisticsDto.setErrorOccurred(errorOccurred);
-
-                    // Asignamos el objeto ChallengesStatistics al DTO principal
-                    statisticsDto.setChallengesStatistics(challengesStatistics);
-
-                    return statisticsDto;
                 })
                 // Manejo de excepciones generales en caso de que algo falle en las consultas
                 .onErrorResume(DataAccessResourceFailureException.class, e -> {
