@@ -70,7 +70,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
 
-        ChallengeStatus challengeStatus = ChallengeStatus.fromValue(status);
+        ChallengeStatus challengeStatus;
+        try {
+            challengeStatus = ChallengeStatus.fromValue(status);
+        } catch (IllegalArgumentException e) {
+            log.error("POST operation failed due to invalid challenge status value: {}", status);
+            return Mono.error(new IllegalArgumentException("Invalid challenge status value: " + status));
+        }
 
         List<SolutionDocument> solutionDocuments = List.of(
                 SolutionDocument.builder()
@@ -84,7 +90,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         .languageId(String.valueOf(savedDocument.getLanguageId()))
                         .challengeId(String.valueOf(savedDocument.getChallengeId()))
                         .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                        .status(savedDocument.getStatus().name()) // Ensure status is included in the DTO
+                        .status(savedDocument.getStatus().name())
                         .score(savedDocument.getScore())
                         .errors(savedDocument.getErrors())
                         .build())
