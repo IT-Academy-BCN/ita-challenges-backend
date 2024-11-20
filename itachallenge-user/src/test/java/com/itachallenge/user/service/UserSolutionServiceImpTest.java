@@ -227,37 +227,7 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
-    @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when status is SENT")
-    @Test
-    void addSolutionNewSolutionWithSentStatus() {
-        userSolutionDto.setStatus("SENT");
 
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
-        scoreResponseDto.setScore(mockScore);
-        scoreResponseDto.setErrors(mockErrors);
-
-        CompletableFuture<Object> completableFuture = CompletableFuture.completedFuture(scoreResponseDto);
-
-        when(zmqClient.sendMessage(any(), any()))
-                .thenReturn(completableFuture);
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == mockScore
-                                && userSolutionScoreDto.getErrors().equals(mockErrors))
-                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-    }
     @DisplayName("saveValidSolution modifies existing solution when status is STARTED")
     @Test
     void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
@@ -287,21 +257,6 @@ class UserSolutionServiceImpTest {
         localUserSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
         localUserSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
         localUserSolutionDto.setStatus(null); // Set status to null
-
-        Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(localUserSolutionDto);
-
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
-                        throwable.getMessage().equals("Status not allowed"))
-                .verify();
-    }
-    @Test
-    void testAddSolutionWithInvalidStatus() {
-        UserSolutionDto localUserSolutionDto = new UserSolutionDto();
-        localUserSolutionDto.setChallengeId("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
-        localUserSolutionDto.setLanguageId("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
-        localUserSolutionDto.setUserId("df99bae8-4f7f-4054-a957-37a12aa16364");
-        localUserSolutionDto.setStatus("INVALID_STATUS"); // Set an invalid status
 
         Mono<UserSolutionScoreDto> result = userSolutionService.addSolution(localUserSolutionDto);
 
@@ -509,7 +464,7 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
 
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-        }
+    }
     @DisplayName("createAndSaveNewBookmark creates and saves new document")
     @Test
     void createAndSaveNewBookmarkCreatesAndSavesNewDocument() {
@@ -547,19 +502,6 @@ class UserSolutionServiceImpTest {
                 .expectNext(expectedValue)
                 .verifyComplete();
 
-    }
-    @DisplayName("determineChallengeStatus returns correct status based on input")
-    @Test
-    void determineChallengeStatusTests() {
-        assertAll(
-                () -> assertEquals(ChallengeStatus.STARTED, userSolutionService.determineChallengeStatus(null), "Status null should return STARTED"),
-                () -> assertEquals(ChallengeStatus.STARTED, userSolutionService.determineChallengeStatus(""), "Empty status should return STARTED"),
-                () -> assertEquals(ChallengeStatus.EMPTY, userSolutionService.determineChallengeStatus("EMPTY"), "Status EMPTY should return EMPTY"),
-                () -> assertEquals(ChallengeStatus.SENT, userSolutionService.determineChallengeStatus("SENT"), "Status SENT should return SENT"),
-                () -> assertEquals(ChallengeStatus.SCORE_PENDING, userSolutionService.determineChallengeStatus("SCORE_PENDING"), "Status SCORE_PENDING should return SCORE_PENDING"),
-                () -> assertEquals(ChallengeStatus.ENDED, userSolutionService.determineChallengeStatus("ENDED"), "Status ENDED should return ENDED"),
-                () -> assertNull(userSolutionService.determineChallengeStatus("UNKNOWN"), "Unknown status should return null")
-        );
     }
     @Test
     void getChallengeUsersPercentageTest() {

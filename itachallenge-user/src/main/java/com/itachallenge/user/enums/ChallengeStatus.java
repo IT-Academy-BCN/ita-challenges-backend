@@ -8,6 +8,8 @@ public enum ChallengeStatus {
 
     private final String value;
 
+
+
     ChallengeStatus(String value) {
         this.value = value;
     }
