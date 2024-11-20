@@ -14,6 +14,12 @@ springdoc:
     enable: true
     path: "/api-docs"
 
+  zeromq:
+    socket:
+      address: tcp://*:5555
+    context:
+      threads: 1
+
 server:
   port: 8763
 
