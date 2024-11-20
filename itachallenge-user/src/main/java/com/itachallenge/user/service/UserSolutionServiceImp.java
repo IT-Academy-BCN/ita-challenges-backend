@@ -229,32 +229,29 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
     // cuando tengo que declarar, en la interfaz, un metodo usado en el service?
 
+    // Commits en rama local al final del dia?gi
+
     private Mono<UsersTotalStatisticsDto> getUserTotalStatistics(String idUser, String idLanguage) {
 
         UUID userUuid = UUID.fromString(idUser);
         UUID languageUuid = UUID.fromString(idLanguage);
 
-        // Consultas a la base de datos usando el repositorio
-        List<ChallengeStatus> completedStatuses = Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING);
-        List<ChallengeStatus> scorePendingStatuses = Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING);
-
-
         // Usamos el método centralizado para manejar los errores y hacer las consultas
         Mono<Long> completedChallengesMono = countChallengesWithErrorHandling(
                 userSolutionRepository::countChallengesByStatusAndLanguage
-                , userUuid, languageUuid, completedStatuses);
+                , userUuid, languageUuid, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
 
         Mono<Long> savedChallenesMono = countChallengesWithErrorHandling(
                 userSolutionRepository::countChallengesByStatusAndLanguage
-                , userUuid, languageUuid, Arrays.asList(ChallengeStatus.STARTED));
+                , userUuid, languageUuid, List.of(ChallengeStatus.STARTED));
 
         Mono<Long> scorePendingChallengesMono = countChallengesWithErrorHandling(
                 userSolutionRepository::countChallengesByStatusAndLanguage
-                , userUuid, languageUuid, scorePendingStatuses);
+                , userUuid, languageUuid,  Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
 
         Mono<Long> passedChallengesMono = countChallengesWithErrorHandling(
                 userSolutionRepository::countByChallengeStatusAndLanguageAndScoreAmount
-                , userUuid, languageUuid, Arrays.asList(ChallengeStatus.ENDED));
+                , userUuid, languageUuid, List.of(ChallengeStatus.ENDED));
 
 //        Mono<Long> completedChallengesMono = userSolutionRepository.countChallengesByStatusInThreeAndLanguage (
 //                userUuid, languageUuid, ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING )
@@ -316,13 +313,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
     // Método que centraliza las consultas del repositorio con manejo de errores
     private Mono<Long> countChallengesWithErrorHandling(
-            TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repoMethod,
+            TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repositoryMethod,
             UUID userUuid,
             UUID languageUuid,
             List<ChallengeStatus> statuses) {
 
         // Llamar al método del repositorio proporcionado, pasando los parámetros adecuados.
-        return repoMethod.apply(userUuid, languageUuid, statuses)
+        return repositoryMethod.apply(userUuid, languageUuid, statuses)
                 .onErrorReturn(-1L); // Si ocurre un error, devolvemos -1L.
     }
 
