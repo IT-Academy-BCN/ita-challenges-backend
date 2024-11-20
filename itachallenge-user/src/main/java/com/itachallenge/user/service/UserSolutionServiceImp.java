@@ -28,7 +28,7 @@ import java.util.concurrent.CompletableFuture;
 public class UserSolutionServiceImp implements IUserSolutionService {
 
 
-    private ZMQClient zmqClient;
+    private final ZMQClient zmqClient;
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
@@ -64,41 +64,42 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
         String status = userSolutionDto.getStatus();
-        List<SolutionDocument> solutionDocuments;
 
         if (status == null || status.isEmpty()) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
 
-        ChallengeStatus challengeStatus = determineChallengeStatus(status);
-        if (challengeStatus == null) {
-            log.error("POST operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status not allowed"));
+        ChallengeStatus challengeStatus;
+        try {
+            challengeStatus = ChallengeStatus.fromValue(status);
+        } catch (IllegalArgumentException e) {
+            log.error("POST operation failed due to invalid challenge status value: {}", status);
+            return Mono.error(new IllegalArgumentException("Invalid challenge status value: " + status));
         }
 
-        if (challengeStatus.equals(ChallengeStatus.EMPTY)) {
-            challengeStatus = ChallengeStatus.STARTED;
-        }
-
-        solutionDocuments = List.of(
+        List<SolutionDocument> solutionDocuments = List.of(
                 SolutionDocument.builder()
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
+
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
                 .map(savedDocument -> UserSolutionScoreDto.builder()
                         .userId(String.valueOf(savedDocument.getUserId()))
                         .languageId(String.valueOf(savedDocument.getLanguageId()))
                         .challengeId(String.valueOf(savedDocument.getChallengeId()))
                         .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                        .status(savedDocument.getStatus().name()) // Ensure status is included in the DTO
+                        .status(savedDocument.getStatus().name())
                         .score(savedDocument.getScore())
                         .errors(savedDocument.getErrors())
                         .build())
-                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
-                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
+                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution for user: {}, challenge: {}, language: {}",
+                        userSolutionDocument.getUserId(), userSolutionDocument.getChallengeId(), userSolutionDocument.getLanguageId()))
+                .doOnError(error -> log.error("POST operation failed for user: {}, challenge: {}, language: {} with error message: {}",
+                        userSolutionDto.getUserId(), userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(), error.getMessage()));
     }
+
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
         UUID challengeId = UUID.fromString(uuidChallenge);
         UUID languageId = UUID.fromString(uuidLanguage);
@@ -163,20 +164,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     log.error(e.getMessage());
                     return new ScoreResponseDto();
                 });
-    }
-    public ChallengeStatus determineChallengeStatus(String status) {
-        if (status == null || status.isEmpty()) {
-            return ChallengeStatus.STARTED;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.EMPTY.getValue())) {
-            return ChallengeStatus.EMPTY;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.SENT.getValue())) {
-            return ChallengeStatus.SENT;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.SCORE_PENDING.getValue())) {
-            return ChallengeStatus.SCORE_PENDING;
-        } else if (status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
-            return ChallengeStatus.ENDED;
-        }
-        return null;
     }
     public Flux<UserSolutionDto> showAllUserSolutions(UUID userUuid) {
         return userSolutionRepository.findByUserId(userUuid)

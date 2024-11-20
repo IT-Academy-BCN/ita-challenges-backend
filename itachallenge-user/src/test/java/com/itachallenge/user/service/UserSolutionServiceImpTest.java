@@ -147,6 +147,50 @@ class UserSolutionServiceImpTest {
                 .expectError(IllegalArgumentException.class)
                 .verify();
     }
+    @DisplayName("addSolution returns UserSolutionScoreDto when solution is successfully added")
+    @Test
+    void addSolutionReturnsUserSolutionScoreDtoWhenSolutionIsSuccessfullyAdded() {
+        userSolutionDto.setStatus("STARTED");
+
+        UserSolutionDocument savedDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.fromString(userSolutionDto.getUserId()))
+                .challengeId(UUID.fromString(userSolutionDto.getChallengeId()))
+                .languageId(UUID.fromString(userSolutionDto.getLanguageId()))
+                .solutionDocument(List.of(SolutionDocument.builder().solutionText(userSolutionDto.getSolutionText()).build()))
+                .status(ChallengeStatus.STARTED)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(any(UUID.class), any(UUID.class), any(UUID.class)))
+                .thenReturn(Mono.just(savedDocument));
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(savedDocument));
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectNextMatches(userSolutionScoreDto ->
+                        userSolutionScoreDto.getStatus().equals("STARTED") &&
+                                userSolutionScoreDto.getUserId().equals(userSolutionDto.getUserId()) &&
+                                userSolutionScoreDto.getChallengeId().equals(userSolutionDto.getChallengeId()) &&
+                                userSolutionScoreDto.getLanguageId().equals(userSolutionDto.getLanguageId()) &&
+                                userSolutionScoreDto.getSolutionText().equals(userSolutionDto.getSolutionText())
+                )
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+    }
+    @DisplayName("addSolution returns error when solution status is invalid")
+    @Test
+    void addSolutionReturnsErrorWhenSolutionStatusIsInvalid() {
+        userSolutionDto.setStatus("INVALID_STATUS");
+
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().contains("Invalid challenge status value"))
+                .verify();
+
+        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+    }
+
     @DisplayName("UserSolutionServiceImpTest - addSolution returns UnmodifiableSolutionException when status is ENDED")
     @Test
     void addSolutionWithEndedStatus() {
