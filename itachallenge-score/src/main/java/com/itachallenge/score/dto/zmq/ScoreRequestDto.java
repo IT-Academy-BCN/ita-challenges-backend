@@ -16,15 +16,11 @@ import java.util.UUID;
 @Builder
 @Data
 public class ScoreRequestDto {
-
     @JsonProperty("uuid_challenge")
     private UUID uuidChallenge;
-
     @JsonProperty("uuid_language")
     private UUID uuidLanguage;
-
     @JsonProperty("solution_text")
     private String solutionText;
-
 }
 

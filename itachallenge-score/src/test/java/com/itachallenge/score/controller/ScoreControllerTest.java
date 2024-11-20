@@ -17,24 +17,17 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
 @WebFluxTest(ScoreController.class)
 @ActiveProfiles("test")
 class ScoreControllerTest {
-
     @MockBean
     private CodeProcessingManager codeProcessingManager;
-
     @Autowired
     private WebTestClient webTestClient;
-
     @Autowired
     private Environment env;
-
     private static final String CONTROLLER_URL = "/itachallenge/api/v1/score/score";
-
     private ScoreResponseDto mockScoreResponse;
-
     @BeforeEach
     void setUp() {
         mockScoreResponse = new ScoreResponseDto();
@@ -43,11 +36,9 @@ class ScoreControllerTest {
         mockScoreResponse.setSolutionText("Example text");
         mockScoreResponse.setScore(99);
         mockScoreResponse.setErrors("No errors");
-
         when(codeProcessingManager.processCode(any(ScoreRequestDto.class)))
                 .thenReturn(ResponseEntity.ok(mockScoreResponse));
     }
-
     @Test
     void getVersionTest() {
         webTestClient.get()
@@ -58,7 +49,6 @@ class ScoreControllerTest {
                 .jsonPath("$.application_name").isEqualTo("itachallenge-score")
                 .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
     }
-
     @Test
     void createScoreReturnsCorrectResponse() {
         ScoreRequestDto scoreRequestDto = new ScoreRequestDto(
@@ -66,7 +56,6 @@ class ScoreControllerTest {
                 UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
                 "Example text"
         );
-
         webTestClient.post().uri(CONTROLLER_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(scoreRequestDto)
@@ -79,5 +68,4 @@ class ScoreControllerTest {
                 .jsonPath("$.score").isEqualTo(mockScoreResponse.getScore())
                 .jsonPath("$.errors").isEqualTo(mockScoreResponse.getErrors());
     }
-
 }
