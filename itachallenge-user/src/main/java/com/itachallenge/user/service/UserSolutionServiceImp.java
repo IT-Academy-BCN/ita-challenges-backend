@@ -58,46 +58,46 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 });
     }
 
+
     @Override
     public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
         String status = userSolutionDto.getStatus();
+        ChallengeStatus challengeStatus;
+        List<SolutionDocument> solutionDocuments;
 
-        if (status == null || status.isEmpty()) {
+        if (status == null) {
             log.error("POST operation failed due to invalid challenge status parameter");
             return Mono.error(new IllegalArgumentException("Status not allowed"));
         }
 
-        ChallengeStatus challengeStatus;
-        try {
-            challengeStatus = ChallengeStatus.fromValue(status);
-        } catch (IllegalArgumentException e) {
-            log.error("POST operation failed due to invalid challenge status value: {}", status);
-            return Mono.error(new IllegalArgumentException("Invalid challenge status value: " + status));
-        }
+        challengeStatus = ChallengeStatus.fromValue(status);
 
-        List<SolutionDocument> solutionDocuments = List.of(
+        solutionDocuments = List.of(
                 SolutionDocument.builder()
+                        .uuid(UUID.randomUUID())
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
 
+        log.info("Calling saveValidSolution with status: {} and solutionDocuments: {}", challengeStatus, solutionDocuments);
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-                .map(savedDocument -> UserSolutionScoreDto.builder()
-                        .userId(String.valueOf(savedDocument.getUserId()))
-                        .languageId(String.valueOf(savedDocument.getLanguageId()))
-                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                        .status(savedDocument.getStatus().name())
-                        .score(savedDocument.getScore())
-                        .errors(savedDocument.getErrors())
-                        .build())
-                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution for user: {}, challenge: {}, language: {}",
-                        userSolutionDocument.getUserId(), userSolutionDocument.getChallengeId(), userSolutionDocument.getLanguageId()))
-                .doOnError(error -> log.error("POST operation failed for user: {}, challenge: {}, language: {} with error message: {}",
-                        userSolutionDto.getUserId(), userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(), error.getMessage()));
+                .map(savedDocument -> {
+                    log.info("Received saved document from saveValidSolution: {}", savedDocument);
+                 return UserSolutionScoreDto.builder()
+                            .userId(String.valueOf(savedDocument.getUserId()))
+                            .languageId(String.valueOf(savedDocument.getLanguageId()))
+                            .challengeId(String.valueOf(savedDocument.getChallengeId()))
+                            .status(String.valueOf(savedDocument.getStatus()))
+                            .solutionText(savedDocument.getSolutionDocument().getFirst().getSolutionText())
+                            .score(savedDocument.getScore())
+                            .errors(savedDocument.getErrors())
+                            .build();
+                })
+                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
+                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
     }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
@@ -123,35 +123,65 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return userSolutionRepository.save(newDocument).thenReturn(newDocument);
     }
     public Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
+        if (challengeStatus == ChallengeStatus.EMPTY) {
+            challengeStatus = ChallengeStatus.STARTED;
+        }
+        final ChallengeStatus updatedChallengeStatus = challengeStatus;
+        log.info("Initial status (after EMPTY -> STARTED {}: ", updatedChallengeStatus);
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
+                    log.info("Found existing solution: {}", existingSolution);
                     if (existingSolution.getStatus().equals(ChallengeStatus.ENDED) || existingSolution.getStatus().equals(ChallengeStatus.SCORE_PENDING)) {
                         return Mono.error(new UnmodifiableSolutionException("Cannot modify solution with status ENDED or SCORE_PENDING"));
                     }
-                    if (challengeStatus == ChallengeStatus.STARTED) {
+                    if (existingSolution.getStatus().equals(ChallengeStatus.STARTED)) {
                         existingSolution.setSolutionDocument(solutionDocuments);
-                        existingSolution.setStatus(challengeStatus);
+                        existingSolution.setStatus(ChallengeStatus.STARTED);
                         return userSolutionRepository.save(existingSolution);
                     }
-                    return Mono.just(existingSolution); // Return the existing solution if not modified
+                    return Mono.just(existingSolution);
                 })
+
                 .switchIfEmpty(Mono.defer(() -> {
-                    if (challengeStatus == ChallengeStatus.SENT) {
-                        UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
-                                .uuid(UUID.randomUUID())
-                                .userId(userUuid)
-                                .challengeId(challengeUuid)
-                                .languageId(languageUuid)
-                                .solutionDocument(solutionDocuments)
-                                .status(ChallengeStatus.SCORE_PENDING)
-                                .build();
-                        return userSolutionRepository.save(userSolutionDocument);
+                    UserSolutionDocument newUserSolution = UserSolutionDocument.builder()
+                            .uuid(UUID.randomUUID())
+                            .userId(userUuid)
+                            .challengeId(challengeUuid)
+                            .languageId(languageUuid)
+                            .solutionDocument(solutionDocuments)
+                            .status(updatedChallengeStatus)
+                            .build();
+                    log.info("Existing solution not found. Status : {}", updatedChallengeStatus);
+                    if (updatedChallengeStatus == ChallengeStatus.STARTED) { // No existing solution found (EMPTY -> STARTED)
+                        log.info("UpdatedChallenge status is STARTED(former EMPTY). Status : {}", updatedChallengeStatus);
+                        log.info("STARTED(former EMPTY). firstUserSolutionDocument : {}", newUserSolution);
+
+                        return userSolutionRepository.save(newUserSolution);
+                    } else if (updatedChallengeStatus == ChallengeStatus.SENT) {
+                        log.info("Challenge status is SENT Status : {}", updatedChallengeStatus);
+                        newUserSolution.setStatus(ChallengeStatus.SCORE_PENDING);
+                        log.info("Request to be sent, status is SCORE-PENDING Status : {}", newUserSolution.getStatus());
+
+                        return userSolutionRepository.save(newUserSolution)
+                                .then(Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getSolutionText())
+                                        .thenCompose(data -> {
+                                            newUserSolution.setStatus(ChallengeStatus.ENDED);
+                                            log.info("ResponseReceived status is now ENDED: {}", newUserSolution.getStatus());
+                                            newUserSolution.setScore(data.getScore());
+                                            newUserSolution.setErrors(data.getErrors());
+                                            log.info("New User Solution Document after receiving score: {}", newUserSolution);
+                                            return userSolutionRepository.save(newUserSolution).toFuture();
+                                        }))
+                                )
+                                .doOnError(e -> log.error("Error updating solution status", e))
+                                .onErrorMap(e -> new IllegalArgumentException("Error updating solution status", e));
                     }
                     return Mono.empty();
                 }));
     }
     public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
+
         return zmqClient.sendMessage(request, ScoreResponseDto.class)
                 .thenApply(response -> {
                     ScoreResponseDto responseDto = (ScoreResponseDto) response;

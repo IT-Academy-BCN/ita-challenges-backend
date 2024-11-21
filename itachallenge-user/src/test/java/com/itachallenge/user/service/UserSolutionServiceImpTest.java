@@ -28,6 +28,7 @@ import reactor.test.StepVerifier;
 
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -74,7 +75,8 @@ class UserSolutionServiceImpTest {
                 .challengeId(idChallenge)
                 .languageId(idLanguage)
                 .status("ENDED")
-                .solutionText(solutionText).build();
+                .solutionText(solutionText)
+                .build();
         userSolutionDocument = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
@@ -228,28 +230,78 @@ class UserSolutionServiceImpTest {
         verifyNoMoreInteractions(userSolutionRepository);
     }
 
-    @DisplayName("saveValidSolution modifies existing solution when status is STARTED")
+    @DisplayName("addSolution changes status from EMPTY to STARTED and saves the solution")
     @Test
-    void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
-        UUID localUserUuid = UUID.randomUUID();
-        UUID localChallengeUuid = UUID.randomUUID();
-        UUID localLanguageUuid = UUID.randomUUID();
-        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
-        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+    void addSolutionChangesStatusFromEmptyToStartedAndSavesSolution() {
+        userSolutionDto.setStatus("EMPTY");
+
+        UUID solutionDocUuid = UUID.randomUUID();
+        List<SolutionDocument> solutionDocuments = List.of( SolutionDocument.builder()
+                .uuid(solutionDocUuid)
+                .solutionText(userSolutionDto.getSolutionText())
+                .build()
+        );
+        UserSolutionDocument savedDocument = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .solutionDocument(solutionDocuments)
                 .status(ChallengeStatus.STARTED)
                 .build();
 
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
-                .thenReturn(Mono.just(existingSolution));
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(existingSolution));
+                .thenReturn(Mono.just(savedDocument));
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid,challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
 
-        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.STARTED, solutionDocuments))
-                .expectNextMatches(savedDocument -> savedDocument.getSolutionDocument().equals(solutionDocuments))
+        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
+                .expectNextMatches(savedSolution ->
+                                savedSolution.getStatus().equals("STARTED") &&
+                                savedSolution.getStatus().equals(savedDocument.getStatus().getValue()) &&
+                                savedSolution.getUserId().equals(userSolutionDto.getUserId()) &&
+                                savedSolution.getUserId().equals(savedDocument.getUserId().toString()) &&
+                                savedSolution.getSolutionText().equals(userSolutionDto.getSolutionText()) &&
+                                savedSolution.getSolutionText().equals(savedDocument.getSolutionDocument().getFirst().getSolutionText())
+                        )
                 .verifyComplete();
 
-        verify(userSolutionRepository).save(existingSolution);
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
+
+    @DisplayName("ChallengeStatus fromValue method correctly maps string values to enum")
+    @Test void challengeStatusFromValueWorksCorrectly() {
+        assertEquals(ChallengeStatus.STARTED, ChallengeStatus.fromValue("STARTED"));
+        assertEquals(ChallengeStatus.EMPTY, ChallengeStatus.fromValue("EMPTY"));
+        assertEquals(ChallengeStatus.SENT, ChallengeStatus.fromValue("SENT"));
+        assertEquals(ChallengeStatus.SCORE_PENDING, ChallengeStatus.fromValue("SCORE_PENDING"));
+        assertEquals(ChallengeStatus.ENDED, ChallengeStatus.fromValue("ENDED"));
+        assertThrows(IllegalArgumentException.class, () -> ChallengeStatus.fromValue("INVALID_STATUS"));
+    }
+
+
+    @DisplayName("saveValidSolution updates existing solution when status is STARTED")
+    @Test
+    void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
+        userSolutionDocument.setStatus(ChallengeStatus.STARTED);
+        userSolutionDocument.setSolutionDocument(List.of(SolutionDocument.builder().solutionText("Old solution").build()));
+
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("Updated solution").build());
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(userSolutionDocument));
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenReturn(Mono.just(userSolutionDocument));
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.STARTED, solutionDocuments))
+                .expectNextMatches(savedDocument ->
+                        savedDocument.getStatus().equals(ChallengeStatus.STARTED) &&
+                        savedDocument.getSolutionDocument().getFirst().getSolutionText().equals("Updated solution"))
+                .verifyComplete();
+
+        verify(userSolutionRepository).save(userSolutionDocument);
+    }
+
     @Test
     void testAddSolutionWithNullStatus() {
         UserSolutionDto localUserSolutionDto = new UserSolutionDto();
@@ -282,37 +334,62 @@ class UserSolutionServiceImpTest {
                 .verify();
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
-    @DisplayName("saveValidSolution creates new solution when status is SENT")
+
+    @DisplayName("saveValidSolution processes and saves solution when status is SENT")
     @Test
-    void saveValidSolutionCreatesNewSolutionWhenStatusIsSent() {
-        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+    void saveValidSolutionProcessesAndSavesSolutionWhenStatusIsSent() {
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .solutionText("New solution")
+                .build());
+
         ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
         scoreResponseDto.setScore(100);
         scoreResponseDto.setErrors("No errors");
 
-        UserSolutionDocument newUserSolutionDocument = UserSolutionDocument.builder()
+        UserSolutionDocument newSolution = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionDocument(solutionDocuments)
-                .status(ChallengeStatus.SENT)
-                .score(100)  // Set the score
-                .errors("No errors")
+                .status(ChallengeStatus.SCORE_PENDING)
                 .build();
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(newUserSolutionDocument));
+                .thenAnswer(invocation -> {
+                            UserSolutionDocument newUserSolutionDocument = invocation.getArgument(0);
+                            if (newUserSolutionDocument.getStatus() == ChallengeStatus.SCORE_PENDING) {
+                                return Mono.just(newSolution);
+                            } else if (newUserSolutionDocument.getStatus() == ChallengeStatus.ENDED) {
+                                return Mono.just(UserSolutionDocument.builder()
+                                        .uuid(UUID.randomUUID())
+                                        .userId(newUserSolutionDocument.getUserId())
+                                        .challengeId(newUserSolutionDocument.getChallengeId())
+                                        .languageId(newUserSolutionDocument.getLanguageId())
+                                        .solutionDocument(newUserSolutionDocument.getSolutionDocument())
+                                        .status(newUserSolutionDocument.getStatus())
+                                        .score(100)
+                                        .errors("No errors")
+                                        .build());
+                            }
+                            return Mono.just(newUserSolutionDocument);
+                        });
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(scoreResponseDto));
 
         StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.SENT, solutionDocuments))
-                .expectNextMatches(savedDocument -> savedDocument.getScore() == 100 && "No errors".equals(savedDocument.getErrors()))
+                .expectNextMatches(savedDocument ->
+                        savedDocument.getStatus().equals(ChallengeStatus.ENDED) &&
+                        savedDocument.getScore() == 100 &&
+                        savedDocument.getErrors().contains("No errors"))
                 .verifyComplete();
 
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verify(userSolutionRepository, times(2)).save(any(UserSolutionDocument.class));
     }
+
     @DisplayName("saveValidSolution returns existing solution when status is not modified")
     @Test
     void saveValidSolutionReturnsExistingSolutionWhenStatusIsNotModified() {
