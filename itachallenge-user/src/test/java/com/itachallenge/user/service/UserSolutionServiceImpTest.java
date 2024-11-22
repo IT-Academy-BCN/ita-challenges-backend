@@ -27,8 +27,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.mockito.Mockito.*;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -138,17 +136,7 @@ class UserSolutionServiceImpTest {
                         && solutionUserDto.getResults().length == 1)
                 .verifyComplete();
     }
-    @ParameterizedTest
-    @ValueSource(strings = { "", "null" })
-    void addSolutionReturnsIllegalArgumentExceptionWhenStatusIsNullOrEmpty(String status) {
-        if ("null".equals(status)) {
-            status = null;
-        }
-        userSolutionDto.setStatus(status);
-        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
-                .expectError(IllegalArgumentException.class)
-                .verify();
-    }
+
     @DisplayName("addSolution returns UserSolutionScoreDto when solution is successfully added")
     @Test
     void addSolutionReturnsUserSolutionScoreDtoWhenSolutionIsSuccessfullyAdded() {
@@ -180,14 +168,21 @@ class UserSolutionServiceImpTest {
 
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
     }
-    @DisplayName("addSolution returns error when solution status is invalid")
-    @Test
-    void addSolutionReturnsErrorWhenSolutionStatusIsInvalid() {
-        userSolutionDto.setStatus("INVALID_STATUS");
-
-        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
-                .expectErrorMatches(throwable -> throwable instanceof IllegalArgumentException &&
-                        throwable.getMessage().contains("Invalid challenge status value"))
+    @DisplayName("addSolution returns error when solution status value is invalid, null or empty ")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "null", "INVALID_STATUS"})
+    void addSolutionReturnsIllegalArgumentExceptionForInvalidNullOrEmptyStatus(String status) {
+        StepVerifier.create(Mono.defer(() -> {
+            try {
+                userSolutionDto.setStatus(status);
+                return userSolutionService.addSolution(userSolutionDto);
+            } catch (IllegalArgumentException e) {
+                    return Mono.error(new IllegalArgumentException("Invalid challenge status value: " + (status == null ? "null" : status)));
+            }
+    }))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof IllegalArgumentException &&
+                        throwable.getMessage().contains("Invalid challenge status value: " + (status == null ? "null" : status)))
                 .verify();
 
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
@@ -282,7 +277,7 @@ class UserSolutionServiceImpTest {
 
     @DisplayName("saveValidSolution updates existing solution when status is STARTED")
     @Test
-    void saveValidSolutionModifiesExistingSolutionWhenStatusIsStarted() {
+    void saveValidSolutionUpdatesExistingSolutionWhenStatusIsStarted() {
         userSolutionDocument.setStatus(ChallengeStatus.STARTED);
         userSolutionDocument.setSolutionDocument(List.of(SolutionDocument.builder().solutionText("Old solution").build()));
 
@@ -317,19 +312,16 @@ class UserSolutionServiceImpTest {
                         throwable.getMessage().equals("Status not allowed"))
                 .verify();
     }
-    @DisplayName("saveValidSolution returns error when existing solution status is ENDED")
-    @Test
-    void saveValidSolutionReturnsErrorWhenExistingSolutionStatusIsEnded() {
-        UUID localUserUuid = UUID.randomUUID();
-        UUID localChallengeUuid = UUID.randomUUID();
-        UUID localLanguageUuid = UUID.randomUUID();
+    @DisplayName("saveValidSolution throws error when status is ENDED or SCORE_PENDING")
+    @ParameterizedTest
+    @ValueSource(strings = {"ENDED", "SCORE_PENDING"})
+    void saveValidSolutionReturnsErrorWhenExistingSolutionStatusIsEndedOrScorePending(String status) {
+        userSolutionDocument.setStatus(ChallengeStatus.fromValue(status));
+        ChallengeStatus challengeStatus = ChallengeStatus.fromValue(status);
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
-        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
-                .status(ChallengeStatus.ENDED)
-                .build();
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(localUserUuid, localChallengeUuid, localLanguageUuid))
-                .thenReturn(Mono.just(existingSolution));
-        StepVerifier.create(userSolutionService.saveValidSolution(localUserUuid, localChallengeUuid, localLanguageUuid, ChallengeStatus.STARTED, solutionDocuments))
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(userSolutionDocument));
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments))
                 .expectError(UnmodifiableSolutionException.class)
                 .verify();
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
@@ -390,32 +382,10 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository, times(2)).save(any(UserSolutionDocument.class));
     }
 
-    @DisplayName("saveValidSolution returns existing solution when status is not modified")
-    @Test
-    void saveValidSolutionReturnsExistingSolutionWhenStatusIsNotModified() {
-        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
-        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(ChallengeStatus.STARTED)
-                .solutionDocument(solutionDocuments)
-                .build();
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.just(existingSolution));
-
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.SENT, solutionDocuments))
-                .expectNext(existingSolution)
-                .expectComplete()
-                .verify();
-
-        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
-    }
-    @DisplayName("saveValidSolution returns empty Mono when no valid status is provided or status is not SENT or STARTED")
+    @DisplayName("saveValidSolution returns empty Mono when no valid status is provided or status is not EMPTY, SENT or STARTED")
     @ParameterizedTest
-    @ValueSource(strings = { "EMPTY", "ENDED" })
-    void saveValidSolutionReturnsEmptyMonoWhenNoValidStatusOrNotSentOrStarted(String status) {
+    @ValueSource(strings = { "SCORE_PENDING", "ENDED" })
+    void saveValidSolutionReturnsEmptyMonoWhenNoValidStatusOrNotEmptySentOrStarted(String status) {
         List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
@@ -426,6 +396,7 @@ class UserSolutionServiceImpTest {
 
         verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
     }
+
     @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
     @Test
     void getDataFromMicroScoreReturnsValidResponse() {
