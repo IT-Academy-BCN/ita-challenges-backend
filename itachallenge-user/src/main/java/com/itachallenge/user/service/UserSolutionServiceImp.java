@@ -30,13 +30,14 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
 
-    private final BuildUserStatisticsDto buildUserStatistics;
+    private final BuildUserStatisticsDto buildUserStatisticsDto;
     SecureRandom random = new SecureRandom();
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
 
-    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter) {
+    public UserSolutionServiceImp(IUserSolutionRepository userSolutionRepository, ConverterDocumentToDto converter, BuildUserStatisticsDto buildUserStatisticsDto) {
         this.userSolutionRepository = userSolutionRepository;
         this.converter = converter;
+        this.buildUserStatisticsDto = buildUserStatisticsDto;
     }
 
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
@@ -225,7 +226,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     /*
         Add Method Description
 
-        Refactorizar DTO
      */
 
     // DUDA
@@ -239,7 +239,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         UUID userUuid = UUID.fromString(idUser);
         UUID languageUuid = UUID.fromString(idLanguage);
 
-        // Usamos el método centralizado para manejar los errores y hacer las consultas
+        // A centralized method ("countChallengesWithErrorHandling()") is used to handle errors and perform the queries.
         Mono<Long> completedChallengesMono = countChallengesWithErrorHandling(
                 userSolutionRepository::countChallengesByStatusAndLanguage,
                 userUuid, languageUuid, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
@@ -256,16 +256,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 userSolutionRepository::countByChallengeStatusAndLanguageAndScoreAmount,
                 userUuid, languageUuid, List.of(ChallengeStatus.ENDED));
 
-
         return Mono.zip(completedChallengesMono, savedChallenesMono, scorePendingChallengesMono, passedChallengesMono)
-                .map(tuple -> fromUserTotalStatisticsToDto (userUuid, languageUuid, tuple))
+                .map(tuple -> buildUserStatisticsDto.fromUserTotalStatisticsToDto (userUuid, languageUuid, tuple))
                 .onErrorResume(DataAccessResourceFailureException.class, e -> {
                     log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
                     return Mono.error(new DataAccessResourceFailureException("Error accessing the database for user: " + userUuid, e));
-                });
-
-
-
                 })
                 // Manejo de excepciones generales en caso de que algo falle en las consultas
                 .onErrorResume(DataAccessResourceFailureException.class, e -> {
@@ -283,16 +278,19 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
 
     }
-    // Método que centraliza las consultas del repositorio con manejo de errores
+    // Method that centralizes repository queries with error handling.
+    // The TriFunction is used to create a single method that handles all database queries.
+    // (One of the TriFunction´arguments is the repository method itself)
     private Mono<Long> countChallengesWithErrorHandling(
             TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repositoryMethod,
             UUID userUuid,
             UUID languageUuid,
             List<ChallengeStatus> statuses) {
 
-        // Llamar al método del repositorio proporcionado, pasando los parámetros adecuados.
+        // Call the provided repository method, passing the appropriate parameters.
         return repositoryMethod.apply(userUuid, languageUuid, statuses)
-                .onErrorReturn(-1L); // Si ocurre un error, devolvemos -1L.
+                .onErrorReturn(-1L); // If an error occurs, returns -1L.
+
     }
 
 

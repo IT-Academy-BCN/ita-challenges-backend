@@ -27,16 +27,6 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByChallengeIdAndStatus(UUID challengeId, ChallengeStatus status);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
-
-//    @Query ("{'solutions.userId' : ?1, 'solutions.idLanguage' : ?2, 'solutions.status' : ?3}")
-//    Mono<Long> countChallengesByStatusAndLanguage (UUID userId, UUID idLanguage, ChallengeStatus status);
-//    @Query ("{'solutions.userId' : ?1, 'solutions.idLanguage' : ?2, 'solutions.status' : {$in: [?3, ?4]}}")
-//    Mono<Long> countChallengesByStatusInTwoAndLanguage (UUID userId, UUID idLanguage, ChallengeStatus status1,
-//                                                        ChallengeStatus status2);
-//    @Query("{'solutions.userId': ?1, 'solutions.idLanguage': ?2, 'solutions.status': {$in: [?3, ?4, ?5]}}")
-//    Mono<Long> countChallengesByStatusInThreeAndLanguage (UUID userId, UUID idLanguage, ChallengeStatus status1,
-//                                                          ChallengeStatus status2, ChallengeStatus status3);
-
     @Query ("{'solutions.userId' : ?1, 'solutions.languages.idLanguage' : ?2, 'solutions.status': {$in: ?3}" +
             " 'solutions.score': {$gte: 75}}")
     Mono<Long> countByChallengeStatusAndLanguageAndScoreAmount (UUID idUser, UUID idLanguage, List<ChallengeStatus> status);

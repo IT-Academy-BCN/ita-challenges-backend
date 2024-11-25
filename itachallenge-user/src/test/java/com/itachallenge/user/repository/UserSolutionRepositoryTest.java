@@ -260,4 +260,18 @@ public class UserSolutionRepositoryTest {
                 .verify();
 
     }
+
+    @DisplayName("Returns total solutions by idLanguage and status STARTED")
+    @Test
+    void testCountChallengesByStatusSTARTEDAndLanguage() {
+
+        List<ChallengeStatus> testStatuses = List.of(ChallengeStatus.STARTED);
+        long expectedValue = 16L;
+        Mono<Long> amountOfChallengesStarted = userSolutionRepository.countChallengesByStatusAndLanguage(testUserUuid
+                ,testLanguageUuid, testStatuses );
+
+        StepVerifier.create(amountOfChallengesStarted)
+                .expectNext(expectedValue)
+                .verifyComplete();
+    }
 }

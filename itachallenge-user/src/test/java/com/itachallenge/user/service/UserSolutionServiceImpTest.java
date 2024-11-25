@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.helper.BuildUserStatisticsDto;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +41,9 @@ class UserSolutionServiceImpTest {
     IUserSolutionRepository userSolutionRepository;
     @Mock
     private ConverterDocumentToDto converter;
+
+    @Mock
+    private BuildUserStatisticsDto buildUserStatisticsDto;
 
     @InjectMocks
     UserSolutionServiceImp userSolutionService;
@@ -115,7 +119,8 @@ class UserSolutionServiceImpTest {
                 .score(mockScore)
                 .build();
         when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
+        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter,
+                buildUserStatisticsDto);
 
         Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
 
