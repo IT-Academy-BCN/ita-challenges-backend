@@ -50,6 +50,8 @@ For example, the following modules were selected for the initial custom JRE for 
 - jdk.charsets
 - java.desktop
 
+Note: other modules not specified during the process may also be automatically included. This may be due to default and essential modules or to included modules that have internal dependencies that require other modules.
+
 #### 2.2. Run the jlink command
 
 Use ```jlink``` to generate the custom JRE by running the following command inside the container:

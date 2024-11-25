@@ -50,6 +50,8 @@ Per exemple, aquests són els mòduls seleccionats per crear el primer JRE perso
 - jdk.charsets
 - java.desktop
 
+Nota: altres mòduls no especificats durant el procés també poden incloure's automàticament. Això pot deure's a mòduls predeterminats i essencials o a mòduls inclosos que tinguin dependències internes que requereixin d'altres mòduls.
+
 #### 2.2. Executa l'ordre jlink
 
 Fes servir ```jlink``` per generar el JRE personalitzat executant aquesta instrucció dins del contenidor:

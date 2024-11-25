@@ -50,6 +50,8 @@ Por ejemplo, estos son los módulos que se seleccionaron para crear el primer JR
 - jdk.charsets
 - java.desktop
 
+Nota: otros módulos no especificados durante el proceso también pueden incluirse automáticamente. Esto puede deberse a módulos predeterminados y esenciales o a módulos incluidos que tengan dependencias internas que requieran de otros módulos.
+
 #### 2.2. Ejecuta el comando jlink
 
 Usa ```jlink``` para generar el JRE personalizado ejecutando este comando dentro del contenedor:
