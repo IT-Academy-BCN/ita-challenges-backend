@@ -66,3 +66,4 @@
 * Carlos Galan - https://github.com/camilo-arthuro
 * David Urpina -https://github.com/eqqbq
 * Hector Pozo -https://github.com/HectorPozoGuerrero
+* Ignasi Moya - https://github.com/imoyaf
