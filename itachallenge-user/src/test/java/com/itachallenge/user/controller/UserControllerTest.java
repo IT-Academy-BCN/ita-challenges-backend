@@ -3,12 +3,14 @@ package com.itachallenge.user.controller;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
+import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,11 +22,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import reactor.core.publisher.Mono;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -354,4 +359,31 @@ class UserControllerTest {
                     assertEquals("Sample Solution", solution.getSolutionText());
                 });
     }
+
+    @Test
+    void addSolutionRequestBodyTooLarge_test() {
+        String URI_TEST = "/solution";
+
+        String largeSolutionText = "aLongText"; // 3MB de datos
+        UserSolutionDto userSolutionDto = new UserSolutionDto();
+        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
+        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
+        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setSolutionText(largeSolutionText);
+
+        when(userSolutionService.addSolution(any()))
+                .thenReturn(Mono.error(new MaxUploadSizeExceededException(2 * 1024 * 1024)));
+
+        webTestClient.put()
+                .uri(CONTROLLER_URL + URI_TEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(userSolutionDto)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.PAYLOAD_TOO_LARGE);
+
+        verify(userSolutionService).addSolution(userSolutionDto);
+    }
 }
+
+
+

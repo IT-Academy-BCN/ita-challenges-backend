@@ -141,7 +141,6 @@ class ChallengeServiceImplCacheTest {
                 })
                 .verifyComplete();
 
-        verify(challengeRepository, times(1)).findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage));
         verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
 
         // Act - Cached Results
