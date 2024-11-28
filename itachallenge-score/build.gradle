@@ -48,7 +48,8 @@ dependencies {
     implementation 'com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer:20211018.1'
     implementation 'org.owasp.esapi:esapi:2.5.4.0'
 
-
+    // Sandbox dependencies
+    implementation 'com.github.docker-java:docker-java:3.4.0'
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
