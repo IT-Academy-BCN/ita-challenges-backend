@@ -49,7 +49,25 @@ dependencies {
     implementation 'org.owasp.esapi:esapi:2.5.4.0'
 
     // Sandbox dependencies
-    implementation 'com.github.docker-java:docker-java:3.4.0'
+
+    // https://osv.dev/vulnerability/GHSA-c43q-5hpj-4crv <-- Known vulnerabilities
+    implementation ('com.github.docker-java:docker-java:3.4.0') {
+        exclude group: 'org.glassfish.jersey.core', module: 'jersey-client'
+        exclude group: 'org.glassfish.jersey.core', module: 'jersey-common'
+    }
+
+    // This versions have the vulnerability patched
+    implementation 'org.glassfish.jersey.core:jersey-client:2.35'
+    implementation 'org.glassfish.jersey.core:jersey-common:2.35'
+
+    /**
+     * Starting from Java 9, the javax.annotation package, which includes javax.annotation.
+     * Priority, is no longer part of the standard Java SE class library.
+     * Jersey and the Docker Java library depend on javax.annotation.Priority for annotations like @Priority.
+     */
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+    // End of Sandbox dependencies
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')
