@@ -17,6 +17,10 @@ public class JavaFileService {
     @Value("${java.file.storage.path}")
     private String storagePath;
 
+    public void setStoragePath(String storagePath) {
+        this.storagePath = storagePath;
+    }
+
     // Método para crear el archivo Java con el código del usuario
     public File createJavaFile(String userCode, String fileName) throws IOException {
         // Usamos File.separator para construir la ruta de manera segura

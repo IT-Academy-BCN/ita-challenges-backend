@@ -81,4 +81,6 @@ docker:
 java:
   file:
     storage:
-      path: /tmp/java-files
+      path: C:\\temp\\java-files
+  uri:
+    file-path: C:\\temp\\java-files\\UserSolution.java

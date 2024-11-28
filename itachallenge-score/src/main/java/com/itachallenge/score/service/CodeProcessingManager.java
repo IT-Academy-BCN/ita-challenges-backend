@@ -9,11 +9,11 @@ import com.itachallenge.score.util.ExecutionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import java.io.File;
 
+import java.io.File;
 import java.io.IOException;
 
 @Component
@@ -23,25 +23,26 @@ public class CodeProcessingManager {
 
     private final Filter filterChain;
     private final DockerExecutor dockerExecutor;
-    private final JavaFileService javaFileService; // Inyección del servicio para crear archivos Java
+    private final JavaFileService javaFileService;
+
+    @Value("${java.uri.file-path}")
+    private String filePath; // Inject the customizable URI
 
     @Autowired
     public CodeProcessingManager(Filter filterChain, DockerExecutor dockerExecutor, JavaFileService javaFileService) {
         this.filterChain = filterChain;
         this.dockerExecutor = dockerExecutor;
-        this.javaFileService = javaFileService; // Inyectamos el servicio
+        this.javaFileService = javaFileService;
     }
 
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
 
-        String sourceCode = scoreRequest.getSolutionText(); // El código del usuario
-        String[] arguments = {"5", "7"}; // Parámetros de entrada del reto
-        String resultExpected = "12"; // Resultado esperado del reto
+        String sourceCode = scoreRequest.getSolutionText();
+        String[] arguments = {"5", "7"};
+        String resultExpected = "12";
 
-        // Aplicamos los filtros al código del usuario
         ExecutionResult executionResult = filterChain.apply(sourceCode);
 
-        // Si no pasa los filtros, devolvemos un puntaje de 0
         if (!executionResult.isSuccess()) {
             ScoreResponse scoreResponse = new ScoreResponse();
             scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
@@ -53,14 +54,10 @@ public class CodeProcessingManager {
             return ResponseEntity.ok(scoreResponse);
         }
 
-        // Si el código pasa los filtros, generamos el archivo Java
         File javaFile;
         try {
-            // Ruta en el host, mapeada a la ruta en el contenedor Docker
-            String filePath = "/tmp/java-files/UserSolution.java"; // Ajusta según la configuración de tu Docker
             javaFile = javaFileService.createJavaFile(sourceCode, filePath);
         } catch (IOException e) {
-            // Si hay un error al generar el archivo, retornamos 0 y el mensaje de error
             ScoreResponse scoreResponse = new ScoreResponse();
             scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
             scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
@@ -71,10 +68,8 @@ public class CodeProcessingManager {
             return ResponseEntity.ok(scoreResponse);
         }
 
-        // Ejecutamos el código en el contenedor Docker
         try {
-            // Ejecutamos el archivo Java en Docker con los parámetros proporcionados
-            executionResult = dockerExecutor.execute(javaFile.getAbsolutePath(), arguments); // Ejecutamos el archivo generado
+            executionResult = dockerExecutor.execute(javaFile.getAbsolutePath(), arguments);
         } catch (IOException e) {
             ScoreResponse scoreResponse = new ScoreResponse();
             scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
@@ -89,7 +84,6 @@ public class CodeProcessingManager {
             throw new DockerExecutionException("Execution interrupted", e);
         }
 
-        // Generamos la respuesta con el puntaje
         ScoreResponse scoreResponse = new ScoreResponse();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
@@ -99,7 +93,6 @@ public class CodeProcessingManager {
         scoreResponse.setCompilationMessage(executionResult.getMessage().trim());
         scoreResponse.setScore(score);
 
-        // Logueamos el resultado
         if (executionResult.getMessage().contains("TIMED OUT")) {
             log.info(scoreResponse.getCompilationMessage());
         } else {
