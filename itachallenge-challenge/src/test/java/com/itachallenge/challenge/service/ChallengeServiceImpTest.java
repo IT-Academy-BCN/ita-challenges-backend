@@ -7,6 +7,7 @@ import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -134,7 +135,7 @@ class ChallengeServiceImpTest {
         StepVerifier.create(result)
                 .expectErrorMatches(error ->
                         error instanceof ChallengeNotFoundException
-                        && error.getMessage().equals("Challenge with id " + id + " not found.")
+                                && error.getMessage().equals("Challenge with id " + id + " not found.")
                 );
     }
 
@@ -282,11 +283,14 @@ class ChallengeServiceImpTest {
         SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
         SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
         List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+        LanguageDocument languageDocument = new LanguageDocument();
+        languageDocument.setIdLanguage(languageId);
 
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
         when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
+        when(languageRepository.findByIdLanguage(languageId)).thenReturn(Mono.just(languageDocument));
 
         // Act
         Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
@@ -343,9 +347,12 @@ class ChallengeServiceImpTest {
         // Arrange
         String nonExistentChallengeStringId = "2f948de0-6f0c-4089-90b9-7f70a0812322";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        LanguageDocument languageDocument = new LanguageDocument();
+        languageDocument.setIdLanguage(UUID.fromString(languageStringId));
 
         // Simulate that the challenge with the specified UUID is not found
         when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.empty());
+        when(languageRepository.findByIdLanguage(UUID.fromString(languageStringId))).thenReturn(Mono.just(languageDocument));
 
         // Act & Assert
         StepVerifier.create(challengeService.getSolutions(nonExistentChallengeStringId, languageStringId))
@@ -420,9 +427,12 @@ class ChallengeServiceImpTest {
         SolutionDto solutionDto = new SolutionDto(solutionId, "Solution 1", languageId, challengeId);
         ChallengeDocument challengeDocument = new ChallengeDocument();
         challengeDocument.setUuid(challengeId);
+        LanguageDocument languageDocument = new LanguageDocument();
+        languageDocument.setIdLanguage(languageId);
 
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
+        when(languageRepository.findByIdLanguage(languageId)).thenReturn(Mono.just(languageDocument));
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solution));
         when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(solutionDto));
 
@@ -604,7 +614,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void getTestingParamsByChallengeIdAndLanguageId_invalidLanguageId_ChallengeNotFoundExceptionThrown() {
+    void getTestingParamsByChallengeIdAndLanguageId_invalidLanguageId_LanguageNotFoundExceptionThrown() {
         // Arrange
         UUID challengeId = UUID.randomUUID();
         UUID languageId = UUID.randomUUID();
@@ -620,7 +630,7 @@ class ChallengeServiceImpTest {
 
         // Assert
         StepVerifier.create(result)
-                .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("Language " + anotherLanguageId + " not found in Challenge " + challengeId))
+                .expectErrorMatches(error -> error instanceof LanguageNotFoundException)
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
@@ -697,4 +707,87 @@ class ChallengeServiceImpTest {
                 })
                 .verifyComplete();
     }
+
+    @Test
+    void updateResourceByUuid_Success() {
+        // Arrange
+        String resourceId = UUID.randomUUID().toString();
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("fieldName", "newValue");
+
+        ChallengeDocument resource = new ChallengeDocument();
+        resource.setUuid(UUID.fromString(resourceId));
+
+        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.just(resource));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(resource));
+
+        // Act
+        Mono<String> result = challengeService.updateResourceByUuid(resourceId, updates);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNext("Resource updated successfully")
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).findByUuid(any(UUID.class));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+    }
+
+    @Test
+    void updateResourceByUuid_ResourceNotFound() {
+        // Arrange
+        String resourceId = UUID.randomUUID().toString();
+        Map<String, Object> updates = new HashMap<>();
+
+        when(challengeRepository.findByUuid(any(UUID.class))).thenReturn(Mono.empty());
+
+        // Act
+        Mono<String> result = challengeService.updateResourceByUuid(resourceId, updates);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(ResourceNotFoundException.class)
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(any(UUID.class));
+        verify(challengeRepository, times(0)).save(any(ChallengeDocument.class));
+    }
+
+    @Test
+    void updateResourceByUuid_InvalidUUID() {
+
+        String invalidUUID = "invalidUUID";
+        Map<String, Object> updates = new HashMap<>();
+
+
+        Mono<String> result = challengeService.updateResourceByUuid(invalidUUID, updates);
+
+        StepVerifier.create(result)
+                .expectError(BadUUIDException.class)
+                .verify();
+
+        verify(challengeRepository, times(0)).findByUuid(any(UUID.class));
+        verify(challengeRepository, times(0)).save(any(ChallengeDocument.class));
+    }
+
+    @Test
+    void updateChallenge_Success() {
+
+        UUID resourceId = UUID.randomUUID();
+        Set<UUID> resources = new HashSet<>();
+        resources.add(resourceId);
+        ChallengeDocument challenge = new ChallengeDocument();
+        challenge.setResources(resources);
+
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challenge));
+
+        Mono<ChallengeDocument> result = challengeService.updateChallenge(challenge, resourceId);
+
+        StepVerifier.create(result)
+                .expectNextMatches(updatedChallenge -> updatedChallenge.getResources().isEmpty())
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+    }
+
 }
