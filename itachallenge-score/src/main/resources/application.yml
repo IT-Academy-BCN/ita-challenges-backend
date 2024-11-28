@@ -77,3 +77,8 @@ docker:
       } 
     }"
   timeout-seconds: 5
+
+java:
+  file:
+    storage:
+      path: /tmp/java-files
