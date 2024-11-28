@@ -20,8 +20,7 @@ public class DockerOptimizedExecutor implements IDockerExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(DockerOptimizedExecutor.class);
 
-    private static final String imageName = "registry.hub.docker.com/library/hello-world:latest"; // TODO Just for testing purposes, here we will add the actual image from teh registry
-
+    private static final String imageName = "hello-world:latest"; // TODO Just for testing purposes, here we will add the actual image from teh registry
 
 
     // State
@@ -102,7 +101,7 @@ public class DockerOptimizedExecutor implements IDockerExecutor {
     private void pullImageFromRegistry(AuthConfig authConfig) throws InterruptedException {
 
         dockerClient.pullImageCmd(imageName)
-                .withAuthConfig(authConfig)
+                // TODO Use the appropriate credentials to authenticate the pull .withAuthConfig(authConfig)
                 .exec(pullImageResultCallback) // TODO This bean is a mock
                 .awaitCompletion(); // TODO This should be consented with the architect
 
