@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -25,4 +26,5 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByChallengeIdAndStatus(UUID challengeId, ChallengeStatus status);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
+    Flux<UserSolutionDocument> findByStatusIn(List<ChallengeStatus> statuses);
 }
