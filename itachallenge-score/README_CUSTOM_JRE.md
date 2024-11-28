@@ -126,7 +126,7 @@ tar -xvzf "C:\Users\Michel\Desktop\custom-jre\custom-jre.tar.gz" -C "C:\Users\Mi
 - Select "7-Zip > Extract Here". This will extract the ```custom-jre.tar``` file.
 - Repeat the process for the ```custom-jre.tar``` file to obtain the final ```custom-jre``` folder.
 
-#### 3.5.  Verify the modules in your custom JRE
+#### 3.5. Verify the modules in your custom JRE
 
 Navigate to the ```custom-jre\legal``` folder and check that all the required modules are included.
 
@@ -135,6 +135,85 @@ Navigate to the ```custom-jre\legal``` folder and check that all the required mo
 If everything looks correct, so you don’t need to recreate the JRE, return to the previous terminal (inside the container) and run the ```exit``` command.
 Exiting the container will automatically delete it due to the ```--rm``` flag used when creating the container.
 
+## **5. Test the Custom JRE**
+
+Once you have created and extracted the custom JRE, it’s essential to verify that it works correctly.
+This project includes several pre-created test classes to help you validate its functionality (located in ```itachallenge-score/custom-jre/test```).
+
+#### 5.1. Set up the Dockerfile
+
+Create the following Dockerfile to test the custom JRE:
+
+```bash
+# Use Alpine as base (you can adjust the version)
+FROM alpine:latest
+
+# Copy the custom JRE into the container
+COPY custom-jre /custom-jre
+
+# Set the JAVA_HOME environment variable to the custom JRE
+ENV JAVA_HOME=/custom-jre
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the precompiled class into the container (e.g., HelloWorld.class)
+COPY HelloWorld.class /app/
+
+# Default command to execute the program (update this to match your class)
+CMD ["java", "HelloWorld"]
+```
+
+#### 5.2. Prepare your testing environment
+
+Create a test folder on your local machine. For example, create a folder called ```test``` (or any name you prefer) and place the following items in it:
+- The decompressed folder of your custom JRE (```custom-jre```).
+- The precompiled class you want to test, such as ```HelloWorld.class``` (you can compile it using the terminal with the ```javac``` command).
+- The Dockerfile created in the previous step.
+
+Your local folder structure should look like this:
+
+```bash
+test/
+├── custom-jre/
+├── HelloWorld.class
+├── Dockerfile
+```
+
+#### 5.3. Build the Docker image
+
+Navigate to the ```test``` folder from your terminal and run the following command to build the Docker image:
+
+```bash
+docker build -t custom-alpine-jre-test .
+```
+
+This command creates a new Docker image named ```custom-alpine-jre-test``` based on your custom JRE.
+
+#### 5.4. Run and test the custom JRE
+
+Once the image is successfully built, use the following command to run it:
+
+```bash
+docker run --rm custom-alpine-jre
+```
+
+If the JRE is working correctly, you should see the program's output in the terminal, for example:
+
+```bash
+Hello world!
+```
+
+If the program you’re testing contains a potentially dangerous class or functionality that relies on a module excluded from your custom JRE, you’ll encounter an execution error similar to this one:
+
+```bash
+Error: Could not find or load main class <MissingClass>
+Caused by: java.lang.NoClassDefFoundError: <ClassName>
+```
+
+This message indicates which specific class is missing. For example, if the error mentions ```javax.transaction.xa.XAResource```, it means the module ```java.transaction.xa``` was excluded during the JRE creation process.
+
 ## **Additional notes**
 
 - Ensure you have the necessary permissions on your system to execute Docker commands and extract files properly.
@@ -142,3 +221,9 @@ Exiting the container will automatically delete it due to the ```--rm``` flag us
 - This process can be repeated as many times as needed if you need to create a new JRE or adjust the results.
 
 - When adding the custom JRE to your project, do not forget to check all the files in the JRE directory and subdirectories. Some files may be automatically added to ```.gitignore```. If this happens, right-click the file in your IDE and select "Git > Add" to include it in the repository.
+
+- Remember to compile the test class with ```javac``` before testing and to update the Dockerfile to match the class you’re testing.
+
+- You can test different compiled classes by repeating these steps and replacing ```HelloWorld.class``` with another ```.class``` file of your choice.
+
+- Make sure the file paths in the Dockerfile match the names and locations of your actual files.

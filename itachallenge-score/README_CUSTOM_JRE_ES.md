@@ -163,7 +163,6 @@ COPY HelloWorld.class /app/
 
 # Comando por defecto para ejecutar el programa (recuerda indicar la clase correcta)
 CMD ["java", "HelloWorld"]
-
 ```
 
 #### 5.2. Prepara tu entorno de pruebas
