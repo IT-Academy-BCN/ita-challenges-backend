@@ -1,45 +1,44 @@
 package com.itachallenge.user.helper;
 
+import ch.qos.logback.classic.Logger;
 import com.itachallenge.user.dtos.UsersTotalStatisticsDto;
 import org.springframework.stereotype.Component;
 import reactor.util.function.Tuple4;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @Component
 public class BuildUserStatisticsDto {
+    private static final long ERROR_VALUE = -1L;
+    private Logger log;
 
-    public UsersTotalStatisticsDto fromUserTotalStatisticsToDto (UUID userUuid, UUID languageUuid,
-                                                                       Tuple4<Long, Long, Long, Long> tuple ) {
-
-        // Crear el DTO con los valores obtenidos
-//        UsersTotalStatisticsDto totalStatisticsDto = new UsersTotalStatisticsDto();
-//        totalStatisticsDto.setUserUuid(userUuid);
-//        totalStatisticsDto.setLanguageUuid(languageUuid);
+    public UsersTotalStatisticsDto fromUserTotalStatisticsToDto (UUID userUuid, UUID languageUuid, long saved,
+                                                                 long completed, long scorePending, long passed ) {
 
         // Asignar los valores a la clase interna ( ChallengesStatistics ) del DTO
         UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics();
-        challengesStatistics.setSaved(tuple.getT1()); // saved
-        challengesStatistics.setCompleted(tuple.getT2()); // completed
-        challengesStatistics.setScorePending(tuple.getT3()); // socrePending
-        challengesStatistics.setPassed(tuple.getT4()); // passed
+        challengesStatistics.setSaved(saved); // saved
+        challengesStatistics.setCompleted(completed); // completed
+        challengesStatistics.setScorePending(scorePending); // socrePending
+        challengesStatistics.setPassed(passed); // passed
 
         // Verificar si hubo algún error en las consultas (indicando que se retornó -1L)
-        boolean errorOccurred = tuple.getT1() == -1L || tuple.getT2() == -1L || tuple.getT3() == -1L || tuple.getT4() == -1L;
-//        totalStatisticsDto.setErrorOccurred(errorOccurred);
+        boolean errorOccurred = saved == ERROR_VALUE || completed == ERROR_VALUE || scorePending == ERROR_VALUE ||
+                passed == ERROR_VALUE;
 
-        // Asignamos el objeto ChallengesStatistics al DTO principal
-//        totalStatisticsDto.setChallengesStatistics(challengesStatistics);
-
+        // Agregar logs para verificar los valores
+        log.debug("Completed Challenges: {}", completed);
+        log.debug("Saved Challenges: {}", saved);
+        log.debug("Score Pending Challenges: {}", scorePending);
+        log.debug("Passed Challenges: {}", passed);
+        
         return UsersTotalStatisticsDto.builder()
                 .userUuid(userUuid)
                 .languageUuid(languageUuid)
                 .challengesStatistics(challengesStatistics)
                 .errorOccurred(errorOccurred)
                 .build();
-
-//        return totalStatisticsDto;
-
     }
 
 }

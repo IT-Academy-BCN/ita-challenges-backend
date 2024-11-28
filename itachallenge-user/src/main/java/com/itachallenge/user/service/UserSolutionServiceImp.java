@@ -257,11 +257,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 userUuid, languageUuid, List.of(ChallengeStatus.ENDED));
 
         return Mono.zip(completedChallengesMono, savedChallenesMono, scorePendingChallengesMono, passedChallengesMono)
-                .map(tuple -> buildUserStatisticsDto.fromUserTotalStatisticsToDto (userUuid, languageUuid, tuple))
-                .onErrorResume(DataAccessResourceFailureException.class, e -> {
-                    log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
-                    return Mono.error(new DataAccessResourceFailureException("Error accessing the database for user: " + userUuid, e));
-                })
+                .map(tuple ->
+                        buildUserStatisticsDto.fromUserTotalStatisticsToDto(userUuid, languageUuid,
+                        tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4())
+                )
                 // Manejo de excepciones generales en caso de que algo falle en las consultas
                 .onErrorResume(DataAccessResourceFailureException.class, e -> {
                     log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
@@ -287,9 +286,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
             UUID languageUuid,
             List<ChallengeStatus> statuses) {
 
+        final long ERROR_VALUE = -1L;
+
+        if (statuses.isEmpty()) { return Mono.just(ERROR_VALUE);}
         // Call the provided repository method, passing the appropriate parameters.
         return repositoryMethod.apply(userUuid, languageUuid, statuses)
-                .onErrorReturn(-1L); // If an error occurs, returns -1L.
+                .onErrorReturn(ERROR_VALUE); // If an error occurs, returns -1L.
 
     }
 

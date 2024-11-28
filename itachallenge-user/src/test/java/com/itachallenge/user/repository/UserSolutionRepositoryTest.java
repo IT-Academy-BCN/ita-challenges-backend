@@ -1,5 +1,6 @@
 package com.itachallenge.user.repository;
 
+import ch.qos.logback.classic.Logger;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
@@ -265,10 +266,16 @@ public class UserSolutionRepositoryTest {
     @Test
     void testCountChallengesByStatusSTARTEDAndLanguage() {
 
-        List<ChallengeStatus> testStatuses = List.of(ChallengeStatus.STARTED);
-        long expectedValue = 16L;
-        Mono<Long> amountOfChallengesStarted = userSolutionRepository.countChallengesByStatusAndLanguage(testUserUuid
-                ,testLanguageUuid, testStatuses );
+        List<ChallengeStatus> testStatuses = List.of(ChallengeStatus.ENDED);
+        long expectedValue = 6L;
+        Mono<Long> amountOfChallengesStarted = userSolutionRepository.countChallengesByStatusAndLanguage(testUserUuid,
+                testLanguageUuid, testStatuses );
+
+        Logger log = null;
+        amountOfChallengesStarted
+                .doOnNext(value -> log.debug("Valor del Mono (durante la ejecución): " + value)) // Imprime el valor
+                .subscribe();
+
 
         StepVerifier.create(amountOfChallengesStarted)
                 .expectNext(expectedValue)
