@@ -4,21 +4,21 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
-import com.github.dockerjava.core.DefaultDockerClientConfig;
-import com.github.dockerjava.okhttp.OkDockerHttpClient;
+import com.github.dockerjava.core.DockerClientConfig;
+import com.github.dockerjava.zerodep.ZerodepDockerHttpClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-import static com.github.dockerjava.core.DockerClientBuilder.getInstance;
 import static com.github.dockerjava.core.DefaultDockerClientConfig.createDefaultConfigBuilder;
+import static com.github.dockerjava.core.DockerClientBuilder.getInstance;
 
 
 @Configuration
 class DockerOptimizedExecutorHelper {
 
     @Bean
-    public PullImageResultCallback debuggingPullImageResultCallback() {
+    public PullImageResultCallback basicPullImageResultCallback() {
 
         return new PullImageResultCallback() {
 
@@ -55,15 +55,15 @@ class DockerOptimizedExecutorHelper {
     @Bean
     public DockerClient basicDockerClient() {
 
-        DefaultDockerClientConfig config = createDefaultConfigBuilder()
-                .build();
+        DockerClientConfig config = createDefaultConfigBuilder().build();
+        // TODO Default Docker daemon is used using auto-detection
+        // TODO Default Docker Hub Registry used
 
-        // Since future versions won't support Jersey we should specify an HTTP client
-        OkDockerHttpClient httpClient = new OkDockerHttpClient.Builder()
+        // Http Client defined since the Jersey one will stop being used in the future
+        ZerodepDockerHttpClient httpClient = new ZerodepDockerHttpClient.Builder()
                 .dockerHost(config.getDockerHost())
                 .build();
 
-        // Build the DockerClient with the specified HTTP client
         return getInstance(config)
                 .withDockerHttpClient(httpClient)
                 .build();
