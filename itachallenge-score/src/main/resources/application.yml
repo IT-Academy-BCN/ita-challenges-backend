@@ -84,3 +84,9 @@ java:
       path: C:\\temp\\java-files
   uri:
     file-path: C:\\temp\\java-files\\UserSolution.java
+
+codeProcessingService:
+  testing_container:
+    image: hello-world:latest
+    volumes: # The path in the host is defined by the java.file.storage.java-files above
+      - ${java.file.storage.path}/opt/scoreUserChallenge
