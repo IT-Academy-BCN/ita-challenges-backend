@@ -212,41 +212,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 
-    public Mono<UserStatisticsDto> getUserStatisticsChallenges(String idLanguage, String idUser) {
-
-        UUID userUuid = UUID.fromString(idUser);
-        UUID languageUuid = UUID.fromString(idLanguage);
-
-        return userSolutionRepository.findByUserId(userUuid)
-                .filter(solution -> solution.getLanguageId().equals(languageUuid))
+    protected Mono<CompletedChallengesDTO[]> getCompletedChallengesStatistics() {
+        return userSolutionRepository.findByStatus(ChallengeStatus.ENDED)
+                .map(userSolution -> new CompletedChallengesDTO(userSolution.getChallengeId(), userSolution.getScore()))
                 .collectList()
-                .flatMap(userSolutions -> {
-                    if (userSolutions == null ||userSolutions.isEmpty())
-                        return Mono.error(new UserSolutionsNotFoundException("No Solutions found"));
-
-                    UserCompletedAndSavedChallengeDto userCompletedChallengeAndSavedDto =
-                            new UserCompletedAndSavedChallengeDto(getUserCompletedChallengesDto(userSolutions),
-                                    getUserSavedChallenges(userSolutions));
-
-                    return Mono.just(new UserStatisticsDto(idUser,idLanguage,userCompletedChallengeAndSavedDto));
-                });
-        // Posible control de error: Error en el procesamiento reactivo
-        //        .onErrorMap(e -> new CustomProcessingException("Error processing user statistics", e));
-
-    }
-    private List<UserCompletedChallengeDto> getUserCompletedChallengesDto(List<UserSolutionDocument> userSolutions) {
-        return userSolutions.stream()
-                .filter(solution -> solution.getStatus() == ChallengeStatus.ENDED)
-                .map(converter::mapUserSolutionDocumentToUserCompletedChallengeDto)
-                .collect(Collectors.toList());
-    }
-    private List<String> getUserSavedChallenges(List<UserSolutionDocument> userSolutions) {
-    // if ChallengeStatus == STARTED --> the Challenge is Saved
-     return userSolutions.stream()
-            .filter(solution ->solution.getStatus()==ChallengeStatus.STARTED)
-            .map(solution ->solution.getChallengeId().
-            toString())  // Extraemos el challengeId como String
-            .collect(Collectors.toList());
+                .map(list -> list.toArray(new CompletedChallengesDTO[0]));
     }
 
 }
