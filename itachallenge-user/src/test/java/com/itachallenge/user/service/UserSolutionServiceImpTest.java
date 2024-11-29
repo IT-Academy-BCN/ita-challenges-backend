@@ -335,7 +335,7 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
-    @DisplayName("Should return only completed challenges")
+    @DisplayName("Testing if method returns only completed challenges")
     @Test
     void getCompletedChallengesStatisticsTest(){
         UserSolutionDocument document1 = UserSolutionDocument.builder()
@@ -367,10 +367,52 @@ class UserSolutionServiceImpTest {
 
         StepVerifier.create(result)
                 .expectNextMatches(completedChallenges -> {
+                    assertEquals(2, completedChallenges.length);
                     assertEquals(document1.getChallengeId(), completedChallenges[0].getChallengeID());
                     assertEquals(document1.getScore(), completedChallenges[0].getScore());
                     assertEquals(document2.getChallengeId(), completedChallenges[1].getChallengeID());
                     assertEquals(document2.getScore(), completedChallenges[1].getScore());
+                    return true;
+                })
+                .verifyComplete();
+    }
+
+    @DisplayName("Testing if method returns only saved challenges")
+    @Test
+    void getSavedChallengesTest() {
+        UserSolutionDocument document1 = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .bookmarked(true)
+                .status(ChallengeStatus.STARTED)
+                .score(0)
+                .solutionDocument(List.of(new SolutionDocument()))
+                .build();
+        UserSolutionDocument document2 = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .bookmarked(true)
+                .status(ChallengeStatus.STARTED)
+                .score(0)
+                .solutionDocument(List.of(new SolutionDocument()))
+                .build();
+
+        when(userSolutionRepository.findByBookmarked(true))
+                .thenReturn(Flux.just(document1, document2));
+
+        Mono<SavedChallengesDTO[]> result = userSolutionService.getSavedChallenges();
+
+        StepVerifier.create(result)
+                .expectNextMatches(savedChallenges -> {
+                    assertEquals(2, savedChallenges.length);
+
+                    assertEquals(document1.getChallengeId(), savedChallenges[0].getChallengeId());
+                    assertEquals(document2.getChallengeId(), savedChallenges[1].getChallengeId());
+
                     return true;
                 })
                 .verifyComplete();
