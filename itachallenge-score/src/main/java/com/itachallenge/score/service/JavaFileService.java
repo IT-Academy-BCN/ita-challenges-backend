@@ -30,18 +30,21 @@ public class JavaFileService {
 
         // Plantilla Boilerplate de Java con manejo de errores
         String boilerplate = """
-                public class UserSolution {
-                    public static void main(String[] args) {
-                        try {
-                            // User code:
-                            %s
-                        } catch (Exception e) {
-                            System.err.println("Error en la ejecución del código del usuario:");
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                """;
+                     import java.util.List;
+                     import java.util.ArrayList;
+
+                     public class UserSolution {
+                     public static void main(String[] args) {
+                     try {
+                        // User code:
+                         %s
+                   } catch (Exception e) {
+                      System.err.println("Error en la ejecución del código del usuario:");
+                      e.printStackTrace();
+                   }
+       }
+    }
+    """;
 
         String finalCode = String.format(boilerplate, userCode);
 
