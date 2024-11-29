@@ -26,5 +26,4 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Flux<UserSolutionDocument> findByChallengeIdAndStatus(UUID challengeId, ChallengeStatus status);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<Long> countByChallengeIdAndBookmarked(UUID challengeId, boolean isBookmarked);
-    Flux<UserSolutionDocument> findByStatusIn(List<ChallengeStatus> statuses);
 }
