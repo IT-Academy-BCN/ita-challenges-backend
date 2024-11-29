@@ -27,7 +27,7 @@ public class CodeProcessingManager {
     private final JavaFileService javaFileService;
 
     @Value("${java.uri.file-path}")
-    private String filePath; // Inject the customizable URI
+    private String filePath = "UserSolution.java"; // Inject the customizable URI
 
     @Autowired
     public CodeProcessingManager(@Qualifier("keywordFilter")Filter filterChain, DockerExecutor dockerExecutor, JavaFileService javaFileService) {
