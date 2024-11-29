@@ -77,3 +77,10 @@ docker:
       } 
     }"
   timeout-seconds: 5
+
+java:
+  file:
+    storage:
+      path: C:\\temp\\java-files
+  uri:
+    file-path: C:\\temp\\java-files\\UserSolution.java
