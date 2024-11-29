@@ -9,6 +9,7 @@ import com.itachallenge.score.util.ExecutionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -29,7 +30,7 @@ public class CodeProcessingManager {
     private String filePath; // Inject the customizable URI
 
     @Autowired
-    public CodeProcessingManager(Filter filterChain, DockerExecutor dockerExecutor, JavaFileService javaFileService) {
+    public CodeProcessingManager(@Qualifier("keywordFilter")Filter filterChain, DockerExecutor dockerExecutor, JavaFileService javaFileService) {
         this.filterChain = filterChain;
         this.dockerExecutor = dockerExecutor;
         this.javaFileService = javaFileService;

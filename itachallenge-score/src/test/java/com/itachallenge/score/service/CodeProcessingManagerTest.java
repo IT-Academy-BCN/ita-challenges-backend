@@ -16,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -32,6 +33,9 @@ class CodeProcessingManagerTest {
     @Mock
     private DockerExecutor dockerExecutor;
 
+    @Mock
+    private JavaFileService javaFileService;
+
     @InjectMocks
     private CodeProcessingManager codeProcessingManager;
 
@@ -39,35 +43,23 @@ class CodeProcessingManagerTest {
 
     @BeforeEach
     void setUp() {
-        codeToCompile =
-                "int numero = 12; " +
-                "int[] conteoDigitos = new int[10]; " +
-                "int digito = numero % 10; " +
-                "conteoDigitos[digito]++; numero /= 10; " +
-                "int resultado = 0; " +
-                "for (int i = 9; i >= 0; i--) { " +
-                    "while (conteoDigitos[i] > 0) { " +
-                        "resultado = resultado * 10 + i;" +
-                        "conteoDigitos[i]--; " +
-                    "} " +
-                "} " +
-                "System.out.println(resultado); ";
-
+        codeToCompile = "System.out.println(\"Hello, World!\");";
     }
 
-    @DisplayName("Test processCode successful")
+    @DisplayName("Process code successfully")
     @Test
-    void testProcessCodeSuccessful() throws IOException, InterruptedException {
+    void processCodeSuccessful() throws IOException, InterruptedException {
         ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
         executionResult.setCompiled(true);
         executionResult.setExecution(true);
-        executionResult.setMessage("12"); //hardcoded value in codeprocessingmanager
+        executionResult.setMessage("12");
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
         when(dockerExecutor.execute(any(String.class), any(String[].class))).thenReturn(executionResult);
+        when(javaFileService.createJavaFile(any(String.class), any(String.class))).thenReturn(new File("UserSolution.java"));
 
         ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
@@ -76,15 +68,16 @@ class CodeProcessingManagerTest {
         assertEquals("Code compiled and executed, and result match: 12", responseEntity.getBody().getCompilationMessage());
     }
 
-    @DisplayName("Test processCode with InterruptedException")
+    @DisplayName("Process code with InterruptedException")
     @Test
-    void testProcessCodeWithInterruptedException() throws IOException, InterruptedException {
+    void processCodeWithInterruptedException() throws IOException, InterruptedException {
         ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+        when(javaFileService.createJavaFile(any(String.class), any(String.class))).thenReturn(new File("UserSolution.java"));
         when(dockerExecutor.execute(any(String.class), any(String[].class))).thenThrow(new InterruptedException("Execution interrupted"));
 
         assertThrows(DockerExecutionException.class, () -> {
