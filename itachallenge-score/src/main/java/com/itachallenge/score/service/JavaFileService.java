@@ -20,6 +20,7 @@ public class JavaFileService {
     private String storagePath;
 
     public File createJavaFile(String userCode, String fileName) throws IOException {
+
         String filePath = storagePath + File.separator + fileName;
         log.info("Creating Java file at: {}", filePath);
 
@@ -31,7 +32,10 @@ public class JavaFileService {
                 public static void main(String[] args) {
                     try {
                         // User code:
-                        %s
+                        File javaFile = new File(filePath);
+                                        try (FileWriter writer = new FileWriter(javaFile)) {
+                                            writer.write(finalCode);
+                                        }
                     } catch (Exception e) {
                         System.err.println("Error executing user code:");
                         e.printStackTrace();
@@ -42,10 +46,12 @@ public class JavaFileService {
 
         String finalCode = String.format(boilerplate, userCode);
 
+        /// El usuario ha escrito esto
         File javaFile = new File(filePath);
         try (FileWriter writer = new FileWriter(javaFile)) {
             writer.write(finalCode);
         }
+        ///     /////////
 
         log.info("Java file created successfully at: {}", javaFile.getAbsolutePath());
         return javaFile;
