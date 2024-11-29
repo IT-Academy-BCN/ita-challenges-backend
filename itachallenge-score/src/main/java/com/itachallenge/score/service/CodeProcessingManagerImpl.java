@@ -10,35 +10,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 
-@Primary
 @Component
 public class CodeProcessingManagerImpl implements CodeProcessingManager {
 
     private static final Logger log = LoggerFactory.getLogger(CodeProcessingManagerImpl.class);
 
-    @Qualifier("createFilterChain")
     private final Filter filterChain;
+    private final DockerExecutor dockerExecutor;
+    private final JavaFileService javaFileService;
 
-    private DockerExecutor dockerExecutor;
+    @Value("${java.uri.file-path}")
+    private String filePath = "UserSolution.java"; // Inject the customizable URI
 
     @Autowired
-    public CodeProcessingManagerImpl(@Qualifier("createFilterChain") Filter filterChain, DockerExecutor dockerExecutor) {
+    public CodeProcessingManagerImpl(@Qualifier("keywordFilter")Filter filterChain, DockerExecutor dockerExecutor, JavaFileService javaFileService) {
         this.filterChain = filterChain;
         this.dockerExecutor = dockerExecutor;
+        this.javaFileService = javaFileService;
     }
 
     @Override
     public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
 
-        String sourceCode = scoreRequest.getSolutionText(); //CODE USER FROM JSON
-        String[] arguments = {"5", "7"}; // PARAMETER "IN" FROM THE CHALLENGE
-        String resultExpected = "12"; //PARAMETER "OUT" FROM THE CHALLENGE
+        String sourceCode = scoreRequest.getSolutionText();
+        String[] arguments = {"5", "7"};
+        String resultExpected = "12";
 
         ExecutionResult executionResult = filterChain.apply(sourceCode);
 
@@ -53,24 +56,35 @@ public class CodeProcessingManagerImpl implements CodeProcessingManager {
             return ResponseEntity.ok(scoreResponse);
         }
 
-        if (executionResult.isSuccess()) {
-            try {
-                executionResult = dockerExecutor.execute(sourceCode, arguments);
-            } catch (IOException e) {
-                ScoreResponse scoreResponse = new ScoreResponse();
-                scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
-                scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
-                scoreResponse.setSolutionText(scoreRequest.getSolutionText());
-                scoreResponse.setExpectedResult(resultExpected);
-                scoreResponse.setCompilationMessage("Execution timed out: " + e.getMessage());
-                scoreResponse.setScore(0);
-                return ResponseEntity.ok(scoreResponse);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DockerExecutionException("Execution interrupted", e);
-            }
+        File javaFile;
+        try {
+            javaFile = javaFileService.createJavaFile(sourceCode, filePath);
+        } catch (IOException e) {
+            ScoreResponse scoreResponse = new ScoreResponse();
+            scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
+            scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
+            scoreResponse.setSolutionText(scoreRequest.getSolutionText());
+            scoreResponse.setExpectedResult(resultExpected);
+            scoreResponse.setCompilationMessage("Error al crear el archivo Java: " + e.getMessage());
+            scoreResponse.setScore(0);
+            return ResponseEntity.ok(scoreResponse);
         }
 
+        try {
+            executionResult = dockerExecutor.execute(javaFile.getAbsolutePath(), arguments);
+        } catch (IOException e) {
+            ScoreResponse scoreResponse = new ScoreResponse();
+            scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
+            scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
+            scoreResponse.setSolutionText(scoreRequest.getSolutionText());
+            scoreResponse.setExpectedResult(resultExpected);
+            scoreResponse.setCompilationMessage("Execution timed out: " + e.getMessage());
+            scoreResponse.setScore(0);
+            return ResponseEntity.ok(scoreResponse);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new DockerExecutionException("Execution interrupted", e);
+        }
 
         ScoreResponse scoreResponse = new ScoreResponse();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
@@ -80,14 +94,16 @@ public class CodeProcessingManagerImpl implements CodeProcessingManager {
         int score = calculateScore(executionResult, resultExpected);
         scoreResponse.setCompilationMessage(executionResult.getMessage().trim());
         scoreResponse.setScore(score);
+
         if (executionResult.getMessage().contains("TIMED OUT")) {
             log.info(scoreResponse.getCompilationMessage());
         } else {
             log.info("Code processed successfully: {}", scoreResponse.getCompilationMessage());
         }
-        return ResponseEntity.ok(scoreResponse);
 
+        return ResponseEntity.ok(scoreResponse);
     }
+
 
     @Override
     public int calculateScore(ExecutionResult executionResult, String resultExpected) {
