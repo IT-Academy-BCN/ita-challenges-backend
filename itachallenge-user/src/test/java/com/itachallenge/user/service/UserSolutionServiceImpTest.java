@@ -335,49 +335,45 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
-    @DisplayName("UserSolutionServiceImpTest - getUserStatisticsChallenges returns the ended and saved challenges " +
-            "from a specific user")
+    @DisplayName("Should return only completed challenges")
     @Test
-    public void getUserStatisticsChallenges() {
-
-        String idUser = userUuid.toString();
-        String idLanguage = languageUuid.toString();
-
-        UserSolutionDocument solution1 = userSolutionDocument; // solution1.ChanllengeStatus = ENDED
-
-        UserSolutionDocument solution2 = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(ChallengeStatus.STARTED)
-                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
-                .score(mockScore).build();
-
-        UserSolutionDocument solution3 =UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
+    void getCompletedChallengesStatisticsTest(){
+        UserSolutionDocument document1 = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .bookmarked(true)
                 .status(ChallengeStatus.ENDED)
-                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
-                .score(mockScore).build();
+                .score(75)
+                .solutionDocument(List.of(new SolutionDocument()))
+                .build();
 
-        Flux<UserSolutionDocument> userSolutionsFlux = Flux.just(solution1, solution2, solution3);
+        UserSolutionDocument document2 = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(UUID.randomUUID())
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .bookmarked(false)
+                .status(ChallengeStatus.ENDED)
+                .score(100)
+                .solutionDocument(List.of(new SolutionDocument()))
+                .build();
 
-        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(userSolutionsFlux);
+        when(userSolutionRepository.findByStatus(ChallengeStatus.ENDED))
+                .thenReturn(Flux.just(document1, document2));
 
-        Mono<UserStatisticsDto> result = userSolutionService.getUserStatisticsChallenges(idLanguage, idUser);
+        Mono<CompletedChallengesDTO[]> result = userSolutionService.getCompletedChallengesStatistics();
 
         StepVerifier.create(result)
-                .expectNextMatches(userStatisticsDto ->
-                    userStatisticsDto.getUserId().equals(idUser)
-                            && userStatisticsDto.getLanguageId().equals(idLanguage)
-                            && userStatisticsDto.getCompletedAndSavedChallenges() != null
-                            && userStatisticsDto.getCompletedAndSavedChallenges().getCompletedChallenge().size() == 2  // Esperamos 2 desafíos completados
-                            && userStatisticsDto.getCompletedAndSavedChallenges().getChallengesSaved().size() == 1 // Esperamos 1 desafío guardado
-                )
+                .expectNextMatches(completedChallenges -> {
+                    assertEquals(document1.getChallengeId(), completedChallenges[0].getChallengeID());
+                    assertEquals(document1.getScore(), completedChallenges[0].getScore());
+                    assertEquals(document2.getChallengeId(), completedChallenges[1].getChallengeID());
+                    assertEquals(document2.getScore(), completedChallenges[1].getScore());
+                    return true;
+                })
                 .verifyComplete();
-
-        verify(userSolutionRepository).findByUserId(userUuid);
     }
 
 }
