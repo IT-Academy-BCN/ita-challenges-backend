@@ -22,7 +22,7 @@ public class JavaFileService {
     }
 
     // Método para crear el archivo Java con el código del usuario
-    public File createJavaFile(String userCode, String fileName, String challengeId, String languageId) throws IOException {
+    public File createJavaFile(String userCode, String fileName) throws IOException {
         // Usamos File.separator para construir la ruta de manera segura
         String filePath = storagePath + File.separator + fileName; // Usamos File.separator en lugar de "/"
 
@@ -33,8 +33,6 @@ public class JavaFileService {
                 public class UserSolution {
                     public static void main(String[] args) {
                         try {
-                            // Challenge ID: %s
-                            // Language ID: %s
                             // User code:
                             %s
                         } catch (Exception e) {
@@ -45,7 +43,7 @@ public class JavaFileService {
                 }
                 """;
 
-        String finalCode = String.format(boilerplate, challengeId, languageId, userCode);
+        String finalCode = String.format(boilerplate, userCode);
 
         // Crear el archivo en la ruta proporcionada
         File javaFile = new File(filePath); // El archivo que se va a generar
