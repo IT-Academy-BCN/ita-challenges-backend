@@ -219,5 +219,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .map(list -> list.toArray(new CompletedChallengesDTO[0]));
     }
 
+    protected Mono<SavedChallengesDTO[]> getSavedChallenges() {
+        return userSolutionRepository.findByBookmarked(true)
+                .map(userSolution -> new SavedChallengesDTO(userSolution.getChallengeId()))
+                .collectList()
+                .map(list -> list.toArray(new SavedChallengesDTO[0]));
+    }
+
 }
 
