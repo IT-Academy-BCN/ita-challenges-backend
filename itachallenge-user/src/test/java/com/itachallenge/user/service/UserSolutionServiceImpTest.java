@@ -418,4 +418,43 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
+    @DisplayName("Testing if method returns completed and saved challenges")
+    @Test
+    void getCompletedAndSavedChallengesStatisticsTest() {
+        CompletedChallengesDTO completedChallenge1 = new CompletedChallengesDTO(UUID.randomUUID(), 75);
+        CompletedChallengesDTO completedChallenge2 = new CompletedChallengesDTO(UUID.randomUUID(), 100);
+        SavedChallengesDTO savedChallenge1 = new SavedChallengesDTO(UUID.randomUUID());
+        SavedChallengesDTO savedChallenge2 = new SavedChallengesDTO(UUID.randomUUID());
+
+        when(userSolutionService.getCompletedChallengesStatistics())
+                .thenReturn(Mono.just(new CompletedChallengesDTO[]{completedChallenge1, completedChallenge2}));
+
+        when(userSolutionService.getSavedChallenges())
+                .thenReturn(Mono.just(new SavedChallengesDTO[]{savedChallenge1, savedChallenge2}));
+
+        Mono<ChallengesCompleteAndSavedStatisticsDTO> result =
+                userSolutionService.getCompletedAndSavedChallengesStatistics();
+
+        StepVerifier.create(result)
+                .expectNextMatches(challengesCompleteAndSavedStatisticsDTO -> {
+                    assertNotNull(ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges());
+                    assertNotNull(ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges());
+
+                    assertEquals(2, ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges().length);
+                    assertEquals(completedChallenge1.getChallengeID(),
+                            ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges()[0].getChallengeID());
+                    assertEquals(completedChallenge2.getChallengeID(),
+                            ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges()[1].getChallengeID());
+
+                    assertEquals(2, ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges().length);
+                    assertEquals(savedChallenge1.getChallengeId(),
+                            ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges()[0].getChallengeId());
+                    assertEquals(savedChallenge2.getChallengeId(),
+                            ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges()[1].getChallengeId());
+
+                    return true;
+                })
+                .verifyComplete();
+    }
+
 }
