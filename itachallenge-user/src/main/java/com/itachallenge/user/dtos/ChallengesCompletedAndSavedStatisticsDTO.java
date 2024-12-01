@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChallengesCompletedAndSavedStatisticsDTO {
-    private CompletedChallengesDTO completedChallenges;
-    private SavedChallengesDTO savedChallenges;
+    private List<CompletedChallengesDTO> completedChallenges;
+    private List<SavedChallengesDTO> savedChallenges;
 }
