@@ -18,9 +18,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.Path;
 
 import static com.github.dockerjava.api.model.HostConfig.newHostConfig;
 import static com.itachallenge.score.dto.ScoreResponse.INTERNAL_SERVER_ERROR_RESPONSE;
@@ -29,10 +28,22 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.ResponseEntity.status;
 
+import static java.io.File.pathSeparator;
+import static java.nio.file.Paths.get;
+import static java.nio.file.Files.newBufferedWriter;
+
+
+
 
 @Service
 @Primary
 final class CodeProcessingService implements CodeProcessingManager {
+
+    // Constants
+
+    // ONLY for testing purposes, it is the name of the script mock we use to mock an output from the container
+    private static final String SCRIPT_MOCK_FILENAME = "processUserCode.sh";
+
 
     // Configuration properties
 
@@ -89,15 +100,21 @@ final class CodeProcessingService implements CodeProcessingManager {
 
         }
 
-        // Create a java file in the appropriate folder using the user procided code
+        // Create a java file in the appropriate folder using the user provided code
         ResponseEntity<ScoreResponse> responseEntity = createJavaFile(scoreRequest);
 
         // This checks if there has been an IOException during the creation of the java file
         if (responseEntity != null)
             return responseEntity;
 
-        // Execute script in container
-        ExecCreateCmdResponse execCreateCmdResponse = executeScriptInContainer(container);
+        // IMPORTANT: This method is meant for testing purposes ONLY. Please, read the documentation in
+        // the method's implementation.
+        ExecCreateCmdResponse execCreateCmdResponse = getExecCreateCmdResponseFromMockedScript(container);
+
+        // IMPORTANT: This method contains the actual logic to handle a script inside the container, it is not tested,
+        // and it is meant to substitute the one above in production. Using this instead of the mocked one above is
+        // HIGHLY DISCOURAGED.
+        // ExecCreateCmdResponse execCreateCmdResponse = executeScriptInContainer(container);
 
         // Get the container's terminal output
         ByteArrayOutputStream byteArrayOutputStream = writeTerminalOutputToStream(execCreateCmdResponse);
@@ -107,6 +124,17 @@ final class CodeProcessingService implements CodeProcessingManager {
         return null;
 
     }
+
+    @Override
+    public int calculateScore(ExecutionResult executionResult, String resultExpected) {
+
+        // Since this method is here just for compatibility reasons is not meant to be called
+        throw new UnsupportedOperationException("Not implemented");
+
+    }
+
+
+    // Helper methods
 
     private ByteArrayOutputStream writeTerminalOutputToStream(ExecCreateCmdResponse execCreateCmdResponse) {
 
@@ -125,16 +153,18 @@ final class CodeProcessingService implements CodeProcessingManager {
 
     }
 
-    @Override
-    public int calculateScore(ExecutionResult executionResult, String resultExpected) {
+    private ExecCreateCmdResponse getExecCreateCmdResponseFromMockedScript(CreateContainerResponse container) {
 
-        // Since this method is here just for compatibility reasons is not meant to be called
-        throw new UnsupportedOperationException("Not implemented");
+        // IMPORTANT: This is for mocking purposes ONLY. The script generated has no actual code and just mocks an
+        // output in the container's terminal. The formal of the output is not final either, it may change over time.
+        createScriptFile(SCRIPT_MOCK_FILENAME);
+
+
+        // Execute script in container
+        // IMPORTANT: This uses the mocked script createed above, should be substituted by the non "stubbed" one in production
+        return executeScriptInContainerMock(container);
 
     }
-
-
-    // Helper methods
 
     private CreateContainerResponse createContainer() {
 
@@ -188,7 +218,7 @@ final class CodeProcessingService implements CodeProcessingManager {
     private @NotNull String extractFilenameFromUserSolutionPath() {
 
         // TODO This should be adapted since it will only work for testing purposes with the current path string
-        return Paths.get(userSolutionPath).getFileName().toString();
+        return get(userSolutionPath).getFileName().toString();
 
     }
 
@@ -209,19 +239,58 @@ final class CodeProcessingService implements CodeProcessingManager {
 
     }
 
-    private ExecCreateCmdResponse executeScriptInContainer(CreateContainerResponse container) {
+    private ExecCreateCmdResponse executeScriptInContainerMock(CreateContainerResponse container) {
 
         final String pathInContainer = firstVolume.split(":")[1];
 
         String fileName = extractFilenameFromUserSolutionPath();
 
-        ExecCreateCmdResponse execCreateCmdResponse = dockerClient.execCreateCmd(container.getId())
-                .withCmd("ash", "-c", pathInContainer + "/script.sh " + pathInContainer + "/" + fileName)
+        String scriptPathInContainer = get(pathInContainer, SCRIPT_MOCK_FILENAME).toString();
+        String filePathInContainer = get(pathInContainer, fileName).toString();
+
+        return dockerClient.execCreateCmd(container.getId())
+                .withCmd("ash", "-c", scriptPathInContainer + " " + filePathInContainer)
                 .withAttachStdout(true)
                 .withAttachStderr(true)
                 .exec();
 
-        return execCreateCmdResponse;
+    }
+
+    private void createScriptFile(String fileName) {
+
+        // Juts for mocking purposes, this method is meant to be deleted
+        String scriptContent = """
+                #!/bin/sh
+                
+                if [ "$2" = "0" ]; then
+                    echo "Couldn't compile" >&2
+                    echo "Score: 0" >&2
+                    exit 1
+                elif [ "$2" = "1" ]; then
+                    echo "Code compiled successfully, but some errors were detected."
+                    echo "Score: 50"
+                    exit 0
+                elif [ "$2" = "2" ]; then
+                    echo "Code compiled and executed successfully."
+                    echo "Tests passed."
+                    echo "Score: 75"
+                    exit 0
+                else
+                    echo "Invalid parameter." >&2
+                    exit 1
+                fi
+                """;
+
+        Path scriptPath = get(userSolutionPath, fileName);
+
+        try (BufferedWriter writer = newBufferedWriter(scriptPath)) {
+
+            writer.write(scriptContent);
+
+        } catch (IOException e) {
+            // TODO This needs proper logging and/or exception handling
+            e.printStackTrace();
+        }
 
     }
 
