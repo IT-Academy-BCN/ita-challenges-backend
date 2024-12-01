@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
 public class CompletedChallengesDTO {
     @JsonProperty(value = "uuid_challenge")
-    private UUID challengeID;
+    private UUID challengeId;
 
     @JsonProperty(value = "score")
     private int score;

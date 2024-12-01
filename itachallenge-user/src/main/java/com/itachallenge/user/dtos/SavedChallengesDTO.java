@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
