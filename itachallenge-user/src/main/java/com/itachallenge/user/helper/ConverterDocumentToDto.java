@@ -37,7 +37,7 @@ public class ConverterDocumentToDto {
         return documentFlux.map(doc -> new CompletedChallengesDTO(doc.getChallengeId(), doc.getScore()));
     }
 
-    public Flux<SavedChallengesDTO> fromUserSolutionDocumentToSavedChallengeDTO
+    public Flux<SavedChallengesDTO> fromUserSolutionDocumentToSavedChallengesDTO
             (Flux<UserSolutionDocument> documentFlux) {
         return documentFlux.map(doc -> new SavedChallengesDTO(doc.getChallengeId()));
     }
