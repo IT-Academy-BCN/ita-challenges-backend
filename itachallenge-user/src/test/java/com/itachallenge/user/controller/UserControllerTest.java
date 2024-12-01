@@ -360,12 +360,16 @@ class UserControllerTest {
         String URI_TEST = "/{idUser}/challenges/language/{idLanguage}/statistics/totals";
         UUID idUser = UUID.randomUUID();
         UUID idLanguage = UUID.randomUUID();
+        int completedChallenges = 100;
+        int savedChallenges = 23;
+        int scorePendingChallenges = 50;
+        int passedChallenges = 50;
+        
         ChallengeStatisticTotalDto challenges = ChallengeStatisticTotalDto.builder()
-                .count(125)
-                .completed(100)
-                .saved(23)
-                .scorePending(50)
-                .passed(50)
+                .completed(completedChallenges)
+                .saved(savedChallenges)
+                .scorePending(scorePendingChallenges)
+                .passed(passedChallenges)
                 .build();
 
         UserStatisticTotalDto mockDto = UserStatisticTotalDto.builder()
@@ -375,6 +379,7 @@ class UserControllerTest {
                 .build();
 
         when(userSolutionService.getUserTotalStatistic(idUser, idLanguage)).thenReturn(Mono.just(mockDto));
+
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, idUser.toString(), idLanguage.toString())
                 .exchange()
@@ -384,11 +389,10 @@ class UserControllerTest {
                 .value(userStatisticTotalDto -> {
                     assertEquals(idUser, userStatisticTotalDto.getUserId());
                     assertEquals(idLanguage, userStatisticTotalDto.getLanguageId());
-                    assertEquals(125, userStatisticTotalDto.getChallenges().getCount());
-                    assertEquals(100, userStatisticTotalDto.getChallenges().getCompleted());
-                    assertEquals(23, userStatisticTotalDto.getChallenges().getSaved());
-                    assertEquals(50, userStatisticTotalDto.getChallenges().getScorePending());
-                    assertEquals(50, userStatisticTotalDto.getChallenges().getPassed());
+                    assertEquals(completedChallenges, userStatisticTotalDto.getChallenges().getCompleted());
+                    assertEquals(savedChallenges, userStatisticTotalDto.getChallenges().getSaved());
+                    assertEquals(scorePendingChallenges, userStatisticTotalDto.getChallenges().getScorePending());
+                    assertEquals(passedChallenges, userStatisticTotalDto.getChallenges().getPassed());
                 });
     }
 }
