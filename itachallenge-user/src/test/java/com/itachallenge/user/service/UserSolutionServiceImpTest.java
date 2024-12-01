@@ -47,10 +47,13 @@ class UserSolutionServiceImpTest {
     private String solutionText;
     private UUID userUuid;
     private UUID challengeUuid;
+    private UUID challengeUuid2;
     private UUID languageUuid;
     private int mockScore;
     private UserSolutionDto userSolutionDto;
     private UserSolutionDocument userSolutionDocument;
+    private UserSolutionDocument completedSolution;
+    private UserSolutionDocument savedSolution;
 
     @BeforeEach
     void setUp() {
@@ -60,6 +63,7 @@ class UserSolutionServiceImpTest {
         solutionText = "This is a test started solution";
         userUuid = UUID.fromString(idUser);
         challengeUuid = UUID.fromString(idChallenge);
+        challengeUuid2 = UUID.randomUUID();
         languageUuid = UUID.fromString(idLanguage);
         mockScore = 13;
         userSolutionDto = UserSolutionDto.builder()
@@ -75,6 +79,20 @@ class UserSolutionServiceImpTest {
                 .status(ChallengeStatus.ENDED)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
                 .score(mockScore).build();
+        completedSolution = UserSolutionDocument.builder()
+                .userId(UUID.randomUUID())
+                .challengeId(challengeUuid)
+                .status(ChallengeStatus.ENDED)
+                .score(100)
+                .bookmarked(false)
+                .build();
+        savedSolution = UserSolutionDocument.builder()
+                .userId(UUID.randomUUID())
+                .challengeId(challengeUuid2)
+                .status(ChallengeStatus.STARTED)
+                .score(0)
+                .bookmarked(true)
+                .build();
 
     }
 
@@ -335,126 +353,37 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
-    @DisplayName("Testing if method returns only completed challenges")
-    @Test
-    void getCompletedChallengesStatisticsTest(){
-        UserSolutionDocument document1 = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(UUID.randomUUID())
-                .challengeId(UUID.randomUUID())
-                .languageId(UUID.randomUUID())
-                .bookmarked(true)
-                .status(ChallengeStatus.ENDED)
-                .score(75)
-                .solutionDocument(List.of(new SolutionDocument()))
-                .build();
-
-        UserSolutionDocument document2 = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(UUID.randomUUID())
-                .challengeId(UUID.randomUUID())
-                .languageId(UUID.randomUUID())
-                .bookmarked(false)
-                .status(ChallengeStatus.ENDED)
-                .score(100)
-                .solutionDocument(List.of(new SolutionDocument()))
-                .build();
-
-        when(userSolutionRepository.findByStatus(ChallengeStatus.ENDED))
-                .thenReturn(Flux.just(document1, document2));
-
-        Mono<CompletedChallengesDTO[]> result = userSolutionService.getCompletedChallengesStatistics();
-
-        StepVerifier.create(result)
-                .expectNextMatches(completedChallenges -> {
-                    assertEquals(2, completedChallenges.length);
-                    assertEquals(document1.getChallengeId(), completedChallenges[0].getChallengeID());
-                    assertEquals(document1.getScore(), completedChallenges[0].getScore());
-                    assertEquals(document2.getChallengeId(), completedChallenges[1].getChallengeID());
-                    assertEquals(document2.getScore(), completedChallenges[1].getScore());
-                    return true;
-                })
-                .verifyComplete();
-    }
-
-    @DisplayName("Testing if method returns only saved challenges")
-    @Test
-    void getSavedChallengesTest() {
-        UserSolutionDocument document1 = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(UUID.randomUUID())
-                .challengeId(UUID.randomUUID())
-                .languageId(UUID.randomUUID())
-                .bookmarked(true)
-                .status(ChallengeStatus.STARTED)
-                .score(0)
-                .solutionDocument(List.of(new SolutionDocument()))
-                .build();
-        UserSolutionDocument document2 = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(UUID.randomUUID())
-                .challengeId(UUID.randomUUID())
-                .languageId(UUID.randomUUID())
-                .bookmarked(true)
-                .status(ChallengeStatus.STARTED)
-                .score(0)
-                .solutionDocument(List.of(new SolutionDocument()))
-                .build();
-
-        when(userSolutionRepository.findByBookmarked(true))
-                .thenReturn(Flux.just(document1, document2));
-
-        Mono<SavedChallengesDTO[]> result = userSolutionService.getSavedChallenges();
-
-        StepVerifier.create(result)
-                .expectNextMatches(savedChallenges -> {
-                    assertEquals(2, savedChallenges.length);
-
-                    assertEquals(document1.getChallengeId(), savedChallenges[0].getChallengeId());
-                    assertEquals(document2.getChallengeId(), savedChallenges[1].getChallengeId());
-
-                    return true;
-                })
-                .verifyComplete();
-    }
-
-    @DisplayName("Testing if method returns completed and saved challenges")
     @Test
     void getCompletedAndSavedChallengesStatisticsTest() {
-        CompletedChallengesDTO completedChallenge1 = new CompletedChallengesDTO(UUID.randomUUID(), 75);
-        CompletedChallengesDTO completedChallenge2 = new CompletedChallengesDTO(UUID.randomUUID(), 100);
-        SavedChallengesDTO savedChallenge1 = new SavedChallengesDTO(UUID.randomUUID());
-        SavedChallengesDTO savedChallenge2 = new SavedChallengesDTO(UUID.randomUUID());
+        when(userSolutionRepository.findByStatus(ChallengeStatus.ENDED))
+                .thenReturn(Flux.just(completedSolution));
+        when(userSolutionRepository.findByBookmarked(true))
+                .thenReturn(Flux.just(savedSolution));
 
-        when(userSolutionService.getCompletedChallengesStatistics())
-                .thenReturn(Mono.just(new CompletedChallengesDTO[]{completedChallenge1, completedChallenge2}));
+        when(converter.fromUserSolutionDocumentToCompletedChallengesDTO(Flux.just(completedSolution)))
+                .thenAnswer(invocation ->
+                        Flux.just(new CompletedChallengesDTO(completedSolution.getChallengeId(), completedSolution.getScore())));
+        when(converter.fromUserSolutionDocumentToSavedChallengesDTO(any()))
+                .thenAnswer(invocation ->
+                        Flux.just(new SavedChallengesDTO(savedSolution.getChallengeId())));
 
-        when(userSolutionService.getSavedChallenges())
-                .thenReturn(Mono.just(new SavedChallengesDTO[]{savedChallenge1, savedChallenge2}));
+        Mono<ChallengesCompletedAndSavedStatisticsDTO> result = userSolutionService.getCompletedAndSavedChallengesStatistics();
 
-        Mono<ChallengesCompleteAndSavedStatisticsDTO> result =
-                userSolutionService.getCompletedAndSavedChallengesStatistics();
+        result.subscribe(statistics -> {
+            assertNotNull(statistics.getCompletedChallenges());
+            assertEquals(1, statistics.getCompletedChallenges().size());
+            assertEquals(completedSolution.getChallengeId(), statistics.getCompletedChallenges().get(0).getChallengeId());
+            assertEquals(completedSolution.getScore(), statistics.getCompletedChallenges().get(0).getScore());
 
-        StepVerifier.create(result)
-                .expectNextMatches(challengesCompleteAndSavedStatisticsDTO -> {
-                    assertNotNull(ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges());
-                    assertNotNull(ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges());
+            assertNotNull(statistics.getSavedChallenges());
+            assertEquals(1, statistics.getSavedChallenges().size());
+            assertEquals(savedSolution.getChallengeId(), statistics.getSavedChallenges().get(0).getChallengeId());
+        });
 
-                    assertEquals(2, ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges().length);
-                    assertEquals(completedChallenge1.getChallengeID(),
-                            ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges()[0].getChallengeID());
-                    assertEquals(completedChallenge2.getChallengeID(),
-                            ChallengesCompleteAndSavedStatisticsDTO.getCompletedChallenges()[1].getChallengeID());
-
-                    assertEquals(2, ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges().length);
-                    assertEquals(savedChallenge1.getChallengeId(),
-                            ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges()[0].getChallengeId());
-                    assertEquals(savedChallenge2.getChallengeId(),
-                            ChallengesCompleteAndSavedStatisticsDTO.getSavedChallenges()[1].getChallengeId());
-
-                    return true;
-                })
-                .verifyComplete();
+        verify(userSolutionRepository, times(1)).findByStatus(ChallengeStatus.ENDED);
+        verify(userSolutionRepository, times(1)).findByBookmarked(true);
+        verify(converter, times(1)).fromUserSolutionDocumentToCompletedChallengesDTO(any());
+        verify(converter, times(1)).fromUserSolutionDocumentToSavedChallengesDTO(any());
     }
 
 }
