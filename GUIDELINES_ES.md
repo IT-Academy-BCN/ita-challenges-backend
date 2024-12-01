@@ -228,6 +228,10 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 6. En caso de que debas revisar y corregir algunos problemas, actualiza tu rama local con los cambios y haz push nuevamente a la rama remota correspondiente.
 7. La pull request se actualizará automáticamente con los nuevos cambios realizados en tu rama.
 
+
+**NOTA IMPORTANTE: Una Pull Request es una solicitud para incluir tu código en el proyecto. No esperes a que tu PR sea aceptada para empezar a trabajar en otra card**
+
+
 <hr/>
 
 ## 2.6 Trabajo con git
@@ -568,7 +572,7 @@ Los siguientes programas son requeridos para poder trabajar en el proyecto:
 
 - **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) es un conjunto de herramientas necesarias para desarrollar aplicaciones en Java. Asegúrate de tener instalada la versión 21.0.3 de JDK que es la que se usa en este proyecto. Puedes descargar [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) desde la web oficial de Oracle.
 
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 Es importante asegurarse de tener todas estas herramientas instaladas y configuradas correctamente antes de comenzar a trabajar en el proyecto.
 

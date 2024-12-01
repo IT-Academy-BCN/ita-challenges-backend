@@ -12,6 +12,10 @@ spring:
       #uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
       uri: mongodb://test_users:xoDjk4eDvu5KWaCB@87.106.229.175:27017/users?authSource=admin
       uuid-representation: standard
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 springdoc:
   swagger-ui:
@@ -23,6 +27,8 @@ springdoc:
 
 server:
   port: 8764
+  tomcat:
+    max-http-form-post-size: 2097152
 
 management:
   endpoints:
