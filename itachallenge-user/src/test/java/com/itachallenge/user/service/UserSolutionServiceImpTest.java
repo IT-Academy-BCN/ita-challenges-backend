@@ -97,7 +97,7 @@ class UserSolutionServiceImpTest {
                 .thenReturn(Mono.just(userSolutionDocument));
 
         assertNotNull(userSolutionDocument);
-        assert(userSolutionDocument.isBookmarked());
+        assert (userSolutionDocument.isBookmarked());
         assert (userSolutionDocument.getUserId().equals(userId));
         assert (userSolutionDocument.getLanguageId().equals(languageId));
         assert (userSolutionDocument.getChallengeId().equals(challengeId));
@@ -219,7 +219,7 @@ class UserSolutionServiceImpTest {
         StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodifiableSolutionException
-                        && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
+                                && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
@@ -233,9 +233,9 @@ class UserSolutionServiceImpTest {
         Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
 
         StepVerifier.create(resultMono)
-            .expectErrorMatches(
-                    throwable -> throwable instanceof IllegalArgumentException
-                        && throwable.getMessage().equals("Status not allowed")).verify();
+                .expectErrorMatches(
+                        throwable -> throwable instanceof IllegalArgumentException
+                                && throwable.getMessage().equals("Status not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
     }
@@ -292,7 +292,7 @@ class UserSolutionServiceImpTest {
 
     @DisplayName("Should return number of BookmarkedTrue by idChallenge")
     @Test
-    void testGetBookmarkCountByIdChallenge(){
+    void testGetBookmarkCountByIdChallenge() {
         UUID idChallenge = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
         boolean isBookmarked = true;
         long expectedValue = 2L;
@@ -339,4 +339,5 @@ class UserSolutionServiceImpTest {
                 .expectNext(expectedValue)
                 .verifyComplete();
     }
+
 }
