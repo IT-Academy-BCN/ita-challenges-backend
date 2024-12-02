@@ -43,56 +43,6 @@ db.createCollection("solutions");
 mongoimport --db=users --username admin_user --authenticationDatabase admin --password mypassword --collection=solutions --jsonArray --file=user_score.json
 ```
 
-### Configuración local de Redis 
-
-##### Windows
-
-- Instalar BBDD redis en la maquina y establecer PATH de contexto
-- Crear redis-ITA.conf con las siguientes lineas de seguridad:
-  - Para establecer una autenticación obligatoria para acceder a la bbdd  
-
-```
-  requirepass << password >>
-```    
-
-  - Establecer una seguridad adicional al renombrar algunos comandos considerados peligrosos (si se quiere usar el comando config se tiene que escribir ita_config)
-
-```
-  rename-command CONFIG ITA_CONFIG
-```   
-
-- Levantar el servidor de redis con el fichero de configuración creado indicando donde se encuentra
-
-```
-redis-server c:/.../redis-ITA.conf
-```
-
-##### UNIX based (Mac / Linux)
-
-- Modificar redis.conf en directorio de instalación
-- Añadir autenticación obligatoria
-```
-  requirepass << password >>
-``` 
-- Reinicio del servicio
-```
-sudo systemctl restart redis
-```
-
-#### Import data to Redis
-
-### Use redis-cli to Execute the Script:
-* redis-cli -h localhost -p 6379 < usersRedis.txt
-
-### **Important**
-When you execute the redis-cli command to import the data, make sure you are in the same directory as the ### 'usersRedis' file or provide the full path to the file in the command:
-* cd /path/to/my_project/
-* redis-cli -h localhost -p 6379 < users
-
-Ensure that your Redis server is running and accessible on the specified host and port
-
-For more info check [Import Data into Redis](https://developer.redis.com/guides/import/)
-
 ##### Spring Boot Actuator
 
 - http://localhost:8762/actuator/health (debe responder {"status":"UP"})
