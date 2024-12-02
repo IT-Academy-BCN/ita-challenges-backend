@@ -3,3 +3,7 @@ public class HelloWorld {
         System.out.println("Hello world!");
     }
 }
+
+/* Expected output:
+ **
+ ** Hello world! */
