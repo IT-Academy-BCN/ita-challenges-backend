@@ -2,6 +2,8 @@ package com.itachallenge.user.helper;
 
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.dtos.CompletedChallengesDTO;
+import com.itachallenge.user.dtos.SavedChallengesDTO;
 import com.itachallenge.user.dtos.UserScoreDto;
 import com.itachallenge.user.dtos.UserSolutionDto;
 import com.itachallenge.user.enums.ChallengeStatus;
@@ -91,5 +93,47 @@ class ConverterDocumentToDtoTest {
                 userSolutionDto.getStatus().equals(userSolutionDocument.getStatus().toString()) &&
                 userSolutionDto.getSolutionText().equals(userSolutionDocument.getSolutionDocument().get(0).getSolutionText());
     }
+
+    @DisplayName("Convert UserSolutionDocument to CompletedChallengesDTO")
+    @Test
+    void testFromUserSolutionDocumentToCompletedChallengesDTO() {
+        UserSolutionDocument completedChallengeDoc = new UserSolutionDocument(
+                uuid_1, uuid_1, idChallenge, idLanguage, false, ChallengeStatus.ENDED, 100, null
+        );
+
+        Flux<UserSolutionDocument> documentFlux = Flux.just(completedChallengeDoc);
+
+        Flux<CompletedChallengesDTO> result = converter.fromUserSolutionDocumentToCompletedChallengesDTO(documentFlux);
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> {
+                    return dto.getChallengeId().equals(completedChallengeDoc.getChallengeId()) &&
+                            dto.getScore() == completedChallengeDoc.getScore();
+                })
+                .expectComplete()
+                .verify();
+    }
+
+    @DisplayName("Convert UserSolutionDocument to SavedChallengesDTO")
+    @Test
+    void testFromUserSolutionDocumentToSavedChallengesDTO() {
+        UserSolutionDocument savedChallengeDoc = new UserSolutionDocument(
+                uuid_1, uuid_1, idChallenge, idLanguage, true, ChallengeStatus.STARTED, 100, null
+        );
+
+        Flux<UserSolutionDocument> documentFlux = Flux.just(savedChallengeDoc);
+
+        Flux<SavedChallengesDTO> result = converter.fromUserSolutionDocumentToSavedChallengesDTO(documentFlux);
+
+        StepVerifier.create(result)
+                .expectNextMatches(dto -> {
+                    return dto.getChallengeId().equals(savedChallengeDoc.getChallengeId());
+                })
+                .expectComplete()
+                .verify();
+
+    }
+
+
 }
 
