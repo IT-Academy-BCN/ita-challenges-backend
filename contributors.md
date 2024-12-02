@@ -68,3 +68,4 @@
 * Hector Pozo -https://github.com/HectorPozoGuerrero
 * Raquel Barrio - https://github.com/Gatchan1
 * Miguel Lozano - https://github.com/Mettanoia
+* Ignasi Moya - https://github.com/imoyaf
