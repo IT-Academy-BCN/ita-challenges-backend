@@ -6,7 +6,6 @@ import com.itachallenge.user.dtos.*;
 import com.itachallenge.user.enums.ChallengeStatus;
 import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.UnmodifiableSolutionException;
-import com.itachallenge.user.exception.UserSolutionsNotFoundException;
 import com.itachallenge.user.helper.ConverterDocumentToDto;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -212,19 +211,22 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 
-    protected Mono<CompletedChallengesDTO[]> getCompletedChallengesStatistics() {
-        return userSolutionRepository.findByStatus(ChallengeStatus.ENDED)
-                .map(userSolution -> new CompletedChallengesDTO(userSolution.getChallengeId(), userSolution.getScore()))
-                .collectList()
-                .map(list -> list.toArray(new CompletedChallengesDTO[0]));
+    public Mono<ChallengesCompletedAndSavedStatisticsDTO> getCompletedAndSavedChallengesStatistics() {
+        Flux<CompletedChallengesDTO> completedChallenges = userSolutionRepository.findByStatus(ChallengeStatus.ENDED)
+                .flatMap(userSolutionDocument ->
+                        converter.fromUserSolutionDocumentToCompletedChallengesDTO(Flux.just(userSolutionDocument)));
+
+        Flux<SavedChallengesDTO> savedChallenges = userSolutionRepository.findByBookmarked(true)
+                .flatMap(userSolutionDocument ->
+                        converter.fromUserSolutionDocumentToSavedChallengesDTO(Flux.just(userSolutionDocument)));
+
+        return Mono.zip(
+                completedChallenges.collectList(),
+                savedChallenges.collectList(),
+                ChallengesCompletedAndSavedStatisticsDTO::new
+        );
     }
 
-    protected Mono<SavedChallengesDTO[]> getSavedChallenges() {
-        return userSolutionRepository.findByBookmarked(true)
-                .map(userSolution -> new SavedChallengesDTO(userSolution.getChallengeId()))
-                .collectList()
-                .map(list -> list.toArray(new SavedChallengesDTO[0]));
-    }
 
 }
 
