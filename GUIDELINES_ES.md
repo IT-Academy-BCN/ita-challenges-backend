@@ -48,14 +48,10 @@
 
 # 1. ENLACES DEL PROYECTO
 ## 1.1 Enlaces del proyecto
-- GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
-  <img src="img/GitHub.jpg" alt="isolated" width="400"/>
-- Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
-  <img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
-- Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
-  <img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
-- Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
-  <img src="img/Figma.jpg" alt="Figma image" width="400"/>
+- [GitHub](https://github.com/IT-Academy-BCN/ita-challenges-backend)
+- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)
+- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)
+- [Figma](https://www.figma.com/design/DynJHHUlOiqx3F5h9dtvAW/)
 
 <hr/>
 
@@ -156,8 +152,7 @@ mongoimport --db=challenges  --username admin_challenge --authenticationDatabase
 Configuraciones Git necesarias para evitar problemas
 
 ### 2.2.1 Git ignore
-1. Copie el archivo ".gitignore" del proyecto raíz\
-   <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
+1. Copie el archivo ".gitignore" del proyecto raíz
 2. Péguelo en el directorio del PC (fuera de la carpeta del proyecto)
 3. En Git Bash...
 4. Ejecute el comando: 'git config --global core-excludesfile ruta/.gitignore'\
@@ -252,9 +247,6 @@ Puede encontrar un buen tutorial en https://www.atlassian.com/git, y hay muchos 
 ## 2.7 Metodología Scrum
 https://scrumguides.org/
 
-
-<img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
-
 <hr/>
 
 # 3. NORMALIZACIÓN DE URL
@@ -301,7 +293,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.1 Nombre de los Packages
 #### NORMAS
     - Todo en minúscula
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
 
 #### EJEMPLO
     - com.itachallenge.user
@@ -317,7 +309,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.2 Nombre de las clases
 #### NORMAS
     - UpperCamelCase
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
 
 #### EJEMPLO
     - UserController
@@ -331,7 +323,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 #### NORMAS
     - UpperCamelCase
     - Terminar con 'Test'
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
 
 #### EJEMPLOS
     - ChallengeControllerTest
@@ -344,7 +336,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ### 4.2.2 Nombre de las clases de interficie
 #### NORMAS
     - UpperCamelCase
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
 
 <hr/>
 
@@ -352,7 +344,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.3 Nombre de los métodos
 #### NORMAS
     - lowerCamelCase 
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
 
 #### EJEMPLO
     - isValidUUID
@@ -365,7 +357,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.3.1 Nombre de los métodos de prueba (testing)
 #### NORMAS
     - lowerCamelCase
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
     - Terminar con '_test'
 
 #### EJEMPLO
@@ -381,7 +373,7 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 ## 4.4 Nombre de constantes
 #### NORMAS
     - Mayúsculas
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
     - Palabra separada con un solo guión bajo '_'
 
 #### EJEMPLO
@@ -438,11 +430,11 @@ Aquí se presentan algunos ejemplos de cómo deben estructurarse las URL's segú
 
 ## 4.7 Camel case: definido
 #### NORMAS
-    - Sólo letras y dígitos
+    - Solo letras y dígitos
     - UpperCamelCase
         - Cada primera letra de cada palabra es letra mayúscula
     - lowerCamelCase
-        - La primera letra de cada palabra está en minúscula, excepto la primera palabra que comienza
+        - Cada palabra comienza con letra mayúscula, excepto la primera palabra que comienza
            con una letra minúscula 
 
 #### EJEMPLO
