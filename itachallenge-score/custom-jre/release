@@ -1,2 +1,2 @@
 JAVA_VERSION="21.0.5"
-MODULES="java.base java.datatransfer java.xml java.prefs java.desktop java.logging java.rmi java.transaction.xa java.sql jdk.charsets"
+MODULES="java.base"

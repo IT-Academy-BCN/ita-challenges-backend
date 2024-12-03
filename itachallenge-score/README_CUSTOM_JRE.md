@@ -40,15 +40,9 @@ Inside the container, generate the custom JRE by following these steps:
 #### 2.1. Identify the required modules
 
 Select the modules you want to include in the custom JRE.
-For example, the following modules were selected for the initial custom JRE for the project. You may need to add or exclude others as required:
+For example, to create the first custom JRE, only the following module was included, but you may need to add more:
 
 - java.base
-- java.logging
-- java.prefs
-- java.rmi
-- java.sql
-- jdk.charsets
-- java.desktop
 
 Note: other modules not specified during the process may also be automatically included. This may be due to default and essential modules or to included modules that have internal dependencies that require other modules.
 
@@ -58,7 +52,7 @@ Use ```jlink``` to generate the custom JRE by running the following command insi
 
 ```bash
 jlink --module-path $JAVA_HOME/jmods \
---add-modules java.base,java.logging,java.prefs,java.rmi,java.sql,jdk.charsets,java.desktop \
+--add-modules java.base \
 --strip-debug --compress=2 --no-header-files --no-man-pages \
 --output /custom-jre
 ```
@@ -213,6 +207,8 @@ Caused by: java.lang.NoClassDefFoundError: <ClassName>
 ```
 
 This message indicates which specific class is missing. For example, if the error mentions ```javax.transaction.xa.XAResource```, it means the module ```java.transaction.xa``` was excluded during the JRE creation process.
+
+Note: If you use your machine's JDK compiler instead of a custom compiler, some module classes excluded in the custom JRE may be executed anyway.
 
 ## **Additional notes**
 

@@ -40,15 +40,9 @@ Dins del contenidor, genera el JRE personalitzat seguint aquests passos:
 #### 2.1. Identifica els mòduls necessaris
 
 Selecciona els mòduls que vols incloure al JRE personalitzat.
-Per exemple, aquests són els mòduls seleccionats per crear el primer JRE personalitzat del projecte, tot i que potser hauràs d’afegir-ne o excloure’n algun més:
+Per exemple, per a crear el primer JRE personalitzat del projecte, només s'ha inclòs el següent mòdul, encara que pot ser que necessitis afegir algun més:
 
 - java.base
-- java.logging
-- java.prefs
-- java.rmi
-- java.sql
-- jdk.charsets
-- java.desktop
 
 Nota: altres mòduls no especificats durant el procés també poden incloure's automàticament. Això pot deure's a mòduls predeterminats i essencials o a mòduls inclosos que tinguin dependències internes que requereixin d'altres mòduls.
 
@@ -58,7 +52,7 @@ Fes servir ```jlink``` per generar el JRE personalitzat executant aquesta instru
 
 ```bash
 jlink --module-path $JAVA_HOME/jmods \
---add-modules java.base,java.logging,java.prefs,java.rmi,java.sql,jdk.charsets,java.desktop \
+--add-modules java.base \
 --strip-debug --compress=2 --no-header-files --no-man-pages \
 --output /custom-jre
 ```
@@ -214,6 +208,9 @@ Caused by: java.lang.NoClassDefFoundError: <NomDeLaClasse>
 ```
 
 Aquest missatge t'indicarà específicament quina classe està faltant. Per exemple: si falta una classe com ```javax.transaction.xa.XAResource```, significa que s'ha exclòs el mòdul ```java.transaction.xa```.
+
+
+Nota: si utilitzes el compilador del JDK de la teva màquina en lloc d'un compilador personalitzat, pot ser que algunes classes de mòduls exclosos en la JRE personalitzada s'executin de totes maneres.
 
 ## **Notes addicionals**
 

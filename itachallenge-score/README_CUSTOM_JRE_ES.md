@@ -40,15 +40,9 @@ Dentro del contenedor, genera el JRE personalizado siguiendo estos pasos:
 #### 2.1. Identifica los módulos necesarios
 
 Selecciona los módulos que quieres incluir en el JRE personalizado.
-Por ejemplo, estos son los módulos que se seleccionaron para crear el primer JRE personalizado del proyecto, aunque puede que necesites añadir o excluir alguno más:
+Por ejemplo, para crear el primer JRE personalizado del proyecto, solo se ha incluido el siguiente módulo, aunque puede que necesites añadir alguno más:
 
 - java.base
-- java.logging
-- java.prefs
-- java.rmi
-- java.sql
-- jdk.charsets
-- java.desktop
 
 Nota: otros módulos no especificados durante el proceso también pueden incluirse automáticamente. Esto puede deberse a módulos predeterminados y esenciales o a módulos incluidos que tengan dependencias internas que requieran de otros módulos.
 
@@ -58,7 +52,7 @@ Usa ```jlink``` para generar el JRE personalizado ejecutando este comando dentro
 
 ```bash
 jlink --module-path $JAVA_HOME/jmods \
---add-modules java.base,java.logging,java.prefs,java.rmi,java.sql,jdk.charsets,java.desktop \
+--add-modules java.base \
 --strip-debug --compress=2 --no-header-files --no-man-pages \
 --output /custom-jre
 ```
@@ -213,6 +207,8 @@ Caused by: java.lang.NoClassDefFoundError: <NombreDeLaClase>
 ```
 
 Este mensaje te indicará específicamente qué clase está faltando. Por ejemplo: si falta una clase como ```javax.transaction.xa.XAResource```, significa que se ha excluido el módulo ```java.transaction.xa```.
+
+Nota: si utilizas el compilador del JDK de tu máquina en lugar de un compilador personalizado, puede que algunas clases de módulos excluidos en la JRE personalizada se ejecuten de todas formas.
 
 ## **Notas adicionales**
 
