@@ -20,7 +20,7 @@ public class BuildUserStatisticsDto {
         UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics();
         challengesStatistics.setSaved(saved); // saved
         challengesStatistics.setCompleted(completed); // completed
-        challengesStatistics.setScorePending(scorePending); // socrePending
+        challengesStatistics.setScorePending(scorePending); // scorePending
         challengesStatistics.setPassed(passed); // passed
 
         // Verificar si hubo algún error en las consultas (indicando que se retornó -1L)

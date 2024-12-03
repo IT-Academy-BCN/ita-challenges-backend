@@ -31,8 +31,8 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
             " 'solutions.score': {$gte: 75}}")
     Mono<Long> countByChallengeStatusAndLanguageAndScoreAmount (UUID idUser, UUID idLanguage, List<ChallengeStatus> status);
 
-    @Query("{'solutions.userId' : ?1, 'solutions.idLanguage' : ?2, 'solutions.status' : {$in: ?3}}")
-//    @Query("{'solutions': {$elemMatch: {'userId': ?1, 'idLanguage': ?2, 'status': {$in: ?3}}}}")
+    //    @Query("{'solutions': {$elemMatch: {'userId': ?1, 'idLanguage': ?2, 'status': {$in: ?3}}}}")
+    @Query("{'solutions.userId' : ?1, 'solutions.languageId' : ?2, 'solutions.status' : {$in: ?3}}")
     Mono<Long> countChallengesByStatusAndLanguage (UUID userId, UUID idLanguage, List<ChallengeStatus> statuses);
 
 }

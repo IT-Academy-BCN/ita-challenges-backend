@@ -277,6 +277,11 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
 
     }
+
+//    private Mono<Long> pruebaParaTest(String idUser, String idLanguage){
+//        UUID userUuid = UUID.fromString(idUser);
+//        UUID languageUuid = UUID.fromString(idLanguage);
+//    }
     // Method that centralizes repository queries with error handling.
     // The TriFunction is used to create a single method that handles all database queries.
     // (One of the TriFunction´arguments is the repository method itself)
