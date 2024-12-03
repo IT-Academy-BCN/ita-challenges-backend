@@ -16,7 +16,7 @@ public class JavaFileService {
 
     private static final Logger log = LoggerFactory.getLogger(JavaFileService.class);
 
-    @Value("${java.file.storage.path}")
+    @Value("${java.file.storage.path:/tmp}") // Path temporal por defecto: /tmp
     private String storagePath;
 
     public File createJavaFile(String userCode, String fileName) throws IOException {
