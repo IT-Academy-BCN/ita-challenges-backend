@@ -11,7 +11,7 @@ import com.itachallenge.score.dto.ScoreRequest;
 import com.itachallenge.score.dto.ScoreResponse;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.util.ExecutionResult;
-import com.itachallenge.score.util.ScoreResult;
+import com.itachallenge.score.domain.ScoreResult;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

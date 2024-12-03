@@ -1,4 +1,4 @@
-package com.itachallenge.score.util;
+package com.itachallenge.score.domain;
 
 import lombok.Getter;
 
