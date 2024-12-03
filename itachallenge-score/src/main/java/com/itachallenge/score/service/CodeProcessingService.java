@@ -119,9 +119,10 @@ final class CodeProcessingService implements CodeProcessingManager {
         // Get the container's terminal output
         ByteArrayOutputStream byteArrayOutputStream = writeTerminalOutputToStream(execCreateCmdResponse);
 
-        // TODO from the output stream the response should be built and returned
+        // TODO from the output stream the response should be built and returned (donne)
 
-        return null;
+        // Process the container output and return the response
+        return processContainerOutput(byteArrayOutputStream);
 
     }
 
