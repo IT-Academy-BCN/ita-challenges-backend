@@ -11,6 +11,7 @@ import com.itachallenge.score.dto.ScoreRequest;
 import com.itachallenge.score.dto.ScoreResponse;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.util.ExecutionResult;
+import com.itachallenge.score.util.ScoreResult;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -199,6 +200,30 @@ final class CodeProcessingService implements CodeProcessingManager {
 
         return null;
 
+    }
+
+    private ResponseEntity<ScoreResponse> processContainerOutput(ByteArrayOutputStream outputStream) {
+        String output = outputStream.toString();
+
+        try {
+            // Determina el resultado basado en el output del terminal
+            ScoreResult scoreResult = ScoreResult.fromTerminalOutput(output);
+
+            // Construye la respuesta
+            ScoreResponse scoreResponse = new ScoreResponse();
+            scoreResponse.setScore(scoreResult.getScore());
+            scoreResponse.setCompilationMessage(scoreResult.getDescription());
+
+            return ResponseEntity.ok(scoreResponse);
+
+        } catch (IllegalArgumentException e) {
+            // Manejo de casos inesperados
+            ScoreResponse errorResponse = new ScoreResponse();
+            errorResponse.setScore(0);
+            errorResponse.setCompilationMessage("Unexpected error during processing: " + e.getMessage());
+
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 
     private void cleanContainer(CreateContainerResponse container) {
