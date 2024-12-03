@@ -23,7 +23,7 @@ fi
 if [ -f "$solution_file" ]; then
   echo "Solution file found: $solution_file"
 else
-  echo "Solution file not found!"
+  echo "Solution file not found!: $solution_file"
   exit 1
 fi
 
