@@ -14,7 +14,7 @@
    2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
    2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
    2.6 [Working with git](#26-working-with-git)\
-   2.7 [Scrum metodology](#27-scrum-metodology)\
+   2.7 [Scrum metodology](#27-scrum-metodology)
 
 3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Conventions](#31-conventions)
@@ -35,7 +35,7 @@
 5. [**LIBRARIES USED**](#5-libraries-used)\
    5.1 [Main Plugins](#51-main-plugins)\
    5.2 [Implementation area](#52-implementation-area)\
-   5.3 [Testimplementation area](#53-testimplementation-area)
+   5.3 [Test implementation area](#53-testimplementation-area)
 
 6. [**REQUIRED PROGRAMS**](#6-required-programs)\
    6.1 [Required programs](#61-required-programs)
@@ -49,14 +49,10 @@
 
 # 1. PROJECT LINKS
 ## 1.1 Project links
-- GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
-<img src="img/GitHub.jpg" alt="isolated" width="400"/>
-- Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
-<img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
-- Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
-<img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
-- Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
-<img src="img/Figma.jpg" alt="Figma image" width="400"/>
+- [GitHub](https://github.com/IT-Academy-BCN/ita-challenges-backend)
+- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)
+- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)
+- [Figma](https://www.figma.com/design/DynJHHUlOiqx3F5h9dtvAW/)
 
 <hr/>
 
@@ -155,8 +151,7 @@ However, if you want to work with your local MongoDB, you can follow the followi
 Necessary Git configurations to prevent problems
 
 ### 2.2.1 Git ignore
-1. Copy file ".gitignore" from root project\
-   <img src="img/Gitignore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
+1. Copy file ".gitignore" from root project
 2. Paste it in the PC directory (outside of project folder)
 3. In Git Bash...
 4. Run the command: 'git config --global core.excludesfile C:\\temp\\.gitignore'\
@@ -251,9 +246,6 @@ A good tutorial is located at https://www.atlassian.com/git, and many other reso
 ## 2.7 Scrum metodology
 https://scrumguides.org/
 
-
-<img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
-
 <hr/>
 
 # 3. URL NORMALIZATION
@@ -302,7 +294,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - All in Lowercase
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - com.itachallenge.user
     - exception
     - helper
@@ -319,7 +311,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - UpperCamelCase
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - UserController
     - PropertiesConfig
 
@@ -333,7 +325,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - End with 'Test'
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - ChallengeControllerTest
     - ResourceHelperTest
 
@@ -353,7 +345,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - lowerCamelCase 
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - isValidUUID
     - initReactorHttpClient
 
@@ -367,7 +359,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Only letters & digits
     - Ended with '_test'
 
-#### EXEMPLE
+#### EXAMPLE
     - getChallengeId_test
     - findAll_test
 
@@ -384,7 +376,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Only letters & digits
     - Word separete with a single underscore '_'
 
-#### EXEMPLE
+#### EXAMPLE
     - static final int BEST_YEAR = 1977;
     - static final String BEST_MONTH = "February";
 
@@ -400,7 +392,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Start with letter
     - Variable names should be short yet meaningful  
 
-#### EXEMPLE
+#### EXAMPLE
     - int  = 1977;
     - static final String BEST_MONTH = "February";
 
@@ -413,7 +405,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Only use for temporary "throwaway" variables
     - lower case
 
-#### EXEMPLE
+#### EXAMPLE
     - int   => i, j, k, m and n
     - char  => c, d and e
 
@@ -428,7 +420,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - A single capital letter, optionally followed by a single numeral
     - A name in the form used for classes
 
-#### EXEMPLE
+#### EXAMPLE
     - E, T, X, T2
     - RequestT, ChallengeT
 
@@ -441,12 +433,12 @@ Here are example of how URL's should be strucutrued according to esablished conv
 #### RULES
     - only letters & digits
     - UpperCamelCase
-        - Every first letter of every word are Upper letter
+        - Every first letter of every word are uppercase letters.
     - lowerCamelCase
-        - The first letter of each word is in lowercase, except for the first word which starts 
+        - The first letter of each word is in uppercase, except for the first word which starts 
           with a lowercase letter 
 
-#### EXEMPLE
+#### EXAMPLE
     - UpperCamelCase
         - UserController
         - ChallengeService
@@ -574,7 +566,7 @@ The following programs are required to work on the project:
 
 - **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 21.0.3 of the JDK which is the one used in this project. You can download [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) from the official website.
 
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 

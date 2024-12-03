@@ -55,7 +55,7 @@ It is important to make sure you have all these tools installed and configured c
 - **MongoDB**
 - **Docker**
 - **Java SE Development Kit 21.0.3**
-- **Gradle 8.8**
+- **Gradle 8.11**
 
 See [GUIDELINES.md](GUIDELINES.md#61-required-programs) to learn how to install and configure these tools.
 
@@ -80,7 +80,7 @@ See [GUIDELINES.md](GUIDELINES.md#5-libraries-used)
 - [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D). The requirements of the project.
 - [Swagger](http://dev.ita-challenges.eurecatacademy.org:9080/swagger-ui/index.html?urls.primaryName=All%20OpenAPI%20Definition). The API documentation of each microservice.
 - [Wiki](https://github.com/IT-Academy-BCN/ita-challenges-backend/wiki) The technical documentation of the project.
-- [Figma](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design). The design of the project.
+- [Figma](https://www.figma.com/design/DynJHHUlOiqx3F5h9dtvAW/). The design of the project.
 
 #### Procedure
 

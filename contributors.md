@@ -66,3 +66,8 @@
 * Carlos Galan - https://github.com/camilo-arthuro
 * David Urpina -https://github.com/eqqbq
 * Hector Pozo -https://github.com/HectorPozoGuerrero
+* Raquel Barrio - https://github.com/Gatchan1
+* Miguel Lozano - https://github.com/Mettanoia
+* Ignasi Moya - https://github.com/imoyaf
+* David Carcelen - https://github.com/DavidCarcelen
+
