@@ -14,7 +14,6 @@ import com.itachallenge.score.util.ExecutionResult;
 import com.itachallenge.score.domain.ScoreResult;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,16 +22,16 @@ import java.io.*;
 import java.nio.file.Path;
 
 import static com.github.dockerjava.api.model.HostConfig.newHostConfig;
+import static com.itachallenge.score.domain.ScoreResult.fromTerminalOutput;
 import static com.itachallenge.score.dto.ScoreResponse.INTERNAL_SERVER_ERROR_RESPONSE;
 import static com.itachallenge.score.dto.ScoreResponse.SOLUTION_TEXT_FILTER_FAILED_RESPONSE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
+import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
 import static java.nio.file.Paths.get;
 import static java.nio.file.Files.newBufferedWriter;
-
-
 
 
 @Service
@@ -47,20 +46,11 @@ final class CodeProcessingService implements CodeProcessingManager {
 
     // Configuration properties
 
-    @Value("${codeProcessingService.image.name}")
     private String imageName;
 
-    @Value("${codeProcessingService.image.version}")
-    private String version;
+    private String storagePath;
 
-    @Value("${codeProcessingService.testing_container.volumes[0]}")
-    private String firstVolume;
-
-    @Value("${java.file.storage.path}")
-    private String hostStoragePath;
-
-    @Value("${java.uri.file-path}")
-    private String userSolutionPath;
+    private String remoteVolumePath;
 
 
     // State
@@ -163,9 +153,9 @@ final class CodeProcessingService implements CodeProcessingManager {
 
         return dockerClient
                 .createContainerCmd(imageName)
-                .withVolumes(new Volume(firstVolume))
+                .withVolumes(new Volume(storagePath))
                 .withHostConfig(newHostConfig()
-                        .withBinds(new Bind(hostStoragePath, new Volume(firstVolume))))
+                        .withBinds(new Bind(storagePath, new Volume(remoteVolumePath))))
                 .exec();
 
     }
@@ -175,8 +165,9 @@ final class CodeProcessingService implements CodeProcessingManager {
         try {
 
             dockerClient
-                    .pullImageCmd(imageName + ":" + version)
+                    .pullImageCmd(imageName)
                     .start()
+                    // TODO Auth is necessary here, in order to do it we need to create an AuthConfig
                     .awaitCompletion();
 
         } catch (InterruptedException e) {
@@ -188,14 +179,10 @@ final class CodeProcessingService implements CodeProcessingManager {
     private ResponseEntity<ScoreResponse> createJavaFile(ScoreRequest scoreRequest) {
 
         try {
-            javaFileService.createJavaFile(scoreRequest.getSolutionText(), userSolutionPath);
+            createJavaFile(scoreRequest.getSolutionText(), userSolutionFileFullName);
         } catch (IOException e) {
 
-            ScoreResponse scoreResponse = INTERNAL_SERVER_ERROR_RESPONSE;
-
-            scoreResponse.setCompilationMessage(e.getMessage());
-
-            return status(INTERNAL_SERVER_ERROR).body(scoreResponse);
+            return getInternalServerErrorScoreResponseResponseEntity(e.getMessage());
 
         }
 
@@ -204,27 +191,38 @@ final class CodeProcessingService implements CodeProcessingManager {
     }
 
     private ResponseEntity<ScoreResponse> processContainerOutput(ByteArrayOutputStream outputStream) {
+
         String output = outputStream.toString();
 
         try {
             // Determina el resultado basado en el output del terminal
-            ScoreResult scoreResult = ScoreResult.fromTerminalOutput(output);
+            ScoreResult scoreResult = fromTerminalOutput(output);
 
             // Construye la respuesta
-            ScoreResponse scoreResponse = new ScoreResponse();
-            scoreResponse.setScore(scoreResult.getScore());
-            scoreResponse.setCompilationMessage(scoreResult.getDescription());
+            ScoreResponse scoreResponse = getScoreResponseFromScoreResult(scoreResult);
 
-            return ResponseEntity.ok(scoreResponse);
+            return ok(scoreResponse);
 
         } catch (IllegalArgumentException e) {
-            // Manejo de casos inesperados
-            ScoreResponse errorResponse = new ScoreResponse();
-            errorResponse.setScore(0);
-            errorResponse.setCompilationMessage("Unexpected error during processing: " + e.getMessage());
-
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(errorResponse);
+            return getInternalServerErrorScoreResponseResponseEntity(e.getMessage());
         }
+    }
+
+    private static @NotNull ScoreResponse getScoreResponseFromScoreResult(ScoreResult scoreResult) {
+        ScoreResponse scoreResponse = new ScoreResponse();
+        scoreResponse.setScore(scoreResult.getScore());
+        scoreResponse.setCompilationMessage(scoreResult.getDescription());
+        return scoreResponse;
+    }
+
+    private static @NotNull ResponseEntity<ScoreResponse> getInternalServerErrorScoreResponseResponseEntity(String errorMessage) {
+
+        ScoreResponse scoreResponse = INTERNAL_SERVER_ERROR_RESPONSE;
+
+        scoreResponse.setCompilationMessage(errorMessage);
+
+        return status(INTERNAL_SERVER_ERROR).body(scoreResponse);
+
     }
 
     private void cleanContainer(CreateContainerResponse container) {
@@ -235,7 +233,7 @@ final class CodeProcessingService implements CodeProcessingManager {
     private @NotNull String extractFilenameFromUserSolutionPath() {
 
         // TODO This should be adapted since it will only work for testing purposes with the current path string
-        return get(userSolutionPath).getFileName().toString();
+        return get(storagePath).getFileName().toString();
 
     }
 
