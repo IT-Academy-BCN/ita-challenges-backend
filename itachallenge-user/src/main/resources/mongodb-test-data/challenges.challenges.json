@@ -1,0 +1,3489 @@
+[{
+  "_id": {
+    "$binary": {
+      "base64": "3KyykbSqQCmOmyhMjKgClg==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Reordena para crecer",
+    "CA": "Reordena per créixer",
+    "EN": "Rearrange to grow"
+  },
+  "level": "EASY",
+  "creation_date": {
+    "$date": "2019-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Su tarea es crear una función que pueda tomar cualquier número entero no negativo como argumento y devolverlo con sus dígitos en orden descendente. Básicamente, reorganice los dígitos para crear el número más alto posible.",
+      "CA": "La teva tasca es fer una funció que pugui prendre qualsevol nombre no negatiu com a argument i retornar-lo amb tots els seus digits reordenats de forma descendent. Basicament, reordenar els digits per crear el nombre mes alt possible.",
+      "EN": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si intentamos pasar una cadena de texto como \"a,bcde\" a la función, nos dará un error de formato de número, ya que la función solo acepta números enteros no negativos.",
+          "CA": "Si intentem passar una cadena de text com \"a,bcde\" a la funció, ens donarà un error de format de número, ja que la funció només accepta nombres enters no negatius.",
+          "EN": "If we try to pass a string like \"a,bcde\" to the function, it will give us a number format error, as the function only accepts non-negative integers."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos el número 42145 a la función, nos devolverá 54421, que es el número más alto que se puede formar reorganizando los dígitos de 42145.",
+          "CA": "Si passem el nombre 42145 a la funció, ens retornarà 54421, que és el nombre més alt que es pot formar reorganitzant els dígits de 42145.",
+          "EN": "If we pass the number 42145 to the function, it will return 54421, which is the highest number that can be formed by rearranging the digits of 42145."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos el número 145263 a la función, nos devolverá 654321, que es el número más alto que se puede formar reorganizando los dígitos de 145263.",
+          "CA": "Si passem el nombre 145263 a la funció, ens retornarà 654321, que és el nombre més alt que es pot formar reorganitzant els dígits de 145263.",
+          "EN": "If we pass the number 145263 to the function, it will return 654321, which is the highest number that can be formed by rearranging the digits of 145263."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este reto necesitarás un conocimiento básico de cómo trabajar con números enteros y cadenas, ordenamiento de listas o arrays y manejo de errores y excepciones en tu lenguaje de programación preferido.",
+      "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i cadenes, ordenació de llistes o arrays, i gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
+      "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and strings, sorting of lists or arrays, and error and exception handling in your preferred programming language."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "QJyf6HTeTbOBoaVSgM+S7w==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Python"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "FoKz6QVqRbeg6erx4Rd1rQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "dadAiZm7Ro2ucbjAuXzmsw==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "a,bcde",
+      "out_param": "java.lang.NumberFormatException"
+    },
+    {
+      "in_param": 42145,
+      "out_param": 54421
+    },
+    {
+      "in_param": 145263,
+      "out_param": 654321
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Buscando los extremos",
+    "CA": "Buscant els extrems",
+    "EN": "Searching for extremes"
+  },
+  "level": "EASY",
+  "creation_date": {
+    "$date": "1986-02-01T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "En esta pequeña tarea, se te proporciona una cadena de números separados por espacios, y debes devolver el número más alto y el más bajo.",
+      "CA": "En aquesta petita tasca set donara una string de nombre separats per espais, hauras de retornar el major i menor d'aquests nombres.",
+      "EN": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "rvPr5RoRSzKfbpjSfiviLQ==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, 2, 3, 4, 5] a la función, nos devolverá [5, 1], que es el número más alto y el más bajo que se puede obtener de la lista.",
+          "CA": "Si passem la llista [1, 2, 3, 4, 5] a la funció, ens retornarà [5, 1], que és el número més alt i el més baix que es pot obtenir de la llista.",
+          "EN": "If we pass the list [1, 2, 3, 4, 5] to the function, it will return [5, 1], which is the highest and lowest number that can be obtained from the list."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "g5hTnntISh6bixNvcRw9yQ==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, 2, -3, 4, 5] a la función, nos devolverá [5, -3], que es el número más alto y el más bajo que se puede obtener de la lista.",
+          "CA": "Si passem la llista [1, 2, -3, 4, 5] a la funció, ens retornarà [5, -3], que és el número més alt i el més baix que es pot obtenir de la llista.",
+          "EN": "If we pass the list [1, 2, -3, 4, 5] to the function, it will return [5, -3], which is the highest and lowest number that can be obtained from the list."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Hmr40My/Tr+Qro6bCYp6FQ==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, 9, 3, 4, -5] a la función, nos devolverá [9, -5], que es el número más alto y el más bajo que se puede obtener de la lista.",
+          "CA": "Si passem la llista [1, 9, 3, 4, -5] a la funció, ens retornarà [9, -5], que és el número més alt i el més baix que es pot obtenir de la llista.",
+          "EN": "f we pass the list [1, 9, 3, 4, -5] to the function, it will return [9, -5], which is the highest and lowest number that can be obtained from the list."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays, manejo de errores y excepciones en tu lenguaje de programación preferido.",
+      "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays, gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
+      "EN": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays, error and exception handling in your preferred programming language."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "CGRGPut8S7O4vHZtcas4tQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "bgeEyVlRSYGffDBBna5hSQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "DcrVbd2SR22SzOuJ3Q5Sjw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "hpY1ZF32QXqE6OUqmMnNPQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "3KyykbSqQCmOmyhMjKgClg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "out_param": [
+        5,
+        1
+      ]
+    },
+    {
+      "in_param": [
+        1,
+        2,
+        -3,
+        4,
+        5
+      ],
+      "out_param": [
+        5,
+        -3
+      ]
+    },
+    {
+      "in_param": [
+        1,
+        9,
+        3,
+        4,
+        -5
+      ],
+      "out_param": [
+        9,
+        -5
+      ]
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Eres muy cuadriculado!",
+    "CA": "Ets molt quadriculat!",
+    "EN": "You're a square!"
+  },
+  "level": "EASY",
+  "creation_date": {
+    "$date": "2003-08-10T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Te gustan los bloques de construcción. Especialmente te gusta construir bloques que son cuadrados. Y lo que más te gusta es organizarlos en un cuadrado de bloques de construcción cuadrados. Sin embargo, a veces no puedes organizarlos en un cuadrado. ¡En cambio, terminas con un simple rectángulo! ¡Esas cosas malditas! Si tan solo tuvieras una manera de saber si estás trabajando en vano... ¡Espera! ¡Eso es! Solo tienes que verificar si tu número de bloques de construcción es un cuadrado perfecto. Tarea\n    Dado un número entero, determina si es un número cuadrado:\n    \n En matemáticas, un número cuadrado o cuadrado perfecto es un número entero que es el cuadrado de otro número entero; en otras palabras, es el producto de algún número entero consigo mismo.\n    \n Las pruebas siempre usarán algún número entero, así que no te preocupes por eso en lenguajes de tipado dinámico.",
+      "CA": "T'agraden els blocs de construcció. T'agraden especialment els blocs quadrats. I el que encara t'agrada més, és colocar-los de forma que creïn un quadrat de blocs de construcció!    Però, de vegades no els pots ordenar en un quadrat. En canvi, acabes amb un simple rectangle! Maleíts rectangles! Tant de bó tinguessis una manera de saber si estas treballant en va... Espera! Ja ho tinc! Nomes has de comprovar si el teu nombre de quadrats es un quadrat. Tasca\n    Donat un nombre natural(int), deterimna si es tracta d'un nombre quadrat:\n    \n En les matemàtiques. un nombre quadrat o quadrat perfecte es un nombre natural que es el quadrat de un altre nombre natural. Dit d'una altre manera, és el producte d'un nombre amb ell mateix.\n    \n Els tests sempre fan servir nombres naturals os sigui que no et preocupis sobre aquesta dinàmica en llenguatges tipats.",
+      "EN": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n The tests will always use some integral number, so don't worry about that in dynamic typed languages."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "hDJz6g6+QoSqO0vOaQnbCw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos el número -1 a la función, nos devolverá false, ya que -1 no es un cuadrado perfecto. ",
+          "CA": "Si passem el número -1 a la funció, ens retornarà false, ja que -1 no és un quadrat perfecte.",
+          "EN": "If we pass the number -1 to the function, it will return false, as -1 is not a perfect square."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "9h0zRSSNTz+g5C5LZPNxgw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos el número 0 a la función, nos devolverá true, ya que 0 es un cuadrado perfecto.",
+          "CA": "Si passem el número 0 a la funció, ens retornarà true, ja que 0 és un quadrat perfecte.",
+          "EN": " If we pass the number 0 to the function, it will return true, as 0 is a perfect square."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "elxuSXhNRQSItQ1KJhjp9Q==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos el número 3 a la función, nos devolverá false, ya que 3 no es un cuadrado perfecto.",
+          "CA": "Si passem el número 3 a la funció, ens retornarà false, ja que 3 no és un quadrat perfecte.",
+          "EN": "If we pass the number 3 to the function, it will return false, as 3 is not a perfect square."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Jq4fjluKTl2aCrRP8jVvmw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos el número 16 a la función, nos devolverá true, ya que 16 es un cuadrado perfecto.",
+          "CA": "Si passem el número 16 a la funció, ens retornarà true, ja que 16 és un quadrat perfecte.",
+          "EN": "If we pass the number 16 to the function, it will return true, as 16 is a perfect square."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con números enteros y cuadrados perfectos en tu lenguaje de programación preferido.",
+      "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i quadrats perfectes en el teu llenguatge de programació preferit.",
+      "EN": "To solve this challenge, you will need a basic understanding of how to work with integers and perfect squares in your preferred programming language."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "QJyf6HTeTbOBoaVSgM+S7w==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Python"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "p6eJqSAGS1mUuzr+DRwWHQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "98nioYttTD+p4C1fjHseSg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "JPz4OWPCTM+1SVvCAneY1Q==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "s7LI100OT02yQFXWoDjVLg==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "i3/zb1EQRFCW7XL29syKXw==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "3KyykbSqQCmOmyhMjKgClg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": -1,
+      "out_param": false
+    },
+    {
+      "in_param": 0,
+      "out_param": true
+    },
+    {
+      "in_param": 3,
+      "out_param": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Filtrado de Listas",
+    "CA": "Filtratge de Llistes",
+    "EN": "List Filtering"
+  },
+  "level": "EASY",
+  "creation_date": {
+    "$date": "2004-09-07T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "En esta kata, crearás una función que tome una lista de integers no negativos y strings, y devuelva una nueva lista con las strings filtradas.",
+      "CA": "En aquesta kata hauràs de crear una funcio que prengui una llista de nombres no negatius i strings i retorni una nova llista amb les string filtrades i eliminades.",
+      "EN": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Wurx8RG8RiqGICPU8u/MMA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, 2, \"a\", \"b\"] a la función, nos devolverá [1, 2], que es la lista con las strings filtradas.",
+          "CA": "Si passem la llista [1, 2, \"a\", \"b\"] a la funció, ens retornarà [1, 2], que és la llista amb les strings filtrades.",
+          "EN": "If we pass the list [1, 2, \"a\", \"b\"] to the function, it will return [1, 2], which is the list with the strings filtered out."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "nhqzsA0eSVu7M02278T58w==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, 2, \"a\", \"b\", 0, 15] a la función, nos devolverá [1, 2, 0, 15], que es la lista con las strings filtradas.",
+          "CA": "Si passem la llista [1, 2, \"a\", \"b\", 0, 15] a la funció, ens retornarà [1, 2, 0, 15], que és la llista amb les strings filtrades.",
+          "EN": "If we pass the list [1, 2, \"a\", \"b\", 0, 15] to the function, it will return [1, 2, 0, 15], which is the list with the strings filtered out."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "0z/e8R+ST7eOjw5C+dzR1A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la función, nos devolverá [1, 2, 231], que es la lista con las strings filtradas.",
+          "CA": "Si passem la llista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la funció, ens retornarà [1, 2, 231], que és la llista amb les strings filtrades.",
+          "EN": "If we pass the list [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] to the function, it will return [1, 2, 231], which is the list with the strings filtered out."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "C99Me8biSjeo+4y/cshkig==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si pasamos la lista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la función, nos devolverá [1, 0, 15, 123], que es la lista con las strings filtradas.",
+          "CA": "Si passem la llista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la funció, ens retornarà [1, 0, 15, 123], que és la llista amb les strings filtrades.",
+          "EN": "If we pass the list [1, \"a\", \"b\", 0, 15, \"abc\", 123] to the function, it will return [1, 0, 15, 123], which is the list with the strings filtered out."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays y manejo de tipos de datos en tu lenguaje de programación preferido.",
+      "CA": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays i gestió de tipus de dades en el teu llenguatge de programació preferit.",
+      "EN": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays and data type handling in your preferred programming language."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "kVHkz4GVStWTY7N4qjItMQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "DR3O6G7oQC+BWn1xe+Bq7Q==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "lg+xNjvsTz2jJszaK5K77g==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "TcVYFe8RSCSLheV9TdhlnQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        1,
+        2,
+        "a",
+        "b"
+      ],
+      "out_param": [
+        1,
+        2
+      ]
+    },
+    {
+      "in_param": [
+        1,
+        2,
+        "a",
+        "b",
+        0,
+        15
+      ],
+      "out_param": [
+        1,
+        2,
+        0,
+        15
+      ]
+    },
+    {
+      "in_param": [
+        1,
+        2,
+        "a",
+        "b",
+        "aasf",
+        "1",
+        "123",
+        231
+      ],
+      "out_param": [
+        1,
+        2,
+        231
+      ]
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "YJn26DmyTHKa4SH908kBCg==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Isogramas",
+    "CA": "Isogrames",
+    "EN": "Isograms"
+  },
+  "level": "EASY",
+  "creation_date": {
+    "$date": "1999-02-01T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Un isograma es una palabra que no tiene letras repetidas, ya sea consecutiva o no consecutiva. Implementa una función que determine si una cadena que contiene solo letras es un isograma. Supón que la cadena vacía es un isograma. Ignora la distinción entre mayúsculas y minúsculas.\n       Ejemplo: (Entrada --> Salida)\\n       \\\"Dermatoglyphics\\\" --> true \\\"aba\\\" --> false \\\"moOse\\\" --> false (ignorar mayúsculas y minúsculas)",
+      "CA": "Un isograma és una paraula que no té cap lleta repetida, sigui consecutiva o no consecutiva. Implementa una funció que determini si una string que només conté lletres es un isograma. Assumeix que una string buida es un isgorama. Ignora la capitalització.\n       Exemple: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ingorar capitalització)",
+      "EN": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Una cadena vacía al no tener letras repetidas. Resultado: true",
+          "CA": "Una cadena buida al no tenir lletres repetides. Resultat: true",
+          "EN": "An empty string as it has no repeating letters. Result: true"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "ES": "Murciélago:Esta palabra no tiene letras repetidas.Resultado: true",
+        "CA": "Estdiant: Aquesta paraula no te lletres repetides.Resultat: true",
+        "EN": "unsubscribed: This word has no repeating letters. Result: true"
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Programación:Esta palabra tiene letras repetidas. Resultado: false",
+          "CA": "Programació: Aquesta paraula te lletres repetides. Resultat: false",
+          "EN": "Programming: This word has repeating letters. Result: false"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Repetir:Esta palabra tiene letras repetidas. Resultado: false",
+          "CA": "Repetir: Aquesta paraula te lletres repetides. Resultat: false",
+          "EN": "Bumblebee: This word has repeating letters. Result: false"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Busca información sobre arrays para encontrar duplicados en una lista o cadena de caracteres, así como sobre la función toLowerCase() para ignorar la distinción entre mayúsculas y minúsculas",
+      "CA": "Busca informació sobre arrays per trobar duplicats en una llista o cadena de caràcters, així com sobre la funció toLowerCase() per ignorar la distinció entre majúscules i minúscules",
+      "EN": "Seek information about arrays to find duplicates in a list or string, as well as about the toLowerCase() function to ignore case distinction"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Cfq+MnNiS/usBbe/hUxuDw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Javascript"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "s7LI100OT02yQFXWoDjVLg==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "4anyuHw9TpuKH5nG1fF6gw==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "Dermatoglyphics",
+      "out_param": true
+    },
+    {
+      "in_param": "moose",
+      "out_param": false
+    },
+    {
+      "in_param": "aba",
+      "out_param": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "pLD402VxTY6FTe+T6pswpg==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Obten el caracter del medio",
+    "CA": "Consegueix el caracter del mig",
+    "EN": "Get the Middle Character"
+  },
+  "level": "EASY",
+  "creation_date": {
+    "$date": "1996-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Se te proporcionará una palabra. Tu tarea es devolver el carácter medio de la palabra. Si la longitud de la palabra es impar, devuelve el carácter medio. Si la longitud de la palabra es par, devuelve los dos caracteres del medio.",
+      "CA": "Set donarà una paraula. La teva feina i retorna la lletra que es troba al mig. Si la llargada de la paraula es una nombre senar, retorna el caracter del mig. si la llargada es un nombre parell, retorna els dos caracters del mig.",
+      "EN": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "hello: la longitud de la palabra es impar, por lo que el carácter del medio es 'l'",
+          "CA": "hello: la llargada de la paraula es senar, per tant el caràcter del mig es 'l'",
+          "EN": "hello: the length of the word is odd, so the middle character is 'l'"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "apple: la longitud de la palabra es par, por lo que los carácteres del medio son 'pp'",
+          "CA": "apple: la llargada de la paraula es parell, per tant els caràcters del mig son 'pp'",
+          "EN": "apple: the length of the word is even, so the middle characters are 'pp'"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "testing: la longitud de la palabra es impar, por lo que el carácter del medio es 't'",
+          "CA": "testing: la llargada de la paraula es senar, per tant el caràcter del mig es 't'",
+          "EN": "testing: the length of the word is odd, so the middle character is 't'"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "elephant: la longitud de la palabra es par, por lo que los carácteres del medio son 'ph'",
+          "CA": "elephant: la llargada de la paraula es parell, per tant els caràcters del mig son 'ph'",
+          "EN": "elephant: the length of the word is even, so the middle characters are 'ph'"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Investiga sobre la función substring() para obtener los caracteres del medio de una cadena",
+      "CA": "Investiga sobre la funció substring() per obtenir els caràcters del mig d'una string",
+      "EN": "Investigate the substring() function to get the middle characters of a string"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "arePq2QqTiW68EiQeU3Y4g==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "test",
+      "out_param": "es"
+    },
+    {
+      "in_param": "testing",
+      "out_param": "t"
+    },
+    {
+      "in_param": "middle",
+      "out_param": "dd"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "fYxqKlinTHK0z4xjqcGBIQ==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Reordenando palabras",
+    "CA": "Reordenant paraules",
+    "EN": "Reorganizing words"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "1992-08-01T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Mueve la primera letra de cada palabra al final y luego agrega 'ay' al final de la palabra. Deja los signos de puntuación sin cambios.",
+      "CA": "Mou la primera lletra de cada paraula que set doni al seu final, despres afegeix 'ay' al final de la paraula. No toquis els simbols de puntuacio.",
+      "EN": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Las cerezas: asLay erezascay",
+          "CA": "Les cireres: esLay irerescay",
+          "EN": "The cherries: heTay herrieschay"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Programar!: rogramar!Pay",
+          "CA": "Programar!: rogramar!Pay",
+          "EN": "Programming!: rogramming!Pay"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Roma: omaRay",
+          "CA": "Roma: omaRay",
+          "EN": "Rome: omeRay"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Colores: oloresCay",
+          "CA": "Colors: olorsCay",
+          "EN": "Colors: olorsCay"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Investiga acerca de las cadenas de palabras y cómo manipularlas",
+      "CA": "Investiga sobre les cadenes de paraules i com manipular-les",
+      "EN": "Look into word strings and how to manipulate them"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Cfq+MnNiS/usBbe/hUxuDw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Javascript"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "xBi6TtaaT7SiTC7kiaDHSQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "1qWywZ6NT3yjsB6fjC1aSw==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "Pig latin is cool",
+      "out_param": "igPay atinlay siay oolcay"
+    },
+    {
+      "in_param": "Hello world !",
+      "out_param": "elloHay orldway !"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "P71OrFPnSaWKwV5tddZuaA==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Conversion de RGB a Hex",
+    "CA": "Conversió de RGB a Hex",
+    "EN": "RGB To Hex Conversion"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "2005-10-10T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "La función RGB está incompleta. Complétala de manera que al pasar valores decimales RGB, se devuelva su representación hexadecimal. Los valores decimales válidos para RGB son 0 - 255. Cualquier valor que caiga fuera de ese rango debe redondearse al valor válido más cercano.\n    Notas: Tu respuesta siempre debe tener 6 caracteres, la abreviatura con 3 no funcionará aquí.",
+      "CA": "La funcio rgb està incompleta. Completala de manera que passant-li RGB en valors decimals ho retorni en una representació haxadecimal. Els valors valids de RGB son 0 - 255. Qualsevol valor que estigui fora d'aquesta ran s'haurà d'arrodonir al valor valid més proper.\n    Notes: La teva resposta sempre hauria de tenir una llargada de 6 caracters, la versió reduida amb 3 no no és correcte aqui.",
+      "EN": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    Notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "255 / 255 / 255 - FFFFFF",
+          "CA": "255 / 255 / 255 - FFFFFF",
+          "EN": "255 / 255 / 255 - FFFFFF"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "0 / 0 / 0 - 000000",
+          "CA": "0 / 0 / 0 - 000000",
+          "EN": "0 / 0 / 0 - 000000"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "148 / 0 / 211 - 9400D3",
+          "CA": "148 / 0 / 211 - 9400D3",
+          "EN": "148 / 0 / 211 - 9400D3"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "128 / 10 / 255 - 8000FF",
+          "CA": "128 / 10 / 255 - 8000FF",
+          "EN": "128 / 10 / 255 - 8000FF"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Informate sobre los valores decimales RGB",
+      "CA": "Informa't sobre els valors decimals RGB",
+      "EN": "Learn about RGB decimal values"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "Nv/SZJ7KSMGM3QnxkNetyg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        255,
+        255,
+        255
+      ],
+      "out_param": "FFFFFF"
+    },
+    {
+      "in_param": [
+        0,
+        0,
+        0
+      ],
+      "out_param": "000000"
+    },
+    {
+      "in_param": [
+        148,
+        0,
+        211
+      ],
+      "out_param": "9400D3"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "nSSOdHMfR4KvLHrptTydXA==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Scramblies",
+    "CA": "Scramblies",
+    "EN": "Scramblies"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": {
+      "$numberLong": "-136044966000"
+    }
+  },
+  "detail": {
+    "description": {
+      "ES": "Completa la función scramble(str1, str2) que devuelve true si una porción de los caracteres de str1 se puede reorganizar para que coincida con str2, de lo contrario, devuelve false.\n       Notas:\n           Solo se utilizarán letras minúsculas (a-z). No se incluirán signos de puntuación ni dígitos.\n    Se debe tener en cuenta el rendimiento.",
+      "CA": "Completa la funció scramble(str1, str2) que retorna true si una part dels caracters de str1 es poden reodenar per ser igual que str2, en cas contrari retorna false.\n    Notes:\n    Només es faran servir lletres minuscules (a-z). No hi hauran ni signes de puntuació ni digits.\n    El rendiment s'ha de tenir en consideració.",
+      "EN": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       Notes:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n    Performance needs to be considered."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "rkqodlw / world - True",
+          "CA": "rkqodlw / world - True",
+          "EN": "rkqodlw / world - True"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "cedewaraaossoqqyt / codewars - True",
+          "CA": "cedewaraaossoqqyt / codewars - True",
+          "EN": "cedewaraaossoqqyt / codewars - True"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "katas / steak - False",
+          "CA": "katas / steak - False",
+          "EN": "katas / steak - False"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Adios / Hola - False",
+          "CA": "Adios / Hola - False",
+          "EN": "Adios / Hola - False"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Informáte sobre los bucles para realizar el ejercicio",
+      "CA": "Informeu-vos sobre els bucles per realitzar l'exercici",
+      "EN": "Find out about the loops to perform the exercise"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "QJyf6HTeTbOBoaVSgM+S7w==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Python"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "n11zOfh7TX646MboUP96UA==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "7dgoOjl4Rle3dv91U24jHQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        "rkqodlw",
+        "world"
+      ],
+      "out_param": true
+    },
+    {
+      "in_param": [
+        "cedewaraaossoqqyt",
+        "codewars"
+      ],
+      "out_param": true
+    },
+    {
+      "in_param": [
+        "katas",
+        "steak"
+      ],
+      "out_param": false
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "WnLWyzIXTXWTaGie1Iy57A==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Numero de zeros finales de N!",
+    "CA": "Nombre de zeros finals de N!",
+    "EN": "Number of trailing zeros of N!"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "2019-01-01T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Escribe un programa que calcule la cantidad de ceros finales en el factorial de un número dado.\n    N! = 1 * 2 * 3 *  ... * N\n    Ten cuidado: 1000! tiene 2568 dígitos...",
+      "CA": "Escriu un programa que calculi el nombre de zeros finals en el factorial de un nombre.\n    N! = 1 * 2 * 3 * ... * N\n    Vigila: 1000! te 2568 digits...",
+      "EN": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para valor de entrada 6, resultado 1",
+          "CA": "Per a valor d'entrada 6, resultat 1",
+          "EN": "For input value 6, result 1"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para valor de entrada 12, resultado 2",
+          "CA": "Per a valor d'entrada 12, resultat 2",
+          "EN": "For input value 12, result 2"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para valor de entrada 34, resultado 11",
+          "CA": "Per a valor d'entrada 34, resultat 11",
+          "EN": "For input value 34, result 11"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para valor de entrada 15, resultado 4",
+          "CA": "Per a valor d'entrada 15, resultat 4",
+          "EN": "For input value 15, result 4"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Un numero factorial es el resultado de multiplicar todos sus valores",
+      "CA": "Un numero factorial és el resultat de multiplicar tots els seus valors",
+      "EN": "A factorial number is the result of multiplying all its values."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "QJyf6HTeTbOBoaVSgM+S7w==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Python"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "wsKmxIOxSoqC4/XPtk/PtA==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "BGeRrnNVT8imlk+WZerJJw==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": 6,
+      "out_param": 1
+    },
+    {
+      "in_param": 12,
+      "out_param": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "w5Rujee0Tjyqz+jWxenQtg==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Xs y Os",
+    "CA": "Xs i Os",
+    "EN": "Exes and Ohs"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "2014-02-03T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Comprueba si un string tiene la misma cantidad de 'x' y 'o'. El método debe devolver un booleano y ser insensible a mayúsculas y minúsculas. La string puede contener cualquier carácter.",
+      "CA": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha de retornar un boleà i ignorar la capitalització. La string pot contenir qualsevol caracter.",
+      "EN": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "ooxx - True",
+          "CA": "ooxx - True",
+          "EN": "ooxx - True"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "xooxx - False",
+          "CA": "xooxx - False",
+          "EN": "xooxx - False"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "ooxXm - True",
+          "CA": "ooxXm - True",
+          "EN": "ooxXm - True"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "alxofrex - False",
+          "CA": "alxofrex - False",
+          "EN": "alxofrex - False"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Informáte sobre los bucles para realizar el ejercicio",
+      "CA": "Informeu-vos sobre els bucles per realitzar l'exercici",
+      "EN": "Find out about the loops to perform the exercise"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "HgR+oreHSees6teekr45CQ==",
+          "subType": "04"
+        }
+      },
+      "language_name": "PHP"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "0OfX3YJpQbaOl7ZqlS3R5Q==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "OW0RZIXFRwqJd/xoubJvsQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "ooxx",
+      "out_param": true
+    },
+    {
+      "in_param": "xooxx",
+      "out_param": false
+    },
+    {
+      "in_param": "ooxXm",
+      "out_param": true
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "hi9dkYOUTbGxiBrC5o1zqA==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Hacia el zero o al infinto?",
+    "CA": "Anant a zero o a l'infinit?",
+    "EN": "Going to zero or to infinity?"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "2017-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) para un valor dado de n, donde n es un entero mayor o igual a 1.",
+      "CA": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) per n donada, on n es un int mes gran o igual a 1.",
+      "EN": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para n = 5, el resultado esperable es (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
+          "CA": "Per n = 5, el resultat esperat és (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
+          "EN": "For n = 5, the expected result is (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para n = 1, el resultado esperable es 1",
+          "CA": "Per n = 1, el resultat esperat és 1",
+          "EN": "For n = 1, the expected result is 1"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para n = 3, el resultado esperable es 9/6",
+          "CA": "Per n = 3, el resultat esperat és 9/6",
+          "EN": "For n = 3, the expected result is 9/6"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para n = 2, el resultado esperable es 3/2",
+          "CA": "Per n = 2, el resultat esperat és 3/2",
+          "EN": "For n = 2, the expected result is 3/2"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "La expresión 'n!', o 'n factorial', se calcula multiplicando todos los numeros enteros positivos menores o iguales a n: n! = 1 * 2 * 3 * ... * n",
+      "CA": "L'expressió 'n!', o 'n factorial', es calcula multiplicant tots els nombres enters positius menors o iguals a n: n! = 1 * 2 * 3 * ... * n",
+      "EN": "The expression 'n!', or 'n factorial', can be found multiplying every positive integer smaller or equal to n: n! = 1 * 2 * 3 * ... * n"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "znbutRofSqWQitzyKcH0jw==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": 1.0000989217538616,
+      "out_param": 1.000098
+    },
+    {
+      "in_param": 1.2125000000000001,
+      "out_param": 1.2125
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "8eKo1mS5S4a2pJ6MTSfzow==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Encuentra el mas pequeño",
+    "CA": "Troba el més petit",
+    "EN": "Find the smallest"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "2022-01-01T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Tienes un número positivo n que consiste en dígitos. Puedes realizar como máximo una operación: elegir el índice de un dígito en el número, quitar este dígito en ese índice e insertarlo nuevamente en otro lugar o en el mismo lugar en el número para encontrar el número más pequeño que puedas obtener.\n\nTarea:\nDevuelve un array o una tupla o una cadena, dependiendo del lenguaje (mira \"Sample Tests\") con\n\nel número más pequeño que obtuviste\nel índice i del dígito d que tomaste, con i tan pequeño como sea posible\nel índice j (tan pequeño como sea posible) donde insertas este dígito d para obtener el número más pequeño.",
+      "CA": "Tens un nombre positiu n que consistex de digits. Com a molt pots realitzar una operacio com a maxim: Escull l'index d'un digit del nombre, treu el digit que es troba en aquest index i insertal un altre cop al mateix o un altre lloc per aconseguir el nombre més petit que puguis.\n\nTasca:\nRetorna un array, un tuple o una string depenen del teu llenguatge (veure \"Sample Tests\") amb\n\nel nombre més petit que puguis trobar\nl'índex i del dígit d que has près, amb i tan petit com sigui possible\nl'index j (tan petit com sigui possible) on insertis el dígit d per a obtindre el número més petit possible.",
+      "EN": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado n = 3541, el dígito d = 1 con índice i = 3 debe moverse a la posición j = 0, para un resultado mínimo de m = 1354",
+          "CA": "Donat n = 3541, el dígit d = 1 amb índex i = 3 s'ha de moure a la posició j = 0, per un resultat mínim de m = 1354",
+          "EN": "Given n = 3541, digit d = 1 with index i = 3 must be moved to position j = 0, for a minimum result of m = 1354"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado n = 35141, el dígito d = 1 con índice i = 2 puede moverse a la posición j = 0 para un resultado mínimo de m = 13541, pero si se mueve el digito d = 1 con indice i = 4 a la posicion j = 0, da un resultado aun menor m = 13514",
+          "CA": "Donat n = 35141, el dígit d = 1 amb índex i = 2 es pot moure a la posició j = 0 per a un resultat mínim de m = 13541, però si el dígit d = 1 amb índex i = 4 es mou a la posició j = 0, dóna un resultat encara més petit m = 13514",
+          "EN": "Given n = 35141, digit d = 1 with index i = 2 can be moved to position j = 0 for a minimum result of m = 13541, but if the digit d = 1 with index i = 4 is moved to position j = 0, it results in an even smaller number m = 13514."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado n = 3544, el dígito d = 3 con índice i = 0 debe quedarse en la posición j = 0, para un resultado mínimo de m = 3544",
+          "CA": "Donat n = 3544, el dígit d = 3 amb índex i = 0 s'ha de quedar a la posició j = 0, per un resultat mínim de m = 3544",
+          "EN": "Given n = 3544, digit d = 3 with index i = 0 must stay in position j = 0, for a minimum result of m = 3544"
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado n = 03540, el dígito d = 0 con índice i = 4 debe moverse a la posición j = 0, para un resultado mínimo de m = 003544",
+          "CA": "Donat n = 03540, el dígit d = 0 amb índex i = 4 s'ha de mover a la posició j = 0, per un resultat mínim de m = 003544",
+          "EN": "Given n = 03540, digit d = 0 with index i = 4 must move to position j = 0, for a minimum result of m = 003544"
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Fíjate que 'i' y 'j' deben ser tan pequeños como sea posible",
+      "CA": "Fixa't que 'i' i 'j' han de ser tan petits com sigui possible",
+      "EN": "Note that 'i' and 'j' must be as small as possible"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Cfq+MnNiS/usBbe/hUxuDw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Javascript"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "yKVEDWRmRjq8zH/vvpOW5A==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "LUI/9pP+SD28hp2MWFUpQg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": 261235,
+      "out_param": [
+        126235,
+        2,
+        0
+      ]
+    },
+    {
+      "in_param": 209917,
+      "out_param": [
+        29917,
+        0,
+        1
+      ]
+    },
+    {
+      "in_param": 1000000,
+      "out_param": [
+        1,
+        0,
+        6
+      ]
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "K/wanjDjQLKel423xaTp5A==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Perímetro terrestre",
+    "CA": "Perímetre terrestre",
+    "EN": "Land perimeter"
+  },
+  "level": "MEDIUM",
+  "creation_date": {
+    "$date": "2003-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Dado un array arr de strings, completa la función calculando el perímetro total de todas las islas. Cada pieza de tierra estará marcada con 'X', mientras que los campos de agua se representarán como 'O'. Considera que cada pieza es una pieza de tierra perfecta de 1 x 1.",
+      "CA": "Donat un array de strings, completa la funció calculant el perímetre total de totes les illes. Cada peça de terra estarà marcada amb un 'X' mentre que l'aigua esta representada com a 'O'. Assumeix que cada casella es un quadrat de terra perfecte 1x1.",
+      "EN": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado arr = ['OOOOO', OXOXO, OOOOO], la respuesta esperable es 8.",
+          "CA": "Donat arr = ['OOOOO', OXOXO, OOOOO], la resposta esperada es 8.",
+          "EN": "Given arr = ['OOOOO', OXOXO, OOOOO], the expected answer is 8."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado arr = ['OOOOOO', OXXXXO, OOOOOO], la respuesta esperable es 10.",
+          "CA": "Donat arr = ['OOOOOO', OXXXXO, OOOOOO], la resposta esperada es 10.",
+          "EN": "Given arr = ['OOOOOO', OXXXXO, OOOOOO], the expected answer is 10."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado arr = ['OOOOOO', OXX0XO, OOOOOO], la respuesta esperable es 10.",
+          "CA": "Donat arr = ['OOOOOO', OXX0XO, OOOOOO], la resposta esperada es 10.",
+          "EN": "Given arr = ['OOOOOO', OXX0XO, OOOOOO], the expected answer is 10."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Dado arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la respuesta esperable es 14.",
+          "CA": "Donat arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la resposta esperada es 14.",
+          "EN": "Given arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], the expected answer is 14."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Ten en cuenta que dos islas en contacto forman una única isla",
+      "CA": "Tingues en compte que dues illes en contacte formen una única illa",
+      "EN": "Note that two islands touching each other form a single island"
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "0PV/J6XgSfaKciStmkl7jQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        "XOOXO",
+        "XOOXO",
+        "OOOXO",
+        "XXOXO",
+        "OXOOO"
+      ],
+      "out_param": "Total land perimeter: 24"
+    },
+    {
+      "in_param": [
+        "XOOO",
+        "XOXO",
+        "XOXO",
+        "OOXX",
+        "OOOO"
+      ],
+      "out_param": "Total land perimeter: 18"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "T4pskYqdSbCfLD5n0rGLjQ==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Evalua la expresión matemática",
+    "CA": "Evalua l'expresió matemàtica.",
+    "EN": "Evaluate mathematical expression."
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2018-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Dada una expresión matemática como un string, debes devolver el resultado como un número",
+      "CA": "Donada una expresió matemàtica en forma d'string has de retornar el resultat en forma de numero.",
+      "EN": "Given a mathematical expression as a string you must return the result as a number."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si la string de entrada es '3+5', la salida esperada sería 8.",
+          "CA": "Si la string d'entrada és '3+5', la sortida esperada seria 8.",
+          "EN": "If the input string is '3+5', the expected output would be 8."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si el string de entrada es '10-6', la salida esperada sería 4.",
+          "CA": "Si el string d'entrada és '10-6', la sortida esperada seria 4.",
+          "EN": "If the input string is '10-6', the expected output would be 4."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si el string de entrada es '2*2', la salida esperada sería 4.",
+          "CA": "Si el string d'entrada és '2*2', la sortida esperada seria 4.",
+          "EN": "If the input string is '2*2', the expected output would be 4."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si el string de entrada es '8/2', la salida esperada sería 4.",
+          "CA": "Si el string d'entrada és '8/2', la sortida esperada seria 4.",
+          "EN": "If the input string is '8/2', the expected output would be 4."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Asegúrate de manejar correctamente los casos de borde, como las expresiones vacías o las expresiones que contienen solo un número.",
+      "CA": "Assegura't de gestionar correctament els casos de vora, com les expressions buides o les expressions que contenen només un número.",
+      "EN": "Make sure to properly handle edge cases, such as empty expressions or expressions containing only a single number."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "HgR+oreHSees6teekr45CQ==",
+          "subType": "04"
+        }
+      },
+      "language_name": "PHP"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "mvq/qgccSymU8UpTbixN1Q==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "87bH2C6aSx2Mfk9anQw7Lg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "1 -1",
+      "out_param": 0
+    },
+    {
+      "in_param": "1 - -1",
+      "out_param": 2
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "16nEsm6NT4yKE5TF4W0vmg==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Comprimir una String",
+    "CA": "Comprimir una String",
+    "EN": "Compress a String"
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2006-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Escribe un programa que tome un String de caracteres y la comprima eliminando las repeticiones consecutivas de caracteres. Por ejemplo, \"aaabbbccc\"  se comprimiría como \"a3b3c3\".",
+      "CA": "Escriu un programa que pren una cadena de caracters i la comprimeix treient caracters que es repeteixin consecutivament. Per exemple, \"aaabbbccc\" seria comprimit com \"a3b3c3\".",
+      "EN": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si la string de entrada es 'aaabbbccc', la salida esperada sería 'a3b3c3'.",
+          "CA": "Si la string d'entrada és 'aaabbbccc', la sortida esperada seria 'a3b3c3'.",
+          "EN": "If the input string is 'aaabbbccc', the expected output would be 'a3b3c3'."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si la string de entrada es 'aabbccdd', la salida esperada sería 'a2b2c2d2'.",
+          "CA": "Si la string d'entrada és 'aabbccdd', la sortida esperada seria 'a2b2c2d2'.",
+          "EN": "If the input string is 'aabbccdd', the expected output would be 'a2b2c2d2'."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si la string de entrada es 'zzzzyyyyyx', la salida esperada sería 'z4y5x'.",
+          "CA": "Si la string d'entrada és 'zzzzyyyyyx', la sortida esperada seria 'z4y5x'.",
+          "EN": "If the input string is 'zzzzyyyyyx', the expected output would be 'z4y5x'."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si la string de entrada es 'abcdeeffff', la salida esperada sería 'abcde2f4'.",
+          "CA": "Si la string d'entrada és 'abcdeeffff', la sortida esperada seria 'abcde2f4'.",
+          "EN": "If the input string is 'abcdeeffff', the expected output would be 'abcde2f4'."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "La salida comprimida debe mantener el orden de los caracteres en la cadena original.",
+      "CA": "La sortida comprimida ha de mantenir l'ordre dels caràcters en la cadena original.",
+      "EN": "The compressed output should maintain the order of characters in the original string."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "1iS65JpDRRWJeYAcDW/YjA==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "aaabbbccc",
+      "out_param": "a3b3c3"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "bTuaLI4dRbSYrOj5x9Oppw==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Subsecuencia Común más Larga",
+    "CA": "Subseqüència Comú més Llarga.",
+    "EN": "Longest Common Subsequence"
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2000-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Implementa un programa que encuentre la subsecuencia común más larga entre dos strings dadas. Una subsecuencia es una secuencia de caracteres que aparece en el mismo orden relativo en ambos strings.",
+      "CA": "Implementa un programa que trobi la subseqüencia comú mes llarga possible entre dos strings. Una subseqüència és una seqüència de caracters que es troba amb el mateix ordre relatiu en ambdues strings.",
+      "EN": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si las strings son 'ABCBDAB' y 'BDCAB', la subsecuencia común más larga sería 'BCAB'.",
+          "CA": "Si les strings són 'ABCBDAB' i 'BDCAB', la subseqüència comuna més llarga seria 'BCAB'.",
+          "EN": "If the strings are 'ABCBDAB' and 'BDCAB', the longest common subsequence would be 'BCAB'."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para las strings 'abcdef' y 'acf', la subsecuencia común más larga sería 'acf'.",
+          "CA": "Per a les strings 'abcdef' i 'acf', la subseqüència comuna més llarga seria 'acf'.",
+          "EN": "For the strings 'abcdef' and 'acf', the longest common subsequence would be 'acf'."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Si las strings son 'AGGTAB' y 'GXTXAYB', la subsecuencia común más larga sería 'GTAB'.",
+          "CA": "Si les strings són 'AGGTAB' i 'GXTXAYB', la subseqüència comuna més llarga seria 'GTAB'.",
+          "EN": "If the strings are 'AGGTAB' and 'GXTXAYB', the longest common subsequence would be 'GTAB'."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para las strings 'abcdgh' y 'aedfhr', la subsecuencia común más larga sería 'adh'.",
+          "CA": "Per a les strings 'abcdgh' i 'aedfhr', la subseqüència comuna més llarga seria 'adh'.",
+          "EN": "For the strings 'abcdgh' and 'aedfhr', the longest common subsequence would be 'adh'."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "La subsecuencia común más larga no necesariamente tiene que ser una subcadena. Puede ser una subsecuencia de caracteres que aparecen en el mismo orden relativo en ambas cadenas, pero no necesariamente contiguos.",
+      "CA": "La subseqüència comuna més llarga no necessàriament ha de ser una subcadena. Pot ser una subseqüència de caràcters que apareixen en el mateix ordre relatiu en ambdues cadenes, però no necessàriament contigus.",
+      "EN": "The longest common subsequence doesn't necessarily have to be a substring. It can be a sequence of characters that appear in the same relative order in both strings, but not necessarily contiguous."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Cfq+MnNiS/usBbe/hUxuDw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Javascript"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "mYvFBCZdQKS1eWL+rMPIzQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nx0qSzxuTXuKnF4PezwqHQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        "ABCBDAB",
+        "BDCAB"
+      ],
+      "out_param": "BCAB"
+    },
+    {
+      "in_param": [
+        "abcdef",
+        "acf"
+      ],
+      "out_param": "acf"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "jH46nWstQ+SdH056jJ0+Gw==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Encuentra el Punto de Equilibrio de un Array",
+    "CA": "Troba el Punt d'Equilibri d'un Array",
+    "EN": "Find the Equilibrium Point in an Array"
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2018-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Escribe un programa que encuentre el punto de equilibrio en un array, el cual es un índice donde la suma de los elementos a la izquierda es igual a la suma de los elementos a la derecha.",
+      "CA": "Escriu un programa que trobi el punt d'esquilibre en un array, el qual és un index on la suma dels elements a l'esquerra és igual que la suma dels elements a la dreta.",
+      "EN": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para el array [-7, 1, 5, 2, -4, 3, 0], el punto de equilibrio sería el índice 3.",
+          "CA": "Per a l'array [-7, 1, 5, 2, -4, 3, 0], el punt d'equilibri seria l'índex 3.",
+          "EN": "For the array [-7, 1, 5, 2, -4, 3, 0], the equilibrium point would be index 3."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para el array [1, 2, 3, 4, 6], el punto de equilibrio sería el índice 3.",
+          "CA": "Per a l'array [1, 2, 3, 4, 6], el punt d'equilibri seria l'índex 3.",
+          "EN": "For the array [1, 2, 3, 4, 6], the equilibrium point would be index 3."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para el array [1, -1, 1], el punto de equilibrio sería el índice 1.",
+          "CA": "Per a l'array [1, -1, 1], el punt d'equilibri seria l'índex 1.",
+          "EN": "For the array [1, -1, 1], the equilibrium point would be index 1."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "Para el array [2, 4, 6, 8], no hay punto de equilibrio ya que la suma de los elementos a la izquierda y a la derecha nunca es igual.",
+          "CA": "Per a l'array [2, 4, 6, 8], no hi ha punt d'equilibri ja que la suma dels elements a l'esquerra i a la dreta mai és igual.",
+          "EN": "For the array [2, 4, 6, 8], there is no equilibrium point since the sum of elements to the left and to the right is never equal."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Recuerda manejar el caso en que no haya un punto de equilibrio en el array, es decir, cuando la suma de los elementos a la izquierda nunca es igual a la suma de los elementos a la derecha.",
+      "CA": "Recorda gestionar el cas en què no hi hagi un punt d'equilibri en l'array, és a dir, quan la suma dels elements a l'esquerra mai és igual a la suma dels elements a la dreta.",
+      "EN": "Remember to handle the case where there is no equilibrium point in the array, i.e., when the sum of elements to the left is never equal to the sum of elements to the right."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "Qphm4cSJRQCkWNRu1ismvg==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "out_param": 3
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "qOfJ0ks+SfeNXDpsno0rbw==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Valida Expresiones Matemáticas",
+    "CA": "Valida Expressions Matemàtiques",
+    "EN": "Validate Mathematical Expressions"
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2007-01-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Crea un programa que valide si una expresión matemática dada es válida, teniendo en cuenta paréntesis equilibrados y operadores matemáticos válidos.",
+      "CA": "Crea un programa que validi si una expresió matemàtica és valida, considerant parèntesis equilibrats i operadors matemàtics valids.",
+      "EN": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Expresión válida: '(2 + 3) * 4'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '(2 + 3 * 4'. Esta expresión es inválida porque falta un paréntesis de cierre.",
+          "CA": "1. Expressió vàlida: '(2 + 3) * 4'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '(2 + 3 * 4'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
+          "EN": "1. Valid expression: '(2 + 3) * 4'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '(2 + 3 * 4'. This expression is invalid because a closing parenthesis is missing."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Expresión válida: '5 * (3 + (2 - 5))'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '2 + )3 * 4('. Esta expresión es inválida porque los paréntesis están desequilibrados.",
+          "CA": "1. Expressió vàlida: '5 * (3 + (2 - 5))'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 + )3 * 4('. Aquesta expressió és invàlida perquè els parèntesis estan desequilibrats.",
+          "EN": "1. Valid expression: '5 * (3 + (2 - 5))'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '2 + )3 * 4('. This expression is invalid because the parentheses are unbalanced."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Expresión válida: '2 * 3'. Esta expresión es válida porque no hay paréntesis y los operadores matemáticos son válidos. 2. Expresión inválida: '2 & 3'. Esta expresión es inválida porque el operador '&' no es un operador matemático válido.",
+          "CA": "1. Expressió vàlida: '2 * 3'. Aquesta expressió és vàlida perquè no hi ha parèntesis i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 & 3'. Aquesta expressió és invàlida perquè l'operador '&' no és un operador matemàtic vàlid.",
+          "EN": "1. Valid expression: '2 * 3'. This expression is valid because there are no parentheses and the mathematical operators are valid. 2. Invalid expression: '2 & 3'. This expression is invalid because the '&' operator is not a valid mathematical operator."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Expresión válida: '((3 + 4) * 2) / (5 - 2)'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '((3 + 4) * 2 / (5 - 2'. Esta expresión es inválida porque falta un paréntesis de cierre.",
+          "CA": "1. Expressió vàlida: '((3 + 4) * 2) / (5 - 2)'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '((3 + 4) * 2 / (5 - 2'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
+          "EN": "1. Valid expression: '((3 + 4) * 2) / (5 - 2)'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '((3 + 4) * 2 / (5 - 2'. This expression is invalid because a closing parenthesis is missing."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este ejercicio, es útil familiarizarse con las estructuras de datos como pilas y con los conceptos básicos de las expresiones matemáticas.",
+      "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb les estructures de dades com a piles i amb els conceptes bàsics de les expressions matemàtiques.",
+      "EN": "To solve this exercise, it's helpful to familiarize yourself with data structures like stacks and basic concepts of mathematical expressions."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "6oN+fT05QvGnlb/B6ShWew==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": "((3 + 4) * 2) / (5 - 2)",
+      "out_param": "Valid"
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "TGqOHZ07T4yLei49HFqdTg==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Encuentra el Subarray Contiguo de mayor tamaño",
+    "CA": "Troba el Subarray Contigu més Gran",
+    "EN": "Find the Largest Contiguous Subarray"
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2018-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Implementa un algoritmo para encontrar la subarray contigua más grande en un array de enteros.",
+      "CA": "Implementa un algoritme per trobar el subarray contigu més gran possible en un array d'integers.",
+      "EN": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contiguo más grande es [4, -1, 2, 1] con una suma de 6. 2. Array de entrada: [1, -2, 3, 5, -3, 2]. El subarray contiguo más grande es [3, 5] con una suma de 8.",
+          "CA": "1. Array d'entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contigu més gran és [4, -1, 2, 1] amb una suma de 6. 2. Array d'entrada: [1, -2, 3, 5, -3, 2]. El subarray contigu més gran és [3, 5] amb una suma de 8.",
+          "EN": "1. Input array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. The largest contiguous subarray is [4, -1, 2, 1] with a sum of 6. 2. Input array: [1, -2, 3, 5, -3, 2]. The largest contiguous subarray is [3, 5] with a sum of 8."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [5, -3, 5]. El subarray contiguo más grande es [5, -3, 5] con una suma de 7. 2. Array de entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contiguo más grande es [0] con una suma de 0.",
+          "CA": "1. Array d'entrada: [5, -3, 5]. El subarray contigu més gran és [5, -3, 5] amb una suma de 7. 2. Array d'entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contigu més gran és [0] amb una suma de 0.",
+          "EN": "1. Input array: [5, -3, 5]. The largest contiguous subarray is [5, -3, 5] with a sum of 7. 2. Input array: [0, -2, -3, -4, -1, -2, -3, -5, -4]. The largest contiguous subarray is [0] with a sum of 0."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [1, 2, 3, 4, 5]. El subarray contiguo más grande es [1, 2, 3, 4, 5] con una suma de 15. 2. Array de entrada: [-1, -2, -3, -4, -5]. El subarray contiguo más grande es [-1] con una suma de -1.",
+          "CA": "1. Array d'entrada: [1, 2, 3, 4, 5]. El subarray contigu més gran és [1, 2, 3, 4, 5] amb una suma de 15. 2. Array d'entrada: [-1, -2, -3, -4, -5]. El subarray contigu més gran és [-1] amb una suma de -1.",
+          "EN": "1. Input array: [1, 2, 3, 4, 5]. The largest contiguous subarray is [1, 2, 3, 4, 5] with a sum of 15. 2. Input array: [-1, -2, -3, -4, -5]. The largest contiguous subarray is [-1] with a sum of -1."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contiguo más grande es [4, -1, -2, 1, 5] con una suma de 7. 2. Array de entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contiguo más grande es [1, -1, 1, -1, 1, -1, 1] con una suma de 1.",
+          "CA": "1. Array d'entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contigu més gran és [4, -1, -2, 1, 5] amb una suma de 7. 2. Array d'entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contigu més gran és [1, -1, 1, -1, 1, -1, 1] amb una suma de 1.",
+          "EN": "1. Input array: [2, -3, 4, -1, -2, 1, 5, -3]. The largest contiguous subarray is [4, -1, -2, 1, 5] with a sum of 7. 2. Input array: [1, -1, 1, -1, 1, -1, 1, -1]. The largest contiguous subarray is [1, -1, 1, -1, 1, -1, 1] with a sum of 1."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de subarrays y con algoritmos de programación dinámica.",
+      "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes de subarrays i amb algoritmes de programació dinàmica.",
+      "EN": "To solve this exercise, it's helpful to familiarize yourself with the concepts of subarrays and dynamic programming algorithms."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Cfq+MnNiS/usBbe/hUxuDw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Javascript"
+    },
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "TceBadTJQT+gMsnNjnylDw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "ax33r/MvTyuPl310MIdNNA==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        -2,
+        1,
+        -3,
+        4,
+        -1,
+        2,
+        1,
+        -5,
+        4
+      ],
+      "out_param": [
+        4,
+        -1,
+        2,
+        1
+      ]
+    }
+  ]
+},
+{
+  "_id": {
+    "$binary": {
+      "base64": "7FK38S94SoOu8DubbzSnYw==",
+      "subType": "04"
+    }
+  },
+  "challenge_title": {
+    "ES": "Cuenta inversiones en un Array",
+    "CA": "Compta inversions dins un Array",
+    "EN": "Count Inversions in an Array"
+  },
+  "level": "HARD",
+  "creation_date": {
+    "$date": "2018-09-09T09:43:54.000Z"
+  },
+  "detail": {
+    "description": {
+      "ES": "Escribe un programa que cuente el número de inversiones en un array. Una inversión ocurre cuando un par de elementos en el array está en el orden incorrecto",
+      "CA": "Esctriu un programa que compti el nombre d'inversions dins un array. Una inversió és quan una parella d'elements en l'array es troba en l'ordre equivocat",
+      "EN": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
+    },
+    "examples": [
+      {
+        "_id": {
+          "$binary": {
+            "base64": "Latuqv30SpOAiIEKlW4r+A==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [2, 4, 1, 3, 5]. El número de inversiones es 3. 2. Array de entrada: [5, 4, 3, 2, 1]. El número de inversiones es 10.",
+          "CA": "1. Array d'entrada: [2, 4, 1, 3, 5]. El nombre d'inversions és 3. 2. Array d'entrada: [5, 4, 3, 2, 1]. El nombre d'inversions és 10.",
+          "EN": "1. Input array: [2, 4, 1, 3, 5]. The number of inversions is 3. 2. Input array: [5, 4, 3, 2, 1]. The number of inversions is 10."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "bAICXrBvQgq6+yjHN7GEcw==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [1, 2, 5, 3, 4, 6]. El número de inversiones es 2. 2. Array de entrada: [6, 5, 4, 3, 2, 1]. El número de inversiones es 15.",
+          "CA": "1. Array d'entrada: [1, 2, 5, 3, 4, 6]. El nombre d'inversions és 2. 2. Array d'entrada: [6, 5, 4, 3, 2, 1]. El nombre d'inversions és 15.",
+          "EN": "1. Input array: [1, 2, 5, 3, 4, 6]. The number of inversions is 2. 2. Input array: [6, 5, 4, 3, 2, 1]. The number of inversions is 15."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "cOl1Xp6DQdOFOmZfHyovXA==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [1, 3, 5, 2, 4, 6]. El número de inversiones es 3. 2. Array de entrada: [6, 4, 2, 5, 3, 1]. El número de inversiones es 9.",
+          "CA": "1. Array d'entrada: [1, 3, 5, 2, 4, 6]. El nombre d'inversions és 3. 2. Array d'entrada: [6, 4, 2, 5, 3, 1]. El nombre d'inversions és 9.",
+          "EN": "1. Input array: [1, 3, 5, 2, 4, 6]. The number of inversions is 3. 2. Input array: [6, 4, 2, 5, 3, 1]. The number of inversions is 9."
+        }
+      },
+      {
+        "_id": {
+          "$binary": {
+            "base64": "u3iXuFF9SEOMF+NHq6CGyg==",
+            "subType": "04"
+          }
+        },
+        "example_text": {
+          "ES": "1. Array de entrada: [1, 2, 3, 4, 5]. El número de inversiones es 0. 2. Array de entrada: [5, 3, 4, 2, 1]. El número de inversiones es 6.",
+          "CA": "1. Array d'entrada: [1, 2, 3, 4, 5]. El nombre d'inversions és 0. 2. Array d'entrada: [5, 3, 4, 2, 1]. El nombre d'inversions és 6.",
+          "EN": "1. Input array: [1, 2, 3, 4, 5]. The number of inversions is 0. 2. Input array: [5, 3, 4, 2, 1]. The number of inversions is 6."
+        }
+      }
+    ],
+    "notes": {
+      "ES": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de inversiones en arrays y con algoritmos de ordenación.",
+      "CA": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes d'inversions en arrays i amb algoritmes d'ordenació.",
+      "EN": "To solve this exercise, it's helpful to familiarize yourself with the concepts of inversions in arrays and sorting algorithms."
+    }
+  },
+  "languages": [
+    {
+      "_id": {
+        "$binary": {
+          "base64": "Zg4bGAwKQmKiioXenfasXw==",
+          "subType": "04"
+        }
+      },
+      "language_name": "Java"
+    }
+  ],
+  "solutions": [
+    {
+      "$binary": {
+        "base64": "qOfT+StcSm6dj2wbCk4/jQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "$binary": {
+        "base64": "3sA/I7A0Sy2A6eUEdn8FGQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "MBx03Se2S+SaOAx62ilpzw==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "UnutENaJShCnh3JQf6/kFQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "related": [
+    {
+      "$binary": {
+        "base64": "9uD4d5VgTmi6tn3V8WtGpQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "nSxOKwKvQyeBsn2/XD9afQ==",
+        "subType": "04"
+      }
+    },
+    {
+      "$binary": {
+        "base64": "L5SN4G8MQImQuX9woIEjGQ==",
+        "subType": "04"
+      }
+    }
+  ],
+  "testing_values": [
+    {
+      "in_param": [
+        2,
+        4,
+        1,
+        3,
+        5
+      ],
+      "out_param": 3
+    }
+  ]
+}]

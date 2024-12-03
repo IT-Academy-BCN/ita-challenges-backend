@@ -90,3 +90,13 @@ codeProcessingService:
     image: hello-world:latest
     volumes: # The path in the host is defined by the java.file.storage.java-files above
       - ${java.file.storage.path}/opt/scoreUserChallenge
+
+# Sandbox.Dockerfile
+sandbox:
+  file:
+    storage:
+      path: /usr/local/bin/solution_testing_data/
+  Dockerfile:
+    volumePath: /data/
+    parametersFile: ${volumePath}${SOLUTION_ID}_parameters.txt
+    solutionFile: ${volumePath}SolutionBody_${SOLUTION_ID}.java
