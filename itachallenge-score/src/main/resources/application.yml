@@ -78,4 +78,12 @@ docker:
     }"
   timeout-seconds: 5
 
-#
+# Sandbox.Dockerfile
+sandbox:
+  file:
+    storage:
+      path: /usr/local/bin/solution_testing_data/
+  Dockerfile:
+    volumePath: /data/
+    parametersFile: ${volumePath}${SOLUTION_ID}_parameters.txt
+    solutionFile: ${volumePath}${SOLUTION_ID}_solution_body.java

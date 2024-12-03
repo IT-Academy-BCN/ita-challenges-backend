@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "Environment Variables:" env
 
 # Ensure the SOLUTION_ID is set
 if [ -z "$SOLUTION_ID"]; then
@@ -8,7 +9,7 @@ fi
 
 # Define the fie paths based on volumePath
 parameters_file="/data/${SOLUTION_ID}_parameters.txt"
-solution_file="/data/${SOLUTION_ID}_solution_body.java"
+solution_file="/data/SolutionBody_${SOLUTION_ID}.java"
 
 # Check if the parameters file exists
 if [ -f "$parameters_file" ]; then
@@ -27,8 +28,9 @@ else
 fi
 
 # Read key/value pairs from the parameters file
+declare -A params
 while IFS='=' read -r key value; do
-  echo "Parameter: $key = $value"
+  params[$key]="$value"
 done < "$parameters_file"
 
 # Compile the user code
@@ -36,7 +38,7 @@ javac "$solution_file"
 
 # check if compilation was successful
 if [ $? -eq 0 ]; then
-  # Run the compiled code
+  # Run the compiled code with each input key ans checks the output
   class_name=$(basename "$solution_file" .java)
 
   for input_key in "${!params[@]}"; do
@@ -53,7 +55,7 @@ if [ $? -eq 0 ]; then
     else
       echo "Test failed!"
     fi
-    done
+  done
 else
   echo "Compilation failed!"
 fi
