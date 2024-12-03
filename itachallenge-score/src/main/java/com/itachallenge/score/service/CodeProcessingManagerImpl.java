@@ -104,9 +104,7 @@ public class CodeProcessingManagerImpl implements CodeProcessingManager {
         return ResponseEntity.ok(scoreResponse);
     }
 
-
-    @Override
-    public int calculateScore(ExecutionResult executionResult, String resultExpected) {
+    private int calculateScore(ExecutionResult executionResult, String resultExpected) {
         String trimmedMessage = executionResult.getMessage().trim();
 
         if (!executionResult.isCompiled()) {

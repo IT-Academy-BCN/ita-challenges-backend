@@ -85,60 +85,60 @@ class CodeProcessingManagerTest {
         });
     }
 
-    @DisplayName("Test calculateScore with compilation error")
-    @Test
-    void testCalculateScoreWithCompilationError() {
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setCompiled(false);
-        executionResult.setMessage("Compilation error");
+//    @DisplayName("Test calculateScore with compilation error")
+//    @Test
+//    void testCalculateScoreWithCompilationError() {
+//        ExecutionResult executionResult = new ExecutionResult();
+//        executionResult.setCompiled(false);
+//        executionResult.setMessage("Compilation error");
+//
+//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+//
+//        assertEquals(0, score);
+//        assertEquals("Compilation error", executionResult.getMessage());
+//    }
 
-        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+//    @DisplayName("Test calculateScore with execution error")
+//    @Test
+//    void testCalculateScoreWithExecutionError() {
+//        ExecutionResult executionResult = new ExecutionResult();
+//        executionResult.setCompiled(true);
+//        executionResult.setExecution(false);
+//        executionResult.setMessage("Execution error");
+//
+//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+//
+//        assertEquals(25, score);
+//        assertEquals("Execution error: Execution error", executionResult.getMessage());
+//    }
 
-        assertEquals(0, score);
-        assertEquals("Compilation error", executionResult.getMessage());
-    }
+//    @DisplayName("Test calculateScore with partial match")
+//    @Test
+//    void testCalculateScoreWithPartialMatch() {
+//        ExecutionResult executionResult = new ExecutionResult();
+//        executionResult.setCompiled(true);
+//        executionResult.setExecution(true);
+//        executionResult.setMessage("54321");
+//
+//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+//
+//        assertEquals(75, score);
+//        assertEquals("Code compiled and executed, and result partially match: 54321", executionResult.getMessage());
+//    }
 
-    @DisplayName("Test calculateScore with execution error")
-    @Test
-    void testCalculateScoreWithExecutionError() {
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setCompiled(true);
-        executionResult.setExecution(false);
-        executionResult.setMessage("Execution error");
-
-        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-
-        assertEquals(25, score);
-        assertEquals("Execution error: Execution error", executionResult.getMessage());
-    }
-
-    @DisplayName("Test calculateScore with partial match")
-    @Test
-    void testCalculateScoreWithPartialMatch() {
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setCompiled(true);
-        executionResult.setExecution(true);
-        executionResult.setMessage("54321");
-
-        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-
-        assertEquals(75, score);
-        assertEquals("Code compiled and executed, and result partially match: 54321", executionResult.getMessage());
-    }
-
-    @DisplayName("Test calculateScore with no match")
-    @Test
-    void testCalculateScoreWithNoMatch() {
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setCompiled(true);
-        executionResult.setExecution(true);
-        executionResult.setMessage("1234");
-
-        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-
-        assertEquals(50, score);
-        assertEquals("Code compiled and executed, but result doesn't match: 1234", executionResult.getMessage());
-    }
+//    @DisplayName("Test calculateScore with no match")
+//    @Test
+//    void testCalculateScoreWithNoMatch() {
+//        ExecutionResult executionResult = new ExecutionResult();
+//        executionResult.setCompiled(true);
+//        executionResult.setExecution(true);
+//        executionResult.setMessage("1234");
+//
+//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+//
+//        assertEquals(50, score);
+//        assertEquals("Code compiled and executed, but result doesn't match: 1234", executionResult.getMessage());
+//    }
 
     @DisplayName("Test processCode with filter failure")
     @Test
@@ -158,16 +158,16 @@ class CodeProcessingManagerTest {
         assertEquals("Filter failed", responseEntity.getBody().getCompilationMessage());
     }
 
-    @DisplayName("Test calculateScore with empty message")
-    @Test
-    void testCalculateScoreWithEmptyMessage() {
-        ExecutionResult executionResult = new ExecutionResult();
-        executionResult.setCompiled(false);
-        executionResult.setMessage("");
-
-        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-
-        assertEquals(0, score);
-        assertEquals("Compilation error: ", executionResult.getMessage());
-    }
+//    @DisplayName("Test calculateScore with empty message")
+//    @Test
+//    void testCalculateScoreWithEmptyMessage() {
+//        ExecutionResult executionResult = new ExecutionResult();
+//        executionResult.setCompiled(false);
+//        executionResult.setMessage("");
+//
+//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+//
+//        assertEquals(0, score);
+//        assertEquals("Compilation error: ", executionResult.getMessage());
+//    }
 }

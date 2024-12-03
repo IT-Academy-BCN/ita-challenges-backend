@@ -28,7 +28,6 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.ResponseEntity.status;
 
-import static java.io.File.pathSeparator;
 import static java.nio.file.Paths.get;
 import static java.nio.file.Files.newBufferedWriter;
 
@@ -125,14 +124,6 @@ final class CodeProcessingService implements CodeProcessingManager {
 
     }
 
-    @Override
-    public int calculateScore(ExecutionResult executionResult, String resultExpected) {
-
-        // Since this method is here just for compatibility reasons is not meant to be called
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
 
     // Helper methods
 
@@ -161,7 +152,7 @@ final class CodeProcessingService implements CodeProcessingManager {
 
 
         // Execute script in container
-        // IMPORTANT: This uses the mocked script createed above, should be substituted by the non "stubbed" one in production
+        // IMPORTANT: This uses the mocked script created above, should be substituted by the non "stubbed" one in production
         return executeScriptInContainerMock(container);
 
     }
