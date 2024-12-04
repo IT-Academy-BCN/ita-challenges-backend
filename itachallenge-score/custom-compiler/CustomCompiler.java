@@ -5,6 +5,13 @@ import java.util.Arrays;
 public class CustomCompiler {
 
     public static void main(String[] args) {
+        if (args.length != 1) {
+            System.out.println("Please provide the path to the Java file to compile.");
+            return;
+        }
+
+        String sourceFilePath = args[0];
+
         // Get the JavaCompiler instance
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
@@ -16,8 +23,7 @@ public class CustomCompiler {
 
         // Specify the Java source file to compile
         Iterable<? extends JavaFileObject> compilationUnits = customFileManager.getJavaFileObjectsFromFiles(
-                // Add the path to the source file
-                Arrays.asList(new File("HelloWorld.java"))
+                Arrays.asList(new File(sourceFilePath))
         );
 
         // Compile the source file

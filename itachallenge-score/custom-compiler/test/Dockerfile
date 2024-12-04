@@ -12,4 +12,4 @@ COPY CustomJavaFileManager.class /app/
 COPY HelloWorld.java /app/
 
 # Command to run the custom compiler
-CMD ["java", "CustomCompiler"]
+CMD ["java", "CustomCompiler", "HelloWorld.java"]
