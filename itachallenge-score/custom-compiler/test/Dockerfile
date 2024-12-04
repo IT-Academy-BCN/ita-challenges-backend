@@ -12,4 +12,4 @@ COPY CustomJavaFileManager.class /app/
 COPY HelloWorld.java /app/
 
 # Command to run the custom compiler
-CMD ["java", "com.itachallenge.score.compiler.CustomCompiler"]
+CMD ["java", "CustomCompiler"]
