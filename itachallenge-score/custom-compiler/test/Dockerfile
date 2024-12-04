@@ -1,12 +1,5 @@
-# Use Alpine as the base image
-FROM alpine:latest
-
-# Copy the custom JRE to the container
-COPY custom-jre /custom-jre
-
-# Set the JAVA_HOME environment variable to the custom JRE
-ENV JAVA_HOME=/custom-jre
-ENV PATH=$JAVA_HOME/bin:$PATH
+# Use OpenJDK 11 as the base image
+FROM openjdk:11-jdk-slim
 
 # Set the working directory
 WORKDIR /app
