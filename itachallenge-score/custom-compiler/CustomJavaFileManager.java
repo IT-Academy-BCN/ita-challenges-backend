@@ -27,7 +27,7 @@ public class CustomJavaFileManager extends ForwardingJavaFileManager<JavaFileMan
     @Override
     public Iterable<JavaFileObject> list(Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
         // Restrict access to certain packages
-        if (packageName.isEmpty() || packageName.startsWith("java.base") || packageName.startsWith("java.compile") || packageName.startsWith("jdk.compile") || packageName.startsWith("java.lang")) {
+        if (packageName.isEmpty() || packageName.startsWith("java.base") || packageName.startsWith("java.compile") || packageName.startsWith("jdk.compile") || packageName.startsWith("java.lang") || packageName.startsWith("java.io") || packageName.startsWith("java.math") || packageName.startsWith("java.net") || packageName.startsWith("java.nio") || packageName.startsWith("java.security") || packageName.startsWith("java.text") || packageName.startsWith("java.time") || packageName.startsWith("java.util")) {
             return super.list(location, packageName, kinds, recurse);
         }
         throw new SecurityException("Access to package " + packageName + " is restricted");
