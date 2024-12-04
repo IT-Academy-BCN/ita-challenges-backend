@@ -12,7 +12,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 WORKDIR /app
 
 # Copy the compiled CustomCompiler class and dependencies into the container
-COPY build/classes/java/main/com/itachallenge/score/compiler/CustomCompiler.class /app/
+COPY build/classes/java/main/com/itachallenge/score/compiler/build/classes/java/main/com/itachallenge/score/compiler/CustomCompiler.class /app/
 COPY build/classes/java/main/com/itachallenge/score/compiler/CustomJavaFileManager.class /app/
 
 # Copy the Java source file to be compiled
