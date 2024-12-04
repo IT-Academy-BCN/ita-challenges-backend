@@ -16,7 +16,8 @@ public class CustomCompiler {
 
         // Specify the Java source file to compile
         Iterable<? extends JavaFileObject> compilationUnits = customFileManager.getJavaFileObjectsFromFiles(
-                Arrays.asList(new File("custom-jre/test/HelloWorld.java"))
+                // Add the path to the source file
+                Arrays.asList(new File("HelloWorld.java"))
         );
 
         // Compile the source file

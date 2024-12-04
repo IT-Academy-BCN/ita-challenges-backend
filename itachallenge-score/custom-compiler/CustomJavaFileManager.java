@@ -8,6 +8,10 @@ public class CustomJavaFileManager extends ForwardingJavaFileManager<JavaFileMan
         super(standardFileManager);
     }
 
+    public Iterable<? extends JavaFileObject> getJavaFileObjectsFromFiles(List<File> files) {
+        return fileManager.getJavaFileObjectsFromFiles(files);
+    }
+
     @Override
     public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind, FileObject sibling) throws IOException {
         // Customize the file output location or behavior if needed
@@ -21,11 +25,11 @@ public class CustomJavaFileManager extends ForwardingJavaFileManager<JavaFileMan
     }
 
     @Override
-    public Iterable<JavaFileObject> list(Location location, String packageName, List<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
+    public Iterable<JavaFileObject> list(Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
         // Restrict access to certain packages
-        if (!(packageName.startsWith("java.base") || packageName.startsWith("java.compile") || packageName.startsWith("jdk.compile"))) {
-            throw new SecurityException("Access to package " + packageName + " is restricted");
+        if (packageName.isEmpty() || packageName.startsWith("java.base") || packageName.startsWith("java.compile") || packageName.startsWith("jdk.compile") || packageName.startsWith("java.lang")) {
+            return super.list(location, packageName, kinds, recurse);
         }
-        return super.list(location, packageName, kinds, recurse);
+        throw new SecurityException("Access to package " + packageName + " is restricted");
     }
 }
