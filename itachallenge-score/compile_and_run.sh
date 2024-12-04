@@ -10,6 +10,7 @@ fi
 # Define the fie paths based on volumePath
 parameters_file="/data/${SOLUTION_ID}_parameters.txt"
 solution_file="/data/SolutionBody_${SOLUTION_ID}.java"
+temp_solution_file="/data/SolutionBody.java"
 
 # Check if the parameters file exists
 if [ -f "$parameters_file" ]; then
@@ -23,9 +24,12 @@ fi
 if [ -f "$solution_file" ]; then
   echo "Solution file found: $solution_file"
 else
-  echo "Solution file NOT found!: $solution_file"
+  echo "Solution file not found!: $solution_file"
   exit 1
 fi
+
+# Copy the original solution file to a temporary file with the correct name
+cp "$solution_file" "$temp_solution_file"
 
 # Read key/value pairs from the parameters file
 declare -A params
@@ -39,7 +43,7 @@ javac "$solution_file"
 # check if compilation was successful
 if [ $? -eq 0 ]; then
   # Run the compiled code with each input key ans checks the output
-  class_name=$(basename "$solution_file" .java)
+  class_name="SolutionBody"
 
   for input_key in "${!params[@]}"; do
     expected_output="${params[${input_key}]}"
