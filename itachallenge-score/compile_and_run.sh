@@ -1,35 +1,33 @@
 #!/bin/bash
-echo "Environment Variables:" env
+
+echo "Environment Variables:"
+env
 
 # Ensure the SOLUTION_ID is set
-if [ -z "$SOLUTION_ID"]; then
+if [ -z "$SOLUTION_ID" ]; then
   echo "SOLUTION_ID environment variable is not set!"
   exit 1
 fi
 
-# Define the fie paths based on volumePath
+# Define the file paths based on volumePath
 parameters_file="/data/${SOLUTION_ID}_parameters.txt"
 solution_file="/data/SolutionBody_${SOLUTION_ID}.java"
-temp_solution_file="/data/SolutionBody.java"
 
 # Check if the parameters file exists
 if [ -f "$parameters_file" ]; then
   echo "Parameters file found: $parameters_file"
 else
-  echo "Parameters file not found!"
+  echo "Parameters file not found!: $parameters_file"
   exit 1
 fi
 
-# Check if the solution fie exists
+# Check if the solution file exists
 if [ -f "$solution_file" ]; then
   echo "Solution file found: $solution_file"
 else
   echo "Solution file not found!: $solution_file"
   exit 1
 fi
-
-# Copy the original solution file to a temporary file with the correct name
-cp "$solution_file" "$temp_solution_file"
 
 # Read key/value pairs from the parameters file
 declare -A params
@@ -38,18 +36,18 @@ while IFS='=' read -r key value; do
 done < "$parameters_file"
 
 # Compile the user code
-javac "$solution_file"
+javac -d /data "$solution_file"
 
 # check if compilation was successful
 if [ $? -eq 0 ]; then
-  # Run the compiled code with each input key ans checks the output
-  class_name="SolutionBody"
+  echo "Compilation succeded."
 
+  # Run the compiled code with each input key ans checks the output
   for input_key in "${!params[@]}"; do
     expected_output="${params[${input_key}]}"
 
     echo "Testing input: ${input_key}"
-    actual_output=$(java "$class_name" "${input_key}")
+    actual_output=$(java -cp /data "$class_name" "${input_key}")
 
     echo "Expected output: ${expected_output}"
     echo "Actual output: ${actual_output}"
@@ -63,3 +61,7 @@ if [ $? -eq 0 ]; then
 else
   echo "Compilation failed!"
 fi
+
+# Clean up temporary files
+echo "Cleaning up temporary files..."
+rm "/data/SolutionBody.class"
