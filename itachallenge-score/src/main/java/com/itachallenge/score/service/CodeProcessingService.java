@@ -177,17 +177,12 @@ final class CodeProcessingService implements CodeProcessingManager {
     }
 
     private ResponseEntity<ScoreResponse> createJavaFile(ScoreRequest scoreRequest) {
-
         try {
-            createJavaFile(scoreRequest.getSolutionText(), userSolutionFileFullName);
+            JavaFileService.createJavaFile(scoreRequest.getSolutionText(), extractFilenameFromUserSolutionPath(), storagePath);
         } catch (IOException e) {
-
             return getInternalServerErrorScoreResponseResponseEntity(e.getMessage());
-
         }
-
         return null;
-
     }
 
     private ResponseEntity<ScoreResponse> processContainerOutput(ByteArrayOutputStream outputStream) {
@@ -256,7 +251,7 @@ final class CodeProcessingService implements CodeProcessingManager {
 
     private ExecCreateCmdResponse executeScriptInContainerMock(CreateContainerResponse container) {
 
-        final String pathInContainer = firstVolume.split(":")[1];
+        final String pathInContainer = storagePath.split(":")[1];
 
         String fileName = extractFilenameFromUserSolutionPath();
 
@@ -296,7 +291,7 @@ final class CodeProcessingService implements CodeProcessingManager {
                 fi
                 """;
 
-        Path scriptPath = get(userSolutionPath, fileName);
+        Path scriptPath = get(storagePath, fileName);
 
         try (BufferedWriter writer = newBufferedWriter(scriptPath)) {
 
