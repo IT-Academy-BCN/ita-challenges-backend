@@ -1,15 +1,24 @@
 
-import java.util.Arrays;
-public class SolutionBody {
+public class SolutionBody_123e4567-e89b-12d3-a456-426614174000 {
 
     public static void main(String[] args) {
         String input = args[0];
 
-        int[] numbers = Arrays.stream(input.split(",")).mapToInt(Integer::parseInt).toArray();
+        String[] numbersStrings = input.substring(1, input.length() - 1).split(",");
 
-        int minValue = Arrays.stream(numbers).min().orElse(Integer.MIN_VALUE);
-        int maxValue = Arrays.stream(numbers).max().orElse(Integer.MAX_VALUE);
+        int minValue = Integer.MIN_VALUE;
+        int maxValue = Integer.MAX_VALUE;
 
-        System.out.println(minValue + "," + maxValue);
+        for (String numberString: numbersStrings) {
+            int number = Integer.parseInt(numberString.trim());
+            if (number < minValue) {
+                minValue = number;
+            }
+            if (number > maxValue) {
+                maxValue = number;
+            }
+        }
+
+        System.out.println("{" + minValue + "," + maxValue + "}");
     }
 }

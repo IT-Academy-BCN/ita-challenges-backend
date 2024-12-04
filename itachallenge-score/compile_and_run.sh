@@ -12,6 +12,7 @@ fi
 # Define the file paths based on volumePath
 parameters_file="/data/${SOLUTION_ID}_parameters.txt"
 solution_file="/data/SolutionBody_${SOLUTION_ID}.java"
+temp_solution_file="/data/SolutionBody_${SOLUTION_ID//-/_}.java"
 
 # Check if the parameters file exists
 if [ -f "$parameters_file" ]; then
@@ -29,6 +30,16 @@ else
   exit 1
 fi
 
+# Copy the solution file to a temporary file with underscores instead of hyphens
+cp "$solution_file" "$temp_solution_file"
+
+#Replace hypehns with underscores in the class name within the file
+sed -i "s/public class .*/public class SolutionBody_${SOLUTION_ID//-/_} {/" "$temp_solution_file"
+
+# Verify the contents of the temporary solution file
+echo "Contents of $temp_solution_file:"
+cat "$temp_solution_file"
+
 # Read key/value pairs from the parameters file
 declare -A params
 while IFS='=' read -r key value; do
@@ -36,11 +47,14 @@ while IFS='=' read -r key value; do
 done < "$parameters_file"
 
 # Compile the user code
-javac -d /data "$solution_file"
+javac -d /data "$temp_solution_file"
 
 # check if compilation was successful
 if [ $? -eq 0 ]; then
-  echo "Compilation succeded."
+  echo "Compilation succeeded."
+
+  # Extract the class name from te solution file name
+  class_name=$(basename "$temp_solution_file" .java)
 
   # Run the compiled code with each input key ans checks the output
   for input_key in "${!params[@]}"; do
@@ -62,6 +76,7 @@ else
   echo "Compilation failed!"
 fi
 
-# Clean up temporary files
+# Clean up compiled class files
 echo "Cleaning up temporary files..."
-rm "/data/SolutionBody.class"
+rm "$temp_solution_file"
+rm "/data/${class_name}.class"
