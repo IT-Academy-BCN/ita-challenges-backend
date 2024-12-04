@@ -66,6 +66,7 @@ class ConverterDocumentToDtoTest {
     @Test
     public void testFromUserSolutionDocumentToUserSolutionDto() {
         solutionDocument.setSolutionText("Sample Solution Text");
+        solutionDocument.setUuid(UUID.randomUUID());
 
         userSolutionDocument.setUserId(UUID.randomUUID());
         userSolutionDocument.setChallengeId(UUID.randomUUID());

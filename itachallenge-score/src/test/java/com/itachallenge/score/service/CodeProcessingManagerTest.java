@@ -58,7 +58,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode successful")
     @Test
     void testProcessCodeSuccessful() throws IOException, InterruptedException {
-        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
@@ -79,7 +79,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode with IOException")
     @Test
     void testProcessCodeWithIOException() throws IOException, InterruptedException {
-        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
@@ -102,7 +102,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode with TIMED OUT message")
     @Test
     void testProcessCodeWithTimedOutMessage() throws IOException, InterruptedException {
-        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
@@ -124,7 +124,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode with InterruptedException")
     @Test
     void testProcessCodeWithInterruptedException() throws IOException, InterruptedException {
-        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
@@ -196,7 +196,7 @@ class CodeProcessingManagerTest {
     @DisplayName("Test processCode with filter failure")
     @Test
     void testProcessCodeWithFilterFailure() {
-        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(false);

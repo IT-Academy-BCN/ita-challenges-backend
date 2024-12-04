@@ -20,6 +20,7 @@ class ObjectSerializerTest {
         dto = new ScoreRequestDto();
         dto.setUuidChallenge(UUID.randomUUID());
         dto.setUuidLanguage(UUID.randomUUID());
+        dto.setUuidSolution(UUID.randomUUID());
         dto.setSolutionText("Solution Text Test");
     }
 
@@ -40,6 +41,7 @@ class ObjectSerializerTest {
         assertNotNull(deserializedDto, "Deserialized object should not be null.");
         assertEquals(dto.getUuidChallenge(), deserializedDto.getUuidChallenge(), "UUIDs should match");
         assertEquals(dto.getUuidLanguage(), deserializedDto.getUuidLanguage(), "UUIDs should match");
+        assertEquals(dto.getUuidSolution(), deserializedDto.getUuidSolution(), "UUIDs should match");
         assertEquals(dto.getSolutionText(), deserializedDto.getSolutionText(), "Solution texts should match");
     }
 

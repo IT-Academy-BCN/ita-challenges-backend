@@ -24,6 +24,9 @@ public class ScoreRequestDto {
     @JsonProperty("uuid_language")
     private UUID uuidLanguage;
 
+    @JsonProperty("uuid_solution")
+    private UUID uuidSolution;
+
     @JsonProperty("solution_text")
     private String solutionText;
 }

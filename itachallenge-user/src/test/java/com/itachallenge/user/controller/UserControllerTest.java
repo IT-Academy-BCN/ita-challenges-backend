@@ -244,10 +244,11 @@ class UserControllerTest {
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setSolutionId("123e4567-e89b-12d3-a456-426614174000");
         userSolutionDto.setSolutionText("This is a test solution");
 
         UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
-                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
+                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(), userSolutionDto.getSolutionId(),
                 userSolutionDto.getSolutionText(), 13, "xxx", "STARTED");
 
         when(userSolutionService.addSolution(userSolutionDto))
@@ -265,6 +266,7 @@ class UserControllerTest {
                     assert dto.getUserId() != null;
                     assert dto.getChallengeId() != null;
                     assert dto.getLanguageId() != null;
+                    assert dto.getSolutionId() != null;
                     assert dto.getScore() >= 0;
                     assert dto.getErrors() != null;
 
@@ -278,10 +280,10 @@ class UserControllerTest {
         String URI_TEST = "/solution";
 
         List<UserSolutionDto> testCases = Arrays.asList(
-                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, ""),
+                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "123e4567-e89b-12d3-a456-426614174000", "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null,"123e4567-e89b-12d3-a456-426614174000" ,"This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "123e4567-e89b-12d3-a456-426614174000","This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "123e4567-e89b-12d3-a456-426614174000", ""),
                 new UserSolutionDto()
         );
 
@@ -305,6 +307,7 @@ class UserControllerTest {
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setSolutionId("123e4567-e89b-12d3-a456-426614174000");
         userSolutionDto.setStatus("ENDED");
         userSolutionDto.setSolutionText("This is a test solution");
 
@@ -370,6 +373,7 @@ class UserControllerTest {
         userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
         userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
         userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
+        userSolutionDto.setSolutionId("123e4567-e89b-12d3-a456-426614174000");
         userSolutionDto.setSolutionText(largeSolutionText);
 
         when(userSolutionService.addSolution(any()))

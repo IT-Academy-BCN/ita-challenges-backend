@@ -43,6 +43,7 @@ public class CodeProcessingManager {
             ScoreResponseDto scoreResponse = new ScoreResponseDto();
             scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
             scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
+            scoreResponse.setUuidSolution(scoreRequest.getUuidSolution());
             scoreResponse.setSolutionText(scoreRequest.getSolutionText());
             scoreResponse.setExpectedResult(resultExpected);
             scoreResponse.setCompilationMessage(executionResult.getMessage().trim());
@@ -57,6 +58,7 @@ public class CodeProcessingManager {
                 ScoreResponseDto scoreResponse = new ScoreResponseDto();
                 scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
                 scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
+                scoreResponse.setUuidSolution(scoreRequest.getUuidSolution());
                 scoreResponse.setSolutionText(scoreRequest.getSolutionText());
                 scoreResponse.setExpectedResult(resultExpected);
                 scoreResponse.setCompilationMessage("Execution timed out: " + e.getMessage());
@@ -72,6 +74,7 @@ public class CodeProcessingManager {
         ScoreResponseDto scoreResponse = new ScoreResponseDto();
         scoreResponse.setUuidChallenge(scoreRequest.getUuidChallenge());
         scoreResponse.setUuidLanguage(scoreRequest.getUuidLanguage());
+        scoreResponse.setUuidSolution(scoreRequest.getUuidSolution());
         scoreResponse.setSolutionText(scoreRequest.getSolutionText());
         scoreResponse.setExpectedResult(resultExpected);
         int score = calculateScore(executionResult, resultExpected);
