@@ -1,7 +1,7 @@
 # EJEMPLO DOCKERFILE PARA PROBAR EL JRE PERSONALIZADO
 
 # Usa Alpine como base (con la versión correspondiente)
-FROM alpine:latest
+FROM alpine:3.20.3
 
 # Copia el JRE personalizado al contenedor
 COPY custom-jre /custom-jre
