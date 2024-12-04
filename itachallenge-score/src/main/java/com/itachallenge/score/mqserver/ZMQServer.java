@@ -96,6 +96,7 @@ public class ZMQServer{
         return ScoreResponseDto.builder()
                 .uuidChallenge(requestDto.getUuidChallenge())
                 .uuidLanguage(requestDto.getUuidLanguage())
+                .uuidSolution(requestDto.getUuidSolution())
                 .solutionText(requestDto.getSolutionText())
                 .score(99)
                 .errors("xxx")

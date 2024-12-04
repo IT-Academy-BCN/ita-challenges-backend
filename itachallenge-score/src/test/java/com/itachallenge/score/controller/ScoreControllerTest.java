@@ -40,6 +40,7 @@ class ScoreControllerTest {
         mockScoreResponse = new ScoreResponseDto();
         mockScoreResponse.setUuidChallenge(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"));
         mockScoreResponse.setUuidLanguage(UUID.fromString("456f7890-e89b-12d3-a456-426614174000"));
+        mockScoreResponse.setUuidSolution(UUID.fromString("23e4567-e89b-12d3-a456-426614174000"));
         mockScoreResponse.setSolutionText("Example text");
         mockScoreResponse.setScore(99);
         mockScoreResponse.setErrors("No errors");
@@ -64,6 +65,7 @@ class ScoreControllerTest {
         ScoreRequestDto scoreRequestDto = new ScoreRequestDto(
                 UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
                 UUID.fromString("456f7890-e89b-12d3-a456-426614174000"),
+                UUID.fromString("23e4567-e89b-12d3-a456-426614174000"),
                 "Example text"
         );
 
@@ -75,6 +77,7 @@ class ScoreControllerTest {
                 .expectBody()
                 .jsonPath("$.uuid_challenge").isEqualTo(mockScoreResponse.getUuidChallenge().toString())
                 .jsonPath("$.uuid_language").isEqualTo(mockScoreResponse.getUuidLanguage().toString())
+                .jsonPath("$.uuid_solution").isEqualTo(mockScoreResponse.getUuidSolution().toString())
                 .jsonPath("$.solution_text").isEqualTo(mockScoreResponse.getSolutionText())
                 .jsonPath("$.score").isEqualTo(mockScoreResponse.getScore())
                 .jsonPath("$.errors").isEqualTo(mockScoreResponse.getErrors());

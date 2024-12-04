@@ -77,10 +77,11 @@ class ZMQServerTest {
     @Test
     void testReceiveAndProcessMessage() throws Exception {
         byte[] messageBytes = "test message".getBytes();
-        ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
+        ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(),"solutionText");
         ScoreResponseDto responseDto = ScoreResponseDto.builder()
                 .uuidChallenge(requestDto.getUuidChallenge())
                 .uuidLanguage(requestDto.getUuidLanguage())
+                .uuidSolution(requestDto.getUuidSolution())
                 .solutionText(requestDto.getSolutionText())
                 .score(99).errors("xxx")
                 .compilationMessage("Compilation Message Text")
@@ -144,7 +145,7 @@ class ZMQServerTest {
     @Test
     void testErrorHandlingDuringSerialization() throws InterruptedException, IOException {
         byte[] messageBytes = "test message".getBytes();
-        ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), "solutionText");
+        ScoreRequestDto requestDto = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "solutionText");
 
         when(socketMock.recv(0)).thenReturn(messageBytes);
         when(objectSerializerMock.deserialize(messageBytes, ScoreRequestDto.class)).thenReturn(requestDto);

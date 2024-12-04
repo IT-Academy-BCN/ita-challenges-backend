@@ -68,7 +68,7 @@ public class DockerExecutor {
         String argsBuilder = buildExecutionArguments(args);
         String command = String.format(
                 "docker run --rm --name %s %s sh -c \"echo '%s' > Main.java && javac Main.java && java -Djava.security.manager -Djava.security.policy=/usr/app/restrictive.policy Main %s\"",
-                containerName, dockerImageName, formattedCode, argsBuilder.toString().trim()
+                containerName, dockerImageName, formattedCode, argsBuilder.trim()
         );
 
         log.info("Executing command: {}", command);
