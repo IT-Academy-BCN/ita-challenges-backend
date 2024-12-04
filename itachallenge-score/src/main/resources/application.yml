@@ -24,6 +24,9 @@ management:
   security:
     enabled: false
 
+sandbox:
+  solutions-dir: "./solution_testing_data"
+
 logging:
   level:
     root: INFO
