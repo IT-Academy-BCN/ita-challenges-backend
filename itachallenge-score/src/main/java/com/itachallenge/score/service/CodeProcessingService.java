@@ -192,10 +192,9 @@ final class CodeProcessingService implements CodeProcessingManager {
         try {
             // Determina el resultado basado en el output del terminal
             ScoreResult scoreResult = fromTerminalOutput(output);
-
-            // Construye la respuesta
-            ScoreResponse scoreResponse = getScoreResponseFromScoreResult(scoreResult);
-
+            ScoreResponse scoreResponse = getScoreResponseFromScoreResult(scoreResult); // Construye la respuesta
+            // TODO we need to add this line to send the response back to ZMQ Cliente.
+            //  zmqClient.send(scoreResponse); // Send the response to the ZMQ Client
             return ok(scoreResponse);
 
         } catch (IllegalArgumentException e) {
