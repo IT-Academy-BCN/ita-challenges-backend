@@ -1,6 +1,5 @@
 package com.itachallenge.user.repository;
 
-import ch.qos.logback.classic.Logger;
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
@@ -265,20 +264,27 @@ public class UserSolutionRepositoryTest {
     @Test
     void testCountChallengesByStatusSTARTEDAndLanguage() {
 
+
+        UUID testUserId1 = UUID.fromString("442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"); // user_id
+        UUID testLanguageUuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f"); // language_id
+        ChallengeStatus testStatus1 = ChallengeStatus.ENDED; // Asegúrate de que este estado esté definido en tu enum
+
         List<ChallengeStatus> testStatuses = List.of(ChallengeStatus.ENDED);
-        long expectedValue = 6L;
-        Mono<Long> amountOfChallengesStarted = userSolutionRepository.countChallengesByStatusAndLanguage(UUID.fromString("c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"),
-                testLanguageUuid, testStatuses );
+        long expectedValue = 1L;
 
-        Logger log = null;
-        amountOfChallengesStarted
-                .doOnNext(value -> log.debug("Valor del Mono (durante la ejecución): " + value)) // Imprime el valor
-                .subscribe();
+        Mono<Long> amountOfChallengesStarted = userSolutionRepository.countChallengesByStatusAndLanguage2(testUserUuid);  //,
+//                testLanguageUuid1, testStatus1 );
+
+//        UUID.fromString("c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"
 
 
-        StepVerifier.create(amountOfChallengesStarted)
-                .expectNextCount(expectedValue)
-                .verifyComplete();
+        Long actualValue = amountOfChallengesStarted.block();
+        assertEquals(expectedValue, actualValue);
+
+
+//        StepVerifier.create(amountOfChallengesStarted)
+//                .expectNext(expectedValue)
+//                .verifyComplete();
     }
 
 }

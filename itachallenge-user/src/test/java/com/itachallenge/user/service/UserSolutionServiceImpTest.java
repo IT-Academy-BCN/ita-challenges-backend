@@ -340,4 +340,8 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
+    @Test
+    void getUserTotalStatisticsTest(){
+        
+    }
 }
