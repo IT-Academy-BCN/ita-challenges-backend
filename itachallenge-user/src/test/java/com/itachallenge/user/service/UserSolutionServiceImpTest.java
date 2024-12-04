@@ -52,6 +52,7 @@ class UserSolutionServiceImpTest {
     private UUID userUuid;
     private UUID challengeUuid;
     private UUID languageUuid;
+    private UUID solutionUuid;
     private int mockScore;
     private String mockErrors;
     private UserSolutionDto userSolutionDto;
@@ -62,10 +63,13 @@ class UserSolutionServiceImpTest {
         String idUser = "550e8400-e29b-41d4-a716-446655440001";
         String idChallenge = "550e8400-e29b-41d4-a716-446655440002";
         String idLanguage = "550e8400-e29b-41d4-a716-446655440003";
+        String idSolution = "23e4567-e89b-12d3-a456-426614174000";
         solutionText = "This is a test started solution";
         userUuid = UUID.fromString(idUser);
         challengeUuid = UUID.fromString(idChallenge);
         languageUuid = UUID.fromString(idLanguage);
+        solutionUuid = UUID.fromString(idSolution);
+
         mockScore = 13;
         mockErrors = "xxx";
         userSolutionDto = UserSolutionDto.builder()
@@ -256,6 +260,7 @@ class UserSolutionServiceImpTest {
                                 savedSolution.getStatus().equals(savedDocument.getStatus().getValue()) &&
                                 savedSolution.getUserId().equals(userSolutionDto.getUserId()) &&
                                 savedSolution.getUserId().equals(savedDocument.getUserId().toString()) &&
+                                        savedSolution.getSolutionId().equals(savedDocument.getSolutionDocument().getFirst().getUuid().toString()) &&
                                 savedSolution.getSolutionText().equals(userSolutionDto.getSolutionText()) &&
                                 savedSolution.getSolutionText().equals(savedDocument.getSolutionDocument().getFirst().getSolutionText())
                         )
@@ -408,7 +413,7 @@ class UserSolutionServiceImpTest {
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.completedFuture(expectedResponse));
 
-        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeUuid, languageUuid, localsolutionText);
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeUuid, languageUuid, solutionUuid, localsolutionText);
 
         assertNotNull(resultFuture);
         assertEquals(expectedResponse, resultFuture.join());
@@ -421,7 +426,7 @@ class UserSolutionServiceImpTest {
         when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
                 .thenReturn(CompletableFuture.failedFuture(new RuntimeException("ZMQ error")));
 
-        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeUuid, languageUuid, localsolutionText);
+        CompletableFuture<ScoreResponseDto> resultFuture = userSolutionService.getDataFromMicroScore(challengeUuid, languageUuid, solutionUuid, localsolutionText);
 
         assertNotNull(resultFuture);
         ScoreResponseDto result = resultFuture.join();

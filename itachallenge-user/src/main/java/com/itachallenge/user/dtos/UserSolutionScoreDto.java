@@ -2,7 +2,6 @@ package com.itachallenge.user.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jdk.jshell.Snippet;
 import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -22,6 +21,9 @@ public class UserSolutionScoreDto {
 
     @JsonProperty(value = "uuid_language")
     private String languageId;
+
+    @JsonProperty(value = "uuid_solution")
+    private String solutionId;
 
     @JsonProperty(value = "solution_text")
     private String solutionText;

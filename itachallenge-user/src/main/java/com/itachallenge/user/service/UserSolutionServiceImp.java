@@ -87,6 +87,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                             .languageId(String.valueOf(savedDocument.getLanguageId()))
                             .challengeId(String.valueOf(savedDocument.getChallengeId()))
                             .status(String.valueOf(savedDocument.getStatus()))
+                            .solutionId(String.valueOf(savedDocument.getSolutionDocument().getFirst().getUuid()))
                             .solutionText(savedDocument.getSolutionDocument().getFirst().getSolutionText())
                             .score(savedDocument.getScore())
                             .errors(savedDocument.getErrors())
@@ -153,7 +154,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         newUserSolution.setStatus(ChallengeStatus.SCORE_PENDING);
 
                         return userSolutionRepository.save(newUserSolution)
-                                .then(Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getSolutionText())
+                                .then(Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getUuid(),solutionDocuments.getFirst().getSolutionText())
                                         .thenCompose(data -> {
                                             newUserSolution.setStatus(ChallengeStatus.ENDED);
                                             newUserSolution.setScore(data.getScore());
@@ -167,8 +168,8 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     return Mono.empty();
                 }));
     }
-    public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, String solutionText) {
-        ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, solutionText);
+    public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, UUID uuidSolution, String solutionText) {
+        ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, uuidSolution, solutionText);
 
         return zmqClient.sendMessage(request, ScoreResponseDto.class)
                 .thenApply(response -> {

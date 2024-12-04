@@ -247,7 +247,7 @@ class UserControllerTest {
         userSolutionDto.setSolutionText("This is a test solution");
 
         UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
-                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
+                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(), userSolutionDto.getSolutionId(),
                 userSolutionDto.getSolutionText(), 13, "xxx", "STARTED");
 
         when(userSolutionService.addSolution(userSolutionDto))
@@ -278,10 +278,10 @@ class UserControllerTest {
         String URI_TEST = "/solution";
 
         List<UserSolutionDto> testCases = Arrays.asList(
-                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "This is a test solution"),
-                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, ""),
+                new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "123e4567-e89b-12d3-a456-426614174000", "This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null,"123e4567-e89b-12d3-a456-426614174000" ,"This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "123e4567-e89b-12d3-a456-426614174000","This is a test solution"),
+                new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "123e4567-e89b-12d3-a456-426614174000", ""),
                 new UserSolutionDto()
         );
 
