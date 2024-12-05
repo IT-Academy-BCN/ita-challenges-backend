@@ -260,31 +260,73 @@ public class UserSolutionRepositoryTest {
                 .verify();
 
     }
-    @DisplayName("Returns total solutions by idLanguage and status STARTED")
+    @DisplayName("Returns the total number of solutions by idLanguage and status")
     @Test
-    void testCountChallengesByStatusSTARTEDAndLanguage() {
+    void testCountChallengesByStatusAndLanguage() {
+
+        // Arrange
+        List<ChallengeStatus> testStatusesCompleted = Arrays.asList(ChallengeStatus.SCORE_PENDING, ChallengeStatus.ENDED,
+                ChallengeStatus.SENT);
+        List<ChallengeStatus> testStatusesSaved = List.of(ChallengeStatus.STARTED);
+        List<ChallengeStatus> testStatusesScorePending = List.of(ChallengeStatus.SCORE_PENDING);
 
 
-        UUID testUserId1 = UUID.fromString("442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"); // user_id
-        UUID testLanguageUuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f"); // language_id
-        ChallengeStatus testStatus1 = ChallengeStatus.ENDED; // Asegúrate de que este estado esté definido en tu enum
+        // Expected Count
+        Long  expectedCountCompleted = userSolutions.stream().
+                filter (us -> us.getUserId().equals(testUserUuid) &&
+                        us.getLanguageId().equals(testLanguageUuid) &&
+                        testStatusesCompleted.contains(us.getStatus()))
+                .count();
+        Long expectedCountSaved = userSolutions.stream()
+                .filter(us -> us.getUserId().equals(testUserUuid) &&
+                        us.getLanguageId().equals(testLanguageUuid) &&
+                        testStatusesSaved.contains(us.getStatus()))
+                .count();
+        Long expectedCountScorePending = userSolutions.stream()
+                .filter(us -> us.getUserId().equals(testUserUuid) &&
+                        us.getLanguageId().equals(testLanguageUuid) &&
+                        testStatusesScorePending.contains(us.getStatus()))
+                .count();
+        // Act
+        Mono<Long> countMonoCompleted = userSolutionRepository.countChallengesByStatusAndLanguage(testUserUuid,
+                testLanguageUuid, testStatusesCompleted);
+        Mono<Long> countMonoSaved = userSolutionRepository.countChallengesByStatusAndLanguage(testUserUuid,
+                testLanguageUuid, testStatusesSaved);
+        Mono<Long> countMonoScorePending = userSolutionRepository.countChallengesByStatusAndLanguage(testUserUuid,
+                testLanguageUuid, testStatusesScorePending);
 
+        // Assert
+        StepVerifier.create(countMonoCompleted)
+                .expectNext(expectedCountCompleted)
+                .verifyComplete();
+
+        StepVerifier.create(countMonoSaved)
+                .expectNext(expectedCountSaved)
+                .verifyComplete();
+
+        StepVerifier.create(countMonoScorePending)
+                .expectNext(expectedCountScorePending)
+                .verifyComplete();
+    }
+
+    @DisplayName("Returns the total number of solutions by userId, languageId, status ENDED and Score = 75%")
+    @Test
+    void testCountChallengesByStatusAndLanguageAndScore() {
+        // Arrange
         List<ChallengeStatus> testStatuses = List.of(ChallengeStatus.ENDED);
-        long expectedValue = 1L;
-
-        Mono<Long> amountOfChallengesStarted = userSolutionRepository.countChallengesByStatusAndLanguage2(testUserUuid);  //,
-//                testLanguageUuid1, testStatus1 );
-
-//        UUID.fromString("c3a92f9d-5d10-4f76-8c0b-6d884c549b1c"
-
-
-        Long actualValue = amountOfChallengesStarted.block();
-        assertEquals(expectedValue, actualValue);
-
-
-//        StepVerifier.create(amountOfChallengesStarted)
-//                .expectNext(expectedValue)
-//                .verifyComplete();
+        Long expectedCountPassed = userSolutions.stream()
+                .filter(us -> us.getUserId().equals(testUuid) &&
+                        us.getLanguageId().equals(testLanguageUuid) &&
+                        us.getScore() >= 75 &&
+                        testStatuses.contains(us.getStatus()))
+                .count();
+        // Act
+        Mono<Long> countMonoPassed= userSolutionRepository
+                .countByChallengeStatusAndLanguageAndScoreAmount(testUserUuid, testLanguageUuid, testStatuses);
+        // Assert
+        StepVerifier.create(countMonoPassed)
+                .expectNext(expectedCountPassed)
+                        .verifyComplete();
     }
 
 }

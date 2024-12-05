@@ -29,7 +29,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImp.class);
     private final IUserSolutionRepository userSolutionRepository;
     private final ConverterDocumentToDto converter;
-
     private final BuildUserStatisticsDto buildUserStatisticsDto;
     SecureRandom random = new SecureRandom();
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id %s not found";
@@ -209,7 +208,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
         List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
                 .filter(us -> challengeId.equals(us.getChallengeId()))
-                .collect(Collectors.toList());
+                .toList();
 
         if (userSolutionsChallenge.isEmpty()) {
             return Flux.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)));
@@ -217,22 +216,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
 
         return Flux.fromIterable(userSolutionsChallenge);
     }
-
-
-    // Prueba GitStatus
-
-    // CARD #623
-
-    /*
-        Add Method Description
-
-     */
-
-    // DUDA
-
-    // cuando tengo que declarar, en la interfaz, un metodo usado en el service?
-
-    // Commits en rama local al final del dia?gi
 
     public Mono<UsersTotalStatisticsDto> getUserTotalStatistics(String idUser, String idLanguage) {
 
@@ -261,7 +244,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                         buildUserStatisticsDto.fromUserTotalStatisticsToDto(userUuid, languageUuid,
                         tuple.getT1(), tuple.getT2(), tuple.getT3(), tuple.getT4())
                 )
-                // Manejo de excepciones generales en caso de que algo falle en las consultas
+                // General exception handling in case something fails in the queries.
                 .onErrorResume(DataAccessResourceFailureException.class, e -> {
                     log.error("Database access failure while fetching solutions for user: {}", userUuid, e);
                     return Mono.error(new DataAccessResourceFailureException("Error accessing the database for user: " + userUuid, e));
@@ -274,22 +257,16 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
                     return Mono.error(new Exception("Unexpected error while fetching solutions for user: " + userUuid, e));
                 });
-
-
     }
 
-//    private Mono<Long> pruebaParaTest(String idUser, String idLanguage){
-//        UUID userUuid = UUID.fromString(idUser);
-//        UUID languageUuid = UUID.fromString(idLanguage);
-//    }
     // Method that centralizes repository queries with error handling.
-    // The TriFunction is used to create a single method that handles all database queries.
-    // (One of the TriFunction´arguments is the repository method itself)
-    private Mono<Long> countChallengesWithErrorHandling(
-            TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repositoryMethod,
-            UUID userUuid,
-            UUID languageUuid,
-            List<ChallengeStatus> statuses) {
+    /*  The TriFunction is used to create a single method that handles all database queries.
+        (One of the TriFunction´arguments is the repository method itself) */
+    protected Mono<Long> countChallengesWithErrorHandling(
+        TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repositoryMethod,
+        UUID userUuid,
+        UUID languageUuid,
+        List<ChallengeStatus> statuses) {
 
         final long ERROR_VALUE = -1L;
 
