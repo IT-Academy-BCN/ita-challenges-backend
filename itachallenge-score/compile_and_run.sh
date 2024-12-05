@@ -43,7 +43,7 @@ fi
 # Copy the solution file to a temporary file with underscores instead of hyphens
 cp "$solution_file" "$temp_solution_file"
 
-#Replace hypehns with underscores in the class name within the file
+#Replace hyphens with underscores in the class name within the file
 sed -i "s/public class .*/public class SolutionBody_${SOLUTION_ID//-/_} {/" "$temp_solution_file"
 
 # Verify the contents of the temporary solution file
@@ -56,13 +56,19 @@ while IFS='=' read -r key value; do
   params[$key]="$value"
 done < "$parameters_file"
 
+# Print all key-value pairs to ensure they are read correctly
+echo "Parameters read from the file:"
+for key in "${!params[@]}"; do
+  echo "Key: $key, Value: ${params[$key]}"
+done
+
 # Compile the user code
 javac -d /data "$temp_solution_file"
 
 # check if compilation was successful
 if [ $? -eq 0 ]; then
   echo "Compilation succeeded."
-  status=2 #Assume the code compiles and works nit not all outputs are correct as starting point
+  status=2 #Assume the code compiles and works not not all outputs are correct as starting point
 
   # Extract the class name from te solution file name
   class_name=$(basename "$temp_solution_file" .java)
@@ -85,6 +91,12 @@ if [ $? -eq 0 ]; then
       status=2 # Not all outputs are correct
     fi
   done
+
+  # If user_code_errors is empty update to status 3
+  if [ -z "$user_code_errors" ]; then
+  status=3
+  fi
+
 else
   echo "Compilation failed!"
   status=0
@@ -93,10 +105,10 @@ else
 fi
 
 # Write output to JSON file
-echo "{\status\": $status, \"user_code_message\": \"$user_code_message\", \"user_code_errors\": \"$user_code_errors\", \"sandbox_exceptions\": \"$sandbox_exceptions\", \"exceptions\": \"$exceptions\"}" > "$json_output_file"
+echo "{\"status\": $status, \"user_code_message\": \"$user_code_message\", \"user_code_errors\": \"$user_code_errors\", \"sandbox_exceptions\": \"$sandbox_exceptions\", \"exceptions\": \"$exceptions\"}" > "$json_output_file"
 
 # Verify JSON file creation
-echo "Verifiying JSON file creation:"
+echo "Verifying JSON file creation:"
 ls -l /data
 
 # Clean up compiled class files
