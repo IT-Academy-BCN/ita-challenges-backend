@@ -1,8 +1,8 @@
 # Use an Alpine base image
 FROM alpine:3.20.3
 
-# Install bash and curl - it will be JDK/JRE from Michel & Joan
-RUN apk add --no-cache bash curl openjdk11
+# Install bash and curl - it will be JDK/JRE from Michel & Joan & jq
+RUN apk add --no-cache bash curl jq openjdk11
 
 # Set JAVA_HOME environment variable
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk
