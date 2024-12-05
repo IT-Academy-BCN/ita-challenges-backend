@@ -14,10 +14,13 @@ import java.util.UUID;
 @Getter
 @Setter
 public class TestingValuesResponseDto {
-    @JsonProperty(value="id_challenge")
+    @JsonProperty(value="uuid_challenge")
     private UUID challengeId;
 
-    @JsonProperty(value = "testing_values")
+    @JsonProperty(value="uuid_language")
+    private UUID languageId;
+
+    @JsonProperty(value = "test_params")
     private List<TestingValueDto> testingValues;
 
 }
