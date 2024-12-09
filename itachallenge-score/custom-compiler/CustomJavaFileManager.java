@@ -28,10 +28,25 @@ public class CustomJavaFileManager extends ForwardingJavaFileManager<StandardJav
 
     @Override
     public Iterable<JavaFileObject> list(Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
-        // Restrict access to certain packages
-        if (packageName.isEmpty() || packageName.startsWith("java.base") || packageName.startsWith("java.compile") || packageName.startsWith("jdk.compile") || packageName.startsWith("java.lang") || packageName.startsWith("java.io") || packageName.startsWith("java.math") || packageName.startsWith("java.net") || packageName.startsWith("java.nio") || packageName.startsWith("java.security") || packageName.startsWith("java.text") || packageName.startsWith("java.time") || packageName.startsWith("java.util")) {
-            return super.list(location, packageName, kinds, recurse);
+        // Define the allowed modules
+        Set<String> allowedModules = Set.of("java.base", "java.compiler", "jdk.compiler");
+
+        // Iterate through all modules in the boot layer
+        for (Module module : ModuleLayer.boot().modules()) {
+            // Check if the module is in the allowed list
+            if (allowedModules.contains(module.getName())) {
+                // If the package name is empty, allow access based on the module
+                if (packageName == null || packageName.isEmpty()) {
+                    return super.list(location, packageName, kinds, recurse);
+                }
+                // Check if the package is in the module, only if the module is named
+                if (module.isNamed() && module.getPackages().contains(packageName)) {
+                    return super.list(location, packageName, kinds, recurse);
+                }
+            }
         }
+
+        // If the module is not allowed or the package couldn't be found, restrict access
         throw new SecurityException("Access to package " + packageName + " is restricted");
     }
 }
