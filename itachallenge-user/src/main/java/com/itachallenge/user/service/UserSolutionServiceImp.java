@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
@@ -217,6 +216,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 
+    @Override
     public Mono<UsersTotalStatisticsDto> getUserTotalStatistics(String idUser, String idLanguage) {
 
         UUID userUuid = UUID.fromString(idUser);

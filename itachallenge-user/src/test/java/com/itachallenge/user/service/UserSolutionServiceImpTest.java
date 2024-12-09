@@ -450,7 +450,7 @@ class UserSolutionServiceImpTest {
         // Act
         Mono<UsersTotalStatisticsDto> resultMono = userSolutionService.getUserTotalStatistics(userIdTest, languageIdTest);
 
-        /// Assert
+        // Assert
         StepVerifier.create(resultMono)
                 .expectNext(expectedDto)
                 .verifyComplete();
@@ -472,4 +472,70 @@ class UserSolutionServiceImpTest {
                 userUuidTest, languageUuidTest, completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
     }
 
+    @DisplayName("Should return Users´s total statistics with one errorOccurred == true")
+    @Test
+    void testGetUserTotalStatisticsWithErrorHandling() {
+        // Arrange
+        String userIdTest = "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79";
+        String languageIdTest = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
+        UUID userUuidTest = UUID.fromString(userIdTest);
+        UUID languageUuidTest = UUID.fromString(languageIdTest);
+        // Simulated Values
+        long completedChallenges = -1L;
+        long savedChallenges = 5L;
+        long scorePendingChallenges = 3L;
+        long passedChallenges = 7L;
+
+        UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics(
+                completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
+
+        UsersTotalStatisticsDto expectedDto = new UsersTotalStatisticsDto(userUuidTest,
+                languageUuidTest, challengesStatistics, true);
+        // Mocking repository methods
+        when(userSolutionRepository.countChallengesByStatusAndLanguage(
+                userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)))
+                .thenReturn(Mono.just(completedChallenges));
+
+        when(userSolutionRepository.countChallengesByStatusAndLanguage(
+                userUuidTest, languageUuidTest, List.of(ChallengeStatus.STARTED)))
+                .thenReturn(Mono.just(savedChallenges));
+
+        when(userSolutionRepository.countChallengesByStatusAndLanguage(
+                userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)))
+                .thenReturn(Mono.just(scorePendingChallenges));
+
+        when(userSolutionRepository.countByChallengeStatusAndLanguageAndScoreAmount(
+                userUuidTest, languageUuidTest, List.of(ChallengeStatus.ENDED)))
+                .thenReturn(Mono.just(passedChallenges));
+
+        // Mocking DTO methods
+        when(buildUserStatisticsDto.fromUserTotalStatisticsToDto(
+                userUuidTest, languageUuidTest, completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges))
+                .thenReturn(expectedDto);
+
+        // Act
+        Mono<UsersTotalStatisticsDto> resultMono = userSolutionService.getUserTotalStatistics(userIdTest, languageIdTest);
+
+        // Assert
+        StepVerifier.create(resultMono)
+                .expectNext(expectedDto)
+                .verifyComplete();
+
+        // Verify that the mocked methods were called
+        verify(userSolutionRepository).countChallengesByStatusAndLanguage(
+                userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
+
+        verify(userSolutionRepository).countChallengesByStatusAndLanguage(
+                userUuidTest, languageUuidTest, List.of(ChallengeStatus.STARTED));
+
+        verify(userSolutionRepository).countChallengesByStatusAndLanguage(
+                userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
+
+        verify(userSolutionRepository).countByChallengeStatusAndLanguageAndScoreAmount(
+                userUuidTest, languageUuidTest, List.of(ChallengeStatus.ENDED));
+
+        verify(buildUserStatisticsDto).fromUserTotalStatisticsToDto(
+                userUuidTest, languageUuidTest, completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
+
+    }
 }
