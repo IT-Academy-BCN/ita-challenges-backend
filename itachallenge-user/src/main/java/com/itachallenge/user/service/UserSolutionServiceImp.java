@@ -260,8 +260,10 @@ public class UserSolutionServiceImp implements IUserSolutionService {
     }
 
     // Method that centralizes repository queries with error handling.
-    /*  The TriFunction is used to create a single method that handles all database queries.
-        (One of the TriFunction´arguments is the repository method itself) */
+    /**
+     *  The TriFunction is used to create a single method that handles all database queries.
+     *  (One of the TriFunction´arguments is the repository method itself)
+     */
     protected Mono<Long> countChallengesWithErrorHandling(
         TriFunction<UUID, UUID, List<ChallengeStatus>, Mono<Long>> repositoryMethod,
         UUID userUuid,
@@ -274,10 +276,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         // Call the provided repository method, passing the appropriate parameters.
         return repositoryMethod.apply(userUuid, languageUuid, statuses)
                 .onErrorReturn(ERROR_VALUE); // If an error occurs, returns -1L.
-
     }
-
-
-
 }
 
