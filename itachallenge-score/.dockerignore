@@ -1,0 +1,4 @@
+# Ignore all Dockerfiles except the one we want to use
+Sandbox.Dockerfile*
+!David.Dockerfile
+
