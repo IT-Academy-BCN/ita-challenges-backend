@@ -23,7 +23,7 @@ public class GenericUUIDValidator implements ConstraintValidator<GenericUUIDVali
 
         if (value == null) {
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate(customMessage + ": value is null")
+            context.buildConstraintViolationWithTemplate(customMessage + value + ": value is null")
                     .addConstraintViolation();
             return false;
         }
