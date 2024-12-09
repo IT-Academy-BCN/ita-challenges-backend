@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -404,97 +406,46 @@ class UserSolutionServiceImpTest {
                 .expectNext(expectedCount)
                 .verifyComplete();
     }
-    @DisplayName("Should return the user's specific status statistics")
-    @Test
-    void testGetUserTotalStatistics() {
-        // Arrange
-        String userIdTest = "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79";
-        String languageIdTest = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
-        UUID userUuidTest = UUID.fromString(userIdTest);
-        UUID languageUuidTest = UUID.fromString(languageIdTest);
 
-        // Simulated Values
-        long completedChallenges = 10L;
-        long savedChallenges = 5L;
-        long scorePendingChallenges = 3L;
-        long passedChallenges = 7L;
-
-        UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics(
-                completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
-
-        UsersTotalStatisticsDto expectedDto = new UsersTotalStatisticsDto(userUuidTest,
-                languageUuidTest, challengesStatistics, false);
-
-        // Mocking repository methods
-        when(userSolutionRepository.countChallengesByStatusAndLanguage(
-                        userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)))
-                .thenReturn(Mono.just(completedChallenges));
-
-        when(userSolutionRepository.countChallengesByStatusAndLanguage(
-                        userUuidTest, languageUuidTest, List.of(ChallengeStatus.STARTED)))
-                .thenReturn(Mono.just(savedChallenges));
-
-        when(userSolutionRepository.countChallengesByStatusAndLanguage(
-                        userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)))
-                .thenReturn(Mono.just(scorePendingChallenges));
-
-        when(userSolutionRepository.countByChallengeStatusAndLanguageAndScoreAmount(
-                        userUuidTest, languageUuidTest, List.of(ChallengeStatus.ENDED)))
-                .thenReturn(Mono.just(passedChallenges));
-
-        // Mocking DTO methods
-        when(buildUserStatisticsDto.fromUserTotalStatisticsToDto(
-                        userUuidTest, languageUuidTest, completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges))
-                .thenReturn(expectedDto);
-
-        // Act
-        Mono<UsersTotalStatisticsDto> resultMono = userSolutionService.getUserTotalStatistics(userIdTest, languageIdTest);
-
-        // Assert
-        StepVerifier.create(resultMono)
-                .expectNext(expectedDto)
-                .verifyComplete();
-
-        // Verify that the mocked methods were called
-        verify(userSolutionRepository).countChallengesByStatusAndLanguage(
-                userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
-
-        verify(userSolutionRepository).countChallengesByStatusAndLanguage(
-                userUuidTest, languageUuidTest, List.of(ChallengeStatus.STARTED));
-
-        verify(userSolutionRepository).countChallengesByStatusAndLanguage(
-                userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING));
-
-        verify(userSolutionRepository).countByChallengeStatusAndLanguageAndScoreAmount(
-                userUuidTest, languageUuidTest, List.of(ChallengeStatus.ENDED));
-
-        verify(buildUserStatisticsDto).fromUserTotalStatisticsToDto(
-                userUuidTest, languageUuidTest, completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
+    // Definir los datos de prueba para testGetUserTotalStatistics()
+    static Stream<Object[]> provideTestGetUserTotalStatisticsCases() {
+        // Simulated values
+        return Stream.of(
+                new Object[]{
+                        false, // Success case
+                        10L, 5L, 3L, 7L,  // Success values
+                        new UsersTotalStatisticsDto(
+                                UUID.fromString("442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"),
+                                UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f"),
+                                new UsersTotalStatisticsDto.ChallengesStatistics(10L, 5L, 3L, 7L),
+                                false)
+                },
+                new Object[]{
+                        true, // Error case
+                        -1L, 5L, 3L, 7L,  // Error values
+                        new UsersTotalStatisticsDto(
+                                UUID.fromString("442b8e6e-5d57-4d12-9be2-3ff4f26e7d79"),
+                                UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f"),
+                                new UsersTotalStatisticsDto.ChallengesStatistics(-1L, 5L, 3L, 7L),
+                                true)
+                }
+        );
     }
-
-    @DisplayName("Should return Users´s total statistics with one errorOccurred == true")
-    @Test
-    void testGetUserTotalStatisticsWithErrorHandling() {
+    @DisplayName("Should return the user's specific status statistics (with and without error output)")
+    @ParameterizedTest
+    @MethodSource("provideTestGetUserTotalStatisticsCases")
+    void testGetUserTotalStatistics(boolean isErrorCase, long completedChallenges, long savedChallenges,
+                                    long scorePendingChallenges, long passedChallenges, UsersTotalStatisticsDto expectedDto) {
         // Arrange
         String userIdTest = "442b8e6e-5d57-4d12-9be2-3ff4f26e7d79";
         String languageIdTest = "09fabe32-7362-4bfb-ac05-b7bf854c6e0f";
         UUID userUuidTest = UUID.fromString(userIdTest);
         UUID languageUuidTest = UUID.fromString(languageIdTest);
-        // Simulated Values
-        long completedChallenges = -1L;
-        long savedChallenges = 5L;
-        long scorePendingChallenges = 3L;
-        long passedChallenges = 7L;
 
-        UsersTotalStatisticsDto.ChallengesStatistics challengesStatistics = new UsersTotalStatisticsDto.ChallengesStatistics(
-                completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
-
-        UsersTotalStatisticsDto expectedDto = new UsersTotalStatisticsDto(userUuidTest,
-                languageUuidTest, challengesStatistics, true);
         // Mocking repository methods
         when(userSolutionRepository.countChallengesByStatusAndLanguage(
                 userUuidTest, languageUuidTest, Arrays.asList(ChallengeStatus.ENDED, ChallengeStatus.SENT, ChallengeStatus.SCORE_PENDING)))
-                .thenReturn(Mono.just(completedChallenges));
+                .thenReturn(isErrorCase ? Mono.just(-1L) : Mono.just(completedChallenges));
 
         when(userSolutionRepository.countChallengesByStatusAndLanguage(
                 userUuidTest, languageUuidTest, List.of(ChallengeStatus.STARTED)))
@@ -536,6 +487,6 @@ class UserSolutionServiceImpTest {
 
         verify(buildUserStatisticsDto).fromUserTotalStatisticsToDto(
                 userUuidTest, languageUuidTest, completedChallenges, savedChallenges, scorePendingChallenges, passedChallenges);
-
     }
+
 }
