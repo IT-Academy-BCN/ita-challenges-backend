@@ -2,7 +2,6 @@ package com.itachallenge.challenge.mqserver;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
-import com.itachallenge.challenge.dto.zmq.TestingValuesResponseDto;
 import com.itachallenge.challenge.helper.ObjectSerializer;
 import com.itachallenge.challenge.service.IChallengeService;
 import jakarta.annotation.PostConstruct;
@@ -13,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,9 +23,6 @@ public class ZMQServer {
     private final ZContext context;
     private final String SOCKET_ADDRESS;
     private static final Logger log = LoggerFactory.getLogger(ZMQServer.class);
-
-    @Autowired
-    ObjectSerializer objectSerializer;
 
     @Autowired
     IChallengeService challengeService;
@@ -49,35 +46,31 @@ public class ZMQServer {
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
 
-                Optional<Object> request = Optional.empty();
+                Optional<ChallengeRequestDto> request = Optional.empty();
                 try {
-                    request = Optional.of(objectSerializer.deserialize(reply, ChallengeRequestDto.class));
+                    request = Optional.of(ObjectSerializer.deserialize(reply, ChallengeRequestDto.class));
                 } catch (IOException e) {
                     log.error(e.getMessage());
                 }
 
-                UUID challengeId = ((ChallengeRequestDto)request.get()).getChallengeId();
+                UUID challengeId = request.map(ChallengeRequestDto::getChallengeId)
+                        .orElseThrow(() -> new IllegalStateException("Request is empty"));
 
-                log.info("Received: [" + challengeId + "]");
-                //ahora tendria que hacer una call a service para buscar en la base de datos la info de este challenge!!
+                log.info("Received challenge id: [{}]", challengeId);      //TODO delete line
 
-                TestingValuesResponseDto challenge = challengeService.getChallengeById(challengeId.toString()).map(
-                        challengeDto -> {
-
-                        }
-                );
-
-                StatisticsResponseDto dto = new StatisticsResponseDto();
-                dto.setPercent(99);
-
-                Optional<byte[]> response = Optional.empty();
-                try {
-                    response = Optional.of(objectSerializer.serialize(dto));
-                } catch (JsonProcessingException e) {
-                    log.error(e.getMessage());
-                }
-
-                socket.send(response.orElse(new byte[0]), 0);
+                challengeService.getTestingParamsByChallengeId(challengeId.toString())
+                        .flatMap(challenge -> {
+                            try {
+                                byte[] serializedData = ObjectSerializer.serialize(challenge);
+                                return Mono.just(serializedData);
+                            } catch (JsonProcessingException e) {
+                                log.error("Serialization error: {}", e.getMessage());
+                                return Mono.just(new byte[0]);
+                            }
+                        })
+                        .doOnError(e -> log.error("Error during service call or processing: {}", e.getMessage()))
+                        .doOnNext(serializedData -> socket.send(serializedData, 0))
+                        .subscribe();
             }
         }
     }
