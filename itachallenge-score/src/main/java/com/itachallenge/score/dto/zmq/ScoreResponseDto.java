@@ -38,4 +38,27 @@ public class ScoreResponseDto {
 
     @JsonProperty("Expected result")
     private String expectedResult;
+
+    public static final ScoreResponseDto INTERNAL_SERVER_ERROR_RESPONSE = new ScoreResponseDto(
+            null,                                           // uuidChallenge
+            null,                                                       // uuidLanguage
+            null,                                                       // uuidSolution
+            null,                                                       // solutionText
+            0,                                                          // score
+            null,                                                       // errors
+            "An unexpected error occurred. Please try again later.",    // compilationMessage
+            null                                                        // expectedResult
+    );
+
+    public static final ScoreResponseDto SOLUTION_TEXT_FILTER_FAILED_RESPONSE = new ScoreResponseDto(
+            null,                                                   // uuidChallenge
+            null,                                                               // uuidLanguage
+            null,                                                               // uuidSolution
+            null,                                                               // solutionText
+            0,                                                                  // score
+            null,                                                               // errors
+            "The provided solution text did not pass the required filters.",    // compilationMessage
+            null                                                                // expectedResult
+    );
+
 }
