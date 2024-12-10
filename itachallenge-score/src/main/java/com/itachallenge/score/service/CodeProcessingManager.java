@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class CodeProcessingManager {
+public class CodeProcessingManager implements ICodeProcessingManager {
 
     private static final Logger log = LoggerFactory.getLogger(CodeProcessingManager.class);
 
@@ -31,6 +31,7 @@ public class CodeProcessingManager {
         this.dockerExecutor = dockerExecutor;
     }
 
+    @Override
     public ResponseEntity<ScoreResponseDto> processCode(ScoreRequestDto scoreRequest) {
 
         String sourceCode = scoreRequest.getSolutionText(); //CODE USER FROM JSON
