@@ -10,7 +10,7 @@ public class CustomCompiler {
             return;
         }
 
-        String sourceFilePath = args[0];
+        File sourceFile = new File(args[0]);
 
         // Get the JavaCompiler instance
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -22,9 +22,7 @@ public class CustomCompiler {
         CustomJavaFileManager customFileManager = new CustomJavaFileManager(standardFileManager);
 
         // Specify the Java source file to compile
-        Iterable<? extends JavaFileObject> compilationUnits = customFileManager.getJavaFileObjectsFromFiles(
-                Arrays.asList(new File(sourceFilePath))
-        );
+        Iterable<? extends JavaFileObject> compilationUnits = customFileManager.getJavaFileObjectsFromFiles(List.of(sourceFile));
 
         // Compile the source file
         JavaCompiler.CompilationTask task = compiler.getTask(null, customFileManager, null, null, null, compilationUnits);
