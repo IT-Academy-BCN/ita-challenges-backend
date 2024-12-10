@@ -32,41 +32,17 @@ public class CustomJavaFileManager extends ForwardingJavaFileManager<StandardJav
 
     @Override
     public Iterable<JavaFileObject> list(Location location, String packageName, Set<JavaFileObject.Kind> kinds, boolean recurse) throws IOException {
-        // Define the allowed modules
         Set<String> allowedModules = Set.of("java.base", "java.compiler", "jdk.compiler");
-        Set<String> allowedPackagesInBase = Set.of(
-                "java.lang",
-                "java.util",
-                "java.io",
-                "java.math",
-                "java.text",
-                "java.time",
-                "java"
-        );
-        // Iterate through all modules in the boot layer
         for (Module module : ModuleLayer.boot().modules()) {
-            // Check if the module is in the allowed list
             if (allowedModules.contains(module.getName())) {
-                // If the package name is empty, allow access based on the module
-                if (packageName == null || packageName.isEmpty()) {
-                    return super.list(location, packageName, kinds, recurse);
-                }
-                // Allow all packages in the java.base module
-                if (module.getName().equals("java.base")) {
-                    if (allowedPackagesInBase.contains(packageName)) {
-                        System.out.println("Accessing package " + packageName + " in module " + module.getName() + "1er Filtro");
-                        return super.list(location, packageName, kinds, recurse);
-                    }
-                }
-                // Check if the package is in the module, only if the module is named
-                if (module.isNamed() && module.getPackages().contains(packageName)) {
-                    System.out.println("Accessing package " + packageName + " in module " + module.getName() + "2do Filtro");
+                boolean isPackageAllowed = packageName == null || packageName.isEmpty() ||
+                        (module.isNamed() && module.getPackages().contains(packageName)) ||
+                        (module.getName().equals("java.base") && packageName.equals("java"));
+                if (isPackageAllowed) {
                     return super.list(location, packageName, kinds, recurse);
                 }
             }
         }
-
-        // If the module is not allowed or the package couldn't be found, restrict access
         throw new SecurityException("Access to package " + packageName + " is restricted");
     }
 }
