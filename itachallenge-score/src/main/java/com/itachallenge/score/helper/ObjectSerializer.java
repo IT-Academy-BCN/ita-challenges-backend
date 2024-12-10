@@ -1,4 +1,4 @@
-package com.itachallenge.user.helper;
+package com.itachallenge.score.helper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,7 +11,6 @@ public class ObjectSerializer {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    // 15/10/2024 Michel: convierto a métodos por instancia en lugar de estáticos para que se pueda mockear esta clase
 
     public byte[] serialize(Object obj) throws JsonProcessingException {
         if (obj == null) {

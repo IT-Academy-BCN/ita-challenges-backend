@@ -1,7 +1,7 @@
 package com.itachallenge.score.service;
 
-import com.itachallenge.score.dto.ScoreRequest;
-import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.dto.zmq.ScoreRequestDto;
+import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.exception.DockerExecutionException;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.sandbox.DockerExecutor;
@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -33,9 +32,6 @@ class CodeProcessingManagerTest {
     @Mock
     private DockerExecutor dockerExecutor;
 
-    @Mock
-    private JavaFileService javaFileService;
-
     @InjectMocks
     private CodeProcessingManager codeProcessingManager;
 
@@ -43,41 +39,97 @@ class CodeProcessingManagerTest {
 
     @BeforeEach
     void setUp() {
-        codeToCompile = "System.out.println(\"Hello, World!\");";
+        codeToCompile =
+                "int numero = 12; " +
+                "int[] conteoDigitos = new int[10]; " +
+                "int digito = numero % 10; " +
+                "conteoDigitos[digito]++; numero /= 10; " +
+                "int resultado = 0; " +
+                "for (int i = 9; i >= 0; i--) { " +
+                    "while (conteoDigitos[i] > 0) { " +
+                        "resultado = resultado * 10 + i;" +
+                        "conteoDigitos[i]--; " +
+                    "} " +
+                "} " +
+                "System.out.println(resultado); ";
+
     }
 
-    @DisplayName("Process code successfully")
+    @DisplayName("Test processCode successful")
     @Test
-    void processCodeSuccessful() throws IOException, InterruptedException {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+    void testProcessCodeSuccessful() throws IOException, InterruptedException {
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
         executionResult.setCompiled(true);
         executionResult.setExecution(true);
-        executionResult.setMessage("12");
+        executionResult.setMessage("12"); //hardcoded value in codeprocessingmanager
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
         when(dockerExecutor.execute(any(String.class), any(String[].class))).thenReturn(executionResult);
-        when(javaFileService.createJavaFile(any(String.class), any(String.class))).thenReturn(new File("UserSolution.java"));
 
-        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(100, responseEntity.getBody().getScore());
         assertEquals("Code compiled and executed, and result match: 12", responseEntity.getBody().getCompilationMessage());
     }
 
-    @DisplayName("Process code with InterruptedException")
+    @DisplayName("Test processCode with IOException")
     @Test
-    void processCodeWithInterruptedException() throws IOException, InterruptedException {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+    void testProcessCodeWithIOException() throws IOException, InterruptedException {
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(true);
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
-        when(javaFileService.createJavaFile(any(String.class), any(String.class))).thenReturn(new File("UserSolution.java"));
+        when(dockerExecutor.execute(any(String.class), any(String[].class))).thenThrow(new IOException("Execution timed out"));
+
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        ScoreResponseDto scoreResponse = responseEntity.getBody();
+        assertNotNull(scoreResponse, "Response body should not be null");
+        assertEquals(scoreRequest.getUuidChallenge(), scoreResponse.getUuidChallenge());
+        assertEquals(scoreRequest.getUuidLanguage(), scoreResponse.getUuidLanguage());
+        assertEquals(scoreRequest.getSolutionText(), scoreResponse.getSolutionText());
+        assertEquals("12", scoreResponse.getExpectedResult(), "Expected result should match");
+        assertEquals("Execution timed out: Execution timed out", scoreResponse.getCompilationMessage(), "Compilation message should match");
+        assertEquals(0, scoreResponse.getScore(), "Score should be 0");
+    }
+
+    @DisplayName("Test processCode with TIMED OUT message")
+    @Test
+    void testProcessCodeWithTimedOutMessage() throws IOException, InterruptedException {
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setSuccess(true);
+        executionResult.setMessage("Execution TIMED OUT");
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
+
+        when(dockerExecutor.execute(any(String.class), any(String[].class))).thenThrow(new IOException("Execution timed out"));
+
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
+
+        ScoreResponseDto scoreResponse = responseEntity.getBody();
+        assertNotNull(scoreResponse, "Response body should not be null");
+
+        assertEquals("Execution TIMED OUT", executionResult.getMessage());
+    }
+
+
+    @DisplayName("Test processCode with InterruptedException")
+    @Test
+    void testProcessCodeWithInterruptedException() throws IOException, InterruptedException {
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setSuccess(true);
+
+        when(filterChain.apply(any(String.class))).thenReturn(executionResult);
         when(dockerExecutor.execute(any(String.class), any(String[].class))).thenThrow(new InterruptedException("Execution interrupted"));
 
         assertThrows(DockerExecutionException.class, () -> {
@@ -85,65 +137,66 @@ class CodeProcessingManagerTest {
         });
     }
 
-//    @DisplayName("Test calculateScore with compilation error")
-//    @Test
-//    void testCalculateScoreWithCompilationError() {
-//        ExecutionResult executionResult = new ExecutionResult();
-//        executionResult.setCompiled(false);
-//        executionResult.setMessage("Compilation error");
-//
-//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-//
-//        assertEquals(0, score);
-//        assertEquals("Compilation error", executionResult.getMessage());
-//    }
 
-//    @DisplayName("Test calculateScore with execution error")
-//    @Test
-//    void testCalculateScoreWithExecutionError() {
-//        ExecutionResult executionResult = new ExecutionResult();
-//        executionResult.setCompiled(true);
-//        executionResult.setExecution(false);
-//        executionResult.setMessage("Execution error");
-//
-//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-//
-//        assertEquals(25, score);
-//        assertEquals("Execution error: Execution error", executionResult.getMessage());
-//    }
+    @DisplayName("Test calculateScore with compilation error")
+    @Test
+    void testCalculateScoreWithCompilationError() {
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(false);
+        executionResult.setMessage("Compilation error");
 
-//    @DisplayName("Test calculateScore with partial match")
-//    @Test
-//    void testCalculateScoreWithPartialMatch() {
-//        ExecutionResult executionResult = new ExecutionResult();
-//        executionResult.setCompiled(true);
-//        executionResult.setExecution(true);
-//        executionResult.setMessage("54321");
-//
-//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-//
-//        assertEquals(75, score);
-//        assertEquals("Code compiled and executed, and result partially match: 54321", executionResult.getMessage());
-//    }
+        int score = codeProcessingManager.calculateScore(executionResult, "5432");
 
-//    @DisplayName("Test calculateScore with no match")
-//    @Test
-//    void testCalculateScoreWithNoMatch() {
-//        ExecutionResult executionResult = new ExecutionResult();
-//        executionResult.setCompiled(true);
-//        executionResult.setExecution(true);
-//        executionResult.setMessage("1234");
-//
-//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-//
-//        assertEquals(50, score);
-//        assertEquals("Code compiled and executed, but result doesn't match: 1234", executionResult.getMessage());
-//    }
+        assertEquals(0, score);
+        assertEquals("Compilation error", executionResult.getMessage());
+    }
+
+    @DisplayName("Test calculateScore with execution error")
+    @Test
+    void testCalculateScoreWithExecutionError() {
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(true);
+        executionResult.setExecution(false);
+        executionResult.setMessage("Execution error");
+
+        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+
+        assertEquals(25, score);
+        assertEquals("Execution error: Execution error", executionResult.getMessage());
+    }
+
+    @DisplayName("Test calculateScore with partial match")
+    @Test
+    void testCalculateScoreWithPartialMatch() {
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("54321");
+
+        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+
+        assertEquals(75, score);
+        assertEquals("Code compiled and executed, and result partially match: 54321", executionResult.getMessage());
+    }
+
+    @DisplayName("Test calculateScore with no match")
+    @Test
+    void testCalculateScoreWithNoMatch() {
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(true);
+        executionResult.setExecution(true);
+        executionResult.setMessage("1234");
+
+        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+
+        assertEquals(50, score);
+        assertEquals("Code compiled and executed, but result doesn't match: 1234", executionResult.getMessage());
+    }
 
     @DisplayName("Test processCode with filter failure")
     @Test
     void testProcessCodeWithFilterFailure() {
-        ScoreRequest scoreRequest = new ScoreRequest(UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
+        ScoreRequestDto scoreRequest = new ScoreRequestDto(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), codeToCompile);
 
         ExecutionResult executionResult = new ExecutionResult();
         executionResult.setSuccess(false);
@@ -151,23 +204,24 @@ class CodeProcessingManagerTest {
 
         when(filterChain.apply(any(String.class))).thenReturn(executionResult);
 
-        ResponseEntity<ScoreResponse> responseEntity = codeProcessingManager.processCode(scoreRequest);
+        ResponseEntity<ScoreResponseDto> responseEntity = codeProcessingManager.processCode(scoreRequest);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(0, responseEntity.getBody().getScore());
         assertEquals("Filter failed", responseEntity.getBody().getCompilationMessage());
     }
 
-//    @DisplayName("Test calculateScore with empty message")
-//    @Test
-//    void testCalculateScoreWithEmptyMessage() {
-//        ExecutionResult executionResult = new ExecutionResult();
-//        executionResult.setCompiled(false);
-//        executionResult.setMessage("");
-//
-//        int score = codeProcessingManager.calculateScore(executionResult, "5432");
-//
-//        assertEquals(0, score);
-//        assertEquals("Compilation error: ", executionResult.getMessage());
-//    }
+    @DisplayName("Test calculateScore with empty message")
+    @Test
+    void testCalculateScoreWithEmptyMessage() {
+        ExecutionResult executionResult = new ExecutionResult();
+        executionResult.setCompiled(false);
+        executionResult.setMessage("");
+
+        int score = codeProcessingManager.calculateScore(executionResult, "5432");
+
+        assertEquals(0, score);
+        assertEquals("Compilation error: ", executionResult.getMessage());
+    }
+
 }

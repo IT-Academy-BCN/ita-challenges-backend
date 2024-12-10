@@ -6,22 +6,20 @@ import com.itachallenge.user.dtos.UserSolutionDto;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
-
 @Component
 public class ConverterDocumentToDto {
 
-
     public Flux<UserScoreDto> fromUserScoreDocumentToUserScoreDto(Flux<UserSolutionDocument> just) {
-    return just.map(this::toUserScoreDto);
+        return just.map(this::toUserScoreDto);
     }
 
-    private UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
-    return UserScoreDto.builder()
-            .challengeId(userScoreDocument.getChallengeId())
-            .languageID(userScoreDocument.getLanguageId())
-            .userId(userScoreDocument.getUserId())
-            .solutions(userScoreDocument.getSolutionDocument())
-            .build();
+    public UserScoreDto toUserScoreDto(UserSolutionDocument userScoreDocument) {
+        return UserScoreDto.builder()
+                .challengeId(userScoreDocument.getChallengeId())
+                .languageID(userScoreDocument.getLanguageId())
+                .userId(userScoreDocument.getUserId())
+                .solutions(userScoreDocument.getSolutionDocument())
+                .build();
     }
 
     public Flux<UserSolutionDto> fromUserSolutionDocumentToUserSolutionDto(UserSolutionDocument document) {
@@ -30,6 +28,7 @@ public class ConverterDocumentToDto {
                 .challengeId(document.getChallengeId().toString())
                 .languageId(document.getLanguageId().toString())
                 .status(document.getStatus().toString())
+                .solutionId(document.getSolutionDocument().get(0).getUuid().toString())
                 .solutionText(document.getSolutionDocument().get(0).getSolutionText())
                 .build());
     }

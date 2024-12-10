@@ -1,33 +1,44 @@
 package com.itachallenge.user.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.*;
 
-@Component
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class UserSolutionScoreDto {
 
-    @JsonProperty(value ="uuid_user")
+
+    @JsonProperty(value = "uuid_user")
     private String userId;
 
-    @JsonProperty(value ="uuid_challenge")
+    @JsonProperty(value = "uuid_challenge")
     private String challengeId;
 
-    @JsonProperty(value ="uuid_language")
+    @JsonProperty(value = "uuid_language")
     private String languageId;
 
-    @JsonProperty(value ="solution_text")
+    @JsonProperty(value = "uuid_solution")
+    private String solutionId;
+
+    @JsonProperty(value = "solution_text")
     private String solutionText;
 
     @JsonProperty(value = "score")
     private int score;
 
+    @JsonProperty(value = "errors")
+    private String errors;
 
+    @JsonProperty(value = "status")
+    private String status;
+
+
+    public Object getStatus() {
+        return status;
+    }
 }

@@ -33,7 +33,7 @@ logging:
     "[org.springframework]": ERROR
     "[com.businessassistantbcn]": INFO
   pattern:
-  # console: Spring's default
+    # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
 #  file:
 #    name: itachallenge-score.log
@@ -42,12 +42,12 @@ validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
 
-#Command to run sandbox
+# Command to run sandbox
 commands:
   windows: "cmd.exe"
   unix: "sh"
 
-#Security Filter
+# Security Filter
 security:
   harmfulPatterns:
     - "System.exit"
@@ -55,7 +55,6 @@ security:
     - "ProcessBuilder"
     - "java.io.File"
     - "java.nio.file.Files"
-
 
 # Keyword Filter
 keyword:
@@ -98,3 +97,9 @@ sandbox:
     volumePath: /data/
     parametersFile: ${volumePath}${SOLUTION_ID}_parameters.txt
     solutionFile: ${volumePath}SolutionBody_${SOLUTION_ID}.java
+
+zeromq:
+  socket:
+    address: tcp://*:5555
+  context:
+    threads: 1

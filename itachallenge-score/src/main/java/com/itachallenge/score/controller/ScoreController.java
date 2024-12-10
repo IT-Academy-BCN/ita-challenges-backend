@@ -1,7 +1,6 @@
 package com.itachallenge.score.controller;
-
-import com.itachallenge.score.dto.ScoreRequest;
-import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.dto.zmq.ScoreRequestDto;
+import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.service.CodeProcessingManager;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
@@ -39,19 +38,17 @@ public class ScoreController {
         return "Hello from ITA Score!!!";
     }
 
+    @Operation(summary = "Endpoint to execute the code and calculate the score")
+    @PostMapping(value = "/score")
+    public Mono<ResponseEntity<ScoreResponseDto>> createScore(@RequestBody ScoreRequestDto scoreRequest) {
+        return Mono.fromCallable(() -> codeProcessingManager.processCode(scoreRequest));
+    }
+
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
         Map<String, String> response = new HashMap<>();
         response.put("application_name", appName);
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
-    }
-
-
-    @Operation(summary = "Endpoint to execute the code and calculate the score")
-    @PostMapping(value = "/score")
-    public Mono<ResponseEntity<ScoreResponse>> createScore(@RequestBody ScoreRequest scoreRequest) {
-        return Mono.just(scoreRequest)
-                .map(req -> codeProcessingManager.processCode(req));
     }
 }

@@ -52,6 +52,8 @@ dependencies {
 
     // https://osv.dev/vulnerability/GHSA-c43q-5hpj-4crv <-- Known vulnerabilities
     implementation 'com.github.docker-java:docker-java:3.4.0'
+    implementation 'org.zeromq:jeromq:0.5.4'
+    // Borrado docker-java ya que no es necesario con la versión actual de testcontainers
 
     // Future versions of docker-java will no longer support the Jersey client
     // Plus, avoiding Jersey fixes the vulnerability above

@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     private final boolean bookmarked = true;
     private final ChallengeStatus challengeStatus = ChallengeStatus.STARTED;
     private final int score = 90;
+    private final String errors = "xxx";
+
     UUID solutionId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
     UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
     String solutionText1 = "Ipsum.. 1";
@@ -23,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
     SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
-    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus,score, solutionDocumentList);
+    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus, score, errors, solutionDocumentList);
 
     @Test
     void getUuid(){
@@ -51,6 +53,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
     void getScore(){
         assertEquals(score, userScoreDocument.getScore());
     }
+    @Test
+    void getErrors() {assertEquals(errors, userScoreDocument.getErrors());}
     @Test
     void getSolutionDocumentList(){
         assertEquals(solutionDocumentList, userScoreDocument.getSolutionDocument());

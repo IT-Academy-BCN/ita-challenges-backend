@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import org.springframework.stereotype.Component;
+
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +28,10 @@ public class UserSolutionDto {
 
     @JsonProperty(value ="status")
     private String status;
+
+    @JsonProperty(value = "uuid_solution")
+    @GenericUUIDValid(message = "Invalid UUID")
+    private String solutionId;
 
     @JsonProperty(value ="solution_text")
     @NotBlank(message = "Solution text is required")
