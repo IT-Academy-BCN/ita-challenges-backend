@@ -15,7 +15,7 @@ RUN mkdir -p /data
 VOLUME /data
 
 # Add the script to compile and run user code it will be shell script from David
-COPY compile_and_run.sh /usr/local/bin/sandboxRunner.sh
+COPY sandboxRunner.sh /usr/local/bin/sandboxRunner.sh
 RUN chmod +x /usr/local/bin/sandboxRunner.sh
 
 
