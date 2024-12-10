@@ -7,8 +7,8 @@ import com.github.dockerjava.api.command.ExecCreateCmdResponse;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Volume;
-import com.itachallenge.score.dto.ScoreRequest;
-import com.itachallenge.score.dto.ScoreResponse;
+import com.itachallenge.score.dto.zmq.ScoreRequestDto;
+import com.itachallenge.score.dto.zmq.ScoreResponseDto;
 import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.util.ExecutionResult;
 import com.itachallenge.score.domain.ScoreResult;
@@ -23,8 +23,8 @@ import java.nio.file.Path;
 
 import static com.github.dockerjava.api.model.HostConfig.newHostConfig;
 import static com.itachallenge.score.domain.ScoreResult.fromTerminalOutput;
-import static com.itachallenge.score.dto.ScoreResponse.INTERNAL_SERVER_ERROR_RESPONSE;
-import static com.itachallenge.score.dto.ScoreResponse.SOLUTION_TEXT_FILTER_FAILED_RESPONSE;
+import static com.itachallenge.score.dto.zmq.ScoreResponseDto.INTERNAL_SERVER_ERROR_RESPONSE;
+import static com.itachallenge.score.dto.zmq.ScoreResponseDto.SOLUTION_TEXT_FILTER_FAILED_RESPONSE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.ResponseEntity.ok;
@@ -36,7 +36,7 @@ import static java.nio.file.Files.newBufferedWriter;
 
 @Service
 @Primary
-final class CodeProcessingService implements CodeProcessingManager {
+final class CodeProcessingService implements ICodeProcessingManager {
 
     // Constants
 
@@ -69,7 +69,7 @@ final class CodeProcessingService implements CodeProcessingManager {
     }
 
     @Override
-    public ResponseEntity<ScoreResponse> processCode(ScoreRequest scoreRequest) {
+    public ResponseEntity<ScoreResponseDto> processCode(ScoreRequestDto scoreRequest) {
 
         // Pull the image from registry
         pullImage();
@@ -91,7 +91,7 @@ final class CodeProcessingService implements CodeProcessingManager {
         }
 
         // Create a java file in the appropriate folder using the user provided code
-        ResponseEntity<ScoreResponse> responseEntity = createJavaFile(scoreRequest);
+        ResponseEntity<ScoreResponseDto> responseEntity = createJavaFile(scoreRequest);
 
         // This checks if there has been an IOException during the creation of the java file
         if (responseEntity != null)
@@ -176,7 +176,7 @@ final class CodeProcessingService implements CodeProcessingManager {
 
     }
 
-    private ResponseEntity<ScoreResponse> createJavaFile(ScoreRequest scoreRequest) {
+    private ResponseEntity<ScoreResponseDto> createJavaFile(ScoreRequestDto scoreRequest) {
         try {
             JavaFileService.createJavaFile(scoreRequest.getSolutionText(), extractFilenameFromUserSolutionPath(), storagePath);
         } catch (IOException e) {
@@ -185,14 +185,14 @@ final class CodeProcessingService implements CodeProcessingManager {
         return null;
     }
 
-    private ResponseEntity<ScoreResponse> processContainerOutput(ByteArrayOutputStream outputStream) {
+    private ResponseEntity<ScoreResponseDto> processContainerOutput(ByteArrayOutputStream outputStream) {
 
         String output = outputStream.toString();
 
         try {
             // Determina el resultado basado en el output del terminal
             ScoreResult scoreResult = fromTerminalOutput(output);
-            ScoreResponse scoreResponse = getScoreResponseFromScoreResult(scoreResult); // Construye la respuesta
+            ScoreResponseDto scoreResponse = getScoreResponseFromScoreResult(scoreResult); // Construye la respuesta
             // TODO we need to add this line to send the response back to ZMQ Cliente.
             //  zmqClient.send(scoreResponse); // Send the response to the ZMQ Client
             return ok(scoreResponse);
@@ -202,16 +202,16 @@ final class CodeProcessingService implements CodeProcessingManager {
         }
     }
 
-    private static @NotNull ScoreResponse getScoreResponseFromScoreResult(ScoreResult scoreResult) {
-        ScoreResponse scoreResponse = new ScoreResponse();
+    private static @NotNull ScoreResponseDto getScoreResponseFromScoreResult(ScoreResult scoreResult) {
+        ScoreResponseDto scoreResponse = new ScoreResponseDto();
         scoreResponse.setScore(scoreResult.getScore());
         scoreResponse.setCompilationMessage(scoreResult.getDescription());
         return scoreResponse;
     }
 
-    private static @NotNull ResponseEntity<ScoreResponse> getInternalServerErrorScoreResponseResponseEntity(String errorMessage) {
+    private static @NotNull ResponseEntity<ScoreResponseDto> getInternalServerErrorScoreResponseResponseEntity(String errorMessage) {
 
-        ScoreResponse scoreResponse = INTERNAL_SERVER_ERROR_RESPONSE;
+        ScoreResponseDto scoreResponse = INTERNAL_SERVER_ERROR_RESPONSE;
 
         scoreResponse.setCompilationMessage(errorMessage);
 
