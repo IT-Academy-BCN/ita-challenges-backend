@@ -10,6 +10,32 @@ user_code_errors=""
 sandbox_exceptions=""
 exceptions=""
 
+output_json() {
+  jq -n \
+    --arg uuid_user "$uuid_user" \
+    --arg uuid_challenge "$uuid_challenge" \
+    --arg uuid_language "$uuid_language" \
+    --arg uuid_solution "$uuid_solution" \
+    --argjson status "$status" \
+    --arg user_code_message "$user_code_message" \
+    --arg user_code_errors "$user_code_errors" \
+    --arg sandbox_exceptions "$sandbox_exceptions" \
+    --arg exceptions "$exceptions" \
+    '{
+      uuid_user: $uuid_user,
+      uuid_challenge: $uuid_challenge,
+      uuid_language: $uuid_language,
+      uuid_solution: $uuid_solution,
+      status: $status,
+      user_code_message: $user_code_message,
+      user_code_errors: $user_code_errors,
+      sandbox_exceptions: $sandbox_exceptions,
+      exceptions: $exceptions
+    }' > /data/output/sandboxResults${SOLUTION_ID}.json
+
+  rm -f "$clean_javaFile" "$parametersFile" "${clean_javaFile%.java}.class"
+}
+
 missing_vars=""
 for var in USER_ID CHALLENGE_ID LANGUAGE_ID SOLUTION_ID; do
   if [ -z "$(eval echo \$$var)" ]; then
@@ -87,31 +113,5 @@ while IFS='=' read -r key value; do
     user_code_errors="Expected $value but got $resultado for key $key."
   fi
 done < "$parametersFile"
-
-output_json() {
-  jq -n \
-    --arg uuid_user "$uuid_user" \
-    --arg uuid_challenge "$uuid_challenge" \
-    --arg uuid_language "$uuid_language" \
-    --arg uuid_solution "$uuid_solution" \
-    --argjson status "$status" \
-    --arg user_code_message "$user_code_message" \
-    --arg user_code_errors "$user_code_errors" \
-    --arg sandbox_exceptions "$sandbox_exceptions" \
-    --arg exceptions "$exceptions" \
-    '{
-      uuid_user: $uuid_user,
-      uuid_challenge: $uuid_challenge,
-      uuid_language: $uuid_language,
-      uuid_solution: $uuid_solution,
-      status: $status,
-      user_code_message: $user_code_message,
-      user_code_errors: $user_code_errors,
-      sandbox_exceptions: $sandbox_exceptions,
-      exceptions: $exceptions
-    }' > /data/output/sandboxResults${SOLUTION_ID}.json
-
-  rm -f "$clean_javaFile" "$parametersFile" "${clean_javaFile%.java}.class"
-}
 
 output_json
