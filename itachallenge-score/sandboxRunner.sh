@@ -23,8 +23,8 @@ if [ -n "$missing_vars" ]; then
   exit 1
 fi
 
-javaFile="/data/SolutionBody${SOLUTION_ID}.java"
-parametersFile="/data/parameters${SOLUTION_ID}.txt"
+javaFile="/data/input/SolutionBody${SOLUTION_ID}.java"
+parametersFile="/data/input/parameters${SOLUTION_ID}.txt"
 
 if [ ! -f "$javaFile" ]; then
   sandbox_exceptions="Java file $javaFile not found."
@@ -50,7 +50,14 @@ if ! command -v java > /dev/null 2>&1; then
   exit 1
 fi
 
-javac "$javaFile"
+clean_solution_id=$(echo "$SOLUTION_ID" | tr -d '-')
+clean_javaFile="/data/input/SolutionBody${clean_solution_id}.java"
+
+if [ "$javaFile" != "$clean_javaFile" ]; then
+  mv "$javaFile" "$clean_javaFile"
+fi
+
+javac "$clean_javaFile"
 if [ $? -ne 0 ]; then
   status=0
   user_code_message="Code doesn't compile."
@@ -66,7 +73,7 @@ while IFS='=' read -r key value; do
     continue
   fi
 
-  resultado=$(java -cp /data "${SOLUTION_ID}" "$key")
+  resultado=$(java -cp /data/input "SolutionBody${clean_solution_id}" "$key")
   if [ $? -ne 0 ]; then
     status=1
     user_code_message="Code compiles but doesn't work."
@@ -104,7 +111,7 @@ output_json() {
       exceptions: $exceptions
     }' > /data/output/sandboxResults${SOLUTION_ID}.json
 
-  rm -f "$javaFile" "$parametersFile"
+  rm -f "$clean_javaFile" "$parametersFile" "${clean_javaFile%.java}.class"
 }
 
 output_json
