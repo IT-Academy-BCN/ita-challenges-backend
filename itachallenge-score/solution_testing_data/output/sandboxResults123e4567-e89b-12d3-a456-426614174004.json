@@ -1,0 +1,11 @@
+{
+  "uuid_user": "550e8400-e29b-41d4-a716-446655440001",
+  "uuid_challenge": "550e8400-e29b-41d4-a716-446655440002",
+  "uuid_language": "550e8400-e29b-41d4-a716-446655440003",
+  "uuid_solution": "123e4567-e89b-12d3-a456-426614174004",
+  "status": 0,
+  "user_code_message": "Code doesn't compile.",
+  "user_code_errors": "",
+  "sandbox_exceptions": "",
+  "exceptions": ""
+}
