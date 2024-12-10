@@ -206,19 +206,23 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getSolutions_ValidIds_SolutionsReturned() {
-        // Arrange
+    void getSolutions_ValidIdsAndPagination_SolutionsReturned() {
         String idChallenge = "valid-challenge-id";
         String idLanguage = "valid-language-id";
+        int offset = 0;
+        int limit = 2;
 
         GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
+        expectedResult.setInfo(offset, limit, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
-        when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
+        when(challengeService.getSolutions(idChallenge, idLanguage, offset, limit)).thenReturn(Mono.just(expectedResult));
 
-        // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}")
+                        .queryParam("offset", offset)
+                        .queryParam("limit", limit)
+                        .build(idChallenge, idLanguage))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)

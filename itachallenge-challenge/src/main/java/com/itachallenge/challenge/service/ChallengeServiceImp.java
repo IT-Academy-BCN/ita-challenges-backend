@@ -169,7 +169,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     }
 
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
@@ -199,10 +199,12 @@ public class ChallengeServiceImp implements IChallengeService {
                                             })
                                     )
                             )
+                            .skip(offset)
+                            .take(limit)
                             .collectList()
                             .map(solutionDtos -> {
                                 GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(0, -1, solutionDtos.size(), solutionDtos.toArray(new SolutionDto[0]));
+                                resultDto.setInfo(offset, limit, solutionDtos.size(), solutionDtos.toArray(new SolutionDto[0]));
                                 return resultDto;
                             });
                 });

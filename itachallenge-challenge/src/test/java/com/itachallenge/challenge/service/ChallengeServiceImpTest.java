@@ -246,6 +246,8 @@ class ChallengeServiceImpTest {
         // Arrange
         String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
         String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+        int offset = 0;
+        int limit = 2;
         UUID challengeId = UUID.fromString(challengeStringId);
         UUID languageId = UUID.fromString(languageStringId);
         UUID solutionId1 = UUID.randomUUID();
@@ -262,7 +264,7 @@ class ChallengeServiceImpTest {
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solutionDocument2));
 
         // Act
-        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId, offset, limit);
 
         // Assert
         StepVerifier.create(resultMono)
@@ -281,9 +283,11 @@ class ChallengeServiceImpTest {
         // Arrange
         String invalidChallengeStringId = "invalid_challenge_id";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        int offset = 0;
+        int limit = 2;
 
         // Act & Assert
-        StepVerifier.create(challengeService.getSolutions(invalidChallengeStringId, languageStringId))
+        StepVerifier.create(challengeService.getSolutions(invalidChallengeStringId, languageStringId, offset, limit))
                 .expectError(BadUUIDException.class)
                 .verify();
 
@@ -297,9 +301,11 @@ class ChallengeServiceImpTest {
         // Arrange
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
         String invalidLanguageStringId = "invalid_language_id";
+        int offset = 0;
+        int limit = 2;
 
         // Act & Assert
-        StepVerifier.create(challengeService.getSolutions(challengeStringId, invalidLanguageStringId))
+        StepVerifier.create(challengeService.getSolutions(challengeStringId, invalidLanguageStringId, offset, limit))
                 .expectError(BadUUIDException.class)
                 .verify();
 
@@ -313,6 +319,8 @@ class ChallengeServiceImpTest {
         // Arrange
         String nonExistentChallengeStringId = "2f948de0-6f0c-4089-90b9-7f70a0812322";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
+        int offset = 0;
+        int limit = 2;
         LanguageDocument languageDocument = new LanguageDocument();
         languageDocument.setIdLanguage(UUID.fromString(languageStringId));
 
@@ -321,7 +329,7 @@ class ChallengeServiceImpTest {
         lenient().when(languageRepository.findByIdLanguage(UUID.fromString(languageStringId))).thenReturn(Mono.just(languageDocument));
 
         // Act & Assert
-        StepVerifier.create(challengeService.getSolutions(nonExistentChallengeStringId, languageStringId))
+        StepVerifier.create(challengeService.getSolutions(nonExistentChallengeStringId, languageStringId, offset, limit))
                 .expectError(ChallengeNotFoundException.class)
                 .verify();
 
