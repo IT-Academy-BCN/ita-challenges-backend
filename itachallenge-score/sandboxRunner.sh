@@ -1,15 +1,5 @@
 #!/bin/sh
 
-uuid_user="$USER_ID"
-uuid_challenge="$CHALLENGE_ID"
-uuid_language="$LANGUAGE_ID"
-uuid_solution="$SOLUTION_ID"
-status=0
-user_code_message=""
-user_code_errors=""
-sandbox_exceptions=""
-exceptions=""
-
 output_json() {
   jq -n \
     --arg uuid_user "$uuid_user" \
@@ -33,8 +23,21 @@ output_json() {
       exceptions: $exceptions
     }' > /data/output/sandboxResults${SOLUTION_ID}.json
 
-  rm -f "$clean_javaFile" "$parametersFile" "${clean_javaFile%.java}.class"
+  rm -f "$javaFile" "$clean_javaFile" "$parametersFile" "${clean_javaFile%.java}.class"
 }
+
+uuid_user="$USER_ID"
+uuid_challenge="$CHALLENGE_ID"
+uuid_language="$LANGUAGE_ID"
+uuid_solution="$SOLUTION_ID"
+status=0
+user_code_message=""
+user_code_errors=""
+sandbox_exceptions=""
+exceptions=""
+
+javaFile="/data/input/SolutionBody${SOLUTION_ID}.java"
+parametersFile="/data/input/parameters${SOLUTION_ID}.txt"
 
 missing_vars=""
 for var in USER_ID CHALLENGE_ID LANGUAGE_ID SOLUTION_ID; do
@@ -48,9 +51,6 @@ if [ -n "$missing_vars" ]; then
   output_json
   exit 1
 fi
-
-javaFile="/data/input/SolutionBody${SOLUTION_ID}.java"
-parametersFile="/data/input/parameters${SOLUTION_ID}.txt"
 
 if [ ! -f "$javaFile" ]; then
   sandbox_exceptions="Java file $javaFile not found."
