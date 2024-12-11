@@ -23,8 +23,11 @@ output_json() {
       exceptions: $exceptions
     }' > /data/output/sandbox_results-${SOLUTION_ID}.json
 
-  rm "/data/input/*${SOLUTION_ID}*"
+  rm "$javaFile"
+  rm "$parametersFile"
   rm "$clean_javaFile"
+  rm "${clean_javaFile}.class"
+
 }
 
 uuid_user="$USER_ID"
