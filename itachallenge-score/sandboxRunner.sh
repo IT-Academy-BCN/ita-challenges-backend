@@ -52,11 +52,14 @@ if [ -n "$missing_vars" ]; then
   exit 1
 fi
 
-if [ ! -f "$javaFile" ]; then
+clean_solution_id=$(echo "$SOLUTION_ID" | tr -d '-')
+clean_javaFile="/data/input/SolutionBody${clean_solution_id}.java"
+
+mv "$javaFile" "$clean_javaFile" 2>/dev/null || {
   sandbox_exceptions="Java file $javaFile not found."
   output_json
   exit 1
-fi
+}
 
 if [ ! -f "$parametersFile" ]; then
   sandbox_exceptions="Parameter file $parametersFile not found."
@@ -74,13 +77,6 @@ if ! command -v java > /dev/null 2>&1; then
   sandbox_exceptions="JRE not found or not configured in PATH."
   output_json
   exit 1
-fi
-
-clean_solution_id=$(echo "$SOLUTION_ID" | tr -d '-')
-clean_javaFile="/data/input/SolutionBody${clean_solution_id}.java"
-
-if [ "$javaFile" != "$clean_javaFile" ]; then
-  mv "$javaFile" "$clean_javaFile"
 fi
 
 javac "$clean_javaFile"
