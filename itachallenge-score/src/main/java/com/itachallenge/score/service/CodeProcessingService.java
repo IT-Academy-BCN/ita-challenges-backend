@@ -1,11 +1,9 @@
 package com.itachallenge.score.service;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.ExecCreateCmdResponse;
+import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.Bind;
-import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Volume;
 import com.itachallenge.score.dto.zmq.ScoreRequestDto;
 import com.itachallenge.score.dto.zmq.ScoreResponseDto;
@@ -13,25 +11,26 @@ import com.itachallenge.score.filter.Filter;
 import com.itachallenge.score.util.ExecutionResult;
 import com.itachallenge.score.domain.ScoreResult;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.nio.file.Path;
 
 import static com.github.dockerjava.api.model.HostConfig.newHostConfig;
 import static com.itachallenge.score.domain.ScoreResult.fromTerminalOutput;
 import static com.itachallenge.score.dto.zmq.ScoreResponseDto.INTERNAL_SERVER_ERROR_RESPONSE;
 import static com.itachallenge.score.dto.zmq.ScoreResponseDto.SOLUTION_TEXT_FILTER_FAILED_RESPONSE;
+import static com.itachallenge.score.service.JavaFileService.createJavaFile;
+import static org.slf4j.LoggerFactory.getLogger;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
 import static java.nio.file.Paths.get;
-import static java.nio.file.Files.newBufferedWriter;
 
 
 @Service
@@ -40,16 +39,16 @@ final class CodeProcessingService implements ICodeProcessingManager {
 
     // Constants
 
+    private static final Logger logger = getLogger(CodeProcessingService.class);
+
     // ONLY for testing purposes, it is the name of the script mock we use to mock an output from the container
     private static final String SCRIPT_MOCK_FILENAME = "processUserCode.sh";
-
 
     // Configuration properties
 
     private String imageName;
-
+    private String registryUrl;
     private String storagePath;
-
     private String remoteVolumePath;
 
 
@@ -72,83 +71,55 @@ final class CodeProcessingService implements ICodeProcessingManager {
     public ResponseEntity<ScoreResponseDto> processCode(ScoreRequestDto scoreRequest) {
 
         // Pull the image from registry
-        pullImage();
-
-        // Create the container based on the image
-        CreateContainerResponse container = createContainer();
+        try {
+            pullImage();
+        } catch (InterruptedException e) {
+            return getPullingImageExceptionResponse(e);
+        }
 
         // Filter the user code
         ExecutionResult executionResult = filterChain.apply(scoreRequest.getSolutionText());
 
         // Precondition: User provided code must pass all the filters
-        if (!executionResult.isSuccess()) {
-
-            cleanContainer(container);
-
+        if (!executionResult.isSuccess())
             return status(UNPROCESSABLE_ENTITY)
                     .body(SOLUTION_TEXT_FILTER_FAILED_RESPONSE);
 
-        }
 
         // Create a java file in the appropriate folder using the user provided code
-        ResponseEntity<ScoreResponseDto> responseEntity = createJavaFile(scoreRequest);
+        try {
+            createJavaFile(scoreRequest.getSolutionText(), extractFilenameFromUserSolutionPath(), storagePath);
+        } catch (IOException e) {
+            return getInternalServerErrorScoreResponse(e.getMessage());
+        }
 
-        // This checks if there has been an IOException during the creation of the java file
-        if (responseEntity != null)
-            return responseEntity;
+        // Create the container based on the image
+        CreateContainerResponse container = createContainer();
 
-        // IMPORTANT: This method is meant for testing purposes ONLY. Please, read the documentation in
-        // the method's implementation.
-        ExecCreateCmdResponse execCreateCmdResponse = getExecCreateCmdResponseFromMockedScript(container);
-
-        // IMPORTANT: This method contains the actual logic to handle a script inside the container, it is not tested,
-        // and it is meant to substitute the one above in production. Using this instead of the mocked one above is
-        // HIGHLY DISCOURAGED.
-        // ExecCreateCmdResponse execCreateCmdResponse = executeScriptInContainer(container);
-
-        // Get the container's terminal output
-        ByteArrayOutputStream byteArrayOutputStream = writeTerminalOutputToStream(execCreateCmdResponse);
-
-        // TODO from the output stream the response should be built and returned (donne)
+        // Start teh container without more configuration, it is all in the dockerfile
+        try {
+            startContainer(container.getId());
+        } catch (InterruptedException e) {
+            return getStartingContainerExceptionResponse(container.getId(), e);
+        }
 
         // Process the container output and return the response
-        return processContainerOutput(byteArrayOutputStream);
+        return processContainerOutput(null);
 
     }
-
 
     // Helper methods
 
-    private ByteArrayOutputStream writeTerminalOutputToStream(ExecCreateCmdResponse execCreateCmdResponse) {
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        try {
-
-            dockerClient.execStartCmd(execCreateCmdResponse.getId())
-                    .exec(getResultCallback(outputStream)).awaitCompletion();
-
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e); // TODO This needs to be clearly improved with logging and a proper return
-        }
-
-        return outputStream;
-
-    }
-
-    private ExecCreateCmdResponse getExecCreateCmdResponseFromMockedScript(CreateContainerResponse container) {
-
-        // IMPORTANT: This is for mocking purposes ONLY. The script generated has no actual code and just mocks an
-        // output in the container's terminal. The formal of the output is not final either, it may change over time.
-        createScriptFile(SCRIPT_MOCK_FILENAME);
-
-
-        // Execute script in container
-        // IMPORTANT: This uses the mocked script created above, should be substituted by the non "stubbed" one in production
-        return executeScriptInContainerMock(container);
-
-    }
-
+    /**
+     * Creates a Docker container based on the specified image and configuration.
+     *
+     * <p>This method utilizes the Docker client to initiate the creation of a new container
+     * using the provided Docker image. It sets up the necessary volume bindings to ensure
+     * that the container has access to the required storage paths both locally and remotely.
+     *
+     * @return {@link CreateContainerResponse} The response containing details of the created container.
+     */
     private CreateContainerResponse createContainer() {
 
         return dockerClient
@@ -160,29 +131,24 @@ final class CodeProcessingService implements ICodeProcessingManager {
 
     }
 
-    private void pullImage() {
+    /**
+     * Pulls a Docker image from the specified registry.
+     * <p>
+     * This method attempts to pull the Docker image using the provided Docker client.
+     */
+    public void pullImage() throws InterruptedException {
 
-        try {
+        logger.info("Starting to pull Docker image '{}' from registry '{}'.", imageName, registryUrl);
 
-            dockerClient
-                    .pullImageCmd(imageName)
-                    .start()
-                    // TODO Auth is necessary here, in order to do it we need to create an AuthConfig
-                    .awaitCompletion();
+        dockerClient.pullImageCmd(imageName)
+                .withRegistry(registryUrl)
 
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e); // TODO This needs proper logging and a proper return
-        }
+                // Synchronous call
+                .exec(new PullImageResultCallback())
+                .awaitCompletion();
 
-    }
+        logger.info("Successfully pulled Docker image '{}'.", imageName);
 
-    private ResponseEntity<ScoreResponseDto> createJavaFile(ScoreRequestDto scoreRequest) {
-        try {
-            JavaFileService.createJavaFile(scoreRequest.getSolutionText(), extractFilenameFromUserSolutionPath(), storagePath);
-        } catch (IOException e) {
-            return getInternalServerErrorScoreResponseResponseEntity(e.getMessage());
-        }
-        return null;
     }
 
     private ResponseEntity<ScoreResponseDto> processContainerOutput(ByteArrayOutputStream outputStream) {
@@ -198,7 +164,7 @@ final class CodeProcessingService implements ICodeProcessingManager {
             return ok(scoreResponse);
 
         } catch (IllegalArgumentException e) {
-            return getInternalServerErrorScoreResponseResponseEntity(e.getMessage());
+            return getInternalServerErrorScoreResponse(e.getMessage());
         }
     }
 
@@ -209,7 +175,7 @@ final class CodeProcessingService implements ICodeProcessingManager {
         return scoreResponse;
     }
 
-    private static @NotNull ResponseEntity<ScoreResponseDto> getInternalServerErrorScoreResponseResponseEntity(String errorMessage) {
+    private static @NotNull ResponseEntity<ScoreResponseDto> getInternalServerErrorScoreResponse(String errorMessage) {
 
         ScoreResponseDto scoreResponse = INTERNAL_SERVER_ERROR_RESPONSE;
 
@@ -219,11 +185,6 @@ final class CodeProcessingService implements ICodeProcessingManager {
 
     }
 
-    private void cleanContainer(CreateContainerResponse container) {
-        dockerClient.stopContainerCmd(container.getId()).exec();
-        dockerClient.removeContainerCmd(container.getId()).exec();
-    }
-
     private @NotNull String extractFilenameFromUserSolutionPath() {
 
         // TODO This should be adapted since it will only work for testing purposes with the current path string
@@ -231,75 +192,48 @@ final class CodeProcessingService implements ICodeProcessingManager {
 
     }
 
-    private static ResultCallback.@NotNull Adapter<Frame> getResultCallback(ByteArrayOutputStream outputStream) {
+    /**
+     * Starts a Docker container given its container ID.
+     *
+     * @param containerId The ID of the container to start.
+     * @throws InterruptedException If the thread is interrupted while waiting for the container to start.
+     */
+    private void startContainer(String containerId) throws InterruptedException {
 
-        return new ResultCallback.Adapter<>() {
-            @Override
-            public void onNext(Frame frame) {
-
-                try {
-                    outputStream.write(frame.getPayload());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-
-    }
-
-    private ExecCreateCmdResponse executeScriptInContainerMock(CreateContainerResponse container) {
-
-        final String pathInContainer = storagePath.split(":")[1];
-
-        String fileName = extractFilenameFromUserSolutionPath();
-
-        String scriptPathInContainer = get(pathInContainer, SCRIPT_MOCK_FILENAME).toString();
-        String filePathInContainer = get(pathInContainer, fileName).toString();
-
-        return dockerClient.execCreateCmd(container.getId())
-                .withCmd("ash", "-c", scriptPathInContainer + " " + filePathInContainer)
-                .withAttachStdout(true)
-                .withAttachStderr(true)
+        logger.info("Starting Docker container with ID: {}", containerId);
+        dockerClient.startContainerCmd(containerId)
                 .exec();
 
     }
 
-    private void createScriptFile(String fileName) {
+    /**
+     * Returns an error response and interrupts the current thread.
+     *
+     * @param e the {@link InterruptedException} that aborted the pulling
+     * @return the response with the predefined error body
+     */
+    private @NotNull ResponseEntity<ScoreResponseDto> getPullingImageExceptionResponse(InterruptedException e) {
 
-        // Juts for mocking purposes, this method is meant to be deleted
-        String scriptContent = """
-                #!/bin/sh
-                
-                if [ "$2" = "0" ]; then
-                    echo "Couldn't compile" >&2
-                    echo "Score: 0" >&2
-                    exit 1
-                elif [ "$2" = "1" ]; then
-                    echo "Code compiled successfully, but some errors were detected."
-                    echo "Score: 50"
-                    exit 0
-                elif [ "$2" = "2" ]; then
-                    echo "Code compiled and executed successfully."
-                    echo "Tests passed."
-                    echo "Score: 75"
-                    exit 0
-                else
-                    echo "Invalid parameter." >&2
-                    exit 1
-                fi
-                """;
+        Thread.currentThread().interrupt();
+        logger.error("Image pull operation was interrupted for image '{}'.", imageName, e);
 
-        Path scriptPath = get(storagePath, fileName);
+        return status(INTERNAL_SERVER_ERROR).body(INTERNAL_SERVER_ERROR_RESPONSE);
 
-        try (BufferedWriter writer = newBufferedWriter(scriptPath)) {
+    }
 
-            writer.write(scriptContent);
+    /**
+     * Returns an error response and interrupts the current thread.
+     *
+     * @param containerId the container's id
+     * @param e  the {@link InterruptedException} that aborted the container start operation
+     * @return the response with the predefined error body
+     */
+    private @NotNull ResponseEntity<ScoreResponseDto> getStartingContainerExceptionResponse(String containerId, InterruptedException e) {
 
-        } catch (IOException e) {
-            // TODO This needs proper logging and/or exception handling
-            e.printStackTrace();
-        }
+        Thread.currentThread().interrupt();
+        logger.error("Container start operation was interrupted for container '{}'.", containerId, e);
+
+        return status(INTERNAL_SERVER_ERROR).body(INTERNAL_SERVER_ERROR_RESPONSE);
 
     }
 
