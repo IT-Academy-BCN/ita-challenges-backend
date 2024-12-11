@@ -1,4 +1,4 @@
-public class SolutionBody_123e4567-e89b-12d3-a456-426614174004 {
+public class SolutionBody_ea6bb09f-90e4-4394-aa0d-7adcc5b37fd5 {
 
     public static void main(String[] args) {
 
@@ -15,8 +15,8 @@ public class SolutionBody_123e4567-e89b-12d3-a456-426614174004 {
             if (number < minValue) {
                 minValue = number;
             }
-            if (number > maxValue) {
-                maxValue = number;
+            if (number > minValue) {
+                minValue = number;
             }
         }
 
