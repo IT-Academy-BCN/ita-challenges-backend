@@ -17,23 +17,15 @@ public class UserSolutionScoreDto {
 
     @JsonProperty(value = "uuid_user")
     @GenericUUIDValid(message = "Invalid UUID")
-    @NotNull
     private String userId;
 
     @JsonProperty(value = "uuid_challenge")
     @GenericUUIDValid(message = "Invalid UUID")
-    @NotNull
     private String challengeId;
 
     @JsonProperty(value = "uuid_language")
     @GenericUUIDValid(message = "Invalid UUID")
-    @NotNull
     private String languageId;
-
-    @JsonProperty(value = "uuid_solution")
-    @GenericUUIDValid(message = "Invalid UUID")
-    @NotNull
-    private String solutionId;
 
     @JsonProperty(value = "solution_text")
     private String solutionText;
