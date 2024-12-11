@@ -21,7 +21,7 @@ output_json() {
       user_code_errors: $user_code_errors,
       sandbox_exceptions: $sandbox_exceptions,
       exceptions: $exceptions
-    }' > /data/output/sandboxResults${SOLUTION_ID}.json
+    }' > /data/output/sandbox_results-${SOLUTION_ID}.json
 
   rm -rf /data/input/*
 }
@@ -36,8 +36,8 @@ user_code_errors=""
 sandbox_exceptions=""
 exceptions=""
 
-javaFile="/data/input/SolutionBody${SOLUTION_ID}.java"
-parametersFile="/data/input/parameters${SOLUTION_ID}.txt"
+javaFile="/data/input/SolutionBody_${SOLUTION_ID}.java"
+parametersFile="/data/input/parameters_${SOLUTION_ID}.txt"
 
 missing_vars=""
 for var in USER_ID CHALLENGE_ID LANGUAGE_ID SOLUTION_ID; do
@@ -60,7 +60,7 @@ mv "$javaFile" "$clean_javaFile" 2>/dev/null || {
   output_json
   exit 1
 }
-sed -i "s/public class SolutionBody${SOLUTION_ID}/public class  SolutionBody${clean_solution_id}/" "$clean_javaFile"
+sed -i "s/public class SolutionBody_${SOLUTION_ID}/public class  SolutionBody${clean_solution_id}/" "$clean_javaFile"
 
 if [ ! -f "$parametersFile" ]; then
   sandbox_exceptions="Parameter file $parametersFile not found."
