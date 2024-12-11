@@ -25,7 +25,9 @@ management:
     enabled: false
 
 sandbox:
-  solutions-dir: "./solution_testing_data"
+  solutions-dir: "./sandbox_data"
+  input-dir: "./sandbox_data/input"
+  output-dir: "./sandbox_data/output"
 
 logging:
   level:
