@@ -23,7 +23,8 @@ output_json() {
       exceptions: $exceptions
     }' > /data/output/sandbox_results-${SOLUTION_ID}.json
 
-  rm -rf /data/input/*
+  rm /data/input/*${SOLUTION_ID}*
+
 }
 
 uuid_user="$USER_ID"
