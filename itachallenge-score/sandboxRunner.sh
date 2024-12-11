@@ -23,7 +23,7 @@ output_json() {
       exceptions: $exceptions
     }' > /data/output/sandboxResults${SOLUTION_ID}.json
 
-  rm -f "$javaFile" "$clean_javaFile" "$parametersFile" "${clean_javaFile%.java}.class"
+  rm -rf /data/input/*
 }
 
 uuid_user="$USER_ID"
@@ -60,6 +60,7 @@ mv "$javaFile" "$clean_javaFile" 2>/dev/null || {
   output_json
   exit 1
 }
+sed -i "s/public class SolutionBody${SOLUTION_ID}/public class  SolutionBody${clean_solution_id}/" "$clean_javaFile"
 
 if [ ! -f "$parametersFile" ]; then
   sandbox_exceptions="Parameter file $parametersFile not found."
