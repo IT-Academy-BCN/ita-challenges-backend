@@ -26,7 +26,7 @@ output_json() {
   rm "$javaFile"
   rm "$parametersFile"
   rm "$clean_javaFile"
-  rm "${clean_solution_id}.class"
+  rm "$*{clean_solution_id}.class"
 
 }
 
