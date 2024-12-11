@@ -1,72 +1,62 @@
 package com.itachallenge.score.mqclient;
-
-import org.apache.commons.io.FileUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.itachallenge.score.dto.TestParamsRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.score.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import com.itachallenge.score.helper.ObjectSerializer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ScoreMicroZmqClient {
-    private final String SOCKET_ADDRESS = "tcp://challenge-micro:5555";  // Address of Challenge Micro's ZMQ Server
 
-    @Value("${file.location}")
-    private final String FILE_LOCATION;  // Parameterized location for storing test params
     private static final Logger log = LoggerFactory.getLogger(ScoreMicroZmqClient.class);
 
-    public ScoreMicroZmqClient(String fileLocation) {
-        this.FILE_LOCATION = fileLocation;  // Set the location from configuration
-    }
+    @Value("${sandbox.solutions-dir}")
+    private String solutionsDir;
 
-    public CompletableFuture<Map<String, Object>> requestTestParams(String challengeId, String languageId) {
-        return CompletableFuture.supplyAsync(() -> {
+    private final String SOCKET_ADDRESS = "tcp://challenge-micro:5555";  // Address of Challenge Micro's ZMQ Server
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+    public CompletableFuture<Void> requestTestParams(UUID challengeId, UUID languageId, UUID solutionId) {
+        return CompletableFuture.runAsync(() -> {
             try (ZContext context = new ZContext()) {
-                // Create a socket as client
-                ZMQ.Socket socket = context.createSocket(ZMQ.REQ);
+                ZMQ.Socket socket = context.createSocket(SocketType.DEALER); //(SocketType.REQ)
                 socket.connect(SOCKET_ADDRESS);
 
-                // Prepare request message
-                String request = "GET_TEST_PARAMS " + challengeId + " " + languageId;
-                socket.send(request.getBytes(ZMQ.CHARSET));
+                TestParamsRequest request = TestParamsRequest.builder()
+                        .uuidChallenge(challengeId)
+                        .uuidLanguage(languageId)
+                        .build();
 
-                // Receive response from server
-                byte[] reply = socket.recv(0);
 
-                // Deserialize response into Map<String, Object> (test params)
-                Map<String, Object> testParams = ObjectSerializer.deserialize(reply, Map.class);
+                byte[] requestBytes = objectMapper.writeValueAsBytes(request);
+                log.info("Sending request for test parameters: {}", new String(requestBytes));
 
-                // Create a text file with key-value pairs
-                createTestParamsFile(testParams);
+                socket.send(requestBytes);
 
-                return testParams;
+                byte[] replyBytes = socket.recv(0);
+                if (replyBytes == null || replyBytes.length == 0) {
+                    throw new RuntimeException("Empty response from Challenge Micro server");
+                }
+
+                Map<String, Object> testParams = objectMapper.readValue(replyBytes, new TypeReference<Map<String, Object>>() {});
+
+                FileUtil.createTestParamsFile(testParams, solutionsDir);
+
             } catch (Exception e) {
-                log.error("Error during ZMQ communication", e);
-                return null;
+                log.error("Error interacting with the Challenge Micro server", e);
             }
-        });
-    }
-
-    private void createTestParamsFile(Map<String, Object> testParams) throws IOException {
-        // Define the path to store the file
-        String filePath = Paths.get(FILE_LOCATION, "test_params.txt").toString();
-        File file = new File(filePath);
-
-        // Create a StringBuilder to store key-value pairs
-        StringBuilder content = new StringBuilder();
-
-        // Write each key-value pair to the StringBuilder
-        for (Map.Entry<String, Object> entry : testParams.entrySet()) {
-            content.append(entry.getKey()).append("=").append(entry.getValue()).append(System.lineSeparator());
-        }
-
-        // Write content to the file using Apache Commons FileUtils
-        FileUtils.writeStringToFile(file, content.toString(), StandardCharsets.UTF_8);
+        }, executorService);
     }
 }
+
+

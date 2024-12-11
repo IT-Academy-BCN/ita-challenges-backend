@@ -1,4 +1,4 @@
-package com.itachallenge.score.helper;
+package com.itachallenge.score.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
