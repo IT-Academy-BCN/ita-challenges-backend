@@ -24,7 +24,7 @@ output_json() {
     }' > /data/output/sandbox_results-${SOLUTION_ID}.json
 
   rm /data/input/*${SOLUTION_ID}*
-
+  rm "$clean_javaFile"
 }
 
 uuid_user="$USER_ID"
