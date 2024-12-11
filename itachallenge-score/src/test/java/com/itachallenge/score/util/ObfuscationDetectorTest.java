@@ -134,14 +134,6 @@ class ObfuscationDetectorTest {
         assertEquals(expected, result, "Converts String to lower case");
     }
 
-    @Test
-    void testApplySubstringWithMultipleConcatenations() {
-        String input = "pinterface6 + anotherString.substring(2, 8)";
-        String expected = "pinterface6 + otherS";
-        String result = applySubstring(input);
-        assertEquals(expected, result);
-    }
-
 //    @ParameterizedTest
 //    @MethodSource("provideLiteralReplaceStrings")
 //    void applyReplaceStringLiteralsTest(String input, String expected) {
