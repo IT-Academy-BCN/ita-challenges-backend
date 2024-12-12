@@ -169,7 +169,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     }
 
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
+    public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
@@ -183,10 +183,11 @@ public class ChallengeServiceImp implements IChallengeService {
                             .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
                                     .flatMap(solutionId -> solutionRepository.findById(solutionId)
                                             .filter(solution -> solution.getIdLanguage().equals(languageId))
+                                            .collectList()
                                             .map(solution -> {
-                                                SolutionDto solutionDto = new SolutionDto();
-                                                solutionDto.setIdLanguage(languageId);
-                                                solutionDto.setIdChallenge(challengeId);
+                                                ChallengeSolutionDto challengeSolutionDto = new ChallengeSolutionDto();
+                                                challengeSolutionDto.setUuidLanguage(languageId);
+                                                challengeSolutionDto.setUuidChallenge(challengeId);
 
                                                 List<SolutionDto> solutions = new ArrayList<>();
                                                 SolutionDto innerSolutionDto = new SolutionDto();

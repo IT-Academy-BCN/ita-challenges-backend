@@ -37,8 +37,6 @@ public class SolutionDto {
     @JsonProperty(value = "uuid_challenge", index = 3)
     private UUID idChallenge;
 
-    @JsonProperty("solutions")
-    private List<SolutionDto> solutions;
 
     // Constructor for testing with uuid, solutionText and idLanguage
     public SolutionDto(UUID uuid, String solutionText, UUID idLanguage) {
