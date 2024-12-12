@@ -179,11 +179,11 @@ public class ChallengeServiceImp implements IChallengeService {
                 .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
                 .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
                 .collectList() // The flux no is a list
-                .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
+                .map(solutions -> CountChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
 
     }
 
-    private static GenericResultDto<ChallengeSolutionDto> assambleChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {
+    private static GenericResultDto<ChallengeSolutionDto> CountChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {
         int count = solutions.size();
         List<ChallengeSolutionDto.SolutionDto> solutionDtos = solutions.subList(offset, limit > 0 ? limit : count - 1);
 
@@ -199,6 +199,7 @@ public class ChallengeServiceImp implements IChallengeService {
     private static ChallengeSolutionDto.SolutionDto mapToSolutionDto(SolutionDocument solutionDocument) {
         return new ChallengeSolutionDto.SolutionDto(solutionDocument.getUuid(), solutionDocument.getSolutionText());
     }
+
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
