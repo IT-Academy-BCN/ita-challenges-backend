@@ -18,6 +18,13 @@ public class FileUtil {
     private String inputDir;
 
     public void createTestParamsFile(Map<String, Object> testParams,  UUID solutionId) throws IOException {
+
+        if (testParams == null) {
+            throw new IllegalArgumentException("testParams cannot be null");
+        }
+        if (solutionId == null) {
+            throw new IllegalArgumentException("solutionId cannot be null");
+        }
         File directory = new File(inputDir);
         if (!directory.exists()) {
             FileUtils.forceMkdir(directory);
