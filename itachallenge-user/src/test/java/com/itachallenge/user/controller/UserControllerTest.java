@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -41,6 +42,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 class UserControllerTest {
+
     @Autowired
     private WebTestClient webTestClient;
 
@@ -65,7 +67,7 @@ class UserControllerTest {
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectBody(String.class)
@@ -102,13 +104,13 @@ class UserControllerTest {
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST)
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.URI_TOO_LONG);
     }
 
     @Test
-    void getSolutionsByUserIdChallengeIdLanguageId (){
+    void getSolutionsByUserIdChallengeIdLanguageId() {
 
         String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
 
@@ -119,12 +121,12 @@ class UserControllerTest {
 
         UserScoreDto userScoreDto = new UserScoreDto();
         SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0,1,1, new UserScoreDto[]{userScoreDto});
+        expectedSolutionUserDto.setInfo(0, 1, 1, new UserScoreDto[]{userScoreDto});
 
-        when(userSolutionService.getChallengeById(any(),any(),any())).thenReturn(Mono.just(expectedSolutionUserDto));
+        when(userSolutionService.getChallengeById(any(), any(), any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId,idLanguage,idChallenge)
+                .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(SolutionUserDto.class)
@@ -147,7 +149,7 @@ class UserControllerTest {
                         .path(CONTROLLER_URL + URI_TEST)
                         .queryParam("", Collections.EMPTY_LIST)
                         .build())
-                .accept(MediaType.APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(ChallengeStatisticsDto.class);
@@ -255,7 +257,7 @@ class UserControllerTest {
 
         webTestClient.put()
                 .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .bodyValue(userSolutionDto)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
@@ -287,7 +289,7 @@ class UserControllerTest {
         for (UserSolutionDto testCase : testCases) {
             webTestClient.put()
                     .uri(CONTROLLER_URL + URI_TEST)
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(APPLICATION_JSON)
                     .bodyValue(testCase)
                     .exchange()
                     .expectStatus().isBadRequest();
@@ -312,7 +314,7 @@ class UserControllerTest {
 
         webTestClient.put()
                 .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .bodyValue(userSolutionDto)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.CONFLICT);
@@ -376,13 +378,55 @@ class UserControllerTest {
 
         webTestClient.put()
                 .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(APPLICATION_JSON)
                 .bodyValue(userSolutionDto)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.PAYLOAD_TOO_LARGE);
 
         verify(userSolutionService).addSolution(userSolutionDto);
     }
+
+    @Test
+    void getStatisticsListByIdUserAndIdLanguage_test() {
+
+        String expectedJson = """
+                {
+                  "uuid_user": "xxx",
+                  "uuid_language": "xxxx",
+                  "challenges": {
+                    "completed": [
+                      {
+                        "uuid_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+                        "score": 50
+                      },
+                      {
+                        "uuid_challenge": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5",
+                        "score": 50
+                      }
+                    ],
+                    "saved": [
+                      "dcacb291-b4aa-4029-8e9b-284c8ca80296",
+                      "f6e0f877-9560-4e68-bab6-7dd5f16b46a5",
+                      "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d",
+                      "2f948de0-6f0c-4089-90b9-7f70a0812319",
+                      "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"
+                    ]
+                  }
+                }
+                """;
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/{idUser}/challenges/language/{idLanguage}/statistics/list", "anyUserId", "anyLanguageId")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .json(expectedJson);
+
+
+    }
+
 }
 
 

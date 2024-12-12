@@ -550,13 +550,12 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void getTestingParamsByChallengeIdAndLanguageId_validId_ChallengeFound() {
+    void getTestingParamsByChallengeId_validId_ChallengeFound() {
         // Arrange
         UUID challengeId = UUID.randomUUID();
-        UUID languageId = UUID.randomUUID();
+
         ChallengeDocument challengeDocument = new ChallengeDocument();
         challengeDocument.setUuid(challengeId);
-        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
         TestingValueDocument testingValueDocument = new TestingValueDocument(Collections.singletonList("input"), Collections.singletonList("output"));
         challengeDocument.setTestingValues(Collections.singletonList(testingValueDocument));
 
@@ -564,40 +563,30 @@ class ChallengeServiceImpTest {
                 .inParam(Collections.singletonList("input"))
                 .outParam(Collections.singletonList("output"))
                 .build();
-
         List<TestingValueDto> expectedTestingValues = Collections.singletonList(testingValueDto);
-
-        Map<String, Object> expectedResult = new LinkedHashMap<>();
-        expectedResult.put("uuid_challenge", challengeId.toString());
-        expectedResult.put("uuid_language", languageId.toString());
-        expectedResult.put("test_params", expectedTestingValues);
+        ChallengeTestingValuesDto expectedDto = ChallengeTestingValuesDto.builder()
+                .challengeId(challengeId)
+                .testingValues(expectedTestingValues)
+                .build();
 
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class)).thenReturn(testingValueDto);
+        when(testingValueConverter.convertDocumentToDto(any(TestingValueDocument.class), eq(TestingValueDto.class)))
+                .thenReturn(testingValueDto);
 
         // Act
-        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), languageId.toString());
+        Mono<ChallengeTestingValuesDto> result = challengeService.getTestingParamsByChallengeId(challengeId.toString());
 
         // Assert
         StepVerifier.create(result)
-                .assertNext(response -> {
-                    assertThat(response).containsEntry("uuid_challenge", challengeId.toString());
-                    assertThat(response).containsEntry("uuid_language", languageId.toString());
-                    Object testParamsObject = response.get("test_params");
-                    if (testParamsObject instanceof List) {
-                        List<?> testParamsList = (List<?>) testParamsObject;
-                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
-                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
-                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
-                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
-                        }
-                    }
+                .assertNext(actualDto -> {
+                    assertThat(actualDto.getChallengeId()).isEqualTo(expectedDto.getChallengeId());
+                    assertThat(actualDto.getTestingValues()).containsExactlyElementsOf(expectedDto.getTestingValues());
                 })
                 .expectComplete()
                 .verify();
 
         verify(challengeRepository).findByUuid(challengeId);
-        verify(testingValueConverter).convertDocumentToDto(testingValueDocument, TestingValueDto.class);
+        verify(testingValueConverter).convertDocumentToDto(any(TestingValueDocument.class), eq(TestingValueDto.class));
     }
 
     @Test
@@ -611,29 +600,6 @@ class ChallengeServiceImpTest {
                 .verify();
 
         verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
-    }
-
-    @Test
-    void getTestingParamsByChallengeIdAndLanguageId_invalidLanguageId_LanguageNotFoundExceptionThrown() {
-        // Arrange
-        UUID challengeId = UUID.randomUUID();
-        UUID languageId = UUID.randomUUID();
-        UUID anotherLanguageId = UUID.randomUUID();
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        challengeDocument.setUuid(challengeId);
-        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
-
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-
-        // Act
-        Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeIdAndLanguageId(challengeId.toString(), anotherLanguageId.toString());
-
-        // Assert
-        StepVerifier.create(result)
-                .expectErrorMatches(error -> error instanceof LanguageNotFoundException)
-                .verify();
-
-        verify(challengeRepository).findByUuid(challengeId);
     }
 
     @Test
