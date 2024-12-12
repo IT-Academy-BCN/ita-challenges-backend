@@ -173,19 +173,22 @@ public class ChallengeServiceImp implements IChallengeService {
 
     public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
 
-        return challengeRepository.findByUuid(fromString(idChallenge))
+        return languageRepository.findById(fromString(idLanguage)).flatMap(languageDocument ->
 
-                .flatMapMany(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
-                .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
-                .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
-                .collectList() // The flux no is a list
-                .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
+                challengeRepository.findChallengeDocumentsByUuidAndLanguagesIn(fromString(idChallenge), Set.of(Set.of(languageDocument)))
+
+                        .flatMap(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
+                        .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
+                        .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
+                        .collectList() // The flux no is a list
+                        .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions)));
 
     }
 
     private static GenericResultDto<ChallengeSolutionDto> assambleChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {
+
         int count = solutions.size();
-        List<ChallengeSolutionDto.SolutionDto> solutionDtos = solutions.subList(offset, limit > 0 ? limit : count - 1);
+        List<ChallengeSolutionDto.SolutionDto> solutionDtos = solutions.subList(offset, limit > 0 ? limit : count);
 
         List<ChallengeSolutionDto> solutionDtoList = List.of(new ChallengeSolutionDto(
                 fromString(idChallenge),
@@ -194,6 +197,7 @@ public class ChallengeServiceImp implements IChallengeService {
         ));
 
         return new GenericResultDto<>(offset, limit, count, solutionDtoList.toArray(new ChallengeSolutionDto[0]));
+
     }
 
     private static ChallengeSolutionDto.SolutionDto mapToSolutionDto(SolutionDocument solutionDocument) {
