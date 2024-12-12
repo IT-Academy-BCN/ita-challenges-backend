@@ -3,7 +3,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.itachallenge.score.dto.TestParamsRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.score.util.FileUtil;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Component;
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -15,12 +17,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Component
 public class ScoreMicroZmqClient {
 
     private static final Logger log = LoggerFactory.getLogger(ScoreMicroZmqClient.class);
 
-    @Value("${sandbox.solutions-dir}")
-    private String solutionsDir;
+    @Autowired
+    private FileUtil fileUtil;
 
     private final String SOCKET_ADDRESS = "tcp://challenge-micro:5555";  // Address of Challenge Micro's ZMQ Server
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -29,14 +32,13 @@ public class ScoreMicroZmqClient {
     public CompletableFuture<Void> requestTestParams(UUID challengeId, UUID languageId, UUID solutionId) {
         return CompletableFuture.runAsync(() -> {
             try (ZContext context = new ZContext()) {
-                ZMQ.Socket socket = context.createSocket(SocketType.DEALER); //(SocketType.REQ)
+                ZMQ.Socket socket = context.createSocket(SocketType.REQ);
                 socket.connect(SOCKET_ADDRESS);
 
                 TestParamsRequest request = TestParamsRequest.builder()
                         .uuidChallenge(challengeId)
                         .uuidLanguage(languageId)
                         .build();
-
 
                 byte[] requestBytes = objectMapper.writeValueAsBytes(request);
                 log.info("Sending request for test parameters: {}", new String(requestBytes));
@@ -50,8 +52,7 @@ public class ScoreMicroZmqClient {
 
                 Map<String, Object> testParams = objectMapper.readValue(replyBytes, new TypeReference<Map<String, Object>>() {});
 
-                FileUtil.createTestParamsFile(testParams, solutionsDir);
-
+                fileUtil.createTestParamsFile(testParams, solutionId);
             } catch (Exception e) {
                 log.error("Error interacting with the Challenge Micro server", e);
             }
