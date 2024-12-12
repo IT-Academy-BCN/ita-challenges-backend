@@ -283,39 +283,29 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage) {
+    public Mono<ChallengeTestingValuesDto> getTestingParamsByChallengeId(String idChallenge) {
 
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
-        Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
-        return Mono.zip(challengeIdMono, languageIdMono)
-                .flatMap(tuple -> {
-                    UUID challengeId = tuple.getT1();
-                    UUID languageId = tuple.getT2();
+        return challengeIdMono
+                .flatMap(challengeId ->
+                        challengeRepository.findByUuid(challengeId)
+                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String
+                                        .format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
+                                .map(challenge -> {
+                                    List<TestingValueDto> testingValues = challenge.getTestingValues()
+                                            .stream()
+                                            .map(testingValueDocument -> testingValueConverter
+                                                    .convertDocumentToDto(testingValueDocument, TestingValueDto.class))
+                                            .toList();
 
-                    return challengeRepository.findByUuid(challengeId)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                            .flatMap(challenge -> {
-                                Optional<LanguageDocument> languageOptional = challenge.getLanguages()
-                                        .stream()
-                                        .filter(lang -> lang.getIdLanguage().equals(languageId))
-                                        .findFirst();
-                                if (languageOptional.isPresent()) {
-                                    return Flux.fromIterable(challenge.getTestingValues())
-                                            .map(testingValueDocument -> testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class))
-                                            .collectList()
-                                            .map(testingValues -> {
-                                                Map<String, Object> response = new LinkedHashMap<>();
-                                                response.put("uuid_challenge", idChallenge);  // Changed from "challengeId" to "uuid_challenge"
-                                                response.put("uuid_language", idLanguage);  // Changed from "languageId" to "uuid_language"
-                                                response.put("test_params", testingValues);
-                                                return response;
-                                            });
-                                } else {
-                                    return Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId)));
-                                }
-                            });
-                });
+                                    ChallengeTestingValuesDto responseDto = new ChallengeTestingValuesDto();
+                                    responseDto.setChallengeId(challengeId);
+                                    responseDto.setTestingValues(testingValues);
+
+                                    return responseDto;
+                                })
+                );
     }
 
 
