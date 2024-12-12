@@ -3,12 +3,15 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 
+import com.itachallenge.challenge.document.LanguageDocument;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.util.Collection;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -16,6 +19,7 @@ import java.util.UUID;
 @Repository
 public interface ChallengeRepository extends ReactiveSortingRepository<ChallengeDocument, UUID> {
 
+    Flux<ChallengeDocument> findChallengeDocumentsByUuidAndLanguagesIn(UUID uuid, Collection<Set<LanguageDocument>> languages);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<ChallengeDocument> findByUuid(UUID uuid);
     Flux<ChallengeDocument> findByLevel(String level);
