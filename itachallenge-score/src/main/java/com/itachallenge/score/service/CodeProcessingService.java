@@ -13,6 +13,7 @@ import com.itachallenge.score.domain.ScoreResult;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,13 @@ final class CodeProcessingService implements ICodeProcessingManager {
 
     // Configuration properties
 
+    @Value("${sandbox.file.image}")
     private String imageName;
-    private String registryUrl;
+    @Value("${docker.registry.url}" )
+    private  String registryUrl;
+    @Value("${sandbox.file.storage.path}")
     private String storagePath;
+    @Value("${sandbox.Dockerfile.volumePath}")
     private String remoteVolumePath;
 
 
