@@ -34,7 +34,6 @@ public class CodeProcessingManager {
     public ResponseEntity<ScoreResponseDto> processCode(ScoreRequestDto scoreRequest) {
 
         String sourceCode = scoreRequest.getSolutionText(); //CODE USER FROM JSON
-        String solutionId = scoreRequest.getUuidSolution().toString();
         String[] arguments = {"5", "7"}; // PARAMETER "IN" FROM THE CHALLENGE
         String resultExpected = "12"; //PARAMETER "OUT" FROM THE CHALLENGE
 
