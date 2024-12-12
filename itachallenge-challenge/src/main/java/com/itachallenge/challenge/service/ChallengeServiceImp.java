@@ -24,6 +24,9 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.util.UUID.fromString;
+import static reactor.core.publisher.Flux.fromIterable;
+
 
 @Service
 public class ChallengeServiceImp implements IChallengeService {
@@ -56,7 +59,6 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
-
 
 
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -170,47 +172,33 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
-        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
-        Mono<UUID> languageIdMono = validateUUID(idLanguage);
 
-        return Mono.zip(challengeIdMono, languageIdMono)
-                .flatMap(tuple -> {
-                    UUID challengeId = tuple.getT1();
-                    UUID languageId = tuple.getT2();
+        return challengeRepository.findByUuid(fromString(idChallenge))
 
-                    return challengeRepository.findByUuid(challengeId)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                            .flatMapMany(challenge -> Flux.fromIterable(challenge.getSolutions())
-                                    .flatMap(solutionId -> solutionRepository.findById(solutionId)
-                                            .filter(solution -> solution.getIdLanguage().equals(languageId))
-                                            .collectList()
-                                            .map(solution -> {
-                                                ChallengeSolutionDto challengeSolutionDto = new ChallengeSolutionDto();
-                                                challengeSolutionDto.setUuidLanguage(languageId);
-                                                challengeSolutionDto.setUuidChallenge(challengeId);
+                .flatMapMany(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
+                .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
+                .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
+                .collectList() // The flux no is a list
+                .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
 
-                                                List<SolutionDto> solutions = new ArrayList<>();
-                                                SolutionDto innerSolutionDto = new SolutionDto();
-                                                innerSolutionDto.setUuid(solution.getUuid()); // Set id_solution
-                                                innerSolutionDto.setSolutionText(solution.getSolutionText()); // Set solution_text
-                                                solutions.add(innerSolutionDto);
-
-                                                solutionDto.setSolutions(solutions);
-                                                return solutionDto;
-                                            })
-                                    )
-                            )
-                            .skip(offset)
-                            .take(limit)
-                            .collectList()
-                            .map(solutionDtos -> {
-                                GenericResultDto<SolutionDto> resultDto = new GenericResultDto<>();
-                                resultDto.setInfo(offset, limit, solutionDtos.size(), solutionDtos.toArray(new SolutionDto[0]));
-                                return resultDto;
-                            });
-                });
     }
 
+    private static GenericResultDto<ChallengeSolutionDto> assambleChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {
+        int count = solutions.size();
+        List<ChallengeSolutionDto.SolutionDto> solutionDtos = solutions.subList(offset, limit > 0 ? limit : count - 1);
+
+        List<ChallengeSolutionDto> solutionDtoList = List.of(new ChallengeSolutionDto(
+                fromString(idChallenge),
+                fromString(idLanguage),
+                solutionDtos
+        ));
+
+        return new GenericResultDto<>(offset, limit, count, solutionDtoList.toArray(new ChallengeSolutionDto[0]));
+    }
+
+    private static ChallengeSolutionDto.SolutionDto mapToSolutionDto(SolutionDocument solutionDocument) {
+        return new ChallengeSolutionDto.SolutionDto(solutionDocument.getUuid(), solutionDocument.getSolutionText());
+    }
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
@@ -262,7 +250,7 @@ public class ChallengeServiceImp implements IChallengeService {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
                         .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
+                        .flatMapMany(challenge -> fromIterable(challenge.getRelatedChallenges())
                                 .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
                                 .flatMap(relatedChallenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), ChallengeDto.class)))
                         )
@@ -281,7 +269,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<String> updateResourceByUuid(String id, Map<String, Object> updates) {
         return validateUUID(id)
                 .flatMap(resourceId -> challengeRepository.findByUuid(resourceId)
-                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND    )))
+                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND)))
                         .flatMap(resource -> {
                             updates.forEach((key, value) -> {
                                 Field field = ReflectionUtils.findField(resource.getClass(), key);
@@ -316,7 +304,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                         .filter(lang -> lang.getIdLanguage().equals(languageId))
                                         .findFirst();
                                 if (languageOptional.isPresent()) {
-                                    return Flux.fromIterable(challenge.getTestingValues())
+                                    return fromIterable(challenge.getTestingValues())
                                             .map(testingValueDocument -> testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class))
                                             .collectList()
                                             .map(testingValues -> {
@@ -342,7 +330,7 @@ public class ChallengeServiceImp implements IChallengeService {
             return Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format."));
         }
 
-        return Mono.just(UUID.fromString(id));
+        return Mono.just(fromString(id));
     }
 
 }
