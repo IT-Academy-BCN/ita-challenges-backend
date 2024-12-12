@@ -242,7 +242,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
             }
     )
-    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge,
+    public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(@PathVariable("idChallenge") String idChallenge,
                                                             @PathVariable("idLanguage") String idLanguage,
                                                             @RequestParam(defaultValue = "0") int offset,
                                                             @RequestParam(defaultValue = "-1") int limit) {
