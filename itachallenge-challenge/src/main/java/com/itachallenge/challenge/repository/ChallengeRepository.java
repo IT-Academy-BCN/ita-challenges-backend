@@ -3,6 +3,7 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 
+import com.itachallenge.challenge.dto.LanguageDto;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
@@ -31,4 +32,5 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     @Query(value = "{ 'languages.idLanguage' : ?0 }", fields = "{'testingValues':0}")
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
+    Flux<ChallengeDocument>findChallengeDocumentsByUuidAndLanguagesIn(UUID uuid, LanguageDto languageDto);
 }
