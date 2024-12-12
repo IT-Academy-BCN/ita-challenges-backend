@@ -173,15 +173,13 @@ public class ChallengeServiceImp implements IChallengeService {
 
     public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
 
-        return languageRepository.findById(fromString(idLanguage)).flatMap(languageDocument ->
-
-                challengeRepository.findChallengeDocumentsByUuidAndLanguagesIn(fromString(idChallenge), Set.of(Set.of(languageDocument)))
-
-                        .flatMap(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
-                        .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
-                        .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
-                        .collectList() // The flux no is a list
-                        .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions)));
+        return challengeRepository.findByUuid(fromString(idChallenge))
+                .flatMapMany(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
+                .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
+                .filter(solutionDocument -> solutionDocument.getIdLanguage().equals(fromString(idLanguage)))
+                .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
+                .collectList() // The flux no is a list
+                .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
 
     }
 

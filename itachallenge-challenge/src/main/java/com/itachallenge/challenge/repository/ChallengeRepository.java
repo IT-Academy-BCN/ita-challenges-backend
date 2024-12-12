@@ -19,7 +19,6 @@ import java.util.UUID;
 @Repository
 public interface ChallengeRepository extends ReactiveSortingRepository<ChallengeDocument, UUID> {
 
-    Flux<ChallengeDocument> findChallengeDocumentsByUuidAndLanguagesIn(UUID uuid, Collection<Set<LanguageDocument>> languages);
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<ChallengeDocument> findByUuid(UUID uuid);
     Flux<ChallengeDocument> findByLevel(String level);
