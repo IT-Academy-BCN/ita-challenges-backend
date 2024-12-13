@@ -1,6 +1,5 @@
 package com.itachallenge.score.util;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,57 +42,60 @@ class ObfuscationDetectorTest {
         assertEquals(expected, result, "Concatenation should be replaced by a single string.");
     }
 
-    static Stream<Arguments> applyToUpperCaseTestCases() {
+    static Stream<Arguments> applySubstringTestCases() {
         return Stream.of(
-                Arguments.of("\"a\".toUpperCase())", "\"A\")"),
-                Arguments.of("Some code \"class\".toUpperCase() Some code ",
-                        "Some code \"CLASS\" Some code "),
-                Arguments.of("Some code \"CLASS\".toUpperCase() Some code ",
-                        "Some code \"CLASS\" Some code "),
-                Arguments.of("Some code \"heLLo123wORLd\".toUpperCase() Some code ",
-                        "Some code \"HELLO123WORLD\" Some code "),
-                Arguments.of("Some code \"java.io.File\".toUpperCase() Some code ",
-                        "Some code \"JAVA.IO.FILE\" Some code "),
-                Arguments.of("Some code \"camión\".toUpperCase() Some code ",
-                        "Some code \"CAMIÓN\" Some code "),
-                Arguments.of("Some code \"@class$\".toUpperCase() Some code ",
-                        "Some code \"@CLASS$\" Some code "),
-                Arguments.of("Some code \"CLASS\".toLowerCase() Some code ",
-                        "Some code \"CLASS\".toLowerCase() Some code ")
+                Arguments.of("Some code interface Some code",
+                        "Some code interface Some code"),
+                Arguments.of("Some code pinterface6.substring(1, 10) Some code",
+                        "Some code interface Some code"),
+                Arguments.of("Some code aString + pinterface6.substring(1, 10) Some code",
+                        "Some code aString + interface Some code"),
+                Arguments.of("Some code pinterface6pointer.substring(1, 10).substring(0, 9) Some code",
+                        "Some code interface Some code"),
+                Arguments.of("Some code ppppinterface6pointers.substring(1, 17).substring(2, 15).substring(1,10) Some code",
+                        "Some code interface Some code")
         );
     }
     @ParameterizedTest
-    @MethodSource("applyToUpperCaseTestCases")
-    void applyToUpperCaseTest(String input, String expected) {
-        String result = applyToUpperCase(input);
-        assertEquals(expected, result, "Coverts String to upper case");
+    @MethodSource("applySubstringTestCases")
+    void applySubstringTest(String input, String expected) {
+        String result = applySubstring(input);
+        assertEquals(expected, result, "Converts String to lower case");
     }
 
-    static Stream<Arguments> applyToLowerCaseTestCases() {
+    static Stream<Arguments> applyToUpperOrLowerCaseTestCases() {
         return Stream.of(
-                Arguments.of("Some code \"A\".toLowerCase() Some code ",
-                        "Some code \"a\" Some code "),
-                Arguments.of("Some code \"CLASS\".toLowerCase() Some code ",
-                        "Some code \"class\" Some code "),
-                Arguments.of("Some code \"class\".toLowerCase() Some code ",
-                        "Some code \"class\")"),
-                Arguments.of("Some code \"heLLo123wORLd\".toLowerCase() Some code ",
-                        "Some code \"hello123world\")"),
-                Arguments.of("Some code \"JAVA.IO.FILE\".toLowerCase() Some code ",
-                        "Some code \"java.io.file\")"),
-                Arguments.of("Some code \"CAMIÓN\".toLowerCase() Some code ",
-                        "Some code \"camión\")"),
-                Arguments.of("Some code \"@CLASS$\".toLowerCase() Some code ",
-                        "Some code \"@class$\")"),
-                Arguments.of("Some code \"class\".toUpperCase() Some code ",
-                        "Some code \"class\".toUpperCase())")
+                Arguments.of("Some code \"a\".toUpperCase() Some code",
+                        "Some code \"A\" Some code"),
+                Arguments.of("Some code \"A\".toLowerCase() Some code",
+                        "Some code \"a\" Some code"),
+                Arguments.of("Some code \"class\".toUpperCase() Some code",
+                        "Some code \"CLASS\" Some code"),
+                Arguments.of("Some code \"class\".toUpperCase().toLowerCase() Some code",
+                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"CLASS\".toLowerCase() Some code",
+                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"heLLo123wORLd\".toUpperCase() Some code",
+                        "Some code \"HELLO123WORLD\" Some code"),
+                Arguments.of("Some code \"heLLo123wORLd\".toLowerCase() Some code",
+                        "Some code \"hello123world\" Some code"),
+                Arguments.of("Some code \"java.io.File\".toUpperCase() Some code",
+                        "Some code \"JAVA.IO.FILE\" Some code"),
+                Arguments.of("Some code \"JAVA.IO.FILE\".toLowerCase() Some code",
+                        "Some code \"java.io.file\" Some code"),
+                Arguments.of("Some code \"@camión$\".toUpperCase() Some code",
+                        "Some code \"@CAMIÓN$\" Some code"),
+                Arguments.of("Some code \"@CAMIÓN$\".toLowerCase() Some code",
+                        "Some code \"@camión$\" Some code"),
+                Arguments.of("Some code \"interafade\".replace('d', 'c')",
+                        "Some code \"interafade\".replace('d', 'c')")
         );
     }
     @ParameterizedTest
-    @MethodSource("applyToLowerCaseTestCases")
-    void applyToLowerCaseTest(String input, String expected) {
-        String result = applyToLowerCase(input);
-        assertEquals(expected, result, "Coverts String to lower case");
+    @MethodSource("applyToUpperOrLowerCaseTestCases")
+    void applyToUpperCaseTest(String input, String expected) {
+        String result = applyToUpperOrLowerCase(input);
+        assertEquals(expected, result, "Converts String to upper case");
     }
 
     static Stream<Arguments> applyCharacterToUpperOrLowerCaseTestCases() {
@@ -117,40 +119,31 @@ class ObfuscationDetectorTest {
         assertEquals(expected, result, "Converts String to lower case");
     }
 
-    static Stream<Arguments> applySubstringTestCases() {
+    static Stream<Arguments> applyReplaceStringLiteralsCases() {
         return Stream.of(
-                Arguments.of("Some code pinterface6.substring(1, 10) Some code",
-                        "Some code interface Some code"),
-                Arguments.of("Some code pinterface6pointer.substring(1, 10).substring(0, 9) Some code",
-                        "Some code interface Some code"),
-                Arguments.of("Some code pinterface6 + anotherString.substring(2, 8) Some code",
-                        "Some code pinterface6 + otherS Some code")
+                Arguments.of("Some code \"class\".replace('z', 'a') Some code",
+                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"clapp\".replace('p', 's') Some code",
+                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"classo\".replace('o', '') Some code",
+                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"impxrt java.ix.File\".replace('x', 'o') Some code",
+                        "Some code \"import java.io.File\" Some code"),
+                Arguments.of("Some code \"import javo.oo.oile\".replace(\"o.oo.o\", \"a.io.F\") Some code",
+                        "Some code \"import java.io.File\" Some code"),
+                Arguments.of("Some code \"intwentyace\".replace(\"wenty\", \"erf\") Some code",
+                        "Some code \"interface\" Some code"),
+                Arguments.of("Some code \"interthirtydog\".replace(\"thirty\", \"\").replace(\"dog\", \"face\") Some code",
+                        "Some code \"interface\" Some code"),
+                Arguments.of("Some code \"ixport javy.io.Sile\".replace('x', 'm').replace('y', 'a').replace('S', 'F') Some code",
+                        "Some code \"import java.io.File\" Some code")
         );
     }
     @ParameterizedTest
-    @MethodSource("applySubstringTestCases")
-    void applySubstringTest(String input, String expected) {
-        String result = applySubstring(input);
-        assertEquals(expected, result, "Converts String to lower case");
+    @MethodSource("applyReplaceStringLiteralsCases")
+    void applyReplaceStringLiteralsTest(String input, String expected) {
+        String result = applyReplaceStringLiterals(input);
+        assertEquals(expected, result);
     }
-
-//    @ParameterizedTest
-//    @MethodSource("provideLiteralReplaceStrings")
-//    void applyReplaceStringLiteralsTest(String input, String expected) {
-//        String result = applyReplaceStringLiterals(input);
-//        assertEquals(expected, result);
-//    }
-//
-//    static Stream<Arguments> provideLiteralReplaceStrings() {
-//        return Stream.of(
-//                Arguments.of("\"clapp.replace('p', 'a')\"", "\"class\""),
-//                Arguments.of("\"class.replace('z', 'a')\"", "\"class\""),
-//                Arguments.of("\"classo.replace('o', '')\"", "\"class\""),
-//                Arguments.of("\"impxrt java.ix.File.replace('x', 'o')\"", "\"import java.io.File\""),
-//                Arguments.of("\"import javo.oo.oile.replace('o.oo.o', 'a.io.F')\"", "\"import java.io.File\""),
-//                Arguments.of("\"ixport javy.io.Sile.replace('x', 'm').replace('y', 'a').replace('S', 'F')\"", "\"import java.io.File\"")
-//        );
-//    }
-
 
 }
