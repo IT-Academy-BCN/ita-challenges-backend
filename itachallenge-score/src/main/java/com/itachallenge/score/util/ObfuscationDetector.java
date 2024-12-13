@@ -1,6 +1,6 @@
 package com.itachallenge.score.util;
 
-import java.util.function.UnaryOperator;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,10 +13,9 @@ public class ObfuscationDetector {
     public static ExecutionResult detectAndModify(String sourceCode) {
         String transformedCode = applyConcatenation(sourceCode);
         transformedCode = applySubstring(transformedCode);
-        transformedCode = applyToUpperCase(transformedCode);
-        transformedCode = applyToLowerCase(transformedCode);
+        transformedCode = applyToUpperOrLowerCase(transformedCode);
         transformedCode = applyCharacterToUpperOrLowerCase(transformedCode);
-//        transformedCode = applyReplaceStringLiterals(transformedCode);
+        transformedCode = applyReplaceStringLiterals(transformedCode);
 //        transformedCode = applyReplaceAll(transformedCode);
 //        transformedCode = applyFormat(transformedCode);
 //        transformedCode = applyStringBuilderAppend(transformedCode);
@@ -44,18 +43,29 @@ public class ObfuscationDetector {
     }
 
     protected static String applyStringMethodTransformation(
-            String code, String methodName, UnaryOperator<String> transformation
+            String code, String regex, Function<MethodDetails, String> transformation
     ) {
         String transformedCode = code;
-        String regex = "\"([^\"]*)\"." + methodName + "\\(\\)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(transformedCode);
 
-        while (matcher.find()) {
-            String matchedString = matcher.group(1);
-            String transformedString = transformation.apply(matchedString);
-            transformedCode = transformedCode.replace(matcher.group(0), "\"" + transformedString + "\"");
-        }
+        String previousCode;
+        do {
+            previousCode = transformedCode;
+            matcher.reset();
+
+            while (matcher.find()) {
+                String beforeMethod = matcher.group(1);
+                String methodName = matcher.group(2);
+                String parameters = matcher.group(3);
+
+                MethodDetails methodDetails = new MethodDetails(beforeMethod, methodName, parameters);
+                String transformedMethodCall = transformation.apply(methodDetails);
+                transformedCode = transformedCode.replace(matcher.group(0), transformedMethodCall);
+                System.out.println("TransformedCode" + transformedCode);
+            }
+
+        } while (!transformedCode.equals(previousCode));
 
         return transformedCode;
     }
@@ -97,17 +107,21 @@ public class ObfuscationDetector {
         return transformedCode;
     }
 
-    protected static String applyToUpperCase(String code) {
-        return applyStringMethodTransformation(code, "toUpperCase", String::toUpperCase);
-    }
-
-    protected static String applyToLowerCase(String code) {
-        return applyStringMethodTransformation(code, "toLowerCase", String::toLowerCase);
+    public static String applyToUpperOrLowerCase(String code) {
+        String regex = "\"([^\"]+)\"\\.(toUpperCase|toLowerCase)\\(([^)]*)\\)";
+        return applyStringMethodTransformation(code, regex, methodDetails -> {
+            String beforeMethod = methodDetails.getBeforeMethod();
+            String methodName = methodDetails.getMethodName();
+            if (methodName.equals("toUpperCase")) {
+                return "\"" + beforeMethod.toUpperCase() + "\"";
+            } else {
+                return "\"" + beforeMethod.toLowerCase() + "\"";
+            }
+        });
     }
 
     protected static String applyCharacterToUpperOrLowerCase(String code) {
         String transformedCode = code;
-        // Updated regex to capture the full method name ("toUpperCase" or "toLowerCase")
         String regex = "Character\\.to(Upper|Lower)Case\\('([^']+)'\\)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(transformedCode);
@@ -126,41 +140,19 @@ public class ObfuscationDetector {
         return transformedCode;
     }
 
-//    protected static String applyCharacterToUpperOrLowerCase(String code) {
-//        String transformedCode = code;
-//        String regex = "Character\\.to((UpperCase)|(LowerCase))\\('([^'])'\\)";
-//        Pattern pattern = Pattern.compile(regex);
-//        Matcher matcher = pattern.matcher(transformedCode);
-//
-//        while (matcher.find()) {
-//            String character = matcher.group(2);
-//            System.out.println("Group 2: " + character);
-//            String transformedCharacter = character.toUpperCase();
-//            System.out.println("transformedCharacter: " + transformedCharacter);
-//            transformedCode = transformedCode.replace(
-//                    matcher.group(0),
-//                    transformedCode.replace(matcher.group(0),
-//                            "Character.to" + matcher.group(1) + "('" + transformedCharacter + "')"));
-//        }
-//        return transformedCode;
-//    }
+    public static String applyReplaceStringLiterals(String code) {
+        String regex = "\"([^\"]+)\"\\.(replace)\\(([^)]*)\\)";
 
-//    public static String applyReplaceStringLiterals(String code) {
-//        return applyStringMethodTransformation(code, "replace", (matchedString, args) -> {
-//            if (matchedString.matches("'\\w', '\\w'")) {
-//                char oldChar = matchedString.charAt(1);
-//                char newChar = matchedString.charAt(4);
-//                return matchedString.replace(oldChar, newChar);
-//            } else {
-//                String[] splitArgs = args.split(",");
-//                String oldValue = splitArgs[0].trim().replace("\"", "");  // Handle removing quotes for substrings
-//                String newValue = splitArgs[1].trim().replace("\"", "");  // Handle removing quotes for substrings
-//
-//                // Perform the actual substring replacement
-//                return "\"" + matchedString.replace(oldValue, newValue) + "\"";  // Return the replaced string
-//            }
-//        });
-//    }
+        return applyStringMethodTransformation(code, regex, methodDetails -> {
+            String beforeMethod = methodDetails.getBeforeMethod();
+            String[] params = methodDetails.getParameters().split(",");
+            String target = params[0].trim().replace("\"", "").replace("'", "");
+            String replacement = params[1].trim().replace("\"", "").replace("'", "");
+
+            return "\"" + beforeMethod.replace(target, replacement) + "\"";
+
+        });
+    }
 
 
 }
