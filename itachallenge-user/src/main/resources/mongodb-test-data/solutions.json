@@ -77,7 +77,7 @@
   },
   {
     "_id" : {
-      "$uuid" : "55ec8eb6-e2ec-4c8a-b609-40dd0608cbc0'"
+      "$uuid" : "55ec8eb6-e2ec-4c8a-b609-40dd0608cbc0"
     },
     "user_id": { "$uuid": "3b20820a-95b9-4ba3-aa81-0925fcb6507e"},
     "challenge_id": { "$uuid":"f6e0f877-9560-4e68-bab6-7dd5f16b46a5"},
@@ -100,7 +100,7 @@
     },
     "user_id": { "$uuid": "9781475b-c8b8-43b4-83ad-70cf197ad38a"},
     "challenge_id": { "$uuid":"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"},
-    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f'"},
+    "language_id": { "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"},
     "bookmarked": false,
     "status": "STARTED",
     "score": 0,
