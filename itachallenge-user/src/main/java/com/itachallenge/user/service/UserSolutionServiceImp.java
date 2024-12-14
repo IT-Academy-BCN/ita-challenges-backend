@@ -150,23 +150,27 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                     if (updatedChallengeStatus == ChallengeStatus.STARTED) {
 
                         return userSolutionRepository.save(newUserSolution);
-                    } else if (updatedChallengeStatus == ChallengeStatus.SENT) {
-                        newUserSolution.setStatus(ChallengeStatus.SCORE_PENDING);
+                    }
+                    return Mono.just(newUserSolution);
+                }))
+                .flatMap(solutionToScore -> {
+                    if (updatedChallengeStatus == ChallengeStatus.SENT) {
+                        solutionToScore.setStatus(ChallengeStatus.SCORE_PENDING);
 
-                        return userSolutionRepository.save(newUserSolution)
+                        return userSolutionRepository.save(solutionToScore)
                                 .then(Mono.fromFuture(() -> getDataFromMicroScore(challengeUuid, languageUuid, solutionDocuments.getFirst().getUuid(),solutionDocuments.getFirst().getSolutionText())
                                         .thenCompose(data -> {
-                                            newUserSolution.setStatus(ChallengeStatus.ENDED);
-                                            newUserSolution.setScore(data.getScore());
-                                            newUserSolution.setErrors(data.getErrors());
-                                            return userSolutionRepository.save(newUserSolution).toFuture();
+                                            solutionToScore.setStatus(ChallengeStatus.ENDED);
+                                            solutionToScore.setScore(data.getScore());
+                                            solutionToScore.setErrors(data.getErrors());
+                                            return userSolutionRepository.save(solutionToScore).toFuture();
                                         }))
                                 )
                                 .doOnError(e -> log.error("Error updating solution status", e))
                                 .onErrorMap(e -> new IllegalArgumentException("Error updating solution status", e));
                     }
-                    return Mono.empty();
-                }));
+                    return Mono.just(solutionToScore);
+                });
     }
     public CompletableFuture<ScoreResponseDto> getDataFromMicroScore(UUID uuidChallenge, UUID uuidLanguage, UUID uuidSolution, String solutionText) {
         ScoreRequestDto request = new ScoreRequestDto(uuidChallenge, uuidLanguage, uuidSolution, solutionText);

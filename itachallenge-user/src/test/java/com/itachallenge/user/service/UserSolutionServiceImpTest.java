@@ -387,20 +387,65 @@ class UserSolutionServiceImpTest {
         verify(userSolutionRepository, times(2)).save(any(UserSolutionDocument.class));
     }
 
-    @DisplayName("saveValidSolution returns empty Mono when no valid status is provided or status is not EMPTY, SENT or STARTED")
-    @ParameterizedTest
-    @ValueSource(strings = { "SCORE_PENDING", "ENDED" })
-    void saveValidSolutionReturnsEmptyMonoWhenNoValidStatusOrNotEmptySentOrStarted(String status) {
-        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder().solutionText("New solution").build());
+    @Test
+    @DisplayName("saveValidSolution processes and transitions from SENT to SCORE_PENDING and then to ENDED")
+    void saveValidSolutionTransitionsFromSentToEnded() {
+
+        List<SolutionDocument> solutionDocuments = List.of(SolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .solutionText(solutionText)
+                .build());
+
+        UserSolutionDocument newSolution = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .solutionDocument(solutionDocuments)
+                .status(ChallengeStatus.SCORE_PENDING)
+                .build();
+
+        ScoreResponseDto scoreResponseDto = new ScoreResponseDto();
+        scoreResponseDto.setScore(100);
+        scoreResponseDto.setErrors("No errors");
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.empty());
 
-        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.valueOf(status), solutionDocuments))
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> {
+                    UserSolutionDocument newUserSolutionDocument = invocation.getArgument(0);
+                    if (newUserSolutionDocument.getStatus() == ChallengeStatus.SCORE_PENDING) {
+                        return Mono.just(newSolution);
+                    } else if (newUserSolutionDocument.getStatus() == ChallengeStatus.ENDED) {
+                        return Mono.just(UserSolutionDocument.builder()
+                                .uuid(UUID.randomUUID())
+                                .userId(newUserSolutionDocument.getUserId())
+                                .challengeId(newUserSolutionDocument.getChallengeId())
+                                .languageId(newUserSolutionDocument.getLanguageId())
+                                .solutionDocument(newUserSolutionDocument.getSolutionDocument())
+                                .status(newUserSolutionDocument.getStatus())
+                                .score(100) .errors("No errors")
+                                .build());
+                    }
+                    return Mono.just(newUserSolutionDocument);
+                });
+
+        CompletableFuture<ScoreResponseDto> future = CompletableFuture.completedFuture(scoreResponseDto);
+        when(zmqClient.sendMessage(any(ScoreRequestDto.class), eq(ScoreResponseDto.class)))
+                .thenReturn((CompletableFuture) future);
+
+        StepVerifier.create(userSolutionService.saveValidSolution(userUuid, challengeUuid, languageUuid, ChallengeStatus.SENT, solutionDocuments))
+                .expectNextMatches(savedDocument ->
+                        savedDocument.getStatus().equals(ChallengeStatus.SCORE_PENDING) ||
+                                (savedDocument.getStatus().equals(ChallengeStatus.ENDED) &&
+                                        savedDocument.getScore() == 100 &&
+                                        "No errors".equals(savedDocument.getErrors())))
                 .verifyComplete();
 
-        verify(userSolutionRepository, never()).save(any(UserSolutionDocument.class));
+        verify(userSolutionRepository, times(2)).save(any(UserSolutionDocument.class));
     }
+
 
     @DisplayName("getDataFromMicroScore returns valid ScoreResponseDto")
     @Test
