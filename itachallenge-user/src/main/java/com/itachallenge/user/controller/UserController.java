@@ -15,13 +15,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.util.*;
+
+import static java.util.Arrays.asList;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.web.reactive.function.server.ServerResponse.ok;
+import static reactor.core.publisher.Mono.just;
 
 @RestController
 @Validated
@@ -175,7 +182,7 @@ public class UserController {
         Map<String, String> response = new HashMap<>();
         response.put("application_name", appName);
         response.put("version", version);
-        return Mono.just(ResponseEntity.ok(response));
+        return just(ResponseEntity.ok(response));
     }
 
     @GetMapping(path = "/{idUser}/challenges/solutions")
@@ -183,9 +190,9 @@ public class UserController {
             summary = "Retrieves all user challenges solutions and their status.",
             description = "Retrieves all user-contributed solutions for all challenges and their status (whether they've finished completing them or not).",
             responses = {
-            @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully", content = {@Content(array = @ArraySchema(schema = @Schema(implementation = UserSolutionDto.class)), mediaType = "application/json")}),
-            @ApiResponse(responseCode = "400", description = "Invalid UUID for user"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+                    @ApiResponse(responseCode = "200", description = "Challenges retrieved successfully", content = {@Content(array = @ArraySchema(schema = @Schema(implementation = UserSolutionDto.class)), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID for user"),
+                    @ApiResponse(responseCode = "404", description = "User not found")
             }
     )
 
@@ -198,4 +205,91 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
+
+    /**
+     * Retrieves the statistics list for a specific user and language.
+     *
+     * <p><strong>Note:</strong> The path parameters {@code idUser} and {@code idLanguage}
+     * are currently not utilized. The method returns a hardcoded {@link UserLanguageChallengesDto}
+     * instance for demonstration purposes.</p>
+     *
+     * @param idUser     the unique identifier of the user
+     * @param idLanguage the unique identifier of the language
+     * @return a {@link Mono} containing the {@link UserLanguageChallengesDto} with hardcoded user language challenges data
+     */
+    @GetMapping(path = "/{idUser}/challenges/language/{idLanguage}/statistics/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<UserLanguageChallengesDto> getStatisticsListByIdUserAndIdLanguage(@PathVariable("idUser") String idUser, @PathVariable("idLanguage") String idLanguage) {
+
+        return just(getUserLanguageChallengesDto());
+
+    }
+
+
+    /**
+     * Creates a hardcoded {@link UserLanguageChallengesDto} instance.
+     *
+     * <p>This helper method currently does not utilize any input parameters and returns
+     * predefined data. It serves as a placeholder for actual data retrieval logic.</p>
+     *
+     * @return a hardcoded {@link UserLanguageChallengesDto} object
+     */
+    private static UserLanguageChallengesDto getUserLanguageChallengesDto() {
+
+        // Create Completed Challenges
+        UserChallengeDto completedChallenge1 = UserChallengeDto.builder()
+                .uuidChallenge("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                .score(50)
+                .build();
+
+        UserChallengeDto completedChallenge2 = UserChallengeDto.builder()
+                .uuidChallenge("f6e0f877-9560-4e68-bab6-7dd5f16b46a5")
+                .score(50)
+                .build();
+
+        List<UserChallengeDto> completedChallenges = asList(completedChallenge1, completedChallenge2);
+
+        // Create Saved Challenges
+        UserChallengeDto savedChallenge1 = UserChallengeDto.builder()
+                .uuidChallenge("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                .build();
+
+        UserChallengeDto savedChallenge2 = UserChallengeDto.builder()
+                .uuidChallenge("f6e0f877-9560-4e68-bab6-7dd5f16b46a5")
+                .build();
+
+        UserChallengeDto savedChallenge3 = UserChallengeDto.builder()
+                .uuidChallenge("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d")
+                .build();
+
+        UserChallengeDto savedChallenge4 = UserChallengeDto.builder()
+                .uuidChallenge("2f948de0-6f0c-4089-90b9-7f70a0812319")
+                .build();
+
+        UserChallengeDto savedChallenge5 = UserChallengeDto.builder()
+                .uuidChallenge("a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6")
+                .build();
+
+        List<UserChallengeDto> savedChallenges = asList(
+                savedChallenge1,
+                savedChallenge2,
+                savedChallenge3,
+                savedChallenge4,
+                savedChallenge5
+        );
+
+        // Create ChallengesListsDto
+        ChallengesListsDto challengesLists = ChallengesListsDto.builder()
+                .completed(completedChallenges)
+                .saved(savedChallenges)
+                .build();
+
+        // Create UserLanguageChallengesDto
+        return UserLanguageChallengesDto.builder()
+                .uuidUser("xxx")
+                .uuidLanguage("xxxx")
+                .challenges(challengesLists)
+                .build();
+
+    }
+
 }

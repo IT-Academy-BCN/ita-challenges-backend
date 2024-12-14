@@ -41,6 +41,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         this.zmqClient = zmqClient;
     }
 
+    //@Cacheable
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
         UUID userUuid = UUID.fromString(idUser);
         UUID challengeUuid = UUID.fromString(idChallenge);
