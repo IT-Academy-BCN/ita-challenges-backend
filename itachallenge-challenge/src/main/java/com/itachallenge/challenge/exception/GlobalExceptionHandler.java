@@ -74,4 +74,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
+
+    @ExceptionHandler(InvalidLimitException.class)
+    public ResponseEntity<String> handleInvalidLimitException(InvalidLimitException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

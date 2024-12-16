@@ -173,25 +173,27 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
-
-        // Precondition: Offset must not be greater to or equal to the limit
-        if (offset <= limit)
-            return just(new GenericResultDto<>(offset, limit, 0, new ChallengeSolutionDto[0]));
-
         return challengeRepository.findByUuid(fromString(idChallenge))
                 .flatMapMany(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
                 .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
                 .filter(solutionDocument -> solutionDocument.getIdLanguage().equals(fromString(idLanguage)))
                 .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
-                .collectList() // The flux no is a list
-                .map(solutions -> assambleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
-
+                .collectList() // The flux now is a list
+                .map(solutions -> assembleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
     }
 
-    private static GenericResultDto<ChallengeSolutionDto> assambleChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {
-
+    private static GenericResultDto<ChallengeSolutionDto> assembleChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {
         int count = solutions.size();
-        List<ChallengeSolutionDto.SolutionDto> solutionDtos = solutions.subList(offset, limit > 0 ? limit : count);
+        List<ChallengeSolutionDto.SolutionDto> solutionDtos;
+
+        if (offset >= count) {
+            solutionDtos = Collections.emptyList();
+        } else {
+            if (limit > count) {
+                throw new InvalidLimitException("Limit cannot be greater than the number of available solutions.");
+            }
+            solutionDtos = solutions.subList(offset, limit > 0 ? Math.min(offset + limit, count) : count);
+        }
 
         List<ChallengeSolutionDto> solutionDtoList = List.of(new ChallengeSolutionDto(
                 fromString(idChallenge),
@@ -200,12 +202,12 @@ public class ChallengeServiceImp implements IChallengeService {
         ));
 
         return new GenericResultDto<>(offset, limit, count, solutionDtoList.toArray(new ChallengeSolutionDto[0]));
-
     }
 
     private static ChallengeSolutionDto.SolutionDto mapToSolutionDto(SolutionDocument solutionDocument) {
         return new ChallengeSolutionDto.SolutionDto(solutionDocument.getUuid(), solutionDocument.getSolutionText());
     }
+
 
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
