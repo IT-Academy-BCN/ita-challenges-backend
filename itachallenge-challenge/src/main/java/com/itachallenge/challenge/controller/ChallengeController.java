@@ -293,20 +293,19 @@ public class ChallengeController {
         return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-    @GetMapping("/test/params/{idChallenge}/language/{idLanguage}")
+    @GetMapping("/test/params/{idChallenge}/")
     @Operation(
-            operationId = "Get the testing parameters for the chosen challenge & language.",
+            operationId = "Get the testing parameters for the chosen challenge.",
             summary = "Get the arrays of the testing values in & out parameters",
-            description = "Sending the ID Challenge & ID Language returns the relevant challenge's testing values.",
+            description = "Sending the ID Challenge returns the relevant challenge's testing values.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "The Challenge Id & Language Id can't be null or empty.", content = {@Content(schema = @Schema())})
+                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The Challenge Id can't be null or empty.", content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<Map<String, Object>> getChallengesTestingValues(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge,
-                                                                @PathVariable("idLanguage") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idLanguage) {
-        return challengeService.getTestingParamsByChallengeIdAndLanguageId(idChallenge, idLanguage);
+    public Mono<ChallengeTestingValuesDto> getChallengesTestingValues(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge) {
+        return challengeService.getTestingParamsByChallengeId(idChallenge);
     }
 
     @GetMapping("/version")

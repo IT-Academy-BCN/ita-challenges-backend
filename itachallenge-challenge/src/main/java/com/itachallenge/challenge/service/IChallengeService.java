@@ -24,7 +24,7 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit);
 
-    Mono<Map<String, Object>> getTestingParamsByChallengeIdAndLanguageId(String idChallenge, String idLanguage);
+    Mono<ChallengeTestingValuesDto> getTestingParamsByChallengeId(String idChallenge);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
