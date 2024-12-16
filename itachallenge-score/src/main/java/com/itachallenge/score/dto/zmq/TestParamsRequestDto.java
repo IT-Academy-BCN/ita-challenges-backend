@@ -1,4 +1,4 @@
-package com.itachallenge.score.dto;
+package com.itachallenge.score.dto.zmq;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,12 +16,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 @Data
-public class TestParamsRequest {
+public class TestParamsRequestDto {
 
-    @JsonProperty(value="id_challenge", index = 0) //"uuid_challenge"))
+    @JsonProperty(value="id_challenge") //"uuid_challenge"))
     private UUID uuidChallenge;
-
-    @JsonProperty(value="id_language")//("uuid_language")
-    private UUID uuidLanguage;
-
 }

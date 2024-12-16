@@ -8,13 +8,26 @@ import java.io.IOException;
 
 @Component
 public class ObjectSerializer {
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    public static byte[] serialize(Object obj) throws JsonProcessingException {
-        return objectMapper.writeValueAsBytes(obj);
+    private final ObjectMapper objectMapper;
+
+    public ObjectSerializer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
     }
 
-    public static <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
-        return objectMapper.readValue(bytes, clazz);
+    public  byte[] serialize(Object obj) throws JsonProcessingException {
+        try {
+            return objectMapper.writeValueAsBytes(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Serialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(bytes, clazz);
+        } catch (IOException e) {
+            throw new RuntimeException("Deserialization failed: " + e.getMessage(), e);
+        }
     }
 }

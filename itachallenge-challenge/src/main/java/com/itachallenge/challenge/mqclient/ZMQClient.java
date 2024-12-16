@@ -42,7 +42,7 @@ public class ZMQClient {
 
                 Optional<byte[]> request = Optional.empty();
                 try {
-                    request = Optional.of(objectSerializer.serialize(message));
+                    request = Optional.of(ObjectSerializer.serialize(message));
                 }catch (JsonProcessingException jpe){
                     log.error(jpe.getMessage());
                 }
