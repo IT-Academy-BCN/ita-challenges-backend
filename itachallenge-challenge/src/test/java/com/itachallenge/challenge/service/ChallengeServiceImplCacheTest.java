@@ -29,6 +29,7 @@ import reactor.test.StepVerifier;
 
 import java.util.*;
 
+import static java.util.UUID.fromString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -126,8 +127,8 @@ class ChallengeServiceImplCacheTest {
         ChallengeDocument challengeDocument = new ChallengeDocument();
         ChallengeDto challengeDto = new ChallengeDto();
 
-        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
+        when(languageRepository.findByIdLanguage(fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
+        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
         when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
 
         // Act
@@ -161,8 +162,8 @@ class ChallengeServiceImplCacheTest {
     @Test
     void getAllLanguages_cacheTest() {
         // Arrange
-        UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
-        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
+        UUID uuid1 = fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
+        UUID uuid2 = fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript");
         LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python");
         LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript");
@@ -248,7 +249,6 @@ class ChallengeServiceImplCacheTest {
     @DisplayName("Cache - getSolutions")
     @Test
     void testGetChallengeSolutions_cacheTest(){
-        // Arrange
         String challengeStringId = "e5f71456-62db-4323-a8d2-1d473d28a931";
         String languageStringId = "b5f78901-28a1-49c7-98bd-1ee0a555c678";
         UUID languageId = UUID.fromString(languageStringId);
@@ -260,44 +260,37 @@ class ChallengeServiceImplCacheTest {
         SolutionDocument solution1 = new SolutionDocument(solutionId1, "Solution 1", languageId);
         SolutionDocument solution2 = new SolutionDocument(solutionId2, "Solution 2", languageId);
         challenge.setSolutions(Arrays.asList(solution1.getUuid(), solution2.getUuid()));
-        SolutionDto solutionDto1 = new SolutionDto(solution1.getUuid(), solution1.getSolutionText(), solution1.getIdLanguage());
-        SolutionDto solutionDto2 = new SolutionDto(solution2.getUuid(), solution2.getSolutionText(), solution2.getIdLanguage());
-        List<SolutionDto> expectedSolutions = List.of(solutionDto1, solutionDto2);
+        ChallengeSolutionDto.SolutionDto solutionDto1 = new ChallengeSolutionDto.SolutionDto(solution1.getUuid(), solution1.getSolutionText());
+        ChallengeSolutionDto.SolutionDto solutionDto2 = new ChallengeSolutionDto.SolutionDto(solution2.getUuid(), solution2.getSolutionText());
 
         when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
         when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solution1));
         when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solution2));
-        when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedSolutions));
 
-        // Act
-        Mono<GenericResultDto<SolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId);
+        Mono<GenericResultDto<ChallengeSolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId, 0, 2);
 
-        // Assert
         StepVerifier.create(resultMono)
-                .expectNextMatches(resultDto -> {
-                    assertThat(resultDto.getOffset()).isZero();
-                    assertThat(resultDto.getLimit()).isEqualTo(expectedSolutions.size());
-                    assertThat(resultDto.getCount()).isEqualTo(expectedSolutions.size());
-                    return true;
+                .assertNext(resultDto -> {
+                    assertThat(resultDto.getCount()).isEqualTo(2);
+                    assertThat(resultDto.getResults()[0].getSolutions()).containsExactly(solutionDto1, solutionDto2);
                 })
                 .verifyComplete();
 
-        verify(challengeRepository).findByUuid(UUID.fromString(challengeStringId));
+        verify(challengeRepository, times(1)).findByUuid(UUID.fromString(challengeStringId));
         verify(solutionRepository, times(2)).findById(any(UUID.class));
-        verify(solutionConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
 
         // Act - Cached Results
-        Mono<GenericResultDto<SolutionDto>> resultCached = challengeService.getSolutions(challengeStringId, languageStringId);
+        Mono<GenericResultDto<ChallengeSolutionDto>> resultCached = challengeService.getSolutions(challengeStringId, languageStringId, 0, 2);
 
         // Assert - Cached Results
         StepVerifier.create(resultCached)
                 .assertNext(actualResult -> {
                     assertThat(actualResult.getCount()).isEqualTo(2);
-                    assertThat(actualResult.getResults()).containsExactly(solutionDto1, solutionDto2);
+                    assertThat(actualResult.getResults()[0].getSolutions()).containsExactly(solutionDto1, solutionDto2);
                 })
                 .verifyComplete();
 
-        verifyNoMoreInteractions(challengeRepository, challengeConverter);
+        verifyNoMoreInteractions(challengeRepository, solutionRepository);
     }
 
     @DisplayName("Cache - getRelatedChallenges")
@@ -306,13 +299,13 @@ class ChallengeServiceImplCacheTest {
         int offset = 1;
         int limit = 1;
         String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-        UUID relatedId = UUID.fromString("f6e0f877-9560-4e68-bab6-7dd5f16b46a5");
-        UUID relatedId2 = UUID.fromString("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d");
-        UUID relatedId3 = UUID.fromString("2f948de0-6f0c-4089-90b9-7f70a0812319");
+        UUID relatedId = fromString("f6e0f877-9560-4e68-bab6-7dd5f16b46a5");
+        UUID relatedId2 = fromString("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d");
+        UUID relatedId3 = fromString("2f948de0-6f0c-4089-90b9-7f70a0812319");
         Set<UUID> relatedChallenges = new HashSet<>(Arrays.asList(relatedId, relatedId2, relatedId3));
 
         ChallengeDocument challenge = new ChallengeDocument();
-        challenge.setUuid(UUID.fromString(challengeStringId));
+        challenge.setUuid(fromString(challengeStringId));
         challenge.setRelatedChallenges(relatedChallenges);
         ChallengeDocument related1 = new ChallengeDocument();
         related1.setUuid(relatedId);

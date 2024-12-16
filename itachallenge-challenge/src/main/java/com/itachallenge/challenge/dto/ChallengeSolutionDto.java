@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -40,6 +41,21 @@ public class ChallengeSolutionDto {
         @NotEmpty(message = "Solution text cannot be empty")
         @JsonProperty("solution_text")
         private String solutionText;
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            SolutionDto that = (SolutionDto) o;
+            return Objects.equals(uuidSolution, that.uuidSolution) &&
+                    Objects.equals(solutionText, that.solutionText);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(uuidSolution, solutionText);
+        }
 
     }
 }

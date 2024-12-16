@@ -28,5 +28,4 @@ public interface IChallengeService {
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
-
 }
