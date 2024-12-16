@@ -314,5 +314,93 @@
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
+  },
+  {
+    "_id": {
+      "$uuid" : "d7b6179f-5f50-4f63-8ed5-2d2d0b6a3f3d"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "1c47394f-9f3d-4e33-8742-6d905f21d41d"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "4c64aaf8-11d0-44a2-96e8-62eec10f1a4f"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "e8e9a41b-1f72-485d-b01c-5cc9d6582cd6"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "2794b28d-bf77-47b2-95c6-bc36cf4e3b4e"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "34299b70-6405-43cc-bc80-4a1d425f60b3"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "c6589c6b-9343-4747-b9df-8b1f7d9c4a6f"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "8e6a1730-3488-4092-b3a5-634360c4d17a"
+    },
+    "solution_text": "DC JavaScript Soluiton",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
   }
+
+
+
+
+
+
+
+
 ]
