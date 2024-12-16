@@ -173,13 +173,23 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     public Mono<GenericResultDto<ChallengeSolutionDto>> getSolutions(String idChallenge, String idLanguage, int offset, int limit) {
-        return challengeRepository.findByUuid(fromString(idChallenge))
-                .flatMapMany(challengeDocument -> fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
-                .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
-                .filter(solutionDocument -> solutionDocument.getIdLanguage().equals(fromString(idLanguage)))
-                .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
-                .collectList() // The flux now is a list
-                .map(solutions -> assembleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
+        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
+        Mono<UUID> languageIdMono = validateUUID(idLanguage);
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeId = tuple.getT1();
+                    UUID languageId = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeId)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException("Challenge not found.")))
+                            .flatMapMany(challengeDocument -> Flux.fromIterable(challengeDocument.getSolutions())) // Flux<UUID>
+                            .flatMap(uuid -> solutionRepository.findById(uuid)) // Flux<SolutionDocument>
+                            .filter(solutionDocument -> solutionDocument.getIdLanguage().equals(languageId))
+                            .map(ChallengeServiceImp::mapToSolutionDto) // Flux<SolutionDto>
+                            .collectList() // The flux now is a list
+                            .map(solutions -> assembleChallengeSolutionDto(idChallenge, idLanguage, offset, limit, solutions));
+                });
     }
 
     private static GenericResultDto<ChallengeSolutionDto> assembleChallengeSolutionDto(String idChallenge, String idLanguage, int offset, int limit, List<ChallengeSolutionDto.SolutionDto> solutions) {

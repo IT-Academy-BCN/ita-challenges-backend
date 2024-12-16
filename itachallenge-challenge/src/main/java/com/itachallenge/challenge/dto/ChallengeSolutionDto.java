@@ -40,5 +40,6 @@ public class ChallengeSolutionDto {
         @NotEmpty(message = "Solution text cannot be empty")
         @JsonProperty("solution_text")
         private String solutionText;
+
     }
 }
