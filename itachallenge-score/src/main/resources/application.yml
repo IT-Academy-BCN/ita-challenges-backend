@@ -24,6 +24,10 @@ management:
   security:
     enabled: false
 
+sandbox:
+  solutions-dir: "./sandbox_data"
+  input-dir: "./sandbox_data/input"
+  output-dir: "./sandbox_data/output"
 
 logging:
   level:
