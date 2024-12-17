@@ -35,13 +35,21 @@ logging:
   pattern:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
+
 #  file:
 #    name: itachallenge-score.log
+# File location for storing test parameters (specific to testing)
+file:
+  location: "./test-data/testparams"   # Path specific to testing environment
+
+# ZMQ Server Address (mocked or simulated for testing)
+zmq:
+  server-address: "tcp://localhost:5555"   # Use localhost or mock server address for testing purposes
+
 
 validation:
   number: yourDefaultValue
   mongodb_pattern: "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
-
 
 # Commands to run Sandbox
 commands:

@@ -33,4 +33,10 @@ public class GlobalExceptionHandler {
         log.error("Code execution exception", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDTO(ex.getMessage()));
     }
+
+    @ExceptionHandler(FileProcessingException.class)
+    public ResponseEntity<MessageDTO> handleFileProcessingException(FileProcessingException ex) {
+        log.error("File processing exception", ex);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDTO(ex.getMessage()));
+    }
 }
