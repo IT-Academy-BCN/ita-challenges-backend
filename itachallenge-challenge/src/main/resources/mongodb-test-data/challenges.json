@@ -1520,18 +1520,8 @@
       }
     ],
     "solutions": [
-      {
-        "$uuid" : "c8a5440d-6466-463a-bccc-7fefbe9396e4",
-        "language_id": {
-          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
-        }
-      },
-      {
-        "$uuid": "2d423ff6-93fe-483d-bc86-9d8c58552942",
-        "language_id": {
-          "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
-        }
-      }
+      {"$uuid": "c8a5440d-6466-463a-bccc-7fefbe9396e4"},
+      {"$uuid": "2d423ff6-93fe-483d-bc86-9d8c58552942"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},

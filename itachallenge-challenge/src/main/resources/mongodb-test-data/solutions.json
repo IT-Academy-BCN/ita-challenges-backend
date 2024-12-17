@@ -3,7 +3,7 @@
     "_id" : {
       "$uuid" : "c8a5440d-6466-463a-bccc-7fefbe9396e4"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "function smallestNumber(n) {\n    const numStr = n.toString();\n    const length = numStr.length;\n    let smallest = n;\n    let fromIndex = 0, toIndex = 0;\n\n    for (let i = 0; i < length; i++) {\n        const digit = numStr[i];\n        const temp = numStr.slice(0, i) + numStr.slice(i + 1);\n\n        for (let j = 0; j <= temp.length; j++) {\n            const newNumber = temp.slice(0, j) + digit + temp.slice(j);\n            const candidate = parseInt(newNumber, 10);\n\n            if (candidate < smallest || (candidate === smallest && i < fromIndex) || (candidate === smallest && i === fromIndex && j < toIndex)) {\n                smallest = candidate;\n                fromIndex = i;\n                toIndex = j;\n            }\n        }\n    }\n\n    return [smallest, fromIndex, toIndex];\n}\n\nconsole.log(smallestNumber(261235)); // [126235, 2, 0];",
     "language":
     {
       "$uuid":"09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -13,7 +13,7 @@
     "_id": {
       "$uuid" : "4dc78169-d4c9-413f-a032-c9cd8e7ca50f"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "function maxSubArraySum(arr) {\n    let maxSum = arr[0];\n    let currentSum = arr[0];\n\n    for (let i = 1; i < arr.length; i++) {\n        currentSum = Math.max(arr[i], currentSum + arr[i]);\n        maxSum = Math.max(maxSum, currentSum);\n    }\n\n    return maxSum;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -23,7 +23,7 @@
     "_id": {
       "$uuid" : "998bc504-265d-40a4-b579-62feacc3c8cd"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "function longestCommonSubsequence(str1, str2) {\n    const m = str1.length;\n    const n = str2.length;\n    const dp = Array.from(Array(m + 1), () => Array(n + 1).fill(0));\n\n    for (let i = 1; i <= m; i++) {\n        for (let j = 1; j <= n; j++) {\n            if (str1[i - 1] === str2[j - 1]) {\n                dp[i][j] = dp[i - 1][j - 1] + 1;\n            } else {\n                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n            }\n        }\n    }\n\n    let lcs = '';\n    let i = m, j = n;\n    while (i > 0 && j > 0) {\n        if (str1[i - 1] === str2[j - 1]) {\n            lcs = str1[i - 1] + lcs;\n            i--;\n            j--;\n        } else if (dp[i - 1][j] > dp[i][j - 1]) {\n            i--;\n        } else {\n            j--;\n        }\n    }\n\n    return lcs;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -33,7 +33,7 @@
     "_id": {
       "$uuid" : "9f1d2a4b-3c6e-4d7b-8a9c-5e0f7b3c2a1d"
     },
-    "solution_text": "String s1 = \"ABCBDAB\";\n        String s2 = \"BDCAB\";\n        int[][] dp = new int[s1.length() + 1][s2.length() + 1];\n\n        for (int i = 1; i <= s1.length(); i++) {\n            for (int j = 1; j <= s2.length(); j++) {\n                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1] + 1;\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n\n        int index = dp[s1.length()][s2.length()];\n        char[] lcs = new char[index];\n        int i = s1.length(), j = s2.length();\n        while (i > 0 && j > 0) {\n            if (s1.charAt(i - 1) == s2.charAt(j - 1)) {\n                lcs[index - 1] = s1.charAt(i - 1);\n                i--;\n                j--;\n                index--;\n            } else if (dp[i - 1][j] > dp[i][j - 1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n\n        System.out.println(new String(lcs));",
+    "solution_text": "public class Main {\n    public static String longestCommonSubsequence(String str1, String str2) {\n        int m = str1.length();\n        int n = str2.length();\n        int[][] dp = new int[m + 1][n + 1];\n\n        for (int i = 1; i <= m; i++) {\n            for (int j = 1; j <= n; j++) {\n                if (str1.charAt(i - 1) == str2.charAt(j - 1)) {\n                    dp[i][j] = dp[i - 1][j - 1] + 1;\n                } else {\n                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);\n                }\n            }\n        }\n\n        StringBuilder lcs = new StringBuilder();\n        int i = m, j = n;\n        while (i > 0 && j > 0) {\n            if (str1.charAt(i - 1) == str2.charAt(j - 1)) {\n                lcs.append(str1.charAt(i - 1));\n                i--;\n                j--;\n            } else if (dp[i - 1][j] > dp[i][j - 1]) {\n                i--;\n            } else {\n                j--;\n            }\n        }\n\n        return lcs.reverse().toString();\n    }\n}",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -123,7 +123,7 @@
     "_id": {
       "$uuid" : "f3b6c7d8-2e9a-4b1d-8c7e-4f5a9d0c3b2e"
     },
-    "solution_text": "String expression = \"6 + -(4)\";\n        System.out.println(evaluate(expression));\n  public static double evaluate(String expression) {\n        return parseExpression(tokenize(expression));\n    }\n\n    private static String[] tokenize(String expression) {\n        return expression.replaceAll(\"\\\\s+\", \"\")\n                .replaceAll(\"([-+*/()])\", \" $1 \")\n                .trim()\n                .split(\"\\\\s+\");\n    }\n\n    private static double parseExpression(String[] tokens) {\n        Stack<Double> numbers = new Stack<>();\n        Stack<Character> operations = new Stack<>();\n\n        for (String token : tokens) {\n            if (token.matches(\"-?\\\\d+(\\\\.\\\\d+)?\")) {\n                numbers.push(Double.parseDouble(token));\n            } else if (token.equals(\"(\")) {\n                operations.push('(');\n            } else if (token.equals(\")\")) {\n                while (operations.peek() != '(') {\n                    numbers.push(applyOp(operations.pop(), numbers.pop(), numbers.pop()));\n                }\n                operations.pop();\n            } else if (\"+-*/\".contains(token)) {\n                while (!operations.isEmpty() && hasPrecedence(token.charAt(0), operations.peek())) {\n                    numbers.push(applyOp(operations.pop(), numbers.pop(), numbers.pop()));\n                }\n                operations.push(token.charAt(0));\n            }\n        }\n\n        while (!operations.isEmpty()) {\n            numbers.push(applyOp(operations.pop(), numbers.pop(), numbers.pop()));\n        }\n\n        return numbers.pop();\n    }\n\n    private static boolean hasPrecedence(char op1, char op2) {\n        if (op2 == '(' || op2 == ')') return false;\n        if ((op1 == '*' || op1 == '/') && (op2 == '+' || op2 == '-')) return false;\n        return true;\n    }\n\n    private static double applyOp(char op, double b, double a) {\n        switch (op) {\n            case '+':\n                return a + b;\n            case '-':\n                return a - b;\n            case '*':\n                return a * b;\n            case '/':\n                if (b == 0) throw new UnsupportedOperationException(\"Cannot divide by zero\");\n                return a / b;\n        }\n        return 0;\n    }",
+    "solution_text": "public class Main {\n    public static int evaluateExpression(String expression) {\n        return Integer.parseInt(expression.split(\"\\\\+|\u002D|\u00D7|\u00F7\")[0]) + Integer.parseInt(expression.split(\"\\\\+|\u002D|\u00D7|\u00F7\")[1]);\n    }\n}",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -247,7 +247,7 @@
     "_id": {
       "$uuid": "ea837e7d-3d39-42f1-a795-bfc1e928567b"
     },
-    "solution_text": "String[] ejemplos = {\n            \"(2 + 3) * 4\",\n            \"(2 + 3 * 4\",\n            \"5 * (3 + (2 - 5))\",\n            \"2 + )3 * 4(\",\n            \"2 * 3\",\n            \"2 & 3\",\n            \"((3 + 4) * 2) / (5 - 2)\",\n            \"((3 + 4) * 2 / (5 - 2\"\n        };\n\n        for (String expresion : ejemplos) {\n            // Verificar paréntesis balanceados\n            boolean paréntesisBalanceados = true;\n            Stack<Character> stack = new Stack<>();\n            for (char c : expresion.toCharArray()) {\n                if (c == '(') {\n                    stack.push(c);\n                } else if (c == ')') {\n                    if (stack.isEmpty()) {\n                        paréntesisBalanceados = false;\n                        break;\n                    }\n                    stack.pop();\n                }\n            }\n            if (!stack.isEmpty()) {\n                paréntesisBalanceados = false;\n            }\n\n            \n            boolean operadoresValidos = true;\n            String operadores = \"+-*/\";\n            String validChars = \"0123456789+-*/() \";\n            for (int i = 0; i < expresion.length(); i++) {\n                char c = expresion.charAt(i);\n                if (validChars.indexOf(c) == -1) {\n                    operadoresValidos = false;\n                    break;\n                }\n\n                if (operadores.indexOf(c) != -1) {\n                    if (i == 0 || i == expresion.length() - 1) {\n                        operadoresValidos = false; // Un operador no puede estar al principio o al final\n                        break;\n                    }\n                    char anterior = expresion.charAt(i - 1);\n                    char siguiente = expresion.charAt(i + 1);\n                    if (operadores.indexOf(anterior) != -1 || operadores.indexOf(siguiente) != -1) {\n                        operadoresValidos = false; // No puede haber dos operadores seguidos\n                        break;\n                    }\n                }\n            }\n\n           \n            boolean esValida = paréntesisBalanceados && operadoresValidos;\n            System.out.println(expresion + \": \" + (esValida ? \"Válida\" : \"Inválida\"));\n        }",
+    "solution_text": "public class Main {\n    public static boolean isValidExpression(String expression) {\n        // Verificar paréntesis equilibrados\n        int balance = 0;\n        for (int i = 0; i < expression.length(); i++) {\n            char c = expression.charAt(i);\n            if (c == '(') {\n                balance++;\n            } else if (c == ')') {\n                balance--;\n            }\n            if (balance < 0) return false; // Paréntesis de cierre sin apertura\n        }\n        if (balance != 0) return false; // Paréntesis no equilibrados\n\n        // Verificar operadores válidos (solo operadores entre números y paréntesis)\n        String validChars = \"0123456789+-*/()\";\n        for (int i = 0; i < expression.length(); i++) {\n            if (validChars.indexOf(expression.charAt(i)) == -1) {\n                return false; // Carácter no válido\n            }\n        }\n\n        return true;\n    }\n}",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -265,7 +265,7 @@
     "_id": {
       "$uuid": "a8e7d3f9-2b5c-4a6e-9d8f-6c1b0a4e3f8d"
     },
-    "solution_text": "int[] array = {2, 4, 1, 3, 5};\n        int inversionCount = 0;\n        for (int i = 0; i < array.length; i++) {\n            for (int j = i + 1; j < array.length; j++) {\n                if (array[i] > array[j]) {\n                    inversionCount++;\n                }\n            }\n        }\n        System.out.println(inversionCount);",
+    "solution_text": "public class Main {\n    public static int countInversions(int[] arr) {\n        int inversionCount = 0;\n        for (int i = 0; i < arr.length; i++) {\n            for (int j = i + 1; j < arr.length; j++) {\n                if (arr[i] > arr[j]) {\n                    inversionCount++;\n                }\n            }\n        }\n        return inversionCount;\n    }\n}",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -292,7 +292,7 @@
     "_id": {
       "$uuid": "396d1164-85c5-470a-8977-fc68b9b26fb1"
     },
-    "solution_text": "String[] testCases = {\"xxoo\", \"OxoO\", \"xxooxxoo\", \"xXoO\", \"abcd\"};\n\n        for (String str : testCases) {\n            // Inicializar contadores para 'x' y 'o'\n            int countX = 0;\n            int countO = 0;\n\n            str = str.toLowerCase();\n           \n            for (int i = 0; i < str.length(); i++) {\n                char c = str.charAt(i);\n                if (c == 'x') {\n                    countX++;\n                } else if (c == 'o') {\n                    countO++;\n                }\n            }\n            \n            boolean result = countX == countO;\n           \n            System.out.println( str + \": \" + result);\n        }",
+    "solution_text": "public class Main {\n    public static boolean checkEqualXO(String str) {\n        str = str.toLowerCase();\n        int countX = 0;\n        int countO = 0;\n\n        for (char c : str.toCharArray()) {\n            if (c == 'x') countX++;\n            if (c == 'o') countO++;\n        }\n\n        return countX == countO;\n    }\n}",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -301,7 +301,7 @@
     "_id": {
       "$uuid": "6b1df7af-f32f-4f2b-8f97-7d7430874d34"
     },
-    "solution_text": "  int[][] testCases = {\n            {-2, 1, -3, 4, -1, 2, 1, -5, 4},\n            {1, -2, 3, 5, -3, 2},\n            {5, -3, 5},\n            {0, -2, -3, -4, -1, -2, -3, -5, -4},\n            {1, 2, 3, 4, 5},\n            {-1, -2, -3, -4, -5},\n            {2, -3, 4, -1, -2, 1, 5, -3},\n            {1, -1, 1, -1, 1, -1, 1, -1}\n        };\n\n        for (int[] arr : testCases) {\n            int maxSoFar = arr[0];\n            int maxEndingHere = arr[0];\n            int start = 0, end = 0, s = 0;\n\n            for (int i = 1; i < arr.length; i++) {\n                if (arr[i] > maxEndingHere + arr[i]) {\n                    maxEndingHere = arr[i];\n                    s = i;\n                } else {\n                    maxEndingHere += arr[i];\n                }\n\n                if (maxEndingHere > maxSoFar) {\n                    maxSoFar = maxEndingHere;\n                    start = s;\n                    end = i;\n                }\n            }\n\n            \n            System.out.print(\"El subarray contiguo más grande es [\");\n            for (int i = start; i <= end; i++) {\n                System.out.print(arr[i] + (i < end ? \", \" : \"\"));\n            }\n            System.out.println(\"] con una suma de \" + maxSoFar);\n        }",
+    "solution_text": "public class Main {\n    public static int maxSubArraySum(int[] arr) {\n        int maxSum = arr[0];\n        int currentSum = arr[0];\n\n        for (int i = 1; i < arr.length; i++) {\n            currentSum = Math.max(arr[i], currentSum + arr[i]);\n            maxSum = Math.max(maxSum, currentSum);\n        }\n\n        return maxSum;\n    }\n}",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -319,7 +319,7 @@
     "_id": {
       "$uuid" : "d7b6179f-5f50-4f63-8ed5-2d2d0b6a3f3d"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function checkEqualXO(str) {\n    str = str.toLowerCase();\n    let countX = 0;\n    let countO = 0;\n\n    for (let char of str) {\n        if (char === 'x') countX++;\n        if (char === 'o') countO++;\n    }\n\n    return countX === countO;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -329,7 +329,7 @@
     "_id": {
       "$uuid" : "1c47394f-9f3d-4e33-8742-6d905f21d41d"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function factorial(num) {\n    if (num === 0 || num === 1) return 1;\n    return num * factorial(num - 1);\n}\n\nfunction calculate(n) {\n    if (n < 1) throw new Error(\"n must be >= 1\");\n    let factorial = 1;\n    let sum = 0;\n\n    for (let i = 1; i <= n; i++) {\n        factorial *= i;\n        sum += factorial;\n    }\n\n    return sum / factorial;\n}\n\nlet n = 10; // Cambia este valor para probar\nconsole.log(calculate(n));",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -339,7 +339,7 @@
     "_id": {
       "$uuid" : "4c64aaf8-11d0-44a2-96e8-62eec10f1a4f"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function calculatePerimeter(arr) {\n    const rows = arr.length;\n    const cols = arr[0].length;\n    let perimeter = 0;\n\n    for (let i = 0; i < rows; i++) {\n        for (let j = 0; j < cols; j++) {\n            if (arr[i][j] === 'X') {\n                if (i === 0 || arr[i - 1][j] === 'O') perimeter++;\n                if (i === rows - 1 || arr[i + 1][j] === 'O') perimeter++;\n                if (j === 0 || arr[i][j - 1] === 'O') perimeter++;\n                if (j === cols - 1 || arr[i][j + 1] === 'O') perimeter++;\n            }\n        }\n    }\n\n    return perimeter;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -349,7 +349,7 @@
     "_id": {
       "$uuid" : "e8e9a41b-1f72-485d-b01c-5cc9d6582cd6"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function evaluateExpression(expression) {\n    return eval(expression);\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -359,7 +359,7 @@
     "_id": {
       "$uuid" : "2794b28d-bf77-47b2-95c6-bc36cf4e3b4e"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function compressString(str) {\n    let compressed = '';\n    let count = 1;\n\n    for (let i = 1; i < str.length; i++) {\n        if (str[i] === str[i - 1]) {\n            count++;\n        } else {\n            compressed += str[i - 1] + count;\n            count = 1;\n        }\n    }\n    compressed += str[str.length - 1] + count;\n\n    return compressed;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -369,7 +369,7 @@
     "_id": {
       "$uuid" : "34299b70-6405-43cc-bc80-4a1d425f60b3"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function findEquilibrium(arr) {\n    let totalSum = arr.reduce((sum, num) => sum + num, 0);\n    let leftSum = 0;\n\n    for (let i = 0; i < arr.length; i++) {\n        totalSum -= arr[i];\n\n        if (leftSum === totalSum) {\n            return i;\n        }\n\n        leftSum += arr[i];\n    }\n\n    return -1; // No equilibrium index\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -379,7 +379,7 @@
     "_id": {
       "$uuid" : "c6589c6b-9343-4747-b9df-8b1f7d9c4a6f"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function isValidExpression(expression) {\n    // Verificar paréntesis equilibrados\n    let balance = 0;\n    for (let i = 0; i < expression.length; i++) {\n        let c = expression[i];\n        if (c === '(') {\n            balance++;\n        } else if (c === ')') {\n            balance--;\n        }\n        if (balance < 0) return false; // Paréntesis de cierre sin apertura\n    }\n    if (balance !== 0) return false; // Paréntesis no equilibrados\n\n    // Verificar caracteres válidos (solo números, operadores y paréntesis)\n    const validChars = \"0123456789+-*/()\";\n    for (let i = 0; i < expression.length; i++) {\n        if (validChars.indexOf(expression[i]) === -1) {\n            return false; // Carácter no válido\n        }\n    }\n\n    return true;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -389,17 +389,12 @@
     "_id": {
       "$uuid" : "8e6a1730-3488-4092-b3a5-634360c4d17a"
     },
-    "solution_text": "DC JavaScript Soluiton",
+    "solution_text": "function countInversions(arr) {\n    let inversionCount = 0;\n    for (let i = 0; i < arr.length; i++) {\n        for (let j = i + 1; j < arr.length; j++) {\n            if (arr[i] > arr[j]) {\n                inversionCount++;\n            }\n        }\n    }\n    return inversionCount;\n}",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
     }
   }
-
-
-
-
-
 
 
 
