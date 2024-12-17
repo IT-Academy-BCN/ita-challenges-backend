@@ -265,29 +265,40 @@ public class UserSolutionRepositoryTest {
 
     }
 
-    @DisplayName("Find UserSolutionDocument by UserId and Status")
+    @DisplayName("Find UserSolutionDocuments by UserId, LanguageId, and Status")
     @Test
-    void testFindByUserIdAndStatus() {
-        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByUserIdAndStatus(testUserUuid, ChallengeStatus.ENDED);
+    void testFindByUserIdAndLanguageIdAndStatus() {
+        UUID userId = testUserUuid;
+        UUID languageId = testLanguageUuid;
+        ChallengeStatus status = testStatus;
+
+        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository
+                .findByUserIdAndLanguageIdAndStatus(userId, languageId, status);
 
         StepVerifier.create(solutionsFound)
-                .expectNextMatches(userSolution ->
-                        userSolution.getUserId().equals(testUserUuid) &&
-                                userSolution.getStatus().equals(ChallengeStatus.ENDED))
+                .expectNextMatches(userSolution -> userSolution.getUserId().equals(userId) &&
+                        userSolution.getLanguageId().equals(languageId) &&
+                        userSolution.getStatus().equals(status))
                 .thenCancel()
                 .verify();
     }
 
-    @DisplayName("Find UserSolutionDocument by UserId and Bookmarked")
+    @DisplayName("Find UserSolutionDocuments by UserId, LanguageId, and Bookmarked flag")
     @Test
-    void testFindByUserIdAndBookmarked() {
-        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByUserIdAndBookmarked(testUserUuid, true);
+    void testFindByUserIdAndLanguageIdAndBookmarked() {
+        UUID userId = testUserUuid;
+        UUID languageId = testLanguageUuid;
+
+        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository
+                .findByUserIdAndLanguageIdAndBookmarked(userId, languageId, true);
 
         StepVerifier.create(solutionsFound)
-                .expectNextMatches(userSolution ->
-                        userSolution.getUserId().equals(testUserUuid) &&
-                                userSolution.isBookmarked())
+                .expectNextMatches(userSolution -> userSolution.getUserId().equals(userId) &&
+                        userSolution.getLanguageId().equals(languageId) &&
+                        userSolution.isBookmarked())
                 .thenCancel()
                 .verify();
     }
+
+
 }
