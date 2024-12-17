@@ -47,7 +47,6 @@ class UserSolutionServiceImpTest {
     private String solutionText;
     private UUID userUuid;
     private UUID challengeUuid;
-    private UUID challengeUuid2;
     private UUID languageUuid;
     private int mockScore;
     private UserSolutionDto userSolutionDto;
@@ -63,7 +62,7 @@ class UserSolutionServiceImpTest {
         solutionText = "This is a test started solution";
         userUuid = UUID.fromString(idUser);
         challengeUuid = UUID.fromString(idChallenge);
-        challengeUuid2 = UUID.randomUUID();
+        UUID challengeUuid2 = UUID.randomUUID();
         languageUuid = UUID.fromString(idLanguage);
         mockScore = 13;
         userSolutionDto = UserSolutionDto.builder()
@@ -101,20 +100,19 @@ class UserSolutionServiceImpTest {
         UUID challengeId = UUID.fromString("b860f3eb-ef9f-43bf-8c3c-9a5318d26a90");
         UUID languageId = UUID.fromString("26cbe8eb-be68-4eb4-96a6-796168e80ec9");
         UUID userId = UUID.fromString("df99bae8-4f7f-4054-a957-37a12aa16364");
-        boolean bookmarked = true;
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
-        userSolutionDocument.setUserId(userId);
-        userSolutionDocument.setLanguageId(languageId);
-        userSolutionDocument.setChallengeId(challengeId);
-        userSolutionDocument.setBookmarked(true);
+        UserSolutionDocument document = new UserSolutionDocument();
+        document.setUserId(userId);
+        document.setLanguageId(languageId);
+        document.setChallengeId(challengeId);
+        document.setBookmarked(true);
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userId, challengeId, languageId))
-                .thenReturn(Mono.just(userSolutionDocument));
+                .thenReturn(Mono.just(document));
 
-        assertNotNull(userSolutionDocument);
-        assert(userSolutionDocument.isBookmarked());
-        assert (userSolutionDocument.getUserId().equals(userId));
-        assert (userSolutionDocument.getLanguageId().equals(languageId));
-        assert (userSolutionDocument.getChallengeId().equals(challengeId));
+        assertNotNull(document);
+        assert(document.isBookmarked());
+        assert (document.getUserId().equals(userId));
+        assert (document.getLanguageId().equals(languageId));
+        assert (document.getChallengeId().equals(challengeId));
 
     }
 
@@ -310,11 +308,11 @@ class UserSolutionServiceImpTest {
         boolean isBookmarked = true;
         long expectedValue = 2L;
 
-        UserSolutionDocument userSolutionDocument = new UserSolutionDocument();
+        UserSolutionDocument document = new UserSolutionDocument();
         UserSolutionDocument userSolutionDocument2 = new UserSolutionDocument();
-        userSolutionDocument.setChallengeId(idChallenge);
+        document.setChallengeId(idChallenge);
         userSolutionDocument2.setChallengeId(idChallenge);
-        userSolutionDocument.setBookmarked(true);
+        document.setBookmarked(true);
         userSolutionDocument2.setBookmarked(true);
 
         when(userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, isBookmarked))
@@ -353,37 +351,94 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
+    @DisplayName("Both Completed and Saved Challenges are Found")
     @Test
-    void getCompletedAndSavedChallengesStatisticsTest() {
-        when(userSolutionRepository.findByStatus(ChallengeStatus.ENDED))
+    void testGetCompletedAndSavedChallengesStatistics_BothListsNonEmpty() {
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndStatus(userUuid, languageUuid, ChallengeStatus.ENDED))
                 .thenReturn(Flux.just(completedSolution));
-        when(userSolutionRepository.findByBookmarked(true))
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndBookmarked(userUuid, languageUuid, true))
                 .thenReturn(Flux.just(savedSolution));
 
-        when(converter.fromUserSolutionDocumentToCompletedChallengesDTO(Flux.just(completedSolution)))
-                .thenAnswer(invocation ->
-                        Flux.just(new CompletedChallengesDTO(completedSolution.getChallengeId(), completedSolution.getScore())));
-        when(converter.fromUserSolutionDocumentToSavedChallengesDTO(any()))
-                .thenAnswer(invocation ->
-                        Flux.just(new SavedChallengesDTO(savedSolution.getChallengeId())));
+        when(converter.fromUserSolutionDocumentToUserChallengeDto(any(Flux.class)))
+                .thenAnswer(invocation -> Flux.just(UserChallengeDto.builder()
+                        .uuidChallenge(completedSolution.getChallengeId().toString())
+                        .score(completedSolution.getScore())
+                        .build()));
 
-        Mono<ChallengesCompletedAndSavedStatisticsDTO> result = userSolutionService.getCompletedAndSavedChallengesStatistics();
+        Mono<ChallengesListsDto> response = userSolutionService.getCompletedAndSavedChallengesStatistics(userUuid.toString(), languageUuid.toString());
 
-        result.subscribe(statistics -> {
-            assertNotNull(statistics.getCompletedChallenges());
-            assertEquals(1, statistics.getCompletedChallenges().size());
-            assertEquals(completedSolution.getChallengeId(), statistics.getCompletedChallenges().get(0).getChallengeId());
-            assertEquals(completedSolution.getScore(), statistics.getCompletedChallenges().get(0).getScore());
+        StepVerifier.create(response)
+                .assertNext(dto -> {
+                    assertEquals(1, dto.getCompleted().size());
+                    assertEquals(1, dto.getSaved().size());
+                })
+                .verifyComplete();
+    }
 
-            assertNotNull(statistics.getSavedChallenges());
-            assertEquals(1, statistics.getSavedChallenges().size());
-            assertEquals(savedSolution.getChallengeId(), statistics.getSavedChallenges().get(0).getChallengeId());
-        });
+    @DisplayName("No Completed Challenges")
+    @Test
+    void testGetCompletedAndSavedChallengesStatistics_NoCompletedChallenges() {
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndStatus(userUuid, languageUuid, ChallengeStatus.ENDED))
+                .thenReturn(Flux.empty());
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndBookmarked(userUuid, languageUuid, true))
+                .thenReturn(Flux.just(savedSolution));
 
-        verify(userSolutionRepository, times(1)).findByStatus(ChallengeStatus.ENDED);
-        verify(userSolutionRepository, times(1)).findByBookmarked(true);
-        verify(converter, times(1)).fromUserSolutionDocumentToCompletedChallengesDTO(any());
-        verify(converter, times(1)).fromUserSolutionDocumentToSavedChallengesDTO(any());
+        when(converter.fromUserSolutionDocumentToUserChallengeDto(any(Flux.class)))
+                .thenAnswer(invocation -> Flux.just(UserChallengeDto.builder()
+                        .uuidChallenge(savedSolution.getChallengeId().toString())
+                        .score(savedSolution.getScore())
+                        .build()));
+
+        Mono<ChallengesListsDto> response = userSolutionService.getCompletedAndSavedChallengesStatistics(userUuid.toString(), languageUuid.toString());
+
+        StepVerifier.create(response)
+                .assertNext(dto -> {
+                    assertEquals(0, dto.getCompleted().size());
+                    assertEquals(1, dto.getSaved().size());
+                })
+                .verifyComplete();
+    }
+
+    @DisplayName("No Saved Challenges")
+    @Test
+    void testGetCompletedAndSavedChallengesStatistics_NoSavedChallenges() {
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndStatus(userUuid, languageUuid, ChallengeStatus.ENDED))
+                .thenReturn(Flux.just(completedSolution));
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndBookmarked(userUuid, languageUuid, true))
+                .thenReturn(Flux.empty());
+
+        when(converter.fromUserSolutionDocumentToUserChallengeDto(any(Flux.class)))
+                .thenAnswer(invocation -> Flux.just(UserChallengeDto.builder()
+                        .uuidChallenge(completedSolution.getChallengeId().toString())
+                        .score(completedSolution.getScore())
+                        .build()));
+
+        Mono<ChallengesListsDto> response = userSolutionService.getCompletedAndSavedChallengesStatistics(userUuid.toString(), languageUuid.toString());
+
+        StepVerifier.create(response)
+                .assertNext(dto -> {
+                    assertEquals(1, dto.getCompleted().size());
+                    assertEquals(0, dto.getSaved().size());
+                })
+                .verifyComplete();
+    }
+
+    @DisplayName("No Challenges Found")
+    @Test
+    void testGetCompletedAndSavedChallengesStatistics_NoChallenges() {
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndStatus(userUuid, languageUuid, ChallengeStatus.ENDED))
+                .thenReturn(Flux.empty());
+        when(userSolutionRepository.findByUserIdAndLanguageIdAndBookmarked(userUuid, languageUuid, true))
+                .thenReturn(Flux.empty());
+
+        Mono<ChallengesListsDto> response = userSolutionService.getCompletedAndSavedChallengesStatistics(userUuid.toString(), languageUuid.toString());
+
+        StepVerifier.create(response)
+                .assertNext(dto -> {
+                    assertEquals(0, dto.getCompleted().size());
+                    assertEquals(0, dto.getSaved().size());
+                })
+                .verifyComplete();
     }
 
 }
