@@ -86,6 +86,6 @@ docker:
   file:
     location: "./data/testparams"   # Path where Score Micro will store testparams.txt
 
-    zeromq:
-      socket:
-        address: tcp://*:5556
+zeromq:
+  socket:
+    address: tcp://*:5556
