@@ -43,6 +43,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive:3.1.1'
     implementation 'org.zeromq:jeromq:0.5.4'
 
+    implementation "io.mongock:mongock:5.0.32"
+    implementation "io.mongock:mongock-springboot-v3:5.2.4"
+    implementation "io.mongock:mongodb-reactive-driver:5.2.4"
 
     //testing
     testImplementation platform('org.junit:junit-bom:5.9.1')

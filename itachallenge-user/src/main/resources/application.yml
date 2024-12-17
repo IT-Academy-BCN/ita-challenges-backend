@@ -12,10 +12,22 @@ spring:
       #uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
       uri: mongodb://test_users:xoDjk4eDvu5KWaCB@87.106.229.175:27017/users?authSource=admin
       uuid-representation: standard
+  #profiles:
+    #active: mongock
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 2MB
+
+mongock:
+  enabled: true
+  transactionEnabled: false
+  migration-scan-package: com.itachallenge.user.config.dbchangelog
+  lock:
+    collectionName: "mongockLocks" # Name of the collection used to lock the execution of the migration
+    maxWaitingForLockMinutes: 5
+    maxTries: 3 # Number of times to try to acquire a lock
+    maxTriesInterval: 1000 # Interval in milliseconds between tries to acquire a lock
 
 springdoc:
   swagger-ui:
