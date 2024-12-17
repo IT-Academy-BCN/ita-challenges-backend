@@ -38,6 +38,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         this.buildUserStatisticsDto = buildUserStatisticsDto;
     }
 
+    //@Cacheable
     public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
         UUID userUuid = UUID.fromString(idUser);
         UUID challengeUuid = UUID.fromString(idChallenge);
@@ -155,6 +156,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .flatMap(converter::fromUserSolutionDocumentToUserSolutionDto);
     }
 
+    //@Cacheable
     @Override
     public Mono<List<ChallengeStatisticsDto>> getChallengeStatistics(List<UUID> challengeIds) {
 
@@ -175,11 +177,13 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Mono.just(challengesList);
     }
 
+    //@Cacheable
     @Override
     public Mono<Long> getBookmarkCountByIdChallenge(UUID idChallenge) {
         return userSolutionRepository.countByChallengeIdAndBookmarked(idChallenge, true);
     }
 
+//    @Cacheable
     @Override
     public Mono<Float> getChallengeUsersPercentage(UUID idChallenge) {
 
@@ -200,10 +204,12 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return percentage;
     }
 
+    //@Cacheable
     private Flux<UserSolutionDocument> getUserSolutions() {
         return userSolutionRepository.findAll();
     }
 
+    //@Cacheable
     private Flux<UserSolutionDocument> getUserSolutionsChallenge(List<UserSolutionDocument> userSolutions, UUID challengeId) {
         List<UserSolutionDocument> userSolutionsChallenge = userSolutions.stream()
                 .filter(us -> challengeId.equals(us.getChallengeId()))
@@ -252,10 +258,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .onErrorResume(RuntimeException.class, e -> {
                     log.error("Runtime error while fetching user solutions for user {}: {}", userUuid, e.getMessage());
                     return Mono.error(new RuntimeException("Runtime error while fetching user solutions for user: " + userUuid, e));
-                })
-                .onErrorResume(Exception.class, e -> {
-                    log.error("Unexpected error while fetching solutions for user: {}", userUuid, e);
-                    return Mono.error(new Exception("Unexpected error while fetching solutions for user: " + userUuid, e));
                 });
     }
 

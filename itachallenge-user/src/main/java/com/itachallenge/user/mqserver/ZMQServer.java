@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
@@ -17,6 +19,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 @Component
+//WARNING: use this annotation only to get many instances of this class, disables Spring singleton default behavior
+//@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class ZMQServer {
 
     private final ZContext context;

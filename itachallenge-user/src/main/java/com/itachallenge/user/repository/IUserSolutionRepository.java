@@ -4,7 +4,6 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -18,7 +17,6 @@ public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSol
     Mono<UserSolutionDocument> findByUuid(UUID uuid);
     Flux<UserSolutionDocument> findByUserId(UUID userId);
     Flux<UserSolutionDocument> findByChallengeId(UUID challengeId);
-
     Flux<UserSolutionDocument> findByUserIdAndChallengeId(UUID userId, UUID challengeId);
     Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID userId, UUID challengeId, UUID languageId);
     Flux<UserSolutionDocument> findByLanguageId(UUID languageId);

@@ -1,5 +1,4 @@
 package com.itachallenge.user.repository;
-
 import com.itachallenge.user.document.SolutionDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.enums.ChallengeStatus;
@@ -18,11 +17,11 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
 import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
@@ -74,7 +73,7 @@ public class UserSolutionRepositoryTest {
             throw new IOException("Failed to read JSON data", e);
         }
 
-        for(JsonNode field : node){
+        for (JsonNode field : node) {
 
             testUuid = UUID.fromString(field.get("_id").get("$uuid").asText());
             testUserUuid = UUID.fromString(field.get("user_id").get("$uuid").asText());
@@ -99,32 +98,36 @@ public class UserSolutionRepositoryTest {
             JsonNode solutionNode = field.get("solution");
             List<SolutionDocument> solutions = new ArrayList<>();
 
-            for(JsonNode solutionField : solutionNode){
+            if (solutionNode != null && solutionNode.has("solutions") && solutionNode.get("solutions") != null) {
+                for (JsonNode solutionField : solutionNode.get("solutions")) {
+                    testSolutionDocumentUuid = UUID.fromString(solutionField.get("_id").get("$uuid").asText());
 
-                testSolutionDocumentUuid = UUID.fromString(solutionField.get("_id").get("$uuid").asText());
-
-                SolutionDocument builtSolution = new SolutionDocument(
-                        testSolutionDocumentUuid,
-                        solutionField.get("solution_text").asText()
-                );
+                    SolutionDocument builtSolution = new SolutionDocument(
+                            testSolutionDocumentUuid,
+                            solutionField.get("solution_text").asText()
+                    );
+                    solutions.add(builtSolution);
+                }
             }
-            userSolution.setSolutionDocument(solutions);
 
+            userSolution.setSolutionDocument(solutions);
             userSolutions.add(userSolution);
+
         }
     }
 
     @BeforeEach
-    void setup(){
+    void setup() {
 
         userSolutionRepository.deleteAll();
 
         userSolutionRepository.saveAll(Flux.fromIterable(userSolutions)).blockLast();
+
     }
 
     @DisplayName("Repository not null Test")
     @Test
-    void testRepositoryNotNull(){
+    void testRepositoryNotNull() {
 
         assertNotNull(userSolutionRepository);
     }
@@ -141,7 +144,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Exists by UUID test")
     @Test
-    void testExistsByUuid(){
+    void testExistsByUuid() {
 
         Boolean exists = userSolutionRepository.existsByUuid(testUuid).block();
         assertEquals(true, exists);
@@ -149,7 +152,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Find UserSolutionDocument by UserId test")
     @Test
-    void testFindByUserId(){
+    void testFindByUserId() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByUserId(testUserUuid);
         StepVerifier.create(solutionsFound)
@@ -160,7 +163,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Find UserSolutionDocument by ChallengeId test")
     @Test
-    void testFindByChallengeId(){
+    void testFindByChallengeId() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByChallengeId(testChallengeUuid);
         StepVerifier.create(solutionsFound)
@@ -171,7 +174,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Find UserSolutionDocument by LanguageId test")
     @Test
-    void testFindByLanguageId(){
+    void testFindByLanguageId() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByLanguageId(testLanguageUuid);
         StepVerifier.create(solutionsFound)
@@ -182,7 +185,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Find all UserSolutionDocument by bookmarked test")
     @Test
-    void testFindByBookmarked(){
+    void testFindByBookmarked() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByBookmarked(true);
         StepVerifier.create(solutionsFound)
@@ -192,7 +195,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Find all UserSolutionDocument by status test")
     @Test
-    void testFindByStatus(){
+    void testFindByStatus() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByStatus(testStatus);
         StepVerifier.create(solutionsFound)
@@ -202,17 +205,18 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Find UserSolutionDocument by score test")
     @Test
-    void testFindByScore(){
+    void testFindByScore() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByScore(score);
         StepVerifier.create(solutionsFound)
-                .expectNextMatches(userSolution -> userSolution.getScore() == score) //at least one result
-                .verifyComplete();
+                .expectNextMatches(userSolution -> userSolution.getScore() == score)
+                .thenCancel()
+                .verify();
     }
 
     @DisplayName("Find all UserSolutionDocument")
     @Test
-    void testFindAll(){
+    void testFindAll() {
 
         Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findAll();
 
@@ -236,7 +240,7 @@ public class UserSolutionRepositoryTest {
 
     @DisplayName("Count number of BookmarkedTrue by idChallenge")
     @Test
-    void testCountBookmarkedTrueByChallengeId(){
+    void testCountBookmarkedTrueByChallengeId() {
         boolean isBookmarked = true;
         Mono<Long> numberOfBookmarks = userSolutionRepository.countByChallengeIdAndBookmarked(testChallengeUuid, isBookmarked);
         long expectedValue = 1L;
@@ -255,11 +259,12 @@ public class UserSolutionRepositoryTest {
         StepVerifier.create(solutionsFound)
                 .expectNextMatches(userSolution ->
                         userSolution.getChallengeId().equals(testChallengeUuid) &&
-                        userSolution.getStatus().equals(testStatus))
+                                userSolution.getStatus().equals(testStatus))
                 .thenCancel()
                 .verify();
 
     }
+
     @DisplayName("Returns the total number of solutions by idLanguage and status")
     @Test
     void testCountChallengesByStatusAndLanguage() {
@@ -330,3 +335,4 @@ public class UserSolutionRepositoryTest {
     }
 
 }
+

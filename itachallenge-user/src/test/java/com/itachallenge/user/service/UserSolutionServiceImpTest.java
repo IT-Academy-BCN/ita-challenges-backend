@@ -385,7 +385,7 @@ class UserSolutionServiceImpTest {
                 .verifyComplete();
     }
 
-    @DisplayName("Should return the number of challenges that have specific conditions")
+    @DisplayName("Should return the number of challenges that have specifics conditions")
     @Test
     void testCountChallengesWithErrorHandlingWithValidRepositoryCall() {
         // Arrange
