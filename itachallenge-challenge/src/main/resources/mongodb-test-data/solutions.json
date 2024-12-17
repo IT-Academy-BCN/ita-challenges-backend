@@ -73,8 +73,7 @@
     "_id": {
       "$uuid" : "f7c9e2a1-8b6d-4c3f-a9e0-2d5f8c7b1e4a"
     },
-    "solution_text": "int number = 16;\n        double squareRoot = Math.sqrt(number);\n        boolean isSquareNumber = squareRoot == Math.floor(squareRoot);\n        System.out.println(isSquareNumber);",
-    "language":
+    "solution_text": "public class SquareNumberChecker {\\n    public static boolean isSquareNumber(int number) {\\n        if (number < 0) {\\n            return false;\\n        }\\n        double squareRoot = Math.sqrt(number);\\n        return squareRoot == Math.floor(squareRoot);\\n    }\\n}",    "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -163,7 +162,7 @@
     "_id": {
       "$uuid" : "d6a5b2c1-9e8d-4f7c-a3b0-1e9f8c2d5a4b"
     },
-    "solution_text": "String sentence = \"Hello, world! This is a test.\";\n        String[] words = sentence.split(\" \");\n        String result = \"\";\n\n        for (String word : words) {\n            String firstLetter = word.substring(0, 1);\n            String restOfWord = word.substring(1);\n            result += restOfWord + firstLetter + \"ay \";\n        }\n\n        System.out.println(result.trim());",
+    "solution_text": "public class WordReorganizer {\\n    public static String reorganizeWords(String sentence) {\\n        String[] words = sentence.split(\" \");\\n        StringBuilder result = new StringBuilder();\\n\\n        for (String word : words) {\\n            if (word.length() > 1) {\\n                char firstChar = word.charAt(0);\\n                String restOfWord = word.substring(1);\\n                if (Character.isLetter(firstChar)) {\\n                    result.append(restOfWord).append(firstChar).append(\"ay\");\\n                } else {\\n                    result.append(word);\\n                }\\n            } else {\\n                result.append(word);\\n            }\\n            result.append(\" \");\\n        }\\n\\n        return result.toString().trim();\\n    }\\n}",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -183,8 +182,7 @@
     "_id": {
       "$uuid" : "e1a9f2b8-7c3d-4e9b-8a1f-99c6d5f17a83"
     },
-    "solution_text": "String input = \"Dermatoglyphics\";\n        input = input.toLowerCase();\n        boolean isIsogram = true;\n\n        for (int i = 0; i < input.length() && isIsogram; i++) {\n            for (int j = i + 1; j < input.length(); j++) {\n                if (input.charAt(i) == input.charAt(j)) {\n                    isIsogram = false;\n                }\n            }\n        }\n\n        System.out.println(isIsogram);",
-    "language":
+    "solution_text": "public class IsogramChecker {\\n    public static boolean isIsogram(String str) {\\n        if (str.isEmpty()) {\\n            return true;\\n        }\\n        str = str.toLowerCase();\\n        Set<Character> charSet = new HashSet<>();\\n        for (char c : str.toCharArray()) {\\n            if (charSet.contains(c)) {\\n                return false;\\n            }\\n            charSet.add(c);\\n        }\\n        return true;\\n    }\\n}",    "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -193,7 +191,7 @@
     "_id": {
       "$uuid": "36ffd264-9eca-48c1-8cdd-09f190d7adca"
     },
-    "solution_text": " int[][] testCases = {\n            {255, 255, 255}, // \"FFFFFF\"\n            {255, 255, 300}, // \"FFFFFF\"\n            {0, 0, 0},       // \"000000\"\n            {148, 0, 211}    // \"9400D3\"\n        };\n\n        for (int[] testCase : testCases) {\n            int r = testCase[0];\n            int g = testCase[1];\n            int b = testCase[2];\n   \n            r = Math.max(0, Math.min(255, r));\n            g = Math.max(0, Math.min(255, g));\n            b = Math.max(0, Math.min(255, b));\n   \n            String hex = String.format(\"%02X%02X%02X\", r, g, b);\n\n            System.out.println(hex);\n        }",
+    "solution_text": "public class RGBToHex {\\n    public static String rgb(int r, int g, int b) {\\n        return toHex(r) + toHex(g) + toHex(b);\\n    }\\n\\n    private static String toHex(int value) {\\n        value = Math.max(0, Math.min(255, value));\\n        String hex = Integer.toHexString(value).toUpperCase();\\n        return hex.length() == 1 ? \"0\" + hex : hex;\\n    }\\n}",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -274,7 +272,7 @@
     "_id": {
       "$uuid": "edd8283a-3978-4657-b776-ff75536e231d"
     },
-    "solution_text": "String[] str1Array = {\"rkqodlw\", \"cedewaraaossoqqyt\", \"katas\", \"adios\"};\n        String[] str2Array = {\"world\", \"codewars\", \"steak\", \"hola\"};\n\n        for (int i = 0; i < str1Array.length; i++) {\n            String str1 = str1Array[i];\n            String str2 = str2Array[i];\n\n            \n            int[] count = new int[26]; // Hay 26 letras en el alfabeto inglés\n\n           \n            for (char c : str1.toCharArray()) {\n                count[c - 'a']++;\n            }\n\n            \n            boolean esValido = true;\n            for (char c : str2.toCharArray()) {\n                if (count[c - 'a'] == 0) {\n                    esValido = false; // No hay suficientes caracteres en str1 para formar str2\n                    break;\n                }\n                count[c - 'a']--;\n            }\n\n           \n            System.out.println(str1 + \" / \" + str2 + \" - \" + (esValido ? \"True\" : \"False\"));\n        }",
+    "solution_text": "public static boolean scramble(String str1, String str2) { int[] charCount = new int[26]; for (char c : str1.toCharArray()) { charCount[c - 'a']++; } for (char c : str2.toCharArray()) { if (charCount[c - 'a'] == 0) { return false; } charCount[c - 'a']--; } return true; }",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -283,7 +281,7 @@
     "_id": {
       "$uuid": "046791ae-7355-4fc8-a696-4f9665eac927"
     },
-    "solution_text": " try {\n            \n            System.out.print(\"Introduce un número: \");\n            StringBuilder inputBuilder = new StringBuilder();\n            int ch;\n            while ((ch = System.in.read()) != '\\n') {\n                if (ch != '\\r') { // Ignorar los retornos de carro\n                    inputBuilder.append((char) ch);\n                }\n            }\n            String input = inputBuilder.toString().trim();\n            int N = Integer.parseInt(input);\n\n         \n            int ceros = 0;\n\n            \n            for (int i = 5; N / i >= 1; i *= 5) {\n                ceros += N / i;\n            }\n\n            \n            System.out.println(\"El número de ceros finales en \" + N + \"! es: \" + ceros);\n        } catch (Exception e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }",
+    "solution_text": "public static int trailingZeros(int n) { int count = 0; for (int i = 5; n / i >= 1; i *= 5) { count += n / i; } return count; }",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
