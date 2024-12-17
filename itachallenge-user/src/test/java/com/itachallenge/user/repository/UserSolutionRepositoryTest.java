@@ -264,4 +264,30 @@ public class UserSolutionRepositoryTest {
                 .verify();
 
     }
+
+    @DisplayName("Find UserSolutionDocument by UserId and Status")
+    @Test
+    void testFindByUserIdAndStatus() {
+        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByUserIdAndStatus(testUserUuid, ChallengeStatus.ENDED);
+
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution ->
+                        userSolution.getUserId().equals(testUserUuid) &&
+                                userSolution.getStatus().equals(ChallengeStatus.ENDED))
+                .thenCancel()
+                .verify();
+    }
+
+    @DisplayName("Find UserSolutionDocument by UserId and Bookmarked")
+    @Test
+    void testFindByUserIdAndBookmarked() {
+        Flux<UserSolutionDocument> solutionsFound = userSolutionRepository.findByUserIdAndBookmarked(testUserUuid, true);
+
+        StepVerifier.create(solutionsFound)
+                .expectNextMatches(userSolution ->
+                        userSolution.getUserId().equals(testUserUuid) &&
+                                userSolution.isBookmarked())
+                .thenCancel()
+                .verify();
+    }
 }
