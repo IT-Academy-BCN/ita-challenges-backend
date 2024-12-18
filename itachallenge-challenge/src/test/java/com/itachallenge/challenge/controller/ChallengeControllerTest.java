@@ -1,14 +1,10 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
-import com.itachallenge.challenge.repository.ChallengeRepository;
-import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.*;
 
@@ -50,17 +45,28 @@ class ChallengeControllerTest {
     @MockBean
     private PropertiesConfig config;
 
-    @MockBean
-    private ChallengeRepository challengeRepository;
-
-    @MockBean
-    private SolutionRepository solutionRepository;
-
     //TODO - pending externalize to service layer (internal comms)
     @MockBean
     ZMQClient zmqClient;
     @MockBean
     ChallengeRequestDto challengeInputDto;
+
+/*    @Test
+    void test() {
+        // Arrange
+        List<ServiceInstance> instances = Arrays.asList(
+                new DefaultServiceInstance("instanceId", "itachallenge-challenge", "localhost", 8080, false),
+                new DefaultServiceInstance("instanceId", "itachallenge-user", "localhost", 8081, false)
+        );
+        when(discoveryClient.getInstances("itachallenge-challenge")).thenReturn(instances);
+        when(discoveryClient.getInstances("itachallenge-user")).thenReturn(Collections.singletonList(instances.get(1)));
+
+        // Act & Assert
+        webTestClient.get().uri("/itachallenge/api/v1/challenge/test")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
+    }*/
 
 
     @Test
@@ -217,48 +223,28 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getSolutions_ValidIdsAndPagination_SolutionsReturned() {
+    void getSolutions_ValidIds_SolutionsReturned() {
         // Arrange
-        String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-        String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
-        int offset = 0;
-        int limit = 2;
-        UUID challengeId = UUID.fromString(challengeStringId);
-        UUID languageId = UUID.fromString(languageStringId);
-        UUID solutionId1 = UUID.randomUUID();
-        UUID solutionId2 = UUID.randomUUID();
+        String idChallenge = "valid-challenge-id";
+        String idLanguage = "valid-language-id";
 
-        SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, "Solution Text 1", languageId);
-        SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, "Solution Text 2", languageId);
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        challengeDocument.setUuid(challengeId);
-        challengeDocument.setSolutions(Arrays.asList(solutionId1, solutionId2));
+        GenericResultDto<SolutionDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(0, 2, 2, new SolutionDto[]{new SolutionDto(), new SolutionDto()});
 
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solutionDocument1));
-        when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solutionDocument2));
+        when(challengeService.getSolutions(idChallenge, idLanguage)).thenReturn(Mono.just(expectedResult));
 
-        List<ChallengeSolutionDto.SolutionDto> solutionDtos = Arrays.asList(
-                new ChallengeSolutionDto.SolutionDto(solutionId1, "Solution Text 1"),
-                new ChallengeSolutionDto.SolutionDto(solutionId2, "Solution Text 2")
-        );
-        ChallengeSolutionDto challengeSolutionDto = new ChallengeSolutionDto(challengeId, languageId, solutionDtos);
-        GenericResultDto<ChallengeSolutionDto> genericResultDto = new GenericResultDto<>(offset, limit, 1, new ChallengeSolutionDto[]{challengeSolutionDto});
-
-        when(challengeService.getSolutions(challengeStringId, languageStringId, offset, limit)).thenReturn(Mono.just(genericResultDto));
-
-        // Act
-        Mono<GenericResultDto<ChallengeSolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId, offset, limit);
-
-        // Assert
-        StepVerifier.create(resultMono)
-                .assertNext(result -> {
-                    assertThat(result.getResults()).hasSize(1);
-                    ChallengeSolutionDto resultChallengeSolutionDto = result.getResults()[0];
-                    assertThat(resultChallengeSolutionDto.getSolutions().get(0).getSolutionText()).isEqualTo("Solution Text 1");
-                    assertThat(resultChallengeSolutionDto.getSolutions().get(1).getSolutionText()).isEqualTo("Solution Text 2");
-                })
-                .verifyComplete();
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/solution/challenge/{idChallenge}/language/{idLanguage}", idChallenge, idLanguage)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(GenericResultDto.class)
+                .value(dto -> {
+                    assert dto != null;
+                    assert dto.getCount() == 2;
+                    assert dto.getResults() != null;
+                    assert dto.getResults().length == 2;
+                });
     }
 
     @Test
@@ -303,21 +289,38 @@ class ChallengeControllerTest {
 
     @Test
     void AddSolution_validIdChallenge_validIdLanguage() {
-        // Arrange
-        SolutionDto solutionDto = new SolutionDto();
-        solutionDto.setSolutionText("Test solution");
-        solutionDto.setIdChallenge(UUID.fromString("3e817487-88a8-47e2-8d3b-b65c942d36aa"));
-        solutionDto.setIdLanguage(UUID.fromString("68dc256a-ac52-40ff-b2f2-bacce4994f9e"));
+        // Mock del servicio
+        SolutionDto inputDto = new SolutionDto();
+        inputDto.setSolutionText("Test solution");
+        inputDto.setIdChallenge(UUID.randomUUID());
+        inputDto.setIdLanguage(UUID.randomUUID());
 
-        when(challengeService.addSolution(any(SolutionDto.class))).thenReturn(Mono.just(solutionDto));
+        SolutionDto outputDto = new SolutionDto();
+        outputDto.setSolutionText("Test solution");
+        outputDto.setIdChallenge(inputDto.getIdChallenge());
+        outputDto.setIdLanguage(inputDto.getIdLanguage());
 
-        // Act & Assert
+        when(challengeService.addSolution(any())).thenReturn(Mono.just(outputDto));
+
+        // Ejecutar la solicitud y verificar la respuesta
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/solution")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(solutionDto)
+                .bodyValue(inputDto)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .consumeWith(response -> {
+                    // Verify that the response has the expected keys
+                    assert response.getResponseBody().containsKey("uuid_challenge");
+                    assert response.getResponseBody().containsKey("uuid_language");
+                    assert response.getResponseBody().containsKey("solution_text");
+
+                    // Verify that the values are correct
+                    assert response.getResponseBody().get("uuid_challenge").equals(inputDto.getIdChallenge().toString());
+                    assert response.getResponseBody().get("uuid_language").equals(inputDto.getIdLanguage().toString());
+                    assert response.getResponseBody().get("solution_text").equals(inputDto.getSolutionText());
+                });
     }
 
     @Test
@@ -383,7 +386,7 @@ class ChallengeControllerTest {
         SolutionDto solutionDto = new SolutionDto();
         solutionDto.setSolutionText("Test solution");
         solutionDto.setIdChallenge(UUID.randomUUID()); // Set challenge ID to a valid UUID
-        solutionDto.setIdLanguage(null); // Set language ID to null
+        solutionDto.setIdLanguage(null); // Set challenge ID to null
 
         // Act & Assert
         webTestClient.post()
@@ -395,6 +398,7 @@ class ChallengeControllerTest {
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("idLanguage: 'Invalid UUID'");
     }
+
     @Test
     void addSolution_NullSolutionDto_ThrowsBadRequestException() {
         // Arrange
