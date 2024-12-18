@@ -1,15 +1,11 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.ChallengeSolutionDto;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
-import com.itachallenge.challenge.repository.ChallengeRepository;
-import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +15,12 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import static org.assertj.core.api.Assertions.assertThat;
+
 
 import java.util.*;
 
@@ -44,11 +41,6 @@ class ChallengeControllerTest {
 
     @MockBean
     private IChallengeService challengeService;
-
-    @MockBean
-    private ChallengeRepository challengeRepository;
-    @MockBean
-    private SolutionRepository solutionRepository;
 
 
     @MockBean
@@ -264,45 +256,6 @@ class ChallengeControllerTest {
                     ChallengeSolutionDto result = dto.getResults()[0];
                     assert result.getSolutions().size() == 2;
                 });
-    }
-
-    @Test
-    void getSolutions_ValidIdsAndPagination_SolutionsReturned() {
-        // Arrange
-        String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-        String languageStringId = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
-        int offset = 0;
-        int limit = 2;
-        UUID challengeId = UUID.fromString(challengeStringId);
-        UUID languageId = UUID.fromString(languageStringId);
-        UUID solutionId1 = UUID.randomUUID();
-        UUID solutionId2 = UUID.randomUUID();
-        SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, "Solution Text 1", languageId);
-        SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, "Solution Text 2", languageId);
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        challengeDocument.setUuid(challengeId);
-        challengeDocument.setSolutions(Arrays.asList(solutionId1, solutionId2));
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(solutionRepository.findById(solutionId1)).thenReturn(Mono.just(solutionDocument1));
-        when(solutionRepository.findById(solutionId2)).thenReturn(Mono.just(solutionDocument2));
-        List<ChallengeSolutionDto.SolutionDto> solutionDtos = Arrays.asList(
-                new ChallengeSolutionDto.SolutionDto(solutionId1, "Solution Text 1"),
-                new ChallengeSolutionDto.SolutionDto(solutionId2, "Solution Text 2")
-        );
-        ChallengeSolutionDto challengeSolutionDto = new ChallengeSolutionDto(challengeId, languageId, solutionDtos);
-        GenericResultDto<ChallengeSolutionDto> genericResultDto = new GenericResultDto<>(offset, limit, 1, new ChallengeSolutionDto[]{challengeSolutionDto});
-        when(challengeService.getSolutions(challengeStringId, languageStringId, offset, limit)).thenReturn(Mono.just(genericResultDto));
-        // Act
-        Mono<GenericResultDto<ChallengeSolutionDto>> resultMono = challengeService.getSolutions(challengeStringId, languageStringId, offset, limit);
-        // Assert
-        StepVerifier.create(resultMono)
-                .assertNext(result -> {
-                    assertThat(result.getResults()).hasSize(1);
-                    ChallengeSolutionDto resultChallengeSolutionDto = result.getResults()[0];
-                    assertThat(resultChallengeSolutionDto.getSolutions().get(0).getSolutionText()).isEqualTo("Solution Text 1");
-                    assertThat(resultChallengeSolutionDto.getSolutions().get(1).getSolutionText()).isEqualTo("Solution Text 2");
-                })
-                .verifyComplete();
     }
 
     @Test
