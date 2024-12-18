@@ -28,7 +28,7 @@ public class ConverterDocumentToDto {
                 .challengeId(document.getChallengeId().toString())
                 .languageId(document.getLanguageId().toString())
                 .status(document.getStatus().toString())
-                .solutionText(document.getSolutionDocument().get(0).getSolutionText())
+                .solutionText(document.getSolutionDocument().getFirst().getSolutionText())
                 .build());
     }
 
