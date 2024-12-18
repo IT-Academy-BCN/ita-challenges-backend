@@ -32,15 +32,17 @@ public class TestParamsResponseDto {
 
         if (testingValues != null) {
             for (TestingValueDto value : testingValues) {
-                List<?> inParams = value.getInParam();
-                List<?> outParams = value.getOutParam();
+                String inParam = String.join(",", value.getInParam().stream()
+                        .map(Object::toString)
+                        .toArray(String[]::new));
+                String outParam = String.join(",", value.getOutParam().stream()
+                        .map(Object::toString)
+                        .toArray(String[]::new));
 
-                if (inParams != null && !inParams.isEmpty() && outParams != null && !outParams.isEmpty()) {
-                    String formattedEntry = String.format("{%s}={%s}", inParams.get(0), outParams.get(0));
-                    params.add(formattedEntry);
+                params.add(inParam + "=" + outParam);
                 }
             }
-        }
+
         return params;
     }
 }
