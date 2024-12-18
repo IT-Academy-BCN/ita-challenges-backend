@@ -28,6 +28,7 @@ public class ChallengeSolutionDto {
     @JsonProperty("solutions")
     private List<SolutionDto> solutions;
 
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
