@@ -73,8 +73,7 @@
     "_id": {
       "$uuid" : "f7c9e2a1-8b6d-4c3f-a9e0-2d5f8c7b1e4a"
     },
-    "solution_text": "int number = 16;\n        double squareRoot = Math.sqrt(number);\n        boolean isSquareNumber = squareRoot == Math.floor(squareRoot);\n        System.out.println(isSquareNumber);",
-    "language":
+    "solution_text": "public class SquareNumberChecker {\\n    public static boolean isSquareNumber(int number) {\\n        if (number < 0) {\\n            return false;\\n        }\\n        double squareRoot = Math.sqrt(number);\\n        return squareRoot == Math.floor(squareRoot);\\n    }\\n}",    "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -133,7 +132,7 @@
     "_id": {
       "$uuid" : "75a74089-99bb-468d-ae71-b8c0b97ce6b3"
     },
-    "solution_text": "int numero = 2345;\n    int[] conteoDigitos = new int[10];\n        while (numero > 0) {\n            int digito = numero % 10;\n            conteoDigitos[digito]++;\n            numero /= 10;\n        }\n\n        int resultado = 0;\n        for (int i = 9; i >= 0; i--) {\n            while (conteoDigitos[i] > 0) {\n                resultado = resultado * 10 + i;\n                conteoDigitos[i]--;\n            }\n        }\n\n        System.out.println(resultado);",
+    "solution_text": "public class RearrangeToGrow {\n    public static int rearrangeToGrow(int num) {\n        String numStr = Integer.toString(num);\n        char[] digits = numStr.toCharArray();\n        Arrays.sort(digits);\n        String sortedNumStr = new StringBuilder(new String(digits)).reverse().toString();\n        return Integer.parseInt(sortedNumStr);\n    }\n}",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -153,7 +152,7 @@
     "_id": {
       "$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "function pigLatin(str) {\n    return str.split(' ').map(word => {\n        if (/^[a-zA-Z]+$/.test(word)) {\n            return word.slice(1) + word[0] + 'ay';\n        } else {\n            return word;\n        }\n    }).join(' ');\n}\n\nconsole.log(pigLatin('The cherries')); // Output: 'heTay herrieschay'\nconsole.log(pigLatin('Programming!')); // Output: 'rogramming!Pay'\nconsole.log(pigLatin('Rome')); // Output: 'omeRay'\nconsole.log(pigLatin('Colors')); // Output: 'olorsCay'",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -163,7 +162,7 @@
     "_id": {
       "$uuid" : "d6a5b2c1-9e8d-4f7c-a3b0-1e9f8c2d5a4b"
     },
-    "solution_text": "String sentence = \"Hello, world! This is a test.\";\n        String[] words = sentence.split(\" \");\n        String result = \"\";\n\n        for (String word : words) {\n            String firstLetter = word.substring(0, 1);\n            String restOfWord = word.substring(1);\n            result += restOfWord + firstLetter + \"ay \";\n        }\n\n        System.out.println(result.trim());",
+    "solution_text": "public class WordReorganizer {\\n    public static String reorganizeWords(String sentence) {\\n        String[] words = sentence.split(\" \");\\n        StringBuilder result = new StringBuilder();\\n\\n        for (String word : words) {\\n            if (word.length() > 1) {\\n                char firstChar = word.charAt(0);\\n                String restOfWord = word.substring(1);\\n                if (Character.isLetter(firstChar)) {\\n                    result.append(restOfWord).append(firstChar).append(\"ay\");\\n                } else {\\n                    result.append(word);\\n                }\\n            } else {\\n                result.append(word);\\n            }\\n            result.append(\" \");\\n        }\\n\\n        return result.toString().trim();\\n    }\\n}",
     "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
@@ -173,7 +172,7 @@
     "_id": {
       "$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"
     },
-    "solution_text": "Sed dictum. Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros. Nam consequat dolor vitae dolor. Donec fringilla. Donec",
+    "solution_text": "function isIsogram(str) {\n    str = str.toLowerCase();\n    let charSet = new Set();\n    for (let char of str) {\n        if (charSet.has(char)) {\n            return false;\n        }\n        charSet.add(char);\n    }\n    return true;\n}\n\nconsole.log(isIsogram('Dermatoglyphics')); // Output: true\nconsole.log(isIsogram('aba')); // Output: false\nconsole.log(isIsogram('moOse')); // Output: false\nconsole.log(isIsogram('')); // Output: true",
     "language":
     {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
@@ -183,8 +182,7 @@
     "_id": {
       "$uuid" : "e1a9f2b8-7c3d-4e9b-8a1f-99c6d5f17a83"
     },
-    "solution_text": "String input = \"Dermatoglyphics\";\n        input = input.toLowerCase();\n        boolean isIsogram = true;\n\n        for (int i = 0; i < input.length() && isIsogram; i++) {\n            for (int j = i + 1; j < input.length(); j++) {\n                if (input.charAt(i) == input.charAt(j)) {\n                    isIsogram = false;\n                }\n            }\n        }\n\n        System.out.println(isIsogram);",
-    "language":
+    "solution_text": "public class IsogramChecker {\\n    public static boolean isIsogram(String str) {\\n        if (str.isEmpty()) {\\n            return true;\\n        }\\n        str = str.toLowerCase();\\n        Set<Character> charSet = new HashSet<>();\\n        for (char c : str.toCharArray()) {\\n            if (charSet.contains(c)) {\\n                return false;\\n            }\\n            charSet.add(c);\\n        }\\n        return true;\\n    }\\n}",    "language":
     {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -193,7 +191,7 @@
     "_id": {
       "$uuid": "36ffd264-9eca-48c1-8cdd-09f190d7adca"
     },
-    "solution_text": " int[][] testCases = {\n            {255, 255, 255}, // \"FFFFFF\"\n            {255, 255, 300}, // \"FFFFFF\"\n            {0, 0, 0},       // \"000000\"\n            {148, 0, 211}    // \"9400D3\"\n        };\n\n        for (int[] testCase : testCases) {\n            int r = testCase[0];\n            int g = testCase[1];\n            int b = testCase[2];\n   \n            r = Math.max(0, Math.min(255, r));\n            g = Math.max(0, Math.min(255, g));\n            b = Math.max(0, Math.min(255, b));\n   \n            String hex = String.format(\"%02X%02X%02X\", r, g, b);\n\n            System.out.println(hex);\n        }",
+    "solution_text": "public class RGBToHex {\\n    public static String rgb(int r, int g, int b) {\\n        return toHex(r) + toHex(g) + toHex(b);\\n    }\\n\\n    private static String toHex(int value) {\\n        value = Math.max(0, Math.min(255, value));\\n        String hex = Integer.toHexString(value).toUpperCase();\\n        return hex.length() == 1 ? \"0\" + hex : hex;\\n    }\\n}",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -274,7 +272,7 @@
     "_id": {
       "$uuid": "edd8283a-3978-4657-b776-ff75536e231d"
     },
-    "solution_text": "String[] str1Array = {\"rkqodlw\", \"cedewaraaossoqqyt\", \"katas\", \"adios\"};\n        String[] str2Array = {\"world\", \"codewars\", \"steak\", \"hola\"};\n\n        for (int i = 0; i < str1Array.length; i++) {\n            String str1 = str1Array[i];\n            String str2 = str2Array[i];\n\n            \n            int[] count = new int[26]; // Hay 26 letras en el alfabeto inglés\n\n           \n            for (char c : str1.toCharArray()) {\n                count[c - 'a']++;\n            }\n\n            \n            boolean esValido = true;\n            for (char c : str2.toCharArray()) {\n                if (count[c - 'a'] == 0) {\n                    esValido = false; // No hay suficientes caracteres en str1 para formar str2\n                    break;\n                }\n                count[c - 'a']--;\n            }\n\n           \n            System.out.println(str1 + \" / \" + str2 + \" - \" + (esValido ? \"True\" : \"False\"));\n        }",
+    "solution_text": "public static boolean scramble(String str1, String str2) { int[] charCount = new int[26]; for (char c : str1.toCharArray()) { charCount[c - 'a']++; } for (char c : str2.toCharArray()) { if (charCount[c - 'a'] == 0) { return false; } charCount[c - 'a']--; } return true; }",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -283,7 +281,7 @@
     "_id": {
       "$uuid": "046791ae-7355-4fc8-a696-4f9665eac927"
     },
-    "solution_text": " try {\n            \n            System.out.print(\"Introduce un número: \");\n            StringBuilder inputBuilder = new StringBuilder();\n            int ch;\n            while ((ch = System.in.read()) != '\\n') {\n                if (ch != '\\r') { // Ignorar los retornos de carro\n                    inputBuilder.append((char) ch);\n                }\n            }\n            String input = inputBuilder.toString().trim();\n            int N = Integer.parseInt(input);\n\n         \n            int ceros = 0;\n\n            \n            for (int i = 5; N / i >= 1; i *= 5) {\n                ceros += N / i;\n            }\n\n            \n            System.out.println(\"El número de ceros finales en \" + N + \"! es: \" + ceros);\n        } catch (Exception e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }",
+    "solution_text": "public static int trailingZeros(int n) { int count = 0; for (int i = 5; n / i >= 1; i *= 5) { count += n / i; } return count; }",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     }
@@ -313,6 +311,86 @@
     "solution_text": "public static int[] findSmallestNumber(String numStr) {\n        //String numStr = String.valueOf(n);\n        int len = numStr.length();\n        int[] result = {Integer.parseInt(numStr), 0, 0}; // Default result if no changes are needed\n\n        for (int i = 0; i < len; i++) {\n            for (int j = 0; j < len; j++) {\n                if (i != j) {\n                    String newNumStr = moveDigit(numStr, i, j);\n                    int newNum = Integer.parseInt(newNumStr);\n                    if (newNum < result[0]) {\n                        result[0] = newNum;\n                        result[1] = i;\n                        result[2] = j;\n                    }\n                }\n            }\n        }\n        return result;\n    }\n\n    public static String moveDigit(String numStr, int i, int j) {\n        StringBuilder sb = new StringBuilder(numStr);\n        char digit = sb.charAt(i);\n        sb.deleteCharAt(i);\n        sb.insert(j, digit);\n        return sb.toString();\n    }",
     "language": {
       "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "b7e6a8d2-4c3b-4f8a-9d7e-2e3d1c5a9d4e"
+    },
+    "solution_text": "function rearrangeToGrow(num) {\n    if (typeof num !== 'number' || num < 0 || !Number.isInteger(num)) {\n        throw new Error('Input must be a non-negative integer');\n    }\n\n    // Convert the number to a string, split it into an array of characters, sort in descending order, and join back to a string\n    let sortedNumStr = num.toString().split('').sort((a, b) => b - a).join('');\n\n    // Convert the sorted string back to a number\n    return parseInt(sortedNumStr, 10);\n}\n\n// Example usage:\nconsole.log(rearrangeToGrow(42145)); // Output: 54421\nconsole.log(rearrangeToGrow(145263)); // Output: 654321",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "3f8a6c91-8a9d-49b0-9f2c-3e67d2b18b8d"
+    },
+    "solution_text": "function highAndLow(numbers) {\n    let numArray = numbers.split(' ').map(Number);\n    let highest = Math.max(...numArray);\n    let lowest = Math.min(...numArray);\n    return [highest, lowest];\n}\n\nconsole.log(highAndLow(\"1 2 3 4 5\")); // Output: [5, 1]\nconsole.log(highAndLow(\"1 2 -3 4 5\")); // Output: [5, -3]\nconsole.log(highAndLow(\"1 9 3 4 -5\")); // Output: [9, -5]",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "4b8a7c92-9b8d-4a0b-8f2d-4e78d3b19c9e"
+    },
+    "solution_text": "function isSquare(n) {\n    return Number.isInteger(Math.sqrt(n));\n}\n\nconsole.log(isSquare(-1)); // Output: false\nconsole.log(isSquare(0));  // Output: true\nconsole.log(isSquare(3));  // Output: false\nconsole.log(isSquare(16)); // Output: true",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "5d2f8a7b-9c8d-4a0b-8f2d-4e78d3b19c9e"
+    },
+    "solution_text": "function filterList(list) {\n    return list.filter(item => typeof item === 'number');\n}\n\nconsole.log(filterList([1, 2, 'a', 'b'])); // Output: [1, 2]\nconsole.log(filterList([1, 2, 'a', 'b', 0, 15])); // Output: [1, 2, 0, 15]\nconsole.log(filterList([1, 2, 'a', 'b', 'aasf', '1', '123', 231])); // Output: [1, 2, 231]\nconsole.log(filterList([1, 'a', 'b', 0, 15, 'abc', 123])); // Output: [1, 0, 15, 123]",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "7c9e2a1b-8b6d-4c3f-a9e0-2d5f8c7b1e4a"
+    },
+    "solution_text": "function getMiddleCharacter(word) {\n    const length = word.length;\n    const middle = Math.floor(length / 2);\n    if (length % 2 === 0) {\n        return word.slice(middle - 1, middle + 1);\n    } else {\n        return word.charAt(middle);\n    }\n}\n\nconsole.log(getMiddleCharacter('hello')); // Output: 'l'\nconsole.log(getMiddleCharacter('apple')); // Output: 'pp'\nconsole.log(getMiddleCharacter('testing')); // Output: 't'\nconsole.log(getMiddleCharacter('elephant')); // Output: 'ph'",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "8f2d7a1b-9c8d-4b0b-8e2d-3e78d3b19c9e"
+    },
+    "solution_text": "function rgb(r, g, b) {\n    function toHex(value) {\n        value = Math.max(0, Math.min(255, value));\n        const hex = value.toString(16).toUpperCase();\n        return hex.length === 1 ? '0' + hex : hex;\n    }\n    return toHex(r) + toHex(g) + toHex(b);\n}\n\nconsole.log(rgb(255, 255, 255)); // Output: 'FFFFFF'\nconsole.log(rgb(0, 0, 0)); // Output: '000000'\nconsole.log(rgb(148, 0, 211)); // Output: '9400D3'\nconsole.log(rgb(128, 10, 255)); // Output: '8000FF'",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78"
+    },
+    "solution_text": "function scramble(str1, str2) {\n    const charCount = (str) => {\n        return str.split('').reduce((count, char) => {\n            count[char] = (count[char] || 0) + 1;\n            return count;\n        }, {});\n    };\n\n    const str1Count = charCount(str1);\n    const str2Count = charCount(str2);\n\n    return Object.keys(str2Count).every(char => str2Count[char] <= str1Count[char] || 0);\n}\n\nconsole.log(scramble('rkqodlw', 'world')); // Output: true\nconsole.log(scramble('cedewaraaossoqqyt', 'codewars')); // Output: true\nconsole.log(scramble('katas', 'steak')); // Output: false\nconsole.log(scramble('Adios', 'Hola')); // Output: false",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+    }
+  },
+  {
+    "_id": {
+      "$uuid" : "b7e3d5a2-4c8f-4b0b-9e2d-3e78d3b19c9e"
+    },
+    "solution_text": "function trailingZerosFactorial(n) {\n    let count = 0;\n    for (let i = 5; Math.floor(n / i) >= 1; i *= 5) {\n        count += Math.floor(n / i);\n    }\n    return count;\n}\n\nconsole.log(trailingZerosFactorial(6)); // Output: 1\nconsole.log(trailingZerosFactorial(12)); // Output: 2\nconsole.log(trailingZerosFactorial(34)); // Output: 7\nconsole.log(trailingZerosFactorial(15)); // Output: 3",
+    "language":
+    {
+      "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
     }
   }
 ]
