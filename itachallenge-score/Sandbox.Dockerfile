@@ -14,10 +14,10 @@ RUN mkdir -p /data
 # Declare the volume for shared data
 VOLUME /data
 
-# Add the script to compile and run user code it will be shell script form David
-COPY compile_and_run.sh /usr/local/bin/compile_and_run.sh
-RUN chmod +x /usr/local/bin/compile_and_run.sh
+# Add the script to compile and run user code it will be shell script from David
+COPY sandboxRunner.sh /usr/local/bin/sandboxRunner.sh
+RUN chmod +x /usr/local/bin/sandboxRunner.sh
 
 
 # Default command to execute the script and keep the container running
-CMD ["/bin/bash", "-c", "/usr/local/bin/compile_and_run.sh && tail -f /dev/null"]
+CMD ["/bin/bash", "-c", "/usr/local/bin/sandboxRunner.sh && tail -f /dev/null"]
