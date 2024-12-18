@@ -31,14 +31,16 @@ public class TestParamsResponseDto {
         params.add("UUID Challenge: " + uuidChallenge);
 
         if (testingValues != null) {
-            for (int i = 0; i < testingValues.size(); i++) {
-                TestingValueDto value = testingValues.get(i);
-                params.add("Testing Value " + (i + 1) + ":");
-                params.add("  In Params: " + value.getInParam());
-                params.add("  Out Params: " + value.getOutParam());
+            for (TestingValueDto value : testingValues) {
+                List<?> inParams = value.getInParam();
+                List<?> outParams = value.getOutParam();
+
+                if (inParams != null && !inParams.isEmpty() && outParams != null && !outParams.isEmpty()) {
+                    String formattedEntry = String.format("{%s}={%s}", inParams.get(0), outParams.get(0));
+                    params.add(formattedEntry);
+                }
             }
         }
-
         return params;
     }
 }

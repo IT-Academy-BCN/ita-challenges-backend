@@ -35,8 +35,10 @@ public class FileUtil {
             String filePath = Paths.get(inputDir, fileName).toString();
             File file = new File(filePath);
 
-            FileUtils.writeStringToFile(file, String.join("\n", testParams), StandardCharsets.UTF_8);
-            } catch (IOException e) {
+            String content = String.join("\n", testParams);
+            FileUtils.writeStringToFile(file, content, StandardCharsets.UTF_8);
+
+        } catch (IOException e) {
             throw new FileProcessingException("Failed to create test parameters file", e);
         }
     }

@@ -21,8 +21,11 @@ public class FileUtilTest {
     void testCreateTestParamsFile_Success(@TempDir Path tempDir) throws Exception {
         ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
 
-        List<String> testParams = List.of("key1=value1", "key2=value2");;
-
+        List<String> testParams = List.of(
+                "{a,bcde}={java.lang.NumberFormatException}",
+                "{42145}={54421}",
+                "{145263}={654321}"
+        );
         UUID solutionId = UUID.randomUUID();
 
         fileUtil.createTestParamsFile(testParams, solutionId);
@@ -31,8 +34,9 @@ public class FileUtilTest {
         assertTrue(createdFile.exists());
 
         String content = Files.readString(createdFile.toPath());
-        assertTrue(content.contains("key1=value1"));
-        assertTrue(content.contains("key2=value2"));
+        assertTrue(content.contains("{a,bcde}={java.lang.NumberFormatException}"));
+        assertTrue(content.contains("{42145}={54421}"));
+        assertTrue(content.contains("{145263}={654321}"));
     }
 
     @Test
