@@ -2,12 +2,10 @@ package com.itachallenge.score.controller;
 
 import com.itachallenge.score.dto.ScoreRequest;
 import com.itachallenge.score.dto.ScoreResponse;
-import com.itachallenge.score.mqclient.ZMQClient;
 import com.itachallenge.score.service.CodeProcessingManager;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +13,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/itachallenge/api/v1/score")
 public class ScoreController {
-
-    @Autowired                                    //
-    ZMQClient zmqClient;                         //TODO delete after manual testing!
 
     private static final Logger log = LoggerFactory.getLogger(ScoreController.class);
 
