@@ -16,9 +16,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
 
 @Service
 public class UserSolutionServiceImp implements IUserSolutionService {
@@ -216,6 +219,25 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         }
 
         return Flux.fromIterable(userSolutionsChallenge);
+    }
+
+    public Mono<ChallengesListsDto> getCompletedAndSavedChallengesStatistics(String userId, String languageId) {
+        // TODO test implementation in feature#622 by Ignasi
+        // Example implementation with mock data for testing
+        UserChallengeDto completedChallenge = UserChallengeDto.builder()
+                .uuidChallenge("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                .score(50)
+                .build();
+        List<UserChallengeDto> completedChallenges = List.of(completedChallenge);
+        UserChallengeDto savedChallenge = UserChallengeDto.builder()
+                .uuidChallenge("f6e0f877-9560-4e68-bab6-7dd5f16b46a5")
+                .build();
+        List<UserChallengeDto> savedChallenges = List.of(savedChallenge);
+        ChallengesListsDto challengesLists = ChallengesListsDto.builder()
+                .completed(completedChallenges)
+                .saved(savedChallenges)
+                .build();
+        return Mono.just(challengesLists).defaultIfEmpty((ChallengesListsDto) emptyList());
     }
 }
 

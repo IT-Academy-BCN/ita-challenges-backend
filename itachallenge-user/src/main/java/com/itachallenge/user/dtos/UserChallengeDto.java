@@ -7,13 +7,9 @@ import lombok.*;
 
 @Getter
 @Setter
-
 @NoArgsConstructor
 @AllArgsConstructor // Required to use builder
-
 @Builder // This helps in the creation of the instance
-
-@JsonSerialize(using = ChallengeJsonSerializer.class)
 public class UserChallengeDto {
 
     @JsonProperty("uuid_challenge")

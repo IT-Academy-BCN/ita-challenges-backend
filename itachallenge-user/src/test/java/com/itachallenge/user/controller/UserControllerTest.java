@@ -30,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -278,7 +279,7 @@ class UserControllerTest {
     void addSolutionIfInvalidValuesThenBadRequest_test() {
         String URI_TEST = "/solution";
 
-        List<UserSolutionDto> testCases = Arrays.asList(
+        List<UserSolutionDto> testCases = asList(
                 new UserSolutionDto("invalid_uuid", "550e8400-e29b-41d4-a716-446655440002", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
                 new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "invalid_uuid", "550e8400-e29b-41d4-a716-446655440003", null, "This is a test solution"),
                 new UserSolutionDto("550e8400-e29b-41d4-a716-446655440001", "550e8400-e29b-41d4-a716-446655440002", "invalid_uuid", null, "This is a test solution"),
@@ -389,41 +390,57 @@ class UserControllerTest {
     @Test
     void getStatisticsListByIdUserAndIdLanguage_test() {
 
-        String expectedJson = """
-                {
-                  "uuid_user": "xxx",
-                  "uuid_language": "xxxx",
-                  "challenges": {
-                    "completed": [
-                      {
-                        "uuid_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-                        "score": 50
-                      },
-                      {
-                        "uuid_challenge": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5",
-                        "score": 50
-                      }
-                    ],
-                    "saved": [
-                      "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-                      "f6e0f877-9560-4e68-bab6-7dd5f16b46a5",
-                      "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d",
-                      "2f948de0-6f0c-4089-90b9-7f70a0812319",
-                      "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"
-                    ]
-                  }
-                }
-                """;
+        String userId = "550e8400-e29b-41d4-a716-446655440001";
+        String languageId = "550e8400-e29b-41d4-a716-446655440002";
 
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/user/{idUser}/challenges/language/{idLanguage}/statistics/list", "anyUserId", "anyLanguageId")
-                .accept(MediaType.APPLICATION_JSON)
+        // Create Completed Challenges
+        UserChallengeDto completedChallenge = UserChallengeDto.builder()
+                .uuidChallenge("dcacb291-b4aa-4029-8e9b-284c8ca80296")
+                .score(50)
+                .build();
+
+        List<UserChallengeDto> completedChallenges = List.of(completedChallenge);
+
+        // Create Saved Challenges
+        UserChallengeDto savedChallenge = UserChallengeDto.builder()
+                .uuidChallenge("f6e0f877-9560-4e68-bab6-7dd5f16b46a5")
+                .build();
+
+        List<UserChallengeDto> savedChallenges = List.of(savedChallenge);
+
+        // Create ChallengesListsDto
+        ChallengesListsDto challengesLists = ChallengesListsDto.builder()
+                .completed(completedChallenges)
+                .saved(savedChallenges)
+                .build();
+
+        // Create UserLanguageChallengesDto
+        UserLanguageChallengesDto expectedResponse = UserLanguageChallengesDto.builder()
+                .uuidUser(userId)
+                .uuidLanguage(languageId)
+                .challenges(challengesLists)
+                .build();
+
+        when(userSolutionService.getCompletedAndSavedChallengesStatistics(anyString(), anyString()))
+                .thenReturn(Mono.just(challengesLists));
+
+        // Perform the GET request and verify the response
+        UserLanguageChallengesDto actualResponse = webTestClient.get()
+                .uri("/itachallenge/api/v1/user/{idUser}/challenges/language/{idLanguage}/statistics/list", userId, languageId)
+                .accept(org.springframework.http.MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody()
-                .json(expectedJson);
+                .expectHeader().contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                .expectBody(UserLanguageChallengesDto.class)
+                .returnResult()
+                .getResponseBody();
 
+        // Assert the response
+        assertEquals(expectedResponse.getUuidUser(), actualResponse.getUuidUser());
+        assertEquals(expectedResponse.getUuidLanguage(), actualResponse.getUuidLanguage());
+        assertEquals(expectedResponse.getChallenges().getCompleted().get(0).getUuidChallenge(), actualResponse.getChallenges().getCompleted().get(0).getUuidChallenge());
+        assertEquals(expectedResponse.getChallenges().getCompleted().get(0).getScore(), actualResponse.getChallenges().getCompleted().get(0).getScore());
+        assertEquals(expectedResponse.getChallenges().getSaved().get(0).getUuidChallenge(), actualResponse.getChallenges().getSaved().get(0).getUuidChallenge());
 
     }
 
