@@ -28,7 +28,7 @@
 # Directories & config files #
 ##############################
 CVS/
-bin/
+# bin/
 build/
 target/
 test-output/
