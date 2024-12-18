@@ -222,6 +222,7 @@ class ChallengeControllerTest {
                 });
     }
 
+    
     @Test
     void getSolutions_ValidIds_SolutionsReturned() {
         // Arrange
