@@ -25,9 +25,8 @@ public class FileUtilTest {
         setInputDir(fileUtil, tempDir);
 
         List<String> testParams = List.of(
-                "a=java.lang.NumberFormatException",
-                "42145=54421",
-                "145263=654321"
+                "\"ABCBDAB\",\"BDCAB\"=\"BCAB\"",
+                "\"abcdef\",\"acf\"=\"acf\""
         );
         UUID solutionId = UUID.randomUUID();
 
@@ -37,10 +36,8 @@ public class FileUtilTest {
         assertTrue(createdFile.exists(),"The file should be created");
 
         String content = Files.readString(createdFile.toPath());
-
-        assertTrue(content.contains("a=java.lang.NumberFormatException"));
-        assertTrue(content.contains("42145=54421"));
-        assertTrue(content.contains("145263=654321"));
+        assertTrue(content.contains("\"ABCBDAB\",\"BDCAB\"=\"BCAB\""));
+        assertTrue(content.contains("\"abcdef\",\"acf\"=\"acf\""));
     }
 
     @Test
@@ -83,7 +80,9 @@ public class FileUtilTest {
 
         List<String> testParams = new ArrayList<>();
         for (int i = 0; i < 10000; i++) {
-            testParams.add("key" + i + "=value" + i);
+            String inParam = "\"key" + i + "\",\"value" + i + "\"";
+            String outParam = "\"result" + i + "\"";
+            testParams.add(inParam + "=" + outParam);
         }
         UUID solutionId = UUID.randomUUID();
         fileUtil.createTestParamsFile(testParams, solutionId);

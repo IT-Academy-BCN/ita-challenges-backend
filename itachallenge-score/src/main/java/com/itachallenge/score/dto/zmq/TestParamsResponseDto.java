@@ -28,16 +28,20 @@ public class TestParamsResponseDto {
 
     public List<String> toParamList() {
         List<String> params = new ArrayList<>();
-        params.add("UUID Challenge: " + uuidChallenge);
+
 
         if (testingValues != null) {
             for (TestingValueDto value : testingValues) {
-                String inParam = String.join(",", value.getInParam().stream()
+
+                String inParam = "\"" + String.join(",", value.getInParam().stream()
                         .map(Object::toString)
-                        .toArray(String[]::new));
-                String outParam = String.join(",", value.getOutParam().stream()
+                        .toArray(String[]::new)) + "\"";
+
+
+                String outParam = "\"" + String.join(",", value.getOutParam().stream()
                         .map(Object::toString)
-                        .toArray(String[]::new));
+                        .toArray(String[]::new)) + "\"";
+
 
                 params.add(inParam + "=" + outParam);
                 }
