@@ -509,7 +509,7 @@
 							"file": {}
 						},
 						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges?offset=10&limit=2",
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -521,16 +521,6 @@
 								"v1",
 								"challenge",
 								"challenges"
-							],
-							"query": [
-								{
-									"key": "offset",
-									"value": "10"
-								},
-								{
-									"key": "limit",
-									"value": "2"
-								}
 							]
 						}
 					},
@@ -782,7 +772,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/solution/challenge/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/660e1b18-0c0a-4262-a28a-85de9df6ac5f?offset=0&limit=1",
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/solution/challenge/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/660e1b18-0c0a-4262-a28a-85de9df6ac5f",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -798,16 +788,6 @@
 								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
 								"language",
 								"660e1b18-0c0a-4262-a28a-85de9df6ac5f"
-							],
-							"query": [
-								{
-									"key": "offset",
-									"value": "0"
-								},
-								{
-									"key": "limit",
-									"value": "1"
-								}
 							]
 						}
 					},
