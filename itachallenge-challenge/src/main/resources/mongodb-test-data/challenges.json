@@ -78,11 +78,18 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
       {"$uuid": "1682b3e9-056a-45b7-a0e9-eaf1e11775ad"},
-      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"}
+      {"$uuid": "75a74089-99bb-468d-ae71-b8c0b97ce6b3"},
+      {"$uuid": "b7e6a8d2-4c3b-4f8a-9d7e-2e3d1c5a9d4e"}
     ],
     "resources": [
       {
@@ -198,10 +205,17 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
-      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"}
+      {"$uuid": "0864463e-eb7c-4bb3-b8bc-766d71ab38b5"},
+      {"$uuid": "3f8a6c91-8a9d-49b0-9f2c-3e67d2b18b8d"}
     ],
     "resources": [
       {"$uuid": "6e0784c9-5951-4981-9f7c-30419dae6149"},
@@ -339,11 +353,18 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
       {"$uuid" : "a7a789a9-2006-4b59-94bb-3afe0d1c161d"},
-      {"$uuid": "f7c9e2a1-8b6d-4c3f-a9e0-2d5f8c7b1e4a"}
+      {"$uuid" : "f7c9e2a1-8b6d-4c3f-a9e0-2d5f8c7b1e4a"},
+      {"$uuid" : "4b8a7c92-9b8d-4a0b-8f2d-4e78d3b19c9e"}
     ],
     "resources": [
       {"$uuid": "24fcf839-63c2-4ccf-b549-5bc2027798d5"},
@@ -447,10 +468,17 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
-      {"$uuid": "9151e4cf-8195-4ad5-9363-b378aa322d31"}
+      {"$uuid": "9151e4cf-8195-4ad5-9363-b378aa322d31"},
+      {"$uuid": "5d2f8a7b-9c8d-4a0b-8f2d-4e78d3b19c9e"}
     ],
     "resources": [
       {"$uuid": "0d1dcee8-6ee8-402f-815a-7d717be06aed"},
@@ -594,7 +622,7 @@
     ],
     "solutions": [
       {"$uuid" : "b3b2c8d7-4d0e-4f4d-b240-55d6a038d52e"},
-      {"$uuid": "e1a9f2b8-7c3d-4e9b-8a1f-99c6d5f17a83"}
+      {"$uuid" : "e1a9f2b8-7c3d-4e9b-8a1f-99c6d5f17a83"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -698,10 +726,17 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
-      {"$uuid": "6ab78fab-642a-4e25-baf0-4890794dd8e2"}
+      {"$uuid": "6ab78fab-642a-4e25-baf0-4890794dd8e2"},
+      {"$uuid": "7c9e2a1b-8b6d-4c3f-a9e0-2d5f8c7b1e4a"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -815,7 +850,7 @@
     ],
     "solutions": [
       {"$uuid" : "c418ba4e-d69a-4fb4-a24c-2ee489a0c749"},
-      {"$uuid": "d6a5b2c1-9e8d-4f7c-a3b0-1e9f8c2d5a4b"}
+      {"$uuid" : "d6a5b2c1-9e8d-4f7c-a3b0-1e9f8c2d5a4b"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -916,10 +951,17 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
-      {"$uuid": "36ffd264-9eca-48c1-8cdd-09f190d7adca"}
+      {"$uuid": "36ffd264-9eca-48c1-8cdd-09f190d7adca"},
+      {"$uuid": "8f2d7a1b-9c8d-4b0b-8e2d-3e78d3b19c9e"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1044,11 +1086,18 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
       {"$uuid": "9f5d7339-f87b-4d7e-b8e8-c6e850ff7a50"},
-      {"$uuid": "edd8283a-3978-4657-b776-ff75536e231d"}
+      {"$uuid": "edd8283a-3978-4657-b776-ff75536e231d"},
+      {"$uuid": "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
@@ -1169,11 +1218,18 @@
           "$uuid": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
         },
         "language_name": "Java"
+      },
+      {
+        "_id": {
+          "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
+        },
+        "language_name": "Javascript"
       }
     ],
     "solutions": [
       {"$uuid": "c2c2a6c4-83b1-4a8a-82e3-f5cfb64fcfb4"},
-      {"$uuid": "046791ae-7355-4fc8-a696-4f9665eac927"}
+      {"$uuid": "046791ae-7355-4fc8-a696-4f9665eac927"},
+      {"$uuid": "b7e3d5a2-4c8f-4b0b-9e2d-3e78d3b19c9e"}
     ],
     "resources": [
       {"$uuid": "dec03f23-b034-4b2d-80e9-e504767f0519"},
