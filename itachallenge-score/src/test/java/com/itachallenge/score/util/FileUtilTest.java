@@ -10,38 +10,42 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileUtilTest {
 
     private final FileUtil fileUtil = new FileUtil();
 
+    private void setInputDir(FileUtil fileUtil, Path tempDir) {
+        ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
+    }
+
     @Test
     void testCreateTestParamsFile_Success(@TempDir Path tempDir) throws Exception {
-        ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
+        setInputDir(fileUtil, tempDir);
 
         List<String> testParams = List.of(
-                "{a,bcde}={java.lang.NumberFormatException}",
-                "{42145}={54421}",
-                "{145263}={654321}"
+                "a=java.lang.NumberFormatException",
+                "42145=54421",
+                "145263=654321"
         );
         UUID solutionId = UUID.randomUUID();
 
         fileUtil.createTestParamsFile(testParams, solutionId);
 
         File createdFile = new File(tempDir.toFile(), "parameters_" + solutionId + ".txt");
-        assertTrue(createdFile.exists());
+        assertTrue(createdFile.exists(),"The file should be created");
 
         String content = Files.readString(createdFile.toPath());
-        assertTrue(content.contains("{a,bcde}={java.lang.NumberFormatException}"));
-        assertTrue(content.contains("{42145}={54421}"));
-        assertTrue(content.contains("{145263}={654321}"));
+
+        assertTrue(content.contains("a=java.lang.NumberFormatException"));
+        assertTrue(content.contains("42145=54421"));
+        assertTrue(content.contains("145263=654321"));
     }
 
     @Test
     void testCreateTestParamsFile_EmptyParams(@TempDir Path tempDir) throws Exception {
-        ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
+        setInputDir(fileUtil, tempDir);
 
         List<String> testParams = List.of();
         UUID solutionId = UUID.randomUUID();
@@ -53,7 +57,7 @@ public class FileUtilTest {
 
     @Test
     void testCreateTestParamsFile_NullParams(@TempDir Path tempDir) {
-        ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
+        setInputDir(fileUtil, tempDir);
 
         UUID solutionId = UUID.randomUUID();
 
@@ -64,7 +68,7 @@ public class FileUtilTest {
 
     @Test
     void testCreateTestParamsFile_NullSolutionId(@TempDir Path tempDir) {
-        ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
+        setInputDir(fileUtil, tempDir);
 
         List<String> testParams = List.of("key1=value1");
 
@@ -75,24 +79,23 @@ public class FileUtilTest {
 
     @Test
     void testCreateTestParamsFile_LargeNumberOfParams(@TempDir Path tempDir) throws Exception {
-        ReflectionTestUtils.setField(fileUtil, "inputDir", tempDir.toString());
+        setInputDir(fileUtil, tempDir);
 
         List<String> testParams = new ArrayList<>();
         for (int i = 0; i < 10000; i++) {
             testParams.add("key" + i + "=value" + i);
         }
-
         UUID solutionId = UUID.randomUUID();
-
         fileUtil.createTestParamsFile(testParams, solutionId);
 
         File createdFile = new File(tempDir.toFile(), "parameters_" + solutionId + ".txt");
         assertTrue(createdFile.exists(), "The file should be created");
 
-        String content = Files.readString(createdFile.toPath());
-        for (int i = 0; i < 10000; i++) {
-            assertTrue(content.contains("key" + i + "=value" + i),
-                    "The file should contain 'key" + i + "=value" + i + "'");
-        }
+        List<String> lines = Files.readAllLines(createdFile.toPath());
+        assertEquals(testParams.size(), lines.size(), "The number of lines should match");
+
+        for (int i = 0; i < testParams.size(); i++) {
+            assertEquals(testParams.get(i), lines.get(i), "Each line should match the corresponding parameter");
     }
+}
 }
