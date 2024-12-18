@@ -218,22 +218,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 
-//    public Mono<ChallengesCompletedAndSavedStatisticsDTO> getCompletedAndSavedChallengesStatistics() {
-//        Flux<CompletedChallengesDTO> completedChallenges = userSolutionRepository.findByStatus(ChallengeStatus.ENDED)
-//                .flatMap(userSolutionDocument ->
-//                        converter.fromUserSolutionDocumentToCompletedChallengesDTO(Flux.just(userSolutionDocument)));
-//
-//        Flux<SavedChallengesDTO> savedChallenges = userSolutionRepository.findByBookmarked(true)
-//                .flatMap(userSolutionDocument ->
-//                        converter.fromUserSolutionDocumentToSavedChallengesDTO(Flux.just(userSolutionDocument)));
-//
-//        return Mono.zip(
-//                completedChallenges.collectList(),
-//                savedChallenges.collectList(),
-//                ChallengesCompletedAndSavedStatisticsDTO::new
-//        );
-//    }
-
     protected Mono<ChallengesListsDto> getCompletedAndSavedChallengesStatistics(String userId, String languageId) {
         UUID userUuid = UUID.fromString(userId);
         UUID languageUuid = UUID.fromString(languageId);
@@ -242,26 +226,20 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                 .findByUserIdAndLanguageIdAndStatus(userUuid, languageUuid, ChallengeStatus.ENDED);
         Flux<UserSolutionDocument> savedChallengesDocs = userSolutionRepository
                 .findByUserIdAndLanguageIdAndBookmarked(userUuid, languageUuid, true);
-
-        // Convert completed challenges if documents exist, otherwise an empty Flux
         Flux<UserChallengeDto> completedChallenges = completedChallengesDocs
                 .collectList()
                 .flatMapMany(list -> list.isEmpty()
                         ? Flux.empty()
                         : converter.fromUserSolutionDocumentToUserChallengeDto(Flux.fromIterable(list)));
-
-        // Convert saved challenges if documents exist, otherwise an empty Flux
         Flux<UserChallengeDto> savedChallenges = savedChallengesDocs
                 .collectList()
                 .flatMapMany(list -> list.isEmpty()
                         ? Flux.empty()
                         : converter.fromUserSolutionDocumentToUserChallengeDto(Flux.fromIterable(list)));
-
-        // Return a ChallengesListsDto with the lists of challenges
         return Mono.zip(
                 completedChallenges.collectList().defaultIfEmpty(Collections.emptyList()),
                 savedChallenges.collectList().defaultIfEmpty(Collections.emptyList()),
-                ChallengesListsDto::new // Combine both lists into a DTO
+                ChallengesListsDto::new
         );
     }
 
