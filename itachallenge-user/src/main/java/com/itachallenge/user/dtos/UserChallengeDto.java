@@ -1,8 +1,6 @@
 package com.itachallenge.user.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.itachallenge.user.helper.ChallengeJsonSerializer;
 import lombok.*;
 
 @Getter
