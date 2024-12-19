@@ -221,6 +221,7 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         return Flux.fromIterable(userSolutionsChallenge);
     }
 
+    @Override
     public Mono<ChallengesListsDto> getCompletedAndSavedChallengesStatistics(String userId, String languageId) {
         // TODO test implementation in feature#622 by Ignasi
         return Mono.just(new ChallengesListsDto()).defaultIfEmpty((ChallengesListsDto) emptyList());
