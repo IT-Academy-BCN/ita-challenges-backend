@@ -63,6 +63,29 @@ class ObfuscationDetectorTest {
         assertEquals(expected, result, "Converts String to lower case");
     }
 
+    static Stream<Arguments> applyCharacterToUpperOrLowerCaseTestCases() {
+        return Stream.of(
+                Arguments.of("Some code Character.toUpperCase('a') Some code", "Some code 'A' Some code"),
+                Arguments.of("Some code Character.toLowerCase('A') Some code", "Some code 'a' Some code"),
+                Arguments.of("Some code Character.toUpperCase('1') Some code", "Some code '1' Some code"),
+                Arguments.of("Some code Character.toUpperCase('é') Some code", "Some code 'É' Some code"),
+                Arguments.of("Some code Character.toLowerCase('É') Some code", "Some code 'é' Some code"),
+                Arguments.of("Some code Character.toUpperCase(' ') Some code", "Some code ' ' Some code"),
+                Arguments.of("Some code Character.toUpperCase('a') Character.toLowerCase('B') Some code",
+                        "Some code 'A' 'b' Some code"),
+                Arguments.of("Some code Character.toUpperCase('a').toLowerCase() Character.toLowerCase('B') Some code",
+                        "Some code 'A'.toLowerCase() 'b' Some code"),
+                Arguments.of("Some code Character.toUpperCase('Z') Character.toLowerCase('E') Some code",
+                        "Some code 'Z' 'e' Some code")
+        );
+    }
+    @ParameterizedTest
+    @MethodSource("applyCharacterToUpperOrLowerCaseTestCases")
+    void applyCharacterToUpperOrLowerCaseTest(String input, String expected) {
+        String result = applyCharacterToUpperOrLowerCase(input);
+        assertEquals(expected, result, "Converts Character to lower or upper case");
+    }
+
     static Stream<Arguments> applyToUpperOrLowerCaseTestCases() {
         return Stream.of(
                 Arguments.of("Some code \"a\".toUpperCase() Some code",
@@ -71,8 +94,8 @@ class ObfuscationDetectorTest {
                         "Some code \"a\" Some code"),
                 Arguments.of("Some code \"class\".toUpperCase() Some code",
                         "Some code \"CLASS\" Some code"),
-                Arguments.of("Some code \"class\".toUpperCase().toLowerCase() Some code",
-                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"class\".toUpperCase().toLowerCase().toUpperCase() Some code",
+                        "Some code \"CLASS\" Some code"),
                 Arguments.of("Some code \"CLASS\".toLowerCase() Some code",
                         "Some code \"class\" Some code"),
                 Arguments.of("Some code \"heLLo123wORLd\".toUpperCase() Some code",
@@ -93,33 +116,12 @@ class ObfuscationDetectorTest {
     }
     @ParameterizedTest
     @MethodSource("applyToUpperOrLowerCaseTestCases")
-    void applyToUpperCaseTest(String input, String expected) {
+    void applyToUpperOrLowerCaseTest(String input, String expected) {
         String result = applyToUpperOrLowerCase(input);
         assertEquals(expected, result, "Converts String to upper case");
     }
 
-    static Stream<Arguments> applyCharacterToUpperOrLowerCaseTestCases() {
-        return Stream.of(
-                Arguments.of("Some code Character.toUpperCase('a') Some code", "Some code A Some code"),
-                Arguments.of("Some code Character.toLowerCase('A') Some code", "Some code a Some code"),
-                Arguments.of("Some code Character.toUpperCase('1') Some code", "Some code 1 Some code"),
-                Arguments.of("Some code Character.toUpperCase('é') Some code", "Some code É Some code"),
-                Arguments.of("Some code Character.toLowerCase('É') Some code", "Some code é Some code"),
-                Arguments.of("Some code Character.toUpperCase(' ') Some code", "Some code   Some code"),
-                Arguments.of("Some code Character.toUpperCase('a') Character.toLowerCase('B') Some code",
-                        "Some code A b Some code"),
-                Arguments.of("Some code Character.toUpperCase('Z') Character.toLowerCase('E') Some code",
-                        "Some code Z e Some code")
-        );
-    }
-    @ParameterizedTest
-    @MethodSource("applyCharacterToUpperOrLowerCaseTestCases")
-    void applyCharacterToUpperOrLowerCaseTest(String input, String expected) {
-        String result = applyCharacterToUpperOrLowerCase(input);
-        assertEquals(expected, result, "Converts String to lower case");
-    }
-
-    static Stream<Arguments> applyReplaceStringLiteralsCases() {
+    static Stream<Arguments> applyReplaceAndReplaceAllCases() {
         return Stream.of(
                 Arguments.of("Some code \"class\".replace('z', 'a') Some code",
                         "Some code \"class\" Some code"),
@@ -136,11 +138,25 @@ class ObfuscationDetectorTest {
                 Arguments.of("Some code \"interthirtydog\".replace(\"thirty\", \"\").replace(\"dog\", \"face\") Some code",
                         "Some code \"interface\" Some code"),
                 Arguments.of("Some code \"ixport javy.io.Sile\".replace('x', 'm').replace('y', 'a').replace('S', 'F') Some code",
+                        "Some code \"import java.io.File\" Some code"),
+                Arguments.of("Some code \"clapp\".replaceAll('p', 's') Some code",
+                        "Some code \"class\" Some code"),
+                Arguments.of("Some code \"impxrt java.ix.File\".replaceAll('x', 'o') Some code",
+                        "Some code \"import java.io.File\" Some code"),
+                Arguments.of("Some code \"import javo.oo.oile\".replaceAll(\"o.oo.o\", \"a.io.F\") Some code",
+                        "Some code \"import java.io.File\" Some code"),
+                Arguments.of("Some code \"intwentyace\".replaceAll(\"wenty\", \"erf\") Some code",
+                        "Some code \"interface\" Some code"),
+                Arguments.of("Some code \"interthirtydog\".replaceAll(\"thirty\", \"\")" +
+                                ".replaceAll(\"dog\", \"face\") Some code",
+                        "Some code \"interface\" Some code"),
+                Arguments.of("Some code \"ixport javy.io.Sile\".replaceAll('x', 'm')" +
+                                ".replaceAll('y', 'a').replaceAll('S', 'F') Some code",
                         "Some code \"import java.io.File\" Some code")
         );
     }
     @ParameterizedTest
-    @MethodSource("applyReplaceStringLiteralsCases")
+    @MethodSource("applyReplaceAndReplaceAllCases")
     void applyReplaceStringLiteralsTest(String input, String expected) {
         String result = applyReplaceStringLiterals(input);
         assertEquals(expected, result);
