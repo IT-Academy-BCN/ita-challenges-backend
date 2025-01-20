@@ -59,9 +59,6 @@ class ChallengeIntegrationTest {
 
     @BeforeEach
     public void setUp() {
-
-        Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
-        Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
         Map<Locale, String> exampleMap1 = new HashMap<>();
         exampleMap1.put(Locale.forLanguageTag("ES"), "Ejemplo texto en español");
         exampleMap1.put(Locale.forLanguageTag("CA"), "Exemple texte en català");
@@ -104,15 +101,10 @@ class ChallengeIntegrationTest {
         title2.put(Locale.forLanguageTag("CA"), "If");
         title2.put(Locale.ENGLISH, "If");
 
-        List<TestingValueDocument> testingValues = Arrays.asList(
-                new TestingValueDocument(Arrays.asList("input1", "input2"), Arrays.asList("output1")),
-                new TestingValueDocument(Arrays.asList("input3", "input4"), Arrays.asList("output2"))
-        );
-
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
