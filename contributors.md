@@ -70,4 +70,5 @@
 * Miguel Lozano - https://github.com/Mettanoia
 * Ignasi Moya - https://github.com/imoyaf
 * David Carcelen - https://github.com/DavidCarcelen
+* Sonia Vera - https://github.com/Dxmrt
 
