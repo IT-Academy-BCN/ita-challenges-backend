@@ -198,17 +198,20 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 1. Open your terminal or command line and navigate to your project's directory. Make sure you are in the "develop" branch.
 
 
-2. Create a new branch using the format "feature#cardnumber". This refers to the Spring Backlog card number. For example:
+2. Create a new branch using the format "feature/cardnumber-shortDescription". 
+   This refers to the Spring Backlog card number and a brief description of what is being implemented. 
+   For example:
 
-         git checkout -b feature#123
+         git checkout -b feature/123-AddUserAuthentication
 3. Now you can start making changes to your branch.
 
 
-4. Once you have made the necessary modifications push your branch to the remote repository. If we were in feature#123 we should do:   
+4. Once you have made the necessary modifications push your branch to the remote repository. 
+   If we were in feature/123-AddUserAuthentication we should do:   
 
-         git push origin feature#123
+         git push origin feature/123-AddUserAuthentication
 
-5. Finally, go to GitHub where your repository is located and create a pull request from your "feature#123" branch to the "develop" branch.
+5. Finally, go to GitHub where your repository is located and create a pull request from your "feature/123-AddUserAuthentication" branch to the "develop" branch.
 
 <hr/>
 

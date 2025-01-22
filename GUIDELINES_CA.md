@@ -200,17 +200,19 @@ IMPORTANT: S'espera que en projecte estiguem en línia amb càmera encesa des de
 1. Obre el teu terminal o línia d'ordres i navega fins al directori del teu projecte. Assegureu-vos d'estar a la branca "develop".
 
 
-2. Crea una nova branca utilitzant el format "feature#numeroDeLaTarjeta". Es refereix al número de la targeta del Spring Backlog. Per exemple:
+2. Crea una nova branca utilitzant el format "feature/numeroDeLaTarjeta-breuDescripció". 
+   Es refereix al número de la targeta del Spring Backlog i una breu descripció del que s'està implementant. 
+   Per exemple:
 
-          git checkout -b feature#123
+          git checkout -b feature/123-AddUserAuthentication
 3. Ara pots començar a fer els canvis a la teva branca.
 
 
-4. Un cop hagis realitzat les modificacions necessàries fes un push de la teva branca al repositori remot. Si estiguéssim a la feature#123 hauríem de fer:
+4. Un cop hagis realitzat les modificacions necessàries fes un push de la teva branca al repositori remot. Si estiguéssim a la feature/123-AddUserAuthentication hauríem de fer:
 
-          git push origin feature#123
+          git push origin feature/123-AddUserAuthentication
 
-5. Finalment, vés a GitHub on es troba el teu repositori i crea un "pull request" des de la teva branca "feature#123" cap a la branca "develop".
+5. Finalment, vés a GitHub on es troba el teu repositori i crea un "pull request" des de la teva branca "feature/123-AddUserAuthentication" cap a la branca "develop".
 
 <hr/>
 

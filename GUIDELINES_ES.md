@@ -197,17 +197,19 @@ IMPORTANTE: Se espera que en proyecto estemos online con cámara encendida desde
 1. Abre tu terminal o línea de comandos y navega hasta el directorio de tu proyecto. Asegúrate de estar en la rama "develop".
 
 
-2. Crea una nueva rama utilizando el formato "feature#numeroDeLaTarjeta". Se refiere al número de la tarjeta del Sprint Backlog. Por ejemplo:
+2. Crea una nueva rama utilizando el formato "feature/numeroDeLaTarjeta-breveDescripción". 
+   Se refiere al número de la tarjeta del Sprint Backlog y una breve descripción de lo que se está implementando.
+   Por ejemplo:
 
-         git checkout -b feature#123
+         git checkout -b feature/123-AddUserAuthentication
 3. Ahora puedes comenzar a realizar los cambios en tu rama.
 
 
-4. Una vez hayas realizado las modificaciones necesarias haz un push de tu rama al repositorio remoto. Si estuviésemos en la feature#123 deberíamos hacer:
+4. Una vez hayas realizado las modificaciones necesarias haz un push de tu rama al repositorio remoto. Si estuviésemos en la feature/123-AddUserAuthentication deberíamos hacer:
 
-         git push origin feature#123
+         git push origin feature/123-AddUserAuthentication
 
-5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature#123" hacia la rama "develop".
+5. Finalmente, ve a GitHub donde se encuentra tu repositorio y crea un "pull request" desde tu rama "feature/123-AddUserAuthentication" hacia la rama "develop".
 
 
 <hr/>
