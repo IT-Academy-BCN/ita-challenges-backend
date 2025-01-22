@@ -26,9 +26,6 @@ import reactor.core.publisher.Mono;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-
 
 
 
@@ -170,7 +167,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
+    @CacheEvict(value = {"challenges", "solutions"}, allEntries = true)
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));

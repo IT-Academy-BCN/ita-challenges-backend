@@ -177,19 +177,4 @@ class ChallengeIntegrationTest {
                 .contains(new ChallengeDto[]{})
                 .hasSize(1);
     }
-
-    @Test
-    void removeResourcesById_ValidId_ResourceDeleted() {
-        webTestClient
-                .delete()
-                .uri("/itachallenge/api/v1/challenge/resources/{idResource}", UUID_VALID)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(Map.class)
-                .value(responseMap -> {
-                    String response = (String) responseMap.get("message");
-                    assert response.equals("Resource removed successfully");
-                });
-    }
-
 }

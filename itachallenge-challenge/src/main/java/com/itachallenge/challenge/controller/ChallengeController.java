@@ -143,25 +143,6 @@ public class ChallengeController {
                 .map(dto -> ResponseEntity.ok().body(dto));
     }
 
-    //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
-    @PatchMapping("/resources/{idResource}")
-    @Operation(
-            operationId = "Update the information of a chosen resource.",
-            summary = "Update the resource and its related parameters.",
-            description = "Sending the ID Resource through the URI and the fields to be updated in the request body.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
-            }
-    )
-    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
-
-        return challengeService.updateResourceByUuid(idResource, updates)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
-
-    }
-
     @GetMapping("/challenges")
     @Operation(
             operationId = "Get only the challenges on a page.",

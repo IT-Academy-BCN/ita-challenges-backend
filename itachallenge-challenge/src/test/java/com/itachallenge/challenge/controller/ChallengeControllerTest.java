@@ -86,30 +86,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void patchResourcesById_ValidResourceId_ResourceRemovedSuccessfully() {
-        // Arrange
-        String resourceId = "validResourceId";
-        Map<String, Object> updates = new HashMap<>();
-        updates.put("fieldName", "newValue"); // Replace with actual field and value
-
-        when(challengeService.updateResourceByUuid(resourceId, updates))
-                .thenReturn(Mono.just("Resource updated successfully"));
-
-        // Act & Assert
-        webTestClient.patch()
-                .uri("/itachallenge/api/v1/challenge/resources/{idResource}", resourceId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(updates)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(Map.class)
-                .value(responseMap -> {
-                    String response = (String) responseMap.get("response");
-                    assert response.equals("Resource updated successfully");
-                });
-    }
-
-    @Test
     void getAllChallenges_ValidPageParameters_ChallengesReturned() {
         //Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
