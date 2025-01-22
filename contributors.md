@@ -71,4 +71,5 @@
 * Ignasi Moya - https://github.com/imoyaf
 * David Carcelen - https://github.com/DavidCarcelen
 * Sonia Vera - https://github.com/Dxmrt
-
+* David Cuadrado - https://github.com/davidcuadrado
+* Alba Márquez - https://github.com/amarinite
