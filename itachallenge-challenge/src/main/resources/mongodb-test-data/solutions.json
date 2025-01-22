@@ -375,7 +375,7 @@
   },
   {
     "_id": {
-      "$uuid" : "a1b2c3d4-e5f6-7890-ab12-cd34ef56gh78"
+      "$uuid" : "cfa5c921-49df-4cbb-abb5-72a8a2747aca"
     },
     "solution_text": "function scramble(str1, str2) {\n    const charCount = (str) => {\n        return str.split('').reduce((count, char) => {\n            count[char] = (count[char] || 0) + 1;\n            return count;\n        }, {});\n    };\n\n    const str1Count = charCount(str1);\n    const str2Count = charCount(str2);\n\n    return Object.keys(str2Count).every(char => str2Count[char] <= str1Count[char] || 0);\n}\n\nconsole.log(scramble('rkqodlw', 'world')); // Output: true\nconsole.log(scramble('cedewaraaossoqqyt', 'codewars')); // Output: true\nconsole.log(scramble('katas', 'steak')); // Output: false\nconsole.log(scramble('Adios', 'Hola')); // Output: false",
     "language":
