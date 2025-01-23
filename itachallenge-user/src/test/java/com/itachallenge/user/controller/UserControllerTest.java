@@ -74,26 +74,6 @@ class UserControllerTest {
                 .value(String::toString, equalTo("Hello from ITA User!!!"));
     }
 
-    //TODO: This test needs mocking. Is calling actual service
-   /* @Test
-    void getChallengeStatistics() {
-        String URI_TEST = "/statistics?";
-
-        URI_TEST += queryCreation(10);
-
-        List<ChallengeStatisticsDto> response = webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .accept(MediaType.APPLICATION_JSON)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBodyList(ChallengeStatisticsDto.class)
-                .returnResult().getResponseBody();
-
-        assertEquals(10, response.size());
-        assertNotEquals(0, response.get(0).getPopularity());
-        assertNotEquals(0, response.get(9).getPercentage());
-    }*/
 
     //TODO: This test needs mocking. Is calling actual service
     @Test
