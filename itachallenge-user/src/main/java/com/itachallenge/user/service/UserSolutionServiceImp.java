@@ -34,56 +34,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
         this.converter = converter;
     }
 
-    //@Cacheable
-    public Mono<SolutionUserDto<UserScoreDto>> getChallengeById(String idUser, String idChallenge, String idLanguage) {
-        UUID userUuid = UUID.fromString(idUser);
-        UUID challengeUuid = UUID.fromString(idChallenge);
-        UUID languageUuid = UUID.fromString(idLanguage);
-
-        return this.userSolutionRepository.findByUserId(userUuid)
-                .filter(userScore -> userScore.getChallengeId().equals(challengeUuid) && userScore.getLanguageId().equals(languageUuid))
-                .flatMap(userScore -> converter.fromUserScoreDocumentToUserScoreDto(Flux.just(userScore)))
-                .collectList()
-                .map(userScoreDtos -> {
-                    SolutionUserDto<UserScoreDto> solutionUserDto = new SolutionUserDto<>();
-                    int count = userScoreDtos.size();
-                    solutionUserDto.setInfo(0, 1, count, userScoreDtos.toArray(new UserScoreDto[0]));
-                    return solutionUserDto;
-                });
-    }
-
-    @Override
-    public Mono<UserSolutionScoreDto> addSolution(UserSolutionDto userSolutionDto) {
-        UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
-        UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
-        UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
-        String status = userSolutionDto.getStatus();
-        ChallengeStatus challengeStatus;
-        List<SolutionDocument> solutionDocuments;
-
-        solutionDocuments = List.of(
-                SolutionDocument.builder()
-                        .uuid(UUID.randomUUID())
-                        .solutionText(userSolutionDto.getSolutionText())
-                        .build()
-        );
-        challengeStatus = determineChallengeStatus(status);
-
-        if (challengeStatus == null) {
-            log.error("POST operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status not allowed"));
-        }
-        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
-                .map(savedDocument -> UserSolutionScoreDto.builder()
-                        .userId(String.valueOf(savedDocument.getUserId()))
-                        .languageId(String.valueOf(savedDocument.getLanguageId()))
-                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionDocument().get(0).getSolutionText())
-                        .score(savedDocument.getScore())
-                        .build())
-                .doOnSuccess(userSolutionDocument -> log.info("Successfully POSTed solution"))
-                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
-    }
 
     public Mono<UserSolutionDocument> markAsBookmarked(String uuidChallenge, String uuidLanguage, String uuidUser, boolean bookmarked) {
         UUID challengeId = UUID.fromString(uuidChallenge);
@@ -128,7 +78,6 @@ public class UserSolutionServiceImp implements IUserSolutionService {
                             .challengeId(challengeUuid)
                             .languageId(languageUuid)
                             .status(challengeStatus)
-                            .score(13)    // TODO GET SCORE FROM SCORE SERVICE
                             .solutionDocument(solutionDocuments)
                             .build();
                     return userSolutionRepository.save(userSolutionDocument);

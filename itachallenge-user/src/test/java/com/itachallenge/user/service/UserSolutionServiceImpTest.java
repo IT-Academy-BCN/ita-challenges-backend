@@ -48,7 +48,6 @@ class UserSolutionServiceImpTest {
     private UUID userUuid;
     private UUID challengeUuid;
     private UUID languageUuid;
-    private int mockScore;
     private UserSolutionDto userSolutionDto;
     private UserSolutionDocument userSolutionDocument;
 
@@ -61,7 +60,6 @@ class UserSolutionServiceImpTest {
         userUuid = UUID.fromString(idUser);
         challengeUuid = UUID.fromString(idChallenge);
         languageUuid = UUID.fromString(idLanguage);
-        mockScore = 13;
         userSolutionDto = UserSolutionDto.builder()
                 .userId(idUser)
                 .challengeId(idChallenge)
@@ -74,7 +72,7 @@ class UserSolutionServiceImpTest {
                 .languageId(languageUuid)
                 .status(ChallengeStatus.ENDED)
                 .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
-                .score(mockScore).build();
+                .build();
 
     }
 
@@ -97,141 +95,6 @@ class UserSolutionServiceImpTest {
         assert (userSolutionDocument.getUserId().equals(userId));
         assert (userSolutionDocument.getLanguageId().equals(languageId));
         assert (userSolutionDocument.getChallengeId().equals(challengeId));
-
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - getChallengeById returns a SolutionUserDto when a valid document is found")
-    @Test
-    void getChallengeByIdTest() {
-
-        ConverterDocumentToDto converter = new ConverterDocumentToDto();
-
-        userSolutionDocument = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(ChallengeStatus.ENDED)
-                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
-                .score(mockScore)
-                .build();
-        when(userSolutionRepository.findByUserId(userUuid)).thenReturn(Flux.just(userSolutionDocument));
-        UserSolutionServiceImp userSolutionServiceImp = new UserSolutionServiceImp(userSolutionRepository, converter);
-
-        Mono<SolutionUserDto<UserScoreDto>> challengeById = userSolutionServiceImp.getChallengeById(userUuid.toString(), challengeUuid.toString(), languageUuid.toString());
-
-        assertNotNull(challengeById);
-        StepVerifier.create(challengeById)
-                .expectNextMatches(solutionUserDto -> solutionUserDto.getCount() == 1
-                        && solutionUserDto.getLimit() == 1
-                        && solutionUserDto.getOffset() == 0
-                        && solutionUserDto.getResults().length == 1)
-                .verifyComplete();
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when existing document can't be found and status is empty or ENDED")
-    @ParameterizedTest
-    @NullSource
-    @ValueSource(strings = {"ENDED"})
-    void addSolutionNewSolutionWithEmptyStatus_test(String status) {
-        userSolutionDocument.setStatus(null);
-        userSolutionDto.setStatus(status);
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == mockScore)
-                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution modifies an existing document when status is empty")
-    @Test
-    void addSolutionModifySolutionWithEmptyStatus_test() {
-        userSolutionDocument.setStatus(null);
-        userSolutionDto.setStatus(null);
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == 13)
-                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution saves a solution when new status is ENDED and solution wasn't already ENDED")
-    @Test
-    void addSolutionWithEndedStatusWhenValid_test() {
-        UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
-        existingUserSolutionDocument.setStatus(ChallengeStatus.STARTED);
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.just(existingUserSolutionDocument));
-
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-                .expectNextMatches(userSolutionScoreDto ->
-                        userSolutionScoreDto.getUserId().equals(userUuid.toString())
-                                && userSolutionScoreDto.getChallengeId().equals(challengeUuid.toString())
-                                && userSolutionScoreDto.getLanguageId().equals(languageUuid.toString())
-                                && userSolutionScoreDto.getSolutionText().equals(solutionText)
-                                && userSolutionScoreDto.getScore() == 13)
-                .verifyComplete();
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns EndedChallengeException when solution's status was previously set to ENDED")
-    @Test
-    void addSolutionWithEndedStatusWhenInvalid_test() {
-        UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
-        existingUserSolutionDocument.setStatus(ChallengeStatus.ENDED);
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.just(existingUserSolutionDocument));
-
-        StepVerifier.create(userSolutionService.addSolution(userSolutionDto))
-                .expectErrorMatches(
-                        throwable -> throwable instanceof UnmodifiableSolutionException
-                        && throwable.getMessage().equals("Existing solution has status ENDED")).verify();
-        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
-        verifyNoMoreInteractions(userSolutionRepository);
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns IllegalArgumentException when provided status is STARTED, EMPTY or invalid")
-    @ParameterizedTest
-    @ValueSource(strings = {"STARTED", "EMPTY", "InvalidStatus"})
-    void addSolutionWithInvalidStatus_test(String status) {
-        userSolutionDto.setStatus(status);
-
-        Mono<UserSolutionScoreDto> resultMono = userSolutionService.addSolution(userSolutionDto);
-
-        StepVerifier.create(resultMono)
-            .expectErrorMatches(
-                    throwable -> throwable instanceof IllegalArgumentException
-                        && throwable.getMessage().equals("Status not allowed")).verify();
-        verifyNoInteractions(userSolutionRepository);
 
     }
 
@@ -310,28 +173,4 @@ class UserSolutionServiceImpTest {
 
     }
 
-    @Test
-    void getChallengeUsersPercentageTest() {
-
-        List<SolutionDocument> solutionField = Arrays.asList(new SolutionDocument(UUID.randomUUID(), "solution1Text"));
-        UUID challengeId = UUID.fromString("7fc6a737-dc36-4e1b-87f3-120d81c548aa");
-        float expectedValue = 100f;
-
-        List<UserSolutionDocument> userSolutions = Arrays.asList(
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.STARTED, 45, solutionField),
-                new UserSolutionDocument(UUID.randomUUID(), UUID.randomUUID(), challengeId, UUID.randomUUID(), false, ChallengeStatus.ENDED, 75, solutionField)
-        );
-
-        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.STARTED)).thenReturn(Flux.fromIterable(
-                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.STARTED).toList()));
-        when(userSolutionRepository.findByChallengeIdAndStatus(challengeId, ChallengeStatus.ENDED)).thenReturn(Flux.fromIterable(
-                userSolutions.stream().filter(s -> s.getStatus() == ChallengeStatus.ENDED).toList()));
-        when(userSolutionRepository.findByChallengeId(challengeId)).thenReturn(Flux.fromIterable(userSolutions));
-
-        Mono<Float> result = userSolutionService.getChallengeUsersPercentage(challengeId);
-
-        StepVerifier.create(result)
-                .expectNext(expectedValue)
-                .verifyComplete();
-    }
 }

@@ -46,16 +46,6 @@ class OpenApiConfigTest {
                 }"""
         );
 
-        when(documentService.getSwaggerScoreDocsStr()).thenReturn(
-                """
-                {
-                    "openapi": "3.0.0",
-                    "info": {
-                        "title": "Score API",
-                        "version": "1.0"
-                    }
-                }"""
-        );
 
         when(documentService.getSwaggerAuthDocsStr()).thenReturn(
                 """

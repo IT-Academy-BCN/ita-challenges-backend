@@ -12,16 +12,10 @@ public class ChallengeJsonSerializer extends JsonSerializer<UserChallengeDto> {
     @Override
     public void serialize(UserChallengeDto challenge, JsonGenerator gen, SerializerProvider serializers) throws IOException {
 
-        // If score is set, then we set all fields in order to serialize the full object
-        if (challenge.getScore() != null) {
-
             gen.writeStartObject();
             gen.writeStringField("uuid_challenge", challenge.getUuidChallenge());
-            gen.writeNumberField("score", challenge.getScore());
             gen.writeEndObject();
 
-        } else
-            gen.writeString(challenge.getUuidChallenge()); // If score is not set we just serialize the uuid, no need of a full object
 
     }
 

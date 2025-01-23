@@ -2,7 +2,6 @@ package com.itachallenge.document.service;
 
 import com.itachallenge.document.proxy.IAuthClient;
 import com.itachallenge.document.proxy.IChallengeClient;
-import com.itachallenge.document.proxy.IScoreClient;
 import com.itachallenge.document.proxy.IUserClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

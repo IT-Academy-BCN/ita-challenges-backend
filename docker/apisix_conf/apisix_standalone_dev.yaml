@@ -32,11 +32,6 @@ routes:
       - GET
     upstream_id: 4
   -
-    uri: /itachallenge/api/v1/score/**
-    methods:
-      - GET
-    upstream_id: 5
-  -
     uri: /itachallenge/api/v1/user/**
     methods:
       - GET

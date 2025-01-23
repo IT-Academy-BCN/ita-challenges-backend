@@ -119,11 +119,6 @@ class UserControllerTest {
         String idLanguage = VALID_MONGO_UUID;
         String idChallenge = VALID_MONGO_UUID;
 
-        UserScoreDto userScoreDto = new UserScoreDto();
-        SolutionUserDto<UserScoreDto> expectedSolutionUserDto = new SolutionUserDto<>();
-        expectedSolutionUserDto.setInfo(0, 1, 1, new UserScoreDto[]{userScoreDto});
-
-        when(userSolutionService.getChallengeById(any(), any(), any())).thenReturn(Mono.just(expectedSolutionUserDto));
 
         webTestClient.get()
                 .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
@@ -238,40 +233,7 @@ class UserControllerTest {
         assertEquals(bookmarkRequestDto, responseEntity.getBody());
     }
 
-    @DisplayName("UserDocumentControllerTest - addSolution - create and return a new document with status 200 OK")
-    @Test
-    void addSolutionIfValidSolutionThenSolutionAdded_test() {
-        String URI_TEST = "/solution";
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
-        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
-        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setSolutionText("This is a test solution");
 
-        UserSolutionScoreDto expectedResponse = new UserSolutionScoreDto(userSolutionDto.getUserId(),
-                userSolutionDto.getChallengeId(), userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText(), 13);
-
-        when(userSolutionService.addSolution(userSolutionDto))
-                .thenReturn(Mono.just(expectedResponse));
-
-        webTestClient.put()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(APPLICATION_JSON)
-                .bodyValue(userSolutionDto)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectBody(UserSolutionScoreDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getUserId() != null;
-                    assert dto.getChallengeId() != null;
-                    assert dto.getLanguageId() != null;
-                    assert dto.getScore() >= 0;
-
-                    verify(userSolutionService).addSolution(userSolutionDto);
-                });
-    }
 
     @DisplayName("UserDocumentControllerTest - addSolution - return 400 BAD REQUEST and don't save if dto is invalid")
     @Test
@@ -298,27 +260,7 @@ class UserControllerTest {
         }
     }
 
-    @DisplayName("UserDocumentControllerTest - addSolution - return 409 CONFLICT if Service returns UnmodifiableSolutionException")
-    @Test
-    void addSolutionServiceThrowsExceptionInternalServerError_test() {
-        String URI_TEST = "/solution";
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
-        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
-        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setStatus("ENDED");
-        userSolutionDto.setSolutionText("This is a test solution");
 
-        when(userSolutionService.addSolution(userSolutionDto))
-                .thenReturn(Mono.error(new UnmodifiableSolutionException("Invalid challenge status: status was already ENDED")));
-
-        webTestClient.put()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(APPLICATION_JSON)
-                .bodyValue(userSolutionDto)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.CONFLICT);
-    }
 
     @Test
     void getVersionTest() {
@@ -362,29 +304,7 @@ class UserControllerTest {
                 });
     }
 
-    @Test
-    void addSolutionRequestBodyTooLarge_test() {
-        String URI_TEST = "/solution";
 
-        String largeSolutionText = "aLongText"; // 3MB de datos
-        UserSolutionDto userSolutionDto = new UserSolutionDto();
-        userSolutionDto.setUserId("550e8400-e29b-41d4-a716-446655440001");
-        userSolutionDto.setChallengeId("550e8400-e29b-41d4-a716-446655440002");
-        userSolutionDto.setLanguageId("550e8400-e29b-41d4-a716-446655440003");
-        userSolutionDto.setSolutionText(largeSolutionText);
-
-        when(userSolutionService.addSolution(any()))
-                .thenReturn(Mono.error(new MaxUploadSizeExceededException(2 * 1024 * 1024)));
-
-        webTestClient.put()
-                .uri(CONTROLLER_URL + URI_TEST)
-                .contentType(APPLICATION_JSON)
-                .bodyValue(userSolutionDto)
-                .exchange()
-                .expectStatus().isEqualTo(HttpStatus.PAYLOAD_TOO_LARGE);
-
-        verify(userSolutionService).addSolution(userSolutionDto);
-    }
 
     @Test
     void getStatisticsListByIdUserAndIdLanguage_test() {

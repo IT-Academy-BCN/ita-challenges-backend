@@ -79,10 +79,6 @@ public class ChallengeController {
                 .findAny()
                 .map(Object::toString);
 
-        Optional<String> scoreService = discoveryClient.getInstances("itachallenge-score")
-                .stream()
-                .findAny()
-                .map(Object::toString);
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
         log.info("Scanning micros:");
@@ -101,11 +97,6 @@ public class ChallengeController {
             logMessage.append(System.lineSeparator()).append(NO_SERVICE);
         }
 
-        if (scoreService.isPresent()) {
-            logMessage.append(System.lineSeparator()).append("Score service available");
-        } else {
-            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
-        }
 
         String logMessageStr = logMessage.toString();
         log.info(logMessageStr);

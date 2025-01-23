@@ -34,9 +34,6 @@ public class UserSolutionDocument {
     @Field("status")
     private ChallengeStatus status;
 
-    @Field("score")
-    private int score;
-
     @Field("solution")
     private List<SolutionDocument> solutionDocument;
 

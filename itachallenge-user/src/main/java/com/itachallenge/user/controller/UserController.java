@@ -36,7 +36,7 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    private IUserSolutionService userScoreService;
+    private IUserSolutionService userSolutionService;
 
     @Value("${spring.application.version}")
     private String version;
@@ -60,48 +60,12 @@ public class UserController {
         Mono<List<ChallengeStatisticsDto>> elements = null;
 
         if (!challengeIds.isEmpty()) {
-            elements = userScoreService.getChallengeStatistics(challengeIds);
+            elements = userSolutionService.getChallengeStatistics(challengeIds);
         }
 
         return elements;
     }
 
-
-    @GetMapping(path = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}")
-    @Operation(
-            summary = "obtains all the solutions to a challenge with the given language and user.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "No user with the required id.", content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<SolutionUserDto<UserScoreDto>> getSolutionsByUserIdChallengeIdLanguageId(
-            @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser,
-            @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge,
-            @PathVariable("idLanguage") @GenericUUIDValid(message = "Invalid UUID for language") String idLanguage) {
-        return userScoreService.getChallengeById(idUser, idChallenge, idLanguage);
-    }
-
-    @PutMapping(path = "/solution")
-    @Operation(
-            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionUserDto.class),
-                            mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Bad request",
-                            content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
-                            content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
-            @Valid @RequestBody UserSolutionDto userSolutionDto) {
-
-        return userScoreService.addSolution(userSolutionDto)
-                .map(savedUserSolutionScoreDto ->
-                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
-                );
-    }
 
     @GetMapping(value = "/bookmarks/{idChallenge}")
     @Operation(
@@ -113,7 +77,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<Map<String, Long>>> getBookmarkCountByIdChallenge(
             @PathVariable("idChallenge") @GenericUUIDValid(message = "Invalid UUID for challenge") String idChallenge) {
-        return userScoreService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
+        return userSolutionService.getBookmarkCountByIdChallenge(UUID.fromString(idChallenge))
                 .map(count -> ResponseEntity.ok(Collections.singletonMap("bookmarked", count)));
     }
 
@@ -134,7 +98,7 @@ public class UserController {
             @GenericUUIDValid(message = "Invalid UUID for challenge")
             String idChallenge) {
 
-        return userScoreService.getChallengeUsersPercentage(UUID.fromString(idChallenge))
+        return userSolutionService.getChallengeUsersPercentage(UUID.fromString(idChallenge))
                 .map(percentage -> new ChallengeUserPercentageStatisticDto(UUID.fromString(idChallenge), percentage))
                 .map(ResponseEntity::ok);
     }
@@ -151,7 +115,7 @@ public class UserController {
 
             @Valid @RequestBody BookmarkRequestDto bookmarkRequestDto) {
 
-        return userScoreService.markAsBookmarked(
+        return userSolutionService.markAsBookmarked(
 
                         bookmarkRequestDto.getUuid_challenge(),
                         bookmarkRequestDto.getUuid_language(),
@@ -194,7 +158,7 @@ public class UserController {
             @PathVariable("idUser") @GenericUUIDValid(message = "Invalid UUID for user") String idUser) {
         UUID userUuid = UUID.fromString(idUser);
 
-        return userScoreService.showAllUserSolutions(userUuid)
+        return userSolutionService.showAllUserSolutions(userUuid)
                 .collectList()
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -232,12 +196,10 @@ public class UserController {
         // Create Completed Challenges
         UserChallengeDto completedChallenge1 = UserChallengeDto.builder()
                 .uuidChallenge("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                .score(50)
                 .build();
 
         UserChallengeDto completedChallenge2 = UserChallengeDto.builder()
                 .uuidChallenge("f6e0f877-9560-4e68-bab6-7dd5f16b46a5")
-                .score(50)
                 .build();
 
         List<UserChallengeDto> completedChallenges = asList(completedChallenge1, completedChallenge2);

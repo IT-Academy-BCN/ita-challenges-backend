@@ -19,6 +19,5 @@ public class UserChallengeDto {
     @JsonProperty("uuid_challenge")
     private String uuidChallenge;
 
-    private Integer score; // It is Integer and not int in order to allow a null value, this allows polymorphism
 
 }

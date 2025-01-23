@@ -34,6 +34,4 @@ logging:
   pattern:
   # console: Spring's default
     file: "%date %5level %-40.40logger{39} [%thread] %msg%n"
-#  file:
-#    name: itachallenge-score.log
 
