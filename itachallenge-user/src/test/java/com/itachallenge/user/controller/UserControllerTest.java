@@ -316,12 +316,10 @@ class UserControllerTest {
                   "challenges": {
                     "completed": [
                       {
-                        "uuid_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-                        "score": 50
+                        "uuid_challenge": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
                       },
                       {
-                        "uuid_challenge": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5",
-                        "score": 50
+                        "uuid_challenge": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
                       }
                     ],
                     "saved": [

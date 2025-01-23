@@ -49,12 +49,10 @@ class DocumentControllerTest {
         // Arrange
         String expectedAuthDocs = "Auth Swagger Docs";
         String expectedChallengeDocs = "Challenge Swagger Docs";
-        String expectedScoreDocs = "Score Swagger Docs";
         String expectedUserDocs = "User Swagger Docs";
 
         when(documentService.getSwaggerAuthDocsStr()).thenReturn(expectedAuthDocs);
         when(documentService.getSwaggerChallengeDocsStr()).thenReturn(expectedChallengeDocs);
-        when(documentService.getSwaggerScoreDocsStr()).thenReturn(expectedScoreDocs);
         when(documentService.getSwaggerUserDocsStr()).thenReturn(expectedUserDocs);
 
         OpenAPI mockOpenAPI = new OpenAPI();
@@ -68,9 +66,6 @@ class DocumentControllerTest {
         String challengeResult = documentController.getSelectedOpenAPI("challenge");
         assertEquals(expectedChallengeDocs, challengeResult);
 
-        // Act and Assert for "score"
-        String scoreResult = documentController.getSelectedOpenAPI("score");
-        assertEquals(expectedScoreDocs, scoreResult);
 
         // Act and Assert for "user"
         String userResult = documentController.getSelectedOpenAPI("user");

@@ -24,8 +24,6 @@ class DocumentServiceTest {
     @Mock
     private IAuthClient authClient;
 
-    @Mock
-    private IScoreClient scoreClient;
 
     @InjectMocks
     private DocumentService documentService;
@@ -60,13 +58,4 @@ class DocumentServiceTest {
         assertThat(result).isEqualTo(expectedDocs);
     }
 
-    @Test
-    void shouldGetSwaggerScoreDocsStr() {
-        String expectedDocs = "Score Swagger Docs";
-        Mockito.when(scoreClient.getSwaggerDocs()).thenReturn(expectedDocs);
-
-        String result = documentService.getSwaggerScoreDocsStr();
-
-        assertThat(result).isEqualTo(expectedDocs);
-    }
 }
