@@ -74,4 +74,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
+
+    @ExceptionHandler(ChallengeAlreadyExistsException.class)
+    public ResponseEntity<MessageDto> handleChallengeAlreadyExistsException(ChallengeAlreadyExistsException ex) {
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    }
 }

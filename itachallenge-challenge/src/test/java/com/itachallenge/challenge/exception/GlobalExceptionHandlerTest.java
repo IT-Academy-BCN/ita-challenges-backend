@@ -216,4 +216,16 @@ class GlobalExceptionHandlerTest {
         assertTrue(responseBody.contains("Language not found"));
     }
 
+    @Test
+    void testHandleChallengeAlreadyExistsException() {
+
+        ChallengeAlreadyExistsException exception = new ChallengeAlreadyExistsException("A challenge with this title already exists");
+
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeAlreadyExistsException(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        String responseBody = responseEntity.getBody().getMessage();
+        assertTrue(responseBody.contains("A challenge with this title already exists"));
+    }
+
 }
