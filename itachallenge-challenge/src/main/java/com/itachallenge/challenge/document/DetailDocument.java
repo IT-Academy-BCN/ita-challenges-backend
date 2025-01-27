@@ -9,6 +9,7 @@ import java.util.Map;
 
 @Getter
 @AllArgsConstructor
+@Builder
 public class DetailDocument {
 
     @Field(name="description")
