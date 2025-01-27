@@ -756,4 +756,47 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
     }
 
+    @Test
+    void addChallenge_test_success() {
+        String title = "Test Challenge";
+        String language = "Java";
+        String solutionText = "Sample solution";
+        
+        ChallengeCreateFormDto dto = new ChallengeCreateFormDto(title, "description", language, "Beginner", solutionText);
+
+        LanguageDocument existingLanguage = new LanguageDocument(UUID.randomUUID(), "Java");
+        SolutionDocument savedSolution = SolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .solutionText(solutionText)
+                .idLanguage(existingLanguage.getIdLanguage())
+                .build();
+        ChallengeDocument savedChallenge = ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .title(Map.of(Locale.forLanguageTag("CA"), title))
+                .level("Beginner")
+                .languages(Set.of(existingLanguage))
+                .solutions(List.of(savedSolution.getUuid()))
+                .build();
+
+        ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(savedChallenge, ChallengeDto.class);
+
+        when(challengeRepository.findByChallengeTitleCA(anyString())).thenReturn(Flux.empty()); // No existing challenge
+        when(languageRepository.findFirstByLanguageName(eq(language))).thenReturn(Mono.just(existingLanguage)); // Valid language
+        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(savedSolution));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(savedChallenge));
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class))).thenReturn(challengeDto);
+
+        // Act & Assert
+        StepVerifier.create(challengeService.addChallenge(dto))
+                .expectNext(challengeDto)
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).findByChallengeTitleCA(eq(title));
+        verify(languageRepository, times(1)).findFirstByLanguageName(eq(language));
+        verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+        verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
+
+    }
+
 }

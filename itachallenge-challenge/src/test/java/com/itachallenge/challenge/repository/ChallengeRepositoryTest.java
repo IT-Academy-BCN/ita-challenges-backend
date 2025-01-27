@@ -351,4 +351,13 @@ class ChallengeRepositoryTest {
         Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
     }
 
+    @DisplayName("Exists challenge title Test, should return true")
+    @Test
+    void findByChallengeTitleCAIgnoreCase_matchingTitle_test() {
+
+        Boolean exists = challengeRepository.findByChallengeTitleCA("Loops")
+                .hasElements().block();
+        Assertions.assertTrue(exists);
+    }
+
 }

@@ -5,7 +5,7 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Component
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Getter
