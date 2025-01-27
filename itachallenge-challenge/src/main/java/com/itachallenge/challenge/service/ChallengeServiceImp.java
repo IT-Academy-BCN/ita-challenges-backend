@@ -1,22 +1,17 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.*;
-import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
-import com.itachallenge.challenge.repository.SolutionRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -324,6 +319,52 @@ public class ChallengeServiceImp implements IChallengeService {
                                     return responseDto;
                                 })
                 );
+    }
+
+    @Override
+    public Mono<ChallengeDto> addChallenge(ChallengeCreateFormDto challengeCreateFormDto) {
+        String catalanTitle = challengeCreateFormDto.getChallengeTitle();
+        String codingLanguage = challengeCreateFormDto.getLanguage();
+
+        return challengeRepository.existsByChallengeTitleCA(catalanTitle)
+                .flatMap(exists -> {
+                    if (exists) {
+                        return Mono.error(new ChallengeAlreadyExistsException("A challenge with title "
+                                + catalanTitle + " already exists"));
+                    }
+                    return languageRepository.findFirstByLanguageName(codingLanguage)
+                            .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
+                            .flatMap(existingLanguage -> {
+                                SolutionDocument solution = SolutionDocument.builder()
+                                        .solutionText(challengeCreateFormDto.getSolution())
+                                        .idLanguage(existingLanguage.getIdLanguage())
+                                        .build();
+                                return solutionRepository.save(solution)
+                                        .flatMap(savedSolution -> {
+                                            ChallengeDocument challenge = buildChallengeDocument(challengeCreateFormDto,
+                                                    existingLanguage, savedSolution.getUuid());
+                                            return challengeRepository.save(challenge)
+                                                    .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class));
+                                        });
+                            });
+                });
+    }
+
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateFormDto dto, LanguageDocument language, UUID solutionId) {
+        Map<Locale, String> catalanTitle = Map.of(Locale.forLanguageTag("CA"), dto.getChallengeTitle());
+        Map<Locale, String> catalanDescription = Map.of(Locale.forLanguageTag("CA"), dto.getDescription());
+
+        DetailDocument detail = DetailDocument.builder()
+                .description(catalanDescription)
+                .build();
+
+        return ChallengeDocument.builder()
+                .title(catalanTitle)
+                .level(dto.getLevel())
+                .detail(detail)
+                .languages(Set.of(language))
+                .solutions(List.of(solutionId))
+                .build();
     }
 
 

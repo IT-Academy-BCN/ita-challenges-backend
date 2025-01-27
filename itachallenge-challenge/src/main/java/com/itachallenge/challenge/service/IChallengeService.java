@@ -27,4 +27,6 @@ public interface IChallengeService {
     Mono<ChallengeTestingValuesDto> getTestingParamsByChallengeId(String idChallenge);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
+
+    Mono<ChallengeDto> addChallenge(ChallengeCreateFormDto challengeCreateFormDto);
 }
