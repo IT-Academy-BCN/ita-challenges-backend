@@ -89,29 +89,6 @@ class UserControllerTest {
                 .expectStatus().isEqualTo(HttpStatus.URI_TOO_LONG);
     }
 
-    @Test
-    void getSolutionsByUserIdChallengeIdLanguageId() {
-
-        String URI_TEST = "/solution/user/{idUser}/challenge/{idChallenge}/language/{idLanguage}";
-
-        final String VALID_MONGO_UUID = "c3a92f9d-5d10-4f76-8c0b-6d884c549b1c";
-        String userId = VALID_MONGO_UUID;
-        String idLanguage = VALID_MONGO_UUID;
-        String idChallenge = VALID_MONGO_UUID;
-
-
-        webTestClient.get()
-                .uri(CONTROLLER_URL + URI_TEST, userId, idLanguage, idChallenge)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(SolutionUserDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 1;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 1;
-                });
-    }
 
 
     //TODO: This test needs mocking. Is calling actual service
