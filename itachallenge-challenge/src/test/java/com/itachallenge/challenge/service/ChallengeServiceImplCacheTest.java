@@ -4,7 +4,6 @@ import com.itachallenge.challenge.config.CacheConfig;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
-import com.itachallenge.challenge.document.TestingValueDocument;
 import com.itachallenge.challenge.dto.*;
 
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -55,9 +54,6 @@ class ChallengeServiceImplCacheTest {
 
     @Mock
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
-
-    @Mock
-    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -300,139 +296,5 @@ class ChallengeServiceImplCacheTest {
         verifyNoMoreInteractions(challengeRepository, challengeConverter);
     }
 
-    @DisplayName("Cache - getRelatedChallenges")
-    @Test
-    void testGetRelatedChallenges_cacheTest() {
-        int offset = 1;
-        int limit = 1;
-        String challengeStringId = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
-        UUID relatedId = UUID.fromString("f6e0f877-9560-4e68-bab6-7dd5f16b46a5");
-        UUID relatedId2 = UUID.fromString("9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d");
-        UUID relatedId3 = UUID.fromString("2f948de0-6f0c-4089-90b9-7f70a0812319");
-        Set<UUID> relatedChallenges = new HashSet<>(Arrays.asList(relatedId, relatedId2, relatedId3));
 
-        ChallengeDocument challenge = new ChallengeDocument();
-        challenge.setUuid(UUID.fromString(challengeStringId));
-        challenge.setRelatedChallenges(relatedChallenges);
-        ChallengeDocument related1 = new ChallengeDocument();
-        related1.setUuid(relatedId);
-        ChallengeDocument related2 = new ChallengeDocument();
-        related2.setUuid(relatedId2);
-        ChallengeDocument related3 = new ChallengeDocument();
-        related3.setUuid(relatedId3);
-        ChallengeDto relatedDto1 = new ChallengeDto();
-        relatedDto1.setChallengeId(relatedId);
-        ChallengeDto relatedDto2 = new ChallengeDto();
-        relatedDto2.setChallengeId(relatedId2);
-        ChallengeDto relatedDto3 = new ChallengeDto();
-        relatedDto3.setChallengeId(relatedId3);
-        List<ChallengeDto> expectedRelated = List.of(relatedDto1, relatedDto2, relatedDto3);
-
-        when(challengeRepository.findByUuid(challenge.getUuid())).thenReturn(Mono.just(challenge));
-        when(challengeRepository.findByUuid(related2.getUuid())).thenReturn(Mono.just(related2));
-        when(challengeRepository.findByUuid(related3.getUuid())).thenReturn(Mono.just(related3));
-        when(challengeConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.fromIterable(expectedRelated));
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> resultMono = challengeService.getRelatedChallenges(challengeStringId, offset, limit);
-
-        // Assert
-        StepVerifier.create(resultMono)
-                .expectSubscription()
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challenge.getUuid());
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> resultMonoCached = challengeService.getRelatedChallenges(challengeStringId, offset, limit);
-
-        // Assert
-        StepVerifier.create(resultMonoCached)
-                .expectSubscription()
-                .expectNextCount(1)
-                .expectComplete()
-                .verify();
-
-        verifyNoMoreInteractions(challengeRepository);
-    }
-
-    @DisplayName("Cache - getTestingParams")
-    @Test
-    void testGetTestingParams_cacheTest() {
-        // Arrange
-        UUID challengeId = UUID.randomUUID();
-        UUID languageId = UUID.randomUUID();
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        challengeDocument.setUuid(challengeId);
-        challengeDocument.setLanguages(Collections.singleton(new LanguageDocument(languageId, "English")));
-        TestingValueDocument testingValueDocument = new TestingValueDocument(Collections.singletonList("input"), Collections.singletonList("output"));
-        challengeDocument.setTestingValues(Collections.singletonList(testingValueDocument));
-
-        TestingValueDto testingValueDto = TestingValueDto.builder()
-                .inParam(Collections.singletonList("input"))
-                .outParam(Collections.singletonList("output"))
-                .build();
-
-        List<TestingValueDto> expectedTestingValues = Collections.singletonList(testingValueDto);
-
-        Map<String, Object> expectedResult = new LinkedHashMap<>();
-        expectedResult.put("uuid_challenge", challengeId.toString());
-        expectedResult.put("uuid_language", languageId.toString());
-        expectedResult.put("test_params", expectedTestingValues);
-
-        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(testingValueConverter.convertDocumentToDto(testingValueDocument, TestingValueDto.class)).thenReturn(testingValueDto);
-
-        // Act
-        //Mono<Map<String, Object>> result = challengeService.getTestingParamsByChallengeId(challengeId.toString());
-        Mono<ChallengeTestingValuesDto> result = challengeService.getTestingParamsByChallengeId(challengeId.toString());
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(response -> {
-                    //TODO - pending fix
-                    //assertThat((response.getChallengeId().toString()).compareTo(challengeId.toString())==0);
-                    //assertThat(response.getChallengeId().toString()).compareTo(UUID.fromString(challengeId.toString())));
-
-                    Object testParamsObject = response.getTestingValues();
-                    if (testParamsObject instanceof List) {
-                        List<?> testParamsList = (List<?>) testParamsObject;
-                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
-                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
-                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
-                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
-                        }
-                    }
-                })
-                .expectComplete()
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeId);
-        verify(testingValueConverter, times(1)).convertDocumentToDto(testingValueDocument, TestingValueDto.class);
-
-        // Act
-       // Mono<Map<String, Object>> resultCached = challengeService.getTestingParamsByChallengeId(challengeId.toString());
-        Mono<ChallengeTestingValuesDto> resultCached = challengeService.getTestingParamsByChallengeId(challengeId.toString());
-
-        // Assert
-        StepVerifier.create(resultCached)
-                .assertNext(response -> {
-                    //TODO - pending fix
-                    //assertThat(response.getChallengeId()).isEqualTo(challengeId.toString());
-                    Object testParamsObject = response.getTestingValues();
-                    if (testParamsObject instanceof List) {
-                        List<?> testParamsList = (List<?>) testParamsObject;
-                        if (!testParamsList.isEmpty() && testParamsList.get(0) instanceof TestingValueDto) {
-                            List<TestingValueDto> testParams = (List<TestingValueDto>) testParamsList;
-                            assertThat(testParams.get(0).getInParam()).isEqualTo(expectedTestingValues.get(0).getInParam());
-                            assertThat(testParams.get(0).getOutParam()).isEqualTo(expectedTestingValues.get(0).getOutParam());
-                        }
-                    }
-                })
-                .expectComplete()
-                .verify();
-        verifyNoMoreInteractions(challengeRepository, testingValueConverter);
-    }
 }

@@ -143,43 +143,6 @@ public class ChallengeController {
                 .map(dto -> ResponseEntity.ok().body(dto));
     }
 
-    //@PreAuthorize("hasRole('SUPERUSER'))TODO Securizar en Apisix
-    @PatchMapping("/resources/{idResource}")
-    @Operation(
-            operationId = "Update the information of a chosen resource.",
-            summary = "Update the resource and its related parameters.",
-            description = "Sending the ID Resource through the URI and the fields to be updated in the request body.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
-            }
-    )
-    public Mono<ResponseEntity<Map<String, String>>> patchResourcesById(@PathVariable String idResource, @RequestBody Map<String, Object> updates) {
-
-        return challengeService.updateResourceByUuid(idResource, updates)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap("response", response)));
-
-    }
-
-
-
-    @DeleteMapping("/resources/{idResource}")
-    @Operation(
-            operationId = "Remove resource from all Challenges from Resource Id.",
-            summary = "Remove resource from all Challenges from Resource Id.",
-            description = "Sending the ID Resource through the URI to patch the challenges.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Resource with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "Incorrect UUID")
-            }
-    )
-    public Mono<ResponseEntity<Map<String, String>>> removeResourcesById(@PathVariable String idResource) {
-        return challengeService.removeResourcesByUuid(idResource)
-                .map(response -> ResponseEntity.ok(Collections.singletonMap(MESSAGE, response)));
-    }
-
     @GetMapping("/challenges")
     @Operation(
             operationId = "Get only the challenges on a page.",
@@ -269,42 +232,6 @@ public class ChallengeController {
                     response.put("solution_text", solution.getSolutionText());
                     return response;
                 });
-    }
-
-    @GetMapping("challenges/{idChallenge}/related")
-    @Operation(
-            operationId = "Get the related challenges from a chosen challenge.",
-            summary = "Get to see the challenge title, creation date, level, popularity and languages.",
-            description = "Sending the ID Challenge through the URI to retrieve the related Challenges from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
-            }
-    )
-    public Mono<GenericResultDto<ChallengeDto>> getRelated
-            (@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String
-                     idChallenge,
-             @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String
-                     offset,
-             @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String
-                     limit) {
-        return challengeService.getRelatedChallenges(idChallenge, Integer.parseInt(offset), Integer.parseInt(limit));
-    }
-
-    @GetMapping("/test/params/{idChallenge}/")
-    @Operation(
-            operationId = "Get the testing parameters for the chosen challenge.",
-            summary = "Get the arrays of the testing values in & out parameters",
-            description = "Sending the ID Challenge returns the relevant challenge's testing values.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = TestingValueDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "The Challenge Id can't be null or empty.", content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<ChallengeTestingValuesDto> getChallengesTestingValues(@PathVariable("idChallenge") @ValidGenericPattern(pattern = UUID_PATTERN, message = INVALID_PARAM) String idChallenge) {
-        return challengeService.getTestingParamsByChallengeId(idChallenge);
     }
 
     @GetMapping("/version")

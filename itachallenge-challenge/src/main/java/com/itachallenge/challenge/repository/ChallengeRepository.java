@@ -19,16 +19,15 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Mono<Boolean> existsByUuid(UUID uuid);
     Mono<ChallengeDocument> findByUuid(UUID uuid);
     Flux<ChallengeDocument> findByLevel(String level);
-    @Query(value = "{}", fields = "{'testingValues':0}")
+    @Query(value = "{}")
     Flux<ChallengeDocument> findAllByUuidNotNullExcludingTestingValues();
-    Flux<ChallengeDocument> findAllByResourcesContaining(UUID idResource);
     Mono<Long> count();
     Mono<Void> deleteByUuid(UUID uuid);
     Mono<ChallengeDocument> save(ChallengeDocument challenge);
     Flux<ChallengeDocument> saveAll(Flux<ChallengeDocument> challengeDocumentFlux);
-    @Query(value = "{ 'level' : ?0, 'languages.idLanguage' : ?1 }", fields = "{'testingValues':0}")
+    @Query(value = "{ 'level' : ?0, 'languages.idLanguage' : ?1 }")
     Flux<ChallengeDocument> findByLevelAndLanguages_IdLanguage(String level, UUID idLanguage);
-    @Query(value = "{ 'languages.idLanguage' : ?0 }", fields = "{'testingValues':0}")
+    @Query(value = "{ 'languages.idLanguage' : ?0 }")
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
 }
