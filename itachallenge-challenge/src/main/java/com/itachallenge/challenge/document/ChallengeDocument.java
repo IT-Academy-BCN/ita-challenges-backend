@@ -39,13 +39,4 @@ public class ChallengeDocument {
     @Field(name="solutions")
     private List<UUID> solutions;
 
-    @Field(name="resources")
-    private Set<UUID> resources;
-
-    @Field(name="related")
-    private Set<UUID> relatedChallenges;
-
-    @Field(name="testing_values")
-    private List<TestingValueDocument> testingValues;
-
 }

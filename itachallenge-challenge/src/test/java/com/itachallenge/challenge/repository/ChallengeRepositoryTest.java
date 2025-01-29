@@ -51,9 +51,6 @@ class ChallengeRepositoryTest {
 
         //challengeRepository.deleteAll().block();
 
-        Set<UUID> UUIDSet = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
-        Set<UUID> UUIDSet2 = new HashSet<>(Arrays.asList(uuid_2, uuid_1));
-
         Map<Locale, String> titleMap1 = new HashMap<>();
             titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
             titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
@@ -92,17 +89,13 @@ class ChallengeRepositoryTest {
         List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
         DetailDocument detail = new DetailDocument(description, exampleList, note);
-        List<TestingValueDocument> testingValues = Arrays.asList(
-                new TestingValueDocument(Arrays.asList("input1", "input2"), Arrays.asList("output1")),
-                new TestingValueDocument(Arrays.asList("input3", "input4"), Arrays.asList("output2"))
-        );
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, titleMap1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
+                (uuid_1, titleMap1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, titleMap2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, UUIDSet, UUIDSet2, testingValues);
+                (uuid_2, titleMap2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, titleMap3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, UUIDSet, UUIDSet2, testingValues);
+                (uuid_3, titleMap3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
     }

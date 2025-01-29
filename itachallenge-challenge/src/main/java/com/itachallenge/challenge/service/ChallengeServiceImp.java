@@ -5,7 +5,6 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.dto.RelatedDto;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -26,9 +25,6 @@ import reactor.core.publisher.Mono;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-
 
 
 
@@ -59,10 +55,6 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private DocumentToDtoConverter<ChallengeDocument, RelatedDto> relatedChallengeConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private DocumentToDtoConverter<TestingValueDocument, TestingValueDto> testingValueConverter = new DocumentToDtoConverter<>();
 
     @Cacheable (value = "challenges", key="#id", unless="#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -73,40 +65,6 @@ public class ChallengeServiceImp implements IChallengeService {
                         .doOnSuccess(challengeDto -> log.info("Challenge found with ID: {}", challengeId))
                         .doOnError(error -> log.error("Error occurred while retrieving challenge: {}", error.getMessage()))
                 );
-    }
-
-    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
-    public Mono<String> removeResourcesByUuid(String id) {
-        return validateUUID(id)
-                .flatMap(resourceId -> {
-                    Flux<ChallengeDocument> challengesToUpdate = challengeRepository.findAllByResourcesContaining(resourceId);
-
-                    return challengesToUpdate
-                            .hasElements()
-                            .flatMap(result -> {
-                                if (Boolean.FALSE.equals(result)) {
-                                    return Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND));
-                                }
-
-                                return challengesToUpdate
-                                        .flatMap(challenge -> {
-                                            Set<UUID> updatedResources = new HashSet<>(challenge.getResources());
-                                            updatedResources.remove(resourceId);
-                                            challenge.setResources(updatedResources);
-                                            return challengeRepository.save(challenge);
-                                        })
-                                        .then(Mono.just("Resource removed successfully"));
-                            });
-                })
-                .doOnSuccess(resultDto -> log.info("Resource found with ID: {}", id))
-                .doOnError(error -> log.error("Error occurred while retrieving resource: {}", error.getMessage()));
-    }
-
-    public Mono<ChallengeDocument> updateChallenge(ChallengeDocument challenge, UUID resourceId) {
-        challenge.setResources(challenge.getResources().stream()
-                .filter(s -> !s.equals(resourceId))
-                .collect(Collectors.toSet()));
-        return challengeRepository.save(challenge);
     }
 
     @Cacheable(value = "challengesByLanguageOrDifficulty", key = "{#idLanguage, #level, #offset, #limit}", unless = "#result == null")
@@ -208,7 +166,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    @CacheEvict(value = {"challenges", "solutions", "relatedChallenges", "testingParams"}, allEntries = true)
+    @CacheEvict(value = {"challenges", "solutions"}, allEntries = true)
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));
@@ -252,27 +210,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
 
     }
-    @Cacheable (value="relatedChallenges", key="{#id, #offset, #limit}", unless="#result==null")
-    @Override
-    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit) {
-
-        return validateUUID(id)
-                .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                        .flatMapMany(challenge -> Flux.fromIterable(challenge.getRelatedChallenges())
-                                .flatMap(relatedChallengeId -> challengeRepository.findByUuid(relatedChallengeId))
-                                .flatMap(relatedChallenge -> Mono.from(challengeConverter.convertDocumentFluxToDtoFlux(Flux.just(relatedChallenge), ChallengeDto.class)))
-                        )
-                        .skip(offset)
-                        .take(limit)
-                        .collectList()
-                        .map(relatedChallenges -> {
-                            GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                            resultDto.setInfo(0, relatedChallenges.size(), relatedChallenges.size(), relatedChallenges.toArray(new ChallengeDto[0]));
-                            return resultDto;
-                        })
-                );
-    }
 
     @Override
     public Mono<String> updateResourceByUuid(String id, Map<String, Object> updates) {
@@ -292,33 +229,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 )
                 .doOnSuccess(resultDto -> log.info("Resource updated with ID: {}", id))
                 .doOnError(error -> log.error("Error occurred while updating resource: {}", error.getMessage()));
-    }
-
-    @Cacheable (value="testingParams", key="{#idChallenge, #idLanguage}", unless="#result==null")
-    @Override
-    public Mono<ChallengeTestingValuesDto> getTestingParamsByChallengeId(String idChallenge) {
-
-        Mono<UUID> challengeIdMono = validateUUID(idChallenge);
-
-        return challengeIdMono
-                .flatMap(challengeId ->
-                        challengeRepository.findByUuid(challengeId)
-                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String
-                                        .format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
-                                .map(challenge -> {
-                                    List<TestingValueDto> testingValues = challenge.getTestingValues()
-                                            .stream()
-                                            .map(testingValueDocument -> testingValueConverter
-                                                    .convertDocumentToDto(testingValueDocument, TestingValueDto.class))
-                                            .toList();
-
-                                    ChallengeTestingValuesDto responseDto = new ChallengeTestingValuesDto();
-                                    responseDto.setChallengeId(challengeId);
-                                    responseDto.setTestingValues(testingValues);
-
-                                    return responseDto;
-                                })
-                );
     }
 
     @Override

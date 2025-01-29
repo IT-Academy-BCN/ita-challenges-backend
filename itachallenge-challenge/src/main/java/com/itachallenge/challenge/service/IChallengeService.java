@@ -10,8 +10,6 @@ public interface IChallengeService {
 
     Mono<ChallengeDto> getChallengeById(String id);
 
-    Mono<String> removeResourcesByUuid(String id);
-
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
 
     Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage);
@@ -21,10 +19,6 @@ public interface IChallengeService {
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit);
 
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit);
-
-    Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String id, int offset, int limit);
-
-    Mono<ChallengeTestingValuesDto> getTestingParamsByChallengeId(String idChallenge);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
