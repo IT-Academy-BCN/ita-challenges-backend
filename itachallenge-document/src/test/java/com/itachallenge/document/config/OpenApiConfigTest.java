@@ -46,16 +46,6 @@ class OpenApiConfigTest {
                 }"""
         );
 
-        when(documentService.getSwaggerScoreDocsStr()).thenReturn(
-                """
-                {
-                    "openapi": "3.0.0",
-                    "info": {
-                        "title": "Score API",
-                        "version": "1.0"
-                    }
-                }"""
-        );
 
         when(documentService.getSwaggerAuthDocsStr()).thenReturn(
                 """
@@ -80,7 +70,6 @@ class OpenApiConfigTest {
         // Verify extensions
         assertThat(result.getExtensions()).containsKey("itachallenge-challenge-api");
         assertThat(result.getExtensions()).containsKey("itachallenge-user-api");
-        assertThat(result.getExtensions()).containsKey("itachallenge-score-api");
         assertThat(result.getExtensions()).containsKey("itachallenge-auth-api");
     }
 }

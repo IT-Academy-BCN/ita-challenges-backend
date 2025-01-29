@@ -48,7 +48,6 @@ public class DocumentController {
             case "all" -> openAPI.toString();
             case "auth" -> documentService.getSwaggerAuthDocsStr();
             case "challenge" -> documentService.getSwaggerChallengeDocsStr();
-            case "score" -> documentService.getSwaggerScoreDocsStr();
             case "user" -> documentService.getSwaggerUserDocsStr();
             default -> documentService.getSwaggerDefaultDocsStr(apiname);
         };

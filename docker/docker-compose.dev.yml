@@ -64,7 +64,7 @@ services:
     image: mongo:5.0.9
     restart: always
     ports:
-        - "27017:27017"
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: '${MONGODB_ROOT_TEST_USERNAME}'
       MONGO_INITDB_ROOT_PASSWORD: '${MONGODB_ROOT_TEST_PASSWORD}'
@@ -170,10 +170,10 @@ volumes:
   itachallenge_mongodb_data-test:
 
 networks:
-    apisix-dev:
-      driver: bridge
-      ipam:
-        driver: default
-        config:
-          - subnet: 172.18.0.0/24
+  apisix-dev:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/24
 
