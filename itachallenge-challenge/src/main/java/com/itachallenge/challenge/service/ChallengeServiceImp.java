@@ -236,13 +236,9 @@ public class ChallengeServiceImp implements IChallengeService {
         String catalanTitle = challengeCreateFormDto.getChallengeTitle();
         String codingLanguage = challengeCreateFormDto.getLanguage();
 
-//        return challengeRepository.existsByChallengeTitleCA(catalanTitle)
-//                .flatMap(exists -> {
-//                    if (exists) {
-        return challengeRepository.findByChallengeTitleCA(catalanTitle)
-                .hasElements()
+        return challengeRepository.existsByChallengeTitleCA(catalanTitle)
                 .flatMap(exists -> {
-                    if (exists != null) {
+                    if (exists) {
                         return Mono.error(new ChallengeAlreadyExistsException("A challenge with title "
                                 + catalanTitle + " already exists"));
                     }
@@ -250,6 +246,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                             .flatMap(existingLanguage -> {
                                 SolutionDocument solution = SolutionDocument.builder()
+                                        .uuid(UUID.randomUUID())
                                         .solutionText(challengeCreateFormDto.getSolution())
                                         .idLanguage(existingLanguage.getIdLanguage())
                                         .build();
@@ -273,6 +270,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 .build();
 
         return ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
                 .title(catalanTitle)
                 .level(dto.getLevel())
                 .detail(detail)
