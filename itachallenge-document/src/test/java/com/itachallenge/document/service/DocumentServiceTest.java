@@ -2,7 +2,6 @@ package com.itachallenge.document.service;
 
 import com.itachallenge.document.proxy.IAuthClient;
 import com.itachallenge.document.proxy.IChallengeClient;
-import com.itachallenge.document.proxy.IScoreClient;
 import com.itachallenge.document.proxy.IUserClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,8 +24,6 @@ class DocumentServiceTest {
     @Mock
     private IAuthClient authClient;
 
-    @Mock
-    private IScoreClient scoreClient;
 
     @InjectMocks
     private DocumentService documentService;
@@ -61,13 +58,4 @@ class DocumentServiceTest {
         assertThat(result).isEqualTo(expectedDocs);
     }
 
-    @Test
-    void shouldGetSwaggerScoreDocsStr() {
-        String expectedDocs = "Score Swagger Docs";
-        Mockito.when(scoreClient.getSwaggerDocs()).thenReturn(expectedDocs);
-
-        String result = documentService.getSwaggerScoreDocsStr();
-
-        assertThat(result).isEqualTo(expectedDocs);
-    }
 }

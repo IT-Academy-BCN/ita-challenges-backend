@@ -33,12 +33,10 @@ public class OpenApiConfig {
 
         String jsonApiSpecChallenge = documentService.getSwaggerChallengeDocsStr();
         String jsonApiSpecUser = documentService.getSwaggerUserDocsStr();
-        String jsonApiSpecScore = documentService.getSwaggerScoreDocsStr();
         String jsonApiSpecAuth = documentService.getSwaggerAuthDocsStr();
 
         OpenAPI challengeApi = parseOpenApiSpec(jsonApiSpecChallenge);
         OpenAPI userApi = parseOpenApiSpec(jsonApiSpecUser);
-        OpenAPI scoreApi = parseOpenApiSpec(jsonApiSpecScore);
         OpenAPI authApi = parseOpenApiSpec(jsonApiSpecAuth);
 
         OpenAPI allApi = new OpenAPI();
@@ -51,7 +49,6 @@ public class OpenApiConfig {
         allApi.setExtensions(Map.of(
                 "itachallenge-challenge-api", challengeApi,
                 "itachallenge-user-api", userApi,
-                "itachallenge-score-api", scoreApi,
                 "itachallenge-auth-api", authApi
         ));
 
