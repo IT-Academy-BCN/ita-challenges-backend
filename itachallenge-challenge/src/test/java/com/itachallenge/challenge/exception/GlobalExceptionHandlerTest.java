@@ -211,7 +211,7 @@ class GlobalExceptionHandlerTest {
 
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleLanguageNotFoundException(exception);
 
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Language not found"));
     }

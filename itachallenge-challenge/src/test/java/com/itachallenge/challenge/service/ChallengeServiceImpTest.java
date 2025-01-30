@@ -564,7 +564,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void addChallenge_test_InexistantLanguage() {
+    void addChallenge_test_NonExistentLanguage() {
         when(challengeRepository.existsByChallengeTitleCA(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
 

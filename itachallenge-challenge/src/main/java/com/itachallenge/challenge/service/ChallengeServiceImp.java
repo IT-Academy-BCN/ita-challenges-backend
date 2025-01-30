@@ -27,7 +27,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-
 @Service
 public class ChallengeServiceImp implements IChallengeService {
 
@@ -56,7 +55,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
 
-    @Cacheable (value = "challenges", key="#id", unless="#result==null")
+    @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -109,7 +108,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    @Cacheable (value = "allLanguages")
+    @Cacheable(value = "allLanguages")
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
@@ -119,7 +118,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null")
+    @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
 
@@ -137,7 +136,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     }
 
-    @Cacheable (value="solutions", key="{#idChallenge, #idLanguage}", unless="#result==null")
+    @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -215,7 +214,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<String> updateResourceByUuid(String id, Map<String, Object> updates) {
         return validateUUID(id)
                 .flatMap(resourceId -> challengeRepository.findByUuid(resourceId)
-                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND    )))
+                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND)))
                         .flatMap(resource -> {
                             updates.forEach((key, value) -> {
                                 Field field = ReflectionUtils.findField(resource.getClass(), key);
@@ -239,11 +238,12 @@ public class ChallengeServiceImp implements IChallengeService {
         return challengeRepository.existsByChallengeTitleCA(catalanTitle)
                 .flatMap(exists -> {
                     if (exists) {
-                        return Mono.error(new ChallengeAlreadyExistsException("A challenge with title "
-                                + catalanTitle + " already exists"));
+                        return Mono.error(new ChallengeAlreadyExistsException("Invalid title: A challenge titled \""
+                                + catalanTitle + "\" already exists"));
                     }
                     return languageRepository.findFirstByLanguageName(codingLanguage)
-                            .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
+                            .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language \"" + codingLanguage
+                                    + "\" is not valid")))
                             .flatMap(existingLanguage -> {
                                 SolutionDocument solution = SolutionDocument.builder()
                                         .uuid(UUID.randomUUID())
@@ -255,7 +255,8 @@ public class ChallengeServiceImp implements IChallengeService {
                                             ChallengeDocument challenge = buildChallengeDocument(challengeCreateFormDto,
                                                     existingLanguage, savedSolution.getUuid());
                                             return challengeRepository.save(challenge)
-                                                    .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class));
+                                                    .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
+                                                            ChallengeDto.class));
                                         });
                             });
                 });

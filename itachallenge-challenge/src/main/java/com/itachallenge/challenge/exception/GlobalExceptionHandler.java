@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(LanguageNotFoundException.class)
     public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
-        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(NotFoundException.class)
