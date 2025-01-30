@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.challenge.enums.DifficultyLevel;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -18,7 +19,7 @@ public class ChallengeCreateFormDto {
     private String description;
 
     @NotEmpty(message = "cannot be empty")
-    private String level;
+    private DifficultyLevel level;
 
     @NotEmpty(message = "cannot be empty")
     private String language;

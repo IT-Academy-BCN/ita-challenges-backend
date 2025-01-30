@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -57,10 +58,10 @@ class ChallengeServiceImpTest {
         MockitoAnnotations.openMocks(this);
 
         String descriptionCA = "Detall";
-        String level = "ADVANCED";
+        String level = "EASY";
         String solutionBody = "Solution Text";
 
-        formData = new ChallengeCreateFormDto(titleCA, descriptionCA, level, languageName, solutionBody);
+        formData = new ChallengeCreateFormDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody);
 
         UUID challengeRandomId = UUID.randomUUID();
         UUID exampleRandomId = UUID.randomUUID();

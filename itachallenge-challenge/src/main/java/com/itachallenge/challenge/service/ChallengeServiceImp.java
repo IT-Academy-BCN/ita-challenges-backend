@@ -272,7 +272,7 @@ public class ChallengeServiceImp implements IChallengeService {
         return ChallengeDocument.builder()
                 .uuid(UUID.randomUUID())
                 .title(catalanTitle)
-                .level(dto.getLevel())
+                .level(dto.getLevel().toString())
                 .detail(detail)
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
