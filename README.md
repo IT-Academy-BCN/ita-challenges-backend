@@ -39,8 +39,7 @@ effectively working on this project.
 
 This project provides REST API services for the ITA challenges application and consists of five microservices:
    * **Challenge.** The challenge microservice is designed to manage and distribute information related to challenges within the project. For instance, it provides details such as title, level, creation date, solution, and other relevant information. This microservice communicates with various modules of the project through a set of endpoints.
-   * **Score.** The score microservice is built to provide information related to the score analysis for a specific challenge solution provided in a determined language.
-   * **User.** The user microservice is crafted to efficiently manage and deliver information stemming from user, challenge, and score interactions. For example, it facilitates access to user challenge solutions, bookmarks, and challenge statistics.
+   * **User.** The user microservice is crafted to efficiently manage and deliver information from user.
    * **Auth**. The auth microservice plays a pivotal role in ensuring the security and integrity of user interactions within the system. It is primarily responsible for validating user authentication tokens, thereby safeguarding access to sensitive resources and functionalities. By validating authentication tokens, this microservice verifies the identity of users and ensures that only authorized individuals can access the system's features and data.
    * **Document**. The document microservice serves as a unified gateway consolidating all documents from various endpoints within the system. Acting as a single entry point, it will be seamlessly redirected by the project's overarching API Gateway. Named itachallenge-document, this microservice is entrusted with aggregating all Swagger documentation from other microservices, ensuring comprehensive access and management of system documentation.
 
