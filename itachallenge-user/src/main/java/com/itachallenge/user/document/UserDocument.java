@@ -1,9 +1,13 @@
 package com.itachallenge.user.document;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.UUID;
 @AllArgsConstructor
@@ -18,6 +22,7 @@ public class UserDocument {
     private UUID uuid;
 
     @Field("username")
+    @Indexed(unique = true)
     private String username;
 
 
