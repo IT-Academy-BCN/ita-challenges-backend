@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -78,5 +79,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ChallengeAlreadyExistsException.class)
     public ResponseEntity<MessageDto> handleChallengeAlreadyExistsException(ChallengeAlreadyExistsException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleInvalidEnumValue(HttpMessageNotReadableException ex) {
+        String message = "Invalid value for field";
+
+        if (ex.getMostSpecificCause().getMessage() != null) {
+            String detailedMessage = ex.getMostSpecificCause().getMessage();
+            if (detailedMessage.contains("Cannot deserialize value of type")) {
+                String[] parts = detailedMessage.split("\"");
+                if (parts.length > 1) {
+                    String invalidValue = parts[1];
+                    message = "Level '" + invalidValue + "' is not valid";
+                }
+            }
+        }
+
+        return ResponseEntity.badRequest().body(message);
     }
 }
