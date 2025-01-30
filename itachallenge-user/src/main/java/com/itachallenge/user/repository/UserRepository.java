@@ -12,6 +12,6 @@ import java.util.UUID;
 public interface UserRepository extends ReactiveMongoRepository<UserDocument, UUID> {
 
     Mono<UserDocument> findByUuid(UUID uuid);
-    Flux<UserDocument> findByUserId(UUID userId);
+    Flux<UserDocument> findByUsername(String username);
     Mono<Boolean> existsByUuid(UUID uuid);
 }
