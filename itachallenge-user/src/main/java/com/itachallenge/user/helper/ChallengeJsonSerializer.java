@@ -16,6 +16,6 @@ public class ChallengeJsonSerializer /* extends JsonSerializer<UserChallengeDto>
             gen.writeEndObject();
 
 
-    }*/
-
+    }
+*/
 }

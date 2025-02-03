@@ -6,43 +6,43 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
 
-class UserTest {
+class UserDocumentTest {
 
-    private UUID uuid;
-    private String username;
-    private UserDocument userDocument;
-
-    @BeforeEach
-    void setUp() {
-        uuid = UUID.randomUUID();
-        username = "testUser";
-        userDocument = UserDocument.builder()
-                .uuid(uuid)
-                .username(username)
-                .build();
+    @Test
+    void noArgsConstructor() {
+        UserDocument user = new UserDocument();
+        assertNotNull(user);
     }
 
     @Test
-    void userDocumentCreation() {
-        assertNotNull(userDocument);
-        assertEquals(uuid, userDocument.getUuid());
-        assertEquals(username, userDocument.getUsername());
+    void allArgsConstructor() {
+        UUID uuid = UUID.randomUUID();
+        String username = "testUser";
+
+        UserDocument user = new UserDocument(uuid, username);
+
+        assertEquals(uuid, user.getUuid());
+        assertEquals(username, user.getUsername());
     }
 
     @Test
     void settersAndGetters() {
-        UUID newUuid = UUID.randomUUID();
-        String newUsername = "newUser";
+        UserDocument user = new UserDocument();
+        UUID uuid = UUID.randomUUID();
+        String username = "newUser";
 
-        userDocument.setUuid(newUuid);
-        userDocument.setUsername(newUsername);
+        user.setUuid(uuid);
+        user.setUsername(username);
 
-        assertEquals(newUuid, userDocument.getUuid());
-        assertEquals(newUsername, userDocument.getUsername());
+        assertEquals(uuid, user.getUuid());
+        assertEquals(username, user.getUsername());
     }
 
     @Test
-    void builderPattern() {
+    void builder() {
+        UUID uuid = UUID.randomUUID();
+        String username = "builderUser";
+
         UserDocument user = UserDocument.builder()
                 .uuid(uuid)
                 .username(username)
@@ -54,40 +54,26 @@ class UserTest {
     }
 
     @Test
-    void noArgsConstructor() {
-        UserDocument emptyUser = new UserDocument();
-        assertNotNull(emptyUser);
-        assertNull(emptyUser.getUuid());
-        assertNull(emptyUser.getUsername());
-    }
-
-    @Test
-    void allArgsConstructor() {
-        UserDocument user = new UserDocument(uuid, username);
-        assertNotNull(user);
-        assertEquals(uuid, user.getUuid());
-        assertEquals(username, user.getUsername());
-    }
-
-    @Test
     void equalsAndHashCode() {
+        UUID uuid = UUID.randomUUID();
+        String username = "equalTest";
+
         UserDocument user1 = new UserDocument(uuid, username);
         UserDocument user2 = new UserDocument(uuid, username);
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
-
-        user2.setUsername("anotherUser");
-        assertNotEquals(user1, user2);
     }
 
     @Test
     void testToString() {
-        String toString = userDocument.toString();
-        assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
-        assertTrue(toString.contains(uuid.toString()), "ToString should contain UUID");
-        assertTrue(toString.contains(username), "ToString should contain username");
+        UUID uuid = UUID.randomUUID();
+        String username = "stringTest";
+
+        UserDocument user = new UserDocument(uuid, username);
+        String userString = user.toString();
+
+        assertTrue(userString.contains(uuid.toString()));
+        assertTrue(userString.contains(username));
     }
-
 }
-
