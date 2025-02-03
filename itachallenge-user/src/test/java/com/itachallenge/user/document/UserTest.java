@@ -53,8 +53,6 @@ class UserTest {
         assertEquals(username, user.getUsername());
     }
 
-
-
     @Test
     void equalsAndHashCode() {
         UserDocument user1 = new UserDocument(uuid, username);
