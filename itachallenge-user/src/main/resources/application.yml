@@ -38,10 +38,6 @@ management:
   security:
     enabled: false
 
-zeromq:
-  socket:
-    address: tcp://*:5555
-
 url:
   max_length: 2048
 
