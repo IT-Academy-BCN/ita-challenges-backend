@@ -12,6 +12,7 @@ spring:
       #uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
       uri: mongodb://test_users:xoDjk4eDvu5KWaCB@87.106.229.175:27017/users?authSource=admin
       uuid-representation: standard
+      auto-index-creation: true
   servlet:
     multipart:
       max-file-size: 2MB
