@@ -54,6 +54,22 @@ class UserTest {
     }
 
     @Test
+    void noArgsConstructor() {
+        UserDocument emptyUser = new UserDocument();
+        assertNotNull(emptyUser);
+        assertNull(emptyUser.getUuid());
+        assertNull(emptyUser.getUsername());
+    }
+
+    @Test
+    void allArgsConstructor() {
+        UserDocument user = new UserDocument(uuid, username);
+        assertNotNull(user);
+        assertEquals(uuid, user.getUuid());
+        assertEquals(username, user.getUsername());
+    }
+
+    @Test
     void equalsAndHashCode() {
         UserDocument user1 = new UserDocument(uuid, username);
         UserDocument user2 = new UserDocument(uuid, username);
