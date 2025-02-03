@@ -81,5 +81,13 @@ class UserTest {
         assertNotEquals(user1, user2);
     }
 
+    @Test
+    void testToString() {
+        String toString = userDocument.toString();
+        assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
+        assertTrue(toString.contains(uuid.toString()), "ToString should contain UUID");
+        assertTrue(toString.contains(username), "ToString should contain username");
+    }
+
 }
 
