@@ -73,3 +73,4 @@
 * Sonia Vera - https://github.com/Dxmrt
 * David Cuadrado - https://github.com/davidcuadrado
 * Alba Márquez - https://github.com/amarinite
+* Clara Pagès - https://github.com/clareta16
