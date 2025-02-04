@@ -532,7 +532,7 @@ class ChallengeServiceImpTest {
 
     @Test
     void addChallenge_test_success() {
-        when(challengeRepository.existsByChallengeTitleCA(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
+        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
@@ -543,7 +543,7 @@ class ChallengeServiceImpTest {
                 .expectNext(challengeDto)
                 .verifyComplete();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCA(eq(titleCA));
+        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
@@ -552,20 +552,20 @@ class ChallengeServiceImpTest {
 
     @Test
     void addChallenge_test_RepeatedTitleFailure() {
-        when(challengeRepository.existsByChallengeTitleCA(eq(titleCA))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
+        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
 
         // Act & Assert
         StepVerifier.create(challengeService.addChallenge(formData))
                 .expectErrorMatches(throwable -> throwable instanceof ChallengeAlreadyExistsException)
                 .verify();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCA(eq(titleCA));
+        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verifyNoInteractions(languageRepository);
     }
 
     @Test
     void addChallenge_test_NonExistentLanguage() {
-        when(challengeRepository.existsByChallengeTitleCA(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
+        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
 
         // Act & Assert
@@ -573,7 +573,7 @@ class ChallengeServiceImpTest {
                 .expectErrorMatches(throwable -> throwable instanceof LanguageNotFoundException)
                 .verify();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCA(eq(titleCA));
+        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
     }
 

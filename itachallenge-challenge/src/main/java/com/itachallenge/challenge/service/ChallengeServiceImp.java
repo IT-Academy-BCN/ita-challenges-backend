@@ -235,11 +235,11 @@ public class ChallengeServiceImp implements IChallengeService {
         String catalanTitle = challengeCreateFormDto.getChallengeTitle();
         String codingLanguage = challengeCreateFormDto.getLanguage();
 
-        return challengeRepository.existsByChallengeTitleCA(catalanTitle)
+        return challengeRepository.existsByChallengeTitleCa(catalanTitle)
                 .flatMap(exists -> {
                     if (exists) {
-                        return Mono.error(new ChallengeAlreadyExistsException("Invalid title: A challenge titled \""
-                                + catalanTitle + "\" already exists"));
+                        return Mono.error(new ChallengeAlreadyExistsException("Invalid title: A challenge titled "
+                                + catalanTitle.toLowerCase() + " already exists"));
                     }
                     return languageRepository.findFirstByLanguageName(codingLanguage)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage

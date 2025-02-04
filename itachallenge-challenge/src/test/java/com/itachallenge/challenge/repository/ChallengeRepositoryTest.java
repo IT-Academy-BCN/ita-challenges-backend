@@ -346,4 +346,20 @@ class ChallengeRepositoryTest {
         Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
     }
 
+    @DisplayName("Exists challenge title Test, should return true")
+    @Test
+    void findByChallengeTitleCa_matchingTitle_test() {
+        Boolean exists = challengeRepository.existsByChallengeTitleCa("loops").block(); // is case insensitive
+        Assertions.assertNotNull(exists);
+        Assertions.assertTrue(exists);
+    }
+
+    @DisplayName("Exists challenge title Test, should return false")
+    @Test
+    void findByChallengeTitleCa_nonMatchingTitle_test() {
+        Boolean exists = challengeRepository.existsByChallengeTitleCa("non existing title").block(); // is case insensitive
+        Assertions.assertNotNull(exists);
+        Assertions.assertFalse(exists);
+    }
+
 }
