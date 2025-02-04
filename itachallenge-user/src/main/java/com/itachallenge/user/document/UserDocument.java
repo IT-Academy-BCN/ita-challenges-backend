@@ -11,7 +11,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
 @Builder
 @NoArgsConstructor
 @Document(collection="users")
@@ -33,7 +32,9 @@ public class UserDocument {
             sb.append("uuid=").append(uuid);
         }
         if (username != null) {
-            if (uuid != null) sb.append(", ");  // Add a comma only if UUID is present
+            if (uuid != null) {
+                sb.append(", ");
+            }
             sb.append("username='").append(username).append("'");
         }
 

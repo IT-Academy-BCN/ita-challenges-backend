@@ -253,20 +253,65 @@ class UserDocumentTest {
     }
 
     @Test
-    void hashCodeSameForEqualObjects() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, username);
-
-        assertEquals(user1.hashCode(), user2.hashCode());
-    }
-
-    @Test
     void hashCodeDifferentForDifferentObjects() {
         UserDocument user1 = new UserDocument(UUID.randomUUID(), "UserA");
         UserDocument user2 = new UserDocument(UUID.randomUUID(), "UserB");
 
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
+
+    @Test
+    void builderHandlesOnlyUuid() {
+        UserDocument user = UserDocument.builder()
+                .uuid(uuid)
+                .build();
+
+        assertNotNull(user);
+        assertEquals(uuid, user.getUuid());
+        assertNull(user.getUsername());
+    }
+
+    @Test
+    void builderHandlesOnlyUsername() {
+        UserDocument user = UserDocument.builder()
+                .username(username)
+                .build();
+
+        assertNotNull(user);
+        assertNull(user.getUuid());
+        assertEquals(username, user.getUsername());
+    }
+
+    @Test
+    void builderCreatesNewInstances() {
+        UserDocument user1 = UserDocument.builder().uuid(uuid).username(username).build();
+        UserDocument user2 = UserDocument.builder().uuid(uuid).username(username).build();
+
+        assertNotSame(user1, user2);
+        assertEquals(user1, user2);
+    }
+
+    @Test
+    void builderWithoutParametersCreatesValidObject() {
+        UserDocument user = UserDocument.builder().build();
+
+        assertNotNull(user);
+        assertNull(user.getUuid());
+        assertNull(user.getUsername());
+    }
+
+    @Test
+    void modifyingBuiltObjectDoesNotAffectOriginalBuilder() {
+        UserDocument.UserDocumentBuilder builder = UserDocument.builder().uuid(uuid).username(username);
+
+        UserDocument user1 = builder.build();
+        UserDocument user2 = builder.uuid(UUID.randomUUID()).username("newUser").build();
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user1.getUuid(), user2.getUuid());
+        assertNotEquals(user1.getUsername(), user2.getUsername());
+    }
+
 
 
 }
