@@ -1,10 +1,11 @@
 package com.itachallenge.user.document;
 
+import lombok.EqualsAndHashCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.UUID;
+import java.util.*;
 
 class UserDocumentTest {
 
@@ -310,6 +311,81 @@ class UserDocumentTest {
         assertNotEquals(user1, user2);
         assertNotEquals(user1.getUuid(), user2.getUuid());
         assertNotEquals(user1.getUsername(), user2.getUsername());
+    }
+
+    @Test
+    void equalsHashCodeContractInCollections() {
+        UUID testUuid = UUID.randomUUID();
+        String testUsername = "collectionUser";
+
+        UserDocument user1 = UserDocument.builder().uuid(testUuid).username(testUsername).build();
+        UserDocument user2 = new UserDocument(testUuid, testUsername);
+
+        Set<UserDocument> set = new HashSet<>();
+        set.add(user1);
+        assertTrue(set.contains(user2), "HashSet should contain an equal object");
+
+        Map<UserDocument, String> map = new HashMap<>();
+        map.put(user1, "storedValue");
+        assertEquals("storedValue", map.get(user2), "HashMap should retrieve the value with an equal key");
+    }
+
+    @Test
+    void equalsWithAnonymousSubclass() {
+        String subclassUsername = "subclassUsername";
+
+        UUID subclassUuid = UUID.randomUUID();
+        UserDocument plainUser = UserDocument.builder().uuid(subclassUuid).username(subclassUsername).build();
+        UserDocument subclassUser = new UserDocument(subclassUuid, subclassUsername) {};
+
+        assertEquals(plainUser.equals(subclassUser), subclassUser.equals(plainUser));
+        assertEquals(plainUser.hashCode(), subclassUser.hashCode());
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    static class ExtendedUserDocument extends UserDocument {
+        private final String extra;
+
+        public ExtendedUserDocument(UUID uuid, String username, String extra) {
+            super(uuid, username);
+            this.extra = extra;
+        }
+    }
+
+    @Test
+    void extendedUserDocumentEquality() {
+        UUID testUuid = UUID.randomUUID();
+        String testUsername = "extendedUser";
+        String extra = "extraValue";
+
+        ExtendedUserDocument extUser1 = new ExtendedUserDocument(testUuid, testUsername, extra);
+        ExtendedUserDocument extUser2 = new ExtendedUserDocument(testUuid, testUsername, extra);
+
+        assertEquals(extUser1, extUser2, "ExtendedUserDocuments with the same fields should be equal");
+        assertEquals(extUser1.hashCode(), extUser2.hashCode(), "Hash codes should be equal for equal ExtendedUserDocuments");
+    }
+
+    @Test
+    void extendedUserDocumentInequalityDueToExtraField() {
+        UUID testUuid = UUID.randomUUID();
+        String testUsername = "extendedUser";
+        ExtendedUserDocument extUser1 = new ExtendedUserDocument(testUuid, testUsername, "extra1");
+        ExtendedUserDocument extUser2 = new ExtendedUserDocument(testUuid, testUsername, "extra2");
+
+        assertNotEquals(extUser1, extUser2, "ExtendedUserDocuments with different extra fields should not be equal");
+        assertNotEquals(extUser1.hashCode(), extUser2.hashCode(), "Hash codes should differ when extra fields differ");
+    }
+
+    @Test
+    void extendedUserDocumentVsUserDocumentInequality() {
+        UUID testUuid = UUID.randomUUID();
+        String testUsername = "mixedUser";
+
+        ExtendedUserDocument extUser = new ExtendedUserDocument(testUuid, testUsername, "extra");
+        UserDocument plainUser = UserDocument.builder().uuid(testUuid).username(testUsername).build();
+
+        assertNotEquals(extUser, plainUser, "An ExtendedUserDocument should not equal a plain UserDocument");
+        assertNotEquals(plainUser, extUser, "Equality should be symmetric even across subclasses");
     }
 
 

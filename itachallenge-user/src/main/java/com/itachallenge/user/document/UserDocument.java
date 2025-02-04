@@ -24,6 +24,7 @@ public class UserDocument {
     @Indexed(unique = true)
     private String username;
 
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("UserDocument{");
@@ -41,6 +42,8 @@ public class UserDocument {
         sb.append("}");
         return sb.toString();
     }
+
+
 
 
 }
