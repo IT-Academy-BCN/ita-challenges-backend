@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.UUID;
 
-class UserTest {
+class UserDocumentTest {
 
     private UUID uuid;
     private String username;
