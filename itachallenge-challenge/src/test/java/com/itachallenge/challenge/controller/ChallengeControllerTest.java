@@ -1,16 +1,13 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
-import com.itachallenge.challenge.mqclient.ZMQClient;
+import com.itachallenge.challenge.exception.BadUUIDException;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
@@ -39,17 +36,6 @@ class ChallengeControllerTest {
     @MockBean
     private IChallengeService challengeService;
 
-    @MockBean
-    private DiscoveryClient discoveryClient;
-
-    @MockBean
-    private PropertiesConfig config;
-
-    //TODO - pending externalize to service layer (internal comms)
-    @MockBean
-    ZMQClient zmqClient;
-    @MockBean
-    ChallengeRequestDto challengeInputDto;
 
 /*    @Test
     void test() {
@@ -72,7 +58,7 @@ class ChallengeControllerTest {
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
         String id = "existing Id";
-        ChallengeDto challengeDto = new ChallengeDto(); // Предположим, что у вас есть объект ChallengeDto
+        ChallengeDto challengeDto = new ChallengeDto();
         Mono<ChallengeDto> response = Mono.just(challengeDto);
 
         when(challengeService.getChallengeById(id)).thenReturn(response);
@@ -80,8 +66,8 @@ class ChallengeControllerTest {
         Mono<ChallengeDto> result = challengeService.getChallengeById(id);
 
         StepVerifier.create(result)
-                .expectNext(challengeDto) // Проверяем, что мы получаем ожидаемый объект ChallengeDto
-                .verifyComplete(); // Убеждаемся, что последовательность Mono завершается успешно
+                .expectNext(challengeDto)
+                .verifyComplete();
 
     }
 
@@ -113,7 +99,6 @@ class ChallengeControllerTest {
 
     @Test
     void getAllChallenges_NullPageParameters_ChallengesReturned() {
-        //Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
@@ -362,5 +347,69 @@ class ChallengeControllerTest {
                 .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
                 .jsonPath("$.version").isEqualTo(expectedVersion);
     }
+    @Test
+    void deleteOneChallenge_success() {
+        // Arrange
+        String id = "123e4567-e89b-12d3-a456-426614174000";
+        DeleteResponseDto responseDto = new DeleteResponseDto(id, "Challenge deleted successfully.");
+
+        when(challengeService.deleteChallengeById(id))
+                .thenReturn(Mono.just(responseDto));
+
+        // Act & Assert
+        webTestClient.delete()
+                .uri("/challenges/{challengeId}", id)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(DeleteResponseDto.class)
+                .value(dto -> {
+                    assertEquals(id, dto.getId());
+                    assertEquals("Challenge deleted successfully.", dto.getMessage());
+                });
+
+        // Verify
+        verify(challengeService).deleteChallengeById(id);
+    }
+
+    @Test
+    void deleteOneChallenge_notFound() {
+        // Arrange
+        String id = "non-existent-id";
+
+        when(challengeService.deleteChallengeById(id))
+                .thenReturn(Mono.error(new ChallengeNotFoundException("Challenge not found")));
+
+        // Act & Assert
+        webTestClient.delete()
+                .uri("/challenges/{challengeId}", id)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Challenge not found");
+
+        // Verify
+        verify(challengeService).deleteChallengeById(id);
+    }
+
+    @Test
+    void deleteOneChallenge_invalidUUID() {
+        // Arrange
+        String invalidId = "invalid-uuid";
+
+        when(challengeService.deleteChallengeById(invalidId))
+                .thenReturn(Mono.error(new BadUUIDException("Invalid UUID")));
+
+        // Act & Assert
+        webTestClient.delete()
+                .uri("/challenges/{challengeId}", invalidId)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Invalid UUID");
+
+        // Verify
+        verify(challengeService).deleteChallengeById(invalidId);
+    }
+
 
 }
