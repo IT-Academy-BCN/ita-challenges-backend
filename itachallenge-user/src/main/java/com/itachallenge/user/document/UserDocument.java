@@ -6,7 +6,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.StringJoiner;
 import java.util.UUID;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -27,23 +29,16 @@ public class UserDocument {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("UserDocument{");
+        StringJoiner joiner = new StringJoiner(", ", "UserDocument{", "}");
 
         if (uuid != null) {
-            sb.append("uuid=").append(uuid);
+            joiner.add("uuid=" + uuid);
         }
         if (username != null) {
-            if (uuid != null) {
-                sb.append(", ");
-            }
-            sb.append("username='").append(username).append("'");
+            joiner.add("username='" + username + "'");
         }
 
-        sb.append("}");
-        return sb.toString();
+        return joiner.toString();
     }
-
-
-
 
 }
