@@ -90,8 +90,12 @@ class UserDocumentTest {
     }
 
     @Test
-    void equalsAndHashCodeWithSameObject() {
+    void equalsWithSameObject() {
         assertEquals(userDocument, userDocument);
+    }
+
+    @Test
+    void equalsWithSameHashCode() {
         assertEquals(userDocument.hashCode(), userDocument.hashCode());
     }
 
@@ -134,9 +138,59 @@ class UserDocumentTest {
 
     @Test
     void equalsWithNull() {
-        assertNotEquals(userDocument, null);
+        assertNotEquals(null, userDocument);
     }
 
+    @Test
+    void equalsConsistencyTest() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(uuid, username);
+
+        assertEquals(user1, user2);
+        assertEquals(user1, user2); // Repeated check for consistency
+    }
+
+    @Test
+    void hashCodeConsistencyTest() {
+        int initialHashCode = userDocument.hashCode();
+        assertEquals(initialHashCode, userDocument.hashCode());
+    }
+
+    @Test
+    void equalsTransitivityTest() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(uuid, username);
+        UserDocument user3 = new UserDocument(uuid, username);
+
+        assertEquals(user1, user2);
+        assertEquals(user2, user3);
+        assertEquals(user1, user3);
+    }
+
+    @Test
+    void equalsSymmetryTest() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(uuid, username);
+
+        assertEquals(user1, user2);
+        assertEquals(user2, user1);
+    }
+
+    @Test
+    void hashCodeEqualityForEqualObjects() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(uuid, username);
+
+        assertEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void hashCodeDifferenceForNonEqualObjects() {
+        UserDocument user1 = new UserDocument(UUID.randomUUID(), "user1");
+        UserDocument user2 = new UserDocument(UUID.randomUUID(), "user2");
+
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
 
 }
 
