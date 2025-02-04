@@ -242,8 +242,8 @@ public class ChallengeServiceImp implements IChallengeService {
                                 + catalanTitle + "\" already exists"));
                     }
                     return languageRepository.findFirstByLanguageName(codingLanguage)
-                            .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language \"" + codingLanguage
-                                    + "\" is not valid")))
+                            .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage
+                                    + " is not valid")))
                             .flatMap(existingLanguage -> {
                                 SolutionDocument solution = SolutionDocument.builder()
                                         .uuid(UUID.randomUUID())
