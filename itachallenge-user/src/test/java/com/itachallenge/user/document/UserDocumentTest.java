@@ -89,5 +89,54 @@ class UserDocumentTest {
         assertTrue(toString.contains(username), "ToString should contain username");
     }
 
+    @Test
+    void equalsAndHashCodeWithSameObject() {
+        assertEquals(userDocument, userDocument);
+        assertEquals(userDocument.hashCode(), userDocument.hashCode());
+    }
+
+    @Test
+    void equalsAndHashCodeWithDifferentUUIDs() {
+        UserDocument differentUser = new UserDocument(UUID.randomUUID(), username);
+
+        assertNotEquals(userDocument, differentUser);
+        assertNotEquals(userDocument.hashCode(), differentUser.hashCode());
+    }
+
+    @Test
+    void equalsAndHashCodeWithDifferentUsernames() {
+        UserDocument sameUuidDifferentUsername = new UserDocument(uuid, "differentUser");
+
+        assertNotEquals(userDocument, sameUuidDifferentUsername);
+        assertNotEquals(userDocument.hashCode(), sameUuidDifferentUsername.hashCode());
+    }
+
+    @Test
+    void equalsAndHashCodeWithNullFields() {
+        UserDocument userWithNullUuid = new UserDocument(null, username);
+        UserDocument userWithNullUsername = new UserDocument(uuid, null);
+        UserDocument completelyNullUser = new UserDocument(null, null);
+
+        assertNotEquals(userDocument, userWithNullUuid);
+        assertNotEquals(userDocument, userWithNullUsername);
+        assertNotEquals(userDocument, completelyNullUser);
+
+        assertNotEquals(userDocument.hashCode(), userWithNullUuid.hashCode());
+        assertNotEquals(userDocument.hashCode(), userWithNullUsername.hashCode());
+        assertNotEquals(userDocument.hashCode(), completelyNullUser.hashCode());
+    }
+
+    @Test
+    void equalsWithDifferentClass() {
+        Object otherObject = new Object();
+        assertNotEquals(userDocument, otherObject);
+    }
+
+    @Test
+    void equalsWithNull() {
+        assertNotEquals(userDocument, null);
+    }
+
+
 }
 
