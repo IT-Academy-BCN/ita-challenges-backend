@@ -192,5 +192,82 @@ class UserDocumentTest {
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
 
+    @Test
+    void equalsWithNullUuidAndUsername() {
+        UserDocument user1 = new UserDocument(null, null);
+        UserDocument user2 = new UserDocument(null, null);
+
+        assertEquals(user1, user2);
+        assertEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void equalsWithOneNullUuid() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(null, username);
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void equalsWithOneNullUsername() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(uuid, null);
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void toStringHandlesNullValues() {
+        UserDocument user = new UserDocument(null, null);
+        String toString = user.toString();
+
+        assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
+        assertFalse(toString.contains("uuid="), "ToString should not contain 'uuid=' when null");
+        assertFalse(toString.contains("username="), "ToString should not contain 'username=' when null");
+        assertEquals("UserDocument{}", toString, "ToString should return an empty object representation");
+    }
+
+
+    @Test
+    void builderHandlesNullValues() {
+        UserDocument user = UserDocument.builder()
+                .uuid(null)
+                .username(null)
+                .build();
+
+        assertNotNull(user);
+        assertNull(user.getUuid());
+        assertNull(user.getUsername());
+    }
+
+    @Test
+    void settersHandleNullValues() {
+        userDocument.setUuid(null);
+        userDocument.setUsername(null);
+
+        assertNull(userDocument.getUuid());
+        assertNull(userDocument.getUsername());
+    }
+
+    @Test
+    void hashCodeSameForEqualObjects() {
+        UserDocument user1 = new UserDocument(uuid, username);
+        UserDocument user2 = new UserDocument(uuid, username);
+
+        assertEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void hashCodeDifferentForDifferentObjects() {
+        UserDocument user1 = new UserDocument(UUID.randomUUID(), "UserA");
+        UserDocument user2 = new UserDocument(UUID.randomUUID(), "UserB");
+
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
+
+
 }
 

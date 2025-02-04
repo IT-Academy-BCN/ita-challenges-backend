@@ -25,5 +25,21 @@ public class UserDocument {
     @Indexed(unique = true)
     private String username;
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("UserDocument{");
+
+        if (uuid != null) {
+            sb.append("uuid=").append(uuid);
+        }
+        if (username != null) {
+            if (uuid != null) sb.append(", ");  // Add a comma only if UUID is present
+            sb.append("username='").append(username).append("'");
+        }
+
+        sb.append("}");
+        return sb.toString();
+    }
+
 
 }
