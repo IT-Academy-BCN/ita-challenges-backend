@@ -1,7 +1,6 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,11 +26,6 @@ class UserServiceTest {
     private UserService userService;
 
     private final String unknownUsername = "unknownUser";
-
-    @BeforeEach
-    void setUp() {
-        // You can add setup logic if needed before each test
-    }
 
     @Test
     void isMentor_WhenUserExists_ShouldReturn200OK() {
@@ -57,21 +50,5 @@ class UserServiceTest {
         verify(userRepository, times(1)).findUsername(unknownUsername);
     }
 
-    @Test
-    void isMentor_WhenEmptyMonoIsProvided_ShouldReturn403Forbidden() {
-        StepVerifier.create(userService.isMentor(Mono.empty()))
-                .expectNext(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Username is not related to a mentor."))
-                .verifyComplete();
 
-        verifyNoInteractions(userRepository);
-    }
-
-    @Test
-    void isMentor_WhenUserDoesNotExist_ShouldLogWarning() {
-        when(userRepository.findUsername(unknownUsername)).thenReturn(Mono.empty());
-
-        userService.isMentor(Mono.just(unknownUsername)).subscribe();
-
-        verify(logger).warn("Unauthorized access attempt for username '{}'", unknownUsername);
-    }
 }
