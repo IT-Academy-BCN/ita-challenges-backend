@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+
 @RestController
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/user")
@@ -31,5 +32,6 @@ public class UserController {
                         }))
         );
     }
+
 
 }

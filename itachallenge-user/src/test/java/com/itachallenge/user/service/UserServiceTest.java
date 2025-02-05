@@ -22,21 +22,25 @@ class UserServiceTest {
 
     @Test
     void isMentor_ShouldReturnUsername_WhenUserExists() {
-        String username = "testUser";
+        String username = "mentorUser";
         when(userRepository.findUsername(username)).thenReturn(Mono.just(username));
 
         StepVerifier.create(userService.isMentor(Mono.just(username)))
                 .expectNext(username)
                 .verifyComplete();
+
+        verify(userRepository, times(1)).findUsername(username);
     }
 
     @Test
     void isMentor_ShouldReturnEmpty_WhenUserDoesNotExist() {
-        String username = "nonExistentUser";
+        String username = "nonMentorUser";
         when(userRepository.findUsername(username)).thenReturn(Mono.empty());
 
         StepVerifier.create(userService.isMentor(Mono.just(username)))
                 .verifyComplete();
+
+        verify(userRepository, times(1)).findUsername(username);
     }
 
     @Test
