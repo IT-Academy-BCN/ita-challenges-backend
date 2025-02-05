@@ -21,7 +21,7 @@ public class UserController {
 
     @Operation(summary = "Validate existing mentor", description = "Endpoint for validating a user as an existing mentor in the database. ")
     @GetMapping("/validateMentor")
-    public Mono<ResponseEntity<String>> validateMentor(@RequestParam Mono<String> githubUsername) {
+    public Mono<ResponseEntity<String>> validateMentor(@RequestParam(required=true) Mono<String> githubUsername) {
         return githubUsername.flatMap(username ->
                 userService.isMentor(Mono.just(username))
                         .map(existingUsername -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(existingUsername))
