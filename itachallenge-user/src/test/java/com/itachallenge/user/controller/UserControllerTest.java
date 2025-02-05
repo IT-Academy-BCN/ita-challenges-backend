@@ -23,14 +23,14 @@ class UserControllerTest {
     private UserController userController;
 
     @Test
-    void validateMentor_WhenUserIsMentor_ShouldReturnForbiddenWithUsername() {
+    void validateMentor_WhenUserIsMentor_ShouldReturnOkWithUsername() {
         String githubUsername = "mentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.just(githubUsername));
 
         Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
 
         StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN && res.getBody().equals(githubUsername))
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.OK && res.getBody().equals(githubUsername))
                 .verifyComplete();
     }
 

@@ -25,7 +25,7 @@ public class UserController {
     public Mono<ResponseEntity<String>> validateMentor(@RequestParam(required=true) Mono<String> githubUsername) {
         return githubUsername.flatMap(username ->
                 userService.isMentor(Mono.just(username))
-                        .map(existingUsername -> ResponseEntity.status(HttpStatus.FORBIDDEN).body(existingUsername))
+                        .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
                         .switchIfEmpty(Mono.defer(() -> {
                             log.warn("Unauthorized access attempt for username '{}'", username);
                             return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
