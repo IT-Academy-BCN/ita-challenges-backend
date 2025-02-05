@@ -73,3 +73,4 @@
 * Sonia Vera - https://github.com/Dxmrt
 * David Cuadrado - https://github.com/davidcuadrado
 * Alba Márquez - https://github.com/amarinite
+* Arnau Alvarez Bernal - https://github.com/arnaufata
