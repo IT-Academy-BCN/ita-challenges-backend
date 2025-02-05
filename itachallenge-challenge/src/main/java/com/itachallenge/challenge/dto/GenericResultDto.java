@@ -16,6 +16,14 @@ public class GenericResultDto<T> {
 
     public GenericResultDto() {}
 
+    public GenericResultDto(int offset, int limit, int count, T[] results) {
+        this.offset = offset;
+        this.limit = limit;
+        this.count = count;
+        this.results = results;
+    }
+
+
     public void setInfo(int offset, int limit, int count, T[] results) {
         this.offset = offset;
         this.limit = limit;

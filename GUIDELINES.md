@@ -13,7 +13,8 @@
    2.3 [Daily Procedure](#23-daily-procedure)\
    2.4 [Work with cards Procedure](#24-work-with-cards-procedure)\
    2.5 [Points to consider when doing a PR](#25-points-to-consider-when-doing-a-pr)\
-   2.6 [Scrum metodology](#26-scrum-metodology)
+   2.6 [Working with git](#26-working-with-git)\
+   2.7 [Scrum metodology](#27-scrum-metodology)
 
 3. [**URL NORMALIZATION**](#3-url-normalization)\
    3.1 [Conventions](#31-conventions)
@@ -34,33 +35,31 @@
 5. [**LIBRARIES USED**](#5-libraries-used)\
    5.1 [Main Plugins](#51-main-plugins)\
    5.2 [Implementation area](#52-implementation-area)\
-   5.3 [Testimplementation area](#53-testimplementation-area)
+   5.3 [Test implementation area](#53-testimplementation-area)
 
 6. [**REQUIRED PROGRAMS**](#6-required-programs)\
-   6.1 [Requierd programs](#61-required-programs)
+   6.1 [Required programs](#61-required-programs)
 
 7. [**RECOMMENDED PROGRAMS**](#7-recommended-programs)\
    7.1 [Recommended programs](#71-recommended-programs)
 
---
+8. [**TESTING**](#8-testing)
+
+<hr/>
 
 # 1. PROJECT LINKS
 ## 1.1 Project links
-- GITHUB [link](https://github.com/IT-Academy-BCN/ita-challenges-backend)\
-<img src="img/GitHub.jpg" alt="isolated" width="400"/>
-- Backend Sprint Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)\
-<img src="img/Spring_BackLog.jpg" alt="isolated" width="400"/>
-- Product Backlog [link](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)\
-<img src="img/Product BackLog.jpg" alt="isolated" width="400"/>
-- Figma [link](https://www.figma.com/file/ScWpDKxEB3wEGbztXMSJO3/Projectes-IT-Academy?type=design&node-id=559-2230&mode=design)\
-<img src="img/Figma.jpg" alt="Figma image" width="400"/>
+- [GitHub](https://github.com/IT-Academy-BCN/ita-challenges-backend)
+- [Backend Sprint Backlog](https://github.com/orgs/IT-Academy-BCN/projects/15/views/1)
+- [Product Backlog](https://github.com/orgs/IT-Academy-BCN/projects/13/views/1?visibleFields=%5B%22Title%22%2C%22Assignees%22%2C%22Status%22%2C%22Labels%22%5D)
+- [Figma](https://www.figma.com/design/DynJHHUlOiqx3F5h9dtvAW/)
 
 <hr/>
 
 # 2. WORK PROCEDURES
 
 ## 2.1 First things to do in the project
-### 2.1.1. Add your name and GitHub to the  contributors.md file
+### 2.1.1. Add your name and GitHub User to contributors.md file
 
 1. Clone the ita-challenges-backend repository from GitHub to your local system:
 
@@ -91,7 +90,14 @@
 
 <hr/>
 
-### 2.1.2. Import data into MongoDB (Example for micro itachallenge-challenge data)
+### 2.1.2. Configuring MongoDB access
+
+You can work with MongoDB in two ways: accessing to a database located at localhost (your machine) or accessing to remote database created with developing purposes.
+We recommend to use the remote develop database to avoid problems with the data.
+To access, you should use the credentials provided at application.yml of each microservice. 
+Ussually, those files contain url's you need to access to remote MongoDB.
+
+However, if you want to work with your local MongoDB, you can follow the following steps:
 
 1. Make sure you have the MongoDB Tools installed. If you don't already have them, go the "Required programs" section and folow the instructions provided to download them to your operting system.
 
@@ -136,6 +142,8 @@
 
 10. Start MongoDB Compass, click on "Reload Data" and you should see the database correctly imported.
 
+11. Please, review README.md documents inside each microservice, they may contain additional instructions.
+
 <hr/>
 
 ## 2.2 Git configurations
@@ -143,8 +151,7 @@
 Necessary Git configurations to prevent problems
 
 ### 2.2.1 Git ignore
-1. Copy file ".gitignore" from root project\
-   <img src="img/GitIgnore_doc.jpg" alt="Gitignore_doc.jpg" width="300"/>
+1. Copy file ".gitignore" from root project
 2. Paste it in the PC directory (outside of project folder)
 3. In Git Bash...
 4. Run the command: 'git config --global core.excludesfile C:\\temp\\.gitignore'\
@@ -153,17 +160,20 @@ Where...\
 Note! This configuration will not only serve for the current project, but also for all the projects you do with GIT.
 
 ### 2.2.2 Autocrlf
-If you have a problem with a PR that modify a lot of files, >100, you need do next...
-1. In Git Bash...
-2. Run the command: 'git config --global core.autocrlf true'
+
+**Before all**, please check https://docs.github.com/es/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+Keep in mind that default encoding in project is UTF-8. Ensure that your text editor is set to uses that encoding.
+
 
 <hr/>
 
 ## 2.3 Daily Procedure
 1. Connect to Teams at 9h15
 2. Make pull the "develop" branch
-3. Merge "develop" with the branc you are working on
-4. Coffee time at the 10h15 approx.
+3. Merge "develop" with the branch you are working on
+4. If you have some PR started, please update the branch with develop branch
+5. Coffee time at the 10h15 approx.
 
 IMPORTANT: It's expected that in the project we will be online with the camera on from 9h15 to 13h15, to work as a team (execpt for circumstance that justify it).
 
@@ -173,7 +183,7 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 ## 2.4 Work with cards Procedure
 ### How to assign a card
 1. Sign in, on the your Github account.
-2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself.
+2. On the "Spring Backlog" dashboard, locate the card you want to assign to yourself. Tasks are classified by their complexity by levels (1, 2, 3) from less to more complex.
 2. Click on the card to open it and see more details.
 3. On the right hand side, in the "Assigness" field, if you click on "Add assigness" a drop-down list opens with all the participants of the project and you can select yourself to be assigned.
 4. Once you have been assigned the card, you user profile will be displayed as the person responsible for the card.
@@ -188,19 +198,23 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 1. Open your terminal or command line and navigate to your project's directory. Make sure you are in the "develop" branch.
 
 
-2. Create a new branch using the format "feature#cardnumber". This refers to the Spring Backlog card number. For example:
+2. Create a new branch using the format "feature/cardnumber-shortDescription". 
+   This refers to the Spring Backlog card number and a brief description of what is being implemented. 
+   For example:
 
-         git checkout -b feature#123
+         git checkout -b feature/123-AddUserAuthentication
 3. Now you can start making changes to your branch.
 
 
-4. Once you have made the necessary modifications push your branch to the remote repository. If we were in feature#123 we should do:   
+4. Once you have made the necessary modifications push your branch to the remote repository. 
+   If we were in feature/123-AddUserAuthentication we should do:   
 
-         git push origin feature#123
+         git push origin feature/123-AddUserAuthentication
 
-5. Finally, go to GitHub where your repository is located and create a pull request from your "feature#123" branch to the "develop" branch.
+5. Finally, go to GitHub where your repository is located and create a pull request from your "feature/123-AddUserAuthentication" branch to the "develop" branch.
 
 <hr/>
+
 
 ## 2.5 Points to consider when doing a PR
 1. On the pull request creation page, select the base branch and the compared branch:
@@ -213,14 +227,27 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 6. In case you need to review and fix some problems, update your local branch with the changes and push back to the corresponding remote branch.
 7. The pull request will be automatically updated with the new changes made to your branch.
 
+**IMPORTANT NOTE: A pull request is a request to include your code into the project. Don't wait for your PR to be accepted to start working on another card.**
 
 <hr/>
 
-## 2.6 Scrum metodology
+## 2.6 Working with git 
+
+The workflow we follow is similar to the Gitflow Workflow.
+To work at the project, you should know at least following git commands:
+- git clone
+- git merge
+- git push
+- git pull
+- git branch
+- git checkout
+
+A good tutorial is located at https://www.atlassian.com/git, and many other resources are available on https://docs.github.com/en/get-started/using-github/github-flow
+
+<hr/>
+
+## 2.7 Scrum metodology
 https://scrumguides.org/
-
-
-<img src="img/VER5-scrum-framework_2020.jpg" alt="isolated" width="400"/>
 
 <hr/>
 
@@ -270,7 +297,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - All in Lowercase
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - com.itachallenge.user
     - exception
     - helper
@@ -279,15 +306,15 @@ Here are example of how URL's should be strucutrued according to esablished conv
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.1 package names](https://google.github.io/styleguide/javaguide.html#s5.2.1-package-names)
 
-
 <hr/>
+
 
 ## 4.2 Class names
 #### RULES
     - UpperCamelCase
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - UserController
     - PropertiesConfig
 
@@ -301,7 +328,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - End with 'Test'
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - ChallengeControllerTest
     - ResourceHelperTest
 
@@ -316,13 +343,12 @@ Here are example of how URL's should be strucutrued according to esablished conv
 
 <hr/>
 
-
 ## 4.3 Method names
 #### RULES
     - lowerCamelCase 
     - Only letters & digits
 
-#### EXEMPLE
+#### EXAMPLE
     - isValidUUID
     - initReactorHttpClient
 
@@ -336,14 +362,13 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Only letters & digits
     - Ended with '_test'
 
-#### EXEMPLE
+#### EXAMPLE
     - getChallengeId_test
     - findAll_test
 
 #### LINKS
 [Oracle Code Conventions for java: 9 - Naming Conventions](https://www.oracle.com/java/technologies/javase/codeconventions-namingconventions.html)\
 [Google Java Style Guide: 5.2.3 method names](https://google.github.io/styleguide/javaguide.html#s5.2.3-method-names)
-
 
 <hr/>
 
@@ -354,7 +379,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Only letters & digits
     - Word separete with a single underscore '_'
 
-#### EXEMPLE
+#### EXAMPLE
     - static final int BEST_YEAR = 1977;
     - static final String BEST_MONTH = "February";
 
@@ -364,14 +389,13 @@ Here are example of how URL's should be strucutrued according to esablished conv
 
 <hr/>
 
-
 ## 4.5 Local variable names
 #### RULES
     - lowerCamelCase
     - Start with letter
     - Variable names should be short yet meaningful  
 
-#### EXEMPLE
+#### EXAMPLE
     - int  = 1977;
     - static final String BEST_MONTH = "February";
 
@@ -384,7 +408,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - Only use for temporary "throwaway" variables
     - lower case
 
-#### EXEMPLE
+#### EXAMPLE
     - int   => i, j, k, m and n
     - char  => c, d and e
 
@@ -399,7 +423,7 @@ Here are example of how URL's should be strucutrued according to esablished conv
     - A single capital letter, optionally followed by a single numeral
     - A name in the form used for classes
 
-#### EXEMPLE
+#### EXAMPLE
     - E, T, X, T2
     - RequestT, ChallengeT
 
@@ -412,12 +436,12 @@ Here are example of how URL's should be strucutrued according to esablished conv
 #### RULES
     - only letters & digits
     - UpperCamelCase
-        - Every first letter of every word are Upper letter
+        - Every first letter of every word are uppercase letters.
     - lowerCamelCase
-        - The first letter of each word is in lowercase, except for the first word which starts 
+        - The first letter of each word is in uppercase, except for the first word which starts 
           with a lowercase letter 
 
-#### EXEMPLE
+#### EXAMPLE
     - UpperCamelCase
         - UserController
         - ChallengeService
@@ -539,13 +563,13 @@ The following programs are required to work on the project:
   
 - **Postman**: Postman is a tool that will allow you to easily test and document APIs. It is especially useful for sending HTTP requests and verifying the responses. You can download [Postman](https://www.postman.com/downloads/) from the official website.
 
-- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
-
-- **Docker**: Docker es una plataforma que permite empaquetar y distribuir aplicaciones en contenedores. Proporciona un entorno aislado para ejecutar la aplicación y sus dependencias. Puedes descargar [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
+- **Docker**: Docker is a platform that allows packaging and distributing applications in containers. It provides an isolated environment to run the application and its dependencies. You can download [Docker](https://www.docker.com/products/docker-desktop/) from the official website.
 
 - **Git**: Git is a distributed version control system widely used in software development. It allows you to collaborate with other developers and keep a history of changes to source code. You can download  [Git](https://git-scm.com/downloads) from the official website.
 
-- **Java SE Development Kit 17.0.7**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 17.0.7 of the JDK which is the one used in this project. You can download [JDK 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) from the official website.
+- **JDK Development Kit 21.0.3**: Java SE Development Kit (JDK) is a set of tools needed to develop Java applications. Make sure you have installed version 21.0.3 of the JDK which is the one used in this project. You can download [JDK 21](https://www.oracle.com/java/technologies/downloads/#java21) from the official website.
+
+- **Gradle 8.11**
 
 It is important to make sure you have all these tools installed and configured correctly before you start working on the project.
 
@@ -553,7 +577,7 @@ It is important to make sure you have all these tools installed and configured c
 
 # 7 RECOMMENDED PROGRAMS
 
-The following programs are recommended to failitate the work on the project::
+The following programs are recommended to facilitate the work on the project:
 
 ## 7.1 Recommended programs
 
@@ -561,8 +585,14 @@ The following programs are recommended to failitate the work on the project::
 
 - **Mongo Shell**: Mongo Shell is a command line interface for MongoDB. It provides an interactive way to interact with the database, execute queries and manage collections. You can download [MongoDB Shell](https://www.mongodb.com/try/download/shell) from the official website.
 
+- **Consul** is a service discovery and configuration tool. It is used to manage communication between different application components. You can download [Consul](https://developer.hashicorp.com/consul/downloads) from the official website.
+
 - **IntelliJ IDEA**: IntelliJ IDEA is an integrated development environment (IDE) widely used in the development of Java applications and other programming languages. You can download [IntelliJ IDEA](https://www.jetbrains.com/es-es/idea/download/?section=windows) from the official website.
 
 - **Plugin SonarLint para IntelliJ IDEA**: SonarLint is a static code analysis tool that will help you identify and correct quality problems in your code. It is a useful aid to detect Code Smell. You can get more information about [SonarLint](https://plugins.jetbrains.com/plugin/7973-sonarlint) from the Jetbrains offical website.
 
 Remember that these programs or plugins are recommended, but not mandatory. Using them can improve your productivity and code quality, but you can opt for other alternatives according to your preferences and needs.
+
+# 8 TESTING
+
+Is available a guide about testing at https://martinfowler.com/articles/practical-test-pyramid.html. Please, check it before start testing.

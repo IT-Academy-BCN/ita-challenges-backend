@@ -8,10 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
 import java.util.UUID;
 @AllArgsConstructor
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
-@Getter
 @Document(collection="solutions")
 public class UserSolutionDocument {
 
@@ -22,21 +21,5 @@ public class UserSolutionDocument {
     @Field("user_id")
     private UUID userId;
 
-    @Field("challenge_id")
-    private UUID challengeId;
 
-    @Field("language_id")
-    private UUID languageId;
-
-    @Field("bookmarked")
-    private boolean bookmarked;
-
-    @Field("status")
-    private String status;
-
-    @Field("score")
-    private int score;
-
-     @Field("solution")
-     private List<SolutionDocument> solutionDocument;
 }

@@ -13,12 +13,11 @@ jar {
     }
 }
 jacoco{
-    toolVersion = '0.8.8'
+    toolVersion = '0.8.11'
     reportsDirectory = layout.buildDirectory.dir('jacocoXml')
 }
 
 group = 'ita.challenges'
-version = '1.1.0-RELEASE'
 
 repositories {
     mavenCentral()
@@ -26,10 +25,10 @@ repositories {
 
 dependencies {
 
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
-    testCompileOnly 'org.projectlombok:lombok:1.18.26'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
@@ -41,10 +40,21 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
     implementation 'org.springframework:spring-context:5.3.13'
     implementation 'org.modelmapper:modelmapper:3.1.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.2'
+    implementation 'org.zeromq:jeromq:0.5.4'
 
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'commons-validator:commons-validator:1.7'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'org.slf4j:slf4j-simple:1.7.32'
+
+    implementation "io.mongock:mongock:5.0.32"
+    implementation "io.mongock:mongock-springboot-v3:5.2.4"
+    implementation "io.mongock:mongodb-reactive-driver:5.2.4"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
     testImplementation 'org.springframework:spring-test:5.3.13'
@@ -57,14 +67,17 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
-    implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
-    implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '4.0.2'
+    testImplementation group: 'io.github.hakky54', name: 'logcaptor', version: '2.9.3'
+
+
 
 
 }
 
 test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
     jvmArgs "-Xshare:off"
     useJUnitPlatform()
     finalizedBy jacocoTestReport
@@ -94,6 +107,6 @@ jacocoTestCoverageVerification {
 
 sonar {
     properties {
-        property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
+        //property "sonar.jacoco.reportPaths", jacoco.reportsDirectory
     }
 }

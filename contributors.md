@@ -30,6 +30,47 @@
 * Natalia Fara - https://github.com/nfaraDev
 * Kirill Dolgopolov - https://github.com/KirillDolgopolov
 * Pau Franco Toda - https://github.com/Parapau
-* 
-* 
+* Arnau Burguera Calles - https://github.com/ArnauBurguera
+* Fethi Abdellaoui - https://github.com/pounct
+* Gabriela Bustamante - https://github.com/GabyB73
+* Ana García - https://github.com/anagarcialainez
+* Alicia Gómez - https://github.com/Alicia-gy
+* Luisa Sans - https://github.com/Lsans80
+* Pedro Lopez - https://github.com/plopezgit
+* Manel Solé Reina - https://github.com/Msoler92
+* Ernesto Arcos - https://github.com/ArcosErnesto
+* Christian Amor - https://github.com/christianamor3
+* Marc Santasusana Berch - https://github.com/MarcSantasusana
+* Gerard Benages - https://github.com/OZu16
+* Jose Antonio Rodríguez - https://github.com/joseRodriguezCubero
+* Marc Sánchez Moreno - https://github.com/marcsanchez95
+* Ainoha Barcia - https://github.com/AinohaBarcia
+* Oriol Riera Lizcano - https://github.com/Uriera4
+* Nuria Fernández Torres - https://github.com/Nuria-Fernandez
+* Enrique Arranz Puig - https://github.com/EnriqueArranz
+* Ezequiel Salas Deramo - https://github.com/ecs90
+* German Medina Calle - https://github.com/audiochemist
+* Montserrat Masó - https://github.com/m-maso
+* Andrés Allegue Zabala - https://github.com/Alalilacias
+* Daniel Diaz Diaz - https://github.com/invictuzzzzz
+* Marcos Leandro Pagliaruzza - https://github.com/MarLea11
+* Marine Achinian - https://github.com/MarineAvramova
+* Joan Caballero Portolés - https://github.com/JoanCaballero
+* Andreia Sofia Sousa Ribeiro - https://github.com/Asousa12
+* I. Michel - https://github.com/i-michel
+* Jorge Monzó Pérez - https://github.com/tommer1375
+* Augustin Nae - https://github.com/auguNa
+* Nuria Grau Horta - https://github.com/nuriagrau
+* Nicusor Ceban - https://github.com/nikulet
+* María Eugenia Torres - https://github.com/Eugenia72
+* Carlos Galan - https://github.com/camilo-arthuro
+* David Urpina -https://github.com/eqqbq
+* Hector Pozo -https://github.com/HectorPozoGuerrero
+* Raquel Barrio - https://github.com/Gatchan1
+* Miguel Lozano - https://github.com/Mettanoia
+* Ignasi Moya - https://github.com/imoyaf
+* David Carcelen - https://github.com/DavidCarcelen
+* Sonia Vera - https://github.com/Dxmrt
+* David Cuadrado - https://github.com/davidcuadrado
+* Alba Márquez - https://github.com/amarinite
 * Arnau Alvarez Bernal - https://github.com/arnaufata
