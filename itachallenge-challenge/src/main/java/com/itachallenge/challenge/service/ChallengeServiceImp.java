@@ -231,9 +231,9 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<ChallengeDto> addChallenge(ChallengeCreateFormDto challengeCreateFormDto) {
-        String catalanTitle = challengeCreateFormDto.getChallengeTitle();
-        String codingLanguage = challengeCreateFormDto.getLanguage();
+    public Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto) {
+        String catalanTitle = challengeCreateDto.getChallengeTitle();
+        String codingLanguage = challengeCreateDto.getLanguage();
 
         return challengeRepository.existsByChallengeTitleCa(catalanTitle)
                 .flatMap(exists -> {
@@ -247,12 +247,12 @@ public class ChallengeServiceImp implements IChallengeService {
                             .flatMap(existingLanguage -> {
                                 SolutionDocument solution = SolutionDocument.builder()
                                         .uuid(UUID.randomUUID())
-                                        .solutionText(challengeCreateFormDto.getSolution())
+                                        .solutionText(challengeCreateDto.getSolution())
                                         .idLanguage(existingLanguage.getIdLanguage())
                                         .build();
                                 return solutionRepository.save(solution)
                                         .flatMap(savedSolution -> {
-                                            ChallengeDocument challenge = buildChallengeDocument(challengeCreateFormDto,
+                                            ChallengeDocument challenge = buildChallengeDocument(challengeCreateDto,
                                                     existingLanguage, savedSolution.getUuid());
                                             return challengeRepository.save(challenge)
                                                     .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
@@ -262,7 +262,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateFormDto dto, LanguageDocument language, UUID solutionId) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId) {
         Map<Locale, String> catalanTitle = Map.of(Locale.forLanguageTag("CA"), dto.getChallengeTitle());
         Map<Locale, String> catalanDescription = Map.of(Locale.forLanguageTag("CA"), dto.getDescription());
 

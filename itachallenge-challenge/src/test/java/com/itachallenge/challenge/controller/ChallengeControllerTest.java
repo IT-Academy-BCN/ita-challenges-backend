@@ -6,7 +6,6 @@ import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.exception.ChallengeAlreadyExistsException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -356,7 +354,7 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_validRequest() {
-        ChallengeCreateFormDto formData = new ChallengeCreateFormDto("títol", "descripció",
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
                 DifficultyLevel.valueOf("EASY"), "Java", "solució");
 
         ChallengeDto createdChallenge = new ChallengeDto();
@@ -371,12 +369,12 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class);
 
-        verify(challengeService).addChallenge(any(ChallengeCreateFormDto.class));
+        verify(challengeService).addChallenge(any(ChallengeCreateDto.class));
     }
 
     @Test
     void addChallenge_test_emptyField_statusBadRequest() {
-        ChallengeCreateFormDto formData = new ChallengeCreateFormDto("", "descripció",
+        ChallengeCreateDto formData = new ChallengeCreateDto("", "descripció",
                 DifficultyLevel.valueOf("EASY"), "Java", "solució");
 
         webTestClient.post()
@@ -389,7 +387,7 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_repeatedTitle_statusBadRequest() {
-        ChallengeCreateFormDto formData = new ChallengeCreateFormDto("Already-existing title", "descripció",
+        ChallengeCreateDto formData = new ChallengeCreateDto("Already-existing title", "descripció",
                 DifficultyLevel.valueOf("EASY"), "Java", "solució");
 
         when(challengeService.addChallenge(any()))
@@ -405,7 +403,7 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
-        ChallengeCreateFormDto formData = new ChallengeCreateFormDto("títol", "descripció",
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
                 DifficultyLevel.valueOf("EASY"), "Invalid language", "solució");
 
         when(challengeService.addChallenge(any()))

@@ -47,7 +47,7 @@ class ChallengeServiceImpTest {
 
     String titleCA = "Títol";
     String languageName = "language name";
-    private ChallengeCreateFormDto formData;
+    private ChallengeCreateDto formData;
     private ChallengeDocument challengeDocument;
     private ChallengeDto challengeDto;
     private LanguageDocument languageDocument;
@@ -61,7 +61,7 @@ class ChallengeServiceImpTest {
         String level = "EASY";
         String solutionBody = "Solution Text";
 
-        formData = new ChallengeCreateFormDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody);
+        formData = new ChallengeCreateDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody);
 
         UUID challengeRandomId = UUID.randomUUID();
         UUID exampleRandomId = UUID.randomUUID();

@@ -8,7 +8,7 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class ChallengeCreateFormDto {
+public class ChallengeCreateDto {
 
     @NotEmpty(message = "cannot be empty")
     private String challengeTitle;

@@ -231,13 +231,13 @@ public class ChallengeController {
             summary = "Post a challenge providing the necessary data.",
             description = "Sending the title, description, difficulty level, language and solution, a new challenge document will be inserted in the database.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeCreateFormDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeCreateDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateFormDto createFormDto) {
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
          return challengeService.addChallenge(createFormDto)
-                 .map(dto -> ResponseEntity.ok().body(dto));
+                 .map(ResponseEntity::ok);
     }
 
     @GetMapping("/version")
