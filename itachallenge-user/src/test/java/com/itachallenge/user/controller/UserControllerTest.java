@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.Objects;
+
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
@@ -30,30 +32,22 @@ class UserControllerTest {
         Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
 
         StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.OK && res.getBody().equals(githubUsername))
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.OK && Objects.equals(res.getBody(), githubUsername))
                 .verifyComplete();
     }
 
     @Test
-    void validateMentor_WhenUserIsNotMentor_ShouldReturnForbiddenWithoutBody() {
+    void validateMentor_WhenUserIsNotMentor_ShouldReturnForbiddenWithMessage() {
         String githubUsername = "nonMentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.empty());
 
         Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
 
         StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN && res.getBody() == null)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN && "Unauthorized username for this request. ".equals(res.getBody()))
                 .verifyComplete();
     }
 
-    @Test
-    void validateMentor_WhenInputIsNull_ShouldReturnBadRequest() {
-        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(null));
-
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
-                .verifyComplete();
-    }
 
     @Test
     void validateMentor_WhenUsernameIsEmpty_ShouldReturnBadRequest() {
@@ -65,15 +59,37 @@ class UserControllerTest {
     }
 
     @Test
-    void validateMentor_WhenServiceFails_ShouldReturnInternalServerError() {
-        String githubUsername = "testUser";
-        when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Unexpected Error")));
+    void validateMentor_WhenUsernameIsNull_ShouldReturnBadRequest() {
+        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.empty());
+
+        StepVerifier.create(response)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
+                .verifyComplete();
+    }
+
+    @Test
+    void validateMentor_WhenUserServiceThrowsError_ShouldReturnBadRequest() {
+        String githubUsername = "mentorUser";
+        when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Database error")));
 
         Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
 
         StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
                 .verifyComplete();
     }
+
+    @Test
+    void validateMentor_WhenUserServiceThrowsErrorForNonMentor_ShouldReturnBadRequest() {
+        String githubUsername = "nonMentorUser";
+        when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Service error")));
+
+        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
+
+        StepVerifier.create(response)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
+                .verifyComplete();
+    }
+
 
 }

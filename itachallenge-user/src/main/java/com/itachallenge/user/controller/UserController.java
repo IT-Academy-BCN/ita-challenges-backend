@@ -22,15 +22,21 @@ public class UserController {
 
     @Operation(summary = "Validate existing mentor", description = "Endpoint for validating a user as an existing mentor in the database. ")
     @GetMapping("/validateMentor")
-    public Mono<ResponseEntity<String>> validateMentor(@RequestParam(required=true) Mono<String> githubUsername) {
-        return githubUsername.flatMap(username ->
-                userService.isMentor(Mono.just(username))
-                        .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
-                        .switchIfEmpty(Mono.defer(() -> {
-                            log.warn("Unauthorized access attempt for username '{}'", username);
-                            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
-                        }))
-        );
+    public Mono<ResponseEntity<String>> validateMentor(@RequestParam Mono<String> githubUsername) {
+        return githubUsername
+                .switchIfEmpty(Mono.just(""))
+                .flatMap(username -> {
+                    if (username.isBlank()) {
+                        log.warn("Validation failed: Username cannot be empty.");
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username cannot be empty. "));
+                    }
+                    return userService.isMentor(Mono.just(username))
+                            .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
+                            .switchIfEmpty(Mono.defer(() -> {
+                                log.warn("Unauthorized access attempt for username '{}'", username);
+                                return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized username for this request. "));
+                            }));
+                }).onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request, please try again. "));
     }
 
 

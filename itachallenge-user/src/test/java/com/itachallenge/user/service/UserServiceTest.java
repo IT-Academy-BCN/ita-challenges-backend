@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.itachallenge.user.repository.UserRepository;
@@ -43,10 +44,13 @@ class UserServiceTest {
         verify(userRepository, times(1)).findUsername(username);
     }
 
+
     @Test
-    void isMentor_ShouldHandleNullInput() {
+    void isMentor_ShouldReturnEmpty_WhenInputIsEmptyMono() {
         StepVerifier.create(userService.isMentor(Mono.empty()))
                 .verifyComplete();
     }
+
+
 }
 
