@@ -46,4 +46,34 @@ class UserControllerTest {
                 .verifyComplete();
     }
 
+    @Test
+    void validateMentor_WhenInputIsNull_ShouldReturnBadRequest() {
+        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(null));
+
+        StepVerifier.create(response)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
+                .verifyComplete();
+    }
+
+    @Test
+    void validateMentor_WhenUsernameIsEmpty_ShouldReturnBadRequest() {
+        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(""));
+
+        StepVerifier.create(response)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
+                .verifyComplete();
+    }
+
+    @Test
+    void validateMentor_WhenServiceFails_ShouldReturnInternalServerError() {
+        String githubUsername = "testUser";
+        when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Unexpected Error")));
+
+        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
+
+        StepVerifier.create(response)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR)
+                .verifyComplete();
+    }
+
 }
