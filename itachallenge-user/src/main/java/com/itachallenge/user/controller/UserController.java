@@ -18,15 +18,11 @@ import reactor.core.publisher.Mono;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
+    private UserService userService;
 
     @Operation(summary = "Validate existing mentor", description = "Endpoint for validating a user as an existing mentor in the database. ")
-    @GetMapping("/validateMentor")
+    @GetMapping("/validate-mentor")
     public Mono<ResponseEntity<String>> validateMentor(@RequestParam @ValidGithubUsername Mono<String> githubUsername) {
         return githubUsername
                 .flatMap(username -> userService.isMentor(Mono.just(username))

@@ -1,5 +1,6 @@
 package com.itachallenge.user.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 import com.itachallenge.user.service.UserService;
@@ -23,6 +24,7 @@ class UserControllerTest {
 
     @InjectMocks
     private UserController userController;
+
 
     @Test
     void validateMentor_WhenUserIsMentor_ShouldReturnOkWithUsername() {
