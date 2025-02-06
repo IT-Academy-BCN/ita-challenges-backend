@@ -98,6 +98,8 @@ class ChallengeRepositoryTest {
                 (uuid_3, titleMap3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
+
+        challengeRepository.count().block();
     }
 
     @DisplayName("Repository not null Test")
@@ -342,6 +344,22 @@ class ChallengeRepositoryTest {
         // Assert
         assert challengeDocumentSaved != null;
         Assertions.assertEquals(3, challengeDocumentSaved.getSolutions().size());
+    }
+
+    @DisplayName("Exists challenge title Test, should return true")
+    @Test
+    void findByChallengeTitleCa_matchingTitle_test() {
+        Boolean exists = challengeRepository.existsByChallengeTitleCa("loops").block(); // is case insensitive
+        Assertions.assertNotNull(exists);
+        Assertions.assertTrue(exists);
+    }
+
+    @DisplayName("Exists challenge title Test, should return false")
+    @Test
+    void findByChallengeTitleCa_nonMatchingTitle_test() {
+        Boolean exists = challengeRepository.existsByChallengeTitleCa("non existing title").block(); // is case insensitive
+        Assertions.assertNotNull(exists);
+        Assertions.assertFalse(exists);
     }
 
 }
