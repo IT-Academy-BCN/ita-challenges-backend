@@ -22,6 +22,8 @@ import java.util.Map;
 public class AuthController {
 
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
+    private static final String KEY_IS_VALID = "isValid";
+    private static final String KEY_USERNAME = "username";
 
     @Autowired
     public IAuthService authService;
@@ -40,6 +42,35 @@ public class AuthController {
         return "Hello from ITA ChallengeAuth!!!";
     }
 
+
+    @PostMapping("/github/authenticate")
+    public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
+        String code = codeRequest.get("code");
+
+        return authService.exchangeCodeForToken(code)
+                .flatMap(accessToken -> authService.validateTokenWithGithub(accessToken))
+                .map(result -> {
+                    boolean isValid = (boolean) result.get(KEY_IS_VALID);
+                    String username = (String) result.get(KEY_USERNAME);
+
+                    Map<String, Object> response = new HashMap<>();
+                    response.put(KEY_IS_VALID, isValid);
+                    response.put(KEY_USERNAME, username);
+
+                    return isValid ?
+                            new ResponseEntity<>(response, HttpStatus.OK) :
+                            new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                })
+                .onErrorResume(ex -> {
+                    log.error("Error during GitHub authentication: {}", ex.getMessage());
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put(KEY_IS_VALID, false);
+                    errorResponse.put(KEY_USERNAME, null);
+                    return Mono.just(new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR));
+                });
+    }
+
+    // Old login method with SSO
     @PostMapping("/validate")
     public Mono<ResponseEntity<String>> validateToken(@RequestBody String token) {
         return authService.validateWithSSO(token)

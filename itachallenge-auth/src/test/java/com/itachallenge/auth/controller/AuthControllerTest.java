@@ -18,6 +18,9 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -36,6 +39,29 @@ class AuthControllerTest {
     @InjectMocks
     private AuthController authController;
 
+    @Test
+    void authenticateWithGithub_ValidCode_ReturnsUsername() {
+        String validCode = "valid-code";
+        String accessToken = "valid-token";
+        String githubUsername = "octocat";
+        Map<String, Object> validationResult = new HashMap<>();
+        validationResult.put("isValid", true);
+        validationResult.put("username", githubUsername);
+
+        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
+        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .bodyValue(Map.of("code", validCode))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.isValid").isEqualTo(true)
+                .jsonPath("$.username").isEqualTo(githubUsername);
+    }
+
+    // Old tests
     @Test
     void validateTokenOK() {
         String validToken = "validToken";
