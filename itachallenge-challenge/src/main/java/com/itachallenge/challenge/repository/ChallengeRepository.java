@@ -30,4 +30,6 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     @Query(value = "{ 'languages.idLanguage' : ?0 }")
     Flux<ChallengeDocument> findByLanguages_IdLanguage(UUID idLanguage);
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
+    @Query(value = "{ 'challenge_title.ca' : { $regex: ?0, $options: 'i' } }", exists = true)
+    Mono<Boolean> existsByChallengeTitleCa(String title);
 }
