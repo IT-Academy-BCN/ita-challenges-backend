@@ -69,7 +69,7 @@ public class UserController {
             }
     )
     @GetMapping("/validate-mentor")
-    public Mono<ResponseEntity<String>> validateMentor(@RequestParam @ValidGithubUsername Mono<String> githubUsername) {
+    public Mono<ResponseEntity<String>> validateMentor(@ValidGithubUsername Mono<String> githubUsername) {
         return githubUsername
                 .flatMap(username -> userService.isMentor(Mono.just(username))
                         .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
