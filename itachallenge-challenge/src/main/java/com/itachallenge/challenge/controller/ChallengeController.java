@@ -218,8 +218,8 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
-         return challengeService.addChallenge(createFormDto)
-                 .map(ResponseEntity::ok);
+        return challengeService.addChallenge(createFormDto)
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/version")

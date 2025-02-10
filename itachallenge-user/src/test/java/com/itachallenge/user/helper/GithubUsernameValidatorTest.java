@@ -2,6 +2,7 @@ package com.itachallenge.user.helper;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import javax.validation.ConstraintValidatorContext;
 
 import static org.junit.jupiter.api.Assertions.*;

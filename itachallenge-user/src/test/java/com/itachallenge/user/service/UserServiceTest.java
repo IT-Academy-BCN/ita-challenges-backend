@@ -1,6 +1,5 @@
 package com.itachallenge.user.service;
 
-import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.*;
 
 import com.itachallenge.user.repository.UserRepository;

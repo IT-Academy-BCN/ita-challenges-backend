@@ -17,7 +17,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-
 @RestController
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/user")
@@ -31,7 +30,7 @@ public class UserController {
     @Operation(
             summary = "Validate existing mentor",
             description = "Checks if a given GitHub username corresponds to an existing mentor in the database.",
-            tags = { "Mentor" },
+            tags = {"Mentor"},
             parameters = {
                     @Parameter(
                             name = "githubUsername",
@@ -73,6 +72,5 @@ public class UserController {
                         }))
                 ).onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request, please try again. "));
     }
-
 
 }
