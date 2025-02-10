@@ -5,6 +5,7 @@ import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +20,13 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+    @Autowired
     private UserService userService;
 
-    @Operation(summary = "Validate existing mentor", description = "Endpoint for validating a user as an existing mentor in the database. ")
+    @Operation(
+            operationId = "Receives a username and validate if it exists in the database. ",
+            summary = "Validate existing mentor",
+            description = "Endpoint for validating a user as an existing mentor in the database. ")
     @GetMapping("/validate-mentor")
     public Mono<ResponseEntity<String>> validateMentor(@RequestParam @ValidGithubUsername Mono<String> githubUsername) {
         return githubUsername
