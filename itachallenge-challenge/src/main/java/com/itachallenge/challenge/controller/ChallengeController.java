@@ -225,6 +225,21 @@ public class ChallengeController {
                 });
     }
 
+    @PostMapping("/challenges")
+    @Operation(
+            operationId = "Add challenge.",
+            summary = "Post a challenge providing the necessary data.",
+            description = "Sending the title, description, difficulty level, language and solution, a new challenge document will be inserted in the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeCreateDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
+            }
+    )
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
+         return challengeService.addChallenge(createFormDto)
+                 .map(ResponseEntity::ok);
+    }
+
     @GetMapping("/version")
     @Operation(
             summary = "Get Application Version",

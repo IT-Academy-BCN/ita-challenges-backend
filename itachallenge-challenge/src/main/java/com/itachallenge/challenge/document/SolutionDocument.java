@@ -10,6 +10,7 @@ import java.util.UUID;
 @Document(collection="solutions")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class SolutionDocument {
