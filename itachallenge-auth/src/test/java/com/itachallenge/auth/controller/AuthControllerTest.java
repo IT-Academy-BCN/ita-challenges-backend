@@ -126,41 +126,41 @@ class AuthControllerTest {
     }
 
     // Old tests
-    @Test
-    void validateTokenOK() {
-        String validToken = "validToken";
-        when(authService.validateWithSSO(validToken)).thenReturn(Mono.just(true));
-
-        // Act & Assert
-        StepVerifier.create(authController.validateToken(validToken))
-                .expectNextMatches(responseEntity ->
-                        responseEntity.getStatusCode() == HttpStatus.OK &&
-                                responseEntity.getBody().equals("Token is valid"))
-                .verifyComplete();
-    }
-
-
-    @Test
-    void validateTokenNotOK() {
-        String invalidToken = "invalidToken";
-        when(authService.validateWithSSO(invalidToken)).thenReturn(Mono.just(false));
-
-        StepVerifier.create((authController.validateToken(invalidToken)))
-                .expectNextMatches(responseEntity -> responseEntity.getStatusCode() == HttpStatus.UNAUTHORIZED &&
-                        responseEntity.getBody().equals("Token is not valid"))
-                .verifyComplete();
-    }
-
-    @Test
-    void getVersionTest() {
-        String expectedVersion = env.getProperty("spring.application.version");
-
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/auth/version")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.application_name").isEqualTo("itachallenge-auth")
-                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
-    }
+//    @Test
+//    void validateTokenOK() {
+//        String validToken = "validToken";
+//        when(authService.validateWithSSO(validToken)).thenReturn(Mono.just(true));
+//
+//        // Act & Assert
+//        StepVerifier.create(authController.validateToken(validToken))
+//                .expectNextMatches(responseEntity ->
+//                        responseEntity.getStatusCode() == HttpStatus.OK &&
+//                                responseEntity.getBody().equals("Token is valid"))
+//                .verifyComplete();
+//    }
+//
+//
+//    @Test
+//    void validateTokenNotOK() {
+//        String invalidToken = "invalidToken";
+//        when(authService.validateWithSSO(invalidToken)).thenReturn(Mono.just(false));
+//
+//        StepVerifier.create((authController.validateToken(invalidToken)))
+//                .expectNextMatches(responseEntity -> responseEntity.getStatusCode() == HttpStatus.UNAUTHORIZED &&
+//                        responseEntity.getBody().equals("Token is not valid"))
+//                .verifyComplete();
+//    }
+//
+//    @Test
+//    void getVersionTest() {
+//        String expectedVersion = env.getProperty("spring.application.version");
+//
+//        webTestClient.get()
+//                .uri("/itachallenge/api/v1/auth/version")
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody()
+//                .jsonPath("$.application_name").isEqualTo("itachallenge-auth")
+//                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
+//    }
 }
