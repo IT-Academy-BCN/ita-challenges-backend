@@ -10,9 +10,7 @@ import java.util.StringJoiner;
 import java.util.UUID;
 
 @AllArgsConstructor
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @Builder
 @NoArgsConstructor
 @Document(collection="users")
