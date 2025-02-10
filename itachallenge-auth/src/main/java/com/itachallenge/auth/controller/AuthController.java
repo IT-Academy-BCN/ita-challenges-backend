@@ -53,9 +53,11 @@ public class AuthController {
                 })
                 .onErrorResume(ex -> {
                     log.error("GitHub authentication error: {}", ex.getMessage());
-                    Map<String, Object> errorResponse = Map.of(KEY_IS_VALID, false, KEY_USERNAME, null);
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body(errorResponse));
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put(KEY_IS_VALID, false);
+                    errorResponse.put(KEY_USERNAME, null);
+
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse));
                 });
     }
 
