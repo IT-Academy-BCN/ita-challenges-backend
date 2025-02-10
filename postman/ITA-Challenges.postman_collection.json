@@ -616,6 +616,29 @@
 					"response": []
 				},
 				{
+					"name": "Challenges/{idChallenge} - Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenges/2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenges",
+								"2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Challenges/{idChallenge}/related",
 					"request": {
 						"method": "GET",
@@ -1088,65 +1111,6 @@
 								"solution",
 								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
 								"score"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Score",
-			"item": [
-				{
-					"name": "Score",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\"uuid_challenge\": \"123e4567-e89b-12d3-a456-426614174000\",\n\"uuid_language\": \"12e4567-e89b-12d3-a456-426614174000\",\n\"solution_text\": \"\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{ip}}:{{score_port}}/itachallenge/api/v1/score/score",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{score_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"score",
-								"score"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Score/version",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{score_port}}/itachallenge/api/v1/score/version",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{score_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"score",
-								"version"
 							]
 						}
 					},
