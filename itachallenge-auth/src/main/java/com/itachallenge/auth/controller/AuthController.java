@@ -45,30 +45,20 @@ public class AuthController {
 
     @PostMapping("/github/authenticate")
     public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
-        String code = codeRequest.get("code");
-
-        return authService.exchangeCodeForToken(code)
-                .flatMap(accessToken -> authService.validateTokenWithGithub(accessToken))
-                .map(result -> {
-                    boolean isValid = (boolean) result.get(KEY_IS_VALID);
-                    String username = (String) result.get(KEY_USERNAME);
-
-                    Map<String, Object> response = new HashMap<>();
-                    response.put(KEY_IS_VALID, isValid);
-                    response.put(KEY_USERNAME, username);
-
-                    return isValid ?
-                            new ResponseEntity<>(response, HttpStatus.OK) :
-                            new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        return authService.exchangeCodeForToken(codeRequest.get("code"))
+                .flatMap(authService::validateTokenWithGithub)
+                .map(response -> {
+                    HttpStatus status = (boolean) response.get(KEY_IS_VALID) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
+                    return ResponseEntity.status(status).body(response);
                 })
                 .onErrorResume(ex -> {
-                    log.error("Error during GitHub authentication: {}", ex.getMessage());
-                    Map<String, Object> errorResponse = new HashMap<>();
-                    errorResponse.put(KEY_IS_VALID, false);
-                    errorResponse.put(KEY_USERNAME, null);
-                    return Mono.just(new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR));
+                    log.error("GitHub authentication error: {}", ex.getMessage());
+                    Map<String, Object> errorResponse = Map.of(KEY_IS_VALID, false, KEY_USERNAME, null);
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body(errorResponse));
                 });
     }
+
 
     // Old login method with SSO
     @PostMapping("/validate")

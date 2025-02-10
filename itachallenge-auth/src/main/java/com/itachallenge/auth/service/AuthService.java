@@ -32,20 +32,28 @@ public class AuthService implements IAuthService {
     private static final String GITHUB_LOGIN_KEY = "login";
 
     @Value("${spring.security.oauth2.client.provider.github.user-info-uri}")
-    private String githubUserInfoUri;
+    private final String githubUserInfoUri;
 
     @Value("${spring.security.oauth2.client.provider.github.token-uri}")
-    private String githubTokenUri;
+    private final String githubTokenUri;
 
     @Value("${spring.security.oauth2.client.registration.github.client-id}")
-    private String clientId;
+    private final String clientId;
 
     @Value("${spring.security.oauth2.client.registration.github.client-secret}")
-    private String clientSecret;
+    private final String clientSecret;
 
     @Autowired
-    public AuthService(WebClient.Builder webClientBuilder) {
+    public AuthService(WebClient.Builder webClientBuilder,
+                       @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
+                       @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri,
+                       @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
+                       @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret) {
         this.webClientBuilder = webClientBuilder;
+        this.githubTokenUri = githubTokenUri;
+        this.githubUserInfoUri = githubUserInfoUri;
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
     }
 
     public Mono<String> exchangeCodeForToken(String code) {
@@ -105,51 +113,55 @@ public class AuthService implements IAuthService {
                 .header("Authorization", "token " + token)
                 .retrieve()
                 .bodyToMono(String.class)
-                .flatMap(response -> {
-                    try {
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        JsonNode jsonNode = objectMapper.readTree(response);
-
-                        if (jsonNode.has("login")) {
-                            String githubUsername = jsonNode.get("login").asText();
-                            log.info("GitHub username extracted: {}", githubUsername);
-
-                            Map<String, Object> result = new HashMap<>();
-                            result.put(KEY_IS_VALID, true);
-                            result.put(KEY_USERNAME, githubUsername);
-                            result.put("token", token);
-
-                            return Mono.just(result);
-
-                        } else {
-                            log.error("GitHub response does not contain a username: {}", response);
-                            Map<String, Object> errorResult = new HashMap<>();
-                            errorResult.put(KEY_IS_VALID, false);
-                            errorResult.put(KEY_USERNAME, null);
-                            return Mono.just(errorResult);
-                        }
-                    } catch (JsonProcessingException e) {
-                        log.error("Error processing GitHub response", e);
-                        return Mono.error(e);
-                    }
-                })
-                .onErrorResume(WebClientResponseException.class, ex -> {
-                    log.error("GitHub API error: {}", ex.getStatusCode());
-                    Map<String, Object> errorResult = new HashMap<>();
-                    errorResult.put(KEY_IS_VALID, false);
-                    errorResult.put(KEY_USERNAME, null);
-                    return Mono.just(errorResult);
-                })
-                .onErrorResume(ex -> {
-                    log.error("Unexpected error: {}", ex.getMessage());
-                    Map<String, Object> errorResult = new HashMap<>();
-                    errorResult.put(KEY_IS_VALID, false);
-                    errorResult.put(KEY_USERNAME, null);
-                    return Mono.just(errorResult);
-                });
+                .flatMap(response -> processGithubResponse(response, token))
+                .onErrorResume(WebClientResponseException.class, this::handleGithubApiError)
+                .onErrorResume(this::handleUnexpectedError);
     }
 
+    private Mono<Map<String, Object>> processGithubResponse(String response, String token) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response);
 
+            if (jsonNode.has(GITHUB_LOGIN_KEY)) {
+                String githubUsername = jsonNode.get(GITHUB_LOGIN_KEY).asText();
+                log.info("GitHub username extracted: {}", githubUsername);
+
+                return Mono.just(createSuccessResult(githubUsername, token));
+            } else {
+                log.error("GitHub response does not contain a username: {}", response);
+                return Mono.just(createErrorResult());
+            }
+        } catch (JsonProcessingException e) {
+            log.error("Error processing GitHub response", e);
+            return Mono.error(e);
+        }
+    }
+
+    private Mono<Map<String, Object>> handleGithubApiError(WebClientResponseException ex) {
+        log.error("GitHub API error: {}", ex.getStatusCode());
+        return Mono.just(createErrorResult());
+    }
+
+    private Mono<Map<String, Object>> handleUnexpectedError(Throwable ex) {
+        log.error("Unexpected error: {}", ex.getMessage());
+        return Mono.just(createErrorResult());
+    }
+
+    private Map<String, Object> createSuccessResult(String username, String token) {
+        Map<String, Object> result = new HashMap<>();
+        result.put(KEY_IS_VALID, true);
+        result.put(KEY_USERNAME, username);
+        result.put(KEY_TOKEN, token);
+        return result;
+    }
+
+    private Map<String, Object> createErrorResult() {
+        Map<String, Object> errorResult = new HashMap<>();
+        errorResult.put(KEY_IS_VALID, false);
+        errorResult.put(KEY_USERNAME, null);
+        return errorResult;
+    }
 
     // Old validation method
     @Value("${uri_validate_token}")

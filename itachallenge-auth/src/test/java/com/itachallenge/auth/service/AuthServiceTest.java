@@ -27,36 +27,39 @@ class AuthServiceTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        String baseUrl = mockWebServer.url("/user").toString();
-        authService = new AuthService(WebClient.builder().baseUrl(baseUrl));
+        String baseUrl = mockWebServer.url("").toString();
+        String githubTokenUri = baseUrl + "login/oauth/access_token";
+        String githubUserInfoUri = baseUrl + "user";
+
+        authService = new AuthService(WebClient.builder(), githubTokenUri, githubUserInfoUri, "test-client-id", "test-client-secret");
     }
 
     @AfterEach
     void tearDown() throws IOException {
         mockWebServer.shutdown();
     }
-//
-//    @Test
-//    void exchangeCodeForToken_Successful() throws InterruptedException {
-//        String code = "auth-code";
-//        String accessToken = "github-access-token";
-//        String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
-////
-//        mockWebServer.enqueue(new MockResponse()
-//                .setBody(mockResponse)
-//                .setResponseCode(200)
-//                .addHeader("Content-Type", "application/json"));
-//
-//        Mono<String> result = authService.exchangeCodeForToken(code);
-//
-//        StepVerifier.create(result)
-//                .expectNext(accessToken)
-//                .verifyComplete();
-//
-//        RecordedRequest request = mockWebServer.takeRequest();
-//        assertEquals("/login/oauth/access_token", request.getPath());
-//        assertEquals("application/json", request.getHeader("Accept"));
-//    }
+
+    @Test
+    void exchangeCodeForToken_Successful() throws InterruptedException {
+        String code = "auth-code";
+        String accessToken = "github-access-token";
+        String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(mockResponse)
+                .setResponseCode(200)
+                .addHeader("Content-Type", "application/json"));
+
+        Mono<String> result = authService.exchangeCodeForToken(code);
+
+        StepVerifier.create(result)
+                .expectNext(accessToken)
+                .verifyComplete();
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("/login/oauth/access_token", request.getRequestUrl().encodedPath());
+        assertEquals("application/json", request.getHeader("Accept"));
+    }
 
     @Test
     void validateTokenWithGithub_ValidToken_ReturnsUsername() throws Exception {
@@ -79,7 +82,7 @@ class AuthServiceTest {
                 .verifyComplete();
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/user", request.getPath());
+        assertEquals("/user", request.getRequestUrl().encodedPath());
         assertEquals("token " + validToken, request.getHeader("Authorization"));
     }
 
