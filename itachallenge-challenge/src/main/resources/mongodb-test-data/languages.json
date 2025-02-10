@@ -33,6 +33,6 @@
     "_id" : {
       "$uuid" : "5caa6142-a49e-4415-a8fc-439669777d1d"
     },
-    "language_name": "TypeScript"
+    "language_name": "Typescript"
   }
 ]
