@@ -61,16 +61,6 @@ public class AuthController {
                 });
     }
 
-
-    // Old login method with SSO
-//    @PostMapping("/validate")
-//    public Mono<ResponseEntity<String>> validateToken(@RequestBody String token) {
-//        return authService.validateWithSSO(token)
-//                .map(isValid -> isValid ?
-//                        new ResponseEntity<>("Token is valid", HttpStatus.OK) :
-//                        new ResponseEntity<>("Token is not valid", HttpStatus.UNAUTHORIZED));
-//    }
-
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
         Map<String, String> response = new HashMap<>();

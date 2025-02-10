@@ -9,12 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,42 +123,16 @@ class AuthControllerTest {
                 .expectStatus().isBadRequest();
     }
 
-    // Old tests
-//    @Test
-//    void validateTokenOK() {
-//        String validToken = "validToken";
-//        when(authService.validateWithSSO(validToken)).thenReturn(Mono.just(true));
-//
-//        // Act & Assert
-//        StepVerifier.create(authController.validateToken(validToken))
-//                .expectNextMatches(responseEntity ->
-//                        responseEntity.getStatusCode() == HttpStatus.OK &&
-//                                responseEntity.getBody().equals("Token is valid"))
-//                .verifyComplete();
-//    }
-//
-//
-//    @Test
-//    void validateTokenNotOK() {
-//        String invalidToken = "invalidToken";
-//        when(authService.validateWithSSO(invalidToken)).thenReturn(Mono.just(false));
-//
-//        StepVerifier.create((authController.validateToken(invalidToken)))
-//                .expectNextMatches(responseEntity -> responseEntity.getStatusCode() == HttpStatus.UNAUTHORIZED &&
-//                        responseEntity.getBody().equals("Token is not valid"))
-//                .verifyComplete();
-//    }
-//
-//    @Test
-//    void getVersionTest() {
-//        String expectedVersion = env.getProperty("spring.application.version");
-//
-//        webTestClient.get()
-//                .uri("/itachallenge/api/v1/auth/version")
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody()
-//                .jsonPath("$.application_name").isEqualTo("itachallenge-auth")
-//                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
-//    }
+    @Test
+    void getVersionTest() {
+        String expectedVersion = env.getProperty("spring.application.version");
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/auth/version")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.application_name").isEqualTo("itachallenge-auth")
+                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
+    }
 }

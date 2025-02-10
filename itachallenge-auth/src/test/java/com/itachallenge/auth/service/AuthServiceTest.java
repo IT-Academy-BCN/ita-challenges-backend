@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -86,51 +85,4 @@ class AuthServiceTest {
         assertEquals("token " + validToken, request.getHeader("Authorization"));
     }
 
-
-    // Old tests
-//    @Test
-//    void validateWithSSO_Successful() throws InterruptedException {
-//        String responseBody = "{\"id\": \"some_id\"}";
-//        mockWebServer.enqueue(new MockResponse().setBody(responseBody));
-//
-//        Mono<Boolean> result = authService.validateWithSSO("validToken");
-//
-//        assertEquals(true, result.block());
-//
-//        RecordedRequest request = mockWebServer.takeRequest();
-//        assertEquals("/api/v1/tokens/validate", request.getPath());
-//        assertEquals("POST", request.getMethod());
-//        assertEquals("application/json", request.getHeader("Content-Type"));
-//        assertEquals("validToken", request.getBody().readUtf8());
-//    }
-//
-//    @Test
-//    void validateWithSSO_Failure() throws InterruptedException {
-//
-//        String responseBody = "{\"message\":\"Token is not valid\"}";
-//        mockWebServer.enqueue(new MockResponse().setBody(responseBody));
-//
-//        Mono<Boolean> result = authService.validateWithSSO("invalidToken");
-//
-//        assertEquals(false, result.block());
-//
-//        RecordedRequest request = mockWebServer.takeRequest();
-//        assertEquals("/api/v1/tokens/validate", request.getPath());
-//        assertEquals("POST", request.getMethod());
-//        assertEquals("application/json", request.getHeader("Content-Type"));
-//        assertEquals("invalidToken", request.getBody().readUtf8());
-//    }
-//
-//    @Test
-//    void validateWithSSO_Unexpected_Response() throws InterruptedException {
-//
-//        String responseBody = "Invalid JSON format";
-//        mockWebServer.enqueue(new MockResponse().setBody(responseBody));
-//
-//        Mono<Boolean> result = authService.validateWithSSO("someToken");
-//
-//        StepVerifier.create(result)
-//                .expectNext(false)
-//                .verifyComplete();
-//    }
 }
