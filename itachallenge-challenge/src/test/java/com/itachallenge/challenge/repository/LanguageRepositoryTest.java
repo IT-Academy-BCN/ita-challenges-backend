@@ -1,10 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -130,6 +127,15 @@ class LanguageRepositoryTest {
                 },
                 () -> fail("Language with id " + uuidLang2 + " not found")
         );
+    }
+
+    @DisplayName("Find by language name")
+    @Test
+    void findFirstByLanguageName_test() {
+        LanguageDocument language = languageRepository.findFirstByLanguageName("Java").block();
+
+        assert language != null;
+        Assertions.assertEquals(language.getIdLanguage(), UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f"));
     }
 
 }

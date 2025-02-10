@@ -3,6 +3,9 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
+import com.itachallenge.challenge.enums.DifficultyLevel;
+import com.itachallenge.challenge.exception.ChallengeAlreadyExistsException;
+import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.mqclient.ZMQClient;
@@ -346,6 +349,91 @@ class ChallengeControllerTest {
                 .uri("/itachallenge/api/v1/challenge/solution")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(solutionDto) // Send the SolutionDto with null fields
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void addChallenge_test_validRequest() {
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
+                DifficultyLevel.valueOf("EASY"), "Java", "solució");
+
+        ChallengeDto createdChallenge = new ChallengeDto();
+
+        when(challengeService.addChallenge(any())).thenReturn(Mono.just(createdChallenge));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeDto.class);
+
+        verify(challengeService).addChallenge(any(ChallengeCreateDto.class));
+    }
+
+    @Test
+    void addChallenge_test_emptyField_statusBadRequest() {
+        ChallengeCreateDto formData = new ChallengeCreateDto("", "descripció",
+                DifficultyLevel.valueOf("EASY"), "Java", "solució");
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void addChallenge_test_repeatedTitle_statusBadRequest() {
+        ChallengeCreateDto formData = new ChallengeCreateDto("Already-existing title", "descripció",
+                DifficultyLevel.valueOf("EASY"), "Java", "solució");
+
+        when(challengeService.addChallenge(any()))
+                .thenThrow(new ChallengeAlreadyExistsException("A challenge with this title already exists"));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void addChallenge_test_invalidLanguage_statusBadRequest() {
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
+                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució");
+
+        when(challengeService.addChallenge(any()))
+                .thenThrow(new LanguageNotFoundException("Language not found: Invalid language"));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void addChallenge_test_invalidLevel_statusBadRequest() {
+        String invalidFormData = """
+                {
+                    "challengeTitle": "títol",
+                    "description": "descripció",
+                    "level": "TOUGH",
+                    "language": "Java",
+                    "solution": "solució"
+                }
+                """;
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalidFormData)
                 .exchange()
                 .expectStatus().isBadRequest();
     }

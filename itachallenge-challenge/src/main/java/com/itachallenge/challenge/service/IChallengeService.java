@@ -22,5 +22,7 @@ public interface IChallengeService {
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
+    Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto);
+
     Mono<DeleteResponseDto> deleteChallengeById(String id);
 }

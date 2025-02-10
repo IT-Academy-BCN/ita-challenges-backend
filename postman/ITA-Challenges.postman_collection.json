@@ -497,7 +497,7 @@
 			"name": "Challenge",
 			"item": [
 				{
-					"name": "Challenges",
+					"name": "Challenge/challenges",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -527,34 +527,7 @@
 					"response": []
 				},
 				{
-					"name": "Challentes/testParams",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/test/params/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/409c9fe8-74de-4db3-81a1-a55280cf92ef",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{challenge_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"challenge",
-								"test",
-								"params",
-								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
-								"language",
-								"409c9fe8-74de-4db3-81a1-a55280cf92ef"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Challenges/filtered",
+					"name": "Challenges filtered",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -592,7 +565,7 @@
 					"response": []
 				},
 				{
-					"name": "Challenges/{idChallenge}",
+					"name": "Challenge/challenges/{idChallenge}",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -687,58 +660,7 @@
 					"response": []
 				},
 				{
-					"name": "Challenge/test_params",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/test/params/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/409c9fe8-74de-4db3-81a1-a55280cf92ef",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{challenge_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"challenge",
-								"test",
-								"params",
-								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
-								"language",
-								"409c9fe8-74de-4db3-81a1-a55280cf92ef"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Challenge/{idResource}",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/resources/527bad10-d689-4a10-a787-72507fafe415",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{challenge_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"challenge",
-								"resources",
-								"527bad10-d689-4a10-a787-72507fafe415"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Challenges/test",
+					"name": "Challenge/test",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -790,12 +712,12 @@
 					"response": []
 				},
 				{
-					"name": "Challenges/solutions",
+					"name": "Challenge/solutions",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/solution/challenge/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/solution/dcacb291-b4aa-4029-8e9b-284c8ca80296/language/660e1b18-0c0a-4262-a28a-85de9df6ac5f",
 							"protocol": "http",
 							"host": [
 								"{{ip}}"
@@ -807,10 +729,41 @@
 								"v1",
 								"challenge",
 								"solution",
-								"challenge",
 								"dcacb291-b4aa-4029-8e9b-284c8ca80296",
 								"language",
 								"660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Challenge/challenges",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"challengeTitle\": \"títol\",\r\n    \"description\": \"descripció\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"solució\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges"
 							]
 						}
 					},
@@ -951,62 +904,6 @@
 								"statistics",
 								"percent",
 								"3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "User/statistics/totals",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenges/language/1e047ea2-b787-49e7-acea-d79e92be3909/statistics/totals",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{user_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"user",
-								"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-								"challenges",
-								"language",
-								"1e047ea2-b787-49e7-acea-d79e92be3909",
-								"statistics",
-								"totals"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "User/statistics/totals Copy",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/c3a92f9d-5d10-4f76-8c0b-6d884c549b1c/challenges/language/1e047ea2-b787-49e7-acea-d79e92be3909/statistics/list",
-							"protocol": "http",
-							"host": [
-								"{{ip}}"
-							],
-							"port": "{{user_port}}",
-							"path": [
-								"itachallenge",
-								"api",
-								"v1",
-								"user",
-								"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c",
-								"challenges",
-								"language",
-								"1e047ea2-b787-49e7-acea-d79e92be3909",
-								"statistics",
-								"list"
 							]
 						}
 					},
