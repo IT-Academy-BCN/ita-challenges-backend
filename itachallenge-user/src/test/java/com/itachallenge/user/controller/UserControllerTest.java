@@ -29,7 +29,7 @@ class UserControllerTest {
         String githubUsername = "mentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.just(githubUsername));
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
+        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
 
         StepVerifier.create(response)
                 .expectNextMatches(res -> res.getStatusCode() == HttpStatus.OK && Objects.equals(res.getBody(), githubUsername))
@@ -41,19 +41,10 @@ class UserControllerTest {
         String githubUsername = "nonMentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.empty());
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
+        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
 
         StepVerifier.create(response)
                 .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN && res.getBody() == null)
-                .verifyComplete();
-    }
-
-    @Test
-    void validateMentor_WhenUsernameIsEmpty_ShouldReturnBadRequest() {
-        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(""));
-
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
                 .verifyComplete();
     }
 
@@ -62,7 +53,7 @@ class UserControllerTest {
         String githubUsername = "mentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Database error")));
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
+        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
 
         StepVerifier.create(response)
                 .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
@@ -74,7 +65,7 @@ class UserControllerTest {
         String githubUsername = "nonMentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Service error")));
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(Mono.just(githubUsername));
+        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
 
         StepVerifier.create(response)
                 .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)

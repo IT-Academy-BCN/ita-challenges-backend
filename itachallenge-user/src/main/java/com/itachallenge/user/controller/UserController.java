@@ -69,15 +69,15 @@ public class UserController {
             }
     )
     @GetMapping("/validate-mentor")
-    public Mono<ResponseEntity<String>> validateMentor(@ValidGithubUsername Mono<String> githubUsername) {
-        return githubUsername
-                .flatMap(username -> userService.isMentor(Mono.just(username))
-                        .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
-                        .switchIfEmpty(Mono.defer(() -> {
-                            log.warn("Unauthorized access attempt for username '{}'", username);
-                            return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
-                        }))
-                ).onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request, please try again. "));
+    public Mono<ResponseEntity<String>> validateMentor(@ValidGithubUsername String githubUsername) {
+        return userService.isMentor(Mono.just(githubUsername))
+                .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("Unauthorized access attempt for username '{}'", githubUsername);
+                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
+                }))
+                .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request, please try again."));
     }
+
 
 }
