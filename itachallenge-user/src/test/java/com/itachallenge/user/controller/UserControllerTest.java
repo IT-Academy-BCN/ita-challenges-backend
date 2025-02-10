@@ -49,6 +49,17 @@ class UserControllerTest {
     }
 
     @Test
+    void validateMentor_WhenUsernameIsEmpty_ShouldReturnForbidden() {
+        when(userService.isMentor(any())).thenReturn(Mono.empty()); // Ensure a Mono is returned, not null
+
+        Mono<ResponseEntity<String>> response = userController.validateMentor("");
+
+        StepVerifier.create(response)
+                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN)
+                .verifyComplete();
+    }
+
+    @Test
     void validateMentor_WhenUserServiceThrowsError_ShouldReturnBadRequest() {
         String githubUsername = "mentorUser";
         when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Database error")));
@@ -71,6 +82,8 @@ class UserControllerTest {
                 .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
                 .verifyComplete();
     }
+
+
 
 
 }
