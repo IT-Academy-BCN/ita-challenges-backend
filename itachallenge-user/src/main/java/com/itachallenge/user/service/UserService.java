@@ -12,7 +12,7 @@ public class UserService {
     private UserRepository userRepository;
 
     public Mono<String> isMentor(Mono<String> githubUsername) {
-        return githubUsername.flatMap(username -> userRepository.findByUsername(username)
+        return githubUsername.flatMap(username -> userRepository.findUsernameByUsername(username)
                 .switchIfEmpty(Mono.empty()));
     }
 }
