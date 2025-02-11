@@ -53,25 +53,25 @@ class UserRepositoryTest {
     }
 
     @Test
-    void findByUsernameReturnUser() {
-        when(userRepository.findByUsernameReturnUser(username)).thenReturn(Mono.just(userDocument));
+    void findByUsername() {
+        when(userRepository.findByUsername(username)).thenReturn(Mono.just(userDocument));
 
-        StepVerifier.create(userRepository.findByUsernameReturnUser(username))
+        StepVerifier.create(userRepository.findByUsername(username))
                 .expectNext(userDocument)
                 .verifyComplete();
 
-        verify(userRepository, times(1)).findByUsernameReturnUser(username);
+        verify(userRepository, times(1)).findByUsername(username);
     }
 
     @Test
-    void findByUsernameReturnUserNotFound() {
-        when(userRepository.findByUsernameReturnUser(username)).thenReturn(Mono.empty());
+    void findByUsernameNotFound() {
+        when(userRepository.findByUsername(username)).thenReturn(Mono.empty());
 
-        StepVerifier.create(userRepository.findByUsernameReturnUser(username))
+        StepVerifier.create(userRepository.findByUsername(username))
                 .expectNextCount(0)
                 .verifyComplete();
 
-        verify(userRepository, times(1)).findByUsernameReturnUser(username);
+        verify(userRepository, times(1)).findByUsername(username);
     }
 
     @Test
