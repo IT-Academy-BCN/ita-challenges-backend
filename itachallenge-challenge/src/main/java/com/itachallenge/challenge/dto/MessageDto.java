@@ -1,17 +1,11 @@
 package com.itachallenge.challenge.dto;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
-@EqualsAndHashCode
+@AllArgsConstructor
 public class MessageDto {
     private String message;
-
-    public MessageDto(String message) {
-        this.message = message;
-    }
 
 }
