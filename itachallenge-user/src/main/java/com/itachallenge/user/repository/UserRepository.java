@@ -3,7 +3,6 @@ package com.itachallenge.user.repository;
 import com.itachallenge.user.document.UserDocument;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -12,8 +11,6 @@ import java.util.UUID;
 public interface UserRepository extends ReactiveMongoRepository<UserDocument, UUID> {
 
     Mono<UserDocument> findByUuid(UUID uuid);
-    Flux<UserDocument> findByUserId(UUID userId);
     Mono<Boolean> existsByUuid(UUID uuid);
-    Mono<UserDocument> findByUsername(String username);
-    Mono<String> findUsername(String username);
+    Mono<String> findByUsername(String username);
 }
