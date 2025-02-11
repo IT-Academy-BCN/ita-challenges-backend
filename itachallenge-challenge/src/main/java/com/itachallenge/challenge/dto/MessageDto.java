@@ -2,8 +2,7 @@ package com.itachallenge.challenge.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 public class MessageDto {
     private String message;

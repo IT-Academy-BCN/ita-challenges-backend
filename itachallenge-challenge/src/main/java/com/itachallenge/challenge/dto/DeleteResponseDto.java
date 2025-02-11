@@ -1,11 +1,10 @@
 package com.itachallenge.challenge.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+
+@Data
 @AllArgsConstructor
 public class DeleteResponseDto {
     private String id;
