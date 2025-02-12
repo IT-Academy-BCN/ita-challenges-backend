@@ -10,4 +10,4 @@ db.createUser({
 
 //use users
 //create collections
-//db.createCollection("solutions");
+//db.createCollection("users");

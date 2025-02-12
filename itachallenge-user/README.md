@@ -36,11 +36,11 @@ mongosh --port 27017 -u admin_user --authenticationDatabase "admin" -p
 ```
 - Crear la nueva collection
 ```
-db.createCollection("solutions");
+db.createCollection("users");
 ```
 - Desde fuera de db, importar el/los files de test en la base de datos `users`
 ```
-mongoimport --db=users --username admin_user --authenticationDatabase admin --password mypassword --collection=solutions --jsonArray --file=user_score.json
+mongoimport --db=users --username admin_user --authenticationDatabase admin --password mypassword --collection=users --jsonArray --file=users.json
 ```
 
 ### Configuración local de Redis 
