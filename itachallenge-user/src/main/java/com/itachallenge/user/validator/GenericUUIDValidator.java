@@ -1,4 +1,4 @@
-package com.itachallenge.user.validators;
+package com.itachallenge.user.validator;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import jakarta.validation.ConstraintValidator;

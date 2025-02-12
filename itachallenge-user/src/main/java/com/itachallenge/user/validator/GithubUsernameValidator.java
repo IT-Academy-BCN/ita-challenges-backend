@@ -1,4 +1,4 @@
-package com.itachallenge.user.helper;
+package com.itachallenge.user.validator;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 

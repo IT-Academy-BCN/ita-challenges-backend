@@ -1,6 +1,6 @@
 package com.itachallenge.user.annotations;
 
-import com.itachallenge.user.helper.GithubUsernameValidator;
+import com.itachallenge.user.validator.GithubUsernameValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
