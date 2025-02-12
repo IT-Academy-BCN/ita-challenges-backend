@@ -1,6 +1,5 @@
-package com.itachallenge.user.helper;
+package com.itachallenge.user.validator;
 
-import com.itachallenge.user.validator.GithubUsernameValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
