@@ -240,4 +240,21 @@ public class ChallengeController {
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
     }
+
+    @DeleteMapping(path = "/challenges/{challengeId}")
+    @Operation(
+            operationId = "Delete a chosen challenge.",
+            summary = "Deleting a challenge.",
+            description = "Sending the ID Challenge through the URI to delete it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+            }
+    )
+    public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(@PathVariable("challengeId") String id) {
+
+        return challengeService.deleteChallengeById(id)
+                .map(dto -> ResponseEntity.ok().body(dto));
+    }
 }

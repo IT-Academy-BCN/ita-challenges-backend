@@ -593,4 +593,26 @@ class ChallengeServiceImpTest {
         return challengeDocMocked;
     }
 
+
+
+    @Test
+    void deleteChallengeById_NotFound() {
+        // Arrange
+        String id = "2f948de0-6f0c-4089-90b9-7f70a0812322";  // ID no existente
+        UUID uuid = UUID.fromString(id);  // Convertir a UUID
+
+        // Mockear el repositorio para que no se encuentre el desafío
+        when(challengeRepository.deleteByUuid(uuid)).thenReturn(Mono.error(new ChallengeNotFoundException("Challenge with id: " + id + " not found")));
+
+        // Act
+        Mono<DeleteResponseDto> result = challengeService.deleteChallengeById(id);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(ChallengeNotFoundException.class)  // Se espera que se lance una excepción
+                .verify();
+    }
+
+
+
 }

@@ -5,6 +5,10 @@ import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -291,5 +295,17 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
+
+    public Mono<DeleteResponseDto> deleteChallengeById(String id) {
+        return validateUUID(id)
+                .flatMap(challengeId -> challengeRepository.deleteByUuid(challengeId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, id))))
+                        .thenReturn(new DeleteResponseDto(id, "Challenge deleted successfully."))
+                )
+                .doOnSuccess(response -> log.info("Challenge deleted with ID: {}", response.getId()))
+                .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
+    }
+
+
 
 }

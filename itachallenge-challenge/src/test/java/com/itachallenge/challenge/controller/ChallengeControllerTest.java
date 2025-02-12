@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.exception.ChallengeAlreadyExistsException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
+import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,6 @@ class ChallengeControllerTest {
 
     //TODO - pending externalize to service layer (internal comms)
 
-
 /*    @Test
     void test() {
         // Arrange
@@ -69,7 +69,7 @@ class ChallengeControllerTest {
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
         String id = "existing Id";
-        ChallengeDto challengeDto = new ChallengeDto(); // Предположим, что у вас есть объект ChallengeDto
+        ChallengeDto challengeDto = new ChallengeDto();
         Mono<ChallengeDto> response = Mono.just(challengeDto);
 
         when(challengeService.getChallengeById(id)).thenReturn(response);
@@ -77,8 +77,8 @@ class ChallengeControllerTest {
         Mono<ChallengeDto> result = challengeService.getChallengeById(id);
 
         StepVerifier.create(result)
-                .expectNext(challengeDto) // Проверяем, что мы получаем ожидаемый объект ChallengeDto
-                .verifyComplete(); // Убеждаемся, что последовательность Mono завершается успешно
+                .expectNext(challengeDto)
+                .verifyComplete();
 
     }
 
@@ -110,7 +110,6 @@ class ChallengeControllerTest {
 
     @Test
     void getAllChallenges_NullPageParameters_ChallengesReturned() {
-        //Arrange
         ChallengeDto challengeDto1 = new ChallengeDto();
         ChallengeDto challengeDto2 = new ChallengeDto();
         ChallengeDto[] expectedChallenges = {challengeDto1, challengeDto2};
@@ -444,5 +443,37 @@ class ChallengeControllerTest {
                 .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
                 .jsonPath("$.version").isEqualTo(expectedVersion);
     }
+    @Test
+    void deleteOneChallenge_success() {
+        String id = "existing_id";
+        DeleteResponseDto deleteResponseDto = new DeleteResponseDto(id, "Challenge deleted successfully.");
+        Mono<DeleteResponseDto> response = Mono.just(deleteResponseDto);
+
+        when(challengeService.deleteChallengeById(id))
+                .thenReturn(response);
+
+        Mono<DeleteResponseDto> result = challengeService.deleteChallengeById(id);
+
+        StepVerifier.create(result)
+                .expectNext(deleteResponseDto)
+                .verifyComplete();
+    }
+
+    @Test
+    void deleteOneChallenge_notFound() {
+        String id = "non_existing_id";
+
+        when(challengeService.deleteChallengeById(id))
+                .thenReturn(Mono.error(new ChallengeNotFoundException(String.format("Challenge with id: %s not found", id))));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + id)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Challenge with id: non_existing_id not found");
+    }
+
+
 
 }
