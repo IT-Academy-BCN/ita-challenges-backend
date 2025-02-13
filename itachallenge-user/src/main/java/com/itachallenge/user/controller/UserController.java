@@ -74,7 +74,7 @@ public class UserController {
                 .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
                 .switchIfEmpty(Mono.defer(() -> {
                     log.warn("Unauthorized access attempt for username '{}'", githubUsername);
-                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).build());
+                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access attempt. "));
                 }))
                 .onErrorReturn(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request, please try again."));
     }
