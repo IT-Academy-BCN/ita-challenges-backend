@@ -69,7 +69,7 @@ public class UserController {
             }
     )
     @GetMapping("/validate-mentor")
-    public Mono<ResponseEntity<String>> validateMentor(@ValidGithubUsername String githubUsername) {
+    public Mono<ResponseEntity<String>> validateMentor(@RequestBody @ValidGithubUsername String githubUsername) {
         return userService.isMentor(Mono.just(githubUsername))
                 .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
                 .switchIfEmpty(Mono.defer(() -> {
