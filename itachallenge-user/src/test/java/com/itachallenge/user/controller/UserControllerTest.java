@@ -1,21 +1,16 @@
 package com.itachallenge.user.controller;
 
-import static org.mockito.Mockito.*;
-
 import com.itachallenge.user.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
-import java.util.Objects;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
     @Mock
@@ -24,66 +19,117 @@ class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
-    @Test
-    void validateMentor_WhenUserIsMentor_ShouldReturnOkWithUsername() {
-        String githubUsername = "mentorUser";
-        when(userService.isMentor(any())).thenReturn(Mono.just(githubUsername));
+    private WebTestClient webTestClient;
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
-
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.OK && Objects.equals(res.getBody(), githubUsername))
-                .verifyComplete();
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        webTestClient = WebTestClient.bindToController(userController).build();
     }
 
     @Test
-    void validateMentor_WhenUserIsNotMentor_ShouldReturnForbiddenWithoutBody() {
-        String githubUsername = "nonMentorUser";
-        when(userService.isMentor(any())).thenReturn(Mono.empty());
-
-        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
-
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN && res.getBody() == null)
-                .verifyComplete();
+    void testEndpoint_ShouldReturnHelloMessage() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/test")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo("Hello from ITA Challenge UserController!!!");
     }
 
     @Test
-    void validateMentor_WhenUsernameIsEmpty_ShouldReturnForbidden() {
-        when(userService.isMentor(any())).thenReturn(Mono.empty()); // Ensure a Mono is returned, not null
+    void validateMentor_WhenUserIsMentor_Returns200() {
+        String githubUsername = "validMentor";
+        when(userService.isMentorUsername(any(Mono.class))).thenReturn(Mono.just(githubUsername));
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor("");
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-by-username")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo(githubUsername);
 
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.FORBIDDEN)
-                .verifyComplete();
+        verify(userService, times(1)).isMentorUsername(any(Mono.class));
     }
 
     @Test
-    void validateMentor_WhenUserServiceThrowsError_ShouldReturnBadRequest() {
-        String githubUsername = "mentorUser";
-        when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Database error")));
+    void validateMentor_WhenUserIsNotMentor_Returns403() {
+        String githubUsername = "invalidMentor";
+        when(userService.isMentorUsername(any(Mono.class))).thenReturn(Mono.empty());
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-by-username")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(String.class).isEqualTo("Invalid login attempt. ");
 
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
-                .verifyComplete();
+        verify(userService, times(1)).isMentorUsername(any(Mono.class));
     }
 
     @Test
-    void validateMentor_WhenUserServiceThrowsErrorForNonMentor_ShouldReturnBadRequest() {
-        String githubUsername = "nonMentorUser";
-        when(userService.isMentor(any())).thenReturn(Mono.error(new RuntimeException("Service error")));
+    void validateMentor_WhenErrorOccurs_Returns400() {
+        String githubUsername = "errorUser";
+        when(userService.isMentorUsername(any(Mono.class))).thenReturn(Mono.error(new RuntimeException("Database error")));
 
-        Mono<ResponseEntity<String>> response = userController.validateMentor(githubUsername);
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-by-username")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).isEqualTo("Invalid request, please try again.");
 
-        StepVerifier.create(response)
-                .expectNextMatches(res -> res.getStatusCode() == HttpStatus.BAD_REQUEST)
-                .verifyComplete();
+        verify(userService, times(1)).isMentorUsername(any(Mono.class));
     }
 
 
+    @Test
+    void validateMentorExists_WhenUserIsMentor_Returns200() {
+        String githubUsername = "validMentor";
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.just(true));
 
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class).isEqualTo(githubUsername);
 
+        verify(userService, times(1)).isMentor(any(Mono.class));
+    }
+
+    @Test
+    void validateMentorExists_WhenUserIsNotMentor_Returns403() {
+        String githubUsername = "invalidMentor";
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.just(false));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(String.class).isEqualTo("Invalid login attempt. ");
+
+        verify(userService, times(1)).isMentor(any(Mono.class));
+    }
+
+    @Test
+    void validateMentorExists_WhenErrorOccurs_Returns400() {
+        String githubUsername = "errorUser";
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.error(new RuntimeException("Database error")));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).isEqualTo("Invalid request, please try again.");
+
+        verify(userService, times(1)).isMentor(any(Mono.class));
+    }
 }

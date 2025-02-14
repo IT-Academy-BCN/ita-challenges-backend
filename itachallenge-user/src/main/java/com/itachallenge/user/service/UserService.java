@@ -1,18 +1,29 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public Mono<String> isMentor(Mono<String> githubUsername) {
-        return githubUsername.flatMap(username -> userRepository.findUsernameByUsername(username)
-                .switchIfEmpty(Mono.empty()));
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
+
+    public Mono<String> isMentorUsername(Mono<String> githubUsernameMono) {
+        return githubUsernameMono.flatMap(username ->
+                userRepository.findByUsername(username)
+                        .map(UserDocument::getUsername)
+        );
+    }
+
+    public Mono<Boolean> isMentor(Mono<String> githubUsernameMono) {
+        return githubUsernameMono.flatMap(userRepository::existsByUsername);
+    }
+
+
 }

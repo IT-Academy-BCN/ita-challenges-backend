@@ -13,7 +13,7 @@ public interface UserRepository extends ReactiveMongoRepository<UserDocument, UU
     Mono<UserDocument> findByUuid(UUID uuid);
     Mono<UserDocument> findByUsername(String username);
     Mono<Boolean> existsByUuid(UUID uuid);
-    Mono<String> findUsernameByUsername(String username);
+    Mono<Boolean> existsByUsername(String username);
 }
 
 

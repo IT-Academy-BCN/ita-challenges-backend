@@ -1,17 +1,17 @@
 package com.itachallenge.user.service;
 
-import static org.mockito.Mockito.*;
-
+import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-@ExtendWith(MockitoExtension.class)
+import static org.mockito.Mockito.*;
+
 class UserServiceTest {
 
     @Mock
@@ -20,36 +20,58 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
-    @Test
-    void isMentor_ShouldReturnUsername_WhenUserExists() {
-        String username = "mentorUser";
-        when(userRepository.findUsernameByUsername(username)).thenReturn(Mono.just(username));
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-        StepVerifier.create(userService.isMentor(Mono.just(username)))
+    @Test
+    void isMentorUsername_ShouldReturnUsername_WhenUserExists() {
+        String username = "mentorUser";
+        UserDocument user = new UserDocument();
+        user.setUsername(username);
+
+        when(userRepository.findByUsername(username)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.isMentorUsername(Mono.just(username)))
                 .expectNext(username)
                 .verifyComplete();
 
-        verify(userRepository, times(1)).findUsernameByUsername(username);
+        verify(userRepository, times(1)).findByUsername(username);
     }
 
     @Test
-    void isMentor_ShouldReturnEmpty_WhenUserDoesNotExist() {
-        String username = "nonMentorUser";
-        when(userRepository.findUsernameByUsername(username)).thenReturn(Mono.empty());
+    void isMentorUsername_ShouldReturnEmpty_WhenUserDoesNotExist() {
+        String username = "nonExistentUser";
+        when(userRepository.findByUsername(username)).thenReturn(Mono.empty());
+
+        StepVerifier.create(userService.isMentorUsername(Mono.just(username)))
+                .verifyComplete();
+
+        verify(userRepository, times(1)).findByUsername(username);
+    }
+
+    @Test
+    void isMentor_ShouldReturnTrue_WhenUserExists() {
+        String username = "mentorUser";
+        when(userRepository.existsByUsername(username)).thenReturn(Mono.just(true));
 
         StepVerifier.create(userService.isMentor(Mono.just(username)))
+                .expectNext(true)
                 .verifyComplete();
 
-        verify(userRepository, times(1)).findUsernameByUsername(username);
+        verify(userRepository, times(1)).existsByUsername(username);
     }
-
 
     @Test
-    void isMentor_ShouldReturnEmpty_WhenInputIsEmptyMono() {
-        StepVerifier.create(userService.isMentor(Mono.empty()))
+    void isMentor_ShouldReturnFalse_WhenUserDoesNotExist() {
+        String username = "nonExistentUser";
+        when(userRepository.existsByUsername(username)).thenReturn(Mono.just(false));
+
+        StepVerifier.create(userService.isMentor(Mono.just(username)))
+                .expectNext(false)
                 .verifyComplete();
+
+        verify(userRepository, times(1)).existsByUsername(username);
     }
-
-
 }
-
