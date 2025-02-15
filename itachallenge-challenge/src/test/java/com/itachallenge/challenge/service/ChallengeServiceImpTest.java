@@ -47,6 +47,7 @@ class ChallengeServiceImpTest {
 
     String titleCA = "Títol";
     String languageName = "language name";
+    String languageImage = "https://image-default.com/default.png";
     private ChallengeCreateDto formData;
     private ChallengeDocument challengeDocument;
     private ChallengeDto challengeDto;
@@ -82,8 +83,8 @@ class ChallengeServiceImpTest {
         Integer popularity = 0;
         Float percentage = 0.0f;
 
-        languageDocument = new LanguageDocument(languageRandomId, languageName);
-        LanguageDto languageDto = new LanguageDto(languageRandomId, languageName);
+        languageDocument = new LanguageDocument(languageRandomId, languageName, languageImage);
+        LanguageDto languageDto = new LanguageDto(languageRandomId, languageName, languageImage);
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId));
@@ -222,10 +223,10 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript");
-        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python");
-        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript");
-        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python");
+        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript", "https://image-default.com/javascript.png");
+        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python", "https://image-default.com/python.png");
+        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript", "https://image-default.com/javascript.png");
+        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python", "https://image-default.com/python.png");
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));

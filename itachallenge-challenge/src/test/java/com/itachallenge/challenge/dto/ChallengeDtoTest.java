@@ -42,8 +42,10 @@ class ChallengeDtoTest {
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID exampleRandomId1 = uuid.fromString("2dab6eaa-fdf4-4a93-8088-810a956e2bf8");
         UUID exampleRandomId2 = uuid2.fromString("6c02025e-b06f-420a-bafb-28c737b18473");
-        LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
-        LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
+        LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto
+                (uuid, "Javascript", "https://image-default.com/javascript.png");
+        LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto
+                (uuid2, "Python", "https://image-default.com/python.png");
         Map<Locale, String> titleMap = new HashMap<>();
             titleMap.put(Locale.forLanguageTag("ES"), "Industrias Sociis");
             titleMap.put(Locale.forLanguageTag("CA"), "Industries Sociis");

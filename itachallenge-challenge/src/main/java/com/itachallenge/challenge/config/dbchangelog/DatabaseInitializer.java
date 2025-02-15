@@ -50,7 +50,7 @@ public class DatabaseInitializer {
     // Method to execute the changes in the database
     @Execution
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
-        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "JAVA");
+        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "JAVA", null);
         reactiveMongoTemplate.save(languageDocument, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nexecution"))
                 .subscribe();

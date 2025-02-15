@@ -53,7 +53,9 @@ class ChallengeTest {
     void getLanguages() {
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        Set<LanguageDocument> languages = Set.of(new LanguageDocument(uuid, "Javascript"), new LanguageDocument(uuid2, "Python"));
+        Set<LanguageDocument> languages = Set.of(new LanguageDocument(uuid, "Javascript",
+                "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg"),
+                new LanguageDocument(uuid2, "Python", "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Python_rphody.svg"));
 
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null);
         assertEquals(languages, challenge.getLanguages());

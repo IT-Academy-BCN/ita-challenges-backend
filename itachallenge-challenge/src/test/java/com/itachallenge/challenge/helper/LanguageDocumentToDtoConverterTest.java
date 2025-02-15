@@ -35,11 +35,11 @@ class LanguageDocumentToDtoConverterTest {
         UUID[] languageID = new UUID[]{UUID.randomUUID(), UUID.randomUUID()};
         String[] languageNames = new String[]{"Java", "Python"};
 
-        languageDocument1 = new LanguageDocument(languageID[0], languageNames[0]);
-        languageDocument2 = new LanguageDocument(languageID[1], languageNames[1]);
+        languageDocument1 = new LanguageDocument(languageID[0], languageNames[0], "https://image-default.com/javascript.png");
+        languageDocument2 = new LanguageDocument(languageID[1], languageNames[1], "https://image-default.com/python.png");
 
-        languageDto1 = new LanguageDto(languageID[0], languageNames[0]);
-        languageDto2 = new LanguageDto(languageID[1], languageNames[1]);
+        languageDto1 = new LanguageDto(languageID[0], languageNames[0], "https://image-default.com/javascript.png");
+        languageDto2 = new LanguageDto(languageID[1], languageNames[1], "https://image-default.com/python.png");
 
     }
 

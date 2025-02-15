@@ -3,24 +3,42 @@
     "_id" : {
       "$uuid": "09fabe32-7362-4bfb-ac05-b7bf854c6e0f"
     },
-    "language_name": "Javascript"
+    "language_name": "Javascript",
+    "language_image": "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg"
   },
   {
     "_id" : {
       "$uuid" : "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
     },
-    "language_name": "Java"
+    "language_name": "Java",
+    "language_image": "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Java_dakuat.svg"
   },
   {
     "_id" : {
       "$uuid" : "1e047ea2-b787-49e7-acea-d79e92be3909"
     },
-    "language_name": "PHP"
+    "language_name": "PHP",
+    "language_image": "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_PHP_gmybol.svg"
   },
   {
     "_id" : {
       "$uuid" : "409c9fe8-74de-4db3-81a1-a55280cf92ef"
     },
-    "language_name": "Python"
+    "language_name": "Python",
+    "language_image": "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Python_rphody.svg"
+  },
+  {
+    "_id": {
+      "$uuid": "129568b8-b09a-4589-a0bb-053dd120f0bb"
+    },
+    "language_name": "SQL",
+    "language_image": "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_SQL_nonewj.svg"
+  },
+  {
+    "_id": {
+      "$uuid": "5caa6142-a49e-4415-a8fc-439669777d1d"
+    },
+    "language_name": "Typescript",
+    "language_image": "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Typescript_npnrq9.svg"
   }
 ]
