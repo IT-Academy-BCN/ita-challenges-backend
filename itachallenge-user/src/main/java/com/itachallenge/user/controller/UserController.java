@@ -78,7 +78,7 @@ public class UserController {
                 }))
                 .onErrorResume(e -> {
                     log.error("Error validating mentor: {}", e.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error"));
+                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request. "));
                 });
     }
 
@@ -129,7 +129,7 @@ public class UserController {
                     }
                 }).onErrorResume(e -> {
                     log.error("Error validating mentor: {}", e.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error"));
+                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request. "));
                 });
 
     }
