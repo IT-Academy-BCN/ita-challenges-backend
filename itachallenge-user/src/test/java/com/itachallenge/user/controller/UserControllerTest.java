@@ -1,11 +1,13 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.user.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
@@ -21,10 +23,19 @@ class UserControllerTest {
 
     private WebTestClient webTestClient;
 
+    private AutoCloseable mocks;
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        mocks = MockitoAnnotations.openMocks(this);
         webTestClient = WebTestClient.bindToController(userController).build();
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        if (mocks != null) {
+            mocks.close();
+        }
     }
 
     @Test
@@ -79,11 +90,10 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("Invalid request, please try again.");
+                .expectBody(String.class).isEqualTo("Invalid request. ");
 
         verify(userService, times(1)).isMentorUsername(any(Mono.class));
     }
-
 
     @Test
     void validateMentorExists_WhenUserIsMentor_Returns200() {
@@ -128,7 +138,22 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("Invalid request, please try again.");
+                .expectBody(String.class).isEqualTo("Invalid request. ");
+
+        verify(userService, times(1)).isMentor(any(Mono.class));
+    }
+
+    @Test
+    void validateMentorExists_WhenInternalServerErrorOccurs_Returns500() {
+        String githubUsername = "internalErrorUser";
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.error(new RuntimeException("Unexpected error")));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
     }
