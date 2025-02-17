@@ -40,12 +40,14 @@ class AuthControllerTest {
         String validCode = "valid-code";
         String accessToken = "valid-token";
         String githubUsername = "octocat";
+
         Map<String, Object> validationResult = new HashMap<>();
         validationResult.put("isValid", true);
         validationResult.put("username", githubUsername);
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.validateUserExists(githubUsername)).thenReturn(Mono.just(true));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -103,6 +105,52 @@ class AuthControllerTest {
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken))
                 .thenReturn(Mono.error(new RuntimeException("Token validation failed")));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .bodyValue(Map.of("code", validCode))
+                .exchange()
+                .expectStatus().is5xxServerError()
+                .expectBody()
+                .jsonPath("$.isValid").isEqualTo(false)
+                .jsonPath("$.username").isEmpty();
+    }
+
+    @Test
+    void authenticateWithGithub_UserDoesNotExist_ReturnsForbidden() {
+        String validCode = "valid-code";
+        String accessToken = "valid-token";
+        String githubUsername = "octocat";
+        Map<String, Object> validationResult = new HashMap<>();
+        validationResult.put("isValid", true);
+        validationResult.put("username", githubUsername);
+
+        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
+        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.validateUserExists(githubUsername)).thenReturn(Mono.just(false));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .bodyValue(Map.of("code", validCode))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("$.isValid").isEqualTo(false)
+                .jsonPath("$.message").isEqualTo("User does not exist in the database");
+    }
+
+    @Test
+    void authenticateWithGithub_UserValidationError_ReturnsInternalServerError() {
+        String validCode = "valid-code";
+        String accessToken = "valid-token";
+        String githubUsername = "octocat";
+        Map<String, Object> validationResult = new HashMap<>();
+        validationResult.put("isValid", true);
+        validationResult.put("username", githubUsername);
+
+        when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
+        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.validateUserExists(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")

@@ -43,17 +43,22 @@ public class AuthService implements IAuthService {
     @Value("${spring.security.oauth2.client.registration.github.client-secret}")
     private final String clientSecret;
 
+    @Value("${user.service.url}")
+    private final String userServiceUrl;
+
     @Autowired
     public AuthService(WebClient.Builder webClientBuilder,
                        @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
                        @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri,
                        @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
-                       @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret) {
+                       @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret,
+                       @Value("${user.service.url}") String userServiceUrl) {
         this.webClientBuilder = webClientBuilder;
         this.githubTokenUri = githubTokenUri;
         this.githubUserInfoUri = githubUserInfoUri;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.userServiceUrl = userServiceUrl;
     }
 
     public Mono<String> exchangeCodeForToken(String code) {
@@ -114,6 +119,7 @@ public class AuthService implements IAuthService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMap(response -> processGithubResponse(response, token))
+
                 .onErrorResume(WebClientResponseException.class, this::handleGithubApiError)
                 .onErrorResume(this::handleUnexpectedError);
     }
@@ -161,6 +167,42 @@ public class AuthService implements IAuthService {
         errorResult.put(KEY_IS_VALID, false);
         errorResult.put(KEY_USERNAME, null);
         return errorResult;
+    }
+
+    public Mono<Boolean> validateUserExists(String githubUsername) {
+        String url = userServiceUrl + "/itachallenge/api/v1/user/validate-mentor-exists?githubUsername=" + githubUsername;
+        log.debug("Request URL: {}", url);
+
+        return webClientBuilder.build()
+                .get()
+                .uri(url)
+                .retrieve()
+                .toEntity(Boolean.class)
+                .map(responseEntity -> {
+                    if (responseEntity.getStatusCode().is2xxSuccessful() && Boolean.TRUE.equals(responseEntity.getBody())) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })
+                .onErrorResume(ex -> {
+                    log.debug("Request URL: {}", url);
+                    log.debug("Validating user: {}", githubUsername);
+                    log.warn("Error validating user: {}", ex.getMessage());
+                    return Mono.just(false);
+                });
+    }
+
+    public Mono<String> callUserTest() {
+        return webClientBuilder.build()
+                .get()
+                .uri(userServiceUrl + "/itachallenge/api/v1/user/test")
+                .retrieve()
+                .bodyToMono(String.class)
+                .onErrorResume(ex -> {
+                    log.error("Error calling User microservice: {}", ex.getMessage());
+                    return Mono.just("Error calling User microservice");
+                });
     }
 
 }

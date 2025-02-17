@@ -47,12 +47,28 @@ public class AuthController {
     public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
         return authService.exchangeCodeForToken(codeRequest.get("code"))
                 .flatMap(authService::validateTokenWithGithub)
-                .map(response -> {
-                    HttpStatus status = (boolean) response.get(KEY_IS_VALID) ? HttpStatus.OK : HttpStatus.UNAUTHORIZED;
-                    return ResponseEntity.status(status).body(response);
+                .flatMap(response -> {
+                    if (!(boolean) response.get(KEY_IS_VALID)) {
+                        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response));
+                    }
+                    String githubUsername = (String) response.get(KEY_USERNAME);
+                    return authService.validateUserExists(githubUsername)
+                            .flatMap(userExists -> {
+                                if (!userExists) {
+                                    log.warn("User {} does not exist in database", githubUsername);
+
+                                    Map<String, Object> errorResponse = new HashMap<>();
+                                    errorResponse.put(KEY_IS_VALID, false);
+                                    errorResponse.put("message", "User does not exist in the database");
+
+                                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse));
+                                }
+                                return Mono.just(ResponseEntity.ok(response));
+                            });
                 })
                 .onErrorResume(ex -> {
                     log.error("GitHub authentication error: {}", ex.getMessage());
+
                     Map<String, Object> errorResponse = new HashMap<>();
                     errorResponse.put(KEY_IS_VALID, false);
                     errorResponse.put(KEY_USERNAME, null);
@@ -67,6 +83,11 @@ public class AuthController {
         response.put("application_name", appName);
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
+    }
+
+    @GetMapping("/call-user-test")
+    public Mono<String> callUserTest() {
+        return authService.callUserTest();
     }
 
 }
