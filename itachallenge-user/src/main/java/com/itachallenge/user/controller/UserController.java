@@ -73,11 +73,11 @@ public class UserController {
         return userService.isMentorUsername(Mono.just(githubUsername))
                 .map(existingUsername -> ResponseEntity.status(HttpStatus.OK).body(existingUsername))
                 .switchIfEmpty(Mono.defer(() -> {
-                    log.warn("Unauthorized access attempt for username '{}'", githubUsername);
+                    log.warn("Unauthorized access attempt (via validateMentor) for username '{}'", githubUsername);
                     return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid login attempt. "));
                 }))
                 .onErrorResume(e -> {
-                    log.error("Error validating mentor: {}", e.getMessage());
+                    log.error("Error validating mentor at validateMentor: {}", e.getMessage());
                     return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request. "));
                 });
     }
@@ -124,11 +124,11 @@ public class UserController {
                     if (Boolean.TRUE.equals(isMentor)) {
                         return ResponseEntity.ok(true);
                     } else {
-                        log.warn("Unauthorized access attempt for username '{}'", githubUsername);
+                        log.warn("Unauthorized access attempt (via validateMentorExists) for username '{}'", githubUsername);
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
                     }
                 }).onErrorResume(e -> {
-                    log.error("Error validating mentor: {}", e.getMessage());
+                    log.error("Error validating mentor at validateMentorExists: {}", e.getMessage());
                     return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false));
                 });
     }
