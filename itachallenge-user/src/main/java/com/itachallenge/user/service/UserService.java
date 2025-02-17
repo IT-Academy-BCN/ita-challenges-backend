@@ -25,5 +25,4 @@ public class UserService {
         return githubUsernameMono.flatMap(userRepository::existsByUsername);
     }
 
-
 }

@@ -186,7 +186,7 @@ class UserControllerTest {
 
         webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
-                        .queryParam("githubUsername", "validmentor") // Different casing
+                        .queryParam("githubUsername", "validMentor")
                         .build())
                 .exchange()
                 .expectStatus().isForbidden()

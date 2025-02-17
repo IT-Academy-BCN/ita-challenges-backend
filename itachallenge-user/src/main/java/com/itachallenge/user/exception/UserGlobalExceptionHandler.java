@@ -11,7 +11,6 @@ import jakarta.validation.ConstraintViolationException;
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
 
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAny(Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happend. ");
@@ -46,6 +45,5 @@ public class UserGlobalExceptionHandler {
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
-
 
 }
