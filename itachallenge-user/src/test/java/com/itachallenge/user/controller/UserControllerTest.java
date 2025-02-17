@@ -106,7 +106,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo(githubUsername);
+                .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
     }
@@ -122,7 +122,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isForbidden()
-                .expectBody(String.class).isEqualTo("Invalid login attempt. ");
+                .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
     }
@@ -138,7 +138,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("Invalid request. ");
+                .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
     }
@@ -157,4 +157,54 @@ class UserControllerTest {
 
         verify(userService, times(1)).isMentor(any(Mono.class));
     }
+
+    @Test
+    void validateMentorExists_WhenGithubUsernameMissing_Returns400() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/validate-mentor-exists")
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void validateMentorExists_WhenGithubUsernameHasSpaces_Returns403() {
+        String githubUsername = " mentorWithSpace ";
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.just(false));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(Boolean.class).isEqualTo(false);
+    }
+
+    @Test
+    void validateMentorExists_WhenGithubUsernameCaseMismatch_Returns403() {
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.just(false));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", "validmentor") // Different casing
+                        .build())
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(Boolean.class).isEqualTo(false);
+    }
+
+    @Test
+    void validateMentorExists_WhenIllegalArgumentExceptionOccurs_Returns400() {
+        String githubUsername = "invalidUser";
+        when(userService.isMentor(any(Mono.class))).thenReturn(Mono.error(new IllegalArgumentException("Invalid input")));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-exists")
+                        .queryParam("githubUsername", githubUsername)
+                        .build())
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(Boolean.class).isEqualTo(false);
+    }
+
 }
