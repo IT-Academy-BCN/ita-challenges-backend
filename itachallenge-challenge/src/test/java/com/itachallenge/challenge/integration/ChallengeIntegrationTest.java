@@ -81,25 +81,16 @@ class ChallengeIntegrationTest {
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
-        Map<Locale, String> descriptionMap = new HashMap<>();
-        descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción en español");
-        descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció en català");
-        descriptionMap.put(Locale.ENGLISH, "Description in english");
+        String description = "Description";
         Map<Locale, String> notesMap = new HashMap<>();
         notesMap.put(Locale.forLanguageTag("ES"), "Detail note en español");
         notesMap.put(Locale.forLanguageTag("CA"), "Detail note en català");
         notesMap.put(Locale.ENGLISH, "Detail note in english");
 
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleList, notesMap);
+        DetailDocument detail = new DetailDocument(description, exampleList, notesMap);
 
-        Map<Locale, String> title1 = new HashMap<>();
-        title1.put(Locale.forLanguageTag("ES"), "Loops");
-        title1.put(Locale.forLanguageTag("CA"), "Loops");
-        title1.put(Locale.ENGLISH, "Loops");
-        Map<Locale, String> title2 = new HashMap<>();
-        title2.put(Locale.forLanguageTag("ES"), "If");
-        title2.put(Locale.forLanguageTag("CA"), "If");
-        title2.put(Locale.ENGLISH, "If");
+        String title1 = "Loops";
+        String title2 = "If";
 
         ChallengeDocument challenge = new ChallengeDocument
                 (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList);

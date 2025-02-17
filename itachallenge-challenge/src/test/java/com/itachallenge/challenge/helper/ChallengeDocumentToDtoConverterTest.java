@@ -38,10 +38,7 @@ class ChallengeDocumentToDtoConverterTest {
         UUID solutionsRandomId = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        Map<Locale, String> title = new HashMap<>();
-        title.put(Locale.forLanguageTag("ES"), "Título");
-        title.put(Locale.forLanguageTag("CA"), "Títol");
-        title.put(Locale.ENGLISH, "Title");
+        String title = "Title";
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
@@ -55,15 +52,12 @@ class ChallengeDocumentToDtoConverterTest {
         exampleMap2.put(Locale.ENGLISH, "Random example");
         List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap1),
                 new ExampleDocument(exampleRandomId, exampleMap2));
-        Map<Locale, String> descriptionMap = new HashMap<>();
-        descriptionMap.put(Locale.forLanguageTag("ES"), "Detalle");
-        descriptionMap.put(Locale.forLanguageTag("CA"), "Detall");
-        descriptionMap.put(Locale.ENGLISH, "Some detail");
+        String description = "Some detail";
         Map<Locale, String> notesMap = new HashMap<>();
         notesMap.put(Locale.forLanguageTag("ES"), "Notas");
         notesMap.put(Locale.forLanguageTag("CA"), "Notes");
         notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(description, exampleDocumentList, notesMap);
 
         Integer popularity = 0;
         Float percentage = 0.0f;
@@ -122,7 +116,7 @@ class ChallengeDocumentToDtoConverterTest {
                 .isEqualTo(challengeDto2);
     }
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);

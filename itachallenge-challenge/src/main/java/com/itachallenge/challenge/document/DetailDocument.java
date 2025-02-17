@@ -13,7 +13,7 @@ import java.util.Map;
 public class DetailDocument {
 
     @Field(name="description")
-    private Map<Locale, String> description;
+    private String description;
 
     @Field(name="examples")
     private List<ExampleDocument> examples;

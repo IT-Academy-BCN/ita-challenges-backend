@@ -52,17 +52,17 @@ class ChallengeRepositoryTest {
         //challengeRepository.deleteAll().block();
 
         Map<Locale, String> titleMap1 = new HashMap<>();
-            titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
-            titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
-            titleMap1.put(Locale.ENGLISH, "Loops");
+        titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
+        titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
+        titleMap1.put(Locale.ENGLISH, "Loops");
         Map<Locale, String> titleMap2 = new HashMap<>();
-            titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
-            titleMap2.put(Locale.forLanguageTag("CA"), "Selector");
-            titleMap2.put(Locale.ENGLISH, "Selector");
+        titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
+        titleMap2.put(Locale.forLanguageTag("CA"), "Selector");
+        titleMap2.put(Locale.ENGLISH, "Selector");
         Map<Locale, String> titleMap3 = new HashMap<>();
-            titleMap3.put(Locale.forLanguageTag("ES"), "Coleccion");
-            titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
-            titleMap3.put(Locale.ENGLISH, "Collection");
+        titleMap3.put(Locale.forLanguageTag("ES"), "Coleccion");
+        titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
+        titleMap3.put(Locale.ENGLISH, "Collection");
         ExampleDocument example = new ExampleDocument(uuid_1, titleMap1);
         ExampleDocument example2 = new ExampleDocument(uuid_2, titleMap2);
         List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
@@ -76,10 +76,7 @@ class ChallengeRepositoryTest {
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
         Set<LanguageDocument> languageSet3 = Set.of(language1);
 
-        Map<Locale, String> description = new HashMap<>();
-            description.put(Locale.forLanguageTag("ES"), "Descripcion");
-            description.put(Locale.forLanguageTag("CA"), "Descripcio");
-            description.put(Locale.ENGLISH, "Description");
+        String description = "Description";
 
         Map<Locale, String> note = new HashMap<>();
             note.put(Locale.forLanguageTag("ES"), "Detalle nota");
@@ -90,12 +87,16 @@ class ChallengeRepositoryTest {
 
         DetailDocument detail = new DetailDocument(description, exampleList, note);
 
+        String title1 = "Loops";
+        String title2 = "Challenge 2";
+        String title3 = "Challenge 3";
+
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, titleMap1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList);
+                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, titleMap2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList);
+                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, titleMap3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList);
+                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
 
@@ -348,16 +349,16 @@ class ChallengeRepositoryTest {
 
     @DisplayName("Exists challenge title Test, should return true")
     @Test
-    void findByChallengeTitleCa_matchingTitle_test() {
-        Boolean exists = challengeRepository.existsByChallengeTitleCa("loops").block(); // is case insensitive
+    void findByChallengeTitle_matchingTitle_test() {
+        Boolean exists = challengeRepository.existsByChallengeTitle("loops").block(); // is case insensitive
         Assertions.assertNotNull(exists);
         Assertions.assertTrue(exists);
     }
 
     @DisplayName("Exists challenge title Test, should return false")
     @Test
-    void findByChallengeTitleCa_nonMatchingTitle_test() {
-        Boolean exists = challengeRepository.existsByChallengeTitleCa("non existing title").block(); // is case insensitive
+    void findByChallengeTitle_nonMatchingTitle_test() {
+        Boolean exists = challengeRepository.existsByChallengeTitle("non existing title").block(); // is case insensitive
         Assertions.assertNotNull(exists);
         Assertions.assertFalse(exists);
     }

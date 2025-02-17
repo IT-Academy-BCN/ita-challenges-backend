@@ -13,12 +13,9 @@ class DetailTest {
 
     @Test
     void getDescription() {
-        Map<Locale, String> descriptionMap = new HashMap<>();
-            descriptionMap.put(Locale.forLanguageTag("ES"), "Descripción del Test");
-            descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció del Test");
-            descriptionMap.put(Locale.ENGLISH, "Test Description");
-        DetailDocument detail = new DetailDocument(descriptionMap, null, null);
-        assertEquals(descriptionMap, detail.getDescription());
+        String expectedDescription = "Description of the test";
+        DetailDocument detail = new DetailDocument(expectedDescription, null, null);
+        assertEquals(expectedDescription, detail.getDescription());
     }
 
     @Test

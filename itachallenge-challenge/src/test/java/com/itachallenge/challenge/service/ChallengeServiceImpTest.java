@@ -45,7 +45,7 @@ class ChallengeServiceImpTest {
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
-    String titleCA = "Títol";
+    String title = "Títol";
     String languageName = "language name";
     private ChallengeCreateDto formData;
     private ChallengeDocument challengeDocument;
@@ -57,26 +57,26 @@ class ChallengeServiceImpTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        String descriptionCA = "Detall";
+        String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
 
-        formData = new ChallengeCreateDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody);
+        formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level), languageName, solutionBody);
 
         UUID challengeRandomId = UUID.randomUUID();
         UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
 
-        Map<Locale, String> title = Map.of(Locale.forLanguageTag("CA"), titleCA);
+        String titleDetailDocument = title;
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
         Map<Locale, String> exampleMap = Map.of(Locale.forLanguageTag("CA"), "Texte d'exemple");
         List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap));
-        Map<Locale, String> descriptionMap = Map.of(Locale.forLanguageTag("CA"), descriptionCA);
+        String descriptionDetailDocument = "Detall";
         Map<Locale, String> notesMap = Map.of(Locale.forLanguageTag("CA"), "Notes");
 
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(descriptionDetailDocument, exampleDocumentList, notesMap);
         solutionDocument = new SolutionDocument(solutionsRandomId, solutionBody, languageRandomId);
 
         Integer popularity = 0;
@@ -532,7 +532,6 @@ class ChallengeServiceImpTest {
 
     @Test
     void addChallenge_test_success() {
-        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
@@ -543,29 +542,31 @@ class ChallengeServiceImpTest {
                 .expectNext(challengeDto)
                 .verifyComplete();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
         verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
 
+    /*
+    ******************************************************************************
+    * Eliminem el test perquè 'addChallenge' ja no comprova els títols duplicats *
+    ******************************************************************************
     @Test
     void addChallenge_test_RepeatedTitleFailure() {
-        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
+        when(challengeRepository.existsByChallengeTitle(eq(title))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
 
         // Act & Assert
         StepVerifier.create(challengeService.addChallenge(formData))
                 .expectErrorMatches(throwable -> throwable instanceof ChallengeAlreadyExistsException)
                 .verify();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
+        verify(challengeRepository, times(1)).existsByChallengeTitle(eq(title));
         verifyNoInteractions(languageRepository);
-    }
+    }*/
 
     @Test
     void addChallenge_test_NonExistentLanguage() {
-        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
 
         // Act & Assert
@@ -573,11 +574,10 @@ class ChallengeServiceImpTest {
                 .expectErrorMatches(throwable -> throwable instanceof LanguageNotFoundException)
                 .verify();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
     }
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
@@ -612,7 +612,6 @@ class ChallengeServiceImpTest {
                 .expectError(ChallengeNotFoundException.class)  // Se espera que se lance una excepción
                 .verify();
     }
-
 
 
 }

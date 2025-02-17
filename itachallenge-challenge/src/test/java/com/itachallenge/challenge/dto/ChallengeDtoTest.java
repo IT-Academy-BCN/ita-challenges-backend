@@ -44,14 +44,8 @@ class ChallengeDtoTest {
         UUID exampleRandomId2 = uuid2.fromString("6c02025e-b06f-420a-bafb-28c737b18473");
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
-        Map<Locale, String> titleMap = new HashMap<>();
-            titleMap.put(Locale.forLanguageTag("ES"), "Industrias Sociis");
-            titleMap.put(Locale.forLanguageTag("CA"), "Industries Sociis");
-            titleMap.put(Locale.ENGLISH, "Sociis Industries");
-        Map<Locale, String> descriptionMap = new HashMap<>();
-            descriptionMap.put(Locale.forLanguageTag("ES"), "Descripcíón de prueba");
-            descriptionMap.put(Locale.forLanguageTag("CA"), "Descripció de prova");
-            descriptionMap.put(Locale.ENGLISH, "Test Description");
+        String title = "Sociis Industries";
+        String description = "Test description";
         Map<Locale, String> exampleMap1 = new HashMap<>();
             exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
             exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
@@ -66,15 +60,15 @@ class ChallengeDtoTest {
             notesMap.put(Locale.forLanguageTag("ES"), "Notas");
             notesMap.put(Locale.forLanguageTag("CA"), "Notes");
             notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(description, exampleDocumentList, notesMap);
 
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                , titleMap, "EASY", "2023-06-05T12:30:00+02:00", detail,
+                , title, "EASY", "2023-06-05T12:30:00+02:00", detail,
                 105, 23.58f,buildLanguagesSorted(firstLanguage, secondLanguage));
 
         challengeDtoFromDeserialization = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")
-                , titleMap, "EASY", "2023-06-05T12:30:00+02:00", detail,
+                , title, "EASY", "2023-06-05T12:30:00+02:00", detail,
                 105, 23.58f,buildLanguages(firstLanguage, secondLanguage));
     }
 
@@ -110,11 +104,11 @@ class ChallengeDtoTest {
     }
 
     static ChallengeDto buildChallengeWithBasicInfoDto
-            (UUID id, Map<Locale, String> titleMap, String level, String creationDate, DetailDocument detail,
+            (UUID id, String title, String level, String creationDate, DetailDocument detail,
              Integer popularity, Float percentage, Set<LanguageDto> languages){
         return ChallengeDto.builder()
                 .challengeId(id)
-                .title(titleMap)
+                .title(title)
                 .level(level)
                 .creationDate(creationDate)
                 .detail(detail)
