@@ -11,7 +11,8 @@ spring:
     mongodb:
       #uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
       uri: mongodb://test_users:xoDjk4eDvu5KWaCB@87.106.229.175:27017/users?authSource=admin
-      #local test uri: mongodb://localhost:27017/users
+      #uri: mongodb://localhost:27017/users
+      #uri: mongodb://172.17.0.6:27017/users
       uuid-representation: standard
   servlet:
     multipart:
