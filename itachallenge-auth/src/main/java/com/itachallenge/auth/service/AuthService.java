@@ -186,8 +186,6 @@ public class AuthService implements IAuthService {
                     }
                 })
                 .onErrorResume(ex -> {
-                    log.debug("Request URL: {}", url);
-                    log.debug("Validating user: {}", githubUsername);
                     log.warn("Error validating user: {}", ex.getMessage());
                     return Mono.just(false);
                 });
