@@ -76,3 +76,4 @@
 * Raúl Fabra - https://github.com/raulfabra20
 * Arnau Alvarez Bernal - https://github.com/arnaufata
 * Clara Pagès - https://github.com/clareta16
+* Juan Ramon Porta - https://github.com/jraporta
