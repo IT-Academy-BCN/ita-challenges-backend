@@ -64,19 +64,14 @@ class ChallengeServiceImpTest {
         formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level), languageName, solutionBody);
 
         UUID challengeRandomId = UUID.randomUUID();
-        UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
 
-        String titleDetailDocument = title;
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
-        Map<Locale, String> exampleMap = Map.of(Locale.forLanguageTag("CA"), "Texte d'exemple");
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap));
         String descriptionDetailDocument = "Detall";
-        Map<Locale, String> notesMap = Map.of(Locale.forLanguageTag("CA"), "Notes");
 
-        DetailDocument detail = new DetailDocument(descriptionDetailDocument, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(descriptionDetailDocument);
         solutionDocument = new SolutionDocument(solutionsRandomId, solutionBody, languageRandomId);
 
         Integer popularity = 0;
@@ -137,25 +132,6 @@ class ChallengeServiceImpTest {
         verifyNoInteractions(challengeRepository);
         verifyNoInteractions(challengeConverter);
     }
-
-//    @Test
-//    void getChallengeById_NonexistentId_ErrorThrown() {
-//        // Arrange
-//        UUID challengeId = UUID.randomUUID();
-//
-//        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.empty());
-//
-//        // Act
-//        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
-//
-//        // Assert
-//        StepVerifier.create(result)
-//                .expectError(ChallengeNotFoundException.class)
-//                .verify();
-//
-//        verify(challengeRepository).findByUuid(challengeId);
-//        verifyNoInteractions(challengeConverter);
-//    }
 
     @Test
     void getChallengeByIdWhenNonexistentIdThenReturnsError_test() {
@@ -547,23 +523,6 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
         verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
-
-    /*
-    ******************************************************************************
-    * Eliminem el test perquè 'addChallenge' ja no comprova els títols duplicats *
-    ******************************************************************************
-    @Test
-    void addChallenge_test_RepeatedTitleFailure() {
-        when(challengeRepository.existsByChallengeTitle(eq(title))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
-
-        // Act & Assert
-        StepVerifier.create(challengeService.addChallenge(formData))
-                .expectErrorMatches(throwable -> throwable instanceof ChallengeAlreadyExistsException)
-                .verify();
-
-        verify(challengeRepository, times(1)).existsByChallengeTitle(eq(title));
-        verifyNoInteractions(languageRepository);
-    }*/
 
     @Test
     void addChallenge_test_NonExistentLanguage() {

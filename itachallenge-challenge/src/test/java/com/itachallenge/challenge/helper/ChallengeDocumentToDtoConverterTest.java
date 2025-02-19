@@ -32,7 +32,6 @@ class ChallengeDocumentToDtoConverterTest {
 
         UUID challengeRandomId1 = UUID.randomUUID();
         UUID challengeRandomId2 = UUID.randomUUID();
-        UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
@@ -42,22 +41,8 @@ class ChallengeDocumentToDtoConverterTest {
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
-        Map<Locale, String> exampleMap1 = new HashMap<>();
-        exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
-        exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
-        exampleMap1.put(Locale.ENGLISH, "Example text");
-        Map<Locale, String> exampleMap2 = new HashMap<>();
-        exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo random");
-        exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple random");
-        exampleMap2.put(Locale.ENGLISH, "Random example");
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap1),
-                new ExampleDocument(exampleRandomId, exampleMap2));
         String description = "Some detail";
-        Map<Locale, String> notesMap = new HashMap<>();
-        notesMap.put(Locale.forLanguageTag("ES"), "Notas");
-        notesMap.put(Locale.forLanguageTag("CA"), "Notes");
-        notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(description, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(description);
 
         Integer popularity = 0;
         Float percentage = 0.0f;

@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.document.DetailDocument;
-import com.itachallenge.challenge.document.ExampleDocument;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,27 +39,11 @@ class ChallengeDtoTest {
     void setUp(){
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        UUID exampleRandomId1 = uuid.fromString("2dab6eaa-fdf4-4a93-8088-810a956e2bf8");
-        UUID exampleRandomId2 = uuid2.fromString("6c02025e-b06f-420a-bafb-28c737b18473");
         LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
         LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
         String title = "Sociis Industries";
         String description = "Test description";
-        Map<Locale, String> exampleMap1 = new HashMap<>();
-            exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
-            exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
-            exampleMap1.put(Locale.ENGLISH, "Example text");
-        Map<Locale, String> exampleMap2 = new HashMap<>();
-            exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo random");
-            exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple random");
-            exampleMap2.put(Locale.ENGLISH, "Random example");
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId1, exampleMap1),
-                new ExampleDocument(exampleRandomId2, exampleMap2));
-        Map<Locale, String> notesMap = new HashMap<>();
-            notesMap.put(Locale.forLanguageTag("ES"), "Notas");
-            notesMap.put(Locale.forLanguageTag("CA"), "Notes");
-            notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(description, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(description);
 
 
         challengeDtoToSerialize = buildChallengeWithBasicInfoDto(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296")

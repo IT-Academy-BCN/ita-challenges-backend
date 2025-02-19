@@ -49,24 +49,6 @@ class ChallengeRepositoryTest {
     @BeforeEach
     public void setUp() {
 
-        //challengeRepository.deleteAll().block();
-
-        Map<Locale, String> titleMap1 = new HashMap<>();
-        titleMap1.put(Locale.forLanguageTag("ES"), "Loops");
-        titleMap1.put(Locale.forLanguageTag("CA"), "Loops");
-        titleMap1.put(Locale.ENGLISH, "Loops");
-        Map<Locale, String> titleMap2 = new HashMap<>();
-        titleMap2.put(Locale.forLanguageTag("ES"), "Selector");
-        titleMap2.put(Locale.forLanguageTag("CA"), "Selector");
-        titleMap2.put(Locale.ENGLISH, "Selector");
-        Map<Locale, String> titleMap3 = new HashMap<>();
-        titleMap3.put(Locale.forLanguageTag("ES"), "Coleccion");
-        titleMap3.put(Locale.forLanguageTag("CA"), "Col·leccio");
-        titleMap3.put(Locale.ENGLISH, "Collection");
-        ExampleDocument example = new ExampleDocument(uuid_1, titleMap1);
-        ExampleDocument example2 = new ExampleDocument(uuid_2, titleMap2);
-        List<ExampleDocument> exampleList = new ArrayList<ExampleDocument>(Arrays.asList(example2, example));
-
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
@@ -78,14 +60,9 @@ class ChallengeRepositoryTest {
 
         String description = "Description";
 
-        Map<Locale, String> note = new HashMap<>();
-            note.put(Locale.forLanguageTag("ES"), "Detalle nota");
-            note.put(Locale.forLanguageTag("CA"), "Detall nota");
-            note.put(Locale.ENGLISH, "Detail note");
-
         List<UUID> solutionList = List.of(UUID.randomUUID(),UUID.randomUUID());
 
-        DetailDocument detail = new DetailDocument(description, exampleList, note);
+        DetailDocument detail = new DetailDocument(description);
 
         String title1 = "Loops";
         String title2 = "Challenge 2";
@@ -182,38 +159,6 @@ class ChallengeRepositoryTest {
                 () -> fail("Challenge to delete not found: " + uuid_2)
         );
     }
-
-/*  ***************************************************************************************
-    This test is no longer needed because the Title is no longer being considered as a searchable field
-    ***************************************************************************************
-
-    @DisplayName("Find by Title Test in different languages")
-    @Test
-    void findByChallengeTitleTest() {
-
-        Map<Locale, String> titleMap1 = new HashMap<>();
-            titleMap1.put(Locale.forLanguageTag("ES"), "Titulo1 en español");
-            titleMap1.put(Locale.forLanguageTag("CA"), "Titol1 en catala");
-            titleMap1.put(Locale.ENGLISH, "Title1 in english");
-        Map<Locale, String> titleMap2 = new HashMap<>();
-            titleMap2.put(Locale.forLanguageTag("ES"), "Titulo2 en español");
-            titleMap2.put(Locale.forLanguageTag("CA"), "Titol2 en catala");
-            titleMap2.put(Locale.ENGLISH, "Title2 in english");
-
-
-        Mono<ChallengeDocument> firstChallenge = challengeRepository.findByTitle(titleMap1);
-        firstChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals("Titol1 en catala", u.getTitle().get("CA")),
-                () -> fail("Challenge with name 'Titol1 en catala' in catalan not found."));
-
-        Mono<ChallengeDocument> secondChallenge = challengeRepository.findByTitle(titleMap2);
-        secondChallenge.blockOptional().ifPresentOrElse(
-                u -> assertEquals("Titulo2 en español", u.getTitle().get("ES")),
-                () -> fail("Challenge with name 'Titulo2 en español' in spanish not found."));
-    }
-
-
- */
 
     @DisplayName("Find by Level and LanguagesId - Get one Test")
     @Test
