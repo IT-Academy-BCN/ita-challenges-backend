@@ -46,4 +46,22 @@ public class DocumentToDtoConverter<S,D> {
         return mapper.map(document, dtoClass);
     }
 
-}
+
+        if (dtoClass.isAssignableFrom(ResourceDto.class) && document instanceof ResourceDocument) {
+            // Aquí afegim només el mapeig específic per a ResourceDocument i ResourceDto
+            modelMapper.createTypeMap(ResourceDocument.class, ResourceDto.class)
+                    .addMapping(ResourceDocument::getUuid, ResourceDto::setResourceId)
+                    .addMapping(ResourceDocument::getTitle, ResourceDto::setTitle)
+                    .addMapping(ResourceDocument::getDescription, ResourceDto::setDescription)
+                    .addMapping(ResourceDocument::getUrl, ResourceDto::setUrl)
+                    .addMapping(ResourceDocument::getTopic, ResourceDto::setTopic)
+                    .addMapping(ResourceDocument::getContentType, ResourceDto::setContentType)
+                    .addMapping(ResourceDocument::getChallengeIds, ResourceDto::setChallengeIds);
+        }
+
+        // Continuar amb la conversió genèrica per a qualsevol altre tipus de document
+        return modelMapper.map(document, dtoClass);
+    }
+
+
+
