@@ -56,7 +56,6 @@ dependencies {
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: '1.17.6'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-webflux'
-    testImplementation 'ch.qos.logback:logback-classic:1.4.6'
 }
 test {
     useJUnitPlatform()
