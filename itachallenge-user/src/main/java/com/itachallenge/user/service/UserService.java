@@ -1,6 +1,5 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
