@@ -14,13 +14,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Mono<String> isMentorUsername(Mono<String> githubUsernameMono) {
-        return githubUsernameMono.flatMap(username ->
-                userRepository.findByUsername(username)
-                        .map(UserDocument::getUsername)
-        );
-    }
-
     public Mono<Boolean> isMentor(Mono<String> githubUsernameMono) {
         return githubUsernameMono.flatMap(userRepository::existsByUsername);
     }

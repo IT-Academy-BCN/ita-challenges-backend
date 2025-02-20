@@ -48,54 +48,6 @@ class UserControllerTest {
     }
 
     @Test
-    void validateMentor_WhenUserIsMentor_Returns200() {
-        String githubUsername = "validMentor";
-        when(userService.isMentorUsername(any(Mono.class))).thenReturn(Mono.just(githubUsername));
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-by-username")
-                        .queryParam("githubUsername", githubUsername)
-                        .build())
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo(githubUsername);
-
-        verify(userService, times(1)).isMentorUsername(any(Mono.class));
-    }
-
-    @Test
-    void validateMentor_WhenUserIsNotMentor_Returns403() {
-        String githubUsername = "invalidMentor";
-        when(userService.isMentorUsername(any(Mono.class))).thenReturn(Mono.empty());
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-by-username")
-                        .queryParam("githubUsername", githubUsername)
-                        .build())
-                .exchange()
-                .expectStatus().isForbidden()
-                .expectBody(String.class).isEqualTo("Invalid login attempt. ");
-
-        verify(userService, times(1)).isMentorUsername(any(Mono.class));
-    }
-
-    @Test
-    void validateMentor_WhenErrorOccurs_Returns400() {
-        String githubUsername = "errorUser";
-        when(userService.isMentorUsername(any(Mono.class))).thenReturn(Mono.error(new RuntimeException("Database error")));
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/itachallenge/api/v1/user/validate-mentor-by-username")
-                        .queryParam("githubUsername", githubUsername)
-                        .build())
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(String.class).isEqualTo("Invalid request. ");
-
-        verify(userService, times(1)).isMentorUsername(any(Mono.class));
-    }
-
-    @Test
     void validateMentorExists_WhenUserIsMentor_Returns200() {
         String githubUsername = "validMentor";
         when(userService.isMentor(any(Mono.class))).thenReturn(Mono.just(true));
