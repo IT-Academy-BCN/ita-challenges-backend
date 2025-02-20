@@ -21,4 +21,8 @@ public interface IChallengeService {
     Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
+
+    Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto);
+
+    Mono<DeleteResponseDto> deleteChallengeById(String id);
 }

@@ -1,12 +1,9 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.exception.BadUUIDException;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.exception.ResourceNotFoundException;
+import com.itachallenge.challenge.enums.DifficultyLevel;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
@@ -22,6 +19,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -47,9 +45,53 @@ class ChallengeServiceImpTest {
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
+    String titleCA = "Títol";
+    String languageName = "language name";
+    private ChallengeCreateDto formData;
+    private ChallengeDocument challengeDocument;
+    private ChallengeDto challengeDto;
+    private LanguageDocument languageDocument;
+    private SolutionDocument solutionDocument;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        String descriptionCA = "Detall";
+        String level = "EASY";
+        String solutionBody = "Solution Text";
+
+        formData = new ChallengeCreateDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody);
+
+        UUID challengeRandomId = UUID.randomUUID();
+        UUID exampleRandomId = UUID.randomUUID();
+        UUID languageRandomId = UUID.randomUUID();
+        UUID solutionsRandomId = UUID.randomUUID();
+
+        Map<Locale, String> title = Map.of(Locale.forLanguageTag("CA"), titleCA);
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
+        String creationDate = "2023-06-05";
+        Map<Locale, String> exampleMap = Map.of(Locale.forLanguageTag("CA"), "Texte d'exemple");
+        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap));
+        Map<Locale, String> descriptionMap = Map.of(Locale.forLanguageTag("CA"), descriptionCA);
+        Map<Locale, String> notesMap = Map.of(Locale.forLanguageTag("CA"), "Notes");
+
+        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        solutionDocument = new SolutionDocument(solutionsRandomId, solutionBody, languageRandomId);
+
+        Integer popularity = 0;
+        Float percentage = 0.0f;
+
+        languageDocument = new LanguageDocument(languageRandomId, languageName);
+        LanguageDto languageDto = new LanguageDto(languageRandomId, languageName);
+
+        challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
+                Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId));
+
+        challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
+                Set.of(languageDto),
+                List.of(solutionsRandomId),
+                popularity, percentage);
     }
 
     @Test
@@ -487,5 +529,90 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(0)).findByUuid(any(UUID.class));
         verify(challengeRepository, times(0)).save(any(ChallengeDocument.class));
     }
+
+    @Test
+    void addChallenge_test_success() {
+        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
+        when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
+        when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
+        when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class))).thenReturn(challengeDto);
+
+        // Act & Assert
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectNext(challengeDto)
+                .verifyComplete();
+
+        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
+        verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
+        verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+        verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
+    }
+
+    @Test
+    void addChallenge_test_RepeatedTitleFailure() {
+        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
+
+        // Act & Assert
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectErrorMatches(throwable -> throwable instanceof ChallengeAlreadyExistsException)
+                .verify();
+
+        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
+        verifyNoInteractions(languageRepository);
+    }
+
+    @Test
+    void addChallenge_test_NonExistentLanguage() {
+        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
+        when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
+
+        // Act & Assert
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectErrorMatches(throwable -> throwable instanceof LanguageNotFoundException)
+                .verify();
+
+        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
+        verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
+    }
+
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
+                                               Set<LanguageDto> languages,
+                                               List<UUID> solutions, Integer popularity, Float percentage) {
+        ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
+        when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
+        when(challengeDocMocked.getTitle()).thenReturn(title);
+        when(challengeDocMocked.getLevel()).thenReturn(level);
+        when(challengeDocMocked.getDetail()).thenReturn(detail);
+        when(challengeDocMocked.getCreationDate()).thenReturn(creationDate);
+        when(challengeDocMocked.getLanguages()).thenReturn(languages);
+        when(challengeDocMocked.getSolutions()).thenReturn(solutions);
+        when(challengeDocMocked.getPopularity()).thenReturn(popularity);
+        when(challengeDocMocked.getPercentage()).thenReturn(percentage);
+        return challengeDocMocked;
+    }
+
+
+
+    @Test
+    void deleteChallengeById_NotFound() {
+        // Arrange
+        String id = "2f948de0-6f0c-4089-90b9-7f70a0812322";  // ID no existente
+        UUID uuid = UUID.fromString(id);  // Convertir a UUID
+
+        // Mockear el repositorio para que no se encuentre el desafío
+        when(challengeRepository.deleteByUuid(uuid)).thenReturn(Mono.error(new ChallengeNotFoundException("Challenge with id: " + id + " not found")));
+
+        // Act
+        Mono<DeleteResponseDto> result = challengeService.deleteChallengeById(id);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectError(ChallengeNotFoundException.class)  // Se espera que se lance una excepción
+                .verify();
+    }
+
+
 
 }

@@ -225,6 +225,21 @@ public class ChallengeController {
                 });
     }
 
+    @PostMapping("/challenges")
+    @Operation(
+            operationId = "Add challenge.",
+            summary = "Post a challenge providing the necessary data.",
+            description = "Sending the title, description, difficulty level, language and solution, a new challenge document will be inserted in the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeCreateDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
+            }
+    )
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
+         return challengeService.addChallenge(createFormDto)
+                 .map(ResponseEntity::ok);
+    }
+
     @GetMapping("/version")
     @Operation(
             summary = "Get Application Version",
@@ -242,5 +257,22 @@ public class ChallengeController {
         response.put("application_name", appName);
         response.put("version", version);
         return Mono.just(ResponseEntity.ok(response));
+    }
+
+    @DeleteMapping(path = "/challenges/{challengeId}")
+    @Operation(
+            operationId = "Delete a chosen challenge.",
+            summary = "Deleting a challenge.",
+            description = "Sending the ID Challenge through the URI to delete it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+            }
+    )
+    public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(@PathVariable("challengeId") String id) {
+
+        return challengeService.deleteChallengeById(id)
+                .map(dto -> ResponseEntity.ok().body(dto));
     }
 }

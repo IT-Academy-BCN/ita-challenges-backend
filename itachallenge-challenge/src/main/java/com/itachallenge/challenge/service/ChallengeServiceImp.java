@@ -1,13 +1,16 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.*;
+import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
@@ -26,7 +29,6 @@ import reactor.core.publisher.Mono;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
-
 
 
 @Service
@@ -57,7 +59,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
 
-    @Cacheable (value = "challenges", key="#id", unless="#result==null")
+    @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
         return validateUUID(id)
                 .flatMap(challengeId -> challengeRepository.findByUuid(challengeId)
@@ -110,7 +112,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    @Cacheable (value = "allLanguages")
+    @Cacheable(value = "allLanguages")
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
@@ -120,7 +122,7 @@ public class ChallengeServiceImp implements IChallengeService {
         });
     }
 
-    @Cacheable (value="challenges", key="{#offset, #limit}", unless="#result==null")
+    @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
 
@@ -138,7 +140,7 @@ public class ChallengeServiceImp implements IChallengeService {
 
     }
 
-    @Cacheable (value="solutions", key="{#idChallenge, #idLanguage}", unless="#result==null")
+    @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -216,7 +218,7 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<String> updateResourceByUuid(String id, Map<String, Object> updates) {
         return validateUUID(id)
                 .flatMap(resourceId -> challengeRepository.findByUuid(resourceId)
-                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND    )))
+                        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Resource with id " + resourceId + NOT_FOUND)))
                         .flatMap(resource -> {
                             updates.forEach((key, value) -> {
                                 Field field = ReflectionUtils.findField(resource.getClass(), key);
@@ -232,6 +234,57 @@ public class ChallengeServiceImp implements IChallengeService {
                 .doOnError(error -> log.error("Error occurred while updating resource: {}", error.getMessage()));
     }
 
+    @Override
+    public Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto) {
+        String catalanTitle = challengeCreateDto.getChallengeTitle();
+        String codingLanguage = challengeCreateDto.getLanguage();
+
+        return challengeRepository.existsByChallengeTitleCa(catalanTitle)
+                .flatMap(exists -> {
+                    if (exists) {
+                        return Mono.error(new ChallengeAlreadyExistsException("Invalid title: A challenge titled "
+                                + catalanTitle.toLowerCase() + " already exists"));
+                    }
+                    return languageRepository.findFirstByLanguageName(codingLanguage)
+                            .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage
+                                    + " is not valid")))
+                            .flatMap(existingLanguage -> {
+                                SolutionDocument solution = SolutionDocument.builder()
+                                        .uuid(UUID.randomUUID())
+                                        .solutionText(challengeCreateDto.getSolution())
+                                        .idLanguage(existingLanguage.getIdLanguage())
+                                        .build();
+                                return solutionRepository.save(solution)
+                                        .flatMap(savedSolution -> {
+                                            ChallengeDocument challenge = buildChallengeDocument(challengeCreateDto,
+                                                    existingLanguage, savedSolution.getUuid());
+                                            return challengeRepository.save(challenge)
+                                                    .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
+                                                            ChallengeDto.class));
+                                        });
+                            });
+                });
+    }
+
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId) {
+        Map<Locale, String> catalanTitle = Map.of(Locale.forLanguageTag("CA"), dto.getChallengeTitle());
+        Map<Locale, String> catalanDescription = Map.of(Locale.forLanguageTag("CA"), dto.getDescription());
+
+        DetailDocument detail = DetailDocument.builder()
+                .description(catalanDescription)
+                .build();
+
+        return ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .title(catalanTitle)
+                .level(dto.getLevel().toString())
+                .detail(detail)
+                .languages(Set.of(language))
+                .solutions(List.of(solutionId))
+                .build();
+    }
+
+
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();
 
@@ -242,5 +295,17 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return Mono.just(UUID.fromString(id));
     }
+
+    public Mono<DeleteResponseDto> deleteChallengeById(String id) {
+        return validateUUID(id)
+                .flatMap(challengeId -> challengeRepository.deleteByUuid(challengeId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, id))))
+                        .thenReturn(new DeleteResponseDto(id, "Challenge deleted successfully."))
+                )
+                .doOnSuccess(response -> log.info("Challenge deleted with ID: {}", response.getId()))
+                .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
+    }
+
+
 
 }
