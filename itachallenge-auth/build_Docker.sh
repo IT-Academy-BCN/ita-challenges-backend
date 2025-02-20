@@ -3,6 +3,8 @@
 #       export ENV=dev
 #       export REGISTRY_NAME=itacademybcn/itachallenges
 #       export MICROSERVICE_VERSION=x.x.x
+#       export GITHUB_CLIENT_ID={GITHUB_CLIENT_ID}
+#       export GITHUB_CLIENT_SECRET={GITHUB_CLIENT_SECRET}
 #       ./itachallenge-auth/build_Docker.sh
 #
 #  At the server, execute:
@@ -13,6 +15,8 @@
 echo " ENV="${ENV}
 echo " REGISTRY_NAME="${REGISTRY_NAME}
 echo " MICROSERVICE_VERSION="${MICROSERVICE_VERSION}
+echo " GITHUB_CLIENT_ID="${GITHUB_CLIENT_ID}
+echo " GITHUB_CLIENT_SECRET="${GITHUB_CLIENT_SECRET}
 
 
 now="$(date +'%d-%m-%Y %H:%M:%S:%3N')"
@@ -21,7 +25,10 @@ base_dir=`pwd`
 ./gradlew :itachallenge-auth:clean && ./gradlew :itachallenge-auth:build
 
 cd itachallenge-auth
-docker build -t=${REGISTRY_NAME}:itachallenge-auth-${MICROSERVICE_VERSION} .
+docker build --build-arg GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID} \
+             --build-arg GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
+             -t=${REGISTRY_NAME}:itachallenge-auth-${MICROSERVICE_VERSION} .
+
 
 #upload image to DockerHub
 if [ ${ENV} = "dev" ] || [ ${ENV} = "pre" ];

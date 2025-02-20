@@ -19,7 +19,7 @@ routes:
   -
     uri: /itachallenge/api/v1/auth/**
     methods:
-      - GET
+      - GET, POST
     upstream_id: 3
   -
     uri: /api-docs**
