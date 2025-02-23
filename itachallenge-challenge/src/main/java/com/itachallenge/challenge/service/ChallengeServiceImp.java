@@ -140,6 +140,26 @@ public class ChallengeServiceImp implements IChallengeService {
 
     }
 
+    @Cacheable(value = "challengesByTopic", key = "{#topic, #offset, #limit}", unless = "#result == null")
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByTopic(String topic, int offset, int limit) {
+        Flux<ChallengeDocument> challenges = challengeRepository.findByDetail_Topic(topic)
+                .switchIfEmpty(Mono.error(new NotFoundException("No challenges found for topic: " + topic)));
+
+        return challenges.count().flatMap(total -> {
+            Flux<ChallengeDocument> pagedChallenges = challenges.skip(offset);
+            if (limit != -1) {
+                pagedChallenges = pagedChallenges.take(limit);
+            }
+            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                    .collectList()
+                    .map(challengeDtoList -> {
+                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
+                        return resultDto;
+                    });
+        });
+    }
+
     @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);

@@ -25,4 +25,6 @@ public interface IChallengeService {
     Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto);
 
     Mono<DeleteResponseDto> deleteChallengeById(String id);
+
+    Mono<GenericResultDto<ChallengeDto>> getChallengesByTopic(String topic, int offset, int limit);
 }

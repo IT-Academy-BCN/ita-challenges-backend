@@ -2,8 +2,10 @@ package com.itachallenge.challenge.helper;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.dto.ResourceDto;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -21,6 +23,11 @@ public class DocumentToDtoConverter<S,D> {
     }
 
     static final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public S convertDtoToDocument(D dto, Class<S> documentClass) {
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(dto, documentClass);
+    }
 
     public D convertDocumentToDto(S document, Class<D> dtoClass){
         ModelMapper mapper = new ModelMapper();
@@ -43,13 +50,8 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
         }
 
-        return mapper.map(document, dtoClass);
-    }
-
-
         if (dtoClass.isAssignableFrom(ResourceDto.class) && document instanceof ResourceDocument) {
-            // Aquí afegim només el mapeig específic per a ResourceDocument i ResourceDto
-            modelMapper.createTypeMap(ResourceDocument.class, ResourceDto.class)
+            mapper.createTypeMap(ResourceDocument.class, ResourceDto.class)
                     .addMapping(ResourceDocument::getUuid, ResourceDto::setResourceId)
                     .addMapping(ResourceDocument::getTitle, ResourceDto::setTitle)
                     .addMapping(ResourceDocument::getDescription, ResourceDto::setDescription)
@@ -59,9 +61,7 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(ResourceDocument::getChallengeIds, ResourceDto::setChallengeIds);
         }
 
-        // Continuar amb la conversió genèrica per a qualsevol altre tipus de document
-        return modelMapper.map(document, dtoClass);
+        return mapper.map(document, dtoClass);
     }
 
-
-
+}
