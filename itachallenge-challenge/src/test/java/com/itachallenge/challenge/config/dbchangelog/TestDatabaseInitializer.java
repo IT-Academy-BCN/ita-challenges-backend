@@ -46,7 +46,7 @@ public class TestDatabaseInitializer {
 
     @Execution
     public void execution(ReactiveMongoTemplate reactiveMongoTemplate) {
-        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "LanguageDemo");
+        LanguageDocument languageDocument = new LanguageDocument(UUID.randomUUID(), "LanguageDemo", "https://image-default.com/default.png");
         reactiveMongoTemplate.save(languageDocument, COLLECTION_NAME)
                 .doOnSuccess(success -> logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nexecution"))
                 .subscribe();

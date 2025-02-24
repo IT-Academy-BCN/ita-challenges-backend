@@ -47,10 +47,10 @@ class ChallengeDocumentToDtoConverterTest {
         Integer popularity = 0;
         Float percentage = 0.0f;
 
-        LanguageDocument languageDoc1 = new LanguageDocument(languageRandomId1, languageNames[0]);
-        LanguageDocument languageDoc2 = new LanguageDocument(languageRandomId2, languageNames[1]);
-        LanguageDto languageDto1 = new LanguageDto(languageRandomId1, languageNames[0]);
-        LanguageDto languageDto2 = new LanguageDto(languageRandomId2, languageNames[1]);
+        LanguageDocument languageDoc1 = new LanguageDocument(languageRandomId1, languageNames[0], "https://image-default.com/javascript.png");
+        LanguageDocument languageDoc2 = new LanguageDocument(languageRandomId2, languageNames[1], "https://image-default.com/python.png");
+        LanguageDto languageDto1 = new LanguageDto(languageRandomId1, languageNames[0], "https://image-default.com/javascript.png");
+        LanguageDto languageDto2 = new LanguageDto(languageRandomId2, languageNames[1], "https://image-default.com/python.png");
 
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId));

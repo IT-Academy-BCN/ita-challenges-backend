@@ -39,8 +39,10 @@ class ChallengeDtoTest {
     void setUp(){
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
-        LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto(uuid2, "Python");
+        LanguageDto firstLanguage = LanguageDtoTest.buildLanguageDto
+                (uuid, "Javascript", "https://image-default.com/javascript.png");
+        LanguageDto secondLanguage = LanguageDtoTest.buildLanguageDto
+                (uuid2, "Python", "https://image-default.com/python.png");
         String title = "Sociis Industries";
         String description = "Test description";
         DetailDocument detail = new DetailDocument(description);

@@ -11,11 +11,13 @@
   "languages" : [
     {
       "id_language" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f",
-      "language_name" : "Javascript"
+      "language_name" : "Javascript",
+      "language_image" : "https://image-default.com/javascript.png"
     },
     {
       "id_language" : "409c9fe8-74de-4db3-81a1-a55280cf92ef",
-      "language_name" : "Python"
+      "language_name" : "Python",
+      "language_image" : "https://image-default.com/python.png"
     }
   ]
 }
