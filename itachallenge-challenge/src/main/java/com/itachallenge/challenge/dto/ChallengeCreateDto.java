@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.dto;
 
 import com.itachallenge.challenge.enums.DifficultyLevel;
+import com.itachallenge.challenge.enums.Topic;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -23,4 +24,7 @@ public class ChallengeCreateDto {
 
     @NotEmpty(message = "cannot be empty")
     private String solution;
+
+    @NotEmpty(message = "cannot be empty")
+    private Topic topic;
 }

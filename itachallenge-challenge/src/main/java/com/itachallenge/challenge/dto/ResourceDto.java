@@ -2,8 +2,11 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.itachallenge.challenge.enums.ResourceContentType;
+import com.itachallenge.challenge.enums.Topic;
 import lombok.*;
 import org.springframework.stereotype.Component;
+import java.util.Objects;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +20,7 @@ import java.util.UUID;
 @Setter
 public class ResourceDto {
 
-    @JsonProperty(value = "id_resource", index = 0)
+    @JsonProperty(value = "resourceId", index = 0)
     private UUID resourceId;
 
     @JsonProperty(value = "title", index = 1)
@@ -30,11 +33,31 @@ public class ResourceDto {
     private String url;
 
     @JsonProperty(value = "topic", index = 4)
-    private String topic;
+    private Topic topic;
 
-    @JsonProperty(value = "content_type", index = 5)
-    private String contentType;
+    @JsonProperty(value = "contentType", index = 5)
+    private ResourceContentType contentType;
 
-    @JsonProperty(value = "challenge_ids", index = 6)
+    @JsonProperty(value = "challengeIds", index = 6)
     private List<UUID> challengeIds;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ResourceDto that = (ResourceDto) o;
+        return Objects.equals(resourceId, that.resourceId) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(url, that.url) &&
+                Objects.equals(topic, that.topic) &&
+                Objects.equals(contentType, that.contentType) &&
+                Objects.equals(challengeIds, that.challengeIds);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(resourceId, title, description, url, topic, contentType, challengeIds);
+    }
+
 }

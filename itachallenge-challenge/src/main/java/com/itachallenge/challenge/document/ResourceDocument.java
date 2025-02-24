@@ -1,5 +1,7 @@
 package com.itachallenge.challenge.document;
 
+import com.itachallenge.challenge.enums.ResourceContentType;
+import com.itachallenge.challenge.enums.Topic;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,7 +19,7 @@ public class ResourceDocument {
 
     @Id
     @Field("_id")
-    private UUID uuid;
+    private UUID resourceId;
 
     @Field(name = "title")
     private String title;
@@ -29,10 +31,10 @@ public class ResourceDocument {
     private String url;
 
     @Field(name = "topic")
-    private String topic;
+    private Topic topic;
 
     @Field(name = "content_type")
-    private String contentType;
+    private ResourceContentType contentType;
 
     @Field(name = "challenge_ids")
     private List<UUID> challengeIds;

@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.ChallengeAlreadyExistsException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
@@ -349,7 +350,7 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_test_validRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució");
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS);
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
@@ -369,7 +370,7 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_test_emptyField_statusBadRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució");
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.COMPONENTS);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
@@ -382,7 +383,7 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_test_repeatedTitle_statusBadRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("Already-existing title", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució");
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS);
 
         when(challengeService.addChallenge(any()))
                 .thenThrow(new ChallengeAlreadyExistsException("A challenge with this title already exists"));
@@ -398,7 +399,7 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució");
+                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució", Topic.COMPONENTS);
 
         when(challengeService.addChallenge(any()))
                 .thenThrow(new LanguageNotFoundException("Language not found: Invalid language"));

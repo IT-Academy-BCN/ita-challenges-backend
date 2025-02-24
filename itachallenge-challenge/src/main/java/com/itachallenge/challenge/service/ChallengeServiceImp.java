@@ -9,6 +9,7 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -21,14 +22,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -140,25 +145,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     }
 
-    @Cacheable(value = "challengesByTopic", key = "{#topic, #offset, #limit}", unless = "#result == null")
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByTopic(String topic, int offset, int limit) {
-        Flux<ChallengeDocument> challenges = challengeRepository.findByDetail_Topic(topic)
-                .switchIfEmpty(Mono.error(new NotFoundException("No challenges found for topic: " + topic)));
-
-        return challenges.count().flatMap(total -> {
-            Flux<ChallengeDocument> pagedChallenges = challenges.skip(offset);
-            if (limit != -1) {
-                pagedChallenges = pagedChallenges.take(limit);
-            }
-            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-                    .collectList()
-                    .map(challengeDtoList -> {
-                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
-                        return resultDto;
-                    });
-        });
-    }
 
     @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
@@ -259,6 +245,13 @@ public class ChallengeServiceImp implements IChallengeService {
         String catalanTitle = challengeCreateDto.getChallengeTitle();
         String codingLanguage = challengeCreateDto.getLanguage();
 
+        Topic topic;
+        try {
+            topic = Topic.fromDisplayName(String.valueOf(challengeCreateDto.getTopic()));
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
+        }
+
         return challengeRepository.existsByChallengeTitleCa(catalanTitle)
                 .flatMap(exists -> {
                     if (exists) {
@@ -277,16 +270,18 @@ public class ChallengeServiceImp implements IChallengeService {
                                 return solutionRepository.save(solution)
                                         .flatMap(savedSolution -> {
                                             ChallengeDocument challenge = buildChallengeDocument(challengeCreateDto,
-                                                    existingLanguage, savedSolution.getUuid());
+                                                    existingLanguage, savedSolution.getUuid(), topic);
                                             return challengeRepository.save(challenge)
-                                                    .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
+                                                    .map(savedChallenge -> challengeConverter.convertDocumentToDto(savedChallenge,
                                                             ChallengeDto.class));
                                         });
                             });
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId) {
+
+
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic) {
         Map<Locale, String> catalanTitle = Map.of(Locale.forLanguageTag("CA"), dto.getChallengeTitle());
         Map<Locale, String> catalanDescription = Map.of(Locale.forLanguageTag("CA"), dto.getDescription());
 
@@ -301,8 +296,10 @@ public class ChallengeServiceImp implements IChallengeService {
                 .detail(detail)
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
+                .topic(topic)
                 .build();
     }
+
 
 
     private Mono<UUID> validateUUID(String id) {
@@ -326,6 +323,22 @@ public class ChallengeServiceImp implements IChallengeService {
                 .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
     }
 
+    @Override
+    public Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size) {
+        // Utilitzem directament el Topic per cercar els desafiaments
+        return challengeRepository.findByTopic(topic)
+                .collectList()
+                .map(challenges -> {
+                    List<ChallengeDto> challengeDtos = challenges.stream()
+                            .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                            .collect(Collectors.toList());
+
+                    ChallengeListDto challengeListDto = new ChallengeListDto();
+                    challengeListDto.setResults(challengeDtos);
+                    challengeListDto.setTotal(challenges.size());
+                    return challengeListDto;
+                });
+    }
 
 
 }

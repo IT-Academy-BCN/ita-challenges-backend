@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -218,9 +219,19 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
+        Topic topic;
+        try {
+            topic = Topic.fromDisplayName(String.valueOf(createFormDto.getTopic()));
+            createFormDto.setTopic(topic);
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new IllegalArgumentException("Invalid topic provided: " + createFormDto.getTopic()));
+        }
+
         return challengeService.addChallenge(createFormDto)
                 .map(ResponseEntity::ok);
     }
+
+
 
     @GetMapping("/version")
     @Operation(

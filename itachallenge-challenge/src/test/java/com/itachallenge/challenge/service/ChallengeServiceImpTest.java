@@ -3,6 +3,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -61,7 +62,7 @@ class ChallengeServiceImpTest {
         String level = "EASY";
         String solutionBody = "Solution Text";
 
-        formData = new ChallengeCreateDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody);
+        formData = new ChallengeCreateDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody, Topic.LISTS);
 
         UUID challengeRandomId = UUID.randomUUID();
         UUID exampleRandomId = UUID.randomUUID();
@@ -86,7 +87,7 @@ class ChallengeServiceImpTest {
         LanguageDto languageDto = new LanguageDto(languageRandomId, languageName);
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
-                Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId));
+                Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
@@ -613,6 +614,57 @@ class ChallengeServiceImpTest {
                 .verify();
     }
 
+    @Test
+    void getChallengesByTopic_WhenChallengesExist_ReturnsResult() {
+        Topic topic = Topic.DEBUGGING;
+        int offset = 0;
+        int limit = 10;
 
+        when(challengeRepository.findByTopic(topic)).thenReturn(Flux.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
+                .thenReturn(challengeDto);
+
+        StepVerifier.create(challengeService.getChallengesByTopic(topic, offset, limit))
+                .expectNextMatches(result ->
+                        result.getTotal() == 1 &&
+                                result.getResults().size() == 1 &&
+                                result.getResults().get(0).getChallengeId().equals(challengeDto.getChallengeId()))
+                .verifyComplete();
+    }
+
+
+    @Test
+    void getChallengesByTopic_WhenNoChallengesExist_ReturnsEmptyResult() {
+        Topic topic = Topic.COMPONENTS;
+        int offset = 0;
+        int limit = 10;
+
+        // Simula que no hi ha desafiaments per al topic
+        when(challengeRepository.findByTopic(topic)).thenReturn(Flux.empty());
+
+        StepVerifier.create(challengeService.getChallengesByTopic(topic, offset, limit))
+                .expectNextMatches(result ->
+                        result.getTotal() == 0 &&  // El total ha de ser 0 perquè no hi ha desafiaments
+                                result.getResults().isEmpty())  // Verifiquem que la llista estigui buida
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengesByTopic_WhenErrorOccurs_ReturnsError() {
+        Topic topic = Topic.COMPONENTS;
+        int offset = 0;
+        int limit = 10;
+
+        // Simula un error en el repositori
+        when(challengeRepository.findByTopic(topic)).thenReturn(Flux.error(new RuntimeException("Database error")));
+
+        StepVerifier.create(challengeService.getChallengesByTopic(topic, offset, limit))
+                .expectErrorMatches(error ->
+                        error instanceof RuntimeException &&
+                                error.getMessage().equals("Database error"))  // Verifiquem l'error retornat
+                .verify();
+    }
 
 }
+
+

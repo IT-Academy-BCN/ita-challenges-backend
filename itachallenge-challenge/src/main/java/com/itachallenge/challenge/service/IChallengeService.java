@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.enums.Topic;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -26,5 +27,6 @@ public interface IChallengeService {
 
     Mono<DeleteResponseDto> deleteChallengeById(String id);
 
-    Mono<GenericResultDto<ChallengeDto>> getChallengesByTopic(String topic, int offset, int limit);
+    Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size);
+
 }

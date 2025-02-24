@@ -52,7 +52,7 @@ public class DocumentToDtoConverter<S,D> {
 
         if (dtoClass.isAssignableFrom(ResourceDto.class) && document instanceof ResourceDocument) {
             mapper.createTypeMap(ResourceDocument.class, ResourceDto.class)
-                    .addMapping(ResourceDocument::getUuid, ResourceDto::setResourceId)
+                    .addMapping(ResourceDocument::getResourceId, ResourceDto::setResourceId)
                     .addMapping(ResourceDocument::getTitle, ResourceDto::setTitle)
                     .addMapping(ResourceDocument::getDescription, ResourceDto::setDescription)
                     .addMapping(ResourceDocument::getUrl, ResourceDto::setUrl)

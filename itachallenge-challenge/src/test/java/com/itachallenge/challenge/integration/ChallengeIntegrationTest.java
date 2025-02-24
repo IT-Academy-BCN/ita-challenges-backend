@@ -2,6 +2,7 @@ package com.itachallenge.challenge.integration;
 
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -102,9 +103,9 @@ class ChallengeIntegrationTest {
         title2.put(Locale.ENGLISH, "If");
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }

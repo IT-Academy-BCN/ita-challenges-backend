@@ -2,6 +2,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.ResourceDto;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
 import org.slf4j.Logger;
@@ -32,10 +33,25 @@ public class ResourceService implements IResourceService {
     @CacheEvict(value = "resources", allEntries = true)
     @Override
     public Mono<ResourceDto> createResource(ResourceDto resourceDto) {
-        return challengeService.getChallengesByTopic(resourceDto.getTopic(), 0, -1)
+        log.info("Creating resource for topic: {}", resourceDto.getTopic());
+
+        if (resourceDto.getContentType() == null) {
+            return Mono.error(new IllegalArgumentException("Content type is required"));
+        }
+        Topic topic;
+        try {
+            topic = Topic.fromDisplayName(resourceDto.getTopic().toString());
+            resourceDto.setTopic(topic);
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new IllegalArgumentException("Invalid topic provided: " + resourceDto.getTopic()));
+        }
+
+        return challengeService.getChallengesByTopic(topic, 0, -1)
+                .doOnSubscribe(sub -> log.info("Calling getChallengesByTopic for topic: {}", resourceDto.getTopic()))
+                .doOnSuccess(result -> log.info("Received challenge result: {}", result))
                 .flatMap(challengeResult -> {
-                    List<ChallengeDto> matchingChallenges = challengeResult != null && challengeResult.getResults() != null
-                            ? Arrays.asList(challengeResult.getResults())
+                    List<ChallengeDto> matchingChallenges = challengeResult.getResults() != null
+                            ? challengeResult.getResults()
                             : new ArrayList<>();
 
                     if (matchingChallenges.size() == 1) {
@@ -49,19 +65,21 @@ public class ResourceService implements IResourceService {
                     return saveResource(resourceDto);
                 })
                 .switchIfEmpty(saveResource(resourceDto))
+                .doOnError(error -> log.error("Error creating resource: {}", error.getMessage()))
                 .onErrorResume(error -> {
-                    log.error("Error creating resource: {}", error.getMessage());
+                    log.error("Handling error gracefully: {}", error.getMessage());
                     return Mono.error(new RuntimeException("Error creating resource"));
                 });
     }
 
-
     private Mono<ResourceDto> saveResource(ResourceDto resourceDto) {
         ResourceDocument resourceDocument = resourceConverter.convertDtoToDocument(resourceDto, ResourceDocument.class);
 
-        if (resourceDocument.getUuid() == null) {
-            resourceDocument.setUuid(UUID.randomUUID());
+        if (resourceDocument.getResourceId() == null) {
+            resourceDocument.setResourceId(UUID.randomUUID());
         }
+
+        resourceDocument.setContentType(resourceDto.getContentType());
 
         return resourceRepository.save(resourceDocument)
                 .map(savedResource -> resourceConverter.convertDocumentToDto(savedResource, ResourceDto.class))
