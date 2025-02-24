@@ -2,11 +2,9 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
-import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +46,6 @@ class ChallengeControllerTest {
     private PropertiesConfig config;
 
     //TODO - pending externalize to service layer (internal comms)
-    @MockBean
-    ZMQClient zmqClient;
-    @MockBean
-    ChallengeRequestDto challengeInputDto;
 
 /*    @Test
     void test() {
