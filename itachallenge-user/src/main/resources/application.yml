@@ -10,9 +10,9 @@ spring:
   data:
     mongodb:
       #uri: mongodb://admin_user:yxRG4sYBDjPFzbh5@localhost:27017/users?authSource=admin
-      #uri: mongodb://test_users:xoDjk4eDvu5KWaCB@87.106.229.175:27017/users?authSource=admin
+      uri: mongodb://test_users:xoDjk4eDvu5KWaCB@87.106.229.175:27017/users?authSource=admin
       #uri: mongodb://localhost:27017/users
-      uri: mongodb://mongodb-test:27017/users
+      #uri: mongodb://mongodb-test:27017/users
       uuid-representation: standard
   servlet:
     multipart:
