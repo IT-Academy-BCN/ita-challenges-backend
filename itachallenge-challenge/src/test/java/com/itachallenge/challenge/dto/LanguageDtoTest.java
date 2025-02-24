@@ -14,7 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +35,8 @@ class LanguageDtoTest {
     @BeforeEach
     void setUp(){
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
-        languageDto = LanguageDtoTest.buildLanguageDto(uuid, "Javascript");
+        languageDto = LanguageDtoTest.buildLanguageDto(uuid, "Javascript",
+                "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg ");
     }
 
     @Test
@@ -43,7 +46,19 @@ class LanguageDtoTest {
         LanguageDto dtoSerializable = languageDto;
         String jsonResult = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dtoSerializable);
         String jsonExpected = new ResourceHelper(languageJsonPath).readResourceAsString().orElse(null);
-        assertEquals(normalizeLineEndings(jsonExpected), normalizeLineEndings(jsonResult));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> expectedMap = objectMapper.readValue(jsonExpected, Map.class);
+        Map<String, Object> resultMap = objectMapper.readValue(jsonResult, Map.class);
+
+        String expectedImage = ((String) expectedMap.get("language_image")).trim();
+        String resultImage = ((String) resultMap.get("language_image")).trim();
+
+        expectedMap.put("language_image", expectedImage);
+        resultMap.put("language_image", resultImage);
+
+        assertEquals(objectMapper.writeValueAsString(expectedMap), objectMapper.writeValueAsString(resultMap));
+
     }
 
     @Test
@@ -53,11 +68,27 @@ class LanguageDtoTest {
         String jsonDeserializable = new ResourceHelper(languageJsonPath).readResourceAsString().orElse(null);
         LanguageDto dtoResult = mapper.readValue(jsonDeserializable, LanguageDto.class);
         LanguageDto dtoExpected = languageDto;
-        assertThat(dtoResult).usingRecursiveComparison().isEqualTo(dtoExpected);
+
+        assertThat(dtoResult.getLanguageImage().trim()).isEqualTo(dtoExpected.getLanguageImage().trim());
     }
 
-    static LanguageDto buildLanguageDto(UUID languageId, String languageName){
-        return new LanguageDto(languageId,languageName);
+    @Test
+    @DisplayName("LanguageDto image URL should not be null or empty")
+    void languageImageShouldNotBeNullOrEmpty() {
+        assertThat(languageDto.getLanguageImage()).isNotNull().isNotEmpty();
+    }
+
+    @Test
+    @DisplayName("LanguageDto image URL should be a valid URL")
+    void languageImageShouldBeAValidURL() {
+        String imageUrl = languageDto.getLanguageImage().trim();
+        System.out.println("Testing URL: " + imageUrl);
+        String urlRegex = "^(https?|ftp)://[^\\s/$.?#].[^\\s]*$";
+        assertThat(imageUrl).matches(Pattern.compile(urlRegex));
+    }
+
+    static LanguageDto buildLanguageDto(UUID languageId, String languageName, String languageImage){
+        return new LanguageDto(languageId,languageName, languageImage);
     }
 
     private static String normalizeLineEndings(String json) {

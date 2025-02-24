@@ -15,4 +15,5 @@ public interface LanguageRepository extends ReactiveMongoRepository<LanguageDocu
     Mono<Void> deleteByIdLanguage(UUID id);
 
     Mono<LanguageDocument> findFirstByLanguageName(String languageName);
+
 }

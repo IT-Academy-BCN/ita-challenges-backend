@@ -20,4 +20,11 @@ public class LanguageDocument {
     @Field(name="language_name")
     private String languageName;
 
+    @Field(name="language_image")
+    private String languageImage;
+
+    public String getLanguageImage() {
+        return (languageImage != null) ? languageImage : "https://default-image.com/default.png";
+    }
+
 }

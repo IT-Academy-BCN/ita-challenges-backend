@@ -76,8 +76,9 @@ class ChallengeIntegrationTest {
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
-        LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0]);
-        LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1]);
+        String languageImage = "https://image-default.com/default.png";
+        LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0], languageImage);
+        LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1], languageImage);
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
@@ -110,10 +111,11 @@ class ChallengeIntegrationTest {
     }
 
     //TODO - Refactor this method, getLanguages endpoint already available
-    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName) {
+    private LanguageDocument getLanguageMocked(UUID idLanguage, String languageName, String languageImage) {
         LanguageDocument languageIMocked = Mockito.mock(LanguageDocument.class);
         when(languageIMocked.getIdLanguage()).thenReturn(idLanguage);
         when(languageIMocked.getLanguageName()).thenReturn(languageName);
+        when(languageIMocked.getLanguageImage()).thenReturn(languageImage);
         return languageIMocked;
     }
 
