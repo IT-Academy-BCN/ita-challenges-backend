@@ -69,20 +69,31 @@ public class UserController {
                     )
             }
     )
+
     @GetMapping("/validate-mentor-exists")
     public Mono<ResponseEntity<Boolean>> validateMentorExists(@RequestParam @ValidGithubUsername String githubUsername) {
         return userService.isMentor(Mono.just(githubUsername))
                 .map(isMentor -> {
                     if (Boolean.TRUE.equals(isMentor)) {
-                        return ResponseEntity.ok(true);
+                        log.info("'{}' successfully validated as a mentor.", githubUsername);
+                        return ResponseEntity.status(HttpStatus.OK)
+                                .header("Mentor validation successful", "Welcome" + githubUsername + "! ")
+                                .body(true);
                     } else {
-                        log.warn("Unauthorized access attempt (via validateMentorExists) for username '{}'", githubUsername);
-                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
+                        log.warn("Unauthorized access attempt for username '{}'", githubUsername);
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                .header("Validation unsuccessful", "Unauthorized access for " + githubUsername)
+                                .body(false);
                     }
-                }).onErrorResume(e -> {
+                })
+                .onErrorResume(e -> {
                     log.error("Error validating mentor at validateMentorExists: {}", e.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false));
+                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .header("Validation error", "An error occurred during validation.")
+                            .body(false));
                 });
     }
+
+
 
 }

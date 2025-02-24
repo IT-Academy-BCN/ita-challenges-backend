@@ -44,8 +44,8 @@ uri_validate_token : https://dev.sso.itawiki.eurecatacademy.org/api/v1/tokens/va
 
 user:
   service:
-    url: http://apisix-gateway:9080 # IN PRODUCTION
-    # http://172.17.0.2:8764 LOCAL IP
+    url: http://apisix-test:9080 # IN PRODUCTION
+    #url: http://172.23.0.9:8764
 
 logging:
   level:
