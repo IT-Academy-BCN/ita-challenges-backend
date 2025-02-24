@@ -49,7 +49,9 @@ public class AuthController {
                 .flatMap(authService::validateTokenWithGithub)
                 .flatMap(response -> {
                     if (!(boolean) response.get(KEY_IS_VALID)) {
-                        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response));
+                        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .header("X-Authentication-Status", "Failed")
+                                .body(response));
                     }
                     String githubUsername = (String) response.get(KEY_USERNAME);
                     return authService.validateUserExists(githubUsername)
@@ -61,9 +63,15 @@ public class AuthController {
                                     errorResponse.put(KEY_IS_VALID, false);
                                     errorResponse.put("message", "User does not exist in the database");
 
-                                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse));
+                                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                            .header("X-Authentication-Status", "UserNotFound")
+                                            .header("X-Github-Username", githubUsername)
+                                            .body(errorResponse));
                                 }
-                                return Mono.just(ResponseEntity.ok(response));
+                                return Mono.just(ResponseEntity.ok()
+                                        .header("X-Authentication-Status", "Success")
+                                        .header("X-Github-Username", githubUsername)
+                                        .body(response));
                             });
                 })
                 .onErrorResume(ex -> {
@@ -73,9 +81,13 @@ public class AuthController {
                     errorResponse.put(KEY_IS_VALID, false);
                     errorResponse.put(KEY_USERNAME, null);
 
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse));
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .header("X-Authentication-Status", "Error")
+                            .header("X-Error-Message", "An error occurred during authentication.")
+                            .body(errorResponse));
                 });
     }
+
 
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {

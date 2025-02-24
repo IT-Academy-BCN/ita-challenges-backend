@@ -76,23 +76,27 @@ public class UserController {
                 .map(isMentor -> {
                     if (Boolean.TRUE.equals(isMentor)) {
                         log.info("'{}' successfully validated as a mentor.", githubUsername);
-                        return ResponseEntity.status(HttpStatus.OK)
-                                .header("Mentor validation successful", "Welcome" + githubUsername + "! ")
+                        return ResponseEntity.ok()
+                                .header("X-Validation-Status", "Success")
+                                .header("X-Github-Username", githubUsername)
                                 .body(true);
                     } else {
                         log.warn("Unauthorized access attempt for username '{}'", githubUsername);
                         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                .header("Validation unsuccessful", "Unauthorized access for " + githubUsername)
+                                .header("X-Validation-Status", "Failed")
+                                .header("X-Github-Username", githubUsername)
                                 .body(false);
                     }
                 })
                 .onErrorResume(e -> {
                     log.error("Error validating mentor at validateMentorExists: {}", e.getMessage());
                     return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .header("Validation error", "An error occurred during validation.")
+                            .header("X-Validation-Status", "Error")
+                            .header("X-Error-Message", "An error occurred during validation.")
                             .body(false));
                 });
     }
+
 
 
 
