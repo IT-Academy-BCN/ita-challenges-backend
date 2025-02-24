@@ -64,7 +64,7 @@ public class AuthController {
                                     errorResponse.put("message", "User does not exist in the database");
 
                                     return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                            .header("X-Authentication-Status", "UserNotFound")
+                                            .header("X-Validation-Status", "UserNotFound")
                                             .header("X-Github-Username", githubUsername)
                                             .body(errorResponse));
                                 }
