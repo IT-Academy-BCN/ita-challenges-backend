@@ -1,6 +1,6 @@
 package com.itachallenge.user.annotations;
 
-import com.itachallenge.user.validators.GenericUUIDValidator;
+import com.itachallenge.user.validator.GenericUUIDValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

@@ -3,9 +3,6 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.dto.zmq.ChallengeRequestDto;
-import com.itachallenge.challenge.dto.zmq.StatisticsResponseDto;
-import com.itachallenge.challenge.mqclient.ZMQClient;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,12 +45,6 @@ public class ChallengeController {
 
     @Autowired
     IChallengeService challengeService;
-
-
-    @Autowired
-    ZMQClient zmqClient;
-    @Autowired
-    ChallengeRequestDto challengeInputDto;
 
     @Value("${spring.application.version}")
     private String version;
@@ -104,15 +95,6 @@ public class ChallengeController {
 
         log.info("~~~~~~~~~~~~~~~~~~~~~~");
 
-        challengeInputDto.setChallengeId(UUID.fromString("dcacb291-b4aa-4029-8e9b-284c8ca80296"));
-
-        zmqClient.sendMessage(challengeInputDto, StatisticsResponseDto.class)
-                .thenAccept(response ->
-                        log.info("[ Response: {}" , ((StatisticsResponseDto) response).getPercent() + " ]"))
-                .exceptionally(e -> {
-                    log.error(e.getMessage());
-                    return null;
-                });
 
         return "Hello from ITA Challenge!!!";
     }
@@ -236,8 +218,8 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
-         return challengeService.addChallenge(createFormDto)
-                 .map(ResponseEntity::ok);
+        return challengeService.addChallenge(createFormDto)
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/version")

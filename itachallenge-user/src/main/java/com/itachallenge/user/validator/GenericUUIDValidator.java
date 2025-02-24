@@ -1,4 +1,4 @@
-package com.itachallenge.user.validators;
+package com.itachallenge.user.validator;
 
 import com.itachallenge.user.annotations.GenericUUIDValid;
 import jakarta.validation.ConstraintValidator;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class GenericUUIDValidator implements ConstraintValidator<GenericUUIDValid, String> {
     @Value("${validation.mongodb_pattern}")
     private String uuidPattern;
-    private Pattern UUID_PATTERN;
+    Pattern UUID_PATTERN;
 
     @Override
     public void initialize(GenericUUIDValid constraintAnnotation) {

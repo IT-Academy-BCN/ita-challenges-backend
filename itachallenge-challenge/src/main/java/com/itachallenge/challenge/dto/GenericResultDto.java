@@ -2,6 +2,7 @@ package com.itachallenge.challenge.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,6 +15,7 @@ public class GenericResultDto<T> {
 
     private T[] results;
 
+    @Autowired
     public GenericResultDto() {}
 
     public GenericResultDto(int offset, int limit, int count, T[] results) {
