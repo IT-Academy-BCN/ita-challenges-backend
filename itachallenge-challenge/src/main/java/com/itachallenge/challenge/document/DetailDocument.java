@@ -6,7 +6,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 public class DetailDocument {
 
     @Field(name="description")

@@ -257,9 +257,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId) {
-        DetailDocument detail = DetailDocument.builder()
-                .description(dto.getDescription())
-                .build();
+        DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()
                 .uuid(UUID.randomUUID())
