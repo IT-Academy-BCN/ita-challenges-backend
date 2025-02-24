@@ -58,6 +58,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isOk()
+                .expectHeader().exists("Mentor validation successful")
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
@@ -74,6 +75,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isForbidden()
+                .expectHeader().exists("Validation unsuccessful")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
@@ -90,6 +92,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isBadRequest()
+                .expectHeader().exists("Validation error")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).isMentor(any(Mono.class));
@@ -129,6 +132,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isForbidden()
+                .expectHeader().exists("Validation unsuccessful")
                 .expectBody(Boolean.class).isEqualTo(false);
     }
 
@@ -142,6 +146,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isForbidden()
+                .expectHeader().exists("Validation unsuccessful")
                 .expectBody(Boolean.class).isEqualTo(false);
     }
 
@@ -156,6 +161,7 @@ class UserControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isBadRequest()
+                .expectHeader().exists("Validation error")
                 .expectBody(Boolean.class).isEqualTo(false);
     }
 
