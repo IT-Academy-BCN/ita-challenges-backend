@@ -69,20 +69,35 @@ public class UserController {
                     )
             }
     )
+
     @GetMapping("/validate-mentor-exists")
     public Mono<ResponseEntity<Boolean>> validateMentorExists(@RequestParam @ValidGithubUsername String githubUsername) {
         return userService.isMentor(Mono.just(githubUsername))
                 .map(isMentor -> {
                     if (Boolean.TRUE.equals(isMentor)) {
-                        return ResponseEntity.ok(true);
+                        log.info("'{}' successfully validated as a mentor.", githubUsername);
+                        return ResponseEntity.ok()
+                                .header("X-Validation-Status", "Success")
+                                .header("X-Github-Username", githubUsername)
+                                .body(true);
                     } else {
-                        log.warn("Unauthorized access attempt (via validateMentorExists) for username '{}'", githubUsername);
-                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);
+                        log.warn("Unauthorized access attempt for username '{}'", githubUsername);
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                .header("X-Validation-Status", "Failed")
+                                .header("X-Github-Username", githubUsername)
+                                .body(false);
                     }
-                }).onErrorResume(e -> {
+                })
+                .onErrorResume(e -> {
                     log.error("Error validating mentor at validateMentorExists: {}", e.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false));
+                    return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .header("X-Validation-Status", "Error")
+                            .header("X-Error-Message", "An error occurred during validation.")
+                            .body(false));
                 });
     }
+
+
+
 
 }

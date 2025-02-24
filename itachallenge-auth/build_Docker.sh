@@ -1,10 +1,11 @@
 #!/bin/sh
 #  Process to deploy manually the docker image; from root folder, execute:
-#       export ENV=dev
-#       export REGISTRY_NAME=itacademybcn/itachallenges
-#       export MICROSERVICE_VERSION=x.x.x
-#       export GITHUB_CLIENT_ID={GITHUB_CLIENT_ID}
-#       export GITHUB_CLIENT_SECRET={GITHUB_CLIENT_SECRET}
+#  export ENV=dev
+#         REGISTRY_NAME=itacademybcn/itachallenges
+#         MICROSERVICE_VERSION=x.x.x
+#         GITHUB_CLIENT_ID={your_github_client_id}
+#         GITHUB_CLIENT_SECRET={your_github_client_secret}
+#
 #       ./itachallenge-auth/build_Docker.sh
 #
 #  At the server, execute:
