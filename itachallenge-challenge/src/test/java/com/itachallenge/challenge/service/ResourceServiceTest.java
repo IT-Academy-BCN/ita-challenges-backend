@@ -4,6 +4,7 @@ import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.ChallengeListDto;
 import com.itachallenge.challenge.dto.ResourceDto;
+import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
@@ -59,7 +60,7 @@ class ResourceServiceTest {
                 .description(description)
                 .url(url)
                 .topic(topic)
-                .contentType(contentType)
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(Collections.singletonList(challengeId))
                 .build();
 
@@ -69,7 +70,7 @@ class ResourceServiceTest {
                 .description(description)
                 .url(url)
                 .topic(topic)
-                .contentType(contentType)
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(Collections.singletonList(challengeId))
                 .build();
 

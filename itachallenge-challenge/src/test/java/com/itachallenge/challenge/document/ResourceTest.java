@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.document;
 
+import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.Test;
 
@@ -58,7 +59,7 @@ public class ResourceTest {
 
     @Test
     void getContentType() {
-        String contentType = "application/pdf";
+        ResourceContentType contentType = ResourceContentType.BLOG;
         ResourceDocument resource = ResourceDocument.builder()
                 .contentType(contentType)
                 .build();

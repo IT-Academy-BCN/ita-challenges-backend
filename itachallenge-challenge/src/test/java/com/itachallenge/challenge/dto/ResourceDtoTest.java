@@ -2,6 +2,7 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -106,7 +107,7 @@ class ResourceDtoTest {
                 .description("A guide on how to start debugging")
                 .url("https://youtubetutorial.com/debugging")
                 .topic(Topic.DEBUGGING)
-                .contentType("TUTORIAL")
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(challengeIds)
                 .build();
 
@@ -127,7 +128,7 @@ class ResourceDtoTest {
                 .description("A guide on how to start debugging")
                 .url("https://youtubetutorial.com/debugging")
                 .topic(Topic.COMPONENTS)
-                .contentType("TUTORIAL")
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(List.of(
                         UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
                         UUID.fromString("550e8400-e29b-41d4-a716-446655440000")
@@ -140,7 +141,7 @@ class ResourceDtoTest {
                 .description("A guide on how to start debugging")
                 .url("https://youtubetutorial.com/debugging")
                 .topic(Topic.COMPONENTS)
-                .contentType("TUTORIAL")
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(List.of(
                         UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
                         UUID.fromString("550e8400-e29b-41d4-a716-446655440000")

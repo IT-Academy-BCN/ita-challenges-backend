@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.dto.ResourceDto;
+import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -27,7 +28,7 @@ public class ResourceDocumentToDtoConverterTest {
                 .description("A guide on how to start debugging")
                 .url("https://youtubetutorial.com/debugging")
                 .topic(Topic.COMPONENTS)
-                .contentType("TUTORIAL")
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(challengeIds)
                 .build();
 

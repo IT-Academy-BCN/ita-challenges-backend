@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ResourceDocument;
+import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +57,7 @@ class ResourceRepositoryTest {
                 .description("Description1")
                 .url("http://exemple.com/resource1")
                 .topic(Topic.DEBUGGING)
-                .contentType("blog")
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(List.of(UUID.randomUUID()))
                 .build();
 
@@ -66,7 +67,7 @@ class ResourceRepositoryTest {
                 .description("Description2")
                 .url("http://exemple.com/resource2")
                 .topic(Topic.DEBUGGING)
-                .contentType("video")
+                .contentType(ResourceContentType.BLOG)
                 .challengeIds(List.of(UUID.randomUUID()))
                 .build();
 
