@@ -26,6 +26,7 @@ public class LanguageDto{
 
     @JsonSetter("language_image")
     public void setLanguageImage(String languageImage) {
-        this.languageImage = (languageImage != null) ? languageImage.trim() : null;
+       String defaultImage = "https://default-image.com/default.png";
+        this.languageImage = (languageImage != null && !languageImage.trim().isEmpty()) ? languageImage.trim() : defaultImage;
     }
 }
