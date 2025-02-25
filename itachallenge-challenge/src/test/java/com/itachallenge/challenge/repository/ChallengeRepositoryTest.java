@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.Locale;
 
-import static com.itachallenge.challenge.enums.Topic.getTopicFromString;
 import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
 
@@ -368,17 +367,13 @@ class ChallengeRepositoryTest {
     @Test
     void findByDetailTopicTest() {
         Topic topic1 = Topic.DEBUGGING;
-        Topic topic2 = getTopicFromString("NON_EXISTING_TOPIC");
 
         Flux<ChallengeDocument> challengesWithTopic1 = challengeRepository.findByTopic(topic1);
         StepVerifier.create(challengesWithTopic1)
                 .expectNextCount(1)
                 .verifyComplete();
 
-        Flux<ChallengeDocument> challengesWithTopic2 = challengeRepository.findByTopic(topic2);
-        StepVerifier.create(challengesWithTopic2)
-                .expectNextCount(0)
-                .verifyComplete();
+
     }
 
 }

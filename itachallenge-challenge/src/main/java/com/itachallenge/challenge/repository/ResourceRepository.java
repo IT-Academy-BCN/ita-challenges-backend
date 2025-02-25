@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ResourceDocument;
+import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
@@ -16,7 +17,7 @@ public interface ResourceRepository extends ReactiveSortingRepository<ResourceDo
     Mono<Boolean> existsByResourceId(UUID uuid);
     Mono<ResourceDocument> findByResourceId(UUID uuid);
     Flux<ResourceDocument> findByTopic(Topic topic);
-    Flux<ResourceDocument> findByContentType(String contentType);
+    Flux<ResourceDocument> findByContentType(ResourceContentType contentType);
 
 
     Mono<Long> count();

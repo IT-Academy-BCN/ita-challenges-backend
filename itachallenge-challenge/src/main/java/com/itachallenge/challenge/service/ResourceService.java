@@ -38,13 +38,12 @@ public class ResourceService implements IResourceService {
         if (resourceDto.getContentType() == null) {
             return Mono.error(new IllegalArgumentException("Content type is required"));
         }
-        Topic topic;
-        try {
-            topic = Topic.fromDisplayName(resourceDto.getTopic().toString());
-            resourceDto.setTopic(topic);
-        } catch (IllegalArgumentException e) {
-            return Mono.error(new IllegalArgumentException("Invalid topic provided: " + resourceDto.getTopic()));
+        if (resourceDto.getTopic() == null) {
+            return Mono.error(new IllegalArgumentException("Topic is required"));
         }
+
+        Topic topic = Topic.fromDisplayName(resourceDto.getTopic().toString());
+        resourceDto.setTopic(topic);
 
         return challengeService.getChallengesByTopic(topic, 0, -1)
                 .doOnSubscribe(sub -> log.info("Calling getChallengesByTopic for topic: {}", resourceDto.getTopic()))

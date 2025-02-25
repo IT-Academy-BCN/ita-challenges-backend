@@ -9,8 +9,7 @@ public enum Topic {
     LISTS("Lists"),
     STYLES("Styles"),
     DEBUGGING("Debugging"),
-    REACT_ROUTER("React Router"),
-    UNKNOWN("Unknown");
+    REACT_ROUTER("React Router");
 
     private final String displayName;
 
@@ -29,14 +28,6 @@ public enum Topic {
             }
         }
         throw new IllegalArgumentException("No enum constant with display name: " + displayName);
-    }
-
-    public static Topic getTopicFromString(String topicString) {
-        try {
-            return Topic.valueOf(topicString);
-        } catch (IllegalArgumentException e) {
-            return Topic.UNKNOWN;
-        }
     }
 
 

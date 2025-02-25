@@ -219,19 +219,9 @@ public class ChallengeController {
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
-        Topic topic;
-        try {
-            topic = Topic.fromDisplayName(String.valueOf(createFormDto.getTopic()));
-            createFormDto.setTopic(topic);
-        } catch (IllegalArgumentException e) {
-            return Mono.error(new IllegalArgumentException("Invalid topic provided: " + createFormDto.getTopic()));
-        }
-
         return challengeService.addChallenge(createFormDto)
                 .map(ResponseEntity::ok);
     }
-
-
 
     @GetMapping("/version")
     @Operation(

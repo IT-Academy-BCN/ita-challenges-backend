@@ -108,7 +108,7 @@ class ResourceRepositoryTest {
     @DisplayName("Find by Content Type Test")
     @Test
     void findByContentTypeTest() {
-        Flux<ResourceDocument> resources = resourceRepository.findByContentType("blog");
+        Flux<ResourceDocument> resources = resourceRepository.findByContentType(ResourceContentType.BLOG);
         StepVerifier.create(resources)
                 .expectNextCount(1)
                 .verifyComplete();
