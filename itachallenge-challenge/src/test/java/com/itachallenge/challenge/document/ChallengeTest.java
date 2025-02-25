@@ -20,12 +20,9 @@ class ChallengeTest {
 
     @Test
     void getTitle() {
-        Map<Locale, String> titleMap = new HashMap<>();
-            titleMap.put(Locale.forLanguageTag("ES"), "Reto de prueba");
-            titleMap.put(Locale.forLanguageTag("CA"), "Repte de prova");
-            titleMap.put(Locale.ENGLISH, "Test Challenge");
-        ChallengeDocument challenge = new ChallengeDocument(null, titleMap, null, null, null, null, null);
-        assertEquals(titleMap, challenge.getTitle());
+        String expectedTitle = "Test challenge";
+        ChallengeDocument challenge = new ChallengeDocument(null, expectedTitle, null, null, null, null, null);
+        assertEquals(expectedTitle, challenge.getTitle());
     }
 
     @Test
@@ -44,7 +41,7 @@ class ChallengeTest {
 
     @Test
     void getDetail() {
-        DetailDocument detail = new DetailDocument(null, null, null);
+        DetailDocument detail = new DetailDocument(null);
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null);
         assertEquals(detail, challenge.getDetail());
     }
