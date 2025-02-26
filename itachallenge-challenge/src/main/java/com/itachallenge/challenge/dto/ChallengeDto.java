@@ -21,7 +21,7 @@ public class ChallengeDto {
     private UUID challengeId;
 
     @JsonProperty(value = "challenge_title", index = 1)
-    private Map<Locale, String> title;
+    private String title;
 
     @JsonProperty(index = 2)
     private String level;

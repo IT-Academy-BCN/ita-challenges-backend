@@ -1,52 +1,23 @@
 {
   "id_challenge" : "dcacb291-b4aa-4029-8e9b-284c8ca80296",
-  "challenge_title" : {
-    "es" : "Industrias Sociis",
-    "en" : "Sociis Industries",
-    "ca" : "Industries Sociis"
-  },
+  "challenge_title" : "Sociis Industries",
   "level" : "EASY",
   "creation_date" : "2023-06-05T12:30:00+02:00",
   "detail" : {
-    "description" : {
-      "es" : "Descripcíón de prueba",
-      "en" : "Test Description",
-      "ca" : "Descripció de prova"
-    },
-    "examples" : [
-      {
-        "id_example": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8",
-        "example_text": {
-          "es" : "Texto de ejemplo",
-          "en" : "Example text",
-          "ca" : "Texte d'exemple"
-        }
-      },
-      {
-        "id_example": "6c02025e-b06f-420a-bafb-28c737b18473",
-        "example_text": {
-          "es" : "Ejemplo random",
-          "en" : "Random example",
-          "ca" : "Exemple random"
-        }
-      }
-    ],
-    "notes": {
-      "es" : "Notas",
-      "en" : "Notes",
-      "ca" : "Notes"
-    }
+    "description" : "Test description"
   },
   "popularity" : 105,
   "percentage" : 23.58,
   "languages" : [
     {
       "id_language" : "09fabe32-7362-4bfb-ac05-b7bf854c6e0f",
-      "language_name" : "Javascript"
+      "language_name" : "Javascript",
+      "language_image" : "https://image-default.com/javascript.png"
     },
     {
       "id_language" : "409c9fe8-74de-4db3-81a1-a55280cf92ef",
-      "language_name" : "Python"
+      "language_name" : "Python",
+      "language_image" : "https://image-default.com/python.png"
     }
   ]
 }

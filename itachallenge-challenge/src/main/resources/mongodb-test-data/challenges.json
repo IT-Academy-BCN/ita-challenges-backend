@@ -3,68 +3,13 @@
     "_id": {
       "$uuid": "dcacb291-b4aa-4029-8e9b-284c8ca80296"
     },
-    "challenge_title": {
-
-      "es": "Reordena para crecer",
-      "ca": "Reordena per créixer",
-      "en": "Rearrange to grow"
-
-    },
+    "challenge_title": "Reordena per crèixer",
     "level": "EASY",
     "creation_date": {
       "$date": "2019-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        
-        "es": "Su tarea es crear una función que pueda tomar cualquier número entero no negativo como argumento y devolverlo con sus dígitos en orden descendente. Básicamente, reorganice los dígitos para crear el número más alto posible.",
-        "ca": "La teva tasca es fer una funció que pugui prendre qualsevol nombre no negatiu com a argument i retornar-lo amb tots els seus digits reordenats de forma descendent. Basicament, reordenar els digits per crear el nombre mes alt possible.",
-        "en": "Your task is to make a function that can take any non-negative integer as an argument and return it with its digits in descending order. Essentially, rearrange the digits to create the highest possible number."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text": {
-            "es": "Si intentamos pasar una cadena de texto como \"a,bcde\" a la función, nos dará un error de formato de número, ya que la función solo acepta números enteros no negativos.",
-            "ca": "Si intentem passar una cadena de text com \"a,bcde\" a la funció, ens donarà un error de format de número, ja que la funció només accepta nombres enters no negatius.",
-            "en": "If we try to pass a string like \"a,bcde\" to the function, it will give us a number format error, as the function only accepts non-negative integers."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-           
-            "es": "Si pasamos el número 42145 a la función, nos devolverá 54421, que es el número más alto que se puede formar reorganizando los dígitos de 42145.",
-            "ca": "Si passem el nombre 42145 a la funció, ens retornarà 54421, que és el nombre més alt que es pot formar reorganitzant els dígits de 42145.",
-            "en": "If we pass the number 42145 to the function, it will return 54421, which is the highest number that can be formed by rearranging the digits of 42145."
-
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-           
-            "es": "Si pasamos el número 145263 a la función, nos devolverá 654321, que es el número más alto que se puede formar reorganizando los dígitos de 145263.",
-            "ca": "Si passem el nombre 145263 a la funció, ens retornarà 654321, que és el nombre més alt que es pot formar reorganitzant els dígits de 145263.",
-            "en": "If we pass the number 145263 to the function, it will return 654321, which is the highest number that can be formed by rearranging the digits of 145263."
-
-          }
-        }
-      ],
-          "notes": {
-       
-            "es": "Para resolver este reto necesitarás un conocimiento básico de cómo trabajar con números enteros y cadenas, ordenamiento de listas o arrays y manejo de errores y excepciones en tu lenguaje de programación preferido.",
-            "ca": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i cadenes, ordenació de llistes o arrays, i gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
-            "en": "To solve this challenge, you will need a basic understanding of how to work with integers and strings, sorting of lists or arrays, and error and exception handling in your preferred programming language."
-      }
+      "description": "La teva tasca és fer una funció que pugui prendre qualsevol nombre no negatiu com a argument i retornar-lo amb tots els seus dígits reordenats de forma descendent. Bàsicament, reordenar els dígits per crear el nombre més alt possible."
     },
     "languages": [
       {
@@ -96,72 +41,13 @@
     "_id": {
       "$uuid": "f6e0f877-9560-4e68-bab6-7dd5f16b46a5"
     },
-    "challenge_title": {
-     
-      "es": "Buscando los extremos",
-      "ca": "Buscant els extrems",
-      "en": "Searching for extremes"
-
-    },
+    "challenge_title": "Buscant els extrems",
     "level": "EASY",
     "creation_date": {
       "$date": "1986-02-01T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-       
-        "es": "En esta pequeña tarea, se te proporciona una cadena de números separados por espacios, y debes devolver el número más alto y el más bajo.",
-        "ca": "En aquesta petita tasca set donara una string de nombre separats per espais, hauras de retornar el major i menor d'aquests nombres.",
-        "en": "In this little assignment you are given a string of space separated numbers, and have to return the highest and lowest number."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "aef3ebe5-1a11-4b32-9f6e-98d27e2be22d"
-          },
-          "example_text":
-          {
-           
-            "es": "Si pasamos la lista [1, 2, 3, 4, 5] a la función, nos devolverá [5, 1], que es el número más alto y el más bajo que se puede obtener de la lista.",
-            "ca": "Si passem la llista [1, 2, 3, 4, 5] a la funció, ens retornarà [5, 1], que és el número més alt i el més baix que es pot obtenir de la llista.",
-            "en": "If we pass the list [1, 2, 3, 4, 5] to the function, it will return [5, 1], which is the highest and lowest number that can be obtained from the list."
-
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "8398539e-7b48-4a1e-9b8b-136f711c3dc9"
-          },
-          "example_text":
-          {
-            
-            "es": "Si pasamos la lista [1, 2, -3, 4, 5] a la función, nos devolverá [5, -3], que es el número más alto y el más bajo que se puede obtener de la lista.",
-            "ca": "Si passem la llista [1, 2, -3, 4, 5] a la funció, ens retornarà [5, -3], que és el número més alt i el més baix que es pot obtenir de la llista.",
-            "en": "If we pass the list [1, 2, -3, 4, 5] to the function, it will return [5, -3], which is the highest and lowest number that can be obtained from the list."
-
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "1e6af8d0-ccbf-4ebf-90ae-8e9b098a7a15"
-          },
-          "example_text":
-          {
-            
-            "es": "Si pasamos la lista [1, 9, 3, 4, -5] a la función, nos devolverá [9, -5], que es el número más alto y el más bajo que se puede obtener de la lista.",
-            "ca": "Si passem la llista [1, 9, 3, 4, -5] a la funció, ens retornarà [9, -5], que és el número més alt i el més baix que es pot obtenir de la llista.",
-            "en": "f we pass the list [1, 9, 3, 4, -5] to the function, it will return [9, -5], which is the highest and lowest number that can be obtained from the list."
-
-          }
-        }
-      ],
-      "notes": {
-
-        "es": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays, manejo de errores y excepciones en tu lenguaje de programación preferido.",
-        "ca": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays, gestió d'errors i excepcions en el teu llenguatge de programació preferit.",
-        "en": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays, error and exception handling in your preferred programming language."
-      }
+      "description": "En aquesta petita tasca se't donarà una cadena de nombres separats per espais i hauràs de retornar el major i menor d'aquests nombres."
     },
     "languages": [
       {
@@ -186,73 +72,13 @@
     "_id": {
       "$uuid": "9d2c4e2b-02af-4327-81b2-7dbf5c3f5a7d"
     },
-    "challenge_title": {
-
-      "es": "Eres muy cuadriculado!",
-      "ca": "Ets molt quadriculat!",
-      "en": "You're a square!"
-    },
+    "challenge_title": "Ets molt quadriculat!",
     "level": "EASY",
     "creation_date": {
       "$date": "2003-08-10T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "es": "Te gustan los bloques de construcción. Especialmente te gusta construir bloques que son cuadrados. Y lo que más te gusta es organizarlos en un cuadrado de bloques de construcción cuadrados. Sin embargo, a veces no puedes organizarlos en un cuadrado. ¡En cambio, terminas con un simple rectángulo! ¡Esas cosas malditas! Si tan solo tuvieras una manera de saber si estás trabajando en vano... ¡Espera! ¡Eso es! Solo tienes que verificar si tu número de bloques de construcción es un cuadrado perfecto. Tarea\n    Dado un número entero, determina si es un número cuadrado:\n    \n En matemáticas, un número cuadrado o cuadrado perfecto es un número entero que es el cuadrado de otro número entero; en otras palabras, es el producto de algún número entero consigo mismo.\n    \n Las pruebas siempre usarán algún número entero, así que no te preocupes por eso en lenguajes de tipado dinámico.",
-        "ca": "T'agraden els blocs de construcció. T'agraden especialment els blocs quadrats. I el que encara t'agrada més, és colocar-los de forma que creïn un quadrat de blocs de construcció!    Però, de vegades no els pots ordenar en un quadrat. En canvi, acabes amb un simple rectangle! Maleíts rectangles! Tant de bó tinguessis una manera de saber si estas treballant en va... Espera! Ja ho tinc! Nomes has de comprovar si el teu nombre de quadrats es un quadrat. Tasca\n    Donat un nombre natural(int), deterimna si es tracta d'un nombre quadrat:\n    \n En les matemàtiques. un nombre quadrat o quadrat perfecte es un nombre natural que es el quadrat de un altre nombre natural. Dit d'una altre manera, és el producte d'un nombre amb ell mateix.\n    \n Els tests sempre fan servir nombres naturals os sigui que no et preocupis sobre aquesta dinàmica en llenguatges tipats.",
-        "en": "You like building blocks. You especially like building blocks that are squares. And what you even like more, is to arrange them into a square of square building blocks!    However, sometimes, you can't arrange them into a square. Instead, you end up with an ordinary rectangle! Those blasted things! If you just had a way to know, whether you're currently working in vain… Wait! That's it! You just have to check if your number of building blocks is a perfect square. Task\n    Given an integral number, determine if it's a square number:\n    \n In mathematics, a square number or perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself.\n    \n The tests will always use some integral number, so don't worry about that in dynamic typed languages."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "843273ea-0ebe-4284-aa3b-4bce6909db0b"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos el número -1 a la función, nos devolverá false, ya que -1 no es un cuadrado perfecto. ",
-            "ca":  "Si passem el número -1 a la funció, ens retornarà false, ja que -1 no és un quadrat perfecte.",
-            "en":  "If we pass the number -1 to the function, it will return false, as -1 is not a perfect square."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "f61d3345-248d-4f3f-a0e4-2e4b64f37183"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos el número 0 a la función, nos devolverá true, ya que 0 es un cuadrado perfecto.",
-            "ca":  "Si passem el número 0 a la funció, ens retornarà true, ja que 0 és un quadrat perfecte.",
-            "en":  " If we pass the number 0 to the function, it will return true, as 0 is a perfect square."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "7a5c6e49-784d-4504-88b5-0d4a2618e9f5"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos el número 3 a la función, nos devolverá false, ya que 3 no es un cuadrado perfecto.",
-            "ca":  "Si passem el número 3 a la funció, ens retornarà false, ja que 3 no és un quadrat perfecte.",
-            "en":  "If we pass the number 3 to the function, it will return false, as 3 is not a perfect square."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "26ae1f8e-5b8a-4e5d-9a0a-b44ff2356f9b"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos el número 16 a la función, nos devolverá true, ya que 16 es un cuadrado perfecto.",
-            "ca":  "Si passem el número 16 a la funció, ens retornarà true, ja que 16 és un quadrat perfecte.",
-            "en":  "If we pass the number 16 to the function, it will return true, as 16 is a perfect square."
-          }
-        }
-      ],
-      "notes": {
-        "es": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con números enteros y cuadrados perfectos en tu lenguaje de programación preferido.",
-        "ca": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb nombres enters i quadrats perfectes en el teu llenguatge de programació preferit.",
-        "en": "To solve this challenge, you will need a basic understanding of how to work with integers and perfect squares in your preferred programming language."
-      }
+      "description": "T'agraden els blocs de construcció. T'agraden especialment els blocs quadrats. I el que encara t'agrada més, és colocar-los de forma que creïn un quadrat de blocs de construcció!    Però, de vegades no els pots ordenar en un quadrat. En canvi, acabes amb un simple rectangle! Maleíts rectangles! Tant de bó tinguessis una manera de saber si estas treballant en va... Espera! Ja ho tinc! Nomes has de comprovar si el teu nombre de quadrats es un quadrat. Tasca\n    Donat un nombre natural(int), deterimna si es tracta d'un nombre quadrat:\n    \n En les matemàtiques. un nombre quadrat o quadrat perfecte es un nombre natural que es el quadrat de un altre nombre natural. Dit d'una altre manera, és el producte d'un nombre amb ell mateix.\n    \n Els tests sempre fan servir nombres naturals os sigui que no et preocupis sobre aquesta dinàmica en llenguatges tipats."
     },
     "languages": [
       {
@@ -284,72 +110,13 @@
     "_id": {
       "$uuid": "2f948de0-6f0c-4089-90b9-7f70a0812319"
     },
-    "challenge_title": {
-      "es": "Filtrado de Listas",
-      "ca": "Filtratge de Llistes",
-      "en": "List Filtering"
-    },
+    "challenge_title": "Filtratge de Llistes",
     "level": "EASY",
     "creation_date": {
       "$date": "2004-09-07T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "es": "En esta kata, crearás una función que tome una lista de integers no negativos y strings, y devuelva una nueva lista con las strings filtradas.",
-        "ca": "En aquesta kata hauràs de crear una funcio que prengui una llista de nombres no negatius i strings i retorni una nova llista amb les string filtrades i eliminades.",
-        "en": "In this kata you will create a function that takes a list of non-negative integers and strings and returns a new list with the strings filtered out."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "5aeaf1f1-11bc-462a-8620-23d4f2efcc30"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos la lista [1, 2, \"a\", \"b\"] a la función, nos devolverá [1, 2], que es la lista con las strings filtradas.",
-            "ca":  "Si passem la llista [1, 2, \"a\", \"b\"] a la funció, ens retornarà [1, 2], que és la llista amb les strings filtrades.",
-            "en":  "If we pass the list [1, 2, \"a\", \"b\"] to the function, it will return [1, 2], which is the list with the strings filtered out."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "9e1ab3b0-0d1e-495b-bb33-4db6efc4f9f3"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos la lista [1, 2, \"a\", \"b\", 0, 15] a la función, nos devolverá [1, 2, 0, 15], que es la lista con las strings filtradas.",
-            "ca":  "Si passem la llista [1, 2, \"a\", \"b\", 0, 15] a la funció, ens retornarà [1, 2, 0, 15], que és la llista amb les strings filtrades.",
-            "en":  "If we pass the list [1, 2, \"a\", \"b\", 0, 15] to the function, it will return [1, 2, 0, 15], which is the list with the strings filtered out."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "d33fdef1-1f92-4fb7-8e8f-0e42f9dcd1d4"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos la lista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la función, nos devolverá [1, 2, 231], que es la lista con las strings filtradas.",
-            "ca":  "Si passem la llista [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] a la funció, ens retornarà [1, 2, 231], que és la llista amb les strings filtrades.",
-            "en":  "If we pass the list [1, 2, \"a\", \"b\", \"aasf\", \"1\", \"123\", 231] to the function, it will return [1, 2, 231], which is the list with the strings filtered out."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "0bdf4c7b-c6e2-4a37-a8fb-8cbf72c8648a"
-          },
-          "example_text":
-          {
-            "es":  "Si pasamos la lista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la función, nos devolverá [1, 0, 15, 123], que es la lista con las strings filtradas.",
-            "ca":  "Si passem la llista [1, \"a\", \"b\", 0, 15, \"abc\", 123] a la funció, ens retornarà [1, 0, 15, 123], que és la llista amb les strings filtrades.",
-            "en":  "If we pass the list [1, \"a\", \"b\", 0, 15, \"abc\", 123] to the function, it will return [1, 0, 15, 123], which is the list with the strings filtered out."
-          }
-        }
-      ],
-      "notes": {
-        "es": "Para resolver este reto, necesitarás un conocimiento básico de cómo trabajar con listas o arrays y manejo de tipos de datos en tu lenguaje de programación preferido.",
-        "ca": "Per resoldre aquest repte, necessitaràs un coneixement bàsic de com treballar amb llistes o arrays i gestió de tipus de dades en el teu llenguatge de programació preferit.",
-        "en": "To solve this challenge, you will need a basic understanding of how to work with lists or arrays and data type handling in your preferred programming language."
-      }
+      "description": "En aquesta kata hauràs de crear una funcio que prengui una llista de nombres no negatius i strings i retorni una nova llista amb les string filtrades i eliminades."
     },
     "languages": [
       {
@@ -374,69 +141,13 @@
     "_id": {
       "$uuid": "6099f6e8-39b2-4c72-9ae1-21fdd3c9010a"
     },
-    "challenge_title": {
-      "es": "Isogramas",
-      "ca": "Isogrames",
-      "en": "Isograms"
-    },
+    "challenge_title": "Isogrames",
     "level": "EASY",
     "creation_date": {
       "$date": "1999-02-01T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "es": "Un isograma es una palabra que no tiene letras repetidas, ya sea consecutiva o no consecutiva. Implementa una función que determine si una cadena que contiene solo letras es un isograma. Supón que la cadena vacía es un isograma. Ignora la distinción entre mayúsculas y minúsculas.\n       Ejemplo: (Entrada --> Salida)\\n       \\\"Dermatoglyphics\\\" --> true \\\"aba\\\" --> false \\\"moOse\\\" --> false (ignorar mayúsculas y minúsculas)",
-        "ca": "Un isograma és una paraula que no té cap lleta repetida, sigui consecutiva o no consecutiva. Implementa una funció que determini si una string que només conté lletres es un isograma. Assumeix que una string buida es un isgorama. Ignora la capitalització.\n       Exemple: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ingorar capitalització)",
-        "en": "An isogram is a word that has no repeating letters, consecutive or non-consecutive. Implement a function that determines whether a string that contains only letters is an isogram. Assume the empty string is an isogram. Ignore letter case.\n       Example: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ignore letter case)"
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Una cadena vacía al no tener letras repetidas. Resultado: true",
-            "ca":  "Una cadena buida al no tenir lletres repetides. Resultat: true",
-            "en":  "An empty string as it has no repeating letters. Result: true"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "es":  "Murciélago:Esta palabra no tiene letras repetidas.Resultado: true",
-          "ca":  "Estdiant: Aquesta paraula no te lletres repetides.Resultat: true",
-          "en":  "unsubscribed: This word has no repeating letters. Result: true"
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Programación:Esta palabra tiene letras repetidas. Resultado: false",
-            "ca":  "Programació: Aquesta paraula te lletres repetides. Resultat: false",
-            "en":  "Programming: This word has repeating letters. Result: false"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Repetir:Esta palabra tiene letras repetidas. Resultado: false",
-            "ca":  "Repetir: Aquesta paraula te lletres repetides. Resultat: false",
-            "en":  "Bumblebee: This word has repeating letters. Result: false"
-          }
-        }
-      ],
-      "notes": {
-        "es": "Busca información sobre arrays para encontrar duplicados en una lista o cadena de caracteres, así como sobre la función toLowerCase() para ignorar la distinción entre mayúsculas y minúsculas",
-        "ca": "Busca informació sobre arrays per trobar duplicats en una llista o cadena de caràcters, així com sobre la funció toLowerCase() per ignorar la distinció entre majúscules i minúscules",
-        "en": "Seek information about arrays to find duplicates in a list or string, as well as about the toLowerCase() function to ignore case distinction"
-      }
+      "description": "Un isograma és una paraula que no té cap lleta repetida, sigui consecutiva o no consecutiva. Implementa una funció que determini si una string que només conté lletres es un isograma. Assumeix que una string buida es un isgorama. Ignora la capitalització.\n       Exemple: (Input --> Output)\n       \"Dermatoglyphics\" --> true \"aba\" --> false \"moOse\" --> false (ingorar capitalització)"
     },
     "languages": [
       {
@@ -461,72 +172,13 @@
     "_id": {
       "$uuid": "a4b0f8d3-6571-4d8e-854d-ef93ea9b30a6"
     },
-    "challenge_title": {
-      "es": "Obten el caracter del medio",
-      "ca": "Consegueix el caracter del mig",
-      "en": "Get the Middle Character"
-    },
+    "challenge_title": "Consegueix el caracter del mig",
     "level": "EASY",
     "creation_date": {
       "$date": "1996-09-09T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "es": "Se te proporcionará una palabra. Tu tarea es devolver el carácter medio de la palabra. Si la longitud de la palabra es impar, devuelve el carácter medio. Si la longitud de la palabra es par, devuelve los dos caracteres del medio.",
-        "ca": "Set donarà una paraula. La teva feina i retorna la lletra que es troba al mig. Si la llargada de la paraula es una nombre senar, retorna el caracter del mig. si la llargada es un nombre parell, retorna els dos caracters del mig.",
-        "en": "You are going to be given a word. Your job is to return the middle character of the word. If the word's length is odd, return the middle character. If the word's length is even, return the middle 2 characters."
-      },
-      "examples":  [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "hello: la longitud de la palabra es impar, por lo que el carácter del medio es 'l'",
-            "ca":  "hello: la llargada de la paraula es senar, per tant el caràcter del mig es 'l'",
-            "en":  "hello: the length of the word is odd, so the middle character is 'l'"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "apple: la longitud de la palabra es par, por lo que los carácteres del medio son 'pp'",
-            "ca":  "apple: la llargada de la paraula es parell, per tant els caràcters del mig son 'pp'",
-            "en":  "apple: the length of the word is even, so the middle characters are 'pp'"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "testing: la longitud de la palabra es impar, por lo que el carácter del medio es 't'",
-            "ca":  "testing: la llargada de la paraula es senar, per tant el caràcter del mig es 't'",
-            "en":  "testing: the length of the word is odd, so the middle character is 't'"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "elephant: la longitud de la palabra es par, por lo que los carácteres del medio son 'ph'",
-            "ca":  "elephant: la llargada de la paraula es parell, per tant els caràcters del mig son 'ph'",
-            "en":  "elephant: the length of the word is even, so the middle characters are 'ph'"
-          }
-        }
-      ],
-      "notes": {
-        "es": "Investiga sobre la función substring() para obtener los caracteres del medio de una cadena",
-        "ca": "Investiga sobre la funció substring() per obtenir els caràcters del mig d'una string",
-        "en": "Investigate the substring() function to get the middle characters of a string"
-      }
+      "description": "Set donarà una paraula. La teva feina i retorna la lletra que es troba al mig. Si la llargada de la paraula es una nombre senar, retorna el caracter del mig. si la llargada es un nombre parell, retorna els dos caracters del mig."
     },
     "languages": [
       {
@@ -551,72 +203,13 @@
     "_id": {
       "$uuid": "7d8c6a2a-58a7-4c72-b4cf-8c63a9c18121"
     },
-    "challenge_title": {
-      "es": "Reordenando palabras",
-      "ca": "Reordenant paraules",
-      "en": "Reorganizing words"
-    },
+    "challenge_title": "Reordenant paraules",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "1992-08-01T11:43:54+0200"
     },
     "detail": {
-      "description": {
-        "es": "Mueve la primera letra de cada palabra al final y luego agrega 'ay' al final de la palabra. Deja los signos de puntuación sin cambios.",
-        "ca": "Mou la primera lletra de cada paraula que set doni al seu final, despres afegeix 'ay' al final de la paraula. No toquis els simbols de puntuacio.",
-        "en": "Move the first letter of each word to the end of it, then add 'ay' to the end of the word. Leave punctuation marks untouched."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Las cerezas: asLay erezascay",
-            "ca":  "Les cireres: esLay irerescay",
-            "en":  "The cherries: heTay herrieschay"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Programar!: rogramar!Pay",
-            "ca":  "Programar!: rogramar!Pay",
-            "en":  "Programming!: rogramming!Pay"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Roma: omaRay",
-            "ca":  "Roma: omaRay",
-            "en":  "Rome: omeRay"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Colores: oloresCay",
-            "ca":  "Colors: olorsCay",
-            "en":  "Colors: olorsCay"
-          }
-        }
-      ],
-      "notes": {
-        "es": "Investiga acerca de las cadenas de palabras y cómo manipularlas",
-        "ca": "Investiga sobre les cadenes de paraules i com manipular-les",
-        "en": "Look into word strings and how to manipulate them"
-      }
+      "description": "Mou la primera lletra de cada paraula que set doni al seu final, despres afegeix 'ay' al final de la paraula. No toquis els simbols de puntuacio."
     },
     "languages": [
       {
@@ -641,73 +234,13 @@
     "_id": {
       "$uuid": "3fbd4eac-53e7-49a5-8ac1-5e6d75d66e68"
     },
-    "challenge_title": {
-      "es": "Conversion de RGB a Hex",
-      "ca": "Conversió de RGB a Hex",
-      "en": "RGB To Hex Conversion"
-    },
+    "challenge_title": "Conversió de RGB a Hex",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2005-10-10T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "La función RGB está incompleta. Complétala de manera que al pasar valores decimales RGB, se devuelva su representación hexadecimal. Los valores decimales válidos para RGB son 0 - 255. Cualquier valor que caiga fuera de ese rango debe redondearse al valor válido más cercano.\n    Notas: Tu respuesta siempre debe tener 6 caracteres, la abreviatura con 3 no funcionará aquí.",
-        "ca": "La funcio rgb està incompleta. Completala de manera que passant-li RGB en valors decimals ho retorni en una representació haxadecimal. Els valors valids de RGB son 0 - 255. Qualsevol valor que estigui fora d'aquesta ran s'haurà d'arrodonir al valor valid més proper.\n    Notes: La teva resposta sempre hauria de tenir una llargada de 6 caracters, la versió reduida amb 3 no no és correcte aqui.",
-        "en": "The rgb function is incomplete. Complete it so that passing in RGB decimal values will result in a hexadecimal representation being returned. Valid decimal values for RGB are 0 - 255. Any values that fall out of that range must be rounded to the closest valid value.\n    Notes: Your answer should always be 6 characters long, the shorthand with 3 will not work here."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "255 / 255 / 255 - FFFFFF",
-            "ca":  "255 / 255 / 255 - FFFFFF",
-            "en":  "255 / 255 / 255 - FFFFFF"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "0 / 0 / 0 - 000000",
-            "ca":  "0 / 0 / 0 - 000000",
-            "en":  "0 / 0 / 0 - 000000"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "148 / 0 / 211 - 9400D3",
-            "ca":  "148 / 0 / 211 - 9400D3",
-            "en":  "148 / 0 / 211 - 9400D3"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "128 / 10 / 255 - 8000FF",
-            "ca":  "128 / 10 / 255 - 8000FF",
-            "en":  "128 / 10 / 255 - 8000FF"
-          }
-        }
-      ],
-      "notes": {
-        "es": "Informate sobre los valores decimales RGB",
-        "ca": "Informa't sobre els valors decimals RGB",
-        "en": "Learn about RGB decimal values"
-      }
+      "description": "La funcio rgb està incompleta. Completala de manera que passant-li RGB en valors decimals ho retorni en una representació haxadecimal. Els valors valids de RGB son 0 - 255. Qualsevol valor que estigui fora d'aquesta ran s'haurà d'arrodonir al valor valid més proper.\n    Notes: La teva resposta sempre hauria de tenir una llargada de 6 caracters, la versió reduida amb 3 no no és correcte aqui."
     },
     "languages": [
       {
@@ -732,75 +265,13 @@
     "_id": {
       "$uuid": "9d248e74-731f-4782-af2c-7ae9b53c9d5c"
     },
-    "challenge_title": {
-      "es": "Scramblies",
-      "ca": "Scramblies",
-      "en": "Scramblies"
-    },
+    "challenge_title": "Scramblies",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "1965-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Completa la función scramble(str1, str2) que devuelve true si una porción de los caracteres de str1 se puede reorganizar para que coincida con str2, de lo contrario, devuelve false.\n       Notas:\n           Solo se utilizarán letras minúsculas (a-z). No se incluirán signos de puntuación ni dígitos.\n    Se debe tener en cuenta el rendimiento.",
-        "ca": "Completa la funció scramble(str1, str2) que retorna true si una part dels caracters de str1 es poden reodenar per ser igual que str2, en cas contrari retorna false.\n    Notes:\n    Només es faran servir lletres minuscules (a-z). No hi hauran ni signes de puntuació ni digits.\n    El rendiment s'ha de tenir en consideració.",
-        "en": "Complete the function scramble(str1, str2) that returns true if a portion of str1 characters can be rearranged to match str2, otherwise returns false.\n       Notes:\n           Only lower case letters will be used (a-z). No punctuation or digits will be included.\n    Performance needs to be considered."
-      }
-    ,
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "rkqodlw / world - True",
-            "ca":  "rkqodlw / world - True",
-            "en":  "rkqodlw / world - True"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "cedewaraaossoqqyt / codewars - True",
-            "ca":  "cedewaraaossoqqyt / codewars - True",
-            "en":  "cedewaraaossoqqyt / codewars - True"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "katas / steak - False",
-            "ca":  "katas / steak - False",
-            "en":  "katas / steak - False"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Adios / Hola - False",
-            "ca":  "Adios / Hola - False",
-            "en":  "Adios / Hola - False"
-          }
-        }
-      ],
-      "notes":
-      {
-        "es": "Informáte sobre los bucles para realizar el ejercicio",
-        "ca": "Informeu-vos sobre els bucles per realitzar l'exercici",
-        "en": "Find out about the loops to perform the exercise"
-      }
+      "description": "Completa la funció scramble(str1, str2) que retorna true si una part dels caracters de str1 es poden reodenar per ser igual que str2, en cas contrari retorna false.\n    Notes:\n    Només es faran servir lletres minuscules (a-z). No hi hauran ni signes de puntuació ni digits.\n    El rendiment s'ha de tenir en consideració."
     },
     "languages": [
       {
@@ -832,74 +303,13 @@
     "_id": {
       "$uuid": "5a72d6cb-3217-4d75-9368-689ed48cb9ec"
     },
-    "challenge_title": {
-      "es": "Numero de zeros finales de N!",
-      "ca": "Nombre de zeros finals de N!",
-      "en": "Number of trailing zeros of N!"
-    },
+    "challenge_title": "Nombre de zeros finals de N!",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2019-01-01T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Escribe un programa que calcule la cantidad de ceros finales en el factorial de un número dado.\n    N! = 1 * 2 * 3 *  ... * N\n    Ten cuidado: 1000! tiene 2568 dígitos...",
-        "ca": "Escriu un programa que calculi el nombre de zeros finals en el factorial de un nombre.\n    N! = 1 * 2 * 3 * ... * N\n    Vigila: 1000! te 2568 digits...",
-        "en": "Write a program that will calculate the number of trailing zeros in a factorial of a given number.\n    N! = 1 * 2 * 3 *  ... * N\n    Be careful 1000! has 2568 digits..."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Para valor de entrada 6, resultado 1",
-            "ca":  "Per a valor d'entrada 6, resultat 1",
-            "en":  "For input value 6, result 1"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Para valor de entrada 12, resultado 2",
-            "ca":  "Per a valor d'entrada 12, resultat 2",
-            "en":  "For input value 12, result 2"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Para valor de entrada 34, resultado 11",
-            "ca":  "Per a valor d'entrada 34, resultat 11",
-            "en":  "For input value 34, result 11"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Para valor de entrada 15, resultado 4",
-            "ca":  "Per a valor d'entrada 15, resultat 4",
-            "en":  "For input value 15, result 4"
-          }
-        }
-      ],
-                 "notes":
-      {
-        "es": "Un numero factorial es el resultado de multiplicar todos sus valores",
-        "ca": "Un numero factorial és el resultat de multiplicar tots els seus valors",
-        "en": "A factorial number is the result of multiplying all its values."
-      }
+      "description": "Escriu un programa que calculi el nombre de zeros finals en el factorial de un nombre.\n    N! = 1 * 2 * 3 * ... * N\n    Vigila: 1000! te 2568 digits..."
     },
     "languages": [
       {
@@ -931,74 +341,13 @@
     "_id": {
       "$uuid": "c3946e8d-e7b4-4e3c-aacf-e8d6c5e9d0b6"
     },
-    "challenge_title": {
-      "es": "Xs y Os",
-      "ca": "Xs i Os",
-      "en": "Exes and Ohs"
-    },
+    "challenge_title": "Xs i Os",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2014-02-03T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Comprueba si un string tiene la misma cantidad de 'x' y 'o'. El método debe devolver un booleano y ser insensible a mayúsculas y minúsculas. La string puede contener cualquier carácter.",
-        "ca": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha de retornar un boleà i ignorar la capitalització. La string pot contenir qualsevol caracter.",
-        "en": "Check to see if a string has the same amount of 'x's and 'o's. The method must return a boolean and be case insensitive. The string can contain any char."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "ooxx - True",
-            "ca":  "ooxx - True",
-            "en":  "ooxx - True"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "xooxx - False",
-            "ca":  "xooxx - False",
-            "en":  "xooxx - False"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "ooxXm - True",
-            "ca":  "ooxXm - True",
-            "en":  "ooxXm - True"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "alxofrex - False",
-            "ca":  "alxofrex - False",
-            "en":  "alxofrex - False"
-          }
-        }
-      ],
-                 "notes":
-      {
-        "es": "Informáte sobre los bucles para realizar el ejercicio",
-        "ca": "Informeu-vos sobre els bucles per realitzar l'exercici",
-        "en": "Find out about the loops to perform the exercise"
-      }
+      "description": "Comprova si una string the el mateix nombre de 'x' i de 'o'. El metode ha de retornar un boleà i ignorar la capitalització. La string pot contenir qualsevol caracter."
     },
     "languages": [
       {
@@ -1023,74 +372,13 @@
     "_id": {
       "$uuid": "862f5d91-8394-4db1-b188-1ac2e68d73a8"
     },
-    "challenge_title": {
-      "es": "Hacia el zero o al infinto?",
-      "ca": "Anant a zero o a l'infinit?",
-      "en": "Going to zero or to infinity?"
-    },
+    "challenge_title": "Anant a zero o a l'infinit?",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2017-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) para un valor dado de n, donde n es un entero mayor o igual a 1.",
-        "ca": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) per n donada, on n es un int mes gran o igual a 1.",
-        "en": "Calculate (1 / n!) * (1! + 2! + 3! + ... + n!) for a given n, where n is an integer greater or equal to 1."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Para n = 5, el resultado esperable es (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
-            "ca":  "Per n = 5, el resultat esperat és (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120",
-            "en":  "For n = 5, the expected result is (1 / 5!) * (1! + 2! + 3! + 4! + 5!) = (1 / 120) * (1 + 2 + 6 + 24 + 120) = 153 / 120"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Para n = 1, el resultado esperable es 1",
-            "ca":  "Per n = 1, el resultat esperat és 1",
-            "en":  "For n = 1, the expected result is 1"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Para n = 3, el resultado esperable es 9/6",
-            "ca":  "Per n = 3, el resultat esperat és 9/6",
-            "en":  "For n = 3, the expected result is 9/6"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Para n = 2, el resultado esperable es 3/2",
-            "ca":  "Per n = 2, el resultat esperat és 3/2",
-            "en":  "For n = 2, the expected result is 3/2"
-          }
-        }
-      ],
-                 "notes":
-      {
-        "es": "La expresión 'n!', o 'n factorial', se calcula multiplicando todos los numeros enteros positivos menores o iguales a n: n! = 1 * 2 * 3 * ... * n",
-        "ca": "L'expressió 'n!', o 'n factorial', es calcula multiplicant tots els nombres enters positius menors o iguals a n: n! = 1 * 2 * 3 * ... * n",
-        "en": "The expression 'n!', or 'n factorial', can be found multiplying every positive integer smaller or equal to n: n! = 1 * 2 * 3 * ... * n"
-      }
+      "description": "Calcula (1 / n!) * (1! + 2! + 3! + ... + n!) per n donada, on n es un int mes gran o igual a 1."
     },
     "languages": [
       {
@@ -1108,74 +396,13 @@
     "_id": {
       "$uuid": "f1e2a8d6-64b9-4b86-b6a4-9e8c4d27f3a3"
     },
-    "challenge_title": {
-      "es": "Encuentra el mas pequeño",
-      "ca": "Troba el més petit",
-      "en": "Find the smallest"
-    },
+    "challenge_title": "Troba el més petit",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2022-01-01T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Tienes un número positivo n que consiste en dígitos. Puedes realizar como máximo una operación: elegir el índice de un dígito en el número, quitar este dígito en ese índice e insertarlo nuevamente en otro lugar o en el mismo lugar en el número para encontrar el número más pequeño que puedas obtener.\n\nTarea:\nDevuelve un array o una tupla o una cadena, dependiendo del lenguaje (mira \"Sample Tests\") con\n\nel número más pequeño que obtuviste\nel índice i del dígito d que tomaste, con i tan pequeño como sea posible\nel índice j (tan pequeño como sea posible) donde insertas este dígito d para obtener el número más pequeño.",
-        "ca": "Tens un nombre positiu n que consistex de digits. Com a molt pots realitzar una operacio com a maxim: Escull l'index d'un digit del nombre, treu el digit que es troba en aquest index i insertal un altre cop al mateix o un altre lloc per aconseguir el nombre més petit que puguis.\n\nTasca:\nRetorna un array, un tuple o una string depenen del teu llenguatge (veure \"Sample Tests\") amb\n\nel nombre més petit que puguis trobar\nl'índex i del dígit d que has près, amb i tan petit com sigui possible\nl'index j (tan petit com sigui possible) on insertis el dígit d per a obtindre el número més petit possible.",
-        "en": "You have a positive number n consisting of digits. You can do at most one operation: Choosing the index of a digit in the number, remove this digit at that index and insert it back to another or at the same place in the number in order to find the smallest number you can get.\n\nTask:\nReturn an array or a tuple or a string depending on the language (see \"Sample Tests\") with\n\nthe smallest number you got\nthe index i of the digit d you took, i as small as possible\nthe index j (as small as possible) where you insert this digit d to have the smallest number."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Dado n = 3541, el dígito d = 1 con índice i = 3 debe moverse a la posición j = 0, para un resultado mínimo de m = 1354",
-            "ca":  "Donat n = 3541, el dígit d = 1 amb índex i = 3 s'ha de moure a la posició j = 0, per un resultat mínim de m = 1354",
-            "en":  "Given n = 3541, digit d = 1 with index i = 3 must be moved to position j = 0, for a minimum result of m = 1354"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Dado n = 35141, el dígito d = 1 con índice i = 2 puede moverse a la posición j = 0 para un resultado mínimo de m = 13541, pero si se mueve el digito d = 1 con indice i = 4 a la posicion j = 0, da un resultado aun menor m = 13514",
-            "ca":  "Donat n = 35141, el dígit d = 1 amb índex i = 2 es pot moure a la posició j = 0 per a un resultat mínim de m = 13541, però si el dígit d = 1 amb índex i = 4 es mou a la posició j = 0, dóna un resultat encara més petit m = 13514",
-            "en":  "Given n = 35141, digit d = 1 with index i = 2 can be moved to position j = 0 for a minimum result of m = 13541, but if the digit d = 1 with index i = 4 is moved to position j = 0, it results in an even smaller number m = 13514."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Dado n = 3544, el dígito d = 3 con índice i = 0 debe quedarse en la posición j = 0, para un resultado mínimo de m = 3544",
-            "ca":  "Donat n = 3544, el dígit d = 3 amb índex i = 0 s'ha de quedar a la posició j = 0, per un resultat mínim de m = 3544",
-            "en":  "Given n = 3544, digit d = 3 with index i = 0 must stay in position j = 0, for a minimum result of m = 3544"
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Dado n = 03540, el dígito d = 0 con índice i = 4 debe moverse a la posición j = 0, para un resultado mínimo de m = 003544",
-            "ca":  "Donat n = 03540, el dígit d = 0 amb índex i = 4 s'ha de mover a la posició j = 0, per un resultat mínim de m = 003544",
-            "en":  "Given n = 03540, digit d = 0 with index i = 4 must move to position j = 0, for a minimum result of m = 003544"
-          }
-        }
-      ],
-                 "notes":
-      {
-        "es": "Fíjate que 'i' y 'j' deben ser tan pequeños como sea posible",
-        "ca": "Fixa't que 'i' i 'j' han de ser tan petits com sigui possible",
-        "en": "Note that 'i' and 'j' must be as small as possible"
-      }
+      "description": "Tens un nombre positiu n que consistex de digits. Com a molt pots realitzar una operacio com a maxim: Escull l'index d'un digit del nombre, treu el digit que es troba en aquest index i insertal un altre cop al mateix o un altre lloc per aconseguir el nombre més petit que puguis.\n\nTasca:\nRetorna un array, un tuple o una string depenen del teu llenguatge (veure \"Sample Tests\") amb\n\nel nombre més petit que puguis trobar\nl'índex i del dígit d que has près, amb i tan petit com sigui possible\nl'index j (tan petit com sigui possible) on insertis el dígit d per a obtindre el número més petit possible."
     },
     "languages": [
       {
@@ -1210,74 +437,13 @@
     "_id": {
       "$uuid": "2bfc1a9e-30e3-40b2-9e97-8db7c5a4e9e4"
     },
-    "challenge_title": {
-      "es": "Perímetro terrestre",
-      "ca": "Perímetre terrestre",
-      "en": "Land perimeter"
-    },
+    "challenge_title": "Perímetre terrestre",
     "level": "MEDIUM",
     "creation_date": {
       "$date": "2003-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Dado un array arr de strings, completa la función calculando el perímetro total de todas las islas. Cada pieza de tierra estará marcada con 'X', mientras que los campos de agua se representarán como 'O'. Considera que cada pieza es una pieza de tierra perfecta de 1 x 1.",
-        "ca": "Donat un array de strings, completa la funció calculant el perímetre total de totes les illes. Cada peça de terra estarà marcada amb un 'X' mentre que l'aigua esta representada com a 'O'. Assumeix que cada casella es un quadrat de terra perfecte 1x1.",
-        "en": "Given an array arr of strings, complete the function by calculating the total perimeter of all the islands. Each piece of land will be marked with 'X' while the water fields are represented as 'O'. Consider each tile being a perfect 1 x 1 piece of land."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Dado arr = ['OOOOO', OXOXO, OOOOO], la respuesta esperable es 8.",
-            "ca":  "Donat arr = ['OOOOO', OXOXO, OOOOO], la resposta esperada es 8.",
-            "en":  "Given arr = ['OOOOO', OXOXO, OOOOO], the expected answer is 8."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Dado arr = ['OOOOOO', OXXXXO, OOOOOO], la respuesta esperable es 10.",
-            "ca":  "Donat arr = ['OOOOOO', OXXXXO, OOOOOO], la resposta esperada es 10.",
-            "en":  "Given arr = ['OOOOOO', OXXXXO, OOOOOO], the expected answer is 10."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Dado arr = ['OOOOOO', OXX0XO, OOOOOO], la respuesta esperable es 10.",
-            "ca":  "Donat arr = ['OOOOOO', OXX0XO, OOOOOO], la resposta esperada es 10.",
-            "en":  "Given arr = ['OOOOOO', OXX0XO, OOOOOO], the expected answer is 10."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Dado arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la respuesta esperable es 14.",
-            "ca":  "Donat arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], la resposta esperada es 14.",
-            "en":  "Given arr = ['OOOOOO', OXOXXO, OXOOXO, 'OOOOOO'], the expected answer is 14."
-          }
-        }
-      ],
-                 "notes":
-      {
-        "es": "Ten en cuenta que dos islas en contacto forman una única isla",
-        "ca": "Tingues en compte que dues illes en contacte formen una única illa",
-        "en": "Note that two islands touching each other form a single island"
-      }
+      "description": "Donat un array de strings, completa la funció calculant el perímetre total de totes les illes. Cada peça de terra estarà marcada amb un 'X' mentre que l'aigua esta representada com a 'O'. Assumeix que cada casella es un quadrat de terra perfecte 1x1."
     },
     "languages": [
       {
@@ -1295,74 +461,13 @@
     "_id": {
       "$uuid": "4f8a6c91-8a9d-49b0-9f2c-3e67d2b18b8d"
     },
-    "challenge_title": {
-      "es": "Evalua la expresión matemática",
-      "ca": "Evalua l'expresió matemàtica.",
-      "en": "Evaluate mathematical expression."
-    },
+    "challenge_title": "Evalua l'expresió matemàtica.",
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Dada una expresión matemática como un string, debes devolver el resultado como un número",
-        "ca": "Donada una expresió matemàtica en forma d'string has de retornar el resultat en forma de numero.",
-        "en": "Given a mathematical expression as a string you must return the result as a number."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Si la string de entrada es '3+5', la salida esperada sería 8.",
-            "ca":  "Si la string d'entrada és '3+5', la sortida esperada seria 8.",
-            "en":  "If the input string is '3+5', the expected output would be 8."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Si el string de entrada es '10-6', la salida esperada sería 4.",
-            "ca":  "Si el string d'entrada és '10-6', la sortida esperada seria 4.",
-            "en":  "If the input string is '10-6', the expected output would be 4."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Si el string de entrada es '2*2', la salida esperada sería 4.",
-            "ca":  "Si el string d'entrada és '2*2', la sortida esperada seria 4.",
-            "en":  "If the input string is '2*2', the expected output would be 4."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Si el string de entrada es '8/2', la salida esperada sería 4.",
-            "ca":  "Si el string d'entrada és '8/2', la sortida esperada seria 4.",
-            "en":  "If the input string is '8/2', the expected output would be 4."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "Asegúrate de manejar correctamente los casos de borde, como las expresiones vacías o las expresiones que contienen solo un número.",
-        "ca": "Assegura't de gestionar correctament els casos de vora, com les expressions buides o les expressions que contenen només un número.",
-        "en": "Make sure to properly handle edge cases, such as empty expressions or expressions containing only a single number."
-      }
+      "description": "Donada una expresió matemàtica en forma d'string has de retornar el resultat en forma de numero."
     },
     "languages": [
       {
@@ -1387,74 +492,13 @@
     "_id": {
       "$uuid": "d7a9c4b2-6e8d-4f8c-8a13-94c5e16d2f9a"
     },
-    "challenge_title": {
-      "es": "Comprimir una String",
-      "ca": "Comprimir una String",
-      "en": "Compress a String"
-    },
+    "challenge_title": "Comprimir una String",
     "level": "HARD",
     "creation_date": {
       "$date": "2006-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Escribe un programa que tome un String de caracteres y la comprima eliminando las repeticiones consecutivas de caracteres. Por ejemplo, \"aaabbbccc\"  se comprimiría como \"a3b3c3\".",
-        "ca": "Escriu un programa que pren una cadena de caracters i la comprimeix treient caracters que es repeteixin consecutivament. Per exemple, \"aaabbbccc\" seria comprimit com \"a3b3c3\".",
-        "en": "Write a program that takes a string of characters and compresses it by removing consecutive character repetitions. For example, \"aaabbbccc\" would be compressed as \"a3b3c3\"."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Si la string de entrada es 'aaabbbccc', la salida esperada sería 'a3b3c3'.",
-            "ca":  "Si la string d'entrada és 'aaabbbccc', la sortida esperada seria 'a3b3c3'.",
-            "en":  "If the input string is 'aaabbbccc', the expected output would be 'a3b3c3'."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Si la string de entrada es 'aabbccdd', la salida esperada sería 'a2b2c2d2'.",
-            "ca":  "Si la string d'entrada és 'aabbccdd', la sortida esperada seria 'a2b2c2d2'.",
-            "en":  "If the input string is 'aabbccdd', the expected output would be 'a2b2c2d2'."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Si la string de entrada es 'zzzzyyyyyx', la salida esperada sería 'z4y5x'.",
-            "ca":  "Si la string d'entrada és 'zzzzyyyyyx', la sortida esperada seria 'z4y5x'.",
-            "en":  "If the input string is 'zzzzyyyyyx', the expected output would be 'z4y5x'."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Si la string de entrada es 'abcdeeffff', la salida esperada sería 'abcde2f4'.",
-            "ca":  "Si la string d'entrada és 'abcdeeffff', la sortida esperada seria 'abcde2f4'.",
-            "en":  "If the input string is 'abcdeeffff', the expected output would be 'abcde2f4'."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "La salida comprimida debe mantener el orden de los caracteres en la cadena original.",
-        "ca": "La sortida comprimida ha de mantenir l'ordre dels caràcters en la cadena original.",
-        "en": "The compressed output should maintain the order of characters in the original string."
-      }
+      "description": "Escriu un programa que pren una cadena de caracters i la comprimeix treient caracters que es repeteixin consecutivament. Per exemple, \"aaabbbccc\" seria comprimit com \"a3b3c3\"."
     },
     "languages": [
       {
@@ -1472,74 +516,13 @@
     "_id": {
       "$uuid": "6d3b9a2c-8e1d-45b4-98ac-e8f9c7d3a9a7"
     },
-    "challenge_title": {
-      "es": "Subsecuencia Común más Larga",
-      "ca": "Subseqüència Comú més Llarga.",
-      "en": "Longest Common Subsequence"
-    },
+    "challenge_title": "Subseqüència Comú més Llarga.",
     "level": "HARD",
     "creation_date": {
       "$date": "2000-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Implementa un programa que encuentre la subsecuencia común más larga entre dos strings dadas. Una subsecuencia es una secuencia de caracteres que aparece en el mismo orden relativo en ambos strings.",
-        "ca": "Implementa un programa que trobi la subseqüencia comú mes llarga possible entre dos strings. Una subseqüència és una seqüència de caracters que es troba amb el mateix ordre relatiu en ambdues strings.",
-        "en": "Implement a program that finds the longest common subsequence between two given strings. A subsequence is a sequence of characters that appears in the same relative order in both strings."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "Si las strings son 'ABCBDAB' y 'BDCAB', la subsecuencia común más larga sería 'BCAB'.",
-            "ca":  "Si les strings són 'ABCBDAB' i 'BDCAB', la subseqüència comuna més llarga seria 'BCAB'.",
-            "en":  "If the strings are 'ABCBDAB' and 'BDCAB', the longest common subsequence would be 'BCAB'."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "Para las strings 'abcdef' y 'acf', la subsecuencia común más larga sería 'acf'.",
-            "ca":  "Per a les strings 'abcdef' i 'acf', la subseqüència comuna més llarga seria 'acf'.",
-            "en":  "For the strings 'abcdef' and 'acf', the longest common subsequence would be 'acf'."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "Si las strings son 'AGGTAB' y 'GXTXAYB', la subsecuencia común más larga sería 'GTAB'.",
-            "ca":  "Si les strings són 'AGGTAB' i 'GXTXAYB', la subseqüència comuna més llarga seria 'GTAB'.",
-            "en":  "If the strings are 'AGGTAB' and 'GXTXAYB', the longest common subsequence would be 'GTAB'."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "Para las strings 'abcdgh' y 'aedfhr', la subsecuencia común más larga sería 'adh'.",
-            "ca":  "Per a les strings 'abcdgh' i 'aedfhr', la subseqüència comuna més llarga seria 'adh'.",
-            "en":  "For the strings 'abcdgh' and 'aedfhr', the longest common subsequence would be 'adh'."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "La subsecuencia común más larga no necesariamente tiene que ser una subcadena. Puede ser una subsecuencia de caracteres que aparecen en el mismo orden relativo en ambas cadenas, pero no necesariamente contiguos.",
-        "ca": "La subseqüència comuna més llarga no necessàriament ha de ser una subcadena. Pot ser una subseqüència de caràcters que apareixen en el mateix ordre relatiu en ambdues cadenes, però no necessàriament contigus.",
-        "en": "The longest common subsequence doesn't necessarily have to be a substring. It can be a sequence of characters that appear in the same relative order in both strings, but not necessarily contiguous."
-      }
+      "description": "Implementa un programa que trobi la subseqüencia comú mes llarga possible entre dos strings. Una subseqüència és una seqüència de caracters que es troba amb el mateix ordre relatiu en ambdues strings."
     },
     "languages": [
       {
@@ -1564,74 +547,13 @@
     "_id": {
       "$uuid": "8c7e3a9d-6b2d-43e4-9d1f-4e7a8c9d3e1b"
     },
-    "challenge_title": {
-      "es": "Encuentra el Punto de Equilibrio de un Array",
-      "ca": "Troba el Punt d'Equilibri d'un Array",
-      "en": "Find the Equilibrium Point in an Array"
-    },
+    "challenge_title": "Troba el Punt d'Equilibri d'un Array",
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Escribe un programa que encuentre el punto de equilibrio en un array, el cual es un índice donde la suma de los elementos a la izquierda es igual a la suma de los elementos a la derecha.",
-        "ca": "Escriu un programa que trobi el punt d'esquilibre en un array, el qual és un index on la suma dels elements a l'esquerra és igual que la suma dels elements a la dreta.",
-        "en": "Write a program that finds the equilibrium point in an array, which is an index where the sum of elements to the left is equal to the sum of elements to the right."
-      },
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es": "Para el array [-7, 1, 5, 2, -4, 3, 0], el punto de equilibrio sería el índice 3.",
-            "ca": "Per a l'array [-7, 1, 5, 2, -4, 3, 0], el punt d'equilibri seria l'índex 3.",
-            "en": "For the array [-7, 1, 5, 2, -4, 3, 0], the equilibrium point would be index 3."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es": "Para el array [1, 2, 3, 4, 6], el punto de equilibrio sería el índice 3.",
-            "ca": "Per a l'array [1, 2, 3, 4, 6], el punt d'equilibri seria l'índex 3.",
-            "en": "For the array [1, 2, 3, 4, 6], the equilibrium point would be index 3."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es": "Para el array [1, -1, 1], el punto de equilibrio sería el índice 1.",
-            "ca": "Per a l'array [1, -1, 1], el punt d'equilibri seria l'índex 1.",
-            "en": "For the array [1, -1, 1], the equilibrium point would be index 1."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es": "Para el array [2, 4, 6, 8], no hay punto de equilibrio ya que la suma de los elementos a la izquierda y a la derecha nunca es igual.",
-            "ca": "Per a l'array [2, 4, 6, 8], no hi ha punt d'equilibri ja que la suma dels elements a l'esquerra i a la dreta mai és igual.",
-            "en": "For the array [2, 4, 6, 8], there is no equilibrium point since the sum of elements to the left and to the right is never equal."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "Recuerda manejar el caso en que no haya un punto de equilibrio en el array, es decir, cuando la suma de los elementos a la izquierda nunca es igual a la suma de los elementos a la derecha.",
-        "ca": "Recorda gestionar el cas en què no hi hagi un punt d'equilibri en l'array, és a dir, quan la suma dels elements a l'esquerra mai és igual a la suma dels elements a la dreta.",
-        "en": "Remember to handle the case where there is no equilibrium point in the array, i.e., when the sum of elements to the left is never equal to the sum of elements to the right."
-      }
+      "description": "Escriu un programa que trobi el punt d'esquilibre en un array, el qual és un index on la suma dels elements a l'esquerra és igual que la suma dels elements a la dreta."
     },
     "languages": [
       {
@@ -1649,75 +571,13 @@
     "_id": {
       "$uuid": "a8e7c9d2-4b3e-49f7-8d5c-3a6c9e8d2b6f"
     },
-    "challenge_title": {
-      "es": "Valida Expresiones Matemáticas",
-      "ca": "Valida Expressions Matemàtiques",
-      "en": "Validate Mathematical Expressions"
-    },
+    "challenge_title": "Valida Expressions Matemàtiques",
     "level": "HARD",
     "creation_date": {
       "$date": "2007-01-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Crea un programa que valide si una expresión matemática dada es válida, teniendo en cuenta paréntesis equilibrados y operadores matemáticos válidos.",
-        "ca": "Crea un programa que validi si una expresió matemàtica és valida, considerant parèntesis equilibrats i operadors matemàtics valids.",
-        "en": "Create a program that validates whether a given mathematical expression is valid, considering balanced parentheses and valid mathematical operators."
-      }
-    ,
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "1. Expresión válida: '(2 + 3) * 4'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '(2 + 3 * 4'. Esta expresión es inválida porque falta un paréntesis de cierre.",
-            "ca":  "1. Expressió vàlida: '(2 + 3) * 4'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '(2 + 3 * 4'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
-            "en":  "1. Valid expression: '(2 + 3) * 4'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '(2 + 3 * 4'. This expression is invalid because a closing parenthesis is missing."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "1. Expresión válida: '5 * (3 + (2 - 5))'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '2 + )3 * 4('. Esta expresión es inválida porque los paréntesis están desequilibrados.",
-            "ca":  "1. Expressió vàlida: '5 * (3 + (2 - 5))'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 + )3 * 4('. Aquesta expressió és invàlida perquè els parèntesis estan desequilibrats.",
-            "en":  "1. Valid expression: '5 * (3 + (2 - 5))'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '2 + )3 * 4('. This expression is invalid because the parentheses are unbalanced."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "1. Expresión válida: '2 * 3'. Esta expresión es válida porque no hay paréntesis y los operadores matemáticos son válidos. 2. Expresión inválida: '2 & 3'. Esta expresión es inválida porque el operador '&' no es un operador matemático válido.",
-            "ca":  "1. Expressió vàlida: '2 * 3'. Aquesta expressió és vàlida perquè no hi ha parèntesis i els operadors matemàtics són vàlids. 2. Expressió invàlida: '2 & 3'. Aquesta expressió és invàlida perquè l'operador '&' no és un operador matemàtic vàlid.",
-            "en":  "1. Valid expression: '2 * 3'. This expression is valid because there are no parentheses and the mathematical operators are valid. 2. Invalid expression: '2 & 3'. This expression is invalid because the '&' operator is not a valid mathematical operator."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "1. Expresión válida: '((3 + 4) * 2) / (5 - 2)'. Esta expresión es válida porque todos los paréntesis están equilibrados y los operadores matemáticos son válidos. 2. Expresión inválida: '((3 + 4) * 2 / (5 - 2'. Esta expresión es inválida porque falta un paréntesis de cierre.",
-            "ca":  "1. Expressió vàlida: '((3 + 4) * 2) / (5 - 2)'. Aquesta expressió és vàlida perquè tots els parèntesis estan equilibrats i els operadors matemàtics són vàlids. 2. Expressió invàlida: '((3 + 4) * 2 / (5 - 2'. Aquesta expressió és invàlida perquè falta un parèntesis de tancament.",
-            "en":  "1. Valid expression: '((3 + 4) * 2) / (5 - 2)'. This expression is valid because all parentheses are balanced and the mathematical operators are valid. 2. Invalid expression: '((3 + 4) * 2 / (5 - 2'. This expression is invalid because a closing parenthesis is missing."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "Para resolver este ejercicio, es útil familiarizarse con las estructuras de datos como pilas y con los conceptos básicos de las expresiones matemáticas.",
-        "ca": "Per resoldre aquest exercici, és útil familiaritzar-se amb les estructures de dades com a piles i amb els conceptes bàsics de les expressions matemàtiques.",
-        "en": "To solve this exercise, it's helpful to familiarize yourself with data structures like stacks and basic concepts of mathematical expressions."
-      }
+      "description": "Crea un programa que validi si una expresió matemàtica és valida, considerant parèntesis equilibrats i operadors matemàtics valids."
     },
     "languages": [
       {
@@ -1735,75 +595,13 @@
     "_id": {
       "$uuid": "4c6a8e1d-9d3b-4f8c-8b7a-2e3d1c5a9d4e"
     },
-    "challenge_title": {
-      "es": "Encuentra el Subarray Contiguo de mayor tamaño",
-      "ca": "Troba el Subarray Contigu més Gran",
-      "en": "Find the Largest Contiguous Subarray"
-    },
+    "challenge_title": "Troba el Subarray Contigu més Gran",
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Implementa un algoritmo para encontrar la subarray contigua más grande en un array de enteros.",
-        "ca": "Implementa un algoritme per trobar el subarray contigu més gran possible en un array d'integers.",
-        "en": "Implement an algorithm to find the largest contiguous subarray in an array of integers."
-      }
-    ,
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contiguo más grande es [4, -1, 2, 1] con una suma de 6. 2. Array de entrada: [1, -2, 3, 5, -3, 2]. El subarray contiguo más grande es [3, 5] con una suma de 8.",
-            "ca":  "1. Array d'entrada: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. El subarray contigu més gran és [4, -1, 2, 1] amb una suma de 6. 2. Array d'entrada: [1, -2, 3, 5, -3, 2]. El subarray contigu més gran és [3, 5] amb una suma de 8.",
-            "en":  "1. Input array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]. The largest contiguous subarray is [4, -1, 2, 1] with a sum of 6. 2. Input array: [1, -2, 3, 5, -3, 2]. The largest contiguous subarray is [3, 5] with a sum of 8."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [5, -3, 5]. El subarray contiguo más grande es [5, -3, 5] con una suma de 7. 2. Array de entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contiguo más grande es [0] con una suma de 0.",
-            "ca":  "1. Array d'entrada: [5, -3, 5]. El subarray contigu més gran és [5, -3, 5] amb una suma de 7. 2. Array d'entrada: [0, -2, -3, -4, -1, -2, -3, -5, -4]. El subarray contigu més gran és [0] amb una suma de 0.",
-            "en":  "1. Input array: [5, -3, 5]. The largest contiguous subarray is [5, -3, 5] with a sum of 7. 2. Input array: [0, -2, -3, -4, -1, -2, -3, -5, -4]. The largest contiguous subarray is [0] with a sum of 0."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [1, 2, 3, 4, 5]. El subarray contiguo más grande es [1, 2, 3, 4, 5] con una suma de 15. 2. Array de entrada: [-1, -2, -3, -4, -5]. El subarray contiguo más grande es [-1] con una suma de -1.",
-            "ca":  "1. Array d'entrada: [1, 2, 3, 4, 5]. El subarray contigu més gran és [1, 2, 3, 4, 5] amb una suma de 15. 2. Array d'entrada: [-1, -2, -3, -4, -5]. El subarray contigu més gran és [-1] amb una suma de -1.",
-            "en":  "1. Input array: [1, 2, 3, 4, 5]. The largest contiguous subarray is [1, 2, 3, 4, 5] with a sum of 15. 2. Input array: [-1, -2, -3, -4, -5]. The largest contiguous subarray is [-1] with a sum of -1."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contiguo más grande es [4, -1, -2, 1, 5] con una suma de 7. 2. Array de entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contiguo más grande es [1, -1, 1, -1, 1, -1, 1] con una suma de 1.",
-            "ca":  "1. Array d'entrada: [2, -3, 4, -1, -2, 1, 5, -3]. El subarray contigu més gran és [4, -1, -2, 1, 5] amb una suma de 7. 2. Array d'entrada: [1, -1, 1, -1, 1, -1, 1, -1]. El subarray contigu més gran és [1, -1, 1, -1, 1, -1, 1] amb una suma de 1.",
-            "en":  "1. Input array: [2, -3, 4, -1, -2, 1, 5, -3]. The largest contiguous subarray is [4, -1, -2, 1, 5] with a sum of 7. 2. Input array: [1, -1, 1, -1, 1, -1, 1, -1]. The largest contiguous subarray is [1, -1, 1, -1, 1, -1, 1] with a sum of 1."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de subarrays y con algoritmos de programación dinámica.",
-        "ca": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes de subarrays i amb algoritmes de programació dinàmica.",
-        "en": "To solve this exercise, it's helpful to familiarize yourself with the concepts of subarrays and dynamic programming algorithms."
-      }
+      "description": "Implementa un algoritme per trobar el subarray contigu més gran possible en un array d'integers."
     },
     "languages": [
       {
@@ -1828,75 +626,13 @@
     "_id": {
       "$uuid": "ec52b7f1-2f78-4a83-aef0-3b9b6f34a763"
     },
-    "challenge_title": {
-      "es": "Cuenta inversiones en un Array",
-      "ca": "Compta inversions dins un Array",
-      "en": "Count Inversions in an Array"
-    },
+    "challenge_title": "Compta inversions dins un Array",
     "level": "HARD",
     "creation_date": {
       "$date": "2018-09-09T11:43:54+0200"
     },
     "detail": {
-      "description":
-      {
-        "es": "Escribe un programa que cuente el número de inversiones en un array. Una inversión ocurre cuando un par de elementos en el array está en el orden incorrecto",
-        "ca": "Esctriu un programa que compti el nombre d'inversions dins un array. Una inversió és quan una parella d'elements en l'array es troba en l'ordre equivocat",
-        "en": "Write a program that counts the number of inversions in an array. An inversion occurs when a pair of elements in the array is in the wrong order."
-      }
-    ,
-      "examples": [
-        {
-          "_id": {
-            "$uuid": "2dab6eaa-fdf4-4a93-8088-810a956e2bf8"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [2, 4, 1, 3, 5]. El número de inversiones es 3. 2. Array de entrada: [5, 4, 3, 2, 1]. El número de inversiones es 10.",
-            "ca":  "1. Array d'entrada: [2, 4, 1, 3, 5]. El nombre d'inversions és 3. 2. Array d'entrada: [5, 4, 3, 2, 1]. El nombre d'inversions és 10.",
-            "en":  "1. Input array: [2, 4, 1, 3, 5]. The number of inversions is 3. 2. Input array: [5, 4, 3, 2, 1]. The number of inversions is 10."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "6c02025e-b06f-420a-bafb-28c737b18473"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [1, 2, 5, 3, 4, 6]. El número de inversiones es 2. 2. Array de entrada: [6, 5, 4, 3, 2, 1]. El número de inversiones es 15.",
-            "ca":  "1. Array d'entrada: [1, 2, 5, 3, 4, 6]. El nombre d'inversions és 2. 2. Array d'entrada: [6, 5, 4, 3, 2, 1]. El nombre d'inversions és 15.",
-            "en":  "1. Input array: [1, 2, 5, 3, 4, 6]. The number of inversions is 2. 2. Input array: [6, 5, 4, 3, 2, 1]. The number of inversions is 15."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "70e9755e-9e83-41d3-853a-665f1f2a2f5c"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [1, 3, 5, 2, 4, 6]. El número de inversiones es 3. 2. Array de entrada: [6, 4, 2, 5, 3, 1]. El número de inversiones es 9.",
-            "ca":  "1. Array d'entrada: [1, 3, 5, 2, 4, 6]. El nombre d'inversions és 3. 2. Array d'entrada: [6, 4, 2, 5, 3, 1]. El nombre d'inversions és 9.",
-            "en":  "1. Input array: [1, 3, 5, 2, 4, 6]. The number of inversions is 3. 2. Input array: [6, 4, 2, 5, 3, 1]. The number of inversions is 9."
-          }
-        },
-        {
-          "_id": {
-            "$uuid": "bb7897b8-517d-4843-8c17-e347aba086ca"
-          },
-          "example_text":
-          {
-            "es":  "1. Array de entrada: [1, 2, 3, 4, 5]. El número de inversiones es 0. 2. Array de entrada: [5, 3, 4, 2, 1]. El número de inversiones es 6.",
-            "ca":  "1. Array d'entrada: [1, 2, 3, 4, 5]. El nombre d'inversions és 0. 2. Array d'entrada: [5, 3, 4, 2, 1]. El nombre d'inversions és 6.",
-            "en":  "1. Input array: [1, 2, 3, 4, 5]. The number of inversions is 0. 2. Input array: [5, 3, 4, 2, 1]. The number of inversions is 6."
-          }
-        }
-      ],
-          "notes":
-      {
-        "es": "Para resolver este ejercicio, es útil familiarizarse con los conceptos de inversiones en arrays y con algoritmos de ordenación.",
-        "ca": "Per resoldre aquest exercici, és útil familiaritzar-se amb els conceptes d'inversions en arrays i amb algoritmes d'ordenació.",
-        "en": "To solve this exercise, it's helpful to familiarize yourself with the concepts of inversions in arrays and sorting algorithms."
-      }
+      "description": "Esctriu un programa que compti el nombre d'inversions dins un array. Una inversió és quan una parella d'elements en l'array es troba en l'ordre equivocat"
     },
     "languages": [
       {

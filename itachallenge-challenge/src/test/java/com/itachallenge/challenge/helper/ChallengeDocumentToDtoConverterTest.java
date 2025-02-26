@@ -32,46 +32,25 @@ class ChallengeDocumentToDtoConverterTest {
 
         UUID challengeRandomId1 = UUID.randomUUID();
         UUID challengeRandomId2 = UUID.randomUUID();
-        UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        Map<Locale, String> title = new HashMap<>();
-        title.put(Locale.forLanguageTag("ES"), "Título");
-        title.put(Locale.forLanguageTag("CA"), "Títol");
-        title.put(Locale.ENGLISH, "Title");
+        String title = "Title";
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
-        Map<Locale, String> exampleMap1 = new HashMap<>();
-        exampleMap1.put(Locale.forLanguageTag("ES"), "Texto de ejemplo");
-        exampleMap1.put(Locale.forLanguageTag("CA"), "Texte d'exemple");
-        exampleMap1.put(Locale.ENGLISH, "Example text");
-        Map<Locale, String> exampleMap2 = new HashMap<>();
-        exampleMap2.put(Locale.forLanguageTag("ES"), "Ejemplo random");
-        exampleMap2.put(Locale.forLanguageTag("CA"), "Exemple random");
-        exampleMap2.put(Locale.ENGLISH, "Random example");
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap1),
-                new ExampleDocument(exampleRandomId, exampleMap2));
-        Map<Locale, String> descriptionMap = new HashMap<>();
-        descriptionMap.put(Locale.forLanguageTag("ES"), "Detalle");
-        descriptionMap.put(Locale.forLanguageTag("CA"), "Detall");
-        descriptionMap.put(Locale.ENGLISH, "Some detail");
-        Map<Locale, String> notesMap = new HashMap<>();
-        notesMap.put(Locale.forLanguageTag("ES"), "Notas");
-        notesMap.put(Locale.forLanguageTag("CA"), "Notes");
-        notesMap.put(Locale.ENGLISH, "Notes");
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        String description = "Some detail";
+        DetailDocument detail = new DetailDocument(description);
 
         Integer popularity = 0;
         Float percentage = 0.0f;
 
-        LanguageDocument languageDoc1 = new LanguageDocument(languageRandomId1, languageNames[0]);
-        LanguageDocument languageDoc2 = new LanguageDocument(languageRandomId2, languageNames[1]);
-        LanguageDto languageDto1 = new LanguageDto(languageRandomId1, languageNames[0]);
-        LanguageDto languageDto2 = new LanguageDto(languageRandomId2, languageNames[1]);
+        LanguageDocument languageDoc1 = new LanguageDocument(languageRandomId1, languageNames[0], "https://image-default.com/javascript.png");
+        LanguageDocument languageDoc2 = new LanguageDocument(languageRandomId2, languageNames[1], "https://image-default.com/python.png");
+        LanguageDto languageDto1 = new LanguageDto(languageRandomId1, languageNames[0], "https://image-default.com/javascript.png");
+        LanguageDto languageDto2 = new LanguageDto(languageRandomId2, languageNames[1], "https://image-default.com/python.png");
 
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
                 Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId));
@@ -122,7 +101,7 @@ class ChallengeDocumentToDtoConverterTest {
                 .isEqualTo(challengeDto2);
     }
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);

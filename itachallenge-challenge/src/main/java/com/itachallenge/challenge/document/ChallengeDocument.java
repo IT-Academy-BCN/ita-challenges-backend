@@ -7,7 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.Locale;
 
 @Document(collection="challenges")
 @Getter
@@ -22,7 +21,7 @@ public class ChallengeDocument {
     private UUID uuid;
 
     @Field(name="challenge_title")
-    private Map<Locale, String> title;
+    private String title;
 
     @Field(name="level")
     private String level;   //valor seteado fom properties
