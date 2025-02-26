@@ -27,7 +27,7 @@ public enum Topic {
                 return topic;
             }
         }
-        throw new IllegalArgumentException("No enum constant with display name: " + displayName);
+        throw new IllegalArgumentException("No enum constant with display name " + displayName);
     }
 
 

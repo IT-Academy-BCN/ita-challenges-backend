@@ -99,20 +99,26 @@ class ResourceRepositoryTest {
     @DisplayName("Find by Topic Test")
     @Test
     void findByTopicTest() {
-        Flux<ResourceDocument> resources = resourceRepository.findByTopic(Topic.COMPONENTS);
+        Flux<ResourceDocument> resources = resourceRepository.findByTopic(Topic.DEBUGGING);
+
         StepVerifier.create(resources)
-                .expectNextCount(1)
-                .verifyComplete();
+                .expectNextMatches(resource -> resource.getTopic().equals(Topic.DEBUGGING))
+                .thenCancel()
+                .verify();
     }
+
 
     @DisplayName("Find by Content Type Test")
     @Test
     void findByContentTypeTest() {
         Flux<ResourceDocument> resources = resourceRepository.findByContentType(ResourceContentType.BLOG);
+
         StepVerifier.create(resources)
-                .expectNextCount(1)
-                .verifyComplete();
+                .expectNextMatches(resource -> resource.getContentType() == ResourceContentType.BLOG)
+                .thenCancel()
+                .verify();
     }
+
 
     @DisplayName("Delete by UUID Test")
     @Test

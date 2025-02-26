@@ -635,17 +635,16 @@ class ChallengeServiceImpTest {
 
     @Test
     void getChallengesByTopic_WhenNoChallengesExist_ReturnsEmptyResult() {
-        Topic topic = Topic.COMPONENTS;
-        int offset = 0;
-        int limit = 10;
+        Topic topic = Topic.DEBUGGING;
+        int page = 0;
+        int size = 10;
 
-        // Simula que no hi ha desafiaments per al topic
         when(challengeRepository.findByTopic(topic)).thenReturn(Flux.empty());
 
-        StepVerifier.create(challengeService.getChallengesByTopic(topic, offset, limit))
+        StepVerifier.create(challengeService.getChallengesByTopic(topic, page, size))
                 .expectNextMatches(result ->
-                        result.getTotal() == 0 &&  // El total ha de ser 0 perquè no hi ha desafiaments
-                                result.getResults().isEmpty())  // Verifiquem que la llista estigui buida
+                        result.getTotal() == 0 &&
+                                result.getResults().isEmpty())
                 .verifyComplete();
     }
 
@@ -655,13 +654,12 @@ class ChallengeServiceImpTest {
         int offset = 0;
         int limit = 10;
 
-        // Simula un error en el repositori
         when(challengeRepository.findByTopic(topic)).thenReturn(Flux.error(new RuntimeException("Database error")));
 
         StepVerifier.create(challengeService.getChallengesByTopic(topic, offset, limit))
                 .expectErrorMatches(error ->
                         error instanceof RuntimeException &&
-                                error.getMessage().equals("Database error"))  // Verifiquem l'error retornat
+                                error.getMessage().equals("Database error"))
                 .verify();
     }
 

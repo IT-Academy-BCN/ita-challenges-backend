@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 @NoArgsConstructor
 @Builder
 @Getter
@@ -17,9 +18,11 @@ import java.util.List;
 public class ChallengeListDto {
 
     @JsonProperty(value = "results", index = 0)
-    private List<ChallengeDto> results;
+    @Builder.Default
+    private List<ChallengeDto> results = new ArrayList<>();
 
     @JsonProperty(value = "total", index = 1)
-    private Integer total;
+    @Builder.Default
+    private Integer total = 0;
 }
 

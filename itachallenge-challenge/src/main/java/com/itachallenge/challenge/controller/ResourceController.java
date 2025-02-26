@@ -37,7 +37,7 @@ public class ResourceController {
             }
     )
     public Mono<ResponseEntity<ResourceDto>> createNewResource(@RequestBody @Valid ResourceDto resourceDto) {
-        log.info("Creating new resource: {}", resourceDto);
+        log.info("Creating a new resource {}", resourceDto);
         return resourceService.createResource(resourceDto)
                 .map(createdResource -> ResponseEntity.ok().body(createdResource));
     }

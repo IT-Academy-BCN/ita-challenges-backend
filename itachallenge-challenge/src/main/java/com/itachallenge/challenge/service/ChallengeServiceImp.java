@@ -280,7 +280,6 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
 
-
     private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic) {
         Map<Locale, String> catalanTitle = Map.of(Locale.forLanguageTag("CA"), dto.getChallengeTitle());
         Map<Locale, String> catalanDescription = Map.of(Locale.forLanguageTag("CA"), dto.getDescription());
@@ -299,7 +298,6 @@ public class ChallengeServiceImp implements IChallengeService {
                 .topic(topic)
                 .build();
     }
-
 
 
     private Mono<UUID> validateUUID(String id) {
@@ -325,20 +323,45 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size) {
-        // Utilitzem directament el Topic per cercar els desafiaments
+        challengeRepository.findByTopic(topic)
+                .count()
+                .doOnSuccess(count -> System.out.println("All challenges found " + count))
+                .subscribe();
+        if (topic == null) {
+            return Mono.just(ChallengeListDto.builder()
+                    .results(new ArrayList<>())
+                    .total(0)
+                    .build());
+        }
+
+        Flux<ChallengeDocument> challengesFlux = challengeRepository.findByTopic(topic);
+
+        if (challengesFlux == null) {
+            return Mono.just(ChallengeListDto.builder()
+                    .results(new ArrayList<>())
+                    .total(0)
+                    .build());
+        }
+
         return challengeRepository.findByTopic(topic)
+                .doOnNext(challenge -> System.out.println("Challenge find " + challenge))
                 .collectList()
+                .doOnSuccess(challenges -> System.out.println("All found " + challenges.size()))
+                .defaultIfEmpty(new ArrayList<>())
                 .map(challenges -> {
                     List<ChallengeDto> challengeDtos = challenges.stream()
                             .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
                             .collect(Collectors.toList());
 
-                    ChallengeListDto challengeListDto = new ChallengeListDto();
-                    challengeListDto.setResults(challengeDtos);
-                    challengeListDto.setTotal(challenges.size());
-                    return challengeListDto;
-                });
+                    return ChallengeListDto.builder()
+                            .results(challengeDtos)
+                            .total(challengeDtos.size())
+                            .build();
+                })
+                .switchIfEmpty(Mono.just(ChallengeListDto.builder()
+                        .results(new ArrayList<>())
+                        .total(0)
+                        .build()));
+
     }
-
-
 }

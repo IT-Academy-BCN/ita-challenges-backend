@@ -42,7 +42,7 @@ class ResourceDtoTest {
 
         Assertions.assertEquals(Topic.DEBUGGING, resource.getTopic(), "El topic no és correcte");
 
-        Assertions.assertEquals("TUTORIAL", resource.getContentType());
+        Assertions.assertEquals(ResourceContentType.BLOG, resource.getContentType());
 
         Assertions.assertNotNull(resource.getChallengeIds(), "Els IDs de challenge no són vàlids!");
         Assertions.assertEquals(2, resource.getChallengeIds().size(), "El nombre de challengeIds no és el correcte!");
@@ -65,7 +65,7 @@ class ResourceDtoTest {
         "description": "A guide on how to start debugging",
         "url": "https://youtubetutorial.com/debugging",
         "topic": "DEBUGGING", 
-        "contentType": "TUTORIAL",
+        "contentType": "BLOG",
         "challengeIds": [
             "f47ac10b-58cc-4372-a567-0e02b2c3d479",
             "550e8400-e29b-41d4-a716-446655440000"
@@ -84,7 +84,7 @@ class ResourceDtoTest {
         Assertions.assertEquals("A guide on how to start debugging", resource.getDescription());
         Assertions.assertEquals("https://youtubetutorial.com/debugging", resource.getUrl());
         Assertions.assertEquals(Topic.DEBUGGING, resource.getTopic());
-        Assertions.assertEquals("TUTORIAL", resource.getContentType());
+        Assertions.assertEquals(ResourceContentType.BLOG, resource.getContentType());
 
         Assertions.assertNotNull(resource.getChallengeIds());
         Assertions.assertEquals(2, resource.getChallengeIds().size());
