@@ -24,7 +24,7 @@ import java.util.UUID;
 public class ResourceDto {
 
     @JsonProperty(value = "resourceId", index = 0)
-    @NotEmpty(message = "cannot be empty")
+    @NotNull(message = "cannot be null")
     private UUID resourceId;
 
     @JsonProperty(value = "title", index = 1)
@@ -44,7 +44,7 @@ public class ResourceDto {
     private Topic topic;
 
     @JsonProperty(value = "contentType", index = 5)
-    @NotEmpty(message = "cannot be empty")
+    @NotNull(message = "cannot be null")
     private ResourceContentType contentType;
 
     @JsonProperty(value = "challengeIds", index = 6)
