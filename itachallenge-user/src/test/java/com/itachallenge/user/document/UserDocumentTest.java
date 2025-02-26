@@ -1,5 +1,6 @@
 package com.itachallenge.user.document;
 
+import com.itachallenge.user.document.enums.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,15 +12,18 @@ class UserDocumentTest {
 
     private UUID uuid;
     private String username;
+    private Role role;
     private UserDocument userDocument;
 
     @BeforeEach
     void setUp() {
         uuid = UUID.randomUUID();
         username = "testUser";
+        role = Role.ADMIN;
         userDocument = UserDocument.builder()
                 .uuid(uuid)
                 .username(username)
+                .role(role)
                 .build();
     }
 
@@ -28,18 +32,22 @@ class UserDocumentTest {
         assertNotNull(userDocument);
         assertEquals(uuid, userDocument.getUuid());
         assertEquals(username, userDocument.getUsername());
+        assertEquals(role, userDocument.getRole());
     }
 
     @Test
     void settersAndGetters() {
         UUID newUuid = UUID.randomUUID();
         String newUsername = "newUser";
+        Role newRole = Role.USER;
 
         userDocument.setUuid(newUuid);
         userDocument.setUsername(newUsername);
+        userDocument.setRole(newRole);
 
         assertEquals(newUuid, userDocument.getUuid());
         assertEquals(newUsername, userDocument.getUsername());
+        assertEquals(newRole, userDocument.getRole());
     }
 
     @Test
@@ -47,11 +55,13 @@ class UserDocumentTest {
         UserDocument user = UserDocument.builder()
                 .uuid(uuid)
                 .username(username)
+                .role(role)
                 .build();
 
         assertNotNull(user);
         assertEquals(uuid, user.getUuid());
         assertEquals(username, user.getUsername());
+        assertEquals(role, user.getRole());
     }
 
     @Test
@@ -60,20 +70,22 @@ class UserDocumentTest {
         assertNotNull(emptyUser);
         assertNull(emptyUser.getUuid());
         assertNull(emptyUser.getUsername());
+        assertNull(emptyUser.getRole());
     }
 
     @Test
     void allArgsConstructor() {
-        UserDocument user = new UserDocument(uuid, username);
+        UserDocument user = new UserDocument(uuid, username, role);
         assertNotNull(user);
         assertEquals(uuid, user.getUuid());
         assertEquals(username, user.getUsername());
+        assertEquals(role, user.getRole());
     }
 
     @Test
     void equalsAndHashCode() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, username);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, username, role);
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
@@ -88,6 +100,7 @@ class UserDocumentTest {
         assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
         assertTrue(toString.contains(uuid.toString()), "ToString should contain UUID");
         assertTrue(toString.contains(username), "ToString should contain username");
+        assertTrue(toString.contains(role.toString()), "ToString should contain role");
     }
 
     @Test
@@ -102,7 +115,7 @@ class UserDocumentTest {
 
     @Test
     void equalsAndHashCodeWithDifferentUUIDs() {
-        UserDocument differentUser = new UserDocument(UUID.randomUUID(), username);
+        UserDocument differentUser = new UserDocument(UUID.randomUUID(), username, role);
 
         assertNotEquals(userDocument, differentUser);
         assertNotEquals(userDocument.hashCode(), differentUser.hashCode());
@@ -110,7 +123,7 @@ class UserDocumentTest {
 
     @Test
     void equalsAndHashCodeWithDifferentUsernames() {
-        UserDocument sameUuidDifferentUsername = new UserDocument(uuid, "differentUser");
+        UserDocument sameUuidDifferentUsername = new UserDocument(uuid, "differentUser", Role.USER);
 
         assertNotEquals(userDocument, sameUuidDifferentUsername);
         assertNotEquals(userDocument.hashCode(), sameUuidDifferentUsername.hashCode());
@@ -118,16 +131,19 @@ class UserDocumentTest {
 
     @Test
     void equalsAndHashCodeWithNullFields() {
-        UserDocument userWithNullUuid = new UserDocument(null, username);
-        UserDocument userWithNullUsername = new UserDocument(uuid, null);
-        UserDocument completelyNullUser = new UserDocument(null, null);
+        UserDocument userWithNullUuid = new UserDocument(null, username, Role.ADMIN);
+        UserDocument userWithNullUsername = new UserDocument(uuid, null, Role.ADMIN);
+        UserDocument userWithNullRole = new UserDocument(uuid, null, null);
+        UserDocument completelyNullUser = new UserDocument(null, null, null);
 
         assertNotEquals(userDocument, userWithNullUuid);
         assertNotEquals(userDocument, userWithNullUsername);
+        assertNotEquals(userDocument, userWithNullRole);
         assertNotEquals(userDocument, completelyNullUser);
 
         assertNotEquals(userDocument.hashCode(), userWithNullUuid.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullUsername.hashCode());
+        assertNotEquals(userDocument.hashCode(), userWithNullRole.hashCode());
         assertNotEquals(userDocument.hashCode(), completelyNullUser.hashCode());
     }
 
@@ -144,8 +160,8 @@ class UserDocumentTest {
 
     @Test
     void equalsConsistencyTest() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, username);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, username, role);
 
         assertEquals(user1, user2);
         assertEquals(user1, user2); // Repeated check for consistency
@@ -159,9 +175,9 @@ class UserDocumentTest {
 
     @Test
     void equalsTransitivityTest() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, username);
-        UserDocument user3 = new UserDocument(uuid, username);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, username, role);
+        UserDocument user3 = new UserDocument(uuid, username, role);
 
         assertEquals(user1, user2);
         assertEquals(user2, user3);
@@ -170,8 +186,8 @@ class UserDocumentTest {
 
     @Test
     void equalsSymmetryTest() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, username);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, username, role);
 
         assertEquals(user1, user2);
         assertEquals(user2, user1);
@@ -179,24 +195,24 @@ class UserDocumentTest {
 
     @Test
     void hashCodeEqualityForEqualObjects() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, username);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, username, role);
 
         assertEquals(user1.hashCode(), user2.hashCode());
     }
 
     @Test
     void hashCodeDifferenceForNonEqualObjects() {
-        UserDocument user1 = new UserDocument(UUID.randomUUID(), "user1");
-        UserDocument user2 = new UserDocument(UUID.randomUUID(), "user2");
+        UserDocument user1 = new UserDocument(UUID.randomUUID(), "user1", Role.ADMIN);
+        UserDocument user2 = new UserDocument(UUID.randomUUID(), "user2", Role.ADMIN);
 
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
 
     @Test
-    void equalsWithNullUuidAndUsername() {
-        UserDocument user1 = new UserDocument(null, null);
-        UserDocument user2 = new UserDocument(null, null);
+    void equalsWithNullUuiAndUsernameAndRole() {
+        UserDocument user1 = new UserDocument(null, null, null);
+        UserDocument user2 = new UserDocument(null, null, null);
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
@@ -204,8 +220,8 @@ class UserDocumentTest {
 
     @Test
     void equalsWithOneNullUuid() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(null, username);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(null, username, role);
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
@@ -213,8 +229,17 @@ class UserDocumentTest {
 
     @Test
     void equalsWithOneNullUsername() {
-        UserDocument user1 = new UserDocument(uuid, username);
-        UserDocument user2 = new UserDocument(uuid, null);
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, null, role);
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
+
+    @Test
+    void equalsWithOneNullRole() {
+        UserDocument user1 = new UserDocument(uuid, username, role);
+        UserDocument user2 = new UserDocument(uuid, username, null);
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
@@ -222,12 +247,13 @@ class UserDocumentTest {
 
     @Test
     void toStringHandlesNullValues() {
-        UserDocument user = new UserDocument(null, null);
+        UserDocument user = new UserDocument(null, null, null);
         String toString = user.toString();
 
         assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
         assertFalse(toString.contains("uuid="), "ToString should not contain 'uuid=' when null");
         assertFalse(toString.contains("username="), "ToString should not contain 'username=' when null");
+        assertFalse(toString.contains("role="), "ToString should not contain 'role=' when null");
         assertEquals("UserDocument{}", toString, "ToString should return an empty object representation");
     }
 
@@ -237,26 +263,30 @@ class UserDocumentTest {
         UserDocument user = UserDocument.builder()
                 .uuid(null)
                 .username(null)
+                .role(null)
                 .build();
 
         assertNotNull(user);
         assertNull(user.getUuid());
         assertNull(user.getUsername());
+        assertNull(user.getRole());
     }
 
     @Test
     void settersHandleNullValues() {
         userDocument.setUuid(null);
         userDocument.setUsername(null);
+        userDocument.setRole(null);
 
         assertNull(userDocument.getUuid());
         assertNull(userDocument.getUsername());
+        assertNull(userDocument.getRole());
     }
 
     @Test
     void hashCodeDifferentForDifferentObjects() {
-        UserDocument user1 = new UserDocument(UUID.randomUUID(), "UserA");
-        UserDocument user2 = new UserDocument(UUID.randomUUID(), "UserB");
+        UserDocument user1 = new UserDocument(UUID.randomUUID(), "UserA", Role.ADMIN);
+        UserDocument user2 = new UserDocument(UUID.randomUUID(), "UserB", Role.ADMIN);
 
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
@@ -270,6 +300,7 @@ class UserDocumentTest {
         assertNotNull(user);
         assertEquals(uuid, user.getUuid());
         assertNull(user.getUsername());
+        assertNull(user.getRole());
     }
 
     @Test
@@ -281,12 +312,25 @@ class UserDocumentTest {
         assertNotNull(user);
         assertNull(user.getUuid());
         assertEquals(username, user.getUsername());
+        assertNull(user.getRole());
+    }
+
+    @Test
+    void builderHandlesOnlyRole() {
+        UserDocument user = UserDocument.builder()
+                .role(role)
+                .build();
+
+        assertNotNull(user);
+        assertNull(user.getUuid());
+        assertNull(user.getUsername());
+        assertEquals(role, user.getRole());
     }
 
     @Test
     void builderCreatesNewInstances() {
-        UserDocument user1 = UserDocument.builder().uuid(uuid).username(username).build();
-        UserDocument user2 = UserDocument.builder().uuid(uuid).username(username).build();
+        UserDocument user1 = UserDocument.builder().uuid(uuid).username(username).role(role).build();
+        UserDocument user2 = UserDocument.builder().uuid(uuid).username(username).role(role).build();
 
         assertNotSame(user1, user2);
         assertEquals(user1, user2);
@@ -299,18 +343,20 @@ class UserDocumentTest {
         assertNotNull(user);
         assertNull(user.getUuid());
         assertNull(user.getUsername());
+        assertNull(user.getRole());
     }
 
     @Test
     void modifyingBuiltObjectDoesNotAffectOriginalBuilder() {
-        UserDocument.UserDocumentBuilder builder = UserDocument.builder().uuid(uuid).username(username);
+        UserDocument.UserDocumentBuilder builder = UserDocument.builder().uuid(uuid).username(username).role(role);
 
         UserDocument user1 = builder.build();
-        UserDocument user2 = builder.uuid(UUID.randomUUID()).username("newUser").build();
+        UserDocument user2 = builder.uuid(UUID.randomUUID()).username("newUser").role(Role.USER).build();
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.getUuid(), user2.getUuid());
         assertNotEquals(user1.getUsername(), user2.getUsername());
+        assertNotEquals(user1.getRole(), user2.getRole());
     }
 
 }

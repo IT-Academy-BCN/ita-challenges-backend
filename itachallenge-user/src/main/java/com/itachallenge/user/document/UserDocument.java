@@ -1,5 +1,6 @@
 package com.itachallenge.user.document;
 
+import com.itachallenge.user.document.enums.Role;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -24,6 +25,8 @@ public class UserDocument {
     @Indexed(unique = true)
     private String username;
 
+    @Field("role")
+    private Role role;
 
     @Override
     public String toString() {
@@ -34,6 +37,9 @@ public class UserDocument {
         }
         if (username != null) {
             joiner.add("username='" + username + "'");
+        }
+        if (role != null) {
+            joiner.add("role='" + role + "'");
         }
 
         return joiner.toString();
