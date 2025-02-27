@@ -39,11 +39,11 @@ class UserServiceTest {
     }
 
     @Test
-    void isMentor_ShouldReturnTrue_WhenUserExists() {
+    void exists_ShouldReturnTrue_WhenUserExists() {
         String username = "mentorUser";
         when(userRepository.existsByUsername(username)).thenReturn(Mono.just(true));
 
-        StepVerifier.create(userService.isMentor(Mono.just(username)))
+        StepVerifier.create(userService.exists(Mono.just(username)))
                 .expectNext(true)
                 .verifyComplete();
 
@@ -51,11 +51,11 @@ class UserServiceTest {
     }
 
     @Test
-    void isMentor_ShouldReturnFalse_WhenUserDoesNotExist() {
+    void exists_ShouldReturnFalse_WhenUserDoesNotExist() {
         String username = "nonExistentUser";
         when(userRepository.existsByUsername(username)).thenReturn(Mono.just(false));
 
-        StepVerifier.create(userService.isMentor(Mono.just(username)))
+        StepVerifier.create(userService.exists(Mono.just(username)))
                 .expectNext(false)
                 .verifyComplete();
 
@@ -68,7 +68,7 @@ class UserServiceTest {
         UserDocument existingUser = new UserDocument(UUID.randomUUID(), username, Role.ADMIN);
         when(userRepository.findByUsername(username)).thenReturn(Mono.just(existingUser));
 
-        StepVerifier.create(userService.getUser(Mono.just(username)))
+        StepVerifier.create(userService.getUser(username))
                 .expectNext(existingUser)
                 .verifyComplete();
 
@@ -80,7 +80,7 @@ class UserServiceTest {
         String username = "nonExistentUser";
         when(userRepository.findByUsername(username)).thenReturn(Mono.empty());
 
-        StepVerifier.create(userService.getUser(Mono.just(username)))
+        StepVerifier.create(userService.getUser(username))
                 .expectNextCount(0)
                 .verifyComplete();
 
