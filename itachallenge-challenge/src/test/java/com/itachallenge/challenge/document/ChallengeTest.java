@@ -21,12 +21,9 @@ class ChallengeTest {
 
     @Test
     void getTitle() {
-        Map<Locale, String> titleMap = new HashMap<>();
-            titleMap.put(Locale.forLanguageTag("ES"), "Reto de prueba");
-            titleMap.put(Locale.forLanguageTag("CA"), "Repte de prova");
-            titleMap.put(Locale.ENGLISH, "Test Challenge");
-        ChallengeDocument challenge = new ChallengeDocument(null, titleMap, null, null, null, null, null, Topic.COMPONENTS);
-        assertEquals(titleMap, challenge.getTitle());
+        String expectedTitle = "Test challenge";
+        ChallengeDocument challenge = new ChallengeDocument(null, expectedTitle, null, null, null, null, null, Topic.COMPONENTS);
+        assertEquals(expectedTitle, challenge.getTitle());
     }
 
     @Test
@@ -45,7 +42,7 @@ class ChallengeTest {
 
     @Test
     void getDetail() {
-        DetailDocument detail = new DetailDocument(null, null, null);
+        DetailDocument detail = new DetailDocument(null);
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null, Topic.COMPONENTS);
         assertEquals(detail, challenge.getDetail());
     }
@@ -54,7 +51,9 @@ class ChallengeTest {
     void getLanguages() {
         UUID uuid = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        Set<LanguageDocument> languages = Set.of(new LanguageDocument(uuid, "Javascript"), new LanguageDocument(uuid2, "Python"));
+        Set<LanguageDocument> languages = Set.of(new LanguageDocument(uuid, "Javascript",
+                "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg"),
+                new LanguageDocument(uuid2, "Python", "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Python_rphody.svg"));
 
         ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS);
         assertEquals(languages, challenge.getLanguages());

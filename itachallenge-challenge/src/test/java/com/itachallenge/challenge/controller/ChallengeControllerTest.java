@@ -4,7 +4,6 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.exception.ChallengeAlreadyExistsException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -380,21 +379,6 @@ class ChallengeControllerTest {
                 .expectStatus().isBadRequest();
     }
 
-    @Test
-    void addChallenge_test_repeatedTitle_statusBadRequest() {
-        ChallengeCreateDto formData = new ChallengeCreateDto("Already-existing title", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS);
-
-        when(challengeService.addChallenge(any()))
-                .thenThrow(new ChallengeAlreadyExistsException("A challenge with this title already exists"));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(formData)
-                .exchange()
-                .expectStatus().isBadRequest();
-    }
 
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {

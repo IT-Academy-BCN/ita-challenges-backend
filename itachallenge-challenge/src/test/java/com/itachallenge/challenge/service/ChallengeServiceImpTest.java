@@ -46,8 +46,9 @@ class ChallengeServiceImpTest {
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
-    String titleCA = "Títol";
+    String title = "Títol";
     String languageName = "language name";
+    String languageImage = "https://image-default.com/default.png";
     private ChallengeCreateDto formData;
     private ChallengeDocument challengeDocument;
     private ChallengeDto challengeDto;
@@ -58,33 +59,28 @@ class ChallengeServiceImpTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        String descriptionCA = "Detall";
+        String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
 
-        formData = new ChallengeCreateDto(titleCA, descriptionCA, DifficultyLevel.valueOf(level), languageName, solutionBody, Topic.LISTS);
+        formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level), languageName, solutionBody, Topic.LISTS);
 
         UUID challengeRandomId = UUID.randomUUID();
-        UUID exampleRandomId = UUID.randomUUID();
         UUID languageRandomId = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
 
-        Map<Locale, String> title = Map.of(Locale.forLanguageTag("CA"), titleCA);
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
-        Map<Locale, String> exampleMap = Map.of(Locale.forLanguageTag("CA"), "Texte d'exemple");
-        List<ExampleDocument> exampleDocumentList = List.of(new ExampleDocument(exampleRandomId, exampleMap));
-        Map<Locale, String> descriptionMap = Map.of(Locale.forLanguageTag("CA"), descriptionCA);
-        Map<Locale, String> notesMap = Map.of(Locale.forLanguageTag("CA"), "Notes");
+        String descriptionDetailDocument = "Detall";
 
-        DetailDocument detail = new DetailDocument(descriptionMap, exampleDocumentList, notesMap);
+        DetailDocument detail = new DetailDocument(descriptionDetailDocument);
         solutionDocument = new SolutionDocument(solutionsRandomId, solutionBody, languageRandomId);
 
         Integer popularity = 0;
         Float percentage = 0.0f;
 
-        languageDocument = new LanguageDocument(languageRandomId, languageName);
-        LanguageDto languageDto = new LanguageDto(languageRandomId, languageName);
+        languageDocument = new LanguageDocument(languageRandomId, languageName, languageImage);
+        LanguageDto languageDto = new LanguageDto(languageRandomId, languageName, languageImage);
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS);
@@ -138,25 +134,6 @@ class ChallengeServiceImpTest {
         verifyNoInteractions(challengeRepository);
         verifyNoInteractions(challengeConverter);
     }
-
-//    @Test
-//    void getChallengeById_NonexistentId_ErrorThrown() {
-//        // Arrange
-//        UUID challengeId = UUID.randomUUID();
-//
-//        when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.empty());
-//
-//        // Act
-//        Mono<ChallengeDto> result = challengeService.getChallengeById(challengeId.toString());
-//
-//        // Assert
-//        StepVerifier.create(result)
-//                .expectError(ChallengeNotFoundException.class)
-//                .verify();
-//
-//        verify(challengeRepository).findByUuid(challengeId);
-//        verifyNoInteractions(challengeConverter);
-//    }
 
     @Test
     void getChallengeByIdWhenNonexistentIdThenReturnsError_test() {
@@ -223,10 +200,10 @@ class ChallengeServiceImpTest {
         // Arrange
         UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript");
-        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python");
-        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript");
-        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python");
+        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript", "https://image-default.com/javascript.png");
+        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python", "https://image-default.com/python.png");
+        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript", "https://image-default.com/javascript.png");
+        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python", "https://image-default.com/python.png");
         LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
 
         when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
@@ -533,7 +510,6 @@ class ChallengeServiceImpTest {
 
     @Test
     void addChallenge_test_success() {
-        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
@@ -544,7 +520,6 @@ class ChallengeServiceImpTest {
                 .expectNext(challengeDto)
                 .verifyComplete();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
@@ -552,21 +527,7 @@ class ChallengeServiceImpTest {
     }
 
     @Test
-    void addChallenge_test_RepeatedTitleFailure() {
-        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.TRUE)); // No existing challenge
-
-        // Act & Assert
-        StepVerifier.create(challengeService.addChallenge(formData))
-                .expectErrorMatches(throwable -> throwable instanceof ChallengeAlreadyExistsException)
-                .verify();
-
-        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
-        verifyNoInteractions(languageRepository);
-    }
-
-    @Test
     void addChallenge_test_NonExistentLanguage() {
-        when(challengeRepository.existsByChallengeTitleCa(eq(titleCA))).thenReturn(Mono.just(Boolean.FALSE)); // No existing challenge
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
 
         // Act & Assert
@@ -574,11 +535,10 @@ class ChallengeServiceImpTest {
                 .expectErrorMatches(throwable -> throwable instanceof LanguageNotFoundException)
                 .verify();
 
-        verify(challengeRepository, times(1)).existsByChallengeTitleCa(eq(titleCA));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
     }
 
-    private ChallengeDto getChallengeDtoMocked(UUID challengeId, Map<Locale, String> title, String level, String creationDate, DetailDocument detail,
+    private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
                                                List<UUID> solutions, Integer popularity, Float percentage) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
@@ -664,5 +624,6 @@ class ChallengeServiceImpTest {
     }
 
 }
+
 
 

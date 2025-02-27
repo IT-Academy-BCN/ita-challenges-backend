@@ -54,8 +54,8 @@ class LanguageRepositoryTest {
 
         languageRepository.deleteAll().block();
 
-        LanguageDocument language = new LanguageDocument(uuidLang1, "Java");
-        LanguageDocument language2 = new LanguageDocument(uuidLang2, "Python");
+        LanguageDocument language = new LanguageDocument(uuidLang1, "Java", "https://image-default.com/java.png");
+        LanguageDocument language2 = new LanguageDocument(uuidLang2, "Python", "\"https://image-default.com/python.png");
         Set<LanguageDocument> languageSet = new HashSet<>(Arrays.asList(language2, language));
 
         languageRepository.saveAll(Flux.just(language, language2)).blockLast();

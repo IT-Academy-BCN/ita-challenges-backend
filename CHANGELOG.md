@@ -3,7 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
                                          
-* Issue #763: Created POST endpoint for adding new challenge (in Challenge micro)                
+* Issue #763: Modified POST endpoint for adding new challenge (in Challenge micro)  
+              Created language image attribute in LanguageDocument and LanguageDto.
+              Added language image's URL to the database and updated Challenge tests.
 * Issue #725: Removing all Score and Solution related code in User microservice
 * Issue #712: Refactoring in Challenge micro due to simplifying challenge entity
 * Issue #709: Removing Score microservice due to new approach
