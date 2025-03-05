@@ -26,6 +26,10 @@ jobs:
         with:
           gradle-version: 8.8
 
+      # ✅ Eliminar la caché de Gradle antes de ejecutar los tests
+      - name: Clear Gradle Cache
+        run: rm -rf ~/.gradle/caches/
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -42,9 +46,15 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      # ✅ Ejecutar los tests y generar reportes
+      # ✅ Verificar versión de Gradle y Java en el runner
+      - name: Check Java & Gradle Version
+        run: |
+          java -version
+          ./gradlew --version
+
+      # ✅ Ejecutar los tests y generar reportes, forzando que no use caché
       - name: Run Tests
-        run: ./gradlew test --info --stacktrace
+        run: ./gradlew test --info --stacktrace --no-build-cache
 
       # ✅ Debug: Mostrar si el directorio de reportes realmente existe
       - name: Debug Test Reports Directory
@@ -62,4 +72,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: gradle build sonar --info
+        run: gradle build sonar --info --no-build-cache
