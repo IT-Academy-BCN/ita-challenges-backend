@@ -3,7 +3,6 @@ package com.itachallenge.challenge.repository;
 import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;

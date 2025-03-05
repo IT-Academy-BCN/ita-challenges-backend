@@ -7,7 +7,6 @@ import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class ResourceService implements IResourceService {
@@ -24,14 +22,14 @@ public class ResourceService implements IResourceService {
     private final ResourceRepository resourceRepository;
     private final DocumentToDtoConverter<ResourceDocument, ResourceDto> resourceConverter;
     private final IChallengeService challengeService;
-    private final ModelMapper mapper;
+
 
     public ResourceService(ResourceRepository resourceRepository, DocumentToDtoConverter<ResourceDocument,
-            ResourceDto> resourceConverter, IChallengeService challengeService, ModelMapper mapper) {
+            ResourceDto> resourceConverter, IChallengeService challengeService) {
         this.resourceRepository = resourceRepository;
         this.resourceConverter = resourceConverter;
         this.challengeService = challengeService;
-        this.mapper = mapper;
+
     }
 
     @CacheEvict(value = "resources", allEntries = true)
@@ -76,7 +74,7 @@ public class ResourceService implements IResourceService {
                                 .associationType(resourceDto.getAssociationType())
                                 .challengeIds(matchingChallenges.stream()
                                         .map(ChallengeDto::getChallengeId)
-                                        .collect(Collectors.toList()))
+                                        .toList())
                                 .build());
                     });
         }
@@ -93,7 +91,7 @@ public class ResourceService implements IResourceService {
                     if (!matchingChallenges.isEmpty()) {
                         resourceDto.setChallengeIds(matchingChallenges.stream()
                                 .map(ChallengeDto::getChallengeId)
-                                .collect(Collectors.toList()));
+                                .toList());
                     }
                     return saveResource(resourceDto);
                 })

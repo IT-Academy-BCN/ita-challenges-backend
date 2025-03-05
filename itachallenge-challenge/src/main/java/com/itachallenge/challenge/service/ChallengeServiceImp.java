@@ -21,18 +21,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -306,10 +302,10 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size) {
+        Logger log = LoggerFactory.getLogger(getClass());
         challengeRepository.findByTopic(topic)
                 .count()
-                .doOnSuccess(count -> System.out.println("All challenges found " + count))
-                .subscribe();
+                .doOnSuccess(count -> log.info("All challenges found: {}", count))                .subscribe();
         if (topic == null) {
             return Mono.just(ChallengeListDto.builder()
                     .results(new ArrayList<>())
@@ -327,14 +323,14 @@ public class ChallengeServiceImp implements IChallengeService {
         }
 
         return challengeRepository.findByTopic(topic)
-                .doOnNext(challenge -> System.out.println("Challenge find " + challenge))
+                .doOnNext(challenge -> log.info("Challenge found: {}", challenge))
                 .collectList()
-                .doOnSuccess(challenges -> System.out.println("All found " + challenges.size()))
+                .doOnSuccess(challenges -> log.info("All found: {}", challenges.size()))
                 .defaultIfEmpty(new ArrayList<>())
                 .map(challenges -> {
                     List<ChallengeDto> challengeDtos = challenges.stream()
                             .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-                            .collect(Collectors.toList());
+                            .toList();
 
                     return ChallengeListDto.builder()
                             .results(challengeDtos)
@@ -347,4 +343,4 @@ public class ChallengeServiceImp implements IChallengeService {
                         .build()));
 
     }
-}
+} //
