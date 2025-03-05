@@ -37,9 +37,21 @@ jobs:
             ~/gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+
+      # Ejecutar los tests y generar reportes
+      - name: Run Tests
+        run: ./gradlew test --info --stacktrace
+
+      # Subir el reporte de tests como artefacto
+      - name: Upload Test Report
+        if: always()  # Se ejecuta aunque los tests fallen
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: itachallenge-challenge/build/reports/tests/test/
+
       - name: Analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: gradle build sonar --info
-
