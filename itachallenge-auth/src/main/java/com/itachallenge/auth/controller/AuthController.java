@@ -2,9 +2,9 @@ package com.itachallenge.auth.controller;
 
 
 import com.itachallenge.auth.service.IAuthService;
+import com.itachallenge.auth.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +25,22 @@ public class AuthController {
     private static final String KEY_IS_VALID = "isValid";
     private static final String KEY_USERNAME = "username";
 
-    @Autowired
-    public IAuthService authService;
+    private final IAuthService authService;
 
-    @Value("${spring.application.version}")
-    private String version;
+    private final IUserService userService;
 
-    @Value("${spring.application.name}")
-    private String appName;
+    private final String version;
 
-    public AuthController() {
+    private final String appName;
+
+    public AuthController(IAuthService authService,
+                          IUserService userService,
+                          @Value("${spring.application.version}") String version,
+                          @Value("${spring.application.name}") String appName) {
+        this.authService = authService;
+        this.userService = userService;
+        this.version = version;
+        this.appName = appName;
     }
 
     @GetMapping(value = "/test")
@@ -54,25 +60,7 @@ public class AuthController {
                                 .body(response));
                     }
                     String githubUsername = (String) response.get(KEY_USERNAME);
-                    return authService.validateUserExists(githubUsername)
-                            .flatMap(userExists -> {
-                                if (!userExists) {
-                                    log.warn("User {} does not exist in database", githubUsername);
-
-                                    Map<String, Object> errorResponse = new HashMap<>();
-                                    errorResponse.put(KEY_IS_VALID, false);
-                                    errorResponse.put("message", "User does not exist in the database");
-
-                                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                            .header("X-Validation-Status", "UserNotFound")
-                                            .header("X-Github-Username", githubUsername)
-                                            .body(errorResponse));
-                                }
-                                return Mono.just(ResponseEntity.ok()
-                                        .header("X-Authentication-Status", "Success")
-                                        .header("X-Github-Username", githubUsername)
-                                        .body(response));
-                            });
+                    return getUserDetailsFromGithubUsername(response, githubUsername);
                 })
                 .onErrorResume(ex -> {
                     log.error("GitHub authentication error: {}", ex.getMessage());
@@ -88,6 +76,44 @@ public class AuthController {
                 });
     }
 
+    /**
+     *
+     * @deprecated  used to test JWT logic during development, delete on production
+     *
+     */
+    @Deprecated(forRemoval = true)
+    @PostMapping("/test/authenticate")
+    public Mono<ResponseEntity<Map<String, Object>>> authenticateSkippingGithub(@RequestBody Map<String, String> codeRequest) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("alert", "test only endpoint");
+        return getUserDetailsFromGithubUsername(response, codeRequest.get("github_username"));
+    }
+
+    private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
+        return userService.forwardUserDetails(githubUsername)
+                .flatMap(userResponseEntity -> {
+                    if (userResponseEntity.getStatusCode().is2xxSuccessful()) {
+                        response.put("user", userResponseEntity.getBody());
+                        return Mono.just(ResponseEntity.ok()
+                                .header("X-Authentication-Status", "Success")
+                                .header("X-Github-Username", githubUsername)
+                                .body(response));
+                    }
+                    log.warn("User Service did not return a positive match. {Code: {}, Error: {}}",
+                            userResponseEntity.getStatusCode().value(),
+                            userResponseEntity.getHeaders().get("X-Error-Message"));
+
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put(KEY_IS_VALID, false);
+                    errorResponse.put("message", "User does not exist in the database");
+
+                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .header("X-Validation-Status", "UserNotFound")
+                            .header("X-Github-Username", githubUsername)
+                            .body(errorResponse));
+                });
+    }
+
 
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
@@ -99,7 +125,7 @@ public class AuthController {
 
     @GetMapping("/call-user-test")
     public Mono<String> callUserTest() {
-        return authService.callUserTest();
+        return userService.callUserTest();
     }
 
 }

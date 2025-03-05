@@ -1,6 +1,8 @@
 package com.itachallenge.auth.controller;
 
+import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.service.IAuthService;
+import com.itachallenge.auth.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -32,6 +35,9 @@ class AuthControllerTest {
     @MockBean
     private IAuthService authService;
 
+    @MockBean
+    private IUserService userService;
+
     @InjectMocks
     private AuthController authController;
 
@@ -47,7 +53,7 @@ class AuthControllerTest {
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(authService.validateUserExists(githubUsername)).thenReturn(Mono.just(true));
+        when(userService.forwardUserDetails(githubUsername)).thenReturn(Mono.just(ResponseEntity.ok(new User("1234", githubUsername, "ADMIN"))));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -127,7 +133,7 @@ class AuthControllerTest {
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(authService.validateUserExists(githubUsername)).thenReturn(Mono.just(false));
+        when(userService.forwardUserDetails(githubUsername)).thenReturn(Mono.just(ResponseEntity.notFound().build()));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -150,7 +156,7 @@ class AuthControllerTest {
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(authService.validateUserExists(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
+        when(userService.forwardUserDetails(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
