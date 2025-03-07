@@ -45,7 +45,7 @@ uri_validate_token : https://dev.sso.itawiki.eurecatacademy.org/api/v1/tokens/va
 user:
   service:
     url: http://apisix-gateway:9080 # IN PRODUCTION
-    # http://172.17.0.2:8764 LOCAL IP
+    #url: http://localhost:8764 # LOCAL IP
 
 logging:
   level:
@@ -58,3 +58,8 @@ logging:
 #  file:
 #    name: itachallenge-challenge.log
 
+token:
+  signing:
+    key: someRandomStringToProtectThisAppFromAttacks
+  expiration:
+    minutes: 600

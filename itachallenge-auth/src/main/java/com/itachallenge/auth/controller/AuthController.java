@@ -1,7 +1,10 @@
 package com.itachallenge.auth.controller;
 
 
+import com.itachallenge.auth.exception.CustomBadRequestException;
+import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
+import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +32,20 @@ public class AuthController {
 
     private final IUserService userService;
 
+    private final IJwtService jwtService;
+
     private final String version;
 
     private final String appName;
 
     public AuthController(IAuthService authService,
                           IUserService userService,
+                          IJwtService jwtService,
                           @Value("${spring.application.version}") String version,
                           @Value("${spring.application.name}") String appName) {
         this.authService = authService;
         this.userService = userService;
+        this.jwtService = jwtService;
         this.version = version;
         this.appName = appName;
     }
@@ -90,27 +97,38 @@ public class AuthController {
     }
 
     private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
-        return userService.forwardUserDetails(githubUsername)
-                .flatMap(userResponseEntity -> {
-                    if (userResponseEntity.getStatusCode().is2xxSuccessful()) {
-                        response.put("user", userResponseEntity.getBody());
-                        return Mono.just(ResponseEntity.ok()
-                                .header("X-Authentication-Status", "Success")
-                                .header("X-Github-Username", githubUsername)
-                                .body(response));
-                    }
-                    log.warn("User Service did not return a positive match. {Code: {}, Error: {}}",
-                            userResponseEntity.getStatusCode().value(),
-                            userResponseEntity.getHeaders().get("X-Error-Message"));
-
-                    Map<String, Object> errorResponse = new HashMap<>();
-                    errorResponse.put(KEY_IS_VALID, false);
-                    errorResponse.put("message", "User does not exist in the database");
-
-                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .header("X-Validation-Status", "UserNotFound")
+        return userService.fetchUserData(githubUsername)
+                .map(user -> jwtService.generateToken(user.getUsername(), user.getRole()))
+                .map(token -> {
+                    response.put("token", token);
+                    return ResponseEntity.ok()
+                            .header("X-Authentication-Status", "Success")
                             .header("X-Github-Username", githubUsername)
-                            .body(errorResponse));
+                            .body(response);
+                })
+                .switchIfEmpty(Mono.just(
+                        ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .header("X-Validation-Status", "Forbidden")
+                                .header("X-Github-Username", githubUsername)
+                                .header("X-Error-Message", "User does not exist in the database")
+                                .body(response)
+                        ))
+                .onErrorResume(throwable -> {
+                    HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+                    String message = "Unexpected Error Occurred";
+
+                    if (throwable instanceof CustomBadRequestException) {
+                        status = HttpStatus.BAD_REQUEST;
+                        message = throwable.getMessage();
+                    }else if (throwable instanceof CustomInternalServerErrorException) {
+                        message = throwable.getMessage();
+                    }
+                    response.put("message", message);
+                    return Mono.just(ResponseEntity.status(status)
+                            .header("X-Validation-Status", "Forbidden")
+                            .header("X-Github-Username", githubUsername)
+                            .body(response)
+                    );
                 });
     }
 

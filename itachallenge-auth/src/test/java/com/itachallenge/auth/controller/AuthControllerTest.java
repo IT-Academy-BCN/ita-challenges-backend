@@ -12,7 +12,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -53,7 +52,7 @@ class AuthControllerTest {
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(userService.forwardUserDetails(githubUsername)).thenReturn(Mono.just(ResponseEntity.ok(new User("1234", githubUsername, "ADMIN"))));
+        when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(new User("1234", githubUsername, "ADMIN")));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -133,7 +132,7 @@ class AuthControllerTest {
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(userService.forwardUserDetails(githubUsername)).thenReturn(Mono.just(ResponseEntity.notFound().build()));
+        when(userService.fetchUserData(githubUsername)).thenReturn(Mono.empty());
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -156,7 +155,7 @@ class AuthControllerTest {
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(userService.forwardUserDetails(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
+        when(userService.fetchUserData(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")

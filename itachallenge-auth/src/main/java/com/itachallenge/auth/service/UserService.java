@@ -1,10 +1,12 @@
 package com.itachallenge.auth.service;
 
 import com.itachallenge.auth.dto.User;
+import com.itachallenge.auth.exception.CustomBadRequestException;
+import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -18,29 +20,42 @@ public class UserService implements IUserService {
 
     private final String userServiceUrl;
 
-    public UserService(WebClient.Builder webClientBuilder,
-                       @Value("${user.service.url}") String userServiceUrl) {
+    public UserService(
+            WebClient.Builder webClientBuilder,
+            @Value("${user.service.url}") String userServiceUrl) {
         this.webClientBuilder = webClientBuilder;
         this.userServiceUrl = userServiceUrl;
     }
 
     @Override
-    public Mono<ResponseEntity<User>> forwardUserDetails(String githubUsername) {
+    public Mono<User> fetchUserData(String githubUsername) {
         String url = userServiceUrl + "/itachallenge/api/v1/user/users/" + githubUsername;
-        log.debug("Request URL: {}", url);
+        log.debug("Fetching user data from: {}", url);
 
         return webClientBuilder.build()
                 .get()
                 .uri(url)
-                .exchangeToMono(clientResponse ->
-                        clientResponse.toEntity(User.class)
-                )
-                .map(responseEntity -> ResponseEntity
-                                .status(responseEntity.getStatusCode())
-                                .headers(responseEntity.getHeaders())
-                                .body(responseEntity.getBody())
-                );
-    }
+                .retrieve()
+                .onStatus(
+                        HttpStatus.NOT_FOUND::equals, response -> {
+                            log.info("User not found {}", githubUsername);
+                            return Mono.empty();
+                        })
+                .onStatus(
+                        HttpStatus.BAD_REQUEST::equals, response -> {
+                            String errorMessage = response.headers().header("X-Error-Message").getFirst();
+                            log.warn("UserService returned 400: {}", errorMessage);
+                            return Mono.error(new CustomBadRequestException(errorMessage));
+                        })
+
+                .onStatus(
+                        HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
+                            String errorMessage = response.headers().header("X-Error-Message").getFirst();
+                            log.warn("UserService returned 500: {}", errorMessage);
+                            return Mono.error(new CustomInternalServerErrorException(errorMessage));
+                        })
+                .bodyToMono(User.class);
+        }
 
     @Override
     public Mono<String> callUserTest() {
