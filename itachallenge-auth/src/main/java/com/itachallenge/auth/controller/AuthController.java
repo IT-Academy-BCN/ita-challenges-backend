@@ -85,19 +85,6 @@ public class AuthController {
                 });
     }
 
-    /**
-     *
-     * @deprecated  used to test JWT logic during development, delete on production
-     *
-     */
-    @Deprecated(forRemoval = true)
-    @PostMapping("/test/authenticate")
-    public Mono<ResponseEntity<Map<String, Object>>> authenticateSkippingGithub(@RequestBody Map<String, String> codeRequest) {
-        Map<String, Object> response = new HashMap<>();
-        response.put("alert", "test only endpoint");
-        return getUserDetailsFromGithubUsername(response, codeRequest.get("github_username"));
-    }
-
     private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
 
         return userService.fetchUserData(githubUsername)
@@ -109,17 +96,16 @@ public class AuthController {
                             .header(X_GITHUB_USERNAME, githubUsername)
                             .body(response);
                 })
-                .switchIfEmpty(Mono.just(
-                        ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                .header("X-Validation-Status", "Forbidden")
-                                .header(X_GITHUB_USERNAME, githubUsername)
-                                .header("X-Error-Message", "User does not exist in the database")
-                                .body(new HashMap<>(response) {{
-                                    put(KEY_USERNAME, null);
-                                    put(KEY_IS_VALID, false);
-                                    put("message", "User does not exist in the database");
-                                }})
-                        ))
+                .switchIfEmpty(Mono.defer(() -> {
+                    response.put(KEY_USERNAME, null);
+                    response.put(KEY_IS_VALID, false);
+                    response.put("message", "User does not exist in the database");
+                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .header("X-Validation-Status", "Forbidden")
+                            .header(X_GITHUB_USERNAME, githubUsername)
+                            .header("X-Error-Message", "User does not exist in the database")
+                            .body(response));
+                }))
                 .onErrorResume(throwable -> {
                     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
                     String message = "Unexpected Error Occurred";
