@@ -2,6 +2,7 @@ package com.itachallenge.auth.controller;
 
 import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.service.IAuthService;
+import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,22 +38,29 @@ class AuthControllerTest {
     @MockBean
     private IUserService userService;
 
+    @MockBean
+    private IJwtService jwtService;
+
     @InjectMocks
     private AuthController authController;
 
     @Test
-    void authenticateWithGithub_ValidCode_ReturnsUsername() {
+    void authenticateWithGithub_ValidCode_ReturnsJwt() {
         String validCode = "valid-code";
         String accessToken = "valid-token";
         String githubUsername = "octocat";
+        User user = new User("1234", githubUsername, "ADMIN");
+        String jwtToken = "generatedJwt";
 
         Map<String, Object> validationResult = new HashMap<>();
         validationResult.put("isValid", true);
         validationResult.put("username", githubUsername);
+        validationResult.put("token", jwtToken);
 
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(new User("1234", githubUsername, "ADMIN")));
+        when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(user));
+        when(jwtService.generateToken(user.getUsername(), user.getRole())).thenReturn(jwtToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -61,7 +69,8 @@ class AuthControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.isValid").isEqualTo(true)
-                .jsonPath("$.username").isEqualTo(githubUsername);
+                .jsonPath("$.username").isEqualTo(githubUsername)
+                .jsonPath("$.token").isEqualTo(jwtToken);
     }
 
     @Test
@@ -141,7 +150,9 @@ class AuthControllerTest {
                 .expectStatus().isForbidden()
                 .expectBody()
                 .jsonPath("$.isValid").isEqualTo(false)
-                .jsonPath("$.message").isEqualTo("User does not exist in the database");
+                .jsonPath("$.message").isEqualTo("User does not exist in the database")
+                .jsonPath("$.username").doesNotExist()
+                .jsonPath("$.token").doesNotExist();
     }
 
     @Test
@@ -164,7 +175,8 @@ class AuthControllerTest {
                 .expectStatus().is5xxServerError()
                 .expectBody()
                 .jsonPath("$.isValid").isEqualTo(false)
-                .jsonPath("$.username").isEmpty();
+                .jsonPath("$.username").doesNotExist()
+                .jsonPath("$.token").doesNotExist();
     }
 
     @Test
@@ -180,12 +192,14 @@ class AuthControllerTest {
     void getVersionTest() {
         String expectedVersion = env.getProperty("spring.application.version");
 
+        assert expectedVersion != null;
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/auth/version")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.application_name").isEqualTo("itachallenge-auth")
-                .jsonPath("$.version").isEqualTo("1.0.0-RELEASE");
+                .jsonPath("$.version").isEqualTo(expectedVersion);
     }
 }

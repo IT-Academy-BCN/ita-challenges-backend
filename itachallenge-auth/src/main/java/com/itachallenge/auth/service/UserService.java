@@ -43,19 +43,21 @@ public class UserService implements IUserService {
                         })
                 .onStatus(
                         HttpStatus.BAD_REQUEST::equals, response -> {
-                            String errorMessage = response.headers().header("X-Error-Message").getFirst();
+                            String errorMessage = response.headers().header("X-Error-Message").stream()
+                                    .findFirst().orElse("Unknown error");
                             log.warn("UserService returned 400: {}", errorMessage);
                             return Mono.error(new CustomBadRequestException(errorMessage));
                         })
 
                 .onStatus(
                         HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
-                            String errorMessage = response.headers().header("X-Error-Message").getFirst();
+                            String errorMessage = response.headers().header("X-Error-Message").stream()
+                                    .findFirst().orElse("Unknown error");
                             log.warn("UserService returned 500: {}", errorMessage);
                             return Mono.error(new CustomInternalServerErrorException(errorMessage));
                         })
                 .bodyToMono(User.class);
-        }
+    }
 
     @Override
     public Mono<String> callUserTest() {

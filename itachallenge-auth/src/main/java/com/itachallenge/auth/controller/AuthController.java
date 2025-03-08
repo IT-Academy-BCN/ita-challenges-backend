@@ -27,6 +27,8 @@ public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private static final String KEY_IS_VALID = "isValid";
     private static final String KEY_USERNAME = "username";
+    public static final String X_GITHUB_USERNAME = "X-Github-Username";
+    public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
 
     private final IAuthService authService;
 
@@ -63,7 +65,7 @@ public class AuthController {
                 .flatMap(response -> {
                     if (!(boolean) response.get(KEY_IS_VALID)) {
                         return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                .header("X-Authentication-Status", "Failed")
+                                .header(X_AUTHENTICATION_STATUS, "Failed")
                                 .body(response));
                     }
                     String githubUsername = (String) response.get(KEY_USERNAME);
@@ -77,7 +79,7 @@ public class AuthController {
                     errorResponse.put(KEY_USERNAME, null);
 
                     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header("X-Authentication-Status", "Error")
+                            .header(X_AUTHENTICATION_STATUS, "Error")
                             .header("X-Error-Message", "An error occurred during authentication.")
                             .body(errorResponse));
                 });
@@ -97,25 +99,31 @@ public class AuthController {
     }
 
     private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
+
         return userService.fetchUserData(githubUsername)
                 .map(user -> jwtService.generateToken(user.getUsername(), user.getRole()))
                 .map(token -> {
                     response.put("token", token);
                     return ResponseEntity.ok()
-                            .header("X-Authentication-Status", "Success")
-                            .header("X-Github-Username", githubUsername)
+                            .header(X_AUTHENTICATION_STATUS, "Success")
+                            .header(X_GITHUB_USERNAME, githubUsername)
                             .body(response);
                 })
                 .switchIfEmpty(Mono.just(
-                        ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        ResponseEntity.status(HttpStatus.FORBIDDEN)
                                 .header("X-Validation-Status", "Forbidden")
-                                .header("X-Github-Username", githubUsername)
+                                .header(X_GITHUB_USERNAME, githubUsername)
                                 .header("X-Error-Message", "User does not exist in the database")
-                                .body(response)
+                                .body(new HashMap<>(response) {{
+                                    put(KEY_USERNAME, null);
+                                    put(KEY_IS_VALID, false);
+                                    put("message", "User does not exist in the database");
+                                }})
                         ))
                 .onErrorResume(throwable -> {
                     HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
                     String message = "Unexpected Error Occurred";
+                    log.error("Error in the authentication process: {}", throwable.getMessage());
 
                     if (throwable instanceof CustomBadRequestException) {
                         status = HttpStatus.BAD_REQUEST;
@@ -123,10 +131,12 @@ public class AuthController {
                     }else if (throwable instanceof CustomInternalServerErrorException) {
                         message = throwable.getMessage();
                     }
+                    response.put(KEY_USERNAME, null);
+                    response.put(KEY_IS_VALID, false);
                     response.put("message", message);
                     return Mono.just(ResponseEntity.status(status)
                             .header("X-Validation-Status", "Forbidden")
-                            .header("X-Github-Username", githubUsername)
+                            .header(X_GITHUB_USERNAME, githubUsername)
                             .body(response)
                     );
                 });
