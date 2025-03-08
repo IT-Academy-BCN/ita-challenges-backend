@@ -14,10 +14,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Mono<Boolean> exists(Mono<String> githubUsernameMono) {
-        return githubUsernameMono.flatMap(userRepository::existsByUsername);
-    }
-
     public Mono<UserDocument> getUser(String githubUsername) {
         return userRepository.findByUsername(githubUsername);
     }
