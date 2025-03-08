@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.document;
 
+import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import lombok.*;
@@ -38,4 +39,8 @@ public class ResourceDocument {
 
     @Field(name = "challenge_ids")
     private List<UUID> challengeIds;
+
+    @Field(name = "association_type")
+    private AssociationType associationType;
+
 }

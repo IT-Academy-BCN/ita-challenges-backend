@@ -35,8 +35,6 @@ public class ResourceService implements IResourceService {
     @CacheEvict(value = "resources", allEntries = true)
     @Override
     public Mono<ResourceDto> createResource(ResourceDto resourceDto) {
-        log.info("Creating resource for the topic {}", resourceDto.getTopic());
-
         if (resourceDto.getContentType() == null) {
             return Mono.error(new IllegalArgumentException("Content type is required"));
         }
@@ -107,7 +105,7 @@ public class ResourceService implements IResourceService {
     private Mono<ResourceDto> saveResource(ResourceDto resourceDto) {
         if (resourceDto == null) {
             log.error("Error where resourceDto null!");
-            return Mono.error(new IllegalArgumentException("ResourceDto no pot ser null"));
+            return Mono.error(new IllegalArgumentException("ResourceDto cannot be null"));
         }
 
         log.info("Trying to convert {}", resourceDto);

@@ -18,7 +18,7 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 @Setter
 public class ResourceDto {
@@ -66,12 +66,13 @@ public class ResourceDto {
                 Objects.equals(url, that.url) &&
                 Objects.equals(topic, that.topic) &&
                 Objects.equals(contentType, that.contentType) &&
-                Objects.equals(challengeIds, that.challengeIds);
+                Objects.equals(challengeIds, that.challengeIds) &&
+                Objects.equals(associationType, that.associationType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(resourceId, title, description, url, topic, contentType, challengeIds);
+        return Objects.hash(resourceId, title, description, url, topic, contentType, challengeIds, associationType);
     }
 
 }
