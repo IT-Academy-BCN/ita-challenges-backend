@@ -231,5 +231,80 @@ class ResourceServiceTest {
                 .verify();
     }
 
+    @Test
+    void createResource_WithChooseAssociationType_NoChallenges_ShouldNotSave() {
+        UUID resourceId = UUID.randomUUID();
+
+        ResourceDto resourceDto = ResourceDto.builder()
+                .resourceId(resourceId)
+                .title("Title")
+                .description("Description")
+                .url("http://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .associationType(AssociationType.CHOOSE)
+                .challengeIds(Collections.emptyList())
+                .build();
+
+        ChallengeListDto emptyChallengeList = new ChallengeListDto(Collections.emptyList(), 0);
+
+        when(challengeService.getChallengesByTopic(Topic.DEBUGGING, 0, -1))
+                .thenReturn(Mono.just(emptyChallengeList));
+
+        Mono<ResourceDto> result = resourceService.createResource(resourceDto);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(error -> error instanceof IllegalArgumentException &&
+                        error.getMessage().equals("No challenges found for the selected topic"))
+                .verify();
+
+        verifyNoInteractions(resourceRepository);
+    }
+
+    @Test
+    void createResource_WithAssociationTypeALLSAMETOPIC_ShouldPopulateChallengeIds() {
+        UUID resourceId = UUID.randomUUID();
+        UUID challengeId = UUID.randomUUID();
+
+        ResourceDto resourceDto = ResourceDto.builder()
+                .resourceId(resourceId)
+                .title("Title")
+                .description("Description")
+                .url("http://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .associationType(AssociationType.ALLSAMETOPIC)
+                .challengeIds(Collections.emptyList())
+                .build();
+
+        ChallengeDto challengeDto = ChallengeDto.builder()
+                .challengeId(challengeId)
+                .title("Challenge")
+                .build();
+
+        ChallengeListDto challengeListDto = new ChallengeListDto(List.of(challengeDto), 1);
+
+        ResourceDocument resourceDocument = new ResourceDocument(
+                resourceId, "Title", "Description", "http://example.com", Topic.DEBUGGING,
+                ResourceContentType.VIDEO, List.of(challengeId), AssociationType.ALLSAMETOPIC
+        );
+
+        when(challengeService.getChallengesByTopic(Topic.DEBUGGING, 0, -1))
+                .thenReturn(Mono.just(challengeListDto));
+        when(resourceConverter.convertDtoToDocument(any(), eq(ResourceDocument.class)))
+                .thenReturn(resourceDocument);
+        when(resourceRepository.save(any(ResourceDocument.class)))
+                .thenReturn(Mono.just(resourceDocument));
+        when(resourceConverter.convertDocumentToDto(any(), eq(ResourceDto.class)))
+                .thenReturn(resourceDto);
+
+        Mono<ResourceDto> result = resourceService.createResource(resourceDto);
+
+        StepVerifier.create(result)
+                .expectNextMatches(updatedResource -> updatedResource.getChallengeIds().contains(challengeId))
+                .verifyComplete();
+
+        verify(challengeService).getChallengesByTopic(Topic.DEBUGGING, 0, -1);
+    }
 
 }

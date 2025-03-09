@@ -8,6 +8,8 @@ import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -43,5 +45,71 @@ public class ResourceDocumentToDtoConverterTest {
         assertEquals(dto.getContentType(), document.getContentType());
         assertEquals(dto.getChallengeIds(), document.getChallengeIds());
     }
+
+    @Test
+    void convertDocumentToDtoTest() {
+        UUID resourceId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+        List<UUID> challengeIds = List.of(
+                UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
+                UUID.fromString("550e8400-e29b-41d4-a716-446655440000")
+        );
+
+        ResourceDocument document = ResourceDocument.builder()
+                .resourceId(resourceId)
+                .title("DEBUGGING FOR THE FIRST TIME")
+                .description("A guide on how to start debugging")
+                .url("https://youtubetutorial.com/debugging")
+                .topic(Topic.COMPONENTS)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(challengeIds)
+                .build();
+
+        ResourceDto dto = converter.convertDocumentToDto(document, ResourceDto.class);
+
+        assertNotNull(dto);
+        assertEquals(document.getResourceId(), dto.getResourceId());
+        assertEquals(document.getTitle(), dto.getTitle());
+        assertEquals(document.getDescription(), dto.getDescription());
+        assertEquals(document.getUrl(), dto.getUrl());
+        assertEquals(document.getTopic(), dto.getTopic());
+        assertEquals(document.getContentType(), dto.getContentType());
+        assertEquals(document.getChallengeIds(), dto.getChallengeIds());
+    }
+
+    @Test
+    void convertDocumentFluxToDtoFluxTest() {
+        UUID resourceId = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+        List<UUID> challengeIds = List.of(
+                UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479"),
+                UUID.fromString("550e8400-e29b-41d4-a716-446655440000")
+        );
+
+        ResourceDocument document1 = ResourceDocument.builder()
+                .resourceId(resourceId)
+                .title("DEBUGGING FOR THE FIRST TIME")
+                .description("A guide on how to start debugging")
+                .url("https://youtubetutorial.com/debugging")
+                .topic(Topic.COMPONENTS)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(challengeIds)
+                .build();
+
+        ResourceDocument document2 = ResourceDocument.builder()
+                .resourceId(UUID.randomUUID())
+                .title("ANOTHER TITLE")
+                .description("A different guide")
+                .url("https://anotherurl.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(challengeIds)
+                .build();
+
+        Flux<ResourceDocument> documentFlux = Flux.just(document1, document2);
+        Flux<ResourceDto> dtoFlux = converter.convertDocumentFluxToDtoFlux(documentFlux, ResourceDto.class);
+
+        assertNotNull(dtoFlux);
+        assertEquals(2, dtoFlux.collectList().block().size());
+    }
+
 }
 
