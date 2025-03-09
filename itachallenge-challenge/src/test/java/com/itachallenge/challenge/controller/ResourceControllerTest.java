@@ -86,7 +86,6 @@ class ResourceControllerTest {
 
     @Test
     void createNewResource_MissingRequiredFields_ReturnsBadRequest() {
-        // Omissió de camps obligatori, com per exemple 'title'
         ResourceDto invalidResource = ResourceDto.builder()
                 .resourceId(UUID.randomUUID())
                 .title("")  // Title buit
@@ -103,7 +102,7 @@ class ResourceControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(invalidResource)
                 .exchange()
-                .expectStatus().isBadRequest();  // Esperem un error de validació
+                .expectStatus().isBadRequest();
 
         verify(resourceService, never()).createResource(any(ResourceDto.class));
     }

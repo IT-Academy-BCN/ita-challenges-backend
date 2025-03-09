@@ -142,4 +142,113 @@ class ResourceRepositoryTest {
                 .expectNext(2L)
                 .verifyComplete();
     }
+
+    @DisplayName("Save Resource Test")
+    @Test
+    void saveResourceTest() {
+        ResourceDocument newResource = ResourceDocument.builder()
+                .resourceId(UUID.randomUUID())
+                .title("New Resource")
+                .description("A new resource for testing")
+                .url("http://exemple.com/newresource")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .build();
+
+
+        Mono<ResourceDocument> savedResource = resourceRepository.save(newResource);
+
+
+        StepVerifier.create(savedResource)
+                .assertNext(resource -> {
+                    assertNotNull(resource.getResourceId());
+                    assertEquals("New Resource", resource.getTitle());
+                    assertEquals("A new resource for testing", resource.getDescription());
+                    assertEquals("http://exemple.com/newresource", resource.getUrl());
+                    assertEquals(Topic.DEBUGGING, resource.getTopic());
+                    assertEquals(ResourceContentType.VIDEO, resource.getContentType());
+                })
+                .verifyComplete();
+    }
+
+    @DisplayName("Save Multiple Resources Test")
+    @Test
+    void saveMultipleResourcesTest() {
+
+        ResourceDocument resource1 = ResourceDocument.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Resource 1")
+                .description("Description 1")
+                .url("http://exemple.com/resource1")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .build();
+
+        ResourceDocument resource2 = ResourceDocument.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Resource 2")
+                .description("Description 2")
+                .url("http://exemple.com/resource2")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .build();
+
+        Flux<ResourceDocument> savedResources = resourceRepository.saveAll(Flux.just(resource1, resource2));
+        StepVerifier.create(savedResources)
+                .expectNextCount(2)
+                .verifyComplete();
+    }
+
+    @DisplayName("Find by Non-Existing Resource ID Test")
+    @Test
+    void findByNonExistingResourceIdTest() {
+        Mono<ResourceDocument> resource = resourceRepository.findByResourceId(UUID.randomUUID());
+        StepVerifier.create(resource)
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @DisplayName("Count Resources After Save and Delete Test")
+    @Test
+    void countResourcesAfterSaveAndDeleteTest() {
+        ResourceDocument resource = ResourceDocument.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Test Resource for Count")
+                .description("A resource to check count after deletion")
+                .url("http://exemple.com/testresource")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .build();
+
+        resourceRepository.save(resource).block();
+        Mono<Long> countAfterSave = resourceRepository.count();
+        StepVerifier.create(countAfterSave)
+                .expectNext(3L)
+                .verifyComplete();
+
+        resourceRepository.deleteByResourceId(resource.getResourceId()).block();
+
+        Mono<Long> countAfterDelete = resourceRepository.count();
+        StepVerifier.create(countAfterDelete)
+                .expectNext(2L)
+                .verifyComplete();
+    }
+
+    @DisplayName("Delete All Resources Test")
+    @Test
+    void deleteAllResourcesTest() {
+        Mono<Void> deletion = resourceRepository.deleteAll();
+        StepVerifier.create(deletion)
+                .expectComplete()
+                .verify();
+
+        Mono<Long> count = resourceRepository.count();
+        StepVerifier.create(count)
+                .expectNext(0L)
+                .verifyComplete();
+    }
 }
