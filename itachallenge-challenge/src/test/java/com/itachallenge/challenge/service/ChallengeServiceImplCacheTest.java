@@ -296,5 +296,4 @@ class ChallengeServiceImplCacheTest {
         verifyNoMoreInteractions(challengeRepository, challengeConverter);
     }
 
-
 }
