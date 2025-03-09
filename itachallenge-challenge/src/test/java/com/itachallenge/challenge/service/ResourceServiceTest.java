@@ -36,7 +36,7 @@ class ResourceServiceTest {
     @InjectMocks
     private ResourceService resourceService;
 
-    @Test
+    @Test //
     void createResource_WithValidData_ResourceCreated() {
         UUID resourceId = UUID.randomUUID();
         ResourceDto resourceDto = ResourceDto.builder()
@@ -109,7 +109,7 @@ class ResourceServiceTest {
                 .verify();
     }
 
-    @Test
+    @Test //
     void createResource_WithAssociationTypeChoose_ShouldReturnUpdatedResource() {
         UUID resourceId = UUID.randomUUID();
         UUID challengeId = UUID.randomUUID();
@@ -156,7 +156,7 @@ class ResourceServiceTest {
     }
 
 
-    @Test
+    @Test //
     void createResource_WithAssociationTypeChoose_NoChallengesFound_ShouldThrowError() {
         UUID resourceId = UUID.randomUUID();
 

@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.ResourceDto;
+import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.service.IResourceService;
@@ -46,6 +47,7 @@ class ResourceControllerTest {
                 .topic(Topic.LISTS)
                 .contentType(ResourceContentType.VIDEO)
                 .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.NONE)
                 .build();
 
         when(resourceService.createResource(any(ResourceDto.class)))
