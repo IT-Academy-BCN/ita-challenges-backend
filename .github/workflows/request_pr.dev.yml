@@ -51,7 +51,6 @@ jobs:
         run: |
           java -version
           ./gradlew --version
-
       # ✅ Ejecutar los tests y generar reportes, forzando que no use caché
       - name: Run Tests
         run: ./gradlew test --info --stacktrace --no-build-cache
