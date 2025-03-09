@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -79,6 +80,30 @@ class ResourceControllerTest {
                 .bodyValue("{\"title\": }")
                 .exchange()
                 .expectStatus().isBadRequest();
+
+        verify(resourceService, never()).createResource(any(ResourceDto.class));
+    }
+
+    @Test
+    void createNewResource_MissingRequiredFields_ReturnsBadRequest() {
+        // Omissió de camps obligatori, com per exemple 'title'
+        ResourceDto invalidResource = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("")  // Title buit
+                .description("Valid Description")
+                .url("https://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.NONE)
+                .build();
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/resource/new")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalidResource)
+                .exchange()
+                .expectStatus().isBadRequest();  // Esperem un error de validació
 
         verify(resourceService, never()).createResource(any(ResourceDto.class));
     }

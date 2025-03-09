@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.enums.AssociationType;
@@ -9,6 +10,7 @@ import jakarta.validation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,27 +28,27 @@ class ResourceDtoTest {
     void rightSerializationTest() throws Exception {
         InputStream is = getClass().getClassLoader().getResourceAsStream("json/ResourceSerialized.json");
 
-        Assertions.assertNotNull(is, "El fitxer JSON no s'ha trobat!");
+        Assertions.assertNotNull(is, "JSON not found!");
 
         String jsonContent = new BufferedReader(new InputStreamReader(is))
                 .lines()
                 .collect(Collectors.joining("\n"));
 
-        System.out.println("JSON carregat correctament:\n" + jsonContent);
+        System.out.println("JSON correct\n" + jsonContent);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
 
         ResourceDto resource = objectMapper.readValue(jsonContent, ResourceDto.class);
 
-        Assertions.assertNotNull(resource, "L'objecte ResourceDto no ha estat deserialitzat correctament!");
+        Assertions.assertNotNull(resource, "ResourceDto nout deserialized correctly!");
 
         Assertions.assertEquals("123e4567-e89b-12d3-a456-426614174000", resource.getResourceId().toString());
         Assertions.assertEquals("DEBUGGING FOR THE FIRST TIME", resource.getTitle());
         Assertions.assertEquals("A guide on how to start debugging", resource.getDescription());
         Assertions.assertEquals("https://youtubetutorial.com/debugging", resource.getUrl());
 
-        Assertions.assertEquals(Topic.DEBUGGING, resource.getTopic(), "El topic no és correcte");
+        Assertions.assertEquals(Topic.DEBUGGING, resource.getTopic(), "Incorrect topic");
 
         Assertions.assertEquals(ResourceContentType.BLOG, resource.getContentType());
 
@@ -182,6 +184,49 @@ class ResourceDtoTest {
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("cannot be null")));
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("cannot be empty")));
     }
+
+    @Test
+    void testToBuilder() {
+        UUID resourceId = UUID.randomUUID();
+        ResourceDto resource = ResourceDto.builder()
+                .resourceId(resourceId)
+                .title("Initial Title")
+                .description("Initial Description")
+                .url("https://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.NONE)
+                .build();
+
+        ResourceDto modifiedResource = resource.toBuilder()
+                .title("Modified Title")
+                .build();
+
+        Assertions.assertEquals("Initial Title", resource.getTitle());
+        Assertions.assertEquals("Modified Title", modifiedResource.getTitle());
+    }
+
+    @Test
+    void testSerializationWithNullFields() throws Exception {
+        ResourceDto resource = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Test Title")
+                .description("Test Description")
+                .url("https://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.NONE)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+
+        String jsonContent = objectMapper.writeValueAsString(resource);
+        Assertions.assertFalse(jsonContent.contains("\"associationType\":null"), " associationType should not be here");
+    }
+
 
 
 }
