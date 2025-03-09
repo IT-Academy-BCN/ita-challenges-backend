@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -22,9 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 
 @WebFluxTest(ResourceController.class)
@@ -63,10 +62,12 @@ class ResourceControllerTest {
                 .value(response -> {
                     assertNotNull(response);
                     assertEquals(resourceDto.getTitle(), response.getTitle());
+                    assertEquals(resourceDto.getDescription(), response.getDescription());
                 });
 
         verify(resourceService, times(1)).createResource(any(ResourceDto.class));
     }
+
 
     @Test
     void createNewResource_InvalidRequest_ReturnsBadRequest() {
@@ -81,4 +82,6 @@ class ResourceControllerTest {
 
         verify(resourceService, never()).createResource(any(ResourceDto.class));
     }
+
+
 }

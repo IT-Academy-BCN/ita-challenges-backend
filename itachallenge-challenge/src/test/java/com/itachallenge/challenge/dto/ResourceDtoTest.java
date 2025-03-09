@@ -2,10 +2,14 @@ package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
+import jakarta.validation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.util.Set;
 import java.util.UUID;
 
 import java.io.BufferedReader;
@@ -13,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 class ResourceDtoTest {
 
@@ -151,6 +157,32 @@ class ResourceDtoTest {
         Assertions.assertEquals(resource1, resource2);
         Assertions.assertEquals(resource1.hashCode(), resource2.hashCode());
     }
+
+    @Test
+    void testInvalidResourceDto() {
+        ResourceDto invalidResource = ResourceDto.builder()
+                .resourceId(null)
+                .title("")
+                .description(null)
+                .url("https://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.NONE)
+                .build();
+
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
+        Set<ConstraintViolation<ResourceDto>> violations = validator.validate(invalidResource);
+
+        assertFalse("ResourceDto invalid", violations.isEmpty());
+
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("cannot be null")));
+        assertTrue(violations.stream().anyMatch(v -> v.getMessage().contains("cannot be empty")));
+    }
+
 
 }
 

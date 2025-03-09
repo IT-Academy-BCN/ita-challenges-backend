@@ -35,6 +35,9 @@ public class ResourceService implements IResourceService {
     @CacheEvict(value = "resources", allEntries = true)
     @Override
     public Mono<ResourceDto> createResource(ResourceDto resourceDto) {
+        if (resourceDto == null) {
+            return Mono.error(new IllegalArgumentException("ResourceDto cannot be null"));
+        }
         if (resourceDto.getContentType() == null) {
             return Mono.error(new IllegalArgumentException("Content type is required"));
         }

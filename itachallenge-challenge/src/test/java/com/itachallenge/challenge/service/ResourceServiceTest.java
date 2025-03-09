@@ -189,4 +189,47 @@ class ResourceServiceTest {
         verifyNoInteractions(resourceRepository);
     }
 
+    @Test
+    void createResource_WithAssociationTypeNone_ShouldSaveResource() {
+        UUID resourceId = UUID.randomUUID();
+
+        ResourceDto resourceDto = ResourceDto.builder()
+                .resourceId(resourceId)
+                .title("Title")
+                .description("Description")
+                .url("http://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .associationType(AssociationType.NONE)
+                .challengeIds(Collections.emptyList())
+                .build();
+
+        ResourceDocument resourceDocument = new ResourceDocument(resourceId, "Title", "Description", "http://example.com", Topic.DEBUGGING, ResourceContentType.VIDEO, Collections.emptyList(), AssociationType.NONE);
+
+        when(resourceConverter.convertDtoToDocument(any(), eq(ResourceDocument.class))).thenReturn(resourceDocument);
+        when(resourceRepository.save(any(ResourceDocument.class))).thenReturn(Mono.just(resourceDocument));
+        when(resourceConverter.convertDocumentToDto(any(), eq(ResourceDto.class))).thenReturn(resourceDto);
+
+        Mono<ResourceDto> result = resourceService.createResource(resourceDto);
+
+        StepVerifier.create(result)
+                .expectNext(resourceDto)
+                .verifyComplete();
+
+        verify(resourceRepository).save(resourceDocument);
+        verify(resourceConverter).convertDtoToDocument(any(), eq(ResourceDocument.class));
+        verify(resourceConverter).convertDocumentToDto(any(), eq(ResourceDto.class));
+    }
+
+
+    @Test
+    void createResource_WithNullResourceDto_ShouldThrowError() {
+        Mono<ResourceDto> result = resourceService.createResource(null);
+
+        StepVerifier.create(result)
+                .expectError(IllegalArgumentException.class)
+                .verify();
+    }
+
+
 }

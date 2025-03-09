@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
+import static org.hibernate.validator.internal.util.Contracts.assertTrue;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ResourceTest {
@@ -73,6 +75,51 @@ public class ResourceTest {
                 .challengeIds(challengeIds)
                 .build();
         assertEquals(challengeIds, resource.getChallengeIds());
+    }
+
+    @Test
+    void testEmptyResourceDocument() {
+        ResourceDocument resource = ResourceDocument.builder().build();
+
+        assertNull(resource.getResourceId());
+        assertNull(resource.getTitle());
+        assertNull(resource.getDescription());
+        assertNull(resource.getUrl());
+        assertNull(resource.getTopic());
+        assertNull(resource.getContentType());
+        assertNull(resource.getChallengeIds());
+        assertNull(resource.getAssociationType());
+    }
+
+    @Test
+    void testEmptyChallengeIds() {
+        ResourceDocument resource = ResourceDocument.builder()
+                .challengeIds(List.of())
+                .build();
+        assertTrue(resource.getChallengeIds().isEmpty(), "Els challengeIds haurien de ser buits.");
+    }
+
+    @Test
+    void testNullFields() {
+        ResourceDocument resource = ResourceDocument.builder()
+                .resourceId(null)
+                .title(null)
+                .description(null)
+                .url(null)
+                .topic(null)
+                .contentType(null)
+                .challengeIds(null)
+                .associationType(null)
+                .build();
+
+        assertNull(resource.getResourceId());
+        assertNull(resource.getTitle());
+        assertNull(resource.getDescription());
+        assertNull(resource.getUrl());
+        assertNull(resource.getTopic());
+        assertNull(resource.getContentType());
+        assertNull(resource.getChallengeIds());
+        assertNull(resource.getAssociationType());
     }
 }
 
