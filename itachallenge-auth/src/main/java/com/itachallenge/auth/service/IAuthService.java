@@ -8,6 +8,5 @@ public interface IAuthService {
 
     Mono<Map<String, Object>> validateTokenWithGithub(String token);
     Mono<String> exchangeCodeForToken(String code);
-    Mono<String> callUserTest();
-    Mono<Boolean> validateUserExists(String githubUsername);
+
 }

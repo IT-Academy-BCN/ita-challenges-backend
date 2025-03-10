@@ -1,10 +1,13 @@
 package com.itachallenge.auth.controller;
 
 
+import com.itachallenge.auth.exception.CustomBadRequestException;
+import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
+import com.itachallenge.auth.service.IJwtService;
+import com.itachallenge.auth.service.IUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,17 +27,29 @@ public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
     private static final String KEY_IS_VALID = "isValid";
     private static final String KEY_USERNAME = "username";
+    public static final String X_GITHUB_USERNAME = "X-Github-Username";
+    public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
 
-    @Autowired
-    public IAuthService authService;
+    private final IAuthService authService;
 
-    @Value("${spring.application.version}")
-    private String version;
+    private final IUserService userService;
 
-    @Value("${spring.application.name}")
-    private String appName;
+    private final IJwtService jwtService;
 
-    public AuthController() {
+    private final String version;
+
+    private final String appName;
+
+    public AuthController(IAuthService authService,
+                          IUserService userService,
+                          IJwtService jwtService,
+                          @Value("${spring.application.version}") String version,
+                          @Value("${spring.application.name}") String appName) {
+        this.authService = authService;
+        this.userService = userService;
+        this.jwtService = jwtService;
+        this.version = version;
+        this.appName = appName;
     }
 
     @GetMapping(value = "/test")
@@ -50,29 +65,11 @@ public class AuthController {
                 .flatMap(response -> {
                     if (!(boolean) response.get(KEY_IS_VALID)) {
                         return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                .header("X-Authentication-Status", "Failed")
+                                .header(X_AUTHENTICATION_STATUS, "Failed")
                                 .body(response));
                     }
                     String githubUsername = (String) response.get(KEY_USERNAME);
-                    return authService.validateUserExists(githubUsername)
-                            .flatMap(userExists -> {
-                                if (!userExists) {
-                                    log.warn("User {} does not exist in database", githubUsername);
-
-                                    Map<String, Object> errorResponse = new HashMap<>();
-                                    errorResponse.put(KEY_IS_VALID, false);
-                                    errorResponse.put("message", "User does not exist in the database");
-
-                                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                            .header("X-Validation-Status", "UserNotFound")
-                                            .header("X-Github-Username", githubUsername)
-                                            .body(errorResponse));
-                                }
-                                return Mono.just(ResponseEntity.ok()
-                                        .header("X-Authentication-Status", "Success")
-                                        .header("X-Github-Username", githubUsername)
-                                        .body(response));
-                            });
+                    return getUserDetailsFromGithubUsername(response, githubUsername);
                 })
                 .onErrorResume(ex -> {
                     log.error("GitHub authentication error: {}", ex.getMessage());
@@ -82,9 +79,52 @@ public class AuthController {
                     errorResponse.put(KEY_USERNAME, null);
 
                     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header("X-Authentication-Status", "Error")
+                            .header(X_AUTHENTICATION_STATUS, "Error")
                             .header("X-Error-Message", "An error occurred during authentication.")
                             .body(errorResponse));
+                });
+    }
+
+    private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
+
+        return userService.fetchUserData(githubUsername)
+                .map(user -> jwtService.generateToken(user.getUsername(), user.getRole()))
+                .map(token -> {
+                    response.put("token", token);
+                    return ResponseEntity.ok()
+                            .header(X_AUTHENTICATION_STATUS, "Success")
+                            .header(X_GITHUB_USERNAME, githubUsername)
+                            .body(response);
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    response.put(KEY_USERNAME, null);
+                    response.put(KEY_IS_VALID, false);
+                    response.put("message", "User does not exist in the database");
+                    return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .header("X-Validation-Status", "Forbidden")
+                            .header(X_GITHUB_USERNAME, githubUsername)
+                            .header("X-Error-Message", "User does not exist in the database")
+                            .body(response));
+                }))
+                .onErrorResume(throwable -> {
+                    HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+                    String message = "Unexpected Error Occurred";
+                    log.error("Error in the authentication process: {}", throwable.getMessage());
+
+                    if (throwable instanceof CustomBadRequestException) {
+                        status = HttpStatus.BAD_REQUEST;
+                        message = throwable.getMessage();
+                    }else if (throwable instanceof CustomInternalServerErrorException) {
+                        message = throwable.getMessage();
+                    }
+                    response.put(KEY_USERNAME, null);
+                    response.put(KEY_IS_VALID, false);
+                    response.put("message", message);
+                    return Mono.just(ResponseEntity.status(status)
+                            .header("X-Validation-Status", "Forbidden")
+                            .header(X_GITHUB_USERNAME, githubUsername)
+                            .body(response)
+                    );
                 });
     }
 
@@ -99,7 +139,7 @@ public class AuthController {
 
     @GetMapping("/call-user-test")
     public Mono<String> callUserTest() {
-        return authService.callUserTest();
+        return userService.callUserTest();
     }
 
 }

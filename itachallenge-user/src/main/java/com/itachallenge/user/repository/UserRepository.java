@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface UserRepository extends ReactiveMongoRepository<UserDocument, UUID> {
 
-    Mono<Boolean> existsByUsername(String username);
+    Mono<UserDocument> findByUsername(String username);
 
 }
 
