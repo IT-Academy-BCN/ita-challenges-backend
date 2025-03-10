@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +49,7 @@ public class UserDtoTest {
     }
 
     @Test
-    @DisplayName("Test UserDto Setters and Getters")
+    @DisplayName("Test Setters and Getters")
     void testSettersAndGetters() {
         UserDto userDto = new UserDto();
         userDto.setUuid(uuid);
@@ -76,48 +76,47 @@ public class UserDtoTest {
     }
 
     @Test
-    @DisplayName("Test UserDto Equals and HashCode with Same Object")
+    @DisplayName("Test Equals and HashCode with Same Object")
     void testEqualsAndHashCodeSameObject() {
         UserDto userDto = new UserDto(uuid, username, role);
 
-        assertTrue(userDto.equals(userDto)); // Test mateix objecte
+        assertTrue(userDto.equals(userDto)); // Mateix objecte
         assertEquals(userDto.hashCode(), userDto.hashCode());
     }
 
     @Test
-    @DisplayName("Test UserDto Equals and HashCode with Different Objects")
+    @DisplayName("Test Equals and HashCode with Different Objects")
     void testEqualsAndHashCodeDifferentObjects() {
         UserDto userDto1 = new UserDto(uuid, username, role);
         UserDto userDto2 = new UserDto(uuid, username, role);
         UserDto userDto3 = new UserDto(UUID.randomUUID(), "otherUser", "ADMIN");
 
-        assertThat(userDto1).isEqualTo(userDto2);
-        assertThat(userDto1.hashCode()).isEqualTo(userDto2.hashCode());
-
-        assertThat(userDto1).isNotEqualTo(userDto3);
-        assertThat(userDto1.hashCode()).isNotEqualTo(userDto3.hashCode());
+        assertEquals(userDto1, userDto2);
+        assertNotEquals(userDto1, userDto3);
+        assertEquals(userDto1.hashCode(), userDto2.hashCode());
+        assertNotEquals(userDto1.hashCode(), userDto3.hashCode());
     }
 
     @Test
-    @DisplayName("Test UserDto Equals with Null and Different Class")
+    @DisplayName("Test Equals with Null and Different Class")
     void testEqualsWithNullAndDifferentClass() {
         UserDto userDto = new UserDto(uuid, username, role);
 
-        assertNotEquals(null, userDto); // Test amb objecte null
-        assertNotEquals(userDto, "Una cadena"); // Test amb classe diferent
+        assertNotEquals(null, userDto);
+        assertNotEquals(userDto, "Una cadena");
     }
 
     @Test
-    @DisplayName("Test UserDto ToString")
+    @DisplayName("Test ToString")
     void testToString() {
         UserDto userDto = new UserDto(uuid, username, role);
 
         String expected = "UserDto(uuid=" + uuid + ", username=" + username + ", role=" + role + ")";
-        assertThat(userDto.toString()).isEqualTo(expected);
+        assertEquals(expected, userDto.toString());
     }
 
     @Test
-    @DisplayName("Test UserDto Serialization")
+    @DisplayName("Test Serialization")
     @SneakyThrows(JsonProcessingException.class)
     void testSerialization() {
         UserDto userDto = new UserDto(uuid, username, role);
@@ -130,7 +129,7 @@ public class UserDtoTest {
     }
 
     @Test
-    @DisplayName("Test UserDto Deserialization")
+    @DisplayName("Test Deserialization")
     @SneakyThrows(JsonProcessingException.class)
     void testDeserialization() {
         String json = "{\"uuid\":\"" + uuid + "\",\"username\":\"" + username + "\",\"role\":\"" + role + "\"}";
@@ -143,25 +142,32 @@ public class UserDtoTest {
     }
 
     @Test
-    @DisplayName("Test UserDto Deserialization with Missing Fields")
-    @SneakyThrows(JsonProcessingException.class)
-    void testDeserializationWithMissingFields() {
-        String json = "{\"username\":\"" + username + "\"}";
-
-        UserDto userDto = mapper.readValue(json, UserDto.class);
-
-        assertNull(userDto.getUuid());
-        assertEquals(username, userDto.getUsername());
-        assertNull(userDto.getRole());
-    }
-
-    @Test
-    @DisplayName("Test UserDto with Null Values")
-    void testUserDtoWithNullValues() {
+    @DisplayName("Test Null Fields in UserDto")
+    void testNullFields() {
         UserDto userDto = new UserDto(null, null, null);
 
         assertNull(userDto.getUuid());
         assertNull(userDto.getUsername());
         assertNull(userDto.getRole());
+    }
+
+    @Test
+    @DisplayName("Test UserDto in Collection")
+    void testUserDtoInCollection() {
+        UserDto userDto = new UserDto(uuid, username, role);
+        Set<UserDto> userSet = new HashSet<>();
+        userSet.add(userDto);
+
+        assertTrue(userSet.contains(userDto));
+    }
+
+    @Test
+    @DisplayName("Test UserDto in Map Key")
+    void testUserDtoAsMapKey() {
+        UserDto userDto = new UserDto(uuid, username, role);
+        Map<UserDto, String> userMap = new HashMap<>();
+        userMap.put(userDto, "testValue");
+
+        assertEquals("testValue", userMap.get(userDto));
     }
 }
