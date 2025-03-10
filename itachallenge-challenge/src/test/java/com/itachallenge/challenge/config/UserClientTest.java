@@ -2,6 +2,7 @@ package com.itachallenge.challenge.config;
 
 import com.itachallenge.challenge.dto.UserDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -12,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -35,9 +37,16 @@ public class UserClientTest {
     @InjectMocks
     private UserClient userClient;
 
+    private UUID uuid;
+    private String username;
+    private String role;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        uuid = UUID.randomUUID();
+        username = "testUser";
+        role = "ADMIN";
     }
 
     @Test
@@ -97,5 +106,26 @@ public class UserClientTest {
         StepVerifier.create(result)
                 .expectError(RuntimeException.class)
                 .verify();
+    }
+
+    @Test
+    @DisplayName("Test Equals and HashCode in UserDto")
+    public void testEqualsAndHashCode() {
+        UserDto userDto1 = new UserDto(uuid, username, role);
+        UserDto userDto2 = new UserDto(uuid, username, role);
+        UserDto userDto3 = new UserDto(UUID.randomUUID(), "otherUser", "ADMIN");
+
+        assert userDto1.equals(userDto2);
+        assert !userDto1.equals(userDto3);
+        assert userDto1.hashCode() == userDto2.hashCode();
+        assert userDto1.hashCode() != userDto3.hashCode();
+    }
+
+    @Test
+    @DisplayName("Test toString Method in UserDto")
+    public void testToStringMethod() {
+        UserDto userDto = new UserDto(uuid, username, role);
+        String expected = "UserDto(uuid=" + uuid + ", username=" + username + ", role=" + role + ")";
+        assert userDto.toString().equals(expected);
     }
 }
