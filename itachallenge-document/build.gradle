@@ -47,6 +47,7 @@ dependencies {
     implementation 'io.swagger.core.v3:swagger-models:2.1.11'
     implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'org.modelmapper:modelmapper:3.1.1'
 
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-circuitbreaker-resilience4j', version: '3.1.0'
 

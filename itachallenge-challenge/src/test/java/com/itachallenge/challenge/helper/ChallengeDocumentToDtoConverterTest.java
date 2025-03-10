@@ -3,6 +3,7 @@ package com.itachallenge.challenge.helper;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,20 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
+import com.itachallenge.challenge.document.*;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.LanguageDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Flux;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
 
 class ChallengeDocumentToDtoConverterTest {
 
@@ -52,11 +67,12 @@ class ChallengeDocumentToDtoConverterTest {
         LanguageDto languageDto1 = new LanguageDto(languageRandomId1, languageNames[0], "https://image-default.com/javascript.png");
         LanguageDto languageDto2 = new LanguageDto(languageRandomId2, languageNames[1], "https://image-default.com/python.png");
 
+        Topic topic = Topic.DEBUGGING;
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId));
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic);
 
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId));
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic);
 
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
@@ -114,6 +130,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getSolutions()).thenReturn(solutions);
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
+        when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
         return challengeDocMocked;
     }
 }

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(SpringExtension.class)
@@ -115,4 +117,53 @@ class ChallengeDtoTest {
             throw new RuntimeException("Error normalizing line endings", e);
         }
     }
+
+    @Test
+    @DisplayName("Test serialization with different Topic values")
+    @SneakyThrows(JsonProcessingException.class)
+    void testDifferentTopicValuesSerialization() {
+        for (Topic topic : Topic.values()) {
+            ChallengeDto challengeDto = buildChallengeWithBasicInfoDto(
+                    UUID.randomUUID(), "Challenge with " + topic, "MEDIUM", "2023-06-05T12:30:00+02:00",
+                    new DetailDocument("Description"), 50, 15.5f, Set.of());
+
+            challengeDto.setTopic(topic);
+
+            String jsonResult = mapper.writeValueAsString(challengeDto);
+
+            assertTrue(jsonResult.contains("\"topic\":\"" + topic.name() + "\""));
+        }
+    }
+
+        @Test
+        @DisplayName("Test Topic - Null Topic value")
+        @SneakyThrows(JsonProcessingException.class)
+        void nullTopicSerializationTest() {
+            ChallengeDto challengeDto = buildChallengeWithBasicInfoDto(
+                    UUID.randomUUID(), "Challenge with no topic", "HARD", "2023-06-05T12:30:00+02:00",
+                    new DetailDocument("Description"), 150, 40.5f, Set.of());
+
+            challengeDto.setTopic(null);
+
+            String jsonResult = mapper.writeValueAsString(challengeDto);
+
+            assertFalse(jsonResult.contains("\"topic\""));
+        }
+
+    @Test
+    @DisplayName("Test deserialization with missing Topic")
+    @SneakyThrows(IOException.class)
+    void testDeserializationWithMissingTopic() {
+        String jsonSource = "{\"id_challenge\":\"09fabe32-7362-4bfb-ac05-b7bf854c6e0f\",\"challenge_title\":\"No Topic Challenge\",\"level\":\"EASY\",\"creation_date\":\"2023-06-05T12:30:00+02:00\",\"detail\":{\"description\":\"Test without topic\"},\"popularity\":75,\"percentage\":50.5,\"languages\":[]}";
+
+        ChallengeDto dtoResult = mapper.readValue(jsonSource, ChallengeDto.class);
+
+        assertNull(dtoResult.getTopic());
+    }
 }
+
+
+
+
+
+

@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.document;
 
+import com.itachallenge.challenge.enums.Topic;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -37,5 +38,8 @@ public class ChallengeDocument {
 
     @Field(name="solutions")
     private List<UUID> solutions;
+
+    @Field(name="topic")
+    private Topic topic;
 
 }

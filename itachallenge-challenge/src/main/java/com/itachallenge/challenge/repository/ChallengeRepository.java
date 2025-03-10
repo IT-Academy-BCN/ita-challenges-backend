@@ -3,12 +3,14 @@ package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 
+import com.itachallenge.challenge.enums.Topic;
 import org.springframework.data.repository.reactive.ReactiveSortingRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import org.springframework.data.mongodb.repository.Query;
 
+import java.awt.print.Pageable;
 import java.util.UUID;
 
 
@@ -32,4 +34,8 @@ public interface ChallengeRepository extends ReactiveSortingRepository<Challenge
     Flux<ChallengeDocument> findByLanguages_LanguageName(String languageName);
     @Query(value = "{ 'challenge_title' : { $regex: ?0, $options: 'i' } }", exists = true)
     Mono<Boolean> existsByChallengeTitle(String title);
+    @Query(value = "{ 'challenge_title.ca' : { $regex: ?0, $options: 'i' } }", exists = true)
+    Mono<Boolean> existsByChallengeTitleCa(String title);
+    Flux<ChallengeDocument> findByTopic(Topic topic);
+
 }

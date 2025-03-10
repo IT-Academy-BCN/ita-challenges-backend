@@ -3,6 +3,7 @@ package com.itachallenge.challenge.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.enums.Topic;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
@@ -51,4 +52,6 @@ public class ChallengeDto {
     @JsonProperty(index = 8)
     private List<UUID> solutions;
 
+    @JsonProperty(index = 9)
+    private Topic topic;
 }

@@ -9,6 +9,7 @@ import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -237,6 +238,13 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto) {
         String codingLanguage = challengeCreateDto.getLanguage();
 
+        Topic topic;
+        try {
+            topic = Topic.fromDisplayName(String.valueOf(challengeCreateDto.getTopic()));
+        } catch (IllegalArgumentException e) {
+            return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
+        }
+
         return languageRepository.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
@@ -248,7 +256,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     return solutionRepository.save(solution)
                             .flatMap(savedSolution -> {
                                 ChallengeDocument challenge = buildChallengeDocument(challengeCreateDto,
-                                        existingLanguage, savedSolution.getUuid());
+                                        existingLanguage, savedSolution.getUuid(), topic);
                                 return challengeRepository.save(challenge)
                                         .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
                                                 ChallengeDto.class));
@@ -256,7 +264,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic) {
         DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()
@@ -266,6 +274,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 .detail(detail)
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
+                .topic(topic)
                 .build();
     }
 
@@ -291,4 +300,47 @@ public class ChallengeServiceImp implements IChallengeService {
                 .doOnError(error -> log.error("Error occurred while deleting challenge: {}", error.getMessage()));
     }
 
-}
+    @Override
+    public Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size) {
+        Logger log = LoggerFactory.getLogger(getClass());
+        challengeRepository.findByTopic(topic)
+                .count()
+                .doOnSuccess(count -> log.info("All challenges found: {}", count))                .subscribe();
+        if (topic == null) {
+            return Mono.just(ChallengeListDto.builder()
+                    .results(new ArrayList<>())
+                    .total(0)
+                    .build());
+        }
+
+        Flux<ChallengeDocument> challengesFlux = challengeRepository.findByTopic(topic);
+
+        if (challengesFlux == null) {
+            return Mono.just(ChallengeListDto.builder()
+                    .results(new ArrayList<>())
+                    .total(0)
+                    .build());
+        }
+
+        return challengeRepository.findByTopic(topic)
+                .doOnNext(challenge -> log.info("Challenge found: {}", challenge))
+                .collectList()
+                .doOnSuccess(challenges -> log.info("All found: {}", challenges.size()))
+                .defaultIfEmpty(new ArrayList<>())
+                .map(challenges -> {
+                    List<ChallengeDto> challengeDtos = challenges.stream()
+                            .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                            .toList();
+
+                    return ChallengeListDto.builder()
+                            .results(challengeDtos)
+                            .total(challengeDtos.size())
+                            .build();
+                })
+                .switchIfEmpty(Mono.just(ChallengeListDto.builder()
+                        .results(new ArrayList<>())
+                        .total(0)
+                        .build()));
+
+    }
+} //

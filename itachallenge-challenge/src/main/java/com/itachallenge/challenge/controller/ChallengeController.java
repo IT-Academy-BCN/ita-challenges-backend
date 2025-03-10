@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
+import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.service.IChallengeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

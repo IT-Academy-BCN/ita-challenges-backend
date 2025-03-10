@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.repository;
 
 import com.itachallenge.challenge.document.*;
+import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -69,11 +70,11 @@ class ChallengeRepositoryTest {
         String title3 = "Challenge 3";
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList);
+                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, Topic.DEBUGGING);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList);
+                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList);
+                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, Topic.COMPONENTS);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
 
@@ -306,6 +307,19 @@ class ChallengeRepositoryTest {
         Boolean exists = challengeRepository.existsByChallengeTitle("non existing title").block(); // is case insensitive
         Assertions.assertNotNull(exists);
         Assertions.assertFalse(exists);
+    }
+
+    @DisplayName("Find by Detail Topic Test")
+    @Test
+    void findByDetailTopicTest() {
+        Topic topic1 = Topic.DEBUGGING;
+
+        Flux<ChallengeDocument> challengesWithTopic1 = challengeRepository.findByTopic(topic1);
+        StepVerifier.create(challengesWithTopic1)
+                .expectNextCount(1)
+                .verifyComplete();
+
+
     }
 
 }
