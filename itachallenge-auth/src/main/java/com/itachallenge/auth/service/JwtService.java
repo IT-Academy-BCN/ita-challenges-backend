@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
@@ -40,11 +41,12 @@ public class JwtService implements IJwtService {
 
     public boolean validateToken(String token) {
         try {
+            SecretKey key =  getSigningKey();
             Jwts.parser()
-                    .setSigningKey(getSigningKey())
+                    .verifyWith(key)
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+                    .parseSignedClaims(token)
+                    .getPayload();
             return true;
         } catch (JwtException e) {
             log.warn("Invalid or expired token: {}", e.getMessage());
@@ -52,7 +54,7 @@ public class JwtService implements IJwtService {
         }
     }
 
-    private Key getSigningKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
