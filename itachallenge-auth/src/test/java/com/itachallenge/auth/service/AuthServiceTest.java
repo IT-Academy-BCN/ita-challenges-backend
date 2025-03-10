@@ -30,15 +30,13 @@ class AuthServiceTest {
         String baseUrl = mockWebServer.url("").toString();
         String githubTokenUri = baseUrl + "login/oauth/access_token";
         String githubUserInfoUri = baseUrl + "user";
-        String userServiceUrl = baseUrl;
 
         authService = new AuthService(
                 WebClient.builder(),
                 githubTokenUri,
                 githubUserInfoUri,
                 "test-client-id",
-                "test-client-secret",
-                userServiceUrl);
+                "test-client-secret");
     }
 
     @AfterEach
@@ -155,53 +153,6 @@ class AuthServiceTest {
 
         StepVerifier.create(result)
                 .assertNext(response -> assertEquals(false, response.get("isValid")))
-                .verifyComplete();
-    }
-
-    @Test
-    void validateUserExists_UserExists_ReturnsTrue() throws InterruptedException {
-        String githubUsername = "octocat";
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("true")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Boolean> result = authService.validateUserExists(githubUsername);
-
-        StepVerifier.create(result)
-                .expectNext(true)
-                .verifyComplete();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/itachallenge/api/v1/user/validate-mentor-exists", request.getRequestUrl().encodedPath());
-        assertEquals(githubUsername, request.getRequestUrl().queryParameter("githubUsername"));
-    }
-
-    @Test
-    void validateUserExists_UserDoesNotExist_ReturnsFalse() {
-        String githubUsername = "unknown-user";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(404));
-
-        Mono<Boolean> result = authService.validateUserExists(githubUsername);
-
-        StepVerifier.create(result)
-                .expectNext(false)
-                .verifyComplete();
-    }
-
-    @Test
-    void validateUserExists_ServiceError_ReturnsFalse() {
-        String githubUsername = "octocat";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(500));
-
-        Mono<Boolean> result = authService.validateUserExists(githubUsername);
-
-        StepVerifier.create(result)
-                .expectNext(false)
                 .verifyComplete();
     }
 

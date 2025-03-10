@@ -63,7 +63,7 @@ jobs:
       # ✅ Subir el reporte de tests como artefacto
       - name: Upload Test Report
         if: always()  # Se ejecuta aunque los tests fallen
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: itachallenge-challenge/build/reports/tests/
