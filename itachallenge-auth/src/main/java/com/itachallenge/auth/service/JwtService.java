@@ -1,5 +1,6 @@
 package com.itachallenge.auth.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -32,6 +33,19 @@ public class JwtService implements IJwtService {
                 .expiration(new Date(System.currentTimeMillis() + minutesTillExpiration * 60000))
                 .signWith(getSigningKey());
         return builder.compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private Key getSigningKey() {
