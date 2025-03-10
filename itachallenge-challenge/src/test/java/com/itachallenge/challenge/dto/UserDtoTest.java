@@ -76,13 +76,35 @@ public class UserDtoTest {
     }
 
     @Test
-    @DisplayName("Test UserDto Equals and HashCode")
-    void testEqualsAndHashCode() {
+    @DisplayName("Test UserDto Equals and HashCode with Same Object")
+    void testEqualsAndHashCodeSameObject() {
+        UserDto userDto = new UserDto(uuid, username, role);
+
+        assertTrue(userDto.equals(userDto)); // Test mateix objecte
+        assertEquals(userDto.hashCode(), userDto.hashCode());
+    }
+
+    @Test
+    @DisplayName("Test UserDto Equals and HashCode with Different Objects")
+    void testEqualsAndHashCodeDifferentObjects() {
         UserDto userDto1 = new UserDto(uuid, username, role);
         UserDto userDto2 = new UserDto(uuid, username, role);
+        UserDto userDto3 = new UserDto(UUID.randomUUID(), "otherUser", "ADMIN");
 
         assertThat(userDto1).isEqualTo(userDto2);
         assertThat(userDto1.hashCode()).isEqualTo(userDto2.hashCode());
+
+        assertThat(userDto1).isNotEqualTo(userDto3);
+        assertThat(userDto1.hashCode()).isNotEqualTo(userDto3.hashCode());
+    }
+
+    @Test
+    @DisplayName("Test UserDto Equals with Null and Different Class")
+    void testEqualsWithNullAndDifferentClass() {
+        UserDto userDto = new UserDto(uuid, username, role);
+
+        assertNotEquals(null, userDto); // Test amb objecte null
+        assertNotEquals(userDto, "Una cadena"); // Test amb classe diferent
     }
 
     @Test
@@ -130,6 +152,16 @@ public class UserDtoTest {
 
         assertNull(userDto.getUuid());
         assertEquals(username, userDto.getUsername());
+        assertNull(userDto.getRole());
+    }
+
+    @Test
+    @DisplayName("Test UserDto with Null Values")
+    void testUserDtoWithNullValues() {
+        UserDto userDto = new UserDto(null, null, null);
+
+        assertNull(userDto.getUuid());
+        assertNull(userDto.getUsername());
         assertNull(userDto.getRole());
     }
 }
