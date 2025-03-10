@@ -78,10 +78,12 @@ class ChallengeIntegrationTest {
         String title1 = "Loops";
         String title2 = "If";
 
+        UUID mentorId = UUID.randomUUID();
+
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, mentorId, Topic.LISTS);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, mentorId, Topic.COMPONENTS);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }

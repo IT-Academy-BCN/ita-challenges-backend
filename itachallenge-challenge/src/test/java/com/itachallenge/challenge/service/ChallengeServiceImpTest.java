@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.config.UserClient;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
@@ -43,6 +44,9 @@ class ChallengeServiceImpTest {
     @Mock
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
 
+    @Mock
+    private UserClient userClient;
+
     @InjectMocks
     private ChallengeServiceImp challengeService;
 
@@ -62,8 +66,9 @@ class ChallengeServiceImpTest {
         String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
+        String mentorUsername = "mentorUser";
 
-        formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level), languageName, solutionBody, Topic.LISTS);
+        formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level), languageName, solutionBody, mentorUsername, Topic.LISTS);
 
         UUID challengeRandomId = UUID.randomUUID();
         UUID languageRandomId = UUID.randomUUID();
@@ -82,8 +87,10 @@ class ChallengeServiceImpTest {
         languageDocument = new LanguageDocument(languageRandomId, languageName, languageImage);
         LanguageDto languageDto = new LanguageDto(languageRandomId, languageName, languageImage);
 
+        UUID mentorId = UUID.randomUUID();
+
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
-                Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS);
+                Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), mentorId, Topic.COMPONENTS);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
@@ -510,6 +517,13 @@ class ChallengeServiceImpTest {
 
     @Test
     void addChallenge_test_success() {
+        String mentorUsername = "mentorUser";
+        UUID mentorId = UUID.randomUUID();
+
+        // Simula la resposta del client d'usuari
+        UserDto userDto = new UserDto(mentorId, mentorUsername, "ADMIN");
+        when(userClient.getUserByUsername(eq(mentorUsername))).thenReturn(Mono.just(userDto));
+
         when(languageRepository.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
@@ -520,6 +534,7 @@ class ChallengeServiceImpTest {
                 .expectNext(challengeDto)
                 .verifyComplete();
 
+        verify(userClient, times(1)).getUserByUsername(eq(mentorUsername));
         verify(languageRepository, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
@@ -624,6 +639,3 @@ class ChallengeServiceImpTest {
     }
 
 }
-
-
-

@@ -26,6 +26,9 @@ public class ChallengeCreateDto {
     @NotEmpty(message = "cannot be empty")
     private String solution;
 
+    @NotEmpty(message = "cannot be empty")
+    private String mentorUsername;
+
     @NotNull(message = "cannot be empty")
     private Topic topic;
 }

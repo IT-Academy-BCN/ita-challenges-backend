@@ -39,6 +39,9 @@ public class ChallengeDocument {
     @Field(name="solutions")
     private List<UUID> solutions;
 
+    @Field(name="mentor_id")
+    private UUID mentorId;
+
     @Field(name="topic")
     private Topic topic;
 

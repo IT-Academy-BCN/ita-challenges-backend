@@ -66,3 +66,6 @@ validation:
 messages:
   errorMessage: "Invalid values."
 
+user:
+  service:
+    url: http://localhost:8764/itachallenge/api/v1/user

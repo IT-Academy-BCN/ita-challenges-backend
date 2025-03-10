@@ -349,7 +349,7 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_test_validRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS);
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", "mentorUser", Topic.LISTS);
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
@@ -369,7 +369,7 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_test_emptyField_statusBadRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.COMPONENTS);
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", "mentorUser", Topic.COMPONENTS);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
@@ -379,11 +379,10 @@ class ChallengeControllerTest {
                 .expectStatus().isBadRequest();
     }
 
-
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució", Topic.COMPONENTS);
+                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució", "mentorUser", Topic.COMPONENTS);
 
         when(challengeService.addChallenge(any()))
                 .thenThrow(new LanguageNotFoundException("Language not found: Invalid language"));

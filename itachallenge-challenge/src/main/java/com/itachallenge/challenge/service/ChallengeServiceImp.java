@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.config.UserClient;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
@@ -58,6 +59,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private UserClient userClient;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -237,6 +240,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto) {
         String codingLanguage = challengeCreateDto.getLanguage();
+        String mentorUsername = challengeCreateDto.getMentorUsername();
 
         Topic topic;
         try {
@@ -247,24 +251,32 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return languageRepository.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
-                .flatMap(existingLanguage -> {
-                    SolutionDocument solution = SolutionDocument.builder()
-                            .uuid(UUID.randomUUID())
-                            .solutionText(challengeCreateDto.getSolution())
-                            .idLanguage(existingLanguage.getIdLanguage())
-                            .build();
-                    return solutionRepository.save(solution)
-                            .flatMap(savedSolution -> {
-                                ChallengeDocument challenge = buildChallengeDocument(challengeCreateDto,
-                                        existingLanguage, savedSolution.getUuid(), topic);
-                                return challengeRepository.save(challenge)
-                                        .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
-                                                ChallengeDto.class));
-                            });
-                });
+                .flatMap(existingLanguage ->
+                        userClient.getUserByUsername(mentorUsername)
+                                .switchIfEmpty(Mono.error(new RuntimeException("Mentor not found: " + mentorUsername)))
+                                .flatMap(user -> {
+                                    if (!"ADMIN".equalsIgnoreCase(user.getRole())) {
+                                        return Mono.error(new RuntimeException("User is not a mentor: " + mentorUsername));
+                                    }
+
+                                    SolutionDocument solution = SolutionDocument.builder()
+                                            .uuid(UUID.randomUUID())
+                                            .solutionText(challengeCreateDto.getSolution())
+                                            .idLanguage(existingLanguage.getIdLanguage())
+                                            .build();
+
+                                    return solutionRepository.save(solution)
+                                            .flatMap(savedSolution -> {
+                                                ChallengeDocument challenge = buildChallengeDocument(
+                                                        challengeCreateDto, existingLanguage, savedSolution.getUuid(), user.getUuid(), topic
+                                                );
+                                                return challengeRepository.save(challenge)
+                                                        .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class));
+                                            });
+                                }));
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, UUID mentorId, Topic topic) {
         DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()
@@ -274,10 +286,10 @@ public class ChallengeServiceImp implements IChallengeService {
                 .detail(detail)
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
+                .mentorId(mentorId)
                 .topic(topic)
                 .build();
     }
-
 
     private Mono<UUID> validateUUID(String id) {
         boolean validUUID = !StringUtils.isEmpty(id) && UUID_FORM.matcher(id).matches();

@@ -53,5 +53,8 @@ public class ChallengeDto {
     private List<UUID> solutions;
 
     @JsonProperty(index = 9)
+    private UUID mentorId;
+
+    @JsonProperty(index = 10)
     private Topic topic;
 }

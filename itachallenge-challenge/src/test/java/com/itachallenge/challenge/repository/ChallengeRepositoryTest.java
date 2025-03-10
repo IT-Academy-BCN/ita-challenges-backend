@@ -18,7 +18,6 @@ import reactor.test.StepVerifier;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.util.AssertionErrors.fail;
@@ -69,12 +68,14 @@ class ChallengeRepositoryTest {
         String title2 = "Challenge 2";
         String title3 = "Challenge 3";
 
+        UUID mentorId = UUID.randomUUID();
+
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, Topic.DEBUGGING);
+                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, mentorId, Topic.DEBUGGING);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS);
+                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, mentorId, Topic.LISTS);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, Topic.COMPONENTS);
+                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, mentorId, Topic.COMPONENTS);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
 
