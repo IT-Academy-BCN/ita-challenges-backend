@@ -215,4 +215,25 @@ public class UserDtoTest {
         assertEquals(userDto1, userDto2);
         assertNotEquals(userDto1, userDto3);
     }
+
+    @Test
+    @DisplayName("Test Equals and HashCode in UserDto")
+    public void testEqualsAndHashCode() {
+        UserDto userDto1 = new UserDto(uuid, username, role);
+        UserDto userDto2 = new UserDto(uuid, username, role);
+        UserDto userDto3 = new UserDto(UUID.randomUUID(), "otherUser", "ADMIN");
+
+        assert userDto1.equals(userDto2);
+        assert !userDto1.equals(userDto3);
+        assert userDto1.hashCode() == userDto2.hashCode();
+        assert userDto1.hashCode() != userDto3.hashCode();
+    }
+
+    @Test
+    @DisplayName("Test toString Method in UserDto")
+    public void testToStringMethod() {
+        UserDto userDto = new UserDto(uuid, username, role);
+        String expected = "UserDto(uuid=" + uuid + ", username=" + username + ", role=" + role + ")";
+        assert userDto.toString().equals(expected);
+    }
 }

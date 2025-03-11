@@ -53,4 +53,4 @@ messages:
 
 user:
   service:
-    url: http://localhost:8764/itachallenge/api/v1/user
+    url: http://apisix-gateway:9080 # IN PRODUCTION
