@@ -170,4 +170,49 @@ public class UserDtoTest {
 
         assertEquals("testValue", userMap.get(userDto));
     }
+
+    @Test
+    @DisplayName("Test Equals and HashCode with Null Object")
+    void testEqualsAndHashCodeWithNull() {
+        UserDto userDto = new UserDto(uuid, username, role);
+        assertNotEquals(userDto, null);
+    }
+
+    @Test
+    @DisplayName("Test Equals and HashCode with Different Class")
+    void testEqualsAndHashCodeWithDifferentClass() {
+        UserDto userDto = new UserDto(uuid, username, role);
+        assertNotEquals(userDto, "Una cadena qualsevol");
+    }
+
+    @Test
+    @DisplayName("Test Equals and HashCode with Null Fields")
+    void testEqualsAndHashCodeWithNullFields() {
+        UserDto userDto1 = new UserDto(null, null, null);
+        UserDto userDto2 = new UserDto(null, null, null);
+
+        assertEquals(userDto1, userDto2);
+        assertEquals(userDto1.hashCode(), userDto2.hashCode());
+    }
+
+    @Test
+    @DisplayName("Test Consistent HashCode")
+    void testConsistentHashCode() {
+        UserDto userDto1 = new UserDto(uuid, username, role);
+        int hashCode1 = userDto1.hashCode();
+        int hashCode2 = userDto1.hashCode();
+
+        assertEquals(hashCode1, hashCode2);
+    }
+
+    @Test
+    @DisplayName("Test Equals with Partially Null Fields")
+    void testEqualsWithPartiallyNullFields() {
+        UserDto userDto1 = new UserDto(uuid, username, null);
+        UserDto userDto2 = new UserDto(uuid, username, null);
+        UserDto userDto3 = new UserDto(uuid, "diferentUsername", null);
+
+        assertEquals(userDto1, userDto2);
+        assertNotEquals(userDto1, userDto3);
+    }
 }
