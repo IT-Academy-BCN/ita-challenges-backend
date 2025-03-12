@@ -233,7 +233,7 @@ IMPORTANT: It's expected that in the project we will be online with the camera o
 
 ## 2.6 Working with git 
 
-The workflow we follow is similar to the Gitflow Workflow.
+****The workflow we follow is similar to the Gitflow Workflow.
 To work at the project, you should know at least following git commands:
 - git clone
 - git merge
