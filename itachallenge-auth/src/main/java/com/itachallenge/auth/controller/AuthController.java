@@ -142,5 +142,23 @@ public class AuthController {
         return userService.callUserTest();
     }
 
+    @PostMapping("/logout")
+    public Mono<ResponseEntity<Map<String, String>>> logout(@RequestHeader (value = "Authorization", required = false) String authHeader){
+        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Unauthorized: No token provided")));
+        }
+        String jwt = authHeader.replace("Bearer ", "");
+
+        if (jwtService.validateToken(jwt)) {
+            log.info("Logout successful for token: {}", jwt);
+            return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
+        } else {
+            log.warn("Invalid or expired token during logout");
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid or expired token")));
+        }
+    }
+
 }
 

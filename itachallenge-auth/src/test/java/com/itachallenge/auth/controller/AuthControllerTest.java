@@ -202,4 +202,50 @@ class AuthControllerTest {
                 .jsonPath("$.application_name").isEqualTo("itachallenge-auth")
                 .jsonPath("$.version").isEqualTo(expectedVersion);
     }
+
+    @Test
+    void logout_ValidToken_ShouldReturn200() {
+        String validToken = "valid.jwt.token";
+
+        when(jwtService.validateToken(validToken)).thenReturn(true);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "Bearer " + validToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .value(response -> {
+                    assert response.get("message").equals("Logout successful");
+                });
+    }
+
+    @Test
+    void logout_InvalidToken_ShouldReturn401() {
+        String invalidToken = "invalid.jwt.token";
+
+        when(jwtService.validateToken(invalidToken)).thenReturn(false);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "Bearer " + invalidToken)
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody(Map.class)
+                .value(response -> {
+                    assert response.get("message").equals("Invalid or expired token");
+                });
+    }
+
+    @Test
+    void logout_NoToken_ShouldReturn401() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody(Map.class)
+                .value(response -> {
+                    assert response.get("message").equals("Unauthorized: No token provided");
+                });
+    }
 }
