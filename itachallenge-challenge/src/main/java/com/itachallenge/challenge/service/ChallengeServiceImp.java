@@ -343,4 +343,33 @@ public class ChallengeServiceImp implements IChallengeService {
                         .build()));
 
     }
+
+    @Override
+    public Mono<FavoriteDto> addUserIdToFavorites(String challengeId, String userId) {
+
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeUuid = tuple.getT1();
+                    UUID userUuid = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> {
+                                if (challenge.getFavoritedByUsers() == null) {
+                                    List<UUID> list = new ArrayList<>();
+                                    challenge.setFavoritedByUsers(list);
+                                }
+                                if (!challenge.getFavoritedByUsers().contains(userUuid)) {
+                                    challenge.getFavoritedByUsers().add(userUuid);
+                                }
+                                return challengeRepository.save(challenge)
+                                        .flatMap(challengeSaved ->
+                                                Mono.just(new FavoriteDto(true, challengeSaved.getFavoritedByUsers().size()))
+                                        );
+                            });
+                });
+    }
 } //

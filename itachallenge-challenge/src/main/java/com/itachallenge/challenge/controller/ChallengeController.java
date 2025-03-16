@@ -3,12 +3,14 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.CustomBadRequestException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.util.JwtParser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -257,5 +259,26 @@ public class ChallengeController {
 
         return challengeService.deleteChallengeById(id)
                 .map(dto -> ResponseEntity.ok().body(dto));
+    }
+
+    @PostMapping("/challenges/{challengeId}/favorites")
+    public Mono<ResponseEntity<FavoriteDto>> addChallengeAsFavorite(@PathVariable String challengeId, HttpServletRequest request) {
+        UUID userId = getUserIdFromToken(request);
+        return challengeService.addUserIdToFavorites(challengeId, userId.toString())
+                .map(ResponseEntity::ok);
+    }
+
+    private UUID getUserIdFromToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer: ")) {
+            log.warn("Missing or bad formatted Authorization header");
+            throw new CustomBadRequestException("Missing or bad formatted Authorization header");
+        }
+        UUID userId = JwtParser.extractUuid(authHeader.replace("Bearer: ", ""));
+        if (userId == null) {
+            log.warn("Error decoding the JWT token");
+            throw new CustomBadRequestException("Invalid Authorization header content");
+        }
+        return userId;
     }
 }

@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IChallengeService {
 
@@ -29,4 +30,5 @@ public interface IChallengeService {
 
     Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size);
 
+    Mono<FavoriteDto> addUserIdToFavorites(String challengeId, String userId);
 }

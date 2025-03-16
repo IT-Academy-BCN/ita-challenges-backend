@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -73,6 +72,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CustomBadRequestException.class)
+    public ResponseEntity<MessageDto> handleCustomBadRequestException(CustomBadRequestException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 }
