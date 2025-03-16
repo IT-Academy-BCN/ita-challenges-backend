@@ -14,19 +14,6 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
-import com.itachallenge.challenge.document.*;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import reactor.core.publisher.Flux;
-
-import java.time.LocalDateTime;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
 
 
 class ChallengeDocumentToDtoConverterTest {
@@ -50,6 +37,7 @@ class ChallengeDocumentToDtoConverterTest {
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
+        UUID favoritedByRandomId = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
         String title = "Title";
@@ -69,10 +57,10 @@ class ChallengeDocumentToDtoConverterTest {
 
         Topic topic = Topic.DEBUGGING;
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, List.of(favoritedByRandomId));
 
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, List.of(favoritedByRandomId));
 
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
