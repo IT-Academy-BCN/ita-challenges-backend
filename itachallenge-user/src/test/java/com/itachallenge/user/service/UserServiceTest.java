@@ -2,6 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +13,11 @@ import org.mockito.MockitoAnnotations;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class UserServiceTest {
@@ -62,4 +66,102 @@ class UserServiceTest {
 
         verify(userRepository, times(1)).findByUsername(username);
     }
+
+    @Test
+    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoritesIsNull() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, "testUser", null, null);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+                .expectNext(true)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertTrue(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoritesIsEmpty() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>());
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+                .expectNext(true)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertTrue(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldReturnTrue_WhenFavoritesHasValues() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        Set<UUID> favorites = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
+        UserDocument user = new UserDocument(userId, "testUser", null, favorites);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+                .expectNext(true)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertTrue(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldReturnFalse_WhenFavoritesAlreadyContainsChallenge() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        Set<UUID> favorites = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
+        UserDocument user = new UserDocument(userId, "testUser", null, favorites);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+                .expectNext(false)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertTrue(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldThrowNotFoundException_WhenUserNotFound() {
+
+        when(userRepository.findById(any(UUID.class))).thenReturn(Mono.empty());
+
+        StepVerifier.create(userService.addChallengeToFavorites(UUID.randomUUID(), UUID.randomUUID()))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(NotFoundException.class, throwable);
+                    assertEquals("User not found", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(1)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
 }
