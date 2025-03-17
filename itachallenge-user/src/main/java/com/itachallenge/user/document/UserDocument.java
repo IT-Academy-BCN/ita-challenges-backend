@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-import java.util.StringJoiner;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Data
@@ -28,6 +28,9 @@ public class UserDocument {
     @Field("role")
     private Role role;
 
+    @Field("favorite_challenges")
+    private Set<UUID> favoriteChallenges;
+
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "UserDocument{", "}");
@@ -40,6 +43,12 @@ public class UserDocument {
         }
         if (role != null) {
             joiner.add("role='" + role + "'");
+        }
+        if (favoriteChallenges != null && !favoriteChallenges.isEmpty()) {
+            joiner.add("favoriteChallenges='");
+            joiner.add(favoriteChallenges.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", ")));
         }
 
         return joiner.toString();
