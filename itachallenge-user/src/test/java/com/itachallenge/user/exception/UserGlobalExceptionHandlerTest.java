@@ -1,6 +1,7 @@
 package com.itachallenge.user.exception;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +27,7 @@ class UserGlobalExceptionHandlerTest {
         ResponseEntity<String> response = exceptionHandler.handleAny(exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("Unexpected error happend. ", response.getBody());
+        assertTrue(response.getBody().contains("Unexpected error happened."));
     }
 
     @Test

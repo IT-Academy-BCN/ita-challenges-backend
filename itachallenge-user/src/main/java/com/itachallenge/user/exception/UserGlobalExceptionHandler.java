@@ -1,5 +1,6 @@
 package com.itachallenge.user.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,12 +9,14 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
+@Slf4j
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAny(Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happend. ");
+        log.error("Unexpected error happened: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happened.");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

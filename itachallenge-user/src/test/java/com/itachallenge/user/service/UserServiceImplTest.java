@@ -2,6 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
+import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -20,13 +21,13 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private AutoCloseable mocks;
 
@@ -76,7 +77,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
 
-        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
@@ -96,7 +97,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
 
-        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
@@ -117,7 +118,7 @@ class UserServiceTest {
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
         when(userRepository.save(user)).thenReturn(Mono.just(user));
 
-        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(true)
                 .verifyComplete();
 
@@ -137,7 +138,7 @@ class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
-        StepVerifier.create(userService.addChallengeToFavorites(userId, challengeId))
+        StepVerifier.create(userService.addChallengeToFavorites(userId.toString(), challengeId.toString()))
                 .expectNext(false)
                 .verifyComplete();
 
@@ -153,7 +154,7 @@ class UserServiceTest {
 
         when(userRepository.findById(any(UUID.class))).thenReturn(Mono.empty());
 
-        StepVerifier.create(userService.addChallengeToFavorites(UUID.randomUUID(), UUID.randomUUID()))
+        StepVerifier.create(userService.addChallengeToFavorites(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
                 .expectErrorSatisfies(throwable -> {
                     assertInstanceOf(NotFoundException.class, throwable);
                     assertEquals("User not found", throwable.getMessage());
@@ -161,6 +162,58 @@ class UserServiceTest {
                 .verify();
 
         verify(userRepository, times(1)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldThrowBadRequestException_WhenUserUuidIsNull() {
+        StepVerifier.create(userService.addChallengeToFavorites(null, UUID.randomUUID().toString()))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldThrowBadRequestException_WhenChallengeUuidIsNull() {
+        StepVerifier.create(userService.addChallengeToFavorites(UUID.randomUUID().toString(), null))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldThrowBadRequestException_WhenUserUuidIsNotValid() {
+        StepVerifier.create(userService.addChallengeToFavorites("invalidUuid", UUID.randomUUID().toString()))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void addChallengeToFavorites_ShouldThrowBadRequestException_WhenChallengeUuidIsNotValid() {
+        StepVerifier.create(userService.addChallengeToFavorites(UUID.randomUUID().toString(), "invalidUuid"))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
         verify(userRepository, times(0)).save(any());
     }
 

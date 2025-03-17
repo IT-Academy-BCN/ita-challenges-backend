@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,8 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 @RestController
 @Validated
@@ -133,6 +132,11 @@ public class UserController {
                             content = @Content(mediaType = "application/json")
                     ),
                     @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request. The provided IDs have a bad format",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
                             responseCode = "404",
                             description = "Not found. No user is found with the provided user id.",
                             content = @Content(mediaType = "application/json")
@@ -145,8 +149,8 @@ public class UserController {
             }
     )
 
-    @GetMapping("/users/{userId}/favorites/{challengeId}")
-    public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable UUID userId, @PathVariable UUID challengeId) {
+    @PostMapping("/users/{userId}/favorites/{challengeId}")
+    public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.addChallengeToFavorites(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
@@ -168,6 +172,13 @@ public class UserController {
                         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
                                 .header(X_FAVORITE_ADDED, FALSE)
                                 .header(X_FAVORITE_MESSAGE, "User not found.")
+                                .body(false));
+                    }
+                    if (throwable instanceof BadUUIDException) {
+                        log.error("The provided IDs are not valid.");
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .header(X_FAVORITE_ADDED, FALSE)
+                                .header(X_FAVORITE_MESSAGE, "The provided IDs are not valid.")
                                 .body(false));
                     }
                     log.error("Unexpected error: {}", throwable.getMessage());
