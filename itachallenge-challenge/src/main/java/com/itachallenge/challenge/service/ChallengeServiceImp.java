@@ -58,6 +58,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private IUserService userService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -358,18 +360,27 @@ public class ChallengeServiceImp implements IChallengeService {
                     return challengeRepository.findByUuid(challengeUuid)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> {
-                                if (challenge.getFavoritedByUsers() == null) {
-                                    List<UUID> list = new ArrayList<>();
-                                    challenge.setFavoritedByUsers(list);
-                                }
-                                if (!challenge.getFavoritedByUsers().contains(userUuid)) {
-                                    challenge.getFavoritedByUsers().add(userUuid);
-                                }
-                                return challengeRepository.save(challenge)
-                                        .flatMap(challengeSaved ->
-                                                Mono.just(new FavoriteDto(true, challengeSaved.getFavoritedByUsers().size()))
+                                return userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
+                                        .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
+                                        .flatMap(unused ->
+                                            addUserToFavorites(challenge, userUuid)
+                                                    .flatMap(challengeSaved ->
+                                                            Mono.just(new FavoriteDto(true, challengeSaved.getFavoritedByUsers().size()))
+                                                    )
                                         );
                             });
                 });
     }
-} //
+
+    private Mono<ChallengeDocument> addUserToFavorites(ChallengeDocument challenge, UUID userUuid) {
+        if (challenge.getFavoritedByUsers() == null) {
+            List<UUID> list = new ArrayList<>();
+            challenge.setFavoritedByUsers(list);
+        }
+        if (!challenge.getFavoritedByUsers().contains(userUuid)) {
+            challenge.getFavoritedByUsers().add(userUuid);
+        }
+        return challengeRepository.save(challenge);
+    }
+
+}
