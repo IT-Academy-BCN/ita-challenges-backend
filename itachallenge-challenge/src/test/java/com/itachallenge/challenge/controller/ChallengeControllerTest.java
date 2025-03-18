@@ -532,4 +532,38 @@ class ChallengeControllerTest {
         verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
     }
 
+    @Test
+    void addChallengeToFavorites_InvalidHeader_Returns400() {
+        String challengeId = "Existing_challengeId";
+        String token = "BadToken";
+
+        when(jwtParser.extractUuid(token)).thenReturn(null);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals("Invalid Authorization header content", messageDto.getMessage()));
+
+        verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
+    }
+
+    @Test
+    void addChallengeToFavorites_MissingHeader_Returns400() {
+        String challengeId = "Existing_challengeId";
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals("Missing or bad formatted Authorization header", messageDto.getMessage()));
+
+        verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
+    }
+
 }
