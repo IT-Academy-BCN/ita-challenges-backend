@@ -4,19 +4,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.Decoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 
+@Component
 public class JwtParser {
 
     private static final Logger log = LoggerFactory.getLogger(JwtParser.class);
 
 
-    public static UUID extractUuid(String token) {
+    public String extractUuid(String token) {
         try {
-            return UUID.fromString(extractAllClaims(token).get("uuid").toString());  // Get "uuid" claim
+            return extractAllClaims(token).get("uuid").toString();  // Get "uuid" claim
         } catch (Exception e) {
             log.warn("Invalid token: {}", e.getMessage());
             return null;

@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
@@ -78,5 +78,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomBadRequestException.class)
     public ResponseEntity<MessageDto> handleCustomBadRequestException(CustomBadRequestException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CustomInternalServerErrorException.class)
+    public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDto(ex.getMessage()));
     }
 }

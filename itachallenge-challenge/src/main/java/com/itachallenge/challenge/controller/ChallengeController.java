@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,10 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
 
     @Autowired
-    IChallengeService challengeService;
+    private IChallengeService challengeService;
+
+    @Autowired
+    private JwtParser jwtParser;
 
     @Value("${spring.application.version}")
     private String version;
@@ -262,19 +264,31 @@ public class ChallengeController {
     }
 
     @PostMapping("/challenges/{challengeId}/favorites")
-    public Mono<ResponseEntity<FavoriteDto>> addChallengeAsFavorite(@PathVariable String challengeId, HttpServletRequest request) {
-        UUID userId = getUserIdFromToken(request);
-        return challengeService.addChallengeToFavorites(challengeId, userId.toString())
+    @Operation(
+            operationId = "Add a challenge to User's favorites.",
+            summary = "Add a challenge to favorites.",
+            description = "The ID Challenge sent through the URI is added to the user's favorites. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        String userId = getUserIdFromToken(authHeader);
+        return challengeService.addChallengeToFavorites(challengeId, userId)
+                .doOnError(error -> log.error("Error adding challenge to favorites {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
 
-    private UUID getUserIdFromToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer: ")) {
+    private String getUserIdFromToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("Missing or bad formatted Authorization header");
             throw new CustomBadRequestException("Missing or bad formatted Authorization header");
         }
-        UUID userId = JwtParser.extractUuid(authHeader.replace("Bearer: ", ""));
+        String userId = jwtParser.extractUuid(authHeader.replace("Bearer ", ""));
         if (userId == null) {
             log.warn("Error decoding the JWT token");
             throw new CustomBadRequestException("Invalid Authorization header content");

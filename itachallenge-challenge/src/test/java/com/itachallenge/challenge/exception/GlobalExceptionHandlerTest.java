@@ -38,6 +38,7 @@ class GlobalExceptionHandlerTest {
     String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
     private final HttpStatus OK_REQUEST = HttpStatus.OK;
+    private final HttpStatus NOT_FOUND_REQUEST = HttpStatus.NOT_FOUND;
 
     @InjectMocks
     private GlobalExceptionHandler globalExceptionHandler;
@@ -157,7 +158,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
-        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+        assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Challenge not found"));
     }
@@ -214,5 +215,17 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Language not found"));
+    }
+
+    @Test
+    void testHandleCustomInternalServerErrorException() {
+
+        CustomInternalServerErrorException exception = new CustomInternalServerErrorException("Error message");
+
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleCustomInternalServerErrorException(exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        String responseBody = responseEntity.getBody().getMessage();
+        assertTrue(responseBody.contains("Error message"));
     }
 }
