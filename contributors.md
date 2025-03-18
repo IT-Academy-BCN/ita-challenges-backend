@@ -78,4 +78,5 @@
 * Clara Pagès - https://github.com/clareta16
 * Juan Ramon Porta - https://github.com/jraporta
 * Jose Arbizu Rendon - https://github.com/Sh1ng0
+* Albert Marín Miranda - https://github.com/Almami679
 * Gwénaël Le Moing - https://github.com/g-lemoing
