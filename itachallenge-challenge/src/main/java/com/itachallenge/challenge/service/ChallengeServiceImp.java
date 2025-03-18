@@ -359,22 +359,23 @@ public class ChallengeServiceImp implements IChallengeService {
 
                     return challengeRepository.findByUuid(challengeUuid)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
-                            .flatMap(challenge -> {
-                                return userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
-                                        .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
-                                        .flatMap(isAddedToUsersFavorites -> {
-                                            if (Boolean.TRUE.equals(isAddedToUsersFavorites)) {
-                                                return updateTimesFavorite(challenge);
-                                            }
-                                            return Mono.just(challenge);
-                                        })
-                                        .map(savedChallenge -> new FavoriteDto(true, savedChallenge.getTimesFavorite()));
-                            });
+                            .flatMap(challenge -> userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isAddedToUsersFavorites -> {
+                                        if (Boolean.TRUE.equals(isAddedToUsersFavorites) ||
+                                                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
+                                            return updateTimesFavorite(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new FavoriteDto(true, savedChallenge.getTimesFavorite())));
                 });
     }
 
     private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
-        challenge.setTimesFavorite(Optional.of(challenge.getTimesFavorite()).orElse(0));
+        challenge.setTimesFavorite(
+                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) + 1
+        );
         return challengeRepository.save(challenge);
     }
 
