@@ -68,10 +68,10 @@ class ChallengeTest {
     }
 
     @Test
-    void getFavoritedByUsers() {
-        List<UUID> favoritedByUsers = List.of(UUID.randomUUID(),UUID.randomUUID());
+    void getTimesFavorite() {
+        int timesFavorite = 20;
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, Topic.COMPONENTS, favoritedByUsers);
-        assertEquals(favoritedByUsers, challenge.getFavoritedByUsers());
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, Topic.COMPONENTS, timesFavorite);
+        assertEquals(timesFavorite, challenge.getTimesFavorite());
     }
 }

@@ -71,7 +71,6 @@ class ChallengeIntegrationTest {
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
 
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
-        List<UUID> favoritedByList = List.of(UUID.randomUUID(), UUID.randomUUID());
         String description = "Description";
 
         DetailDocument detail = new DetailDocument(description);
@@ -80,9 +79,9 @@ class ChallengeIntegrationTest {
         String title2 = "If";
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, favoritedByList);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, 20);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS, favoritedByList);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS, 20);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }

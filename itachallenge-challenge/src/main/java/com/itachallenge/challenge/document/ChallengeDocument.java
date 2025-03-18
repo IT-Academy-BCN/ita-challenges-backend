@@ -42,7 +42,7 @@ public class ChallengeDocument {
     @Field(name="topic")
     private Topic topic;
 
-    @Field(name="favorited_by_users")
-    private List<UUID> favoritedByUsers;
+    @Field(name="times_favorite")
+    private Integer timesFavorite;
 
 }

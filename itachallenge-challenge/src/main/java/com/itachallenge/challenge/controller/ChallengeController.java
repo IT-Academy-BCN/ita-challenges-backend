@@ -264,7 +264,7 @@ public class ChallengeController {
     @PostMapping("/challenges/{challengeId}/favorites")
     public Mono<ResponseEntity<FavoriteDto>> addChallengeAsFavorite(@PathVariable String challengeId, HttpServletRequest request) {
         UUID userId = getUserIdFromToken(request);
-        return challengeService.addUserIdToFavorites(challengeId, userId.toString())
+        return challengeService.addChallengeToFavorites(challengeId, userId.toString())
                 .map(ResponseEntity::ok);
     }
 

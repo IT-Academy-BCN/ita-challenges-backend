@@ -68,7 +68,6 @@ class ChallengeServiceImpTest {
         UUID challengeRandomId = UUID.randomUUID();
         UUID languageRandomId = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
-        UUID favoritedById = UUID.randomUUID();
 
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
         String creationDate = "2023-06-05";
@@ -85,7 +84,7 @@ class ChallengeServiceImpTest {
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                List.of(favoritedById));
+                20);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),

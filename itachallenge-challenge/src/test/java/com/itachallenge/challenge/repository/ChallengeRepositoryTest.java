@@ -72,11 +72,11 @@ class ChallengeRepositoryTest {
         String title3 = "Challenge 3";
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, Topic.DEBUGGING, favoritedByList);
+                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, Topic.DEBUGGING, 5);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, favoritedByList);
+                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, 10);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, Topic.COMPONENTS, favoritedByList);
+                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, Topic.COMPONENTS, 15);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
 

@@ -347,7 +347,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Override
-    public Mono<FavoriteDto> addUserIdToFavorites(String challengeId, String userId) {
+    public Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
         Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
@@ -362,24 +362,19 @@ public class ChallengeServiceImp implements IChallengeService {
                             .flatMap(challenge -> {
                                 return userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
                                         .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
-                                        .flatMap(unused ->
-                                            addUserToFavorites(challenge, userUuid)
-                                                    .flatMap(challengeSaved ->
-                                                            Mono.just(new FavoriteDto(true, challengeSaved.getFavoritedByUsers().size()))
-                                                    )
-                                        );
+                                        .flatMap(isAddedToUsersFavorites -> {
+                                            if (Boolean.TRUE.equals(isAddedToUsersFavorites)) {
+                                                return updateTimesFavorite(challenge);
+                                            }
+                                            return Mono.just(challenge);
+                                        })
+                                        .map(savedChallenge -> new FavoriteDto(true, savedChallenge.getTimesFavorite()));
                             });
                 });
     }
 
-    private Mono<ChallengeDocument> addUserToFavorites(ChallengeDocument challenge, UUID userUuid) {
-        if (challenge.getFavoritedByUsers() == null) {
-            List<UUID> list = new ArrayList<>();
-            challenge.setFavoritedByUsers(list);
-        }
-        if (!challenge.getFavoritedByUsers().contains(userUuid)) {
-            challenge.getFavoritedByUsers().add(userUuid);
-        }
+    private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
+        challenge.setTimesFavorite(Optional.of(challenge.getTimesFavorite()).orElse(0));
         return challengeRepository.save(challenge);
     }
 
