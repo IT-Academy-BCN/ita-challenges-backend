@@ -372,10 +372,42 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
+    @Override
+    public Mono<FavoriteDto> removeChallengeFromFavorites(String challengeId, String userId) {
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeUuid = tuple.getT1();
+                    UUID userUuid = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isRemovedFromUsersFavorites -> {
+                                        if (Boolean.TRUE.equals(isRemovedFromUsersFavorites) ||
+                                                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
+                                            return decreaseTimesFavorite(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new FavoriteDto(false, savedChallenge.getTimesFavorite())));
+                });
+    }
+
     private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
         challenge.setTimesFavorite(
                 Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) + 1
         );
+        return challengeRepository.save(challenge);
+    }
+
+    private Mono<? extends ChallengeDocument> decreaseTimesFavorite(ChallengeDocument challenge) {
+        challenge.setTimesFavorite(Integer.max(
+                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) - 1, 0
+        ));
         return challengeRepository.save(challenge);
     }
 

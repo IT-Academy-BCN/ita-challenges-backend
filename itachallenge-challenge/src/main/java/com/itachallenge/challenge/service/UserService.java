@@ -34,7 +34,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
+    public Mono<Boolean> removeChallengeFromFavorites(String userId, String challengeId) {
         return callFavoriteEndpoint(userId, challengeId, HttpMethod.DELETE);
     }
 

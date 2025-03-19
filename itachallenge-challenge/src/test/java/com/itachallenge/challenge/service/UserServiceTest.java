@@ -175,7 +175,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteChallengeFromFavorites_DeletedFromUser_ReturnsTrue() throws InterruptedException {
+    void removeChallengeFromFavorites_DeletedFromUser_ReturnsTrue() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
 
@@ -184,7 +184,7 @@ public class UserServiceTest {
                 .setResponseCode(201)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = userService.deleteChallengeFromFavorites(userId, challengeId);
+        Mono<Boolean> result = userService.removeChallengeFromFavorites(userId, challengeId);
 
         StepVerifier.create(result)
                 .expectNext(true)
@@ -199,7 +199,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteChallengeFromFavorites_NotDeletedFromUser_ReturnsFalse() throws InterruptedException {
+    void removeChallengeFromFavorites_NotDeletedFromUser_ReturnsFalse() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
 
@@ -208,7 +208,7 @@ public class UserServiceTest {
                 .setResponseCode(200)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = userService.deleteChallengeFromFavorites(userId, challengeId);
+        Mono<Boolean> result = userService.removeChallengeFromFavorites(userId, challengeId);
 
         StepVerifier.create(result)
                 .expectNext(false)
@@ -223,7 +223,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteChallengeFromFavorites_BadRequest_ReturnsError() throws InterruptedException {
+    void removeChallengeFromFavorites_BadRequest_ReturnsError() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
         String someErrorMessage = "Some error message";
@@ -234,7 +234,7 @@ public class UserServiceTest {
                 .addHeader(X_FAVORITE_MESSAGE, someErrorMessage)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = userService.deleteChallengeFromFavorites(userId, challengeId);
+        Mono<Boolean> result = userService.removeChallengeFromFavorites(userId, challengeId);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
@@ -252,7 +252,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteChallengeFromFavorites_UserNotFound_ReturnsError() throws InterruptedException {
+    void removeChallengeFromFavorites_UserNotFound_ReturnsError() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
 
@@ -261,7 +261,7 @@ public class UserServiceTest {
                 .setResponseCode(404)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = userService.deleteChallengeFromFavorites(userId, challengeId);
+        Mono<Boolean> result = userService.removeChallengeFromFavorites(userId, challengeId);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
@@ -279,7 +279,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void deleteChallengeFromFavorites_500_ReturnsError() throws InterruptedException {
+    void removeChallengeFromFavorites_500_ReturnsError() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
         String someErrorMessage = "Some error message";
@@ -290,7 +290,7 @@ public class UserServiceTest {
                 .addHeader(X_FAVORITE_MESSAGE, someErrorMessage)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = userService.deleteChallengeFromFavorites(userId, challengeId);
+        Mono<Boolean> result = userService.removeChallengeFromFavorites(userId, challengeId);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
