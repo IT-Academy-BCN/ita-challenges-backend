@@ -78,3 +78,4 @@
 * Clara Pagès - https://github.com/clareta16
 * Juan Ramon Porta - https://github.com/jraporta
 * Jose Arbizu Rendon - https://github.com/Sh1ng0
+* Pau Maneja Celma - https://github.com/paumaneja
