@@ -674,7 +674,7 @@ class ChallengeServiceImpTest {
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundException &&
+                        error instanceof ChallengeNotFoundReturn404Exception &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
