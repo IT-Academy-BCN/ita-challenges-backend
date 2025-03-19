@@ -30,10 +30,41 @@ public class UserService implements IUserService {
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
         String url = userServiceUrl + "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
-        log.debug("Call to endpoint: {}", url);
+        log.debug("Call to endpoint(POST): {}", url);
 
         return webClientBuilder.build()
                 .post()
+                .uri(url)
+                .retrieve()
+                .onStatus(
+                        HttpStatus.NOT_FOUND::equals, response -> {
+                            log.info("User not found {}", userId);
+                            return Mono.error(new UserNotFoundException("User not found"));
+                        })
+                .onStatus(
+                        HttpStatus.BAD_REQUEST::equals, response -> {
+                            String errorMessage = response.headers().header("X-Favorite-Message").stream()
+                                    .findFirst().orElse("Unknown error");
+                            log.warn("UserService returned 400: {}", errorMessage);
+                            return Mono.error(new CustomBadRequestException(errorMessage));
+                        })
+                .onStatus(
+                        HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
+                            String errorMessage = response.headers().header("X-Favorite-Message").stream()
+                                    .findFirst().orElse("Unknown error");
+                            log.warn("UserService returned 500: {}", errorMessage);
+                            return Mono.error(new CustomInternalServerErrorException(errorMessage));
+                        })
+                .bodyToMono(Boolean.class);
+    }
+
+    @Override
+    public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
+        String url = userServiceUrl + "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
+        log.debug("Call to endpoint(DELETE): {}", url);
+
+        return webClientBuilder.build()
+                .delete()
                 .uri(url)
                 .retrieve()
                 .onStatus(
