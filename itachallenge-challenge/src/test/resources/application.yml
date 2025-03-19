@@ -50,3 +50,7 @@ validation:
 
 messages:
   errorMessage: "Invalid values."
+
+user:
+  service:
+    url: http://notreallymatters
