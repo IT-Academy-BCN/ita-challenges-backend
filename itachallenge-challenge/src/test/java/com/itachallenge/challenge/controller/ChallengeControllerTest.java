@@ -4,6 +4,7 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.ChallengeNotFoundReturn404Exception;
 import com.itachallenge.challenge.exception.CustomInternalServerErrorException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
@@ -460,7 +461,7 @@ class ChallengeControllerTest {
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + id)
                 .exchange()
-                .expectStatus().isNotFound()
+                .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("Challenge with id: non_existing_id not found");
     }
@@ -495,7 +496,7 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
         when(jwtParser.extractUuid(token)).thenReturn(userId);
 
         webTestClient.post()

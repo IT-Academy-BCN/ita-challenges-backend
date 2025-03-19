@@ -158,6 +158,20 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
+        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Challenge not found"));
+    }
+
+    @Test
+    void testHandleChallengeNotFoundReturn404Exception() {
+        // Arrange
+        ChallengeNotFoundReturn404Exception challengeNotFoundException = new ChallengeNotFoundReturn404Exception("Challenge not found");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundReturn404Exception(challengeNotFoundException);
+
+        // Assert
         assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Challenge not found"));

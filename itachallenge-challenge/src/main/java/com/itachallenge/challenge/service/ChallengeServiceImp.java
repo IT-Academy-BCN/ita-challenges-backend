@@ -358,7 +358,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID userUuid = tuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
                                     .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isAddedToUsersFavorites -> {
