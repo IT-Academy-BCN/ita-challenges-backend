@@ -6,6 +6,7 @@ import com.itachallenge.challenge.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,42 +30,20 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-        String url = userServiceUrl + "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
-        log.debug("Call to endpoint(POST): {}", url);
-
-        return webClientBuilder.build()
-                .post()
-                .uri(url)
-                .retrieve()
-                .onStatus(
-                        HttpStatus.NOT_FOUND::equals, response -> {
-                            log.info("User not found {}", userId);
-                            return Mono.error(new UserNotFoundException("User not found"));
-                        })
-                .onStatus(
-                        HttpStatus.BAD_REQUEST::equals, response -> {
-                            String errorMessage = response.headers().header("X-Favorite-Message").stream()
-                                    .findFirst().orElse("Unknown error");
-                            log.warn("UserService returned 400: {}", errorMessage);
-                            return Mono.error(new CustomBadRequestException(errorMessage));
-                        })
-                .onStatus(
-                        HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
-                            String errorMessage = response.headers().header("X-Favorite-Message").stream()
-                                    .findFirst().orElse("Unknown error");
-                            log.warn("UserService returned 500: {}", errorMessage);
-                            return Mono.error(new CustomInternalServerErrorException(errorMessage));
-                        })
-                .bodyToMono(Boolean.class);
+        return callFavoriteEndpoint(userId, challengeId, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
+        return callFavoriteEndpoint(userId, challengeId, HttpMethod.DELETE);
+    }
+
+    private Mono<Boolean> callFavoriteEndpoint(String userId, String challengeId, HttpMethod method) {
         String url = userServiceUrl + "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
-        log.debug("Call to endpoint(DELETE): {}", url);
+        log.debug("Call to endpoint({}): {}", method, url);
 
         return webClientBuilder.build()
-                .delete()
+                .method(method)
                 .uri(url)
                 .retrieve()
                 .onStatus(
