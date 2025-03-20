@@ -284,6 +284,27 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
+    @DeleteMapping("/challenges/{challengeId}/favorites")
+    @Operation(
+            operationId = "Remove a challenge from the User's favorites.",
+            summary = "Remove a challenge from favorites.",
+            description = "The ID Challenge sent through the URI is removed from the user's favorites. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> removeChallengeFromFavorite(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        String userId = getUserIdFromToken(authHeader);
+        return challengeService.removeChallengeFromFavorites(challengeId, userId)
+                .doOnError(error -> log.error("Error removing challenge from favorites {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
     private String getUserIdFromToken(String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("Missing or bad formatted Authorization header");

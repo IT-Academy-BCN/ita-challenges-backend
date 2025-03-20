@@ -364,7 +364,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .flatMap(isAddedToUsersFavorites -> {
                                         if (Boolean.TRUE.equals(isAddedToUsersFavorites) ||
                                                 Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
-                                            return updateTimesFavorite(challenge);
+                                            return increaseTimesFavorite(challenge);
                                         }
                                         return Mono.just(challenge);
                                     })
@@ -397,7 +397,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
+    private Mono<ChallengeDocument> increaseTimesFavorite(ChallengeDocument challenge) {
         challenge.setTimesFavorite(
                 Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) + 1
         );
