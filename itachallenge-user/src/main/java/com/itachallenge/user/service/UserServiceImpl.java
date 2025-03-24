@@ -55,6 +55,11 @@ public class UserServiceImpl implements UserService {
     }
 
     private Mono<UUID> parseAndValidateUUID(String id) {
+
+        if (id == null || id.isEmpty()) {
+            return Mono.error(new BadUUIDException("Invalid ID format"));
+        }
+
         try {
             return Mono.just(UUID.fromString(id));
         } catch (IllegalArgumentException ex) {
