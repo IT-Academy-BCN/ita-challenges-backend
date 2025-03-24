@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -29,7 +30,7 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-        String url = userServiceUrl + "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
+        String url = getFavoritesUrl(userId, challengeId);
         log.debug("Call to endpoint: {}", url);
 
         return webClientBuilder.build()
@@ -56,6 +57,13 @@ public class UserService implements IUserService {
                             return Mono.error(new InternalServerErrorException(errorMessage));
                         })
                 .bodyToMono(Boolean.class);
+    }
+
+    private String getFavoritesUrl(String userId, String challengeId) {
+        return UriComponentsBuilder.fromHttpUrl(userServiceUrl)
+                .path("/itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}")
+                .buildAndExpand(userId, challengeId)
+                .toUriString();
     }
 
 }

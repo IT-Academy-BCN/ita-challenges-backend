@@ -8,26 +8,31 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class JwtServiceTest {
 
-    private JwtService jwtService;
+    JwtService jwtService;
 
     @BeforeEach
     void setUp() {
-        jwtService = new JwtService("SomeStringReallyDifficultToGuessQWERTASDFGZXCVB");
+        jwtService = new JwtService();
     }
 
     @Test
     void extractUuid_WhenValidToken_ReturnUUID() {
         String userId = "userId";
-        String token = jwtService.generateToken("testUser", "testRole", userId);
+        String base64EncryptedInfo = "eyJzdWIiOiJ0ZXN0VXNlciIsInJvbGUiOiJBRE1JTiIsInV1aWQiOiJ1c2VySWQiLCJpYXQiOjE3NDE2MTM2MTIsImV4cCI6MTc0MTY0OTYxMn0=";
+
+        String tokenConstructor = "%s.%s.%s";
+        String token = String.format(tokenConstructor, "Anything", base64EncryptedInfo, "Anything");
 
         assertEquals(userId, jwtService.extractUuid(token));
     }
 
     @Test
     void extractUuid_WhenInvalidToken_ReturnNull() {
-        String userId = "userId";
-        String tamperedToken = jwtService.generateToken("testUser", "testRole", userId) + "invalid";
+        String base64EncryptedInfo = "BadToken";
 
-        assertNull(jwtService.extractUuid(tamperedToken));
+        String tokenConstructor = "%s.%s.%s";
+        String token = String.format(tokenConstructor, "Anything", base64EncryptedInfo, "Anything");
+
+        assertNull(jwtService.extractUuid(token));
     }
 }
