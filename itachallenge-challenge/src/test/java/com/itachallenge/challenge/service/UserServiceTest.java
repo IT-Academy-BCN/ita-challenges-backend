@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.exception.CustomBadRequestException;
-import com.itachallenge.challenge.exception.CustomInternalServerErrorException;
+import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.UserNotFoundException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -103,7 +103,7 @@ public class UserServiceTest {
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
-                    assertInstanceOf(CustomBadRequestException.class, throwable);
+                    assertInstanceOf(BadRequestException.class, throwable);
                     assertTrue(throwable.getMessage().contains(someErrorMessage));
                 })
                 .verify();
@@ -157,7 +157,7 @@ public class UserServiceTest {
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
-                    assertInstanceOf(CustomInternalServerErrorException.class, throwable);
+                    assertInstanceOf(InternalServerErrorException.class, throwable);
                     assertTrue(throwable.getMessage().contains(throwable.getMessage()));
                 })
                 .verify();

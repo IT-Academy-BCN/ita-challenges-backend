@@ -108,13 +108,13 @@ public class UserController {
             description = "Adds challenge to user favorites",
             parameters = {
                     @Parameter(
-                            name = "",
+                            name = "User ID",
                             description = "User ID",
                             required = true,
                             in = ParameterIn.PATH
                     ),
                     @Parameter(
-                            name = "",
+                            name = "Challenge ID",
                             description = "Challenge ID",
                             required = true,
                             in = ParameterIn.PATH
@@ -168,7 +168,7 @@ public class UserController {
                 })
                 .onErrorResume(throwable -> {
                     if (throwable instanceof NotFoundException) {
-                        log.error("No User not found with id: {}", userId);
+                        log.warn("No User not found with id: {}", userId);
                         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
                                 .header(X_FAVORITE_ADDED, FALSE)
                                 .header(X_FAVORITE_MESSAGE, "User not found.")

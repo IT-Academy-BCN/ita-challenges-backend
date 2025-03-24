@@ -80,13 +80,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(CustomBadRequestException.class)
-    public ResponseEntity<MessageDto> handleCustomBadRequestException(CustomBadRequestException ex) {
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<MessageDto> handleCustomBadRequestException(BadRequestException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(CustomInternalServerErrorException.class)
-    public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(CustomInternalServerErrorException ex) {
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(InternalServerErrorException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDto(ex.getMessage()));
     }
 }

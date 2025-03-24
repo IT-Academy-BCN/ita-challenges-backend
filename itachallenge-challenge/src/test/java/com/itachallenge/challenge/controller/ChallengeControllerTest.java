@@ -5,7 +5,7 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.ChallengeNotFoundReturn404Exception;
-import com.itachallenge.challenge.exception.CustomInternalServerErrorException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
@@ -518,7 +518,7 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new CustomInternalServerErrorException(errorMessage)));
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
         when(jwtParser.extractUuid(token)).thenReturn(userId);
 
         webTestClient.post()

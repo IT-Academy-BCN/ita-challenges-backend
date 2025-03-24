@@ -1,7 +1,7 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.exception.CustomBadRequestException;
-import com.itachallenge.challenge.exception.CustomInternalServerErrorException;
+import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,14 +46,14 @@ public class UserService implements IUserService {
                             String errorMessage = response.headers().header("X-Favorite-Message").stream()
                                     .findFirst().orElse("Unknown error");
                             log.warn("UserService returned 400: {}", errorMessage);
-                            return Mono.error(new CustomBadRequestException(errorMessage));
+                            return Mono.error(new BadRequestException(errorMessage));
                         })
                 .onStatus(
                         HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
                             String errorMessage = response.headers().header("X-Favorite-Message").stream()
                                     .findFirst().orElse("Unknown error");
                             log.warn("UserService returned 500: {}", errorMessage);
-                            return Mono.error(new CustomInternalServerErrorException(errorMessage));
+                            return Mono.error(new InternalServerErrorException(errorMessage));
                         })
                 .bodyToMono(Boolean.class);
     }
