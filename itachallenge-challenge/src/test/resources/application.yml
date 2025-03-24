@@ -54,3 +54,7 @@ messages:
 user:
   service:
     url: http://notreallymatters
+
+token:
+  signing:
+    key: AnythingSoTestsCanStartSpringEnvironment
