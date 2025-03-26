@@ -1,10 +1,9 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,11 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
-public class TagService {
+public class TagService implements ITagService {
 
     @Autowired
     TagRepository tagRepository;
@@ -30,6 +32,15 @@ public class TagService {
             resultDto.setInfo(0, tag.size(), tag.size(), tag.toArray(new TagDto[0]));
             return resultDto;
         });
+    }
+
+    public List<TagDocument> convertStringNameToTag(List<String> tagsAssigned) {
+        return tagsAssigned.stream()
+                .map(tag -> tagRepository.findByTagName(tag)
+                        .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tag)))
+                        .block()
+                )
+                .collect(Collectors.toList());
     }
 
 

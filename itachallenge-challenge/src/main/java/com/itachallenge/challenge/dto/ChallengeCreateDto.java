@@ -34,5 +34,5 @@ ChallengeCreateDto {
     @NotNull(message = "cannot be empty")
     private Topic topic;
 
-    private List<TagDocument> tags;
+    private List<String> tags;
 }
