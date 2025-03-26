@@ -65,6 +65,7 @@ class ChallengeIntegrationTest {
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
+        List<TagDocument> tags = List.of(new TagDocument());
         String languageImage = "https://image-default.com/default.png";
         LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0], languageImage);
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1], languageImage);
@@ -79,9 +80,11 @@ class ChallengeIntegrationTest {
         String title2 = "If";
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, 20);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet,
+                        solutionList, Topic.LISTS, 20, tags);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS, 20);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet,
+                        solutionList, Topic.COMPONENTS, 20, tags);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }

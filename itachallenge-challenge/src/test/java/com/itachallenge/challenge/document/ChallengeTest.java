@@ -11,39 +11,85 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeTest {
+    List<TagDocument> tags = List.of(new TagDocument());
 
     @Test
     void getUuid() {
         UUID uuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument(uuid, null, null, null, null, null, null, Topic.LISTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(uuid,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Topic.LISTS,
+                null,
+                tags);
         assertEquals(uuid, challenge.getUuid());
     }
 
     @Test
     void getTitle() {
         String expectedTitle = "Test challenge";
-        ChallengeDocument challenge = new ChallengeDocument(null, expectedTitle, null, null, null, null, null, Topic.COMPONENTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                expectedTitle,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                null,
+                tags);
         assertEquals(expectedTitle, challenge.getTitle());
     }
 
     @Test
     void getLevel() {
         String level = "Intermediate";
-        ChallengeDocument challenge = new ChallengeDocument(null, null, level, null, null, null, null, Topic.COMPONENTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                level,
+                null,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                null,
+                tags);
         assertEquals(level, challenge.getLevel());
     }
 
     @Test
     void getCreationDate() {
         LocalDateTime creationDate = now();
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, creationDate, null, null, null, Topic.COMPONENTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                creationDate,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                null,
+                tags);
         assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getCreationDate().truncatedTo(ChronoUnit.SECONDS)));
     }
 
     @Test
     void getDetail() {
         DetailDocument detail = new DetailDocument(null);
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, detail, null, null, Topic.COMPONENTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                null,
+                detail,
+                null,
+                null,
+                Topic.COMPONENTS,
+                null,
+                tags);
         assertEquals(detail, challenge.getDetail());
     }
 
@@ -55,7 +101,7 @@ class ChallengeTest {
                 "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg"),
                 new LanguageDocument(uuid2, "Python", "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Python_rphody.svg"));
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS, null,tags);
         assertEquals(languages, challenge.getLanguages());
     }
 
@@ -63,7 +109,16 @@ class ChallengeTest {
     void getSolutions() {
         List<UUID> solutions = List.of(UUID.randomUUID(),UUID.randomUUID());
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, solutions, Topic.COMPONENTS, null);
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                solutions,
+                Topic.COMPONENTS,
+                null,
+                tags);
         assertEquals(solutions, challenge.getSolutions());
     }
 
@@ -71,7 +126,16 @@ class ChallengeTest {
     void getTimesFavorite() {
         int timesFavorite = 20;
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, Topic.COMPONENTS, timesFavorite);
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                timesFavorite,
+                tags);
         assertEquals(timesFavorite, challenge.getTimesFavorite());
     }
 }

@@ -355,8 +355,9 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_validRequest() {
+        List<String> tags = List.of("POO");
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS);
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS,tags );
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
@@ -375,8 +376,14 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_emptyField_statusBadRequest() {
-        ChallengeCreateDto formData = new ChallengeCreateDto("", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.COMPONENTS);
+        List<String> tags = List.of("POO");
+        ChallengeCreateDto formData = new ChallengeCreateDto("",
+                "descripció",
+                DifficultyLevel.valueOf("EASY"),
+                "Java",
+                "solució",
+                Topic.COMPONENTS,
+                tags);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
@@ -389,8 +396,14 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
-        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució", Topic.COMPONENTS);
+        List<String> tags = List.of("POO");
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol",
+                "descripció",
+                DifficultyLevel.valueOf("EASY"),
+                "Invalid language",
+                "solució",
+                Topic.COMPONENTS,
+                tags);
 
         when(challengeService.addChallenge(any()))
                 .thenThrow(new LanguageNotFoundException("Language not found: Invalid language"));

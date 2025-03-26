@@ -39,6 +39,7 @@ class ChallengeDocumentToDtoConverterTest {
         UUID solutionsRandomId = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
+        List<TagDocument> tags = List.of(new TagDocument());
         String title = "Title";
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
@@ -58,10 +59,10 @@ class ChallengeDocumentToDtoConverterTest {
         int timesFavorite = 20;
 
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, tags);
 
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, tags);
 
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
