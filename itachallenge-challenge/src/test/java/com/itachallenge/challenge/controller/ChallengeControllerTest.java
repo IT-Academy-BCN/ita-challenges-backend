@@ -10,8 +10,11 @@ import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.JwtService;
+import com.itachallenge.challenge.service.TagService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -31,7 +35,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(ChallengeController.class)
+@WebFluxTest(controllers = ChallengeController.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 class ChallengeControllerTest {
 
@@ -43,6 +48,9 @@ class ChallengeControllerTest {
 
     @MockBean
     private IChallengeService challengeService;
+
+    @MockBean
+    private TagService tagService;
 
     @MockBean
     private DiscoveryClient discoveryClient;
@@ -580,4 +588,35 @@ class ChallengeControllerTest {
         verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
     }
 
+    @Test
+    @DisplayName("GET recibir respuesta 200 a getTags")
+    void testGetAllTagsEndpoint() {
+
+        TagDto tag1 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos");
+        TagDto tag2 = new TagDto(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia");
+
+        GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
+        resultDto.setInfo(0, 2, 2, new TagDto[]{tag1, tag2});
+
+        when(tagService.getAllTags()).thenReturn(Mono.just(resultDto));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/tags")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType("application/json")
+                .expectBody()
+                .jsonPath("$.results.length()").isEqualTo(2)
+                .jsonPath("$.results[0].tag_name").isEqualTo("POO")
+                .jsonPath("$.results[1].tag_name").isEqualTo("Algoritmos")
+                .jsonPath("$.results[0].tag_description").value(desc ->
+                        assertTrue(desc.toString().contains("Programación orientada")))
+                .jsonPath("$.offset").isEqualTo(0)
+                .jsonPath("$.limit").isEqualTo(2);
+
+        verify(tagService).getAllTags();
+    }
+
 }
+
+
