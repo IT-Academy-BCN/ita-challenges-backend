@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(TagNotFoundException.class)
     public ResponseEntity<MessageDto> handleTagNotFoundException(TagNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(ChallengeNotFoundReturn404Exception.class)

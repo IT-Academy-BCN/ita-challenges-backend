@@ -48,4 +48,12 @@ public class ChallengeDocument {
     @Field(name="tags")
     private List<TagDocument> tags;
 
+    public void setTags(TagDocument tag) {
+        if (tags.contains(tag)) {
+            tags.remove(tag);
+        } else {
+            tags.add(tag);
+        }
+    }
+
 }

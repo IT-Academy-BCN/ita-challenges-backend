@@ -138,4 +138,49 @@ class ChallengeTest {
                 tags);
         assertEquals(timesFavorite, challenge.getTimesFavorite());
     }
+
+    @Test
+    void getTagsTest() {
+        UUID uuid = UUID.randomUUID();
+        List<TagDocument> tags = List.of(new TagDocument(uuid,
+                "POO",
+                "bla bla bla"));
+
+
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                20,
+                tags);
+        assertEquals(tags, challenge.getTags());
+    }
+
+    @Test
+    void setTagsTest() {
+        UUID uuid = UUID.randomUUID();
+        List<TagDocument> tags = new ArrayList<>(Arrays.asList(new TagDocument(uuid,
+                "POO",
+                "bla bla bla")));
+
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                20,
+                tags);
+        TagDocument newTag = new TagDocument(uuid,
+                "Estructura",
+                "bla bla bla");
+        challenge.setTags(newTag);
+        assertEquals(newTag, challenge.getTags().getLast());
+    }
 }
