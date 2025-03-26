@@ -38,6 +38,7 @@ class GlobalExceptionHandlerTest {
     String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
     private final HttpStatus OK_REQUEST = HttpStatus.OK;
+    private final HttpStatus NOT_FOUND_REQUEST = HttpStatus.NOT_FOUND;
 
     @InjectMocks
     private GlobalExceptionHandler globalExceptionHandler;
@@ -163,6 +164,20 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    void testHandleChallengeNotFoundReturn404Exception() {
+        // Arrange
+        ChallengeNotFoundReturn404Exception challengeNotFoundException = new ChallengeNotFoundReturn404Exception("Challenge not found");
+
+        // Act
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundReturn404Exception(challengeNotFoundException);
+
+        // Assert
+        assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
+        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
+        Assertions.assertTrue(responseBody.contains("Challenge not found"));
+    }
+
+    @Test
     void testHandleResourceNotFoundException() {
         // Arrange
         ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
@@ -214,5 +229,17 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Language not found"));
+    }
+
+    @Test
+    void testHandleCustomInternalServerErrorException() {
+
+        InternalServerErrorException exception = new InternalServerErrorException("Error message");
+
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleCustomInternalServerErrorException(exception);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
+        String responseBody = responseEntity.getBody().getMessage();
+        assertTrue(responseBody.contains("Error message"));
     }
 }

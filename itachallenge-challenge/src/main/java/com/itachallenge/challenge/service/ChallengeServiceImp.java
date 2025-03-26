@@ -58,6 +58,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
     @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    @Autowired
+    private IUserService userService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -343,4 +345,38 @@ public class ChallengeServiceImp implements IChallengeService {
                         .build()));
 
     }
-} //
+
+    @Override
+    public Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId) {
+
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeUuid = tuple.getT1();
+                    UUID userUuid = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isAddedToUsersFavorites -> {
+                                        if (Boolean.TRUE.equals(isAddedToUsersFavorites) ||
+                                                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
+                                            return updateTimesFavorite(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new FavoriteDto(true, savedChallenge.getTimesFavorite())));
+                });
+    }
+
+    private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
+        challenge.setTimesFavorite(
+                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) + 1
+        );
+        return challengeRepository.save(challenge);
+    }
+
+}

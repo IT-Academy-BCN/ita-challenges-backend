@@ -60,7 +60,7 @@ class AuthControllerTest {
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(user));
-        when(jwtService.generateToken(user.getUsername(), user.getRole())).thenReturn(jwtToken);
+        when(jwtService.generateToken(user.getUsername(), user.getRole(), user.getUuid())).thenReturn(jwtToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")

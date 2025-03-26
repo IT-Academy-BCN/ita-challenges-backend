@@ -3,8 +3,9 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
-import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,7 +46,10 @@ public class ChallengeController {
     private DiscoveryClient discoveryClient;
 
     @Autowired
-    IChallengeService challengeService;
+    private IChallengeService challengeService;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Value("${spring.application.version}")
     private String version;
@@ -257,5 +261,39 @@ public class ChallengeController {
 
         return challengeService.deleteChallengeById(id)
                 .map(dto -> ResponseEntity.ok().body(dto));
+    }
+
+    @PostMapping("/challenges/{challengeId}/favorites")
+    @Operation(
+            operationId = "Add a challenge to User's favorites.",
+            summary = "Add a challenge to favorites.",
+            description = "The ID Challenge sent through the URI is added to the user's favorites. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        String userId = getUserIdFromToken(authHeader);
+        return challengeService.addChallengeToFavorites(challengeId, userId)
+                .doOnError(error -> log.error("Error adding challenge to favorites {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
+    private String getUserIdFromToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("Missing or bad formatted Authorization header");
+            throw new BadRequestException("Missing or bad formatted Authorization header");
+        }
+        String userId = jwtService.extractUuid(authHeader.replace("Bearer ", ""));
+        if (userId == null) {
+            log.warn("Error decoding the JWT token");
+            throw new BadRequestException("Invalid Authorization header content");
+        }
+        return userId;
     }
 }

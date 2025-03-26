@@ -88,7 +88,7 @@ public class AuthController {
     private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
 
         return userService.fetchUserData(githubUsername)
-                .map(user -> jwtService.generateToken(user.getUsername(), user.getRole()))
+                .map(user -> jwtService.generateToken(user.getUsername(), user.getRole(), user.getUuid()))
                 .map(token -> {
                     response.put("token", token);
                     return ResponseEntity.ok()

@@ -2,6 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.exception.BadUUIDException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,6 +25,10 @@ import reactor.core.publisher.Mono;
 public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    public static final String X_FAVORITE_ADDED = "X-Favorite-Added";
+    public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
+    public static final String X_VALIDATION_STATUS = "X-Validation-Status";
+    public static final String FALSE = "False";
 
     private final UserService userService;
 
@@ -76,7 +82,7 @@ public class UserController {
                 .map(user -> {
                     log.info("User found: {} (Role: {})", githubUsername, user.getRole());
                     return ResponseEntity.ok()
-                            .header("X-Validation-Status", "Success")
+                            .header(X_VALIDATION_STATUS, "Success")
                             .header("X-Github-Username", githubUsername)
                             .body(user);
                 })
@@ -84,16 +90,102 @@ public class UserController {
                     log.warn("User not found: {}", githubUsername);
                     return ResponseEntity
                             .status(HttpStatus.NOT_FOUND)
-                            .header("X-Validation-Status", "Error")
+                            .header(X_VALIDATION_STATUS, "Error")
                             .header("X-Error-Message", "User not found")
                             .body(null);
                 }))
                 .onErrorResume(e -> {
                     log.error("Error retrieving user '{}': {}", githubUsername, e.getMessage());
                     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header("X-Validation-Status", "Error")
+                            .header(X_VALIDATION_STATUS, "Error")
                             .header("X-Error-Message", "An error occurred retrieving user.")
                             .body(null));
+                });
+    }
+
+    @Operation(
+            summary = "Add Challenge to User Favorite Challenges",
+            description = "Adds challenge to user favorites",
+            parameters = {
+                    @Parameter(
+                            name = "User ID",
+                            description = "User ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    ),
+                    @Parameter(
+                            name = "Challenge ID",
+                            description = "Challenge ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Challenge is already in favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Challenge added to favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request. The provided IDs have a bad format",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found. No user is found with the provided user id.",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error. An unexpected error occurred.",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+
+    @PostMapping("/users/{userId}/favorites/{challengeId}")
+    public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
+        return userService.addChallengeToFavorites(userId, challengeId)
+                .map(added -> {
+                    if (Boolean.TRUE.equals(added)) {
+                        log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
+                        return ResponseEntity.status(HttpStatus.CREATED)
+                                .header(X_FAVORITE_ADDED, "True")
+                                .header(X_FAVORITE_MESSAGE, "Challenge added to favorites.")
+                                .body(true);
+                    }
+                    log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
+                    return ResponseEntity.ok()
+                            .header(X_FAVORITE_ADDED, FALSE)
+                            .header(X_FAVORITE_MESSAGE, "Challenge is already in favorites.")
+                            .body(false);
+                })
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof NotFoundException) {
+                        log.warn("No User not found with id: {}", userId);
+                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .header(X_FAVORITE_ADDED, FALSE)
+                                .header(X_FAVORITE_MESSAGE, "User not found.")
+                                .body(false));
+                    }
+                    if (throwable instanceof BadUUIDException) {
+                        log.error("The provided IDs are not valid.");
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .header(X_FAVORITE_ADDED, FALSE)
+                                .header(X_FAVORITE_MESSAGE, "The provided IDs are not valid.")
+                                .body(false));
+                    }
+                    log.error("Unexpected error: {}", throwable.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .header(X_FAVORITE_ADDED, FALSE)
+                            .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
+                            .body(false));
                 });
     }
 

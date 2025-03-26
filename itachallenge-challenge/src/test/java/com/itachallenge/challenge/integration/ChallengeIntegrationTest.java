@@ -79,9 +79,9 @@ class ChallengeIntegrationTest {
         String title2 = "If";
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS);
+                (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, 20);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS);
+                (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet, solutionList, Topic.COMPONENTS, 20);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }

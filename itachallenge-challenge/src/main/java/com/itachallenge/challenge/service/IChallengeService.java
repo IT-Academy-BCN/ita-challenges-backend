@@ -29,4 +29,5 @@ public interface IChallengeService {
 
     Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size);
 
+    Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId);
 }

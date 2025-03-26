@@ -4,9 +4,13 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.ChallengeNotFoundReturn404Exception;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.JwtService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -14,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -24,8 +29,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @WebFluxTest(ChallengeController.class)
 @ActiveProfiles("test")
@@ -45,6 +49,9 @@ class ChallengeControllerTest {
 
     @MockBean
     private PropertiesConfig config;
+
+    @MockBean
+    private JwtService jwtService;
 
     //TODO - pending externalize to service layer (internal comms)
 
@@ -459,6 +466,105 @@ class ChallengeControllerTest {
                 .jsonPath("$.message").isEqualTo("Challenge with id: non_existing_id not found");
     }
 
+    @Test
+    void addChallengeToFavorites_Success_Returns200() {
+        String challengeId = "existing_challengeId";
+        String userId = "existing_userId";
+        String token = "JWT_token_containing_userId";
 
+        FavoriteDto expectedResponse = new FavoriteDto(true, 20);
+
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
+        when(jwtService.extractUuid(token)).thenReturn(userId);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(FavoriteDto.class)
+                .isEqualTo(expectedResponse);
+
+        verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
+    }
+
+    @Test
+    void addChallengeToFavorites_ChallengeNotFound_Returns404() {
+        String challengeId = "nonExisting_challengeId";
+        String userId = "existing_userId";
+        String token = "JWT_token_containing_userId";
+
+        String errorMessage = "ErrorMessage";
+
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
+        when(jwtService.extractUuid(token)).thenReturn(userId);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
+
+        verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
+    }
+
+    @Test
+    void addChallengeToFavorites_InternalServerError_Returns500() {
+        String challengeId = "Existing_challengeId";
+        String userId = "existing_userId";
+        String token = "JWT_token_containing_userId";
+
+        String errorMessage = "ErrorMessage";
+
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
+        when(jwtService.extractUuid(token)).thenReturn(userId);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
+
+        verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
+    }
+
+    @Test
+    void addChallengeToFavorites_InvalidHeader_Returns400() {
+        String challengeId = "Existing_challengeId";
+        String token = "BadToken";
+
+        when(jwtService.extractUuid(token)).thenReturn(null);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals("Invalid Authorization header content", messageDto.getMessage()));
+
+        verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
+    }
+
+    @Test
+    void addChallengeToFavorites_MissingHeader_Returns400() {
+        String challengeId = "Existing_challengeId";
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals("Missing or bad formatted Authorization header", messageDto.getMessage()));
+
+        verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
+    }
 
 }

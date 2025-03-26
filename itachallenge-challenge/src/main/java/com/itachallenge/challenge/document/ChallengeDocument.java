@@ -42,4 +42,7 @@ public class ChallengeDocument {
     @Field(name="topic")
     private Topic topic;
 
+    @Field(name="times_favorite")
+    private Integer timesFavorite;
+
 }
