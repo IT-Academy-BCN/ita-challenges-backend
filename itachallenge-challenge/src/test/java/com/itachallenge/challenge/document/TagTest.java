@@ -21,4 +21,24 @@ public class TagTest {
         assertEquals(tagDescriptionTest, tag.getTagDescription());
 
     }
+
+    @Test
+    void setTestName() {
+        String firstTagName = "POO";
+        String tagNameTest = "TEST";
+        TagDocument tag = new TagDocument(null, firstTagName, null);
+        tag.setTagName(tagNameTest);
+        assertEquals(tagNameTest, tag.getTagName());
+
+    }
+
+    @Test
+    void setDescriptionTest() {
+        String firstTagDescription = "Programació orientada a objectes";
+        String tagDescriptionTest = "TEST";
+        TagDocument tag = new TagDocument(null, "POO", firstTagDescription);
+        tag.setTagDescription(tagDescriptionTest);
+        assertEquals(tagDescriptionTest, tag.getTagDescription());
+
+    }
 }
