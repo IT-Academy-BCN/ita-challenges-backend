@@ -45,4 +45,7 @@ public class ChallengeDocument {
     @Field(name="times_favorite")
     private Integer timesFavorite;
 
+    @Field(name="tags")
+    private List<TagDocument> tags;
+
 }

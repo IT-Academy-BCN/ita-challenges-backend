@@ -5,7 +5,9 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
+import com.itachallenge.challenge.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -47,6 +49,9 @@ public class ChallengeController {
 
     @Autowired
     private IChallengeService challengeService;
+
+    @Autowired
+    private TagService tagService;
 
     @Autowired
     private JwtService jwtService;
@@ -295,5 +300,18 @@ public class ChallengeController {
             throw new BadRequestException("Invalid Authorization header content");
         }
         return userId;
+    }
+
+    @GetMapping("/tags")
+    @Operation(
+            operationId = "Get all the stored tags into the Database.",
+            summary = "Get to see all id tags, name and description.",
+            description = "Requesting all the tags through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+            }
+    )
+    public Mono<GenericResultDto<TagDto>> getAllTags() {
+        return tagService.getAllTags();
     }
 }
