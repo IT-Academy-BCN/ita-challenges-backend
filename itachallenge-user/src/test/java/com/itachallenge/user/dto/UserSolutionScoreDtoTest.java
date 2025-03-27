@@ -7,12 +7,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserSolutionScoreDtoTest {
     @Test
     void testLombokGeneratedMethods() {
-        UserSolutionScoreDto dto = UserSolutionScoreDto.builder().build();
+        UserSolutionScoreDto dto1 = UserSolutionScoreDto.builder().build();
+        UserSolutionScoreDto dto2 = UserSolutionScoreDto.builder().build();
 
-        assertThat(dto).isNotNull();
-        assertThat(dto.toString()).isNotEmpty();
-        assertThat(dto.hashCode()).isNotZero();
-        assertThat(dto.equals(new UserSolutionScoreDto())).isTrue();
+        assertThat(dto1).isNotNull();
+        assertThat(dto1.toString()).isNotEmpty();
+        assertThat(dto1.hashCode()).isNotZero();
+        assertThat(dto1.hashCode()).isEqualTo(dto2.hashCode());
+        assertThat(dto1).isEqualTo(dto2);
+        assertThat(dto1.getClass()).isEqualTo(UserSolutionScoreDto.class);
     }
 
 }

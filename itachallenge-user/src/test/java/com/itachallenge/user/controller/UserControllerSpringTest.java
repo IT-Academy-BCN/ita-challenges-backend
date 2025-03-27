@@ -17,7 +17,7 @@ import java.util.UUID;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @AutoConfigureWebTestClient
-public class UserControllerSpringTest {
+class UserControllerSpringTest {
     @Autowired
     private WebTestClient webTestClient;
 
