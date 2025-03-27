@@ -2,6 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.dto.UserSolutionDto;
+import com.itachallenge.user.dto.UserSolutionScoreDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.UserService;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -187,6 +190,33 @@ public class UserController {
                             .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
                             .body(false));
                 });
+    }
+
+    @PutMapping(path = "/solution")
+    @Operation(
+            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionDto.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
+            @Valid @RequestBody UserSolutionDto userSolutionDto) {
+
+        final int score = 0;
+        UserSolutionScoreDto userSolutionScoreDto = new UserSolutionScoreDto(
+                userSolutionDto.getUserId(),
+                userSolutionDto.getChallengeId(),
+                userSolutionDto.getLanguageId(),
+                userSolutionDto.getSolutionText(),
+                score
+        );
+
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionScoreDto));
     }
 
 }
