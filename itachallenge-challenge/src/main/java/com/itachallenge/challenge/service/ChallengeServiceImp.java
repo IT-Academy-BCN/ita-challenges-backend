@@ -360,7 +360,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     return challengeRepository.findByUuid(challengeUuid)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
-                                    .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isAddedToUsersFavorites -> {
                                         if (Boolean.TRUE.equals(isAddedToUsersFavorites) ||
                                                 Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
@@ -385,7 +385,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     return challengeRepository.findByUuid(challengeUuid)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())
-                                    .onErrorResume(throwable -> Mono.error(new CustomInternalServerErrorException(throwable.getMessage())))
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isRemovedFromUsersFavorites -> {
                                         if (Boolean.TRUE.equals(isRemovedFromUsersFavorites) ||
                                                 Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {

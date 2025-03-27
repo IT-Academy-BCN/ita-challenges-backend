@@ -5,11 +5,11 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.ChallengeNotFoundReturn404Exception;
-import com.itachallenge.challenge.exception.CustomInternalServerErrorException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.challenge.util.JwtParser;
+import com.itachallenge.challenge.service.JwtService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +51,7 @@ class ChallengeControllerTest {
     private PropertiesConfig config;
 
     @MockBean
-    private JwtParser jwtParser;
+    private JwtService jwtService;
 
     //TODO - pending externalize to service layer (internal comms)
 
@@ -475,7 +475,7 @@ class ChallengeControllerTest {
         FavoriteDto expectedResponse = new FavoriteDto(true, 20);
 
         when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtParser.extractUuid(token)).thenReturn(userId);
+        when(jwtService.extractUuid(token)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -497,7 +497,7 @@ class ChallengeControllerTest {
         String errorMessage = "ErrorMessage";
 
         when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
-        when(jwtParser.extractUuid(token)).thenReturn(userId);
+        when(jwtService.extractUuid(token)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -518,8 +518,8 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new CustomInternalServerErrorException(errorMessage)));
-        when(jwtParser.extractUuid(token)).thenReturn(userId);
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
+        when(jwtService.extractUuid(token)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -538,7 +538,7 @@ class ChallengeControllerTest {
         String challengeId = "Existing_challengeId";
         String token = "BadToken";
 
-        when(jwtParser.extractUuid(token)).thenReturn(null);
+        when(jwtService.extractUuid(token)).thenReturn(null);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -576,7 +576,7 @@ class ChallengeControllerTest {
         FavoriteDto expectedResponse = new FavoriteDto(false, 20);
 
         when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtParser.extractUuid(token)).thenReturn(userId);
+        when(jwtService.extractUuid(token)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -598,7 +598,7 @@ class ChallengeControllerTest {
         String errorMessage = "ErrorMessage";
 
         when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
-        when(jwtParser.extractUuid(token)).thenReturn(userId);
+        when(jwtService.extractUuid(token)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -619,8 +619,8 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new CustomInternalServerErrorException(errorMessage)));
-        when(jwtParser.extractUuid(token)).thenReturn(userId);
+        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
+        when(jwtService.extractUuid(token)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -639,7 +639,7 @@ class ChallengeControllerTest {
         String challengeId = "Existing_challengeId";
         String token = "BadToken";
 
-        when(jwtParser.extractUuid(token)).thenReturn(null);
+        when(jwtService.extractUuid(token)).thenReturn(null);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")

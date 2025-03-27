@@ -1,17 +1,18 @@
-package com.itachallenge.challenge.util;
+package com.itachallenge.challenge.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-class JwtParserTest {
+class JwtServiceTest {
 
-    JwtParser jwtParser;
+    JwtService jwtService;
 
     @BeforeEach
     void setUp() {
-        jwtParser = new JwtParser();
+        jwtService = new JwtService();
     }
 
     @Test
@@ -22,7 +23,7 @@ class JwtParserTest {
         String tokenConstructor = "%s.%s.%s";
         String token = String.format(tokenConstructor, "Anything", base64EncryptedInfo, "Anything");
 
-        assertEquals(userId, jwtParser.extractUuid(token));
+        assertEquals(userId, jwtService.extractUuid(token));
     }
 
     @Test
@@ -32,6 +33,6 @@ class JwtParserTest {
         String tokenConstructor = "%s.%s.%s";
         String token = String.format(tokenConstructor, "Anything", base64EncryptedInfo, "Anything");
 
-        assertNull(jwtParser.extractUuid(token));
+        assertNull(jwtService.extractUuid(token));
     }
 }

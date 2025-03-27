@@ -234,7 +234,7 @@ class GlobalExceptionHandlerTest {
     @Test
     void testHandleCustomInternalServerErrorException() {
 
-        CustomInternalServerErrorException exception = new CustomInternalServerErrorException("Error message");
+        InternalServerErrorException exception = new InternalServerErrorException("Error message");
 
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleCustomInternalServerErrorException(exception);
 

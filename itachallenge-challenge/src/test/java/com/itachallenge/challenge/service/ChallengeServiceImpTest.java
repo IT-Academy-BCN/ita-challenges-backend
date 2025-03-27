@@ -694,7 +694,7 @@ class ChallengeServiceImpTest {
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof CustomInternalServerErrorException &&
+                        error instanceof InternalServerErrorException &&
                                 error.getMessage().equals(message))
                 .verify();
 
@@ -711,11 +711,11 @@ class ChallengeServiceImpTest {
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
 
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new CustomBadRequestException(message)));
+        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof CustomInternalServerErrorException &&
+                        error instanceof InternalServerErrorException &&
                                 error.getMessage().equals(message))
                 .verify();
 
@@ -732,11 +732,11 @@ class ChallengeServiceImpTest {
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
 
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new CustomInternalServerErrorException(message)));
+        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof CustomInternalServerErrorException &&
+                        error instanceof InternalServerErrorException &&
                                 error.getMessage().equals(message))
                 .verify();
 
@@ -940,7 +940,7 @@ class ChallengeServiceImpTest {
 
         StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof CustomInternalServerErrorException &&
+                        error instanceof InternalServerErrorException &&
                                 error.getMessage().equals(message))
                 .verify();
 
@@ -957,11 +957,11 @@ class ChallengeServiceImpTest {
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
 
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new CustomBadRequestException(message)));
+        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
 
         StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof CustomInternalServerErrorException &&
+                        error instanceof InternalServerErrorException &&
                                 error.getMessage().equals(message))
                 .verify();
 
@@ -978,11 +978,11 @@ class ChallengeServiceImpTest {
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
 
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new CustomInternalServerErrorException(message)));
+        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
 
         StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof CustomInternalServerErrorException &&
+                        error instanceof InternalServerErrorException &&
                                 error.getMessage().equals(message))
                 .verify();
 

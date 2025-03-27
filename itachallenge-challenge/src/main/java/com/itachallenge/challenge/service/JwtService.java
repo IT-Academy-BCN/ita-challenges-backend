@@ -1,19 +1,18 @@
-package com.itachallenge.challenge.util;
+package com.itachallenge.challenge.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.Decoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Map;
 
-@Component
-public class JwtParser {
+@Service
+public class JwtService implements IJwtService {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtParser.class);
-
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     public String extractUuid(String token) {
         try {
@@ -25,7 +24,6 @@ public class JwtParser {
     }
 
     private static Map<String, Object> extractAllClaims(String token) throws IOException {
-
         int n1 = token.indexOf(".");
         int n2 = token.lastIndexOf(".");
         String claimsBase64 = token.substring(n1 + 1, n2);
