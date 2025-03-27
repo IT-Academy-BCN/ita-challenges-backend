@@ -45,4 +45,12 @@ public class ChallengeDocument {
     @Field(name="times_favorite")
     private Integer timesFavorite;
 
+    public void increaseTimesFavorite() {
+        timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
+    }
+
+    public void decreaseTimesFavorite() {
+        timesFavorite = Integer.max(timesFavorite == null ? 0 : timesFavorite - 1, 0);
+    }
+
 }

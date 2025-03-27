@@ -4,10 +4,7 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.exception.ChallengeNotFoundReturn404Exception;
-import com.itachallenge.challenge.exception.InternalServerErrorException;
-import com.itachallenge.challenge.exception.LanguageNotFoundException;
-import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.JwtService;
 import org.junit.jupiter.api.Assertions;
@@ -470,16 +467,16 @@ class ChallengeControllerTest {
     void addChallengeToFavorites_Success_Returns200() {
         String challengeId = "existing_challengeId";
         String userId = "existing_userId";
-        String token = "JWT_token_containing_userId";
+        String authHeader = "validAuthHeader";
 
         FavoriteDto expectedResponse = new FavoriteDto(true, 20);
 
         when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtService.extractUuid(token)).thenReturn(userId);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(FavoriteDto.class)
@@ -492,16 +489,16 @@ class ChallengeControllerTest {
     void addChallengeToFavorites_ChallengeNotFound_Returns404() {
         String challengeId = "nonExisting_challengeId";
         String userId = "existing_userId";
-        String token = "JWT_token_containing_userId";
+        String authHeader = "validAuthHeader";
 
         String errorMessage = "ErrorMessage";
 
         when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
-        when(jwtService.extractUuid(token)).thenReturn(userId);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(MessageDto.class)
@@ -514,16 +511,16 @@ class ChallengeControllerTest {
     void addChallengeToFavorites_InternalServerError_Returns500() {
         String challengeId = "Existing_challengeId";
         String userId = "existing_userId";
-        String token = "JWT_token_containing_userId";
+        String authHeader = "validAuthHeader";
 
         String errorMessage = "ErrorMessage";
 
         when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
-        when(jwtService.extractUuid(token)).thenReturn(userId);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus()
                 .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -536,18 +533,19 @@ class ChallengeControllerTest {
     @Test
     void addChallengeToFavorites_InvalidHeader_Returns400() {
         String challengeId = "Existing_challengeId";
-        String token = "BadToken";
+        String authHeader = "badHeader";
+        String errorMessage = "ErrorMessage";
 
-        when(jwtService.extractUuid(token)).thenReturn(null);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus()
                 .isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals("Invalid Authorization header content", messageDto.getMessage()));
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
     }
@@ -555,6 +553,9 @@ class ChallengeControllerTest {
     @Test
     void addChallengeToFavorites_MissingHeader_Returns400() {
         String challengeId = "Existing_challengeId";
+        String errorMessage = "ErrorMessage";
+
+        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -562,7 +563,7 @@ class ChallengeControllerTest {
                 .expectStatus()
                 .isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals("Missing or bad formatted Authorization header", messageDto.getMessage()));
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
     }
@@ -571,16 +572,16 @@ class ChallengeControllerTest {
     void removeChallengeFromFavorite_Success_Returns200() {
         String challengeId = "existing_challengeId";
         String userId = "existing_userId";
-        String token = "JWT_token_containing_userId";
+        String authHeader = "validAuthHeader";
 
         FavoriteDto expectedResponse = new FavoriteDto(false, 20);
 
         when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtService.extractUuid(token)).thenReturn(userId);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(FavoriteDto.class)
@@ -593,16 +594,16 @@ class ChallengeControllerTest {
     void removeChallengeFromFavorite_ChallengeNotFound_Returns404() {
         String challengeId = "nonExisting_challengeId";
         String userId = "existing_userId";
-        String token = "JWT_token_containing_userId";
+        String authHeader = "validAuthHeader";
 
         String errorMessage = "ErrorMessage";
 
         when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
-        when(jwtService.extractUuid(token)).thenReturn(userId);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(MessageDto.class)
@@ -615,16 +616,16 @@ class ChallengeControllerTest {
     void removeChallengeFromFavorite_InternalServerError_Returns500() {
         String challengeId = "Existing_challengeId";
         String userId = "existing_userId";
-        String token = "JWT_token_containing_userId";
+        String authHeader = "validAuthHeader";
 
         String errorMessage = "ErrorMessage";
 
         when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
-        when(jwtService.extractUuid(token)).thenReturn(userId);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus()
                 .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -637,18 +638,19 @@ class ChallengeControllerTest {
     @Test
     void removeChallengeFromFavorite_InvalidHeader_Returns400() {
         String challengeId = "Existing_challengeId";
-        String token = "BadToken";
+        String authHeader = "BadHeader";
+        String errorMessage = "Error message";
 
-        when(jwtService.extractUuid(token)).thenReturn(null);
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", "Bearer " + token)
+                .header("Authorization", authHeader)
                 .exchange()
                 .expectStatus()
                 .isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals("Invalid Authorization header content", messageDto.getMessage()));
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(0)).removeChallengeFromFavorites(anyString(), anyString());
     }
@@ -656,6 +658,9 @@ class ChallengeControllerTest {
     @Test
     void removeChallengeFromFavorite_MissingHeader_Returns400() {
         String challengeId = "Existing_challengeId";
+        String errorMessage = "ErrorMessage";
+
+        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
@@ -663,7 +668,7 @@ class ChallengeControllerTest {
                 .expectStatus()
                 .isEqualTo(HttpStatus.BAD_REQUEST)
                 .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals("Missing or bad formatted Authorization header", messageDto.getMessage()));
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(0)).removeChallengeFromFavorites(anyString(), anyString());
     }
