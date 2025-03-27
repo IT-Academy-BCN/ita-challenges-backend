@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 public class UserSolutionDto {
 
     @JsonProperty(value ="uuid_user")

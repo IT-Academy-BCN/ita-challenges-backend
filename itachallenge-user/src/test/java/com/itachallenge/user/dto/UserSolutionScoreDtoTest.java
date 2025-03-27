@@ -13,16 +13,12 @@ class UserSolutionScoreDtoTest {
 
     private UserSolutionScoreDto userSolutionScoreDto;
     String userId = UUID.randomUUID().toString();
-    String user2Id = UUID.randomUUID().toString();
-    String user3Id = UUID.randomUUID().toString();
     String challengeId = UUID.randomUUID().toString();
     String languageId = UUID.randomUUID().toString();
     int score = 30;
     String solutionText = "This is my solution";
     UserSolutionScoreDto solutionScoreDto = new UserSolutionScoreDto();
     UserSolutionScoreDto dto1 = UserSolutionScoreDto.builder().build();
-    UserSolutionScoreDto dto2 = UserSolutionScoreDto.builder().build();
-    UserSolutionScoreDto dto3 = UserSolutionScoreDto.builder().userId(user3Id).build();
 
     @BeforeEach
     public void setUp() {
@@ -38,8 +34,6 @@ class UserSolutionScoreDtoTest {
     @Test
     void lombokGeneratedMethods_test() {
         assertThat(dto1).isNotNull();
-        assertThat(dto1.toString()).isNotEmpty();
-        assertThat(dto3.toString()).contains(user3Id);
         assertThat(dto1.getClass()).isEqualTo(UserSolutionScoreDto.class);
     }
 
@@ -88,47 +82,5 @@ class UserSolutionScoreDtoTest {
         assertThat(userSolutionScoreDto1.getLanguageId()).isEqualTo(languageId);
         assertThat(userSolutionScoreDto1.getScore()).isEqualTo(score);
         assertThat(userSolutionScoreDto1.getSolutionText()).isEqualTo(solutionText);
-    }
-
-    @Test
-    void equals_test(){
-        dto1.setUserId(userId);
-        dto2.setUserId(userId);
-        assertEquals(dto1, dto2);
-    }
-
-    @Test
-    void nonEquals_test(){
-        dto1.setUserId(userId);
-        dto2.setUserId(user2Id);
-        assertNotEquals(dto1, dto2);
-    }
-
-    @Test
-    void hash_test(){
-        dto1.setUserId(userId);
-        dto2.setUserId(userId);
-        dto3.setUserId(user3Id);
-        assertThat(dto1.hashCode()).isNotZero();
-        assertEquals(dto1.hashCode(), dto2.hashCode());
-        assertNotEquals(dto1.hashCode(),dto3.hashCode());
-        assertNotEquals(dto2.hashCode(),dto3.hashCode());
-    }
-
-    @Test
-    void toString_test(){
-        dto1.setUserId(userId);
-        dto3.setUserId(user3Id);
-        dto3.setLanguageId(languageId);
-        dto3.setChallengeId(challengeId);
-        dto3.setScore(score);
-        dto3.setSolutionText(solutionText);
-        assertThat(dto1.toString()).isNotEmpty();
-        assertThat(dto3.toString()).contains(user3Id);
-        assertThat(dto3.toString()).contains(languageId);
-        assertThat(dto3.toString()).contains(challengeId);
-        assertThat(dto3.toString()).contains(String.valueOf(score));
-        assertThat(dto3.toString()).contains(solutionText);
-        assertThat(dto3.toString()).doesNotContain(userId);
     }
 }
