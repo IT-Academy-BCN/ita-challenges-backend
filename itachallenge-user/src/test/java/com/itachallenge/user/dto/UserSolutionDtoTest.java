@@ -1,19 +1,42 @@
 package com.itachallenge.user.dto;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
+import static org.junit.jupiter.api.Assertions.*;
 class UserSolutionDtoTest {
+
+    private UserSolutionDto userSolutionDto;
+
+    @BeforeEach
+    public void setUp() {
+        userSolutionDto = UserSolutionDto.builder()
+                .userId("validUserId")
+                .challengeId("validChallengeId")
+                .languageId("validLanguageId")
+                .status("validChallengeStatus")
+                .solutionText("Valid solution text")
+                .build();
+    }
+
     @Test
-    void testLombokGeneratedMethods() {
-        UserSolutionDto dto1 = UserSolutionDto.builder().build();
-        UserSolutionDto dto2 = UserSolutionDto.builder().build();
-        assertThat(dto1).isNotNull();
-        assertThat(dto1.toString()).isNotEmpty();
-        assertThat(dto1.hashCode()).isNotZero();
-        assertThat(dto1.hashCode()).isEqualTo(dto2.hashCode());
-        assertThat(dto1).isEqualTo(dto2);
-        assertThat(dto1.getClass()).isEqualTo(UserSolutionDto.class);
+    void testUserSolutionDto() {
+        assertNotNull(userSolutionDto);
+        assertEquals("validUserId", userSolutionDto.getUserId());
+        assertEquals("validChallengeId", userSolutionDto.getChallengeId());
+        assertEquals("validLanguageId", userSolutionDto.getLanguageId());
+        assertEquals("validChallengeStatus", userSolutionDto.getStatus());
+        assertEquals("Valid solution text", userSolutionDto.getSolutionText());
+    }
+
+    @Test
+    void testInvalidUserId() {
+        userSolutionDto.setUserId("invalidUserId");
+        assertEquals("invalidUserId", userSolutionDto.getUserId());
+    }
+
+    @Test
+    void testInvalidSolutionText() {
+        userSolutionDto.setSolutionText("");
+        assertEquals("", userSolutionDto.getSolutionText());
     }
 }
