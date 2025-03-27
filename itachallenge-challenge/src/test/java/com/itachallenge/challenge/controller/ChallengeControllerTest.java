@@ -1,6 +1,8 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
@@ -8,9 +10,11 @@ import com.itachallenge.challenge.exception.ChallengeNotFoundReturn404Exception;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.LanguageNotFoundException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.JwtService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -565,6 +569,36 @@ class ChallengeControllerTest {
                 .value(messageDto -> Assertions.assertEquals("Missing or bad formatted Authorization header", messageDto.getMessage()));
 
         verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
+    }
+
+    @Test
+    @DisplayName("GET /challenges must return the timesFavorite field in the JSON")
+    void getChallenges_IncludesTimesFavorite() {
+        ChallengeDto challenge = ChallengeDto.builder()
+                .challengeId(UUID.randomUUID())
+                .title("Repte amb cor")
+                .level("Hard")
+                .creationDate("2025-03-26")
+                .detail(new DetailDocument("detall"))
+                .languages(Set.of())
+                .solutions(List.of())
+                .topic(Topic.DEBUGGING)
+                .timesFavorite(5)
+                .build();
+
+        ChallengeDto[] challengeArray = new ChallengeDto[] { challenge };
+        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>(0, 10, 1, challengeArray);
+
+
+        when(challengeService.getAllChallenges(anyInt(), anyInt()))
+                .thenReturn(Mono.just(resultDto));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.results[0].timesFavorite").isEqualTo(5);
     }
 
 }

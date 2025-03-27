@@ -54,4 +54,7 @@ public class ChallengeDto {
 
     @JsonProperty(index = 9)
     private Topic topic;
+
+    @JsonProperty(index = 10)
+    private Integer timesFavorite;
 }
