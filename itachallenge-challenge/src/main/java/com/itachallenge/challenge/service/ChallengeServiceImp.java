@@ -106,10 +106,15 @@ public class ChallengeServiceImp implements IChallengeService {
     @Override
     public Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level) {
         if (level.isPresent() && !level.get().isBlank()) {
-            return challenges.filter(challenge -> challenge.getLevel().equalsIgnoreCase(level.get()));
+            return challenges.filter(challenge ->
+                    challenge.getLevel() != null &&
+                            challenge.getLevel().equalsIgnoreCase(level.get())
+            );
         }
+        
         return challenges;
     }
+
 
 
     @Cacheable(value = "allLanguages")
