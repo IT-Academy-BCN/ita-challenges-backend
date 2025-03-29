@@ -14,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,15 +46,38 @@ public class TagService implements ITagService {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public Flux<ChallengeDocument> filterByTags(Flux<ChallengeDocument> challenges, Optional<List<String>> tags) {
-        if (tags.isPresent() && !tags.get().isEmpty()) {
-            List<String> tagList = tags.get();
-            return challenges.filter(challenge -> challenge.getTags() != null && challenge.getTags().stream().anyMatch(tagList::contains));
+        if (tags.isPresent() && tags.get().stream().anyMatch(tag -> tag != null && !tag.isBlank())) {
+            List<String> tagList = tags.get().stream()
+                    .filter(tag -> tag != null && !tag.isBlank())
+                    .map(String::toLowerCase)
+                    .toList();
+
+            return challenges.filter(challenge -> {
+                if (challenge.getTags() == null || challenge.getTags().isEmpty()) {
+                    return false;
+                }
+
+                List<String> challengeTagNames = challenge.getTags().stream()
+                        .map(TagDocument::getTagName)
+                        .filter(Objects::nonNull)
+                        .map(String::toLowerCase)
+                        .toList();
+
+                return challengeTagNames.stream().anyMatch(tagList::contains);
+            });
         }
+
         return challenges;
     }
 
-    ////HAY QUE MIRAR SI LOS TAGS LOS DESCARGA PARA COMPROBARLOS
+
+
+
+
+
+
 
 
 

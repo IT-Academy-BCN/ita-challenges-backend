@@ -1,7 +1,9 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.Topic;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -25,6 +27,8 @@ public interface IChallengeService {
                                                                int offset,
                                                                int limit,
                                                                Optional<List<String>> tags);
+
+    Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 

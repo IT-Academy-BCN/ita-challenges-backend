@@ -142,9 +142,9 @@ public class ChallengeController {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/")
+    @GetMapping("/challenges/byFilter")
     @Operation(
-            operationId = "Get challenges on a page by language, difficulty, or tags.",
+            operationId = "Get challenges on a page by FILTER (language, difficulty, or tags).",
             summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
@@ -155,6 +155,7 @@ public class ChallengeController {
             })
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
+        log.info("Entrando en el Service de Filtro");
         return challengeService.getChallengesByFilter(
                 Optional.ofNullable(filter.getIdLanguage()),
                 Optional.ofNullable(filter.getLevel()),
@@ -315,4 +316,5 @@ public class ChallengeController {
     public Mono<GenericResultDto<TagDto>> getAllTags() {
         return tagService.getAllTags();
     }
+
 }

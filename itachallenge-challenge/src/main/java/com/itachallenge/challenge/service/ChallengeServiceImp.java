@@ -83,7 +83,8 @@ public class ChallengeServiceImp implements IChallengeService {
             int limit,
             Optional<List<String>> tags) {
 
-        return languageServiceImp.filterByLanguage(idLanguage)
+        return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                .transform(challenges -> languageServiceImp.filterByLanguage(challenges, idLanguage))
                 .transform(challenges -> filterByLevel(challenges, level))
                 .transform(challenges -> tagService.filterByTags(challenges, tags))
                 .collectList()
@@ -101,14 +102,18 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
+
+    @Override
     public Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level) {
-        if (level.isPresent()) {
+        if (level.isPresent() && !level.get().isBlank()) {
             return challenges.filter(challenge -> challenge.getLevel().equalsIgnoreCase(level.get()));
         }
         return challenges;
     }
 
+
     @Cacheable(value = "allLanguages")
+    @Override
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
@@ -137,6 +142,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
+    @Override
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -166,6 +172,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @CacheEvict(value = {"challenges", "solutions"}, allEntries = true)
+    @Override
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));

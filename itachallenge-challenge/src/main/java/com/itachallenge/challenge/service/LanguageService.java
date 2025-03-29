@@ -9,6 +9,8 @@ import java.util.UUID;
 
 public interface LanguageService {
 
-    Flux<ChallengeDocument> filterByLanguage(Optional<String> idLanguage);
+    Flux<ChallengeDocument> filterByLanguage(Flux<ChallengeDocument> challenge, Optional<String> idLanguage);
+
+
 
 }
