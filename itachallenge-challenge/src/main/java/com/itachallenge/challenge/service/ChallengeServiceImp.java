@@ -111,7 +111,7 @@ public class ChallengeServiceImp implements IChallengeService {
                             challenge.getLevel().equalsIgnoreCase(level.get())
             );
         }
-        
+
         return challenges;
     }
 
