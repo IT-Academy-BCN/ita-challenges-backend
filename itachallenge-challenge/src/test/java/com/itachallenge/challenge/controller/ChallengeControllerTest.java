@@ -590,7 +590,7 @@ class ChallengeControllerTest {
 
     @Test
     @DisplayName("GET recibir respuesta 200 a getTags")
-    void testGetAllTagsEndpoint() {
+    void getTags_test_validRequest() {
 
         TagDto tag1 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos");
         TagDto tag2 = new TagDto(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia");

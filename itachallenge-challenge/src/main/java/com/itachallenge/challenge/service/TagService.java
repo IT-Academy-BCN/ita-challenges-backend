@@ -25,6 +25,7 @@ public class TagService implements ITagService {
     private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
 
     @Cacheable(value = "allTags")
+    @Override
     public Mono<GenericResultDto<TagDto>> getAllTags() {
         Flux<TagDto> tagDto = tagConverter.convertDocumentFluxToDtoFlux(tagRepository.findAll(), TagDto.class);
         return tagDto.collectList().map(tag -> {
@@ -34,6 +35,7 @@ public class TagService implements ITagService {
         });
     }
 
+    @Override
     public List<TagDocument> convertStringNameToTag(List<String> tagsAssigned) {
         return tagsAssigned.stream()
                 .map(tag -> tagRepository.findByTagName(tag)

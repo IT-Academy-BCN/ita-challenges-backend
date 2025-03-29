@@ -272,7 +272,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, List<TagDocument> tagsAssigned) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, List<TagDocument> tags) {
         DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()
@@ -283,7 +283,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
                 .topic(topic)
-                .tags(tagsAssigned)
+                .tags(tags)
                 .build();
     }
 

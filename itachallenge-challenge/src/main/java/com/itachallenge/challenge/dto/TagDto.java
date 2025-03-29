@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class TagDto {
     private UUID tagId;
 
     @JsonProperty(value = "tag_name", index = 1)
+    @Size(max = 20, message = "El nom del tag és molt llarg")
     private String tagName;
 
     @JsonProperty(value = "tag_description", index = 2)

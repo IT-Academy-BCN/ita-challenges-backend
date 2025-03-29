@@ -10,5 +10,5 @@ import java.util.List;
 public interface ITagService {
 
     Mono<GenericResultDto<TagDto>> getAllTags();
-    List<TagDocument> convertStringNameToTag(List<String> tagsAssigned);
+    List<TagDocument> convertStringNameToTag(List<String> tags);
 }

@@ -304,7 +304,7 @@ public class ChallengeController {
 
     @GetMapping("/tags")
     @Operation(
-            operationId = "Get all the stored tags into the Database.",
+            operationId = "Get all stored tags from the Database for FrontEnd can print them.",
             summary = "Get to see all id tags, name and description.",
             description = "Requesting all the tags through the URI from the database.",
             responses = {

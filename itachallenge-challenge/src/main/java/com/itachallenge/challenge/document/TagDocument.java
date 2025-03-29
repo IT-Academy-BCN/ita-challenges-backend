@@ -15,11 +15,10 @@ import java.util.UUID;
 public class TagDocument {
 
     @Id
-    @Field(name="id_languages")
+    @Field(name="id_tag")
     private UUID idTag;
 
-    @Field(name="language_name")
-    @Size(max = 20, message = "El nom del tag és molt llarg")
+    @Field(name="tag_name")
     private String tagName;
 
     @Field(name="tag_description")

@@ -86,10 +86,10 @@ class TagServiceTest {
         when(tagRepository.findByTagName(name1)).thenReturn(Mono.just(tag1));
         when(tagRepository.findByTagName(name2)).thenReturn(Mono.just(tag2));
 
-        List<String> tagsAssigned = List.of(name1, name2);
+        List<String> tagsInstead = List.of(name1, name2);
 
 
-        List<TagDocument> result = tagService.convertStringNameToTag(tagsAssigned);
+        List<TagDocument> result = tagService.convertStringNameToTag(tagsInstead);
 
 
         assertEquals(2, result.size());

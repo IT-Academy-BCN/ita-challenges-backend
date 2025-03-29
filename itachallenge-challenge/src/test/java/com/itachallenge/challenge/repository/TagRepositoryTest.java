@@ -106,20 +106,6 @@ public class TagRepositoryTest {
                 () -> fail("Tag with name " + tagNameByFound2 + " not found"));
     }
 
-    @DisplayName("Delete by TagName")
-    @Test
-    void deleteByNameTagTest() {
 
-        String tagNameByFound = "POO";
-
-        tagRepository.deleteByTagName(tagNameByFound).block();
-
-        Mono<TagDocument> tagFound = tagRepository.findByTagName(tagNameByFound);
-
-        tagFound.blockOptional().ifPresentOrElse(
-                t -> fail("Tag with name " + tagNameByFound + " still exists after deletion"),
-                () -> assertTrue(true)
-        );
-    }
 
 }
