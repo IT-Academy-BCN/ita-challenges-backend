@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.Topic;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,7 +20,11 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit);
 
-    Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit);
+    Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(Optional<String> idLanguage,
+                                                               Optional<String> level,
+                                                               int offset,
+                                                               int limit,
+                                                               Optional<List<String>> tags);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 

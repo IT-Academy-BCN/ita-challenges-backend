@@ -379,7 +379,7 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues()).thenReturn(Flux.empty());
 
         // Act & Assert
-        StepVerifier.create(challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.empty(), 0, 1))
+        StepVerifier.create(challengeService.getChallengesByFilter(Optional.empty(), Optional.empty(), 0, 1, Optional.empty()))
                 .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("No challenges found"))
                 .verify();
 
@@ -402,7 +402,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.of(idLanguage), Optional.of(level), offset, limit, Optional.empty());
 
         // Assert
         StepVerifier.create(result)
@@ -424,7 +424,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(languageId), Optional.empty(), 0, 1);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.of(languageId), Optional.empty(), 0, 1, Optional.empty());
 
         // Assert
         StepVerifier.create(result)
@@ -448,7 +448,7 @@ class ChallengeServiceImpTest {
         when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(ChallengeDto.builder().build());
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.empty(), Optional.of(difficulty), 0, 1);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.empty(), Optional.of(difficulty), 0, 1, Optional.empty());
 
         // Assert
         StepVerifier.create(result)

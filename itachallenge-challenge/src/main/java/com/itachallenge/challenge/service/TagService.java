@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +44,17 @@ public class TagService implements ITagService {
                 )
                 .collect(Collectors.toList());
     }
+
+    public Flux<ChallengeDocument> filterByTags(Flux<ChallengeDocument> challenges, Optional<List<String>> tags) {
+        if (tags.isPresent() && !tags.get().isEmpty()) {
+            List<String> tagList = tags.get();
+            return challenges.filter(challenge -> challenge.getTags() != null && challenge.getTags().stream().anyMatch(tagList::contains));
+        }
+        return challenges;
+    }
+
+    ////HAY QUE MIRAR SI LOS TAGS LOS DESCARGA PARA COMPROBARLOS
+
 
 
 }

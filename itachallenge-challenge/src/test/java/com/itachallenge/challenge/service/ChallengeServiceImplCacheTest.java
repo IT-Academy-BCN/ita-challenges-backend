@@ -112,10 +112,11 @@ class ChallengeServiceImplCacheTest {
 
     @DisplayName("Cache - getChallengesByLanguageOrDifficulty")
     @Test
-    void testGetChallengesByLanguageOrDifficulty_cacheTest(){
+    void testGetChallengesByFilter_cacheTest(){
         // Arrange
         String idLanguage = UUID.randomUUID().toString();
         String level = "EASY";
+        List<String> tags = List.of("POO");
         int offset = 0;
         int limit = 2;
 
@@ -127,7 +128,7 @@ class ChallengeServiceImplCacheTest {
         when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
 
         // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.of(idLanguage), Optional.of(level), offset, limit, Optional.of(tags));
 
         // Assert
         StepVerifier.create(result)
@@ -140,7 +141,7 @@ class ChallengeServiceImplCacheTest {
         verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
 
         // Act - Cached Results
-        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
+        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByFilter(Optional.of(idLanguage), Optional.of(level), offset, limit, Optional.of(tags));
 
         // Assert - Cached Results
         StepVerifier.create(resultCached)

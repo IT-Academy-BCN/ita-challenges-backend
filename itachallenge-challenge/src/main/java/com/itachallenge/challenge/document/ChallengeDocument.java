@@ -25,7 +25,7 @@ public class ChallengeDocument {
     private String title;
 
     @Field(name="level")
-    private String level;   //valor seteado fom properties
+    private String level;
 
     @Field(name="creation_date")
     private LocalDateTime creationDate;

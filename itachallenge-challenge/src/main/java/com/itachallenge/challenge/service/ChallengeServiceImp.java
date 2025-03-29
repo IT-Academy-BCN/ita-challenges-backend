@@ -42,14 +42,14 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String LANGUAGE_NOT_FOUND_ERROR = "Language with id: %s not found";
 
-    private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
-
     private static final String NOT_FOUND = "not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
     private LanguageRepository languageRepository;
+    @Autowired
+    LanguageServiceImp languageServiceImp;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
@@ -76,44 +76,36 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Cacheable(value = "challengesByLanguageOrDifficulty", key = "{#idLanguage, #level, #offset, #limit}", unless = "#result == null")
     @Override
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
-        Flux<ChallengeDocument> challenges;
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(
+            Optional<String> idLanguage,
+            Optional<String> level,
+            int offset,
+            int limit,
+            Optional<List<String>> tags) {
 
-        if (idLanguage.isPresent() && level.isPresent()) {
-            challenges = validateUUID(idLanguage.get())
-                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)
-                                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found for language " + idLanguage.get())))
-                            )
-                    );
-        } else if (idLanguage.isPresent()) {
-            challenges = validateUUID(idLanguage.get())
-                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
-        } else if (level.isPresent()) {
-            challenges = challengeRepository.findByLevel(level.get())
-                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + NOT_FOUND)));
-        } else {
-            challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                    .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
+        return languageServiceImp.filterByLanguage(idLanguage)
+                .transform(challenges -> filterByLevel(challenges, level))
+                .transform(challenges -> tagService.filterByTags(challenges, tags))
+                .collectList()
+                .flatMap(filteredList -> {
+                    long total = filteredList.size();
+                    List<ChallengeDto> pagedList = filteredList.stream()
+                            .skip(offset)
+                            .limit(limit == -1 ? total : limit)
+                            .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                            .toList();
+
+                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                    resultDto.setInfo(offset, limit, (int) total, pagedList.toArray(new ChallengeDto[0]));
+                    return Mono.just(resultDto);
+                });
+    }
+
+    public Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level) {
+        if (level.isPresent()) {
+            return challenges.filter(challenge -> challenge.getLevel().equalsIgnoreCase(level.get()));
         }
-
-        Flux<ChallengeDocument> finalChallenges = challenges;
-        return challenges.count().flatMap(total -> {
-            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
-            if (limit != -1) {
-                pagedChallenges = pagedChallenges.take(limit);
-            }
-            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-                    .collectList()
-                    .map(challengeDtoList -> {
-                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
-                        return resultDto;
-                    });
-        });
+        return challenges;
     }
 
     @Cacheable(value = "allLanguages")

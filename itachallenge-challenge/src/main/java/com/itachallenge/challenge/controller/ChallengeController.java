@@ -5,7 +5,6 @@ import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
 import com.itachallenge.challenge.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -145,7 +144,7 @@ public class ChallengeController {
 
     @GetMapping("/challenges/")
     @Operation(
-            operationId = "Get challenges on a page by language and difficulty, language or difficulty.",
+            operationId = "Get challenges on a page by language, difficulty, or tags.",
             summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
@@ -155,12 +154,14 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
-            @RequestParam Optional<String> idLanguage,
-            @RequestParam Optional<String> level,
-            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
-            @RequestParam(defaultValue = "-1") int limit) {
-        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
+        return challengeService.getChallengesByFilter(
+                Optional.ofNullable(filter.getIdLanguage()),
+                Optional.ofNullable(filter.getLevel()),
+                filter.getOffset(),
+                filter.getLimit(),
+                Optional.ofNullable(filter.getTags())
+        );
     }
 
 
