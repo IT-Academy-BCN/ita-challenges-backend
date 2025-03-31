@@ -1,9 +1,12 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.JwtService;
@@ -722,6 +725,36 @@ class ChallengeControllerTest {
 
         verify(challengeService, times(0)).removeChallengeFromFavorites(anyString(), anyString());
 
+    }
+
+    @Test
+    @DisplayName("GET /challenges must return the timesFavorite field in the JSON")
+    void getChallenges_IncludesTimesFavorite() {
+        ChallengeDto challenge = ChallengeDto.builder()
+                .challengeId(UUID.randomUUID())
+                .title("Repte amb cor")
+                .level("Hard")
+                .creationDate("2025-03-26")
+                .detail(new DetailDocument("detall"))
+                .languages(Set.of())
+                .solutions(List.of())
+                .topic(Topic.DEBUGGING)
+                .timesFavorite(5)
+                .build();
+
+        ChallengeDto[] challengeArray = new ChallengeDto[] { challenge };
+        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>(0, 10, 1, challengeArray);
+
+
+        when(challengeService.getAllChallenges(anyInt(), anyInt()))
+                .thenReturn(Mono.just(resultDto));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.results[0].timesFavorite").isEqualTo(5);
     }
 
 }
