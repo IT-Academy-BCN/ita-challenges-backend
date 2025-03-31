@@ -617,6 +617,7 @@ class ChallengeControllerTest {
                 .jsonPath("$.limit").isEqualTo(2);
 
         verify(tagService).getAllTags();
+    }
 
     void removeChallengeFromFavorite_Success_Returns200() {
         String challengeId = "existing_challengeId";
