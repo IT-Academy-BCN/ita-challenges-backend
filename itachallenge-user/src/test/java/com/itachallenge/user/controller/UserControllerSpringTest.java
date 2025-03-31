@@ -26,7 +26,6 @@ class UserControllerSpringTest {
     String userId = UUID.randomUUID().toString();
     String challengeId = UUID.randomUUID().toString();
     String languageId = UUID.randomUUID().toString();
-    int expectedScore = 0;
 
     @Test
     void addSolution_WithCorrectParameters_ExpectsReturn200Test() {
@@ -34,7 +33,7 @@ class UserControllerSpringTest {
         UserSolutionDto userSolutionDto = new UserSolutionDto(
                 userId, challengeId, languageId, "ENDED", solution);
         UserSolutionScoreDto userSolutionScoreDto = new UserSolutionScoreDto(
-                userId, challengeId, languageId, solution, expectedScore);
+                userId, challengeId, languageId, solution);
 
         webTestClient.put()
                 .uri(uri)
@@ -52,7 +51,6 @@ class UserControllerSpringTest {
                     assert response.getResponseBody().get("uuid_challenge").equals(userSolutionScoreDto.getChallengeId());
                     assert response.getResponseBody().get("uuid_user").equals(userSolutionScoreDto.getUserId());
                     assert response.getResponseBody().get("solution_text").equals(userSolutionScoreDto.getSolutionText());
-                    assert response.getResponseBody().get("score").equals(userSolutionScoreDto.getScore());
                 });
     }
 

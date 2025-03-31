@@ -23,8 +23,5 @@ public class UserSolutionScoreDto {
 
     @JsonProperty(value ="solution_text")
     private String solutionText;
-
-    @JsonProperty(value = "score")
-    private int score;
 }
 

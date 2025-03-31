@@ -212,8 +212,7 @@ public class UserController {
                 userSolutionDto.getUserId(),
                 userSolutionDto.getChallengeId(),
                 userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText(),
-                score
+                userSolutionDto.getSolutionText()
         );
 
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionScoreDto));
