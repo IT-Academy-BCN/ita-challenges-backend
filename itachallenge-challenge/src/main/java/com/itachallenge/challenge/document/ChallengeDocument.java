@@ -45,6 +45,8 @@ public class ChallengeDocument {
     @Field(name = "times_favorite")
     private Integer timesFavorite;
 
+    @Field(name="times_bookmark")
+    private Integer timesBookmark;
 
     @Field(name = "tags")
     private List<UUID> tags;
@@ -61,15 +63,11 @@ public class ChallengeDocument {
         }
     }
 
-
     public void increaseTimesFavorite () {
-            timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
-        }
+        timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
+    }
 
-        public void decreaseTimesFavorite () {
-            timesFavorite = Integer.max(timesFavorite == null ? 0 : timesFavorite - 1, 0);
-
-        }
-
-
+    public void decreaseTimesFavorite() {
+        timesFavorite = Integer.max(timesFavorite == null ? 0 : timesFavorite - 1, 0);
+    }
 }
