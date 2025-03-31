@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.exception.JwtException;
 import io.jsonwebtoken.io.Decoders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,19 @@ public class JwtService implements IJwtService {
 
     private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
-    public String extractUuid(String token) {
+    @Override
+    public String getUserUuIdFromAuthenticationHeader(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new JwtException("Missing or bad formatted Authorization header");
+        }
+        String userId = extractUuid(authHeader.replace("Bearer ", ""));
+        if (userId == null) {
+            throw new JwtException("Invalid Authorization header content");
+        }
+        return userId;
+    }
+
+    private String extractUuid(String token) {
         try {
             return extractAllClaims(token).get("uuid").toString();  // Get "uuid" claim
         } catch (Exception e) {
