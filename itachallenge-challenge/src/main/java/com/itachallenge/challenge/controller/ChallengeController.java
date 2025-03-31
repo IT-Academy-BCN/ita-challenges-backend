@@ -310,6 +310,41 @@ public class ChallengeController {
                 .flatMap(userId -> challengeService.removeChallengeFromFavorites(challengeId, userId))
                 .doOnError(error -> log.error("Error removing challenge from favorites: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
+
+    @PostMapping("/challenges/{challengeId}/bookmarks")
+    @Operation(
+            operationId = "Add a challenge to User's bookmarks.",
+            summary = "Add a challenge to bookmarks.",
+            description = "The ID Challenge sent through the URI is added to the user's bookmarks. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkDto>> addChallengeToBookmarks(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        String userId = getUserIdFromToken(authHeader);
+        return challengeService.addChallengeToBookmarks(challengeId, userId)
+                .doOnError(error -> log.error("Error adding challenge to bookmarks {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
+
+    private String getUserIdFromToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("Missing or bad formatted Authorization header");
+            throw new BadRequestException("Missing or bad formatted Authorization header");
+        }
+        String userId = jwtService.extractUuid(authHeader.replace("Bearer ", ""));
+        if (userId == null) {
+            log.warn("Error decoding the JWT token");
+            throw new BadRequestException("Invalid Authorization header content");
+        }
+        return userId;
     }
 
     @GetMapping("/tags")
