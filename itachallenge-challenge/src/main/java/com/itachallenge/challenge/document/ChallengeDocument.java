@@ -21,32 +21,32 @@ public class ChallengeDocument {
     @Field("_id")
     private UUID uuid;
 
-    @Field(name="challenge_title")
+    @Field(name = "challenge_title")
     private String title;
 
-    @Field(name="level")
+    @Field(name = "level")
     private String level;   //valor seteado fom properties
 
-    @Field(name="creation_date")
+    @Field(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Field(name="detail")
+    @Field(name = "detail")
     private DetailDocument detail;
 
-    @Field(name="languages")
+    @Field(name = "languages")
     private Set<LanguageDocument> languages;
 
-    @Field(name="solutions")
+    @Field(name = "solutions")
     private List<UUID> solutions;
 
-    @Field(name="topic")
+    @Field(name = "topic")
     private Topic topic;
 
-    @Field(name="times_favorite")
+    @Field(name = "times_favorite")
     private Integer timesFavorite;
 
 
-    @Field(name="tags")
+    @Field(name = "tags")
     private List<TagDocument> tags;
 
     public void setTags(TagDocument tag) {
@@ -55,14 +55,16 @@ public class ChallengeDocument {
         } else {
             tags.add(tag);
         }
-
-    public void increaseTimesFavorite() {
-        timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
     }
 
-    public void decreaseTimesFavorite() {
-        timesFavorite = Integer.max(timesFavorite == null ? 0 : timesFavorite - 1, 0);
+        public void increaseTimesFavorite () {
+            timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
+        }
 
-    }
+        public void decreaseTimesFavorite () {
+            timesFavorite = Integer.max(timesFavorite == null ? 0 : timesFavorite - 1, 0);
+
+        }
+
 
 }
