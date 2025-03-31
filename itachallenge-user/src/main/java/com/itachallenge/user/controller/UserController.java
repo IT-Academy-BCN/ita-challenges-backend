@@ -29,6 +29,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static final String X_FAVORITE_ADDED = "X-Favorite-Added";
+    public static final String X_FAVORITE_DELETED = "X-Favorite-Deleted";
     public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     public static final String X_VALIDATION_STATUS = "X-Validation-Status";
     public static final String FALSE = "False";
@@ -215,6 +216,92 @@ public class UserController {
         );
 
         return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionScoreDto));
+    }
+  
+    @Operation(
+            summary = "Delete Challenge from User Favorite Challenges",
+            description = "Deletes challenge from user favorites",
+            parameters = {
+                    @Parameter(
+                            name = "",
+                            description = "User ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    ),
+                    @Parameter(
+                            name = "",
+                            description = "Challenge ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "No change, challenge was not in favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Challenge deleted from favorites",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request. The provided IDs have a bad format",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found. No user is found with the provided user id.",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error. An unexpected error occurred.",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+    @DeleteMapping("/users/{userId}/favorites/{challengeId}")
+    public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
+        return userService.deleteChallengeFromFavorites(userId, challengeId)
+                .map(deleted -> {
+                    if (Boolean.TRUE.equals(deleted)) {
+                        log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
+                        return ResponseEntity.status(HttpStatus.CREATED)
+                                .header(X_FAVORITE_DELETED, "True")
+                                .header(X_FAVORITE_MESSAGE, "Challenge deleted from favorites.")
+                                .body(true);
+                    }
+                    log.info("No change, User's '{}' favorites doesn't contain Challenge '{}'", userId, challengeId);
+                    return ResponseEntity.ok()
+                            .header(X_FAVORITE_DELETED, FALSE)
+                            .header(X_FAVORITE_MESSAGE, "Challenge not found in user's favorites.")
+                            .body(false);
+                })
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof NotFoundException) {
+                        log.error("No User not found with id: {}", userId);
+                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .header(X_FAVORITE_DELETED, FALSE)
+                                .header(X_FAVORITE_MESSAGE, "User not found.")
+                                .body(false));
+                    }
+                    if (throwable instanceof BadUUIDException) {
+                        log.error("The provided IDs are not valid.");
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .header(X_FAVORITE_DELETED, FALSE)
+                                .header(X_FAVORITE_MESSAGE, "The provided IDs are not valid.")
+                                .body(false));
+                    }
+                    log.error("Unexpected error: {}", throwable.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .header(X_FAVORITE_DELETED, FALSE)
+                            .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
+                            .body(false));
+                });
+
     }
 
 }
