@@ -4,6 +4,7 @@ import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
@@ -283,23 +284,33 @@ public class ChallengeController {
     public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        String userId = getUserIdFromToken(authHeader);
-        return challengeService.addChallengeToFavorites(challengeId, userId)
-                .doOnError(error -> log.error("Error adding challenge to favorites {}", error.getMessage()))
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallengeToFavorites(challengeId, userId))
+                .doOnError(error -> log.error("Error adding challenge to favorites: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
 
-    private String getUserIdFromToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Missing or bad formatted Authorization header");
-            throw new BadRequestException("Missing or bad formatted Authorization header");
-        }
-        String userId = jwtService.extractUuid(authHeader.replace("Bearer ", ""));
-        if (userId == null) {
-            log.warn("Error decoding the JWT token");
-            throw new BadRequestException("Invalid Authorization header content");
-        }
-        return userId;
+    @DeleteMapping("/challenges/{challengeId}/favorites")
+    @Operation(
+            operationId = "Remove a challenge from the User's favorites.",
+            summary = "Remove a challenge from favorites.",
+            description = "The ID Challenge sent through the URI is removed from the user's favorites. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> removeChallengeFromFavorite(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.removeChallengeFromFavorites(challengeId, userId))
+                .doOnError(error -> log.error("Error removing challenge from favorites: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/tags")

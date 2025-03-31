@@ -70,3 +70,4 @@ user:
   service:
     url: http://apisix-gateway:9080 # IN PRODUCTION
     #url: http://172.17.0.2:8764 # LOCAL IP
+

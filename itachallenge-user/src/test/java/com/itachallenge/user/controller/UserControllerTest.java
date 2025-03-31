@@ -195,4 +195,94 @@ class UserControllerTest {
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
+    @Test
+    void deleteFromFavorites_WhenDeleted_Returns201() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+                .thenReturn(Mono.just(true));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CREATED)
+                .expectHeader().valueEquals("X-Favorite-Deleted", "True")
+                .expectHeader().valueEquals("X-Favorite-Message", "Challenge deleted from favorites.")
+                .expectBody(Boolean.class).isEqualTo(true);
+
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    void deleteFromFavorites_WhenNotInFavorites_Returns200() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+                .thenReturn(Mono.just(false));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
+                .expectHeader().valueEquals("X-Favorite-Message", "Challenge not found in user's favorites.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    void deleteFromFavorites_WhenUserNotExists_Returns404() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+                .thenReturn(Mono.error(new NotFoundException("User not found")));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
+                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
+                .expectHeader().valueEquals("X-Favorite-Message", "User not found.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    void deleteFromFavorites_WhenBadFormattedId_Returns404() {
+        String userId = "invalidUuid";
+        String challengeId = "invalidUUid";
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
+                .expectHeader().valueEquals("X-Favorite-Message", "The provided IDs are not valid.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    void deleteFromFavorites_WhenUnexpectedError_Returns500() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromFavorites(userId, challengeId))
+                .thenReturn(Mono.error(new Exception()));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
+                .expectHeader().valueEquals("X-Favorite-Message", "Unexpected server error.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
 }

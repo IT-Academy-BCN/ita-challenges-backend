@@ -360,9 +360,9 @@ public class ChallengeServiceImp implements IChallengeService {
         Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
 
         return Mono.zip(challengeIdMono, languageIdMono)
-                .flatMap(tuple -> {
-                    UUID challengeUuid = tuple.getT1();
-                    UUID userUuid = tuple.getT2();
+                .flatMap(Uuidtuple -> {
+                    UUID challengeUuid = Uuidtuple.getT1();
+                    UUID userUuid = Uuidtuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
@@ -371,7 +371,8 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .flatMap(isAddedToUsersFavorites -> {
                                         if (Boolean.TRUE.equals(isAddedToUsersFavorites) ||
                                                 Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
-                                            return updateTimesFavorite(challenge);
+                                            challenge.increaseTimesFavorite();
+                                            return challengeRepository.save(challenge);
                                         }
                                         return Mono.just(challenge);
                                     })
@@ -379,11 +380,30 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
-        challenge.setTimesFavorite(
-                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) + 1
-        );
-        return challengeRepository.save(challenge);
+    @Override
+    public Mono<FavoriteDto> removeChallengeFromFavorites(String challengeId, String userId) {
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(Uuidtuple -> {
+                    UUID challengeUuid = Uuidtuple.getT1();
+                    UUID userUuid = Uuidtuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isRemovedFromUsersFavorites -> {
+                                        if (Boolean.TRUE.equals(isRemovedFromUsersFavorites) ||
+                                                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) == 0) {
+                                            challenge.decreaseTimesFavorite();
+                                            return challengeRepository.save(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new FavoriteDto(false, savedChallenge.getTimesFavorite())));
+                });
     }
 
 }
