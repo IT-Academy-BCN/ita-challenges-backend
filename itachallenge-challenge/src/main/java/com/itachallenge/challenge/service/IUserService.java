@@ -4,5 +4,5 @@ import reactor.core.publisher.Mono;
 
 public interface IUserService {
     Mono<Boolean> addChallengeToFavorites(String userId, String challengeId);
-
+    Mono<Boolean> removeChallengeFromFavorites(String userId, String challengeId);
 }
