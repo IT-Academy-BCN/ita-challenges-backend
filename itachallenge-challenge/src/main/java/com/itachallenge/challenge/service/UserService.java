@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,6 +23,8 @@ public class UserService implements IUserService {
     private final WebClient.Builder webClientBuilder;
 
     private final String userServiceUrl;
+    private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
+    private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
 
     public UserService(
             WebClient.Builder webClientBuilder,
@@ -32,12 +35,12 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-        return addChallengeToUserTag(userId, challengeId, SavedItemType.FAVORITES, "X-Favorite-Message", HttpMethod.POST);
+        return addChallengeToUserTag(userId, challengeId, SavedItemType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
-        return addChallengeToUserTag(userId, challengeId, SavedItemType.BOOKMARKS,"X-Bookmark-Message", HttpMethod.POST);
+        return addChallengeToUserTag(userId, challengeId, SavedItemType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
     }
 
     @Override
@@ -78,5 +81,4 @@ public class UserService implements IUserService {
                 .buildAndExpand(userId, challengeId)
                 .toUriString();
     }
-
 }
