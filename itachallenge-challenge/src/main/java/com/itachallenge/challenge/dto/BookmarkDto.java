@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BookmarkDTO {
+public class BookmarkDto {
 
     private boolean isBookmarked;
 
