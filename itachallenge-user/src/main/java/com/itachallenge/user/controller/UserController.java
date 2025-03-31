@@ -206,8 +206,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
             @Valid @RequestBody UserSolutionDto userSolutionDto) {
-
-        final int score = 0;
+        
         UserSolutionScoreDto userSolutionScoreDto = new UserSolutionScoreDto(
                 userSolutionDto.getUserId(),
                 userSolutionDto.getChallengeId(),
