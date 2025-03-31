@@ -357,9 +357,9 @@ public class ChallengeServiceImp implements IChallengeService {
     public Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
-        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
+        Mono<UUID> userIdMono = validateUUID(String.valueOf(userId));
 
-        return Mono.zip(challengeIdMono, languageIdMono)
+        return Mono.zip(challengeIdMono, userIdMono)
                 .flatMap(Uuidtuple -> {
                     UUID challengeUuid = Uuidtuple.getT1();
                     UUID userUuid = Uuidtuple.getT2();
