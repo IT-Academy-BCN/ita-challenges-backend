@@ -404,6 +404,43 @@ public class ChallengeServiceImp implements IChallengeService {
                                     })
                                     .map(savedChallenge -> new FavoriteDto(false, savedChallenge.getTimesFavorite())));
                 });
+    @Override
+    public Mono<BookmarkDto> addChallengeToBookmarks(String challengeId, String userId) {
+
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> userIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, userIdMono)
+                .flatMap(tuple -> {
+                    UUID challengeUuid = tuple.getT1();
+                    UUID userUuid = tuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isAddedToUsersBookmarks -> {
+                                        if (Boolean.TRUE.equals(isAddedToUsersBookmarks) ||
+                                        Optional.ofNullable(challenge.getTimesBookmark()).orElse(0) == 0) {
+                                            return updateTimesBookmark(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new BookmarkDto( true, savedChallenge.getTimesBookmark())));
+                });
     }
 
+    private Mono<ChallengeDocument> updateTimesFavorite(ChallengeDocument challenge) {
+        challenge.setTimesFavorite(
+                Optional.ofNullable(challenge.getTimesFavorite()).orElse(0) + 1
+        );
+        return challengeRepository.save(challenge);
+    }
+
+    private Mono<ChallengeDocument> updateTimesBookmark(ChallengeDocument challenge) {
+        challenge.setTimesBookmark(
+                Optional.ofNullable(challenge.getTimesBookmark()).orElse(0) + 1
+        );
+        return challengeRepository.save(challenge);
+    }
 }
