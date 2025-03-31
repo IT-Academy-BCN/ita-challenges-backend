@@ -40,6 +40,19 @@ public class UserServiceImpl implements UserService {
                 });
     }
 
+    @Override
+    public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
+        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
+                .flatMap(uuidTuple -> {
+                    UUID userUuid = uuidTuple.getT1();
+                    UUID challengeUuid = uuidTuple.getT2();
+
+                    return userRepository.findById(userUuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                            .flatMap(user -> deleteFromFavorites(user, challengeUuid));
+                });
+    }
+
     private Mono<Boolean> addToFavorites(UserDocument user, UUID challengeUuid) {
         Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
                 .orElseGet(HashSet::new);
@@ -47,6 +60,20 @@ public class UserServiceImpl implements UserService {
         boolean added = favorites.add(challengeUuid);
 
         if (added) {
+            user.setFavoriteChallenges(favorites);
+            return userRepository.save(user).then(Mono.just(true));
+        }
+
+        return Mono.just(false);
+    }
+
+    private Mono<Boolean> deleteFromFavorites(UserDocument user, UUID challengeUuid) {
+        Set<UUID> favorites = Optional.ofNullable(user.getFavoriteChallenges())
+                .orElseGet(HashSet::new);
+
+        boolean deleted = favorites.remove(challengeUuid);
+
+        if (deleted) {
             user.setFavoriteChallenges(favorites);
             return userRepository.save(user).then(Mono.just(true));
         }

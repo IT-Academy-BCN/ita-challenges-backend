@@ -217,4 +217,150 @@ class UserServiceImplTest {
         verify(userRepository, times(0)).save(any());
     }
 
+    @Test
+    void deleteChallengeFromFavorites_ShouldReturnFalse_WhenFavoritesIsNull() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, "testUser", null, null);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.deleteChallengeFromFavorites(userId.toString(), challengeId.toString()))
+                .expectNext(false)
+                .verifyComplete();
+
+        assertNull(user.getFavoriteChallenges());
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).save(user);
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldReturnFalse_WhenFavoritesIsEmpty() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, "testUser", null, new HashSet<>());
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.deleteChallengeFromFavorites(userId.toString(), challengeId.toString()))
+                .expectNext(false)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertFalse(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).save(user);
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldReturnFalse_WhenChallengeNotInFavorites() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        Set<UUID> favorites = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID()));
+        UserDocument user = new UserDocument(userId, "testUser", null, favorites);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.deleteChallengeFromFavorites(userId.toString(), challengeId.toString()))
+                .expectNext(false)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertFalse(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).save(user);
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldReturnTrue_WhenFavoritesAlreadyContainsChallenge() {
+        UUID challengeId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        Set<UUID> favorites = new HashSet<>(Set.of(UUID.randomUUID(), UUID.randomUUID(), challengeId));
+        UserDocument user = new UserDocument(userId, "testUser", null, favorites);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.deleteChallengeFromFavorites(userId.toString(), challengeId.toString()))
+                .expectNext(true)
+                .verifyComplete();
+
+        assertNotNull(user.getFavoriteChallenges());
+        assertFalse(user.getFavoriteChallenges().contains(challengeId));
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(1)).save(any());
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldThrowNotFoundException_WhenUserNotFound() {
+
+        when(userRepository.findById(any(UUID.class))).thenReturn(Mono.empty());
+
+        StepVerifier.create(userService.deleteChallengeFromFavorites(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(NotFoundException.class, throwable);
+                    assertEquals("User not found", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(1)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldThrowBadRequestException_WhenUserUuidIsNull() {
+        StepVerifier.create(userService.deleteChallengeFromFavorites(null, UUID.randomUUID().toString()))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldThrowBadRequestException_WhenChallengeUuidIsNull() {
+        StepVerifier.create(userService.deleteChallengeFromFavorites(UUID.randomUUID().toString(), null))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldThrowBadRequestException_WhenUserUuidIsNotValid() {
+        StepVerifier.create(userService.deleteChallengeFromFavorites("invalidUuid", UUID.randomUUID().toString()))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    void deleteChallengeFromFavorites_ShouldThrowBadRequestException_WhenChallengeUuidIsNotValid() {
+        StepVerifier.create(userService.deleteChallengeFromFavorites(UUID.randomUUID().toString(), "invalidUuid"))
+                .expectErrorSatisfies(throwable -> {
+                    assertInstanceOf(BadUUIDException.class, throwable);
+                    assertEquals("Invalid ID format", throwable.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(0)).findById(any(UUID.class));
+        verify(userRepository, times(0)).save(any());
+    }
+
 }
