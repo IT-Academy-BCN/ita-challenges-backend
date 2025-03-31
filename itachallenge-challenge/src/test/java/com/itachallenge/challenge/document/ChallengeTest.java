@@ -27,6 +27,7 @@ class ChallengeTest {
                 null,
                 Topic.LISTS,
                 null,
+                null,
                 tags);
         assertEquals(uuid, challenge.getUuid());
     }
@@ -42,6 +43,7 @@ class ChallengeTest {
                 null,
                 null,
                 Topic.COMPONENTS,
+                null,
                 null,
                 tags);
         assertEquals(expectedTitle, challenge.getTitle());
@@ -59,6 +61,7 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 null,
+                null,
                 tags);
         assertEquals(level, challenge.getLevel());
     }
@@ -74,6 +77,7 @@ class ChallengeTest {
                 null,
                 null,
                 Topic.COMPONENTS,
+                null,
                 null,
                 tags);
         assertTrue(creationDate.truncatedTo(ChronoUnit.SECONDS).isEqual(challenge.getCreationDate().truncatedTo(ChronoUnit.SECONDS)));
@@ -91,6 +95,7 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 null,
+                null,
                 tags);
         assertEquals(detail, challenge.getDetail());
     }
@@ -103,7 +108,7 @@ class ChallengeTest {
                 "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg"),
                 new LanguageDocument(uuid2, "Python", "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Python_rphody.svg"));
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS, null,tags);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS, null, null, tags);
         assertEquals(languages, challenge.getLanguages());
     }
 
@@ -119,6 +124,7 @@ class ChallengeTest {
                 null,
                 solutions,
                 Topic.COMPONENTS,
+                null,
                 null,
                 tags);
         assertEquals(solutions, challenge.getSolutions());
@@ -137,6 +143,7 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 timesFavorite,
+                null,
                 tags);
         assertEquals(timesFavorite, challenge.getTimesFavorite());
     }
@@ -156,6 +163,7 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
+                null,
                 List.of(tag.getIdTag())
         );
 
@@ -173,6 +181,7 @@ class ChallengeTest {
                 null, null, null, null, null, null, null,
                 Topic.COMPONENTS,
                 20,
+                null,
                 new ArrayList<UUID>(List.of(firstTag.getIdTag())) {
                 }
         );
