@@ -1,16 +1,14 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
-import com.itachallenge.challenge.service.TagService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -50,7 +48,7 @@ class ChallengeControllerTest {
     private IChallengeService challengeService;
 
     @MockBean
-    private TagService tagService;
+    private ITagService tagService;
 
     @MockBean
     private DiscoveryClient discoveryClient;

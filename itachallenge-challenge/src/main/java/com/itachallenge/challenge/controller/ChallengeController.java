@@ -8,7 +8,6 @@ import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
-import com.itachallenge.challenge.service.TagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -52,7 +51,7 @@ public class ChallengeController {
     private IChallengeService challengeService;
 
     @Autowired
-    private TagService tagService;
+    private ITagService tagService;
 
     @Autowired
     private JwtService jwtService;

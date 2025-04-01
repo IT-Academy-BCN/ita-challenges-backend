@@ -50,6 +50,10 @@ public class ChallengeDocument {
     private List<TagDocument> tags;
 
     public void setTags(TagDocument tag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+
         if (tags.contains(tag)) {
             tags.remove(tag);
         } else {
@@ -57,7 +61,8 @@ public class ChallengeDocument {
         }
     }
 
-        public void increaseTimesFavorite () {
+
+    public void increaseTimesFavorite () {
             timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
         }
 
