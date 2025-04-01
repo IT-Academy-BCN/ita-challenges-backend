@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeTest {
-    List<TagDocument> tags = List.of(new TagDocument());
+    Set<TagDocument> tags = Set.of(new TagDocument());
 
     @Test
     void getUuid() {
@@ -142,7 +142,7 @@ class ChallengeTest {
     @Test
     void getTagsTest() {
         UUID uuid = UUID.randomUUID();
-        List<TagDocument> tags = List.of(new TagDocument(uuid,
+        Set<TagDocument> tags = Set.of(new TagDocument(uuid,
                 "POO",
                 "bla bla bla"));
 
@@ -163,9 +163,9 @@ class ChallengeTest {
     @Test
     void setTagsTest() {
         UUID uuid = UUID.randomUUID();
-        List<TagDocument> tags = new ArrayList<>(Arrays.asList(new TagDocument(uuid,
+        Set<TagDocument> tags = Set.of(new TagDocument(uuid,
                 "POO",
-                "bla bla bla")));
+                "bla bla bla"));
 
         ChallengeDocument challenge = new ChallengeDocument(null,
                 null,
@@ -181,6 +181,6 @@ class ChallengeTest {
                 "Estructura",
                 "bla bla bla");
         challenge.setTags(newTag);
-        assertEquals(newTag, challenge.getTags().getLast());
+        assertTrue(challenge.getTags().stream().anyMatch(tag -> tag.getTagName().equals(newTag.getTagName())));
     }
 }
