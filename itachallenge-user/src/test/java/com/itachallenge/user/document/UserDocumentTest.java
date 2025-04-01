@@ -15,6 +15,7 @@ class UserDocumentTest {
     private Role role;
     private UserDocument userDocument;
     private Set<UUID> favoriteChallenges;
+    private Set<UUID> bookmarkChallenges;
     private UUID favoriteChallenge;
 
     @BeforeEach
@@ -40,6 +41,7 @@ class UserDocumentTest {
         assertEquals(username, userDocument.getUsername());
         assertEquals(role, userDocument.getRole());
         assertEquals(favoriteChallenges, userDocument.getFavoriteChallenges());
+        assertEquals(bookmarkChallenges, userDocument.getBookmarkChallenges());
     }
 
     @Test
@@ -48,16 +50,19 @@ class UserDocumentTest {
         String newUsername = "newUser";
         Role newRole = Role.USER;
         Set<UUID> newFavoriteChallenges = Set.of(UUID.randomUUID());
+        Set<UUID> newBookmarkChallenges = Set.of(UUID.randomUUID());
 
         userDocument.setUuid(newUuid);
         userDocument.setUsername(newUsername);
         userDocument.setRole(newRole);
         userDocument.setFavoriteChallenges(newFavoriteChallenges);
+        userDocument.setBookmarkChallenges(newBookmarkChallenges);
 
         assertEquals(newUuid, userDocument.getUuid());
         assertEquals(newUsername, userDocument.getUsername());
         assertEquals(newRole, userDocument.getRole());
         assertEquals(newFavoriteChallenges, userDocument.getFavoriteChallenges());
+        assertEquals(newBookmarkChallenges, userDocument.getBookmarkChallenges());
     }
 
     @Test
@@ -67,6 +72,7 @@ class UserDocumentTest {
                 .username(username)
                 .role(role)
                 .favoriteChallenges(favoriteChallenges)
+                .bookmarkChallenges(bookmarkChallenges)
                 .build();
 
         assertNotNull(user);
@@ -74,6 +80,7 @@ class UserDocumentTest {
         assertEquals(username, user.getUsername());
         assertEquals(role, user.getRole());
         assertEquals(favoriteChallenges, user.getFavoriteChallenges());
+        assertEquals(bookmarkChallenges, user.getBookmarkChallenges());
     }
 
     @Test
@@ -84,22 +91,24 @@ class UserDocumentTest {
         assertNull(emptyUser.getUsername());
         assertNull(emptyUser.getRole());
         assertNull(emptyUser.getFavoriteChallenges());
+        assertNull(emptyUser.getBookmarkChallenges());
     }
 
     @Test
     void allArgsConstructor() {
-        UserDocument user = new UserDocument(uuid, username, role, favoriteChallenges);
+        UserDocument user = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
         assertNotNull(user);
         assertEquals(uuid, user.getUuid());
         assertEquals(username, user.getUsername());
         assertEquals(role, user.getRole());
         assertEquals(favoriteChallenges, user.getFavoriteChallenges());
+        assertEquals(bookmarkChallenges, user.getBookmarkChallenges());
     }
 
     @Test
     void equalsAndHashCode() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
@@ -116,6 +125,7 @@ class UserDocumentTest {
         assertTrue(toString.contains(username), "ToString should contain username");
         assertTrue(toString.contains(role.toString()), "ToString should contain role");
         assertTrue(toString.contains(favoriteChallenge.toString()), "ToString should contain favorite challenge");
+        assertTrue(toString.contains(bookmarkChallenges.toString()), "ToString should contain bookmark challenge");
     }
 
     @Test
@@ -130,7 +140,7 @@ class UserDocumentTest {
 
     @Test
     void equalsAndHashCodeWithDifferentUUIDs() {
-        UserDocument differentUser = new UserDocument(UUID.randomUUID(), username, role, favoriteChallenges);
+        UserDocument differentUser = new UserDocument(UUID.randomUUID(), username, role, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(userDocument, differentUser);
         assertNotEquals(userDocument.hashCode(), differentUser.hashCode());
@@ -138,7 +148,7 @@ class UserDocumentTest {
 
     @Test
     void equalsAndHashCodeWithDifferentUsernames() {
-        UserDocument sameUuidDifferentUsername = new UserDocument(uuid, "differentUser", Role.USER, favoriteChallenges);
+        UserDocument sameUuidDifferentUsername = new UserDocument(uuid, "differentUser", Role.USER, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(userDocument, sameUuidDifferentUsername);
         assertNotEquals(userDocument.hashCode(), sameUuidDifferentUsername.hashCode());
@@ -146,22 +156,25 @@ class UserDocumentTest {
 
     @Test
     void equalsAndHashCodeWithNullFields() {
-        UserDocument userWithNullUuid = new UserDocument(null, username, role, favoriteChallenges);
-        UserDocument userWithNullUsername = new UserDocument(uuid, null, role, favoriteChallenges);
-        UserDocument userWithNullRole = new UserDocument(uuid, username, null, favoriteChallenges);
-        UserDocument userWithNullFavoriteChallenges = new UserDocument(uuid, username, role, null);
-        UserDocument completelyNullUser = new UserDocument(null, null, null, null);
+        UserDocument userWithNullUuid = new UserDocument(null, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument userWithNullUsername = new UserDocument(uuid, null, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument userWithNullRole = new UserDocument(uuid, username, null, favoriteChallenges, bookmarkChallenges);
+        UserDocument userWithNullFavoriteChallenges = new UserDocument(uuid, username, role, null, bookmarkChallenges);
+        UserDocument userWithNullBookmarkChallenges = new UserDocument(uuid, username, role, favoriteChallenges, null);
+        UserDocument completelyNullUser = new UserDocument(null, null, null, null, null);
 
         assertNotEquals(userDocument, userWithNullUuid);
         assertNotEquals(userDocument, userWithNullUsername);
         assertNotEquals(userDocument, userWithNullRole);
         assertNotEquals(userDocument, userWithNullFavoriteChallenges);
+        assertNotEquals(userDocument, userWithNullBookmarkChallenges);
         assertNotEquals(userDocument, completelyNullUser);
 
         assertNotEquals(userDocument.hashCode(), userWithNullUuid.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullUsername.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullRole.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullFavoriteChallenges.hashCode());
+        assertNotEquals(userDocument.hashCode(), userWithNullBookmarkChallenges.hashCode());
         assertNotEquals(userDocument.hashCode(), completelyNullUser.hashCode());
     }
 
@@ -178,8 +191,8 @@ class UserDocumentTest {
 
     @Test
     void equalsConsistencyTest() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
 
         assertEquals(user1, user2);
         assertEquals(user1, user2); // Repeated check for consistency
@@ -193,9 +206,9 @@ class UserDocumentTest {
 
     @Test
     void equalsTransitivityTest() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user3 = new UserDocument(uuid, username, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user3 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
 
         assertEquals(user1, user2);
         assertEquals(user2, user3);
@@ -204,8 +217,8 @@ class UserDocumentTest {
 
     @Test
     void equalsSymmetryTest() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
 
         assertEquals(user1, user2);
         assertEquals(user2, user1);
@@ -213,24 +226,24 @@ class UserDocumentTest {
 
     @Test
     void hashCodeEqualityForEqualObjects() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
 
         assertEquals(user1.hashCode(), user2.hashCode());
     }
 
     @Test
     void hashCodeDifferenceForNonEqualObjects() {
-        UserDocument user1 = new UserDocument(UUID.randomUUID(), "user1", Role.ADMIN, favoriteChallenges);
-        UserDocument user2 = new UserDocument(UUID.randomUUID(), "user2", Role.ADMIN, favoriteChallenges);
+        UserDocument user1 = new UserDocument(UUID.randomUUID(), "user1", Role.ADMIN, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(UUID.randomUUID(), "user2", Role.ADMIN, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
 
     @Test
     void equalsWithNullAttributes() {
-        UserDocument user1 = new UserDocument(null, null, null, null);
-        UserDocument user2 = new UserDocument(null, null, null, null);
+        UserDocument user1 = new UserDocument(null, null, null, null, null);
+        UserDocument user2 = new UserDocument(null, null, null, null, null);
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
@@ -238,8 +251,8 @@ class UserDocumentTest {
 
     @Test
     void equalsWithOneNullUuid() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(null, username, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(null, username, role, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
@@ -247,8 +260,8 @@ class UserDocumentTest {
 
     @Test
     void equalsWithOneNullUsername() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, null, role, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, null, role, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
@@ -256,8 +269,8 @@ class UserDocumentTest {
 
     @Test
     void equalsWithOneNullRole() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, null, favoriteChallenges);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, null, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
@@ -265,17 +278,25 @@ class UserDocumentTest {
 
     @Test
     void equalsWithOneNullFavoriteChallenges() {
-        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges);
-        UserDocument user2 = new UserDocument(uuid, username, role, null);
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, null, bookmarkChallenges);
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
 
+    @Test
+    void equalsWithOneNullBookmarkChallenges() {
+        UserDocument user1 = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(uuid, username, role, favoriteChallenges, null);
+
+        assertNotEquals(user1, user2);
+        assertNotEquals(user1.hashCode(), user2.hashCode());
+    }
 
     @Test
     void toStringHandlesNullValues() {
-        UserDocument user = new UserDocument(null, null, null, null);
+        UserDocument user = new UserDocument(null, null, null, null, null);
         String toString = user.toString();
 
         assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
@@ -283,6 +304,7 @@ class UserDocumentTest {
         assertFalse(toString.contains("username="), "ToString should not contain 'username=' when null");
         assertFalse(toString.contains("role="), "ToString should not contain 'role=' when null");
         assertFalse(toString.contains("favoriteChallenges="), "ToString should not contain 'favoriteChallenges=' when null");
+        assertFalse(toString.contains("bookmarkChallenges="), "ToString should not contain 'bookmarkChallenges=' when null");
         assertEquals("UserDocument{}", toString, "ToString should return an empty object representation");
     }
 
@@ -294,6 +316,7 @@ class UserDocumentTest {
                 .username(null)
                 .role(null)
                 .favoriteChallenges(null)
+                .bookmarkChallenges(null)
                 .build();
 
         assertNotNull(user);
@@ -301,6 +324,7 @@ class UserDocumentTest {
         assertNull(user.getUsername());
         assertNull(user.getRole());
         assertNull(user.getFavoriteChallenges());
+        assertNull(user.getBookmarkChallenges());
     }
 
     @Test
@@ -309,17 +333,19 @@ class UserDocumentTest {
         userDocument.setUsername(null);
         userDocument.setRole(null);
         userDocument.setFavoriteChallenges(null);
+        userDocument.setBookmarkChallenges(null);
 
         assertNull(userDocument.getUuid());
         assertNull(userDocument.getUsername());
         assertNull(userDocument.getRole());
         assertNull(userDocument.getFavoriteChallenges());
+        assertNull(userDocument.getBookmarkChallenges());
     }
 
     @Test
     void hashCodeDifferentForDifferentObjects() {
-        UserDocument user1 = new UserDocument(UUID.randomUUID(), "UserA", Role.ADMIN, favoriteChallenges);
-        UserDocument user2 = new UserDocument(UUID.randomUUID(), "UserB", Role.ADMIN, favoriteChallenges);
+        UserDocument user1 = new UserDocument(UUID.randomUUID(), "UserA", Role.ADMIN, favoriteChallenges, bookmarkChallenges);
+        UserDocument user2 = new UserDocument(UUID.randomUUID(), "UserB", Role.ADMIN, favoriteChallenges, bookmarkChallenges);
 
         assertNotEquals(user1.hashCode(), user2.hashCode());
     }
@@ -374,11 +400,29 @@ class UserDocumentTest {
     }
 
     @Test
+    void builderHandlesOnlyBookmarkChallenges() {
+        UserDocument user = UserDocument.builder()
+                .favoriteChallenges(bookmarkChallenges)
+                .build();
+
+        assertNotNull(user);
+        assertNull(user.getUuid());
+        assertNull(user.getUsername());
+        assertNull(user.getRole());
+        assertEquals(bookmarkChallenges, user.getBookmarkChallenges());
+    }
+
+    @Test
     void builderCreatesNewInstances() {
         UserDocument user1 = UserDocument.builder().uuid(uuid).username(username).role(role)
-                .favoriteChallenges(favoriteChallenges).build();
+                .favoriteChallenges(favoriteChallenges)
+                .bookmarkChallenges(bookmarkChallenges)
+                .build();
+
         UserDocument user2 = UserDocument.builder().uuid(uuid).username(username).role(role)
-                .favoriteChallenges(favoriteChallenges).build();
+                .favoriteChallenges(favoriteChallenges)
+                .bookmarkChallenges(bookmarkChallenges)
+                .build();
 
         assertNotSame(user1, user2);
         assertEquals(user1, user2);
@@ -393,22 +437,27 @@ class UserDocumentTest {
         assertNull(user.getUsername());
         assertNull(user.getRole());
         assertNull(user.getFavoriteChallenges());
+        assertNull(user.getBookmarkChallenges());
     }
 
     @Test
     void modifyingBuiltObjectDoesNotAffectOriginalBuilder() {
         UserDocument.UserDocumentBuilder builder = UserDocument.builder().uuid(uuid).username(username).role(role)
-                .favoriteChallenges(favoriteChallenges);
+                .favoriteChallenges(favoriteChallenges)
+                .bookmarkChallenges(bookmarkChallenges);
 
         UserDocument user1 = builder.build();
         UserDocument user2 = builder.uuid(UUID.randomUUID()).username("newUser").role(Role.USER)
-                .favoriteChallenges(new HashSet<>()).build();
+                .favoriteChallenges(new HashSet<>())
+                .bookmarkChallenges(new HashSet<>())
+                .build();
 
         assertNotEquals(user1, user2);
         assertNotEquals(user1.getUuid(), user2.getUuid());
         assertNotEquals(user1.getUsername(), user2.getUsername());
         assertNotEquals(user1.getRole(), user2.getRole());
         assertNotEquals(user1.getFavoriteChallenges(), user2.getFavoriteChallenges());
+        assertNotEquals(user1.getBookmarkChallenges(), user2.getBookmarkChallenges());
     }
 
 }
