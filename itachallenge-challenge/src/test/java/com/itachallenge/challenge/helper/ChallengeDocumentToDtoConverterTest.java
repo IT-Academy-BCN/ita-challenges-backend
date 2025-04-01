@@ -120,6 +120,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
+        when(challengeDocMocked.getTimesFavorite()).thenReturn(20);
         return challengeDocMocked;
     }
 }
