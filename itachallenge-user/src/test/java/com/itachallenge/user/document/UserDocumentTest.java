@@ -17,6 +17,7 @@ class UserDocumentTest {
     private Set<UUID> favoriteChallenges;
     private Set<UUID> bookmarkChallenges;
     private UUID favoriteChallenge;
+    private UUID bookmarkChallenge;
 
     @BeforeEach
     void setUp() {
@@ -26,11 +27,15 @@ class UserDocumentTest {
         favoriteChallenges = new HashSet<>();
         favoriteChallenge = UUID.randomUUID();
         favoriteChallenges.add(favoriteChallenge);
+        bookmarkChallenges = new HashSet<>();
+        bookmarkChallenge = UUID.randomUUID();
+        bookmarkChallenges.add(bookmarkChallenge);
         userDocument = UserDocument.builder()
                 .uuid(uuid)
                 .username(username)
                 .role(role)
                 .favoriteChallenges(favoriteChallenges)
+                .bookmarkChallenges(bookmarkChallenges)
                 .build();
     }
 
@@ -125,7 +130,7 @@ class UserDocumentTest {
         assertTrue(toString.contains(username), "ToString should contain username");
         assertTrue(toString.contains(role.toString()), "ToString should contain role");
         assertTrue(toString.contains(favoriteChallenge.toString()), "ToString should contain favorite challenge");
-        assertTrue(toString.contains(bookmarkChallenges.toString()), "ToString should contain bookmark challenge");
+        assertTrue(toString.contains(bookmarkChallenge.toString()), "ToString should contain bookmark challenge");
     }
 
     @Test
@@ -402,7 +407,7 @@ class UserDocumentTest {
     @Test
     void builderHandlesOnlyBookmarkChallenges() {
         UserDocument user = UserDocument.builder()
-                .favoriteChallenges(bookmarkChallenges)
+                .bookmarkChallenges(bookmarkChallenges)
                 .build();
 
         assertNotNull(user);
