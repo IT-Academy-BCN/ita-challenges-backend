@@ -149,6 +149,14 @@ class ChallengeTest {
     }
 
     @Test
+    void getTimesBookmark(){
+        int timesBookmark = 30;
+
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, Topic.COMPONENTS, null, timesBookmark, tags);
+        assertEquals(timesBookmark, challenge.getTimesBookmark());
+    }
+
+    @Test
     void getTagsTest() {
         UUID uuid = UUID.randomUUID();
         TagDocument tag = new TagDocument(uuid, "POO", "bla bla bla");
