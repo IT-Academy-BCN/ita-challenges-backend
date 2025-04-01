@@ -2,8 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.user.dto.UserSolutionDto;
-import com.itachallenge.user.dto.UserSolutionScoreDto;
+import com.itachallenge.user.dto.UserSolutionRequestDto;
+import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.UserService;
@@ -197,7 +197,7 @@ public class UserController {
     @Operation(
             summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
             responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionDto.class),
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
                             mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Bad request",
                             content = {@Content(schema = @Schema())}),
@@ -205,17 +205,17 @@ public class UserController {
                             content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<ResponseEntity<UserSolutionScoreDto>> addSolution(
-            @Valid @RequestBody UserSolutionDto userSolutionDto) {
+    public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
+            @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
         
-        UserSolutionScoreDto userSolutionScoreDto = new UserSolutionScoreDto(
-                userSolutionDto.getUserId(),
-                userSolutionDto.getChallengeId(),
-                userSolutionDto.getLanguageId(),
-                userSolutionDto.getSolutionText()
+        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
+                userSolutionRequestDto.getUserId(),
+                userSolutionRequestDto.getChallengeId(),
+                userSolutionRequestDto.getLanguageId(),
+                userSolutionRequestDto.getSolutionText()
         );
 
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionScoreDto));
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
     }
   
     @Operation(

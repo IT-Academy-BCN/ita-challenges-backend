@@ -9,19 +9,19 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserSolutionScoreDtoTest {
+class UserSolutionResponseDtoTest {
 
-    private UserSolutionScoreDto userSolutionScoreDto;
+    private UserSolutionResponseDto userSolutionResponseDto;
     String userId = UUID.randomUUID().toString();
     String challengeId = UUID.randomUUID().toString();
     String languageId = UUID.randomUUID().toString();
     String solutionText = "This is my solution";
-    UserSolutionScoreDto solutionScoreDto = new UserSolutionScoreDto();
-    UserSolutionScoreDto dto1 = UserSolutionScoreDto.builder().build();
+    UserSolutionResponseDto solutionScoreDto = new UserSolutionResponseDto();
+    UserSolutionResponseDto dto1 = UserSolutionResponseDto.builder().build();
 
     @BeforeEach
     public void setUp() {
-        userSolutionScoreDto = UserSolutionScoreDto.builder()
+        userSolutionResponseDto = UserSolutionResponseDto.builder()
                 .userId("validUserId")
                 .challengeId("validChallengeId")
                 .languageId("validLanguageId")
@@ -32,16 +32,16 @@ class UserSolutionScoreDtoTest {
     @Test
     void lombokGeneratedMethods_test() {
         assertThat(dto1).isNotNull();
-        assertThat(dto1.getClass()).isEqualTo(UserSolutionScoreDto.class);
+        assertThat(dto1.getClass()).isEqualTo(UserSolutionResponseDto.class);
     }
 
     @Test
     void getterUserSolutionScoreDto_test() {
-        assertNotNull(userSolutionScoreDto);
-        assertEquals("validUserId", userSolutionScoreDto.getUserId());
-        assertEquals("validChallengeId", userSolutionScoreDto.getChallengeId());
-        assertEquals("validLanguageId", userSolutionScoreDto.getLanguageId());
-        assertEquals("Valid solution text", userSolutionScoreDto.getSolutionText());
+        assertNotNull(userSolutionResponseDto);
+        assertEquals("validUserId", userSolutionResponseDto.getUserId());
+        assertEquals("validChallengeId", userSolutionResponseDto.getChallengeId());
+        assertEquals("validLanguageId", userSolutionResponseDto.getLanguageId());
+        assertEquals("Valid solution text", userSolutionResponseDto.getSolutionText());
     }
 
     @Test
@@ -60,7 +60,7 @@ class UserSolutionScoreDtoTest {
     @Test
     void jsonSerialization_test() throws Exception{
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(userSolutionScoreDto);
+        String json = mapper.writeValueAsString(userSolutionResponseDto);
         assertTrue(json.contains("\"uuid_user\":\"validUserId\""));
         assertTrue(json.contains("\"uuid_language\":\"validLanguageId\""));
         assertTrue(json.contains("\"uuid_challenge\":\"validChallengeId\""));
@@ -69,11 +69,11 @@ class UserSolutionScoreDtoTest {
 
     @Test
     void requiredArgsConstructor_userSolutionScoreDto_test(){
-        UserSolutionScoreDto userSolutionScoreDto1 = new UserSolutionScoreDto(
+        UserSolutionResponseDto userSolutionResponseDto1 = new UserSolutionResponseDto(
                 userId, challengeId, languageId, solutionText);
-        assertThat(userSolutionScoreDto1.getUserId()).isEqualTo(userId);
-        assertThat(userSolutionScoreDto1.getChallengeId()).isEqualTo(challengeId);
-        assertThat(userSolutionScoreDto1.getLanguageId()).isEqualTo(languageId);
-        assertThat(userSolutionScoreDto1.getSolutionText()).isEqualTo(solutionText);
+        assertThat(userSolutionResponseDto1.getUserId()).isEqualTo(userId);
+        assertThat(userSolutionResponseDto1.getChallengeId()).isEqualTo(challengeId);
+        assertThat(userSolutionResponseDto1.getLanguageId()).isEqualTo(languageId);
+        assertThat(userSolutionResponseDto1.getSolutionText()).isEqualTo(solutionText);
     }
 }

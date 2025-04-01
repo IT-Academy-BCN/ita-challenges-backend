@@ -8,19 +8,19 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-class UserSolutionDtoTest {
+class UserSolutionRequestDtoTest {
 
-    private UserSolutionDto userSolutionDto;
+    private UserSolutionRequestDto userSolutionRequestDto;
     String userID = UUID.randomUUID().toString();
     String challengeId = UUID.randomUUID().toString();
     String languageId = UUID.randomUUID().toString();
     String status = "status";
     String solutionText = "This is my solution";
-    UserSolutionDto solutionDto = new UserSolutionDto();
+    UserSolutionRequestDto solutionDto = new UserSolutionRequestDto();
 
     @BeforeEach
     public void setUp() {
-        userSolutionDto = UserSolutionDto.builder()
+        userSolutionRequestDto = UserSolutionRequestDto.builder()
                 .userId("validUserId")
                 .challengeId("validChallengeId")
                 .languageId("validLanguageId")
@@ -31,21 +31,21 @@ class UserSolutionDtoTest {
 
     @Test
     void testLombokGeneratedMethods() {
-        UserSolutionDto dto1 = UserSolutionDto.builder().build();
+        UserSolutionRequestDto dto1 = UserSolutionRequestDto.builder().build();
 
         assertThat(dto1).isNotNull();
         assertThat(dto1.toString()).isNotEmpty();
-        assertThat(dto1.getClass()).isEqualTo(UserSolutionDto.class);
+        assertThat(dto1.getClass()).isEqualTo(UserSolutionRequestDto.class);
     }
 
     @Test
     void getterUserSolutionDto_test() {
-        assertNotNull(userSolutionDto);
-        assertEquals("validUserId", userSolutionDto.getUserId());
-        assertEquals("validChallengeId", userSolutionDto.getChallengeId());
-        assertEquals("validLanguageId", userSolutionDto.getLanguageId());
-        assertEquals("Valid solution text", userSolutionDto.getSolutionText());
-        assertEquals("validChallengeStatus", userSolutionDto.getStatus());
+        assertNotNull(userSolutionRequestDto);
+        assertEquals("validUserId", userSolutionRequestDto.getUserId());
+        assertEquals("validChallengeId", userSolutionRequestDto.getChallengeId());
+        assertEquals("validLanguageId", userSolutionRequestDto.getLanguageId());
+        assertEquals("Valid solution text", userSolutionRequestDto.getSolutionText());
+        assertEquals("validChallengeStatus", userSolutionRequestDto.getStatus());
     }
 
     @Test
@@ -66,7 +66,7 @@ class UserSolutionDtoTest {
     @Test
     void jsonSerialization_test() throws Exception{
         ObjectMapper mapper = new ObjectMapper();
-        String json = mapper.writeValueAsString(userSolutionDto);
+        String json = mapper.writeValueAsString(userSolutionRequestDto);
         assertTrue(json.contains("\"uuid_user\":\"validUserId\""));
         assertTrue(json.contains("\"uuid_language\":\"validLanguageId\""));
         assertTrue(json.contains("\"uuid_challenge\":\"validChallengeId\""));
@@ -75,24 +75,24 @@ class UserSolutionDtoTest {
     }
     @Test
     void requiredArgsConstructor_userSolutionScoreDto_test(){
-        UserSolutionDto userSolutionDto1 = new UserSolutionDto(
+        UserSolutionRequestDto userSolutionRequestDto1 = new UserSolutionRequestDto(
                 userID, challengeId, languageId, status, solutionText);
-        assertThat(userSolutionDto1.getUserId()).isEqualTo(userID);
-        assertThat(userSolutionDto1.getChallengeId()).isEqualTo(challengeId);
-        assertThat(userSolutionDto1.getLanguageId()).isEqualTo(languageId);
-        assertThat(userSolutionDto1.getStatus()).isEqualTo(status);
-        assertThat(userSolutionDto1.getSolutionText()).isEqualTo(solutionText);
+        assertThat(userSolutionRequestDto1.getUserId()).isEqualTo(userID);
+        assertThat(userSolutionRequestDto1.getChallengeId()).isEqualTo(challengeId);
+        assertThat(userSolutionRequestDto1.getLanguageId()).isEqualTo(languageId);
+        assertThat(userSolutionRequestDto1.getStatus()).isEqualTo(status);
+        assertThat(userSolutionRequestDto1.getSolutionText()).isEqualTo(solutionText);
     }
 
     @Test
     void testInvalidUserId() {
-        userSolutionDto.setUserId("invalidUserId");
-        assertEquals("invalidUserId", userSolutionDto.getUserId());
+        userSolutionRequestDto.setUserId("invalidUserId");
+        assertEquals("invalidUserId", userSolutionRequestDto.getUserId());
     }
 
     @Test
     void testInvalidSolutionText() {
-        userSolutionDto.setSolutionText("");
-        assertEquals("", userSolutionDto.getSolutionText());
+        userSolutionRequestDto.setSolutionText("");
+        assertEquals("", userSolutionRequestDto.getSolutionText());
     }
 }

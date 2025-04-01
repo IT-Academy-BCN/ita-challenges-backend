@@ -1,7 +1,7 @@
 package com.itachallenge.user.controller;
 
-import com.itachallenge.user.dto.UserSolutionDto;
-import com.itachallenge.user.dto.UserSolutionScoreDto;
+import com.itachallenge.user.dto.UserSolutionRequestDto;
+import com.itachallenge.user.dto.UserSolutionResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ class UserControllerSpringTest {
     @Test
     void addSolution_WithCorrectParameters_ExpectsReturn200Test() {
 
-        UserSolutionDto userSolutionDto = new UserSolutionDto(
+        UserSolutionRequestDto userSolutionRequestDto = new UserSolutionRequestDto(
                 userId, challengeId, languageId, "ENDED", solution);
-        UserSolutionScoreDto userSolutionScoreDto = new UserSolutionScoreDto(
+        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
                 userId, challengeId, languageId, solution);
 
         webTestClient.put()
                 .uri(uri)
-                .bodyValue(userSolutionDto)
+                .bodyValue(userSolutionRequestDto)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Map.class)
@@ -47,28 +47,28 @@ class UserControllerSpringTest {
                     assert response.getResponseBody().containsKey("uuid_challenge");
                     assert response.getResponseBody().containsKey("uuid_language");
 
-                    assert response.getResponseBody().get("uuid_language").equals(userSolutionScoreDto.getLanguageId());
-                    assert response.getResponseBody().get("uuid_challenge").equals(userSolutionScoreDto.getChallengeId());
-                    assert response.getResponseBody().get("uuid_user").equals(userSolutionScoreDto.getUserId());
-                    assert response.getResponseBody().get("solution_text").equals(userSolutionScoreDto.getSolutionText());
+                    assert response.getResponseBody().get("uuid_language").equals(userSolutionResponseDto.getLanguageId());
+                    assert response.getResponseBody().get("uuid_challenge").equals(userSolutionResponseDto.getChallengeId());
+                    assert response.getResponseBody().get("uuid_user").equals(userSolutionResponseDto.getUserId());
+                    assert response.getResponseBody().get("solution_text").equals(userSolutionResponseDto.getSolutionText());
                 });
     }
 
     @Test
     void addSolution_WithEmptySolution_ReturnBadRequestError_Test() {
 
-        UserSolutionDto userSolutionDto1 = new UserSolutionDto(
+        UserSolutionRequestDto userSolutionRequestDto1 = new UserSolutionRequestDto(
                 userId, challengeId, languageId, "ENDED", "");
-        UserSolutionDto userSolutionDto2 = new UserSolutionDto(
+        UserSolutionRequestDto userSolutionRequestDto2 = new UserSolutionRequestDto(
                 userId, challengeId, languageId, "ENDED", null);
-        UserSolutionDto userSolutionDto3 = new UserSolutionDto(
+        UserSolutionRequestDto userSolutionRequestDto3 = new UserSolutionRequestDto(
                 userId, challengeId, languageId, "ENDED", " ");
-        List<UserSolutionDto> userSolutionDtos = List.of(userSolutionDto1, userSolutionDto2, userSolutionDto3);
+        List<UserSolutionRequestDto> userSolutionRequestDtos = List.of(userSolutionRequestDto1, userSolutionRequestDto2, userSolutionRequestDto3);
 
-        for(UserSolutionDto userSolutionDto : userSolutionDtos){
+        for(UserSolutionRequestDto userSolutionRequestDto : userSolutionRequestDtos){
             webTestClient.put()
                     .uri(uri)
-                    .bodyValue(userSolutionDto)
+                    .bodyValue(userSolutionRequestDto)
                     .exchange()
                     .expectStatus().isBadRequest();
         }
@@ -80,15 +80,15 @@ class UserControllerSpringTest {
         String badChallengeId = challengeId.substring(0, challengeId.length() - 1);
         String badLanguageId = languageId.substring(0, languageId.length() - 1);
 
-        UserSolutionDto userSolutionDto1 = new UserSolutionDto(badUserId, challengeId, languageId, "ENDED", solution);
-        UserSolutionDto userSolutionDto2 = new UserSolutionDto(userId, badChallengeId, languageId, "ENDED", solution);
-        UserSolutionDto userSolutionDto3 = new UserSolutionDto(userId, challengeId, badLanguageId, "ENDED", solution);
-        List<UserSolutionDto> userSolutions = List.of(userSolutionDto1, userSolutionDto2, userSolutionDto3);
+        UserSolutionRequestDto userSolutionRequestDto1 = new UserSolutionRequestDto(badUserId, challengeId, languageId, "ENDED", solution);
+        UserSolutionRequestDto userSolutionRequestDto2 = new UserSolutionRequestDto(userId, badChallengeId, languageId, "ENDED", solution);
+        UserSolutionRequestDto userSolutionRequestDto3 = new UserSolutionRequestDto(userId, challengeId, badLanguageId, "ENDED", solution);
+        List<UserSolutionRequestDto> userSolutions = List.of(userSolutionRequestDto1, userSolutionRequestDto2, userSolutionRequestDto3);
 
-        for(UserSolutionDto userSolutionDto : userSolutions){
+        for(UserSolutionRequestDto userSolutionRequestDto : userSolutions){
             webTestClient.put()
                     .uri(uri)
-                    .bodyValue(userSolutionDto)
+                    .bodyValue(userSolutionRequestDto)
                     .exchange()
                     .expectStatus().isBadRequest();
         }
