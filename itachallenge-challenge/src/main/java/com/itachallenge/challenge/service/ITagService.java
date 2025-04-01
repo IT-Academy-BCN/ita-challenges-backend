@@ -6,9 +6,10 @@ import com.itachallenge.challenge.dto.TagDto;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ITagService {
 
     Mono<GenericResultDto<TagDto>> getAllTags();
-    List<TagDocument> convertStringNameToTag(List<String> tags);
+    Set<TagDocument> convertStringNameToTag(List<String> tags);
 }

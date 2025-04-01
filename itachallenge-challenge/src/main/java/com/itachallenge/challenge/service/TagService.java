@@ -13,6 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,13 +37,13 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public List<TagDocument> convertStringNameToTag(List<String> tagsAssigned) {
+    public Set<TagDocument> convertStringNameToTag(List<String> tagsAssigned) {
         return tagsAssigned.stream()
                 .map(tag -> tagRepository.findByTagName(tag)
                         .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tag)))
                         .block()
                 )
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
 

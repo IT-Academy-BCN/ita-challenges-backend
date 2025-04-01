@@ -20,6 +20,7 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -89,12 +90,12 @@ class TagServiceTest {
         List<String> tagsInstead = List.of(name1, name2);
 
 
-        List<TagDocument> result = tagService.convertStringNameToTag(tagsInstead);
+        Set<TagDocument> result = tagService.convertStringNameToTag(tagsInstead);
 
 
         assertEquals(2, result.size());
-        assertEquals(name1, result.get(0).getTagName());
-        assertEquals(name2, result.get(1).getTagName());
+        assertTrue(result.stream().anyMatch(tag -> tag.getTagName().equals(name1)));
+        assertTrue(result.stream().anyMatch(tag -> tag.getTagName().equals(name2)));
 
         verify(tagRepository).findByTagName(name1);
         verify(tagRepository).findByTagName(name2);
