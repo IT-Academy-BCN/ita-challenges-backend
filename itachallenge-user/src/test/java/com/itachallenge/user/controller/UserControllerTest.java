@@ -7,6 +7,7 @@ import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
 import java.util.UUID;
 
 import static org.mockito.Mockito.*;
@@ -283,6 +285,83 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/favorites returns favorite challenges")
+    void getUserFavorites_returnsFavorites() {
+        UUID userId = UUID.randomUUID();
+        Set<UUID> expectedFavorites = Set.of(UUID.randomUUID(), UUID.randomUUID());
+
+        when(userService.getUserFavorites(userId.toString())).thenReturn(Mono.just(expectedFavorites));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().valueEquals("X-Validation-Status", "Success")
+                .expectBodyList(UUID.class)
+                .hasSize(expectedFavorites.size())
+                .contains(expectedFavorites.toArray(new UUID[0]));
+
+        verify(userService, times(1)).getUserFavorites(userId.toString());
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/favorites returns 404 if user not found")
+    void getUserFavorites_returns404IfUserNotFound() {
+        UUID userId = UUID.randomUUID();
+
+        when(userService.getUserFavorites(userId.toString()))
+                .thenReturn(Mono.error(new NotFoundException("User not found")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectHeader().valueEquals("X-Validation-Status", "Error")
+                .expectHeader().valueEquals("X-Error-Message", "User not found")
+                .expectBody().isEmpty();
+
+        verify(userService, times(1)).getUserFavorites(userId.toString());
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/favorites returns 400 if UUID is invalid")
+    void getUserFavorites_returns400IfInvalidUUID() {
+        String invalidUserId = "invalid-uuid";
+
+        when(userService.getUserFavorites(invalidUserId))
+                .thenReturn(Mono.error(new BadUUIDException("Invalid UUID format")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectHeader().valueEquals("X-Validation-Status", "Error")
+                .expectHeader().valueEquals("X-Error-Message", "Invalid UUID format")
+                .expectBody().isEmpty();
+
+        verify(userService, times(1)).getUserFavorites(invalidUserId);
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/favorites returns 500 if there is an internal error")
+    void getUserFavorites_returns500IfUnexpectedError() {
+        UUID userId = UUID.randomUUID();
+
+        when(userService.getUserFavorites(userId.toString()))
+                .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectHeader().valueEquals("X-Validation-Status", "Error")
+                .expectHeader().valueEquals("X-Error-Message", "Unexpected server error")
+                .expectBody().isEmpty();
+
+        verify(userService, times(1)).getUserFavorites(userId.toString());
     }
 
 }
