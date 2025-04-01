@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -158,4 +160,6 @@ class ChallengeIntegrationTest {
                 .contains(new ChallengeDto[]{})
                 .hasSize(1);
     }
+
+
 }

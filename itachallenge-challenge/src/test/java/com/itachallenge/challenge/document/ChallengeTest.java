@@ -176,11 +176,17 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
-                tags);
-        TagDocument newTag = new TagDocument(uuid,
+                new HashSet<>(tags)); // mutable set
+
+        TagDocument newTag = new TagDocument(UUID.randomUUID(), // diferente ID
                 "Estructura",
                 "bla bla bla");
+
         challenge.setTags(newTag);
-        assertTrue(challenge.getTags().stream().anyMatch(tag -> tag.getTagName().equals(newTag.getTagName())));
+
+        assertTrue(challenge.getTags()
+                .stream()
+                .anyMatch(tag -> tag.getTagName().equals(newTag.getTagName())));
     }
+
 }
