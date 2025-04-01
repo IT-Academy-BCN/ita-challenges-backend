@@ -65,7 +65,7 @@ class ChallengeIntegrationTest {
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
-        List<TagDocument> tags = List.of(new TagDocument());
+        Set<TagDocument> tags = Set.of(new TagDocument());
         String languageImage = "https://image-default.com/default.png";
         LanguageDocument language1 = getLanguageMocked(idsLanguages[0], languageNames[0], languageImage);
         LanguageDocument language2 = getLanguageMocked(idsLanguages[1], languageNames[1], languageImage);
