@@ -19,7 +19,7 @@ public class TagDto {
     private UUID tagId;
 
     @JsonProperty(value = "tag_name", index = 1)
-    @Size(max = 20, message = "El nom del tag és molt llarg")
+    @Size(max = 20, message = "The tagName is very long")
     private String tagName;
 
     @JsonProperty(value = "tag_description", index = 2)

@@ -13,9 +13,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class
-
-ChallengeCreateDto {
+public class ChallengeCreateDto {
 
     @NotEmpty(message = "cannot be empty")
     private String challengeTitle;
