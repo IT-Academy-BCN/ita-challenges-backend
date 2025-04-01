@@ -58,7 +58,7 @@ class UserControllerTest {
     @Test
     void getUser_WhenUserExists_Returns200() {
         String githubUsername = "existingUser";
-        UserDocument expectedUser = new UserDocument(UUID.randomUUID(), githubUsername, Role.ADMIN, null);
+        UserDocument expectedUser = new UserDocument(UUID.randomUUID(), githubUsername, Role.ADMIN, null, null);
         when(userService.getUser(githubUsername)).thenReturn(Mono.just(expectedUser));
 
         webTestClient.get()
@@ -126,6 +126,24 @@ class UserControllerTest {
     }
 
     @Test
+    void addToBookmarks_WhenAdded_Returns201() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.addChallengeToBookmarks(userId, challengeId))
+                .thenReturn(Mono.just(true));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.CREATED)
+                .expectHeader().valueEquals("X-Bookmark-Added", "True")
+                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge added to Bookmarks.")
+                .expectBody(Boolean.class).isEqualTo(true);
+
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
+    }
+
+    @Test
     void addToFavorites_WhenAlreadyInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -141,6 +159,24 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+    }
+
+    @Test
+    void addToBookmarks_WhenAlreadyInBookmarks_Returns200() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.addChallengeToBookmarks(userId, challengeId))
+                .thenReturn(Mono.just(false));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectHeader().valueEquals("X-Bookmark-Added", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge is already in Bookmarks.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Test
@@ -162,6 +198,24 @@ class UserControllerTest {
     }
 
     @Test
+    void addToBookmarks_WhenUserNotExists_Returns404() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.addChallengeToBookmarks(userId, challengeId))
+                .thenReturn(Mono.error(new NotFoundException("User not found")));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
+                .expectHeader().valueEquals("X-Bookmark-Added", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "User not found.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
+    }
+
+    @Test
     void addToFavorites_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
@@ -180,6 +234,24 @@ class UserControllerTest {
     }
 
     @Test
+    void addToBookmarks_WhenBadFormattedId_Returns404() {
+        String userId = "invalidUuid";
+        String challengeId = "invalidUUid";
+        when(userService.addChallengeToBookmarks(userId, challengeId))
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectHeader().valueEquals("X-Bookmark-Added", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "The provided IDs are not valid.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
+    }
+
+    @Test
     void addToFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -195,6 +267,24 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
+    }
+
+    @Test
+    void addToBookmarks_WhenUnexpectedError_Returns500() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.addChallengeToBookmarks(userId, challengeId))
+                .thenReturn(Mono.error(new Exception()));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectHeader().valueEquals("X-Bookmark-Added", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "Unexpected server error.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
 
     @Test
