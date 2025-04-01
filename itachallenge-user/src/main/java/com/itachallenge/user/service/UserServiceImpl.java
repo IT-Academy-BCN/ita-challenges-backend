@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         boolean added = bookmarks.add(challengeUuid);
 
         if (added) {
-            user.setFavoriteChallenges(bookmarks);
+            user.setBookmarkChallenges(bookmarks);
             return userRepository.save(user).then(Mono.just(true));
         }
 
