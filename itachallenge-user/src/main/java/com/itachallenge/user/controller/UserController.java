@@ -273,19 +273,19 @@ public class UserController {
 
     @PostMapping("/users/{userId}/bookmarks/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
-        return userService.addChallengeToFavorites(userId, challengeId)
+        return userService.addChallengeToBookmarks(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
                         log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
                         return ResponseEntity.status(HttpStatus.CREATED)
                                 .header(X_BOOKMARK_ADDED, "True")
-                                .header(X_BOOKMARK_MESSAGE, "Challenge added to favorites.")
+                                .header(X_BOOKMARK_MESSAGE, "Challenge added to Bookmarks.")
                                 .body(true);
                     }
                     log.info("User's '{}' bookmarks already contain Challenge '{}'", userId, challengeId);
                     return ResponseEntity.ok()
                             .header(X_BOOKMARK_ADDED, FALSE)
-                            .header(X_BOOKMARK_MESSAGE, "Challenge is already in favorites.")
+                            .header(X_BOOKMARK_MESSAGE, "Challenge is already in Bookmarks.")
                             .body(false);
                 })
                 .onErrorResume(throwable -> {
