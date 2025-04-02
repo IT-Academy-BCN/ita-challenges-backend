@@ -216,7 +216,7 @@ class UserControllerTest {
     }
 
     @Test
-    void addToFavorites_WhenBadFormattedId_Returns404() {
+    void addToFavorites_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(userService.addChallengeToFavorites(userId, challengeId))
@@ -234,7 +234,7 @@ class UserControllerTest {
     }
 
     @Test
-    void addToBookmarks_WhenBadFormattedId_Returns404() {
+    void addToBookmarks_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(userService.addChallengeToBookmarks(userId, challengeId))
