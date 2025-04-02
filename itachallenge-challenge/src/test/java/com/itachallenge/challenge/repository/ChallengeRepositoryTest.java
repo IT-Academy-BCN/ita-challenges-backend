@@ -54,6 +54,7 @@ class ChallengeRepositoryTest {
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
+        List<UUID> tags = List.of(UUID.randomUUID());
         LanguageDocument language1 = new LanguageDocument(idsLanguages[0], languageNames[0], "https://image-default.com/default.png");
         LanguageDocument language2 = new LanguageDocument(idsLanguages[1], languageNames[1], "https://image-default.com/default.png");
         Set<LanguageDocument> languageSet = Set.of(language1, language2);
@@ -72,11 +73,14 @@ class ChallengeRepositoryTest {
         String title3 = "Challenge 3";
 
         ChallengeDocument challenge = new ChallengeDocument
-                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList, Topic.DEBUGGING, 5);
+                (uuid_1, title1, "MEDIUM", LocalDateTime.now(), detail, languageSet, solutionList,
+                        Topic.DEBUGGING, 5, tags);
         ChallengeDocument challenge2 = new ChallengeDocument
-                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList, Topic.LISTS, 10);
+                (uuid_2, title2, "EASY", LocalDateTime.now(), detail, languageSet, solutionList,
+                        Topic.LISTS, 10, tags);
         ChallengeDocument challenge3 = new ChallengeDocument
-                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList, Topic.COMPONENTS, 15);
+                (uuid_3, title3, "HARD", LocalDateTime.now(), detail, languageSet3, solutionList,
+                        Topic.COMPONENTS, 15, tags);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2, challenge3)).blockLast();
 
