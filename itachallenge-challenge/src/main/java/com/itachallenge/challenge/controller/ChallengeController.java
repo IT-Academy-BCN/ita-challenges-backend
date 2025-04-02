@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -81,7 +81,7 @@ public class ChallengeServiceImp implements IChallengeService {
             Optional<String> level,
             int offset,
             int limit,
-            Optional<List<String>> tags) {
+            Optional<List<UUID>> tags) {
 
         return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
                 .transform(challenges -> languageServiceImp.filterByLanguage(challenges, idLanguage))

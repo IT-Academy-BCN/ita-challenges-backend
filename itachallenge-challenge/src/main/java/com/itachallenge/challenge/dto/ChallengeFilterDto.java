@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
@@ -13,7 +14,7 @@ public class ChallengeFilterDto {
 
     private String idLanguage;
     private String level;
-    private List<String> tags;
+    private List<UUID> tags;
     private Integer offset = 0;
     private Integer limit = -1;
 }

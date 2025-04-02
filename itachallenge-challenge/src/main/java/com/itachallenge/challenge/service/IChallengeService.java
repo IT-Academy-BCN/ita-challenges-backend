@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface IChallengeService {
 
@@ -26,7 +27,7 @@ public interface IChallengeService {
                                                                Optional<String> level,
                                                                int offset,
                                                                int limit,
-                                                               Optional<List<String>> tags);
+                                                               Optional<List<UUID>> tags);
 
     Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level);
 
