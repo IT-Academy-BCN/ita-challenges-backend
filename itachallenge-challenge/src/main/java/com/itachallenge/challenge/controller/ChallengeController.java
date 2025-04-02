@@ -327,10 +327,10 @@ public class ChallengeController {
     public Mono<ResponseEntity<BookmarkDto>> addChallengeToBookmarks(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-
-        String userId = getUserIdFromToken(authHeader);
-        return challengeService.addChallengeToBookmarks(challengeId, userId)
-                .doOnError(error -> log.error("Error adding challenge to bookmarks {}", error.getMessage()))
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallengeToBookmarks(challengeId, userId))
+                .doOnError(error -> log.error("Error adding challenge to bookmarks: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
 
