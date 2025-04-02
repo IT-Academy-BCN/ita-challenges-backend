@@ -6,6 +6,7 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,9 @@ public class UserController {
     public static final String FALSE = "False";
 
     private final UserService userService;
+
+    @Autowired
+    private IUserSolutionService userSolutionService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -206,16 +211,12 @@ public class UserController {
             }
     )
     public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
-            @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
-        
-        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
-                userSolutionRequestDto.getUserId(),
-                userSolutionRequestDto.getChallengeId(),
-                userSolutionRequestDto.getLanguageId(),
-                userSolutionRequestDto.getSolutionText()
-        );
+            @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
 
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
+        return userSolutionService.addSolution(userSolutionDto)
+                .map(savedUserSolutionScoreDto ->
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
+                );
     }
   
     @Operation(
@@ -301,7 +302,5 @@ public class UserController {
                             .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
                             .body(false));
                 });
-
     }
-
 }
