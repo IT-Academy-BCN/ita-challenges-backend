@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -35,22 +34,22 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-        return addChallengeToUserTag(userId, challengeId, SavedItemType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.POST);
+        return callEndpoint(userId, challengeId, SavedItemType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
-        return addChallengeToUserTag(userId, challengeId, SavedItemType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
+        return callEndpoint(userId, challengeId, SavedItemType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> removeChallengeFromFavorites(String userId, String challengeId) {
-        return callFavoriteEndpoint(userId, challengeId, HttpMethod.DELETE);
+        return callEndpoint(userId, challengeId, SavedItemType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.DELETE);
     }
 
-    private Mono<Boolean> addChallengeToUserTag(String userId, String challengeId, SavedItemType type, String errorHeader) {
+    private Mono<Boolean> callEndpoint(String userId, String challengeId, SavedItemType type, String errorHeader, HttpMethod method) {
         String url = buildUrl(userId, challengeId, type.toString().toLowerCase());
-        log.debug("Call to endpoint: {}", method, url);
+        log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
 
         return webClientBuilder.build()
                 .method(method)
