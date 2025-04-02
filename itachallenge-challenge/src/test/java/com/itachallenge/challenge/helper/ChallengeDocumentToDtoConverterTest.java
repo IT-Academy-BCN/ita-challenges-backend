@@ -40,7 +40,7 @@ class ChallengeDocumentToDtoConverterTest {
         UUID tagIdRandom = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        Set<UUID> tags = Set.of(tagIdRandom);
+        List<UUID> tags = List.of(tagIdRandom);
         String title = "Title";
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
