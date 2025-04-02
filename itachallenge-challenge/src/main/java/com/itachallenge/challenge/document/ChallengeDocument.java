@@ -70,4 +70,9 @@ public class ChallengeDocument {
     public void decreaseTimesFavorite() {
         timesFavorite = Integer.max(timesFavorite == null ? 0 : timesFavorite - 1, 0);
     }
+
+    public void increaseTimesBookmark() {
+        timesBookmark = timesBookmark == null ? 1 : timesBookmark + 1;
+    }
+
 }
