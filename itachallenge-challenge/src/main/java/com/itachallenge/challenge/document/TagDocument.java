@@ -24,19 +24,5 @@ public class TagDocument {
     @Field(name="tag_description")
     private String tagDescription;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        TagDocument that = (TagDocument) o;
-
-        return idTag != null ? idTag.equals(that.idTag) : that.idTag == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return idTag != null ? idTag.hashCode() : 0;
-    }
 
 }

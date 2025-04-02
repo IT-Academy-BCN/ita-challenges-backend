@@ -54,49 +54,5 @@ public class TagTest {
         assertEquals(name, tag.getTagName());
         assertEquals(desc, tag.getTagDescription());
     }
-
-    @Test
-    void equalsShouldReturnTrueForSameId() {
-        UUID id = UUID.randomUUID();
-
-        TagDocument tag1 = new TagDocument(id, "POO", "desc1");
-        TagDocument tag2 = new TagDocument(id, "Another", "desc2");
-
-        assertEquals(tag1, tag2);
-        assertEquals(tag1.hashCode(), tag2.hashCode());
-    }
-
-    @Test
-    void equalsShouldReturnFalseForDifferentId() {
-        TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "desc1");
-        TagDocument tag2 = new TagDocument(UUID.randomUUID(), "POO", "desc1");
-
-        assertNotEquals(tag1, tag2);
-    }
-
-    @Test
-    void equalsShouldReturnFalseWhenComparingWithNull() {
-        TagDocument tag = new TagDocument(UUID.randomUUID(), "POO", "desc");
-        assertNotEquals(tag, null);
-    }
-
-    @Test
-    void equalsShouldReturnFalseWhenComparingWithDifferentClass() {
-        TagDocument tag = new TagDocument(UUID.randomUUID(), "POO", "desc");
-        assertNotEquals(tag, "some string");
-    }
-
-    @Test
-    void hashSetShouldContainOnlyOneElementWithSameId() {
-        UUID id = UUID.randomUUID();
-
-        TagDocument tag1 = new TagDocument(id, "POO", "desc1");
-        TagDocument tag2 = new TagDocument(id, "POO", "desc1");
-
-        Set<TagDocument> tags = new HashSet<>();
-        tags.add(tag1);
-        tags.add(tag2); // debería ser ignorado por equals/hashCode
-
-        assertEquals(1, tags.size());
-    }
+    
 }
