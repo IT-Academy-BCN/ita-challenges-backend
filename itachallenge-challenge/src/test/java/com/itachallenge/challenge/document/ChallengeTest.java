@@ -156,7 +156,7 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
-                List.of(tag.getIdTag()) 
+                List.of(tag.getIdTag())
         );
 
         assertTrue(challenge.getTags().contains(tag.getIdTag()));
