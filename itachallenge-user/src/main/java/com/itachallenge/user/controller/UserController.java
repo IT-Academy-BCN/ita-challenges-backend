@@ -42,9 +42,11 @@ public class UserController {
     public static final String FALSE = "False";
 
     private final UserService userService;
+    private final IUserSolutionService userSolutionService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
+        this.userSolutionService = userSolutionService;
     }
 
     @GetMapping(value = "/test")
@@ -214,7 +216,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
             @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
-        
+
         UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
                 userSolutionRequestDto.getUserId(),
                 userSolutionRequestDto.getChallengeId(),
