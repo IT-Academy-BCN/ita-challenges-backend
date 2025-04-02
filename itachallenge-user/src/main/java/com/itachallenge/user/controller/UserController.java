@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -37,12 +36,11 @@ public class UserController {
     public static final String FALSE = "False";
 
     private final UserService userService;
+    private final IUserSolutionService userSolutionService;
 
-    @Autowired
-    private IUserSolutionService userSolutionService;
-
-    public UserController(UserService userService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
+        this.userSolutionService = userSolutionService;
     }
 
     @GetMapping(value = "/test")
