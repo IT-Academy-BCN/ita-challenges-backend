@@ -107,7 +107,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(resultMono)
                 .expectErrorMatches(
                         throwable -> throwable instanceof IllegalArgumentException
-                                && throwable.getMessage().equals("Status not allowed")).verify();
+                                && throwable.getMessage().equals("Status null or not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
     }
 
@@ -164,7 +164,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(resultMono)
                 .expectErrorMatches(
                         throwable -> throwable instanceof IllegalArgumentException
-                                && throwable.getMessage().equals("Status not allowed")).verify();
+                                && throwable.getMessage().equals("Status null or not allowed")).verify();
         verifyNoInteractions(userSolutionRepository);
 
     }
