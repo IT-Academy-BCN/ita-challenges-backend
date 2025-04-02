@@ -292,7 +292,7 @@ public class UserController {
                     )
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "List of favorite challengeIds by user"),
+                    @ApiResponse(responseCode = "200", description = "Set of favorite challengeIds by user"),
                     @ApiResponse(responseCode = "404", description = "User not found"),
                     @ApiResponse(responseCode = "400", description = "Invalid UUID format"),
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
