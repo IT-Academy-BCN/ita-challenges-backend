@@ -217,16 +217,12 @@ public class UserController {
             }
     )
     public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
-            @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
+            @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
 
-        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
-                userSolutionRequestDto.getUserId(),
-                userSolutionRequestDto.getChallengeId(),
-                userSolutionRequestDto.getLanguageId(),
-                userSolutionRequestDto.getSolutionText()
-        );
-
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
+        return userSolutionService.addSolution(userSolutionDto)
+                .map(savedUserSolutionScoreDto ->
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
+                );
     }
   
     @Operation(
@@ -394,7 +390,6 @@ public class UserController {
                             .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
                             .body(false));
                 });
-
     }
 
     @Operation(
