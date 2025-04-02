@@ -47,9 +47,9 @@ public class ChallengeDocument {
 
 
     @Field(name = "tags")
-    private Set<TagDocument> tags;
+    private Set<UUID> tags;
 
-    public void setTags(TagDocument tag) {
+    public void setTags(UUID tag) {
         if (tags == null) {
             tags = new HashSet<>();
         }

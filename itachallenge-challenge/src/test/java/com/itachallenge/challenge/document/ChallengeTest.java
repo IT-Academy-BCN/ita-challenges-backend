@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeTest {
-    Set<TagDocument> tags = Set.of(new TagDocument());
+    Set<UUID> tags = Set.of(UUID.randomUUID());
 
     @Test
     void getUuid() {
@@ -142,9 +142,9 @@ class ChallengeTest {
     @Test
     void getTagsTest() {
         UUID uuid = UUID.randomUUID();
-        Set<TagDocument> tags = Set.of(new TagDocument(uuid,
+        TagDocument tag = new TagDocument(uuid,
                 "POO",
-                "bla bla bla"));
+                "bla bla bla");
 
 
         ChallengeDocument challenge = new ChallengeDocument(null,
@@ -156,37 +156,32 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
-                tags);
-        assertEquals(tags, challenge.getTags());
+                Set.of(tag.getIdTag()));
+        assertEquals(tag.getIdTag(), challenge.getTags());
     }
 
     @Test
     void setTagsTest() {
-        UUID uuid = UUID.randomUUID();
-        Set<TagDocument> tags = Set.of(new TagDocument(uuid,
-                "POO",
-                "bla bla bla"));
+        UUID firstTagId = UUID.randomUUID();
+        TagDocument firstTag = new TagDocument(firstTagId, "POO", "bla bla bla");
 
-        ChallengeDocument challenge = new ChallengeDocument(null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+        ChallengeDocument challenge = new ChallengeDocument(
+                null, null, null, null, null, null, null,
                 Topic.COMPONENTS,
                 20,
-                new HashSet<>(tags)); // mutable set
+                new HashSet<>(Set.of(firstTag.getIdTag()))
+        );
 
-        TagDocument newTag = new TagDocument(UUID.randomUUID(), // diferente ID
-                "Estructura",
-                "bla bla bla");
+        UUID secondTagId = UUID.randomUUID();
+        TagDocument secondTag = new TagDocument(secondTagId, "Estructura", "bla bla bla");
 
-        challenge.setTags(newTag);
+        challenge.setTags(secondTag.getIdTag());
 
-        assertTrue(challenge.getTags()
-                .stream()
-                .anyMatch(tag -> tag.getTagName().equals(newTag.getTagName())));
+        Set<UUID> tags = challenge.getTags();
+        assertEquals(2, tags.size(), "El challenge debería tener 2 tags");
+        assertTrue(tags.contains(firstTagId), "Debe contener el primer tag");
+        assertTrue(tags.contains(secondTagId), "Debe contener el nuevo tag");
     }
+
 
 }

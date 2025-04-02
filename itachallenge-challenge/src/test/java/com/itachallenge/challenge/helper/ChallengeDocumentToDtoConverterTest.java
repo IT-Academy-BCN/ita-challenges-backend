@@ -37,9 +37,10 @@ class ChallengeDocumentToDtoConverterTest {
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
+        UUID tagIdRandom = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        Set<TagDocument> tags = Set.of(new TagDocument());
+        Set<UUID> tags = Set.of(tagIdRandom);
         String title = "Title";
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
