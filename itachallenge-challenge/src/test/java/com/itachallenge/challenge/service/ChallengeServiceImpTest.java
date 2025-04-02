@@ -91,7 +91,7 @@ class ChallengeServiceImpTest {
         languageDocument = new LanguageDocument(languageRandomId, languageName, languageImage);
         LanguageDto languageDto = new LanguageDto(languageRandomId, languageName, languageImage);
 
-        Set<TagDocument> tagsConverted = tagService.convertStringNameToTag(tags);
+        Set<TagDocument> tagsConverted = tagService.convertIdTagFromTagDocument(tags);
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,

@@ -18,7 +18,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -75,49 +74,47 @@ class TagServiceTest {
     }
 
     @Test
-    @DisplayName("convertir Strings en TagDocuments")
-    void testConvertStringNameToTag_Success() {
+    @DisplayName("convertir UUIDs en TagDocuments")
+    void testConvertIdTagFromTag_Document_Success() {
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
 
-        String name1 = "POO";
-        String name2 = "Algoritmos";
+        TagDocument tag1 = new TagDocument(id1, "POO", "Programación orientada a objetos");
+        TagDocument tag2 = new TagDocument(id2, "Lógica", "Retos de lógica");
 
-        TagDocument tag1 = new TagDocument(UUID.randomUUID(), name1, "Programación orientada a objetos");
-        TagDocument tag2 = new TagDocument(UUID.randomUUID(), name2, "Retos de lógica");
+        when(tagRepository.findById(id1)).thenReturn(Mono.just(tag1));
+        when(tagRepository.findById(id2)).thenReturn(Mono.just(tag2));
 
-        when(tagRepository.findByTagName(name1)).thenReturn(Mono.just(tag1));
-        when(tagRepository.findByTagName(name2)).thenReturn(Mono.just(tag2));
+        List<UUID> tagIds = List.of(id1, id2);
 
-        List<String> tagsInstead = List.of(name1, name2);
-
-
-        Set<TagDocument> result = tagService.convertStringNameToTag(tagsInstead);
-
+        Set<TagDocument> result = tagService.convertIdTagFromTagDocument(tagIds);
 
         assertEquals(2, result.size());
-        assertTrue(result.stream().anyMatch(tag -> tag.getTagName().equals(name1)));
-        assertTrue(result.stream().anyMatch(tag -> tag.getTagName().equals(name2)));
+        assertTrue(result.stream().anyMatch(tag -> tag.getIdTag().equals(id1)));
+        assertTrue(result.stream().anyMatch(tag -> tag.getIdTag().equals(id2)));
 
-        verify(tagRepository).findByTagName(name1);
-        verify(tagRepository).findByTagName(name2);
+        verify(tagRepository).findById(id1);
+        verify(tagRepository).findById(id2);
     }
 
+
     @Test
-    @DisplayName("saltar la excepcion")
-    void testConvertStringNameToTag_TagNotFound() {
+    @DisplayName("lanzar excepción cuando no se encuentra el TagDocument por UUID")
+    void testConvertIdTagFromTag_TagDocumentNotFound() {
+        UUID missingId = UUID.randomUUID();
+        when(tagRepository.findById(missingId)).thenReturn(Mono.empty());
 
-        String missingTag = "Inexistente";
-        when(tagRepository.findByTagName(missingTag)).thenReturn(Mono.empty());
-
-        List<String> tagsAssigned = List.of(missingTag);
+        List<UUID> tagsAssigned = List.of(missingId);
 
         TagNotFoundException exception = assertThrows(
                 TagNotFoundException.class,
-                () -> tagService.convertStringNameToTag(tagsAssigned)
+                () -> tagService.convertIdTagFromTagDocument(tagsAssigned)
         );
 
-        assertEquals("Tag not found: " + missingTag, exception.getMessage());
-        verify(tagRepository).findByTagName(missingTag);
+        assertEquals("Tag not found: " + missingId, exception.getMessage());
+        verify(tagRepository).findById(missingId);
     }
+
 }
 
 

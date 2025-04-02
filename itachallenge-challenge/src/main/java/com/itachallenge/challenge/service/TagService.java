@@ -14,6 +14,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,9 +38,9 @@ public class TagService implements ITagService {
     }
 
     @Override
-    public Set<TagDocument> convertStringNameToTag(List<String> tagsAssigned) {
+    public Set<TagDocument> convertIdTagFromTagDocument(List<UUID> tagsAssigned) {
         return tagsAssigned.stream()
-                .map(tag -> tagRepository.findByTagName(tag)
+                .map(tag -> tagRepository.findById(tag)
                         .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tag)))
                         .block()
                 )

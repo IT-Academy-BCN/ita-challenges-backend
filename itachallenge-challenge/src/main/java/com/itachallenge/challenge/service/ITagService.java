@@ -7,9 +7,10 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public interface ITagService {
 
     Mono<GenericResultDto<TagDto>> getAllTags();
-    Set<TagDocument> convertStringNameToTag(List<String> tags);
+    Set<TagDocument> convertIdTagFromTagDocument(List<UUID> tags);
 }

@@ -264,7 +264,7 @@ public class ChallengeServiceImp implements IChallengeService {
                                         existingLanguage,
                                         savedSolution.getUuid(),
                                         topic,
-                                        tagService.convertStringNameToTag(challengeCreateDto.getTags()));
+                                        challengeCreateDto.getTags());
                                 return challengeRepository.save(challenge)
                                         .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
                                                 ChallengeDto.class));
@@ -272,7 +272,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, Set<TagDocument> tags) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, Set<UUID> tags) {
         DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()
