@@ -310,6 +310,7 @@ public class ChallengeController {
                 .flatMap(userId -> challengeService.removeChallengeFromFavorites(challengeId, userId))
                 .doOnError(error -> log.error("Error removing challenge from favorites: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
+    }
 
     @PostMapping("/challenges/{challengeId}/bookmarks")
     @Operation(
