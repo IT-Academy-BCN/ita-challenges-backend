@@ -276,7 +276,7 @@ public class UserController {
         return userService.addChallengeToBookmarks(userId, challengeId)
                 .map(added -> {
                     if (Boolean.TRUE.equals(added)) {
-                        log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
+                        log.info("Challenge '{}' added to user '{}' bookmarks", challengeId, userId);
                         return ResponseEntity.status(HttpStatus.CREATED)
                                 .header(X_BOOKMARK_ADDED, "True")
                                 .header(X_BOOKMARK_MESSAGE, "Challenge added to Bookmarks.")
