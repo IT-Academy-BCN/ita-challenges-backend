@@ -26,6 +26,7 @@ public class TagService implements ITagService {
     @Autowired
     private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
 
+    @Cacheable(value = "allTags")
     @Override
     public Mono<GenericResultDto<TagDto>> getAllTags() {
         Flux<TagDto> tagDto = tagConverter.convertDocumentFluxToDtoFlux(tagRepository.findAll(), TagDto.class);
