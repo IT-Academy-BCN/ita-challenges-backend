@@ -54,7 +54,7 @@ class ChallengeRepositoryTest {
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
         UUID[] idsLanguages = new UUID[]{uuidLang1, uuidLang2};
         String[] languageNames = new String[]{"name1", "name2"};
-        Set<TagDocument> tags = Set.of(new TagDocument());
+        Set<UUID> tags = Set.of(UUID.randomUUID());
         LanguageDocument language1 = new LanguageDocument(idsLanguages[0], languageNames[0], "https://image-default.com/default.png");
         LanguageDocument language2 = new LanguageDocument(idsLanguages[1], languageNames[1], "https://image-default.com/default.png");
         Set<LanguageDocument> languageSet = Set.of(language1, language2);

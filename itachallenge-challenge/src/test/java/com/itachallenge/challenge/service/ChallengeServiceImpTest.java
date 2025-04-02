@@ -69,7 +69,7 @@ class ChallengeServiceImpTest {
         String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
-        List<String> tags = List.of("POO");
+        Set<UUID> tags = Set.of(UUID.randomUUID());
 
         formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level),
                 languageName, solutionBody, Topic.LISTS, tags);
@@ -91,11 +91,9 @@ class ChallengeServiceImpTest {
         languageDocument = new LanguageDocument(languageRandomId, languageName, languageImage);
         LanguageDto languageDto = new LanguageDto(languageRandomId, languageName, languageImage);
 
-        Set<TagDocument> tagsConverted = tagService.convertIdTagFromTagDocument(tags);
-
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                20, tagsConverted);
+                20, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),

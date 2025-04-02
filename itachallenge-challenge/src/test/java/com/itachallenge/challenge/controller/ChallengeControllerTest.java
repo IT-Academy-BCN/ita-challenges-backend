@@ -361,7 +361,7 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_validRequest() {
-        List<String> tags = List.of("POO");
+        Set<UUID> tags = Set.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
                 DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS,tags );
 
@@ -382,7 +382,7 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_emptyField_statusBadRequest() {
-        List<String> tags = List.of("POO");
+        Set<UUID> tags = Set.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("",
                 "descripció",
                 DifficultyLevel.valueOf("EASY"),
@@ -402,7 +402,7 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
-        List<String> tags = List.of("POO");
+        Set<UUID> tags = Set.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol",
                 "descripció",
                 DifficultyLevel.valueOf("EASY"),
