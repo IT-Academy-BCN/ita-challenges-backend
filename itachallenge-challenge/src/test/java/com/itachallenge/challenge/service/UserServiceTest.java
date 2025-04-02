@@ -323,7 +323,7 @@ public class UserServiceTest {
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
         assertEquals(
-                String.format(USER_SERVICE_URL, userId, challengeId),
+                String.format(FAVORITES_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("DELETE", request.getMethod());
     }
@@ -347,7 +347,7 @@ public class UserServiceTest {
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
         assertEquals(
-                String.format(USER_SERVICE_URL, userId, challengeId),
+                String.format(FAVORITES_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("DELETE", request.getMethod());
     }
@@ -376,7 +376,7 @@ public class UserServiceTest {
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
         assertEquals(
-                String.format(USER_SERVICE_URL, userId, challengeId),
+                String.format(FAVORITES_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("DELETE", request.getMethod());
     }
@@ -403,7 +403,7 @@ public class UserServiceTest {
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
         assertEquals(
-                String.format(USER_SERVICE_URL, userId, challengeId),
+                String.format(FAVORITES_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("DELETE", request.getMethod());
     }
@@ -432,7 +432,7 @@ public class UserServiceTest {
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
         assertEquals(
-                String.format(USER_SERVICE_URL, userId, challengeId),
+                String.format(FAVORITES_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("DELETE", request.getMethod());
     }
