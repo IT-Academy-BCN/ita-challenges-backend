@@ -37,9 +37,10 @@ class ChallengeDocumentToDtoConverterTest {
         UUID languageRandomId1 = UUID.randomUUID();
         UUID languageRandomId2 = UUID.randomUUID();
         UUID solutionsRandomId = UUID.randomUUID();
+        UUID tagIdRandom = UUID.randomUUID();
 
         String[] languageNames = new String[]{"name1", "name2"};
-        List<TagDocument> tags = List.of(new TagDocument());
+        List<UUID> tags = List.of(tagIdRandom);
         String title = "Title";
         String level = "Hard";
         LocalDateTime localDateTime = LocalDateTime.of(2023, 6, 5, 12, 30, 0);
@@ -121,6 +122,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
+        when(challengeDocMocked.getTimesFavorite()).thenReturn(20);
         return challengeDocMocked;
     }
 }

@@ -6,6 +6,7 @@ import com.itachallenge.challenge.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,11 +31,20 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
+        return callFavoriteEndpoint(userId, challengeId, HttpMethod.POST);
+    }
+
+    @Override
+    public Mono<Boolean> removeChallengeFromFavorites(String userId, String challengeId) {
+        return callFavoriteEndpoint(userId, challengeId, HttpMethod.DELETE);
+    }
+
+    private Mono<Boolean> callFavoriteEndpoint(String userId, String challengeId, HttpMethod method) {
         String url = getFavoritesUrl(userId, challengeId);
-        log.debug("Call to endpoint: {}", url);
+        log.debug("Call to endpoint({}): {}", method, url);
 
         return webClientBuilder.build()
-                .post()
+                .method(method)
                 .uri(url)
                 .retrieve()
                 .onStatus(

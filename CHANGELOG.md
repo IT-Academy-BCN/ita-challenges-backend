@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
               Created language image attribute in LanguageDocument and LanguageDto.
               Added language image's URL to the database and updated Challenge tests.
               Created POST endpoint to add a new challenge to users favorites (in Challenge micro)
+              Created DELETE endpoint to remove a challenge from users favorites (in Challenge micro)
 * Issue #725: Removing all Score and Solution related code in User microservice
 * Issue #712: Refactoring in Challenge micro due to simplifying challenge entity
 * Issue #709: Removing Score microservice due to new approach
+* PR #825: Removing score attribute in Dtos de UserSolution
 
 ### [itachallenge-challenge-2.0.4-RELEASE] - 2023-11-12
 * Issue #441b: Added Mongock to tracing database changes

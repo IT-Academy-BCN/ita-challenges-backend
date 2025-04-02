@@ -48,7 +48,7 @@ class TagDocumentToDtoConverterTest {
 
     @Test
     @DisplayName("Conversion from document to dto when the field types and names perfectly match the source")
-    void testConvertLanguageDocumentToLanguageDto() {
+    void testConvertTagDocumentToTagDto() {
 
         TagDocument tagDocumentMocked = tagDocument1;
         TagDto resultDto = mapper.convertDocumentToDto(tagDocumentMocked, TagDto.class);

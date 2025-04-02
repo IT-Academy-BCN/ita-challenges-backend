@@ -19,7 +19,6 @@ public class TagDocument {
     private UUID idTag;
 
     @Field(name="tag_name")
-    @Size(max = 20, message = "El nom del tag és molt llarg")
     private String tagName;
 
     @Field(name="tag_description")

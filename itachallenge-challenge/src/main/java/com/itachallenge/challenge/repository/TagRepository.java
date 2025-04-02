@@ -12,6 +12,4 @@ public interface TagRepository extends ReactiveMongoRepository<TagDocument, UUID
 
     Mono<TagDocument> findByTagName(String tagName);
 
-    Mono<Void> deleteByTagName(String tagName);
-
 }

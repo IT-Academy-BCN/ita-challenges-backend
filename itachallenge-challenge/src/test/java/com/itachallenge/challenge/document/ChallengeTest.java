@@ -2,6 +2,8 @@ package com.itachallenge.challenge.document;
 
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -11,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeTest {
-    List<TagDocument> tags = List.of(new TagDocument());
+    List<UUID> tags = List.of(UUID.randomUUID());
 
     @Test
     void getUuid() {
@@ -142,12 +144,10 @@ class ChallengeTest {
     @Test
     void getTagsTest() {
         UUID uuid = UUID.randomUUID();
-        List<TagDocument> tags = List.of(new TagDocument(uuid,
-                "POO",
-                "bla bla bla"));
+        TagDocument tag = new TagDocument(uuid, "POO", "bla bla bla");
 
-
-        ChallengeDocument challenge = new ChallengeDocument(null,
+        ChallengeDocument challenge = new ChallengeDocument(
+                null,
                 null,
                 null,
                 null,
@@ -156,31 +156,37 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
-                tags);
-        assertEquals(tags, challenge.getTags());
+                List.of(tag.getIdTag())
+        );
+
+        assertTrue(challenge.getTags().contains(tag.getIdTag()));
+        assertEquals(1, challenge.getTags().size());
     }
+
 
     @Test
     void setTagsTest() {
-        UUID uuid = UUID.randomUUID();
-        List<TagDocument> tags = new ArrayList<>(Arrays.asList(new TagDocument(uuid,
-                "POO",
-                "bla bla bla")));
+        UUID firstTagId = UUID.randomUUID();
+        TagDocument firstTag = new TagDocument(firstTagId, "POO", "bla bla bla");
 
-        ChallengeDocument challenge = new ChallengeDocument(null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+        ChallengeDocument challenge = new ChallengeDocument(
+                null, null, null, null, null, null, null,
                 Topic.COMPONENTS,
                 20,
-                tags);
-        TagDocument newTag = new TagDocument(uuid,
-                "Estructura",
-                "bla bla bla");
-        challenge.setTags(newTag);
-        assertEquals(newTag, challenge.getTags().getLast());
+                new ArrayList<UUID>(List.of(firstTag.getIdTag())) {
+                }
+        );
+
+        UUID secondTagId = UUID.randomUUID();
+        TagDocument secondTag = new TagDocument(secondTagId, "Estructura", "bla bla bla");
+
+        challenge.setTags(secondTag.getIdTag());
+
+        List<UUID> tags = challenge.getTags();
+        assertEquals(2, tags.size(), "El challenge debería tener 2 tags");
+        assertTrue(tags.contains(firstTagId), "Debe contener el primer tag");
+        assertTrue(tags.contains(secondTagId), "Debe contener el nuevo tag");
     }
+
+
 }

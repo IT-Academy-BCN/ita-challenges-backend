@@ -8,14 +8,14 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Builder
 @Getter
 @Setter
-public class
-
-ChallengeCreateDto {
+public class ChallengeCreateDto {
 
     @NotEmpty(message = "cannot be empty")
     private String challengeTitle;
@@ -34,5 +34,5 @@ ChallengeCreateDto {
     @NotNull(message = "cannot be empty")
     private Topic topic;
 
-    private List<String> tags;
+    private List<UUID> tags;
 }

@@ -51,7 +51,8 @@ public class DocumentToDtoConverter<S,D> {
             };
             mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class)
                     .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
-                    .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle);
+                    .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle)
+                    .addMapping(ChallengeDocument::getTimesFavorite, ChallengeDto::setTimesFavorite);
             mapper.addConverter(converterFromLocalDateTimeToString);
         }
 
@@ -80,5 +81,7 @@ public class DocumentToDtoConverter<S,D> {
 
         return mapper.map(document, dtoClass);
     }
+
+
 
 }
