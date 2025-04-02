@@ -34,5 +34,5 @@ public class ChallengeCreateDto {
     @NotNull(message = "cannot be empty")
     private Topic topic;
 
-    private Set<UUID> tags;
+    private List<UUID> tags;
 }

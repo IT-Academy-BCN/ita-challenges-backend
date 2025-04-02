@@ -272,7 +272,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, Set<UUID> tags) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, List<UUID> tags) {
         DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()

@@ -47,15 +47,17 @@ public class ChallengeDocument {
 
 
     @Field(name = "tags")
-    private Set<UUID> tags;
+    private List<UUID> tags;
 
     public void setTags(UUID tag) {
         if (tags == null) {
-            tags = new HashSet<>();
+            tags = new ArrayList<>();
         }
 
-        if (!tags.add(tag)) {
+        if (tags.contains(tag)) {
             tags.remove(tag);
+        } else {
+            tags.add(tag);
         }
     }
 

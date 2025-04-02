@@ -2,6 +2,8 @@ package com.itachallenge.challenge.document;
 
 import com.itachallenge.challenge.enums.Topic;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Array;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -11,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ChallengeTest {
-    Set<UUID> tags = Set.of(UUID.randomUUID());
+    List<UUID> tags = List.of(UUID.randomUUID());
 
     @Test
     void getUuid() {
@@ -156,7 +158,7 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
-                Set.of(tag.getIdTag()));
+                List.of(tag.getIdTag()));
         assertEquals(tag.getIdTag(), challenge.getTags());
     }
 
@@ -169,7 +171,8 @@ class ChallengeTest {
                 null, null, null, null, null, null, null,
                 Topic.COMPONENTS,
                 20,
-                new HashSet<>(Set.of(firstTag.getIdTag()))
+                new ArrayList<UUID>(List.of(firstTag.getIdTag())) {
+                }
         );
 
         UUID secondTagId = UUID.randomUUID();
@@ -177,7 +180,7 @@ class ChallengeTest {
 
         challenge.setTags(secondTag.getIdTag());
 
-        Set<UUID> tags = challenge.getTags();
+        List<UUID> tags = challenge.getTags();
         assertEquals(2, tags.size(), "El challenge debería tener 2 tags");
         assertTrue(tags.contains(firstTagId), "Debe contener el primer tag");
         assertTrue(tags.contains(secondTagId), "Debe contener el nuevo tag");

@@ -69,7 +69,7 @@ class ChallengeServiceImpTest {
         String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
-        Set<UUID> tags = Set.of(UUID.randomUUID());
+        List<UUID> tags = List.of(UUID.randomUUID());
 
         formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level),
                 languageName, solutionBody, Topic.LISTS, tags);
