@@ -144,12 +144,10 @@ class ChallengeTest {
     @Test
     void getTagsTest() {
         UUID uuid = UUID.randomUUID();
-        TagDocument tag = new TagDocument(uuid,
-                "POO",
-                "bla bla bla");
+        TagDocument tag = new TagDocument(uuid, "POO", "bla bla bla");
 
-
-        ChallengeDocument challenge = new ChallengeDocument(null,
+        ChallengeDocument challenge = new ChallengeDocument(
+                null,
                 null,
                 null,
                 null,
@@ -158,9 +156,13 @@ class ChallengeTest {
                 null,
                 Topic.COMPONENTS,
                 20,
-                List.of(tag.getIdTag()));
-        assertEquals(tag.getIdTag(), challenge.getTags());
+                List.of(tag.getIdTag()) 
+        );
+
+        assertTrue(challenge.getTags().contains(tag.getIdTag()));
+        assertEquals(1, challenge.getTags().size());
     }
+
 
     @Test
     void setTagsTest() {
