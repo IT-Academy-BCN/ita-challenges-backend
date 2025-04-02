@@ -78,7 +78,7 @@ public class UserService implements IUserService {
     private String buildUrl(String userId, String challengeId, String type){
         return UriComponentsBuilder.fromHttpUrl(userServiceUrl)
                 .path("/itachallenge/api/v1/user/users/{userId}/{type}/{challengeId}")
-                .buildAndExpand(userId, challengeId)
+                .buildAndExpand(userId, type, challengeId)
                 .toUriString();
     }
 }
