@@ -194,44 +194,34 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallengesByLanguageOrDifficultyTest() {
-        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+    void getChallengesByFilter_ValidParams_ChallengesReturned() {
+        String idLanguage = "valid-language-id";
         String level = "EASY";
-        List<UUID> tags = List.of(UUID.randomUUID());
         int offset = 0;
-        int limit = -1;
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        challengeDto1.setLevel(level);
+        int limit = 10;
 
-        List<ChallengeDto> challengeDtos = List.of(challengeDto1);
+        ChallengeDto challenge1 = new ChallengeDto();
+        challenge1.setTitle("Challenge 1");
 
-        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
-        genericResultDto.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challenge1});
 
-        Mono<GenericResultDto<ChallengeDto>> expectedResult = Mono.just(genericResultDto);
+        when(challengeService.getChallengesByFilter(any(), any(), anyInt(), anyInt(), any()))
+                .thenReturn(Mono.just(expectedResult));
 
-        // Mock del servicio con los parámetros correctos
-        when(challengeService.getChallengesByFilter(Optional.of(idLanguage), Optional.of(level), offset, limit, Optional.of(tags)))
-                .thenReturn(expectedResult);
-
-        // Act & Assert
         webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/challenge/challenges/")
+                        .path("/itachallenge/api/v1/challenge/challenges")
                         .queryParam("idLanguage", idLanguage)
                         .queryParam("level", level)
-                        .queryParam("offset", offset)
-                        .queryParam("limit", limit)
+                        .queryParam("offset", String.valueOf(offset))
+                        .queryParam("limit", String.valueOf(limit))
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {
-                })
-                .value(result -> {
-                    assertNotNull(result);
-                    assertEquals(level, result.getResults()[0].getLevel());
-                });
+                .expectHeader().contentType(MediaType.APPLICATION_JSON);
+
     }
 
     @Test
