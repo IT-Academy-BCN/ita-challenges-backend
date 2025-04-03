@@ -119,13 +119,13 @@ public class UserController {
             description = "Adds challenge to user favorites",
             parameters = {
                     @Parameter(
-                            name = "User ID",
+                            name = "userId",
                             description = "User ID",
                             required = true,
                             in = ParameterIn.PATH
                     ),
                     @Parameter(
-                            name = "Challenge ID",
+                            name = "challengeId",
                             description = "Challenge ID",
                             required = true,
                             in = ParameterIn.PATH
@@ -230,13 +230,13 @@ public class UserController {
             description = "Adds challenge to user Bookmarks",
             parameters = {
                     @Parameter(
-                            name = "User ID",
+                            name = "userId",
                             description = "User ID",
                             required = true,
                             in = ParameterIn.PATH
                     ),
                     @Parameter(
-                            name = "Challenge ID",
+                            name = "challengeId",
                             description = "Challenge ID",
                             required = true,
                             in = ParameterIn.PATH
@@ -317,13 +317,13 @@ public class UserController {
             description = "Deletes challenge from user favorites",
             parameters = {
                     @Parameter(
-                            name = "",
+                            name = "userId",
                             description = "User ID",
                             required = true,
                             in = ParameterIn.PATH
                     ),
                     @Parameter(
-                            name = "",
+                            name = "challengeId",
                             description = "Challenge ID",
                             required = true,
                             in = ParameterIn.PATH
