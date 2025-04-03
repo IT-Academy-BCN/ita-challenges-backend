@@ -197,7 +197,7 @@ class ChallengeControllerTest {
     void getChallengesByLanguageOrDifficultyTest() {
         String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
         String level = "EASY";
-        List<String> tags = List.of("Recursividad");
+        List<UUID> tags = List.of(UUID.randomUUID());
         int offset = 0;
         int limit = -1;
         ChallengeDto challengeDto1 = new ChallengeDto();

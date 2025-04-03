@@ -123,7 +123,7 @@ public class ChallengeFilterTests {
     @Test
     public void testFilterByTags_present_matchesSome() {
         Flux<ChallengeDocument> source = Flux.just(challenge1, challenge2);
-        List<String> tags = List.of("recursion", "arrays");
+        List<UUID> tags = List.of(UUID.randomUUID(), UUID.randomUUID());
 
         StepVerifier.create(tagService.filterByTags(source, Optional.of(tags)))
                 .expectNext(challenge1, challenge2)
@@ -134,7 +134,7 @@ public class ChallengeFilterTests {
     @Test
     public void testFilterByTags_present_matchesNone() {
         Flux<ChallengeDocument> source = Flux.just(challenge1, challenge2);
-        List<String> tags = List.of("graphs");
+        List<UUID> tags = List.of(UUID.randomUUID());
 
         StepVerifier.create(tagService.filterByTags(source, Optional.of(tags)))
                 .verifyComplete();
