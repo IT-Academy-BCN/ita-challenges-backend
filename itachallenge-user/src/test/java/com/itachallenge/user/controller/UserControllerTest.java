@@ -306,6 +306,24 @@ class UserControllerTest {
     }
 
     @Test
+    void deleteFromBookmarks_WhenDeleted_Returns200() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
+                .thenReturn(Mono.just(true));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectHeader().valueEquals("X-Bookmark-Deleted", "True")
+                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge deleted from bookmarks.")
+                .expectBody(Boolean.class).isEqualTo(true);
+
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+    }
+
+    @Test
     void deleteFromFavorites_WhenNotInFavorites_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -321,6 +339,24 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    void deleteFromBookmarks_WhenNotInBookmarks_Returns200() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
+                .thenReturn(Mono.just(false));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.OK)
+                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge not found in user's bookmarks.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Test
@@ -342,6 +378,24 @@ class UserControllerTest {
     }
 
     @Test
+    void deleteFromBookmarks_WhenUserNotExists_Returns404() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
+                .thenReturn(Mono.error(new NotFoundException("User not found")));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
+                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "User not found.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+    }
+
+    @Test
     void deleteFromFavorites_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
@@ -360,6 +414,24 @@ class UserControllerTest {
     }
 
     @Test
+    void deleteFromBookmarks_WhenBadFormattedId_Returns404() {
+        String userId = "invalidUuid";
+        String challengeId = "invalidUUid";
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "The provided IDs are not valid.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
+    }
+
+    @Test
     void deleteFromFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
@@ -375,6 +447,24 @@ class UserControllerTest {
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
+    }
+
+    @Test
+    void deleteFromBookmarks_WhenUnexpectedError_Returns500() {
+        String userId = UUID.randomUUID().toString();
+        String challengeId = UUID.randomUUID().toString();
+        when(userService.deleteChallengeFromBookmarks(userId, challengeId))
+                .thenReturn(Mono.error(new Exception()));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
+                .expectHeader().valueEquals("X-Bookmark-Message", "Unexpected server error.")
+                .expectBody(Boolean.class).isEqualTo(false);
+
+        verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Test
