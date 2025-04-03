@@ -12,6 +12,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.util.Objects;
+
 class UserGlobalExceptionHandlerTest {
 
     private UserGlobalExceptionHandler exceptionHandler;
@@ -27,7 +29,7 @@ class UserGlobalExceptionHandlerTest {
         ResponseEntity<String> response = exceptionHandler.handleAny(exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(response.getBody().contains("Unexpected error happened."));
+        assertTrue(Objects.requireNonNull(response.getBody()).contains("Unexpected error happened."));
     }
 
     @Test
@@ -82,6 +84,16 @@ class UserGlobalExceptionHandlerTest {
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("Resource not found", response.getBody());
+    }
+
+    @Test
+    void testHandleUnmodifiableSolutionException(){
+        String message = "There's an existing solution with status 'ENDED'.";
+        UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
+        ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(message, response.getBody());
     }
 }
 

@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
 class UserSolutionDocumentTest {
 
     private final UUID uuid = UUID.randomUUID();
@@ -23,6 +24,7 @@ class UserSolutionDocumentTest {
     SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
     List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
     UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus, solutionDocumentList);
+    UserSolutionDocument noArgsUserSolutionDocument = new UserSolutionDocument();
 
     @Test
     void getUuid(){
@@ -55,6 +57,11 @@ class UserSolutionDocumentTest {
     @Test
     void getSolutionDocumentList(){
         assertEquals(solutionDocumentList, userScoreDocument.getSolutionDocument());
+    }
+
+    @Test
+    void noArgsBuilder_test(){
+        assertNotNull(noArgsUserSolutionDocument);
     }
 }
 
