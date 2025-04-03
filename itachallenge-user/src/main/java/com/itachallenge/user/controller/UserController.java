@@ -333,12 +333,7 @@ public class UserController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "No change, challenge was not in favorites",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Challenge deleted from favorites",
+                            description = "Challenge deleted from favorites or was not in favorites",
                             content = @Content(mediaType = "application/json")
                     ),
                     @ApiResponse(
@@ -364,7 +359,7 @@ public class UserController {
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED)
+                        return ResponseEntity.ok()
                                 .header(X_FAVORITE_DELETED, "True")
                                 .header(X_FAVORITE_MESSAGE, "Challenge deleted from favorites.")
                                 .body(true);
@@ -404,13 +399,13 @@ public class UserController {
             description = "Deletes challenge from user bookmarks",
             parameters = {
                     @Parameter(
-                            name = "",
+                            name = "userId",
                             description = "User ID",
                             required = true,
                             in = ParameterIn.PATH
                     ),
                     @Parameter(
-                            name = "",
+                            name = "challengeId",
                             description = "Challenge ID",
                             required = true,
                             in = ParameterIn.PATH
@@ -419,12 +414,7 @@ public class UserController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "No change, challenge was not in bookmarks",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Challenge deleted from bookmarks",
+                            description = "Challenge deleted from bookmarks or was not in bookmarks",
                             content = @Content(mediaType = "application/json")
                     ),
                     @ApiResponse(
@@ -450,7 +440,7 @@ public class UserController {
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' bookmarks", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED)
+                        return ResponseEntity.ok()
                                 .header(X_BOOKMARK_DELETED, "True")
                                 .header(X_BOOKMARK_MESSAGE, "Challenge deleted from bookmarks.")
                                 .body(true);

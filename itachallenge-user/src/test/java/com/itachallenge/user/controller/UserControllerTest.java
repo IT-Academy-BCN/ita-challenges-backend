@@ -288,7 +288,7 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenDeleted_Returns201() {
+    void deleteFromFavorites_WhenDeleted_Returns200() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.deleteChallengeFromFavorites(userId, challengeId))
@@ -297,7 +297,7 @@ class UserControllerTest {
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
-                .expectStatus().isEqualTo(HttpStatus.CREATED)
+                .expectStatus().isEqualTo(HttpStatus.OK)
                 .expectHeader().valueEquals("X-Favorite-Deleted", "True")
                 .expectHeader().valueEquals("X-Favorite-Message", "Challenge deleted from favorites.")
                 .expectBody(Boolean.class).isEqualTo(true);
