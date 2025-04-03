@@ -19,10 +19,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static reactor.core.publisher.Mono.when;
 
@@ -69,7 +66,7 @@ public class ChallengeFilterTests {
 
         TagDocument tag1 = new TagDocument(UUID.randomUUID(), "recursion", "Challenges about recursion");
 
-        List<TagDocument> tags = List.of(tag1);
+        List<UUID> tags = new ArrayList<>(Arrays.asList(tag1.getIdTag()));
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
 
         challenge1 = new ChallengeDocument(uuid_2, "Challenge 2", "EASY", LocalDateTime.now(), detail,
@@ -85,22 +82,28 @@ public class ChallengeFilterTests {
         LanguageDocument language = new LanguageDocument();
         language.setIdLanguage(uuid);
 
-        when(languageRepository.findByIdLanguage(uuid)).thenReturn(Mono.just(language));
-        when(challengeRepository.findByLanguages_IdLanguage(uuid)).thenReturn(Flux.just(challenge1, challenge2));
+        // Challenge con language correcto
+        challenge1.setLanguages(Set.of(language));
+        // Challenge sin idiomas o con otros idiomas
+        challenge2.setLanguages(Set.of());
 
-        StepVerifier.create(languageService.filterByLanguage(Optional.of(mockLanguageId)))
+        Flux<ChallengeDocument> inputChallenges = Flux.just(challenge1, challenge2);
+
+        StepVerifier.create(languageService.filterByLanguage(inputChallenges, Optional.of(mockLanguageId)))
+                .expectNext(challenge1)
+                .verifyComplete();
+    }
+
+
+    @Test
+    public void testFilterByLanguage_notPresent_returnsAll() {
+        Flux<ChallengeDocument> allChallenges = Flux.just(challenge1, challenge2);
+
+        StepVerifier.create(languageService.filterByLanguage(allChallenges, Optional.empty()))
                 .expectNext(challenge1, challenge2)
                 .verifyComplete();
     }
 
-    @Test
-    public void testFilterByLanguage_notPresent_returnsAll() {
-        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues()).thenReturn(Flux.just(challenge1));
-
-        StepVerifier.create(languageService.filterByLanguage(Optional.empty()))
-                .expectNext(challenge1)
-                .verifyComplete();
-    }
 
     @Test
     public void testFilterByLevel_present_filtersCorrectly() {
@@ -122,8 +125,18 @@ public class ChallengeFilterTests {
 
     @Test
     public void testFilterByTags_present_matchesSome() {
+        UUID tag1 = UUID.randomUUID();
+        UUID tag2 = UUID.randomUUID();
+        List<UUID> tags = List.of(tag1, tag2);
+        TagDocument tagDoc1 = new TagDocument(tag1, "POO","bla bla");
+        TagDocument tagDoc2 = new TagDocument(tag2, "hjs", "bla bla");
+
+
+        challenge1.setTags(tagDoc1.getIdTag());
+
+        challenge2.setTags(tagDoc2.getIdTag());
+
         Flux<ChallengeDocument> source = Flux.just(challenge1, challenge2);
-        List<UUID> tags = List.of(UUID.randomUUID(), UUID.randomUUID());
 
         StepVerifier.create(tagService.filterByTags(source, Optional.of(tags)))
                 .expectNext(challenge1, challenge2)
