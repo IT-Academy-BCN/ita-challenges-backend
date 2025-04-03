@@ -334,20 +334,6 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
-
-    private String getUserIdFromToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Missing or bad formatted Authorization header");
-            throw new BadRequestException("Missing or bad formatted Authorization header");
-        }
-        String userId = jwtService.extractUuid(authHeader.replace("Bearer ", ""));
-        if (userId == null) {
-            log.warn("Error decoding the JWT token");
-            throw new BadRequestException("Invalid Authorization header content");
-        }
-        return userId;
-    }
-
     @GetMapping("/tags")
     @Operation(
             operationId = "Get all stored tags from the Database for FrontEnd can print them.",
