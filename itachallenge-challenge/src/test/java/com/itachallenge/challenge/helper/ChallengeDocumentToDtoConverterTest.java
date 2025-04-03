@@ -124,6 +124,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
         when(challengeDocMocked.getTimesFavorite()).thenReturn(20);
+        when(challengeDocMocked.getTimesBookmark()).thenReturn(30);
         return challengeDocMocked;
     }
 }
