@@ -1,18 +1,18 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +22,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -32,7 +33,8 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@WebFluxTest(ChallengeController.class)
+@WebFluxTest(controllers = ChallengeController.class)
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 class ChallengeControllerTest {
 
@@ -44,6 +46,9 @@ class ChallengeControllerTest {
 
     @MockBean
     private IChallengeService challengeService;
+
+    @MockBean
+    private ITagService tagService;
 
     @MockBean
     private DiscoveryClient discoveryClient;
@@ -356,8 +361,9 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_validRequest() {
+        List<UUID> tags = List.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS);
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS,tags );
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
@@ -376,8 +382,14 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_emptyField_statusBadRequest() {
-        ChallengeCreateDto formData = new ChallengeCreateDto("", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.COMPONENTS);
+        List<UUID> tags = List.of(UUID.randomUUID());
+        ChallengeCreateDto formData = new ChallengeCreateDto("",
+                "descripció",
+                DifficultyLevel.valueOf("EASY"),
+                "Java",
+                "solució",
+                Topic.COMPONENTS,
+                tags);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
@@ -390,8 +402,14 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
-        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Invalid language", "solució", Topic.COMPONENTS);
+        List<UUID> tags = List.of(UUID.randomUUID());
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol",
+                "descripció",
+                DifficultyLevel.valueOf("EASY"),
+                "Invalid language",
+                "solució",
+                Topic.COMPONENTS,
+                tags);
 
         when(challengeService.addChallenge(any()))
                 .thenThrow(new LanguageNotFoundException("Language not found: Invalid language"));
@@ -573,6 +591,35 @@ class ChallengeControllerTest {
     }
 
     @Test
+
+    @DisplayName("GET recibir respuesta 200 a getTags")
+    void getTags_test_validRequest() {
+
+        TagDto tag1 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos");
+        TagDto tag2 = new TagDto(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia");
+
+        GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
+        resultDto.setInfo(0, 2, 2, new TagDto[]{tag1, tag2});
+
+        when(tagService.getAllTags()).thenReturn(Mono.just(resultDto));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/tags")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType("application/json")
+                .expectBody()
+                .jsonPath("$.results.length()").isEqualTo(2)
+                .jsonPath("$.results[0].tag_name").isEqualTo("POO")
+                .jsonPath("$.results[1].tag_name").isEqualTo("Algoritmos")
+                .jsonPath("$.results[0].tag_description").value(desc ->
+                        assertTrue(desc.toString().contains("Programación orientada")))
+                .jsonPath("$.offset").isEqualTo(0)
+                .jsonPath("$.limit").isEqualTo(2);
+
+        verify(tagService).getAllTags();
+    }
+
     void removeChallengeFromFavorite_Success_Returns200() {
         String challengeId = "existing_challengeId";
         String userId = "existing_userId";
@@ -675,6 +722,7 @@ class ChallengeControllerTest {
                 .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(0)).removeChallengeFromFavorites(anyString(), anyString());
+
     }
 
     @Test
@@ -708,3 +756,5 @@ class ChallengeControllerTest {
     }
 
 }
+
+

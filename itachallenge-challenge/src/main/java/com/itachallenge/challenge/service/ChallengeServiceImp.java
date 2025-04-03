@@ -60,6 +60,8 @@ public class ChallengeServiceImp implements IChallengeService {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     @Autowired
     private IUserService userService;
+    @Autowired
+    private TagService tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -257,8 +259,12 @@ public class ChallengeServiceImp implements IChallengeService {
                             .build();
                     return solutionRepository.save(solution)
                             .flatMap(savedSolution -> {
-                                ChallengeDocument challenge = buildChallengeDocument(challengeCreateDto,
-                                        existingLanguage, savedSolution.getUuid(), topic);
+                                ChallengeDocument challenge = buildChallengeDocument(
+                                        challengeCreateDto,
+                                        existingLanguage,
+                                        savedSolution.getUuid(),
+                                        topic,
+                                        challengeCreateDto.getTags());
                                 return challengeRepository.save(challenge)
                                         .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
                                                 ChallengeDto.class));
@@ -266,7 +272,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 });
     }
 
-    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic) {
+    private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, List<UUID> tags) {
         DetailDocument detail = new DetailDocument(dto.getDescription());
 
         return ChallengeDocument.builder()
@@ -277,6 +283,7 @@ public class ChallengeServiceImp implements IChallengeService {
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
                 .topic(topic)
+                .tags(tags)
                 .build();
     }
 

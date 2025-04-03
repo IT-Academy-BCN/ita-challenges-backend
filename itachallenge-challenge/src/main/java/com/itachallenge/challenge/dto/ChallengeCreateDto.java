@@ -1,10 +1,15 @@
 package com.itachallenge.challenge.dto;
 
+import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Builder
@@ -28,4 +33,6 @@ public class ChallengeCreateDto {
 
     @NotNull(message = "cannot be empty")
     private Topic topic;
+
+    private List<UUID> tags;
 }

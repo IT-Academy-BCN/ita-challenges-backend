@@ -242,4 +242,16 @@ class GlobalExceptionHandlerTest {
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Error message"));
     }
+
+    @Test
+    void testHandleTagNotFoundException() {
+
+        TagNotFoundException exception = new TagNotFoundException("Tag not found");
+
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleTagNotFoundException(exception);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        String responseBody = responseEntity.getBody().getMessage();
+        assertTrue(responseBody.contains("Tag not found"));
+    }
 }

@@ -3,9 +3,11 @@ package com.itachallenge.challenge.helper;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.ResourceDocument;
+import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.dto.ResourceDto;
+import com.itachallenge.challenge.dto.TagDto;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -59,6 +61,13 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(LanguageDocument::getIdLanguage,LanguageDto::setLanguageId);
         }
 
+        if(dtoClass.isAssignableFrom(TagDto.class)) {
+            mapper.createTypeMap(TagDocument.class, TagDto.class)
+                    .addMapping(TagDocument::getIdTag,TagDto::setTagId)
+                    .addMapping(TagDocument::getTagName, TagDto::setTagName)
+                    .addMapping(TagDocument::getTagDescription, TagDto::setTagDescription);
+        }
+
         if (dtoClass.isAssignableFrom(ResourceDto.class) && document instanceof ResourceDocument) {
             mapper.createTypeMap(ResourceDocument.class, ResourceDto.class)
                     .addMapping(ResourceDocument::getResourceId, ResourceDto::setResourceId)
@@ -72,5 +81,7 @@ public class DocumentToDtoConverter<S,D> {
 
         return mapper.map(document, dtoClass);
     }
+
+
 
 }

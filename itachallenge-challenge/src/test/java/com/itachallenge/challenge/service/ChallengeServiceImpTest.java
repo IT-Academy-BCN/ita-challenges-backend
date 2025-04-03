@@ -47,6 +47,8 @@ class ChallengeServiceImpTest {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     @Mock
     private IUserService userService;
+    @Mock
+    private TagService tagService;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -67,8 +69,10 @@ class ChallengeServiceImpTest {
         String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
+        List<UUID> tags = List.of(UUID.randomUUID());
 
-        formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level), languageName, solutionBody, Topic.LISTS);
+        formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level),
+                languageName, solutionBody, Topic.LISTS, tags);
 
         UUID challengeRandomId = UUID.randomUUID();
         UUID languageRandomId = UUID.randomUUID();
@@ -89,7 +93,7 @@ class ChallengeServiceImpTest {
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                20);
+                20, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),

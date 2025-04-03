@@ -2,6 +2,8 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.dto.UserSolutionRequestDto;
+import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.UserService;
@@ -11,6 +13,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -195,6 +198,31 @@ public class UserController {
                 });
     }
 
+    @PutMapping(path = "/solution")
+    @Operation(
+            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
+            @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
+        
+        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
+                userSolutionRequestDto.getUserId(),
+                userSolutionRequestDto.getChallengeId(),
+                userSolutionRequestDto.getLanguageId(),
+                userSolutionRequestDto.getSolutionText()
+        );
+
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
+    }
+  
     @Operation(
             summary = "Delete Challenge from User Favorite Challenges",
             description = "Deletes challenge from user favorites",
@@ -278,6 +306,7 @@ public class UserController {
                             .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
                             .body(false));
                 });
+
     }
 
     @Operation(
