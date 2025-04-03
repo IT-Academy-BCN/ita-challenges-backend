@@ -412,7 +412,7 @@ class UserServiceImplTest {
                 .as(StepVerifier::create)
                 .expectErrorMatches(error ->
                         error instanceof NotFoundException &&
-                                error.getMessage().equals("User not found."))
+                                error.getMessage().equals("User not found with id: " + userId))
                 .verify();
     }
 
