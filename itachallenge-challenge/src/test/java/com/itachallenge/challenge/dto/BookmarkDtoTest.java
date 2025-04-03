@@ -45,4 +45,14 @@ public class BookmarkDtoTest {
         assertFalse(dto.isBookmarked());
         assertEquals(0, dto.getTimesBookmarked());
     }
+
+    @Test
+    void testToString() {
+        BookmarkDto dto = new BookmarkDto(true, 100);
+        String result = dto.toString();
+
+        assertTrue(result.contains("BookmarkDto"));
+        assertTrue(result.contains("isBookmarked=true"));
+        assertTrue(result.contains("timesBookmarked=100"));
+    }
 }
