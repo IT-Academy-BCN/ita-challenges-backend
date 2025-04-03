@@ -3,6 +3,8 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
 
+* Issue #829: Added bookmark POST endpoint in the Challenge Microservice to bookmark a challenge.
+* Issue #827: Added bookmark POST endpoint in the User Microservice to bookmark a challenge.
 * Issue #831: Added DELETE endpoint for user's bookmals in User Microservice.
 * Issue #826: Added GET endpoint to retrieve the list of challenges marked as favorites by a user.                                          
 * Issue #763: Modified POST endpoint for adding new challenge (in Challenge micro)  
