@@ -643,8 +643,26 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void addChallengeToBookmarks_WhenChallengeUuidNotValid_ReturnsError() {
+        StepVerifier.create(challengeService.addChallengeToBookmarks("InvalidUuid", UUID.randomUUID().toString()))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
     void addChallengeToFavorites_WhenUserUuidNotValid_ReturnsError() {
         StepVerifier.create(challengeService.addChallengeToFavorites(UUID.randomUUID().toString(), "InvalidUuid"))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
+    void addChallengeToBookmarks_WhenUserUuidNotValid_ReturnsError() {
+        StepVerifier.create(challengeService.addChallengeToBookmarks(UUID.randomUUID().toString(), "InvalidUuid"))
                 .expectErrorMatches(error ->
                         error instanceof BadUUIDException &&
                                 error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
@@ -661,8 +679,26 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void addChallengeToBookmarks_WhenChallengeUuidIsNull_ReturnsError() {
+        StepVerifier.create(challengeService.addChallengeToBookmarks(null, UUID.randomUUID().toString()))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
     void addChallengeToFavorites_WhenUserUuidIsNull_ReturnsError() {
         StepVerifier.create(challengeService.addChallengeToFavorites(UUID.randomUUID().toString(), null))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
+    void addChallengeToBookmarks_WhenUserUuidIsNull_ReturnsError() {
+        StepVerifier.create(challengeService.addChallengeToBookmarks(UUID.randomUUID().toString(), null))
                 .expectErrorMatches(error ->
                         error instanceof BadUUIDException &&
                                 error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
@@ -677,6 +713,22 @@ class ChallengeServiceImpTest {
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
+                .expectErrorMatches(error ->
+                        error instanceof ChallengeNotFoundReturn404Exception &&
+                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+    }
+
+    @Test
+    void addChallengeToBookmarks_WhenChallengeNotFound_ReturnsError() {
+        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
+        UUID challengeUuid = UUID.randomUUID();
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
                         error instanceof ChallengeNotFoundReturn404Exception &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
@@ -707,6 +759,27 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void addChallengeToBookmarks_WhenUserNotFound_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new UserNotFoundException(message)));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof InternalServerErrorException &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
     void addChallengeToFavorites_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -725,6 +798,27 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
+    void addChallengeToBookmarks_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof InternalServerErrorException &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
     }
 
     @Test
@@ -749,6 +843,27 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void addChallengeToBookmarks_WhenUserServiceReturnsCustomInternalServerErrorException_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof InternalServerErrorException &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
     void addChallengeToFavorites_WhenUserServiceReturnsAnyException_ReturnsError() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -767,6 +882,27 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
+    void addChallengeToBookmarks_WhenUserServiceReturnsAnyException_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new Exception(message)));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof Exception &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
     }
 
     @Test
@@ -797,6 +933,33 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void addChallengeToBookmarks_WhenAdded_IncreasesTimesBookmarkAndReturnsFavoriteDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        int initialTimesBookmark = 20;
+
+        challenge.setTimesBookmark(initialTimesBookmark);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(bookmarkDto -> {
+                    return bookmarkDto.getTimesBookmarked() == initialTimesBookmark + 1 &&
+                            bookmarkDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(initialTimesBookmark + 1, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
+    @Test
     void addChallengeToFavorites_WhenAddedAndInitialTimesFavoriteIsNull_IncreasesTimesFavoriteAndReturnsFavoriteDTO() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -823,6 +986,32 @@ class ChallengeServiceImpTest {
     }
 
     @Test
+    void addChallengeToBookmarks_WhenAddedAndInitialTimesFavoriteIsNull_IncreasesTimesBookmarkAndReturnsBookmarkDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesBookmark(null);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(favoriteDto -> {
+                    return favoriteDto.getTimesBookmarked() == 1 &&
+                            favoriteDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(1, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
+    @Test
     void addChallengeToFavorites_WhenNotAdded_NotIncreaseTimesFavoriteAndReturnsFavoriteDTO() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -845,6 +1034,32 @@ class ChallengeServiceImpTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(0)).save(any());
+    }
+
+    @Test
+    void addChallengeToBookmarks_WhenNotAdded_NotIncreaseTimesBookmarkAndReturnsBookmarkDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        int initialTimesBookmark = 20;
+
+        challenge.setTimesBookmark(initialTimesBookmark);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(bookmarkDto -> {
+                    return bookmarkDto.getTimesBookmarked() == initialTimesBookmark &&
+                            bookmarkDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(initialTimesBookmark, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
         verify(challengeRepository, times(0)).save(any());
     }
 
@@ -875,7 +1090,38 @@ class ChallengeServiceImpTest {
         verify(challengeRepository, times(1)).save(challenge);
     }
 
+    @ParameterizedTest
+    @MethodSource
+    void addChallengeToBookmarks_WhenNotAddedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkToOneAndReturnsBookmarkDTO(Integer timesBookmark) {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesBookmark(timesBookmark);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(bookmarkDto -> {
+                    return bookmarkDto.getTimesBookmarked() == 1 &&
+                            bookmarkDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(1, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
     public static Stream<Integer> addChallengeToFavorites_WhenNotAddedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToOneAndReturnsFavoriteDTO() {
+        return Stream.of(null, 0);
+    }
+
+    public static Stream<Integer> addChallengeToBookmarks_WhenNotAddedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkToOneAndReturnsBookmarkDTO() {
         return Stream.of(null, 0);
     }
 
