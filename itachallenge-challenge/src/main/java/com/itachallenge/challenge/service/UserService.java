@@ -56,7 +56,7 @@ public class UserService implements IUserService {
                 .uri(url)
                 .retrieve()
                 .onStatus(HttpStatus.NOT_FOUND::equals, response -> {
-                    log.info("User not found {}", userId);
+                    log.info("User not found with id: {}", userId);
                     return Mono.error(new UserNotFoundException("User not found"));
                 })
                 .onStatus(HttpStatus.BAD_REQUEST::equals, response -> {
