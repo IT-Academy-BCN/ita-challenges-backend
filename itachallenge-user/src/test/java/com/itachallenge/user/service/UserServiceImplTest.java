@@ -7,6 +7,7 @@ import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -361,6 +362,71 @@ class UserServiceImplTest {
 
         verify(userRepository, times(0)).findById(any(UUID.class));
         verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("getUserFavorites returns favorite challenges when the user exists and has challenges")
+    void getUserFavorites_WhenUserExistsWithFavorites_ReturnsSet() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+
+        Set<UUID> favorites = Set.of(challengeId1, challengeId2);
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+        user.setFavoriteChallenges(favorites);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        userService.getUserFavorites(userId.toString())
+                .as(StepVerifier::create)
+                .expectNextMatches(result -> result.size() == 2 && result.contains(challengeId1))
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("getUserFavorites returns an empty set when the user has no challenges marked.")
+    void getUserFavorites_WhenUserHasNoFavorites_ReturnsEmptySet() {
+        UUID userId = UUID.randomUUID();
+
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+        user.setFavoriteChallenges(null); // explícitament null
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        userService.getUserFavorites(userId.toString())
+                .as(StepVerifier::create)
+                .expectNextMatches(Set::isEmpty)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("getUserFavorites returns NotFoundException error when the user does not exist")
+    void getUserFavorites_WhenUserNotFound_ReturnsError() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.findById(userId)).thenReturn(Mono.empty());
+
+        userService.getUserFavorites(userId.toString())
+                .as(StepVerifier::create)
+                .expectErrorMatches(error ->
+                        error instanceof NotFoundException &&
+                                error.getMessage().equals("User not found with id: " + userId))
+                .verify();
+    }
+
+    @Test
+    @DisplayName("getUserFavorites throws BadUUIDException when the UUID format is invalid")
+    void getUserFavorites_WhenInvalidUUID_ReturnsBadUUIDException() {
+        String invalidUUID = "invalid-uuid";
+
+        userService.getUserFavorites(invalidUUID)
+                .as(StepVerifier::create)
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format"))
+                .verify();
     }
 
 }

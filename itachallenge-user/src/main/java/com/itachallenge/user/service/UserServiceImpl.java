@@ -94,4 +94,14 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public Mono<Set<UUID>> getUserFavorites(String userId) {
+        return parseAndValidateUUID(userId)
+                .flatMap(userUuid ->
+                        userRepository.findById(userUuid)
+                                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + userId)))
+                                .map(user -> Optional.ofNullable(user.getFavoriteChallenges()).orElseGet(HashSet::new))
+                );
+    }
+
 }
