@@ -63,6 +63,11 @@ class UserSolutionDocumentTest {
     void noArgsBuilder_test(){
         assertNotNull(noArgsUserSolutionDocument);
     }
+
+    @Test
+    void noArgsBuilder_test(){
+        assertNotNull(noArgsUserSolutionDocument);
+    }
 }
 
 
