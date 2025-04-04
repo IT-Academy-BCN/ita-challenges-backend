@@ -611,6 +611,7 @@ class ChallengeControllerTest {
         verify(tagService).getAllTags();
     }
 
+    @Test
     void removeChallengeFromFavorite_Success_Returns200() {
         String challengeId = "existing_challengeId";
         String userId = "existing_userId";
@@ -744,6 +745,36 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.results[0].timesFavorite").isEqualTo(5);
+    }
+
+    @Test
+    void getChallengesByFilter_shouldReturnOkResponse() {
+        // Mock de respuesta vacía
+        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+        resultDto.setInfo(0, 10, 0, new ChallengeDto[0]);
+
+        UUID mockTag = UUID.randomUUID();
+        UUID languageMok = UUID.randomUUID();
+
+        when(challengeService.getChallengesByFilter(
+                Optional.of(languageMok.toString()),
+                Optional.of("EASY"),
+                0,
+                2,
+                Optional.of(List.of(mockTag))
+        )).thenReturn(Mono.just(resultDto));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/challenge/challenges/byFilter")
+                        .queryParam("idLanguage", languageMok.toString())
+                        .queryParam("level", "EASY")
+                        .queryParam("offset", 0)
+                        .queryParam("limit", 2)
+                        .queryParam("tags", mockTag.toString())
+                        .build())
+                .exchange()
+                .expectStatus().isOk(); // <-- solo comprueba 200 OK
     }
 
 }

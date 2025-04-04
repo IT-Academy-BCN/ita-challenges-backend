@@ -109,7 +109,7 @@ class ChallengeServiceImplCacheTest {
         verifyNoMoreInteractions(challengeRepository);
 
     }
-    
+
 
     @DisplayName("Cache - getAllLanguages")
     @Test
