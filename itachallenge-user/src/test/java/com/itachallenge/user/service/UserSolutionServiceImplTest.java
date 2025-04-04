@@ -140,6 +140,8 @@ class UserSolutionServiceImplTest {
     void addSolutionWithEndedStatusWhenInvalid_test() {
         UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
         existingUserSolutionDocument.setStatus(ChallengeStatus.ENDED);
+        String expectedMessage = "Existing solution for user " + userUuid +
+                " and challenge " + challengeUuid + " has status 'ENDED', and thus cannot be modified.";
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
                 .thenReturn(Mono.just(existingUserSolutionDocument));
@@ -147,7 +149,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(userSolutionService.addSolution(userSolutionRequestDto))
                 .expectErrorMatches(
                         throwable -> throwable instanceof UnmodificableSolutionException
-                                && throwable.getMessage().equals("Existing solution has status ENDED, and thus cannot be modified.")).verify();
+                                && throwable.getMessage().equals(expectedMessage)).verify();
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
         verifyNoMoreInteractions(userSolutionRepository);
     }
