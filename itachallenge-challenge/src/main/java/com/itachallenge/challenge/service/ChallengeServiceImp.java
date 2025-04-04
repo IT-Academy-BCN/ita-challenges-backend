@@ -49,7 +49,7 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private LanguageRepository languageRepository;
     @Autowired
-    LanguageServiceImp languageServiceImp;
+    private LanguageService languageService;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
@@ -84,7 +84,7 @@ public class ChallengeServiceImp implements IChallengeService {
             Optional<List<UUID>> tags) {
 
         return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                .transform(challenges -> languageServiceImp.filterByLanguage(challenges, idLanguage))
+                .transform(challenges -> languageService.filterByLanguage(challenges, idLanguage))
                 .transform(challenges -> filterByLevel(challenges, level))
                 .transform(challenges -> tagService.filterByTags(challenges, tags))
                 .collectList()
@@ -105,6 +105,9 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Override
     public Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level) {
+        if (challenges == null) {
+            return Flux.empty();
+        }
         if (level.isPresent() && !level.get().isBlank()) {
             return challenges.filter(challenge ->
                     challenge.getLevel() != null &&

@@ -22,14 +22,13 @@ public class LanguageServiceImp implements LanguageService {
 
     private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 
-    @Autowired
-    private LanguageRepository languageRepository;
-
-    @Autowired
-    private ChallengeRepository challengeRepository;
 
     @Override
     public Flux<ChallengeDocument> filterByLanguage(Flux<ChallengeDocument> challenges, Optional<String> idLanguage) {
+        if (challenges == null) {
+            return Flux.empty();
+        }
+
         if (idLanguage.isPresent() && !idLanguage.get().isBlank()) {
             UUID finalLanguageUUID;
             try {

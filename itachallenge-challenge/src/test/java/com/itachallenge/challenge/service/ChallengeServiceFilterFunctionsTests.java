@@ -15,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
@@ -24,7 +23,7 @@ import java.util.*;
 import static reactor.core.publisher.Mono.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ChallengeFilterTests {
+public class ChallengeServiceFilterFunctionsTests {
 
     @Mock
     private LanguageRepository languageRepository;

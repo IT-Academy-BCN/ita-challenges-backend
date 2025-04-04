@@ -18,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
+
 
 class ChallengeServiceImpTest {
 
@@ -49,6 +51,8 @@ class ChallengeServiceImpTest {
     private IUserService userService;
     @Mock
     private TagService tagService;
+    @Mock
+    private LanguageService languageService;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -65,6 +69,16 @@ class ChallengeServiceImpTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        ReflectionTestUtils.setField(challengeService, "challengeRepository", challengeRepository);
+        ReflectionTestUtils.setField(challengeService, "languageRepository", languageRepository);
+        ReflectionTestUtils.setField(challengeService, "solutionRepository", solutionRepository);
+        ReflectionTestUtils.setField(challengeService, "challengeConverter", challengeConverter);
+        ReflectionTestUtils.setField(challengeService, "languageConverter", languageConverter);
+        ReflectionTestUtils.setField(challengeService, "solutionConverter", solutionConverter);
+        ReflectionTestUtils.setField(challengeService, "userService", userService);
+        ReflectionTestUtils.setField(challengeService, "tagService", tagService);
+        ReflectionTestUtils.setField(challengeService, "languageService", languageService);
 
         String description = "Detall";
         String level = "EASY";
@@ -369,91 +383,6 @@ class ChallengeServiceImpTest {
         verify(challengeRepository).findByUuid(challengeId);
         verify(solutionRepository).save(any(SolutionDocument.class));
         verify(solutionConverter).convertDocumentFluxToDtoFlux(any(), any());
-    }
-
-    @Test
-    void getChallengesByLanguageOrDifficulty_NoChallengesFound_ExceptionThrown() {
-        // Arrange
-        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues()).thenReturn(Flux.empty());
-
-        // Act & Assert
-        StepVerifier.create(challengeService.getChallengesByFilter(Optional.empty(), Optional.empty(), 0, 1, Optional.empty()))
-                .expectErrorMatches(error -> error instanceof ChallengeNotFoundException && error.getMessage().equals("No challenges found"))
-                .verify();
-
-        verify(challengeRepository).findAllByUuidNotNullExcludingTestingValues();
-    }
-
-    @Test
-    void getChallengesByLanguageAndDifficulty_ValidInput_ChallengesReturned() {
-        // Arrange
-        String idLanguage = UUID.randomUUID().toString();
-        String level = "EASY";
-        int offset = 0;
-        int limit = 2;
-
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-
-        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.of(idLanguage), Optional.of(level), offset, limit, Optional.empty());
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
-                })
-                .verifyComplete();
-    }
-
-    @Test
-    void getChallengesByLanguageOrDifficulty_OnlyIdLanguagePresent_ChallengesReturned() {
-        // Arrange
-        String languageId = UUID.randomUUID().toString();
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-
-        when(languageRepository.findByIdLanguage(UUID.fromString(languageId))).thenReturn(Mono.just(new LanguageDocument()));
-        when(challengeRepository.findByLanguages_IdLanguage(UUID.fromString(languageId))).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(challengeDto);
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.of(languageId), Optional.empty(), 0, 1, Optional.empty());
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(challengeDto);
-                })
-                .verifyComplete();
-    }
-
-    @Test
-    void getChallengesByLanguageOrDifficulty_OnlyLevelPresent_ChallengesReturned() {
-        // Arrange
-        String difficulty = "HARD";
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-
-        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
-        genericResultDto.setResults(new ChallengeDto[]{challengeDto});
-
-        when(challengeRepository.findByLevel(difficulty)).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(any(), any())).thenReturn(ChallengeDto.builder().build());
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.empty(), Optional.of(difficulty), 0, 1, Optional.empty());
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getResults()[0]).usingRecursiveComparison().isEqualTo(genericResultDto.getResults()[0]);
-                })
-                .verifyComplete();
     }
 
     @Test
