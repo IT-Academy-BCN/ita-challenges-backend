@@ -27,6 +27,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-challenge-1.5.0-RELEASE] - 2023-05-08
 * Issue #397: Filter revision at endpoint /GET Challenges?idLanguage=99&level=EASY with params offset, limit and count and pagination
 
+### [itachallenge-challenge-1.5.0-RELEASE] - 2025-04-04
+* Feature #184: Filter revision at endpoint /GET Challenges
+    * Added DTO for filter with language, level and tags
+    * Refactored the filtering method in filterByLanguage(), FilterByLevel() and FIterByTags()
+    * Added ENDPOINT GET /allTags
 ### [itachallenge-challenge-1.1.0-RELEASE] - 2023-12-12
 * CORS enabled
 
