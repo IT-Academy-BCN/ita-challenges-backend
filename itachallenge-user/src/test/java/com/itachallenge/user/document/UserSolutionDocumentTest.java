@@ -20,43 +20,43 @@ class UserSolutionDocumentTest {
     UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
     String solutionText1 = "Ipsum.. 1";
     String solutionText2 = "Ipsum.. 2";
-    SolutionDocument solutionDocument1 = new SolutionDocument(solutionId1, solutionText1);
-    SolutionDocument solutionDocument2 = new SolutionDocument(solutionId2, solutionText2);
-    List<SolutionDocument> solutionDocumentList = List.of(solutionDocument1, solutionDocument2);
-    UserSolutionDocument userScoreDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus, solutionDocumentList);
+    SolutionAttemptDocument solutionAttemptDocument1 = new SolutionAttemptDocument(solutionId1, solutionText1);
+    SolutionAttemptDocument solutionAttemptDocument2 = new SolutionAttemptDocument(solutionId2, solutionText2);
+    List<SolutionAttemptDocument> solutionAttemptDocumentList = List.of(solutionAttemptDocument1, solutionAttemptDocument2);
+    UserSolutionDocument userSolutionDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, bookmarked, challengeStatus, solutionAttemptDocumentList);
     UserSolutionDocument noArgsUserSolutionDocument = new UserSolutionDocument();
 
     @Test
     void getUuid(){
-        assertEquals(uuid, userScoreDocument.getUuid());
+        assertEquals(uuid, userSolutionDocument.getUuid());
     }
 
     @Test
-    void getUserId(){ assertEquals(userId, userScoreDocument.getUserId());}
+    void getUserId(){ assertEquals(userId, userSolutionDocument.getUserId());}
 
     @Test
     void getChallengeId(){
-        assertEquals(challengeId, userScoreDocument.getChallengeId());
+        assertEquals(challengeId, userSolutionDocument.getChallengeId());
     }
 
     @Test
     void getLanguageId(){
-        assertEquals(languageId, userScoreDocument.getLanguageId());
+        assertEquals(languageId, userSolutionDocument.getLanguageId());
     }
 
     @Test
     void getBookmark(){
-        assertEquals(bookmarked, userScoreDocument.isBookmarked());
+        assertEquals(bookmarked, userSolutionDocument.isBookmarked());
     }
 
     @Test
     void getStatus(){
-        assertEquals(challengeStatus, userScoreDocument.getStatus());
+        assertEquals(challengeStatus, userSolutionDocument.getStatus());
     }
 
     @Test
-    void getSolutionDocumentList(){
-        assertEquals(solutionDocumentList, userScoreDocument.getSolutionDocument());
+    void getSolutionAttemptDocumentList(){
+        assertEquals(solutionAttemptDocumentList, userSolutionDocument.getSolutionAttemptDocument());
     }
 
     @Test

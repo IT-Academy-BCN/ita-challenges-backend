@@ -1,6 +1,6 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.user.document.SolutionDocument;
+import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
@@ -31,10 +31,10 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
         String status = userSolutionDto.getStatus();
         ChallengeStatus challengeStatus;
-        List<SolutionDocument> solutionDocuments;
+        List<SolutionAttemptDocument> solutionAttemptDocuments;
 
-        solutionDocuments = List.of(
-                SolutionDocument.builder()
+        solutionAttemptDocuments = List.of(
+                SolutionAttemptDocument.builder()
                         .uuid(UUID.randomUUID())
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
@@ -46,24 +46,25 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
             return Mono.error(new IllegalArgumentException("Status null or not allowed"));
         }
 
-        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionDocuments)
+        return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttemptDocuments)
                 .map(savedDocument -> UserSolutionResponseDto.builder()
                         .userId(String.valueOf(savedDocument.getUserId()))
                         .languageId(String.valueOf(savedDocument.getLanguageId()))
                         .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionDocument().getFirst().getSolutionText())
+                        .solutionText(savedDocument.getSolutionAttemptDocument().getFirst().getSolutionText())
                         .build())
-                .doOnSuccess(userSolutionDocument -> log.info("PUT request successfully processed and solution added to challenge."))
-                .doOnError(error -> log.error("POST operation failed with error message: {}", error.getMessage()));
+                .doOnSuccess(userSolutionDocument -> log.info("PUT request successfully processed and solution added to challenge {} for user {}.", userUuid, challengeUuid))
+                .doOnError(error -> log.error("PUT operation failed with error message: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
     }
 
-    private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionDocument> solutionDocuments) {
+    private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, List<SolutionAttemptDocument> solutionAttemptDocuments) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
                     if (existingSolution.getStatus() != null && existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error(new UnmodificableSolutionException("Existing solution has status ENDED, and thus cannot be modified."));
+                        return Mono.error(new UnmodificableSolutionException("Existing solution for user " + userUuid +
+                                " and challenge " + challengeUuid + " has status 'ENDED', and thus cannot be modified."));
                     }
-                    existingSolution.setSolutionDocument(solutionDocuments);
+                    existingSolution.setSolutionAttemptDocument(solutionAttemptDocuments);
                     existingSolution.setStatus(challengeStatus);
                     return userSolutionRepository.save(existingSolution);
                 })
@@ -74,7 +75,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .challengeId(challengeUuid)
                             .languageId(languageUuid)
                             .status(challengeStatus)
-                            .solutionDocument(solutionDocuments)
+                            .solutionAttemptDocument(solutionAttemptDocuments)
                             .build();
                     return userSolutionRepository.save(userSolutionDocument);
                 }));
