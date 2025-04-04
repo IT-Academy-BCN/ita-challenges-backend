@@ -1,6 +1,6 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.user.document.SolutionDocument;
+import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.*;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -65,7 +64,7 @@ class UserSolutionServiceImplTest {
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .status(ChallengeStatus.ENDED)
-                .solutionDocument(List.of(SolutionDocument.builder().solutionText(solutionText).build()))
+                .solutionAttemptDocument(List.of(SolutionAttemptDocument.builder().solutionText(solutionText).build()))
                 .build();
 
     }

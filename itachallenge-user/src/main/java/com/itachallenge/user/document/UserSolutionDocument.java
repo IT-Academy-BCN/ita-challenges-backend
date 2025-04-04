@@ -36,7 +36,7 @@ public class UserSolutionDocument {
     private ChallengeStatus status;
 
     @Field("solution")
-    private List<SolutionDocument> solutionDocument;
+    private List<SolutionAttemptDocument> solutionAttemptDocument;
 
 }
 

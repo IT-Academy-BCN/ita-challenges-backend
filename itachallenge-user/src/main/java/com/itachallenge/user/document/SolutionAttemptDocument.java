@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
-public class SolutionDocument {
+public class SolutionAttemptDocument {
 
     @Id
     @Field(name="id_solution")
