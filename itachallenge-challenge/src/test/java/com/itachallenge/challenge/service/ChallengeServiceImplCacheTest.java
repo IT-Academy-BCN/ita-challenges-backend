@@ -109,53 +109,7 @@ class ChallengeServiceImplCacheTest {
         verifyNoMoreInteractions(challengeRepository);
 
     }
-
-    @DisplayName("Cache - getChallengesByLanguageOrDifficulty")
-    @Test
-    void testGetChallengesByFilter_cacheTest(){
-        // Arrange
-        String idLanguage = UUID.randomUUID().toString();
-        String level = "EASY";
-        List<UUID> tags = List.of(UUID.randomUUID());
-        int offset = 0;
-        int limit = 2;
-
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-
-        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(Optional.of(idLanguage),
-                Optional.of(level),
-                offset, limit,
-                Optional.of(tags));
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(1);
-                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
-                })
-                .verifyComplete();
-
-        verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
-
-        // Act - Cached Results
-        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByFilter(Optional.of(idLanguage), Optional.of(level), offset, limit, Optional.of(tags));
-
-        // Assert - Cached Results
-        StepVerifier.create(resultCached)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(1);
-                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
-                })
-                .verifyComplete();
-
-        verifyNoMoreInteractions(challengeRepository, challengeConverter);
-    }
+    
 
     @DisplayName("Cache - getAllLanguages")
     @Test

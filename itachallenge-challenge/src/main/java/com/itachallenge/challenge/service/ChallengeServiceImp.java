@@ -74,7 +74,11 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-    @Cacheable(value = "challengesByLanguageOrDifficulty", key = "{#idLanguage, #level, #offset, #limit}", unless = "#result == null")
+    @Cacheable(
+            value = "challengesByFilter",
+            key = "T(java.util.Objects).hash(#idLanguage.orElse(''), #level.orElse(''), T(java.util.Objects).hash(#tags.orElse(new java.util.ArrayList())), #offset, #limit)",
+            unless = "#result == null"
+    )
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(
             Optional<String> idLanguage,
