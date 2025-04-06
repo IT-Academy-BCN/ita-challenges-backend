@@ -143,10 +143,10 @@ public class ChallengeController {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/")
+    @GetMapping("/challenges/byFilter")
     @Operation(
-            operationId = "Get challenges on a page by language or difficulty, language or difficulty.",
-            summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
+            operationId = "Get challenges on a page by FILTER (language and/or difficulty and/or tags).",
+            summary = "Get to see challenges on a page and their levels and/or language, and/or tags",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
@@ -155,12 +155,15 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
-            @RequestParam Optional<String> idLanguage,
-            @RequestParam Optional<String> level,
-            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
-            @RequestParam(defaultValue = "-1") int limit) {
-        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
+        log.info("Entering in filter service");
+        return challengeService.getChallengesByFilter(
+                Optional.ofNullable(filter.getIdLanguage()),
+                Optional.ofNullable(filter.getLevel()),
+                filter.getOffset(),
+                filter.getLimit(),
+                Optional.ofNullable(filter.getTags())
+        );
     }
 
 
