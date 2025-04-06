@@ -143,9 +143,9 @@ public class ChallengeController {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/byFilter")
+    @GetMapping("/challenges/")
     @Operation(
-            operationId = "Get challenges on a page by FILTER (language, difficulty, or tags).",
+            operationId = "Get challenges on a page by language or difficulty, language or difficulty.",
             summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
@@ -155,15 +155,12 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
-        log.info("Entrando en el Service de Filtro");
-        return challengeService.getChallengesByFilter(
-                Optional.ofNullable(filter.getIdLanguage()),
-                Optional.ofNullable(filter.getLevel()),
-                filter.getOffset(),
-                filter.getLimit(),
-                Optional.ofNullable(filter.getTags())
-        );
+    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
+            @RequestParam Optional<String> idLanguage,
+            @RequestParam Optional<String> level,
+            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
+            @RequestParam(defaultValue = "-1") int limit) {
+        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
     }
 
 
@@ -327,5 +324,4 @@ public class ChallengeController {
     public Mono<GenericResultDto<TagDto>> getAllTags() {
         return tagService.getAllTags();
     }
-
 }
