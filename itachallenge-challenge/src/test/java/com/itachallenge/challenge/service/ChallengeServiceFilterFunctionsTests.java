@@ -68,9 +68,9 @@ public class ChallengeServiceFilterFunctionsTests {
         List<UUID> tags = new ArrayList<>(Arrays.asList(tag1.getIdTag()));
         List<UUID> solutionList = List.of(UUID.randomUUID(), UUID.randomUUID());
 
-        challenge1 = new ChallengeDocument(uuid_2, "Challenge 2", "EASY", LocalDateTime.now(), detail,
+        challenge1 = new ChallengeDocument(uuid_2, "Challenge 1", "EASY", LocalDateTime.now(), detail,
                 languageSet, solutionList, Topic.LISTS, 10, tags);
-        challenge2 = new ChallengeDocument(uuid_3, "Challenge 3", "HARD", LocalDateTime.now(), detail,
+        challenge2 = new ChallengeDocument(uuid_3, "Challenge 2", "HARD", LocalDateTime.now(), detail,
                 languageSet3, solutionList, Topic.COMPONENTS, 15, tags);
     }
 
@@ -149,8 +149,10 @@ public class ChallengeServiceFilterFunctionsTests {
         List<UUID> tags = List.of(UUID.randomUUID());
 
         StepVerifier.create(tagService.filterByTags(source, Optional.of(tags)))
+                .expectNextCount(0)
                 .verifyComplete();
     }
+
 
     @Test
     public void testFilterByTags_emptyTags_returnsAll() {
