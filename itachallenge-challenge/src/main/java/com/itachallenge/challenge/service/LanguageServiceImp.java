@@ -2,18 +2,11 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.exception.NotFoundException;
-import com.itachallenge.challenge.helper.SafeDataParse;
-import com.itachallenge.challenge.repository.ChallengeRepository;
-import com.itachallenge.challenge.repository.LanguageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
 
