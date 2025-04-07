@@ -34,9 +34,10 @@ public class UserController {
     public static final String X_FAVORITE_ADDED = "X-Favorite-Added";
     public static final String X_FAVORITE_DELETED = "X-Favorite-Deleted";
     public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
-    public static final String X_VALIDATION_STATUS = "X-Validation-Status";
     public static final String X_BOOKMARK_ADDED = "X-Bookmark-Added";
+    public static final String X_BOOKMARK_DELETED = "X-Bookmark-Deleted";
     public static final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
+    public static final String X_VALIDATION_STATUS = "X-Validation-Status";
     public static final String X_ERROR_MESSAGE = "X-Error-Message";
     public static final String X_GITHUB_USERNAME ="X-Github-Username";
     public static final String FALSE = "False";
@@ -332,12 +333,7 @@ public class UserController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "No change, challenge was not in favorites",
-                            content = @Content(mediaType = "application/json")
-                    ),
-                    @ApiResponse(
-                            responseCode = "201",
-                            description = "Challenge deleted from favorites",
+                            description = "Challenge deleted from favorites or was not in favorites",
                             content = @Content(mediaType = "application/json")
                     ),
                     @ApiResponse(
@@ -363,7 +359,7 @@ public class UserController {
                 .map(deleted -> {
                     if (Boolean.TRUE.equals(deleted)) {
                         log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED)
+                        return ResponseEntity.ok()
                                 .header(X_FAVORITE_DELETED, "True")
                                 .header(X_FAVORITE_MESSAGE, "Challenge deleted from favorites.")
                                 .body(true);
@@ -393,6 +389,87 @@ public class UserController {
                     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                             .header(X_FAVORITE_DELETED, FALSE)
                             .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
+                            .body(false));
+                });
+
+    }
+
+    @Operation(
+            summary = "Delete Challenge from User Bookmark Challenges",
+            description = "Deletes challenge from user bookmarks",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "User ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    ),
+                    @Parameter(
+                            name = "challengeId",
+                            description = "Challenge ID",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Challenge deleted from bookmarks or was not in bookmarks",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Bad Request. The provided IDs have a bad format",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found. No user is found with the provided user id.",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Internal server error. An unexpected error occurred.",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+    @DeleteMapping("/users/{userId}/bookmarks/{challengeId}")
+    public Mono<ResponseEntity<Boolean>> deleteFromBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
+        return userService.deleteChallengeFromBookmarks(userId, challengeId)
+                .map(deleted -> {
+                    if (Boolean.TRUE.equals(deleted)) {
+                        log.info("Challenge '{}' deleted from user '{}' bookmarks", challengeId, userId);
+                        return ResponseEntity.ok()
+                                .header(X_BOOKMARK_DELETED, "True")
+                                .header(X_BOOKMARK_MESSAGE, "Challenge deleted from bookmarks.")
+                                .body(true);
+                    }
+                    log.info("No change, User's '{}' bookmarks doesn't contain Challenge '{}'", userId, challengeId);
+                    return ResponseEntity.ok()
+                            .header(X_BOOKMARK_DELETED, FALSE)
+                            .header(X_BOOKMARK_MESSAGE, "Challenge not found in user's bookmarks.")
+                            .body(false);
+                })
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof NotFoundException) {
+                        log.error("No User not found with id: {}", userId);
+                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .header(X_BOOKMARK_DELETED, FALSE)
+                                .header(X_BOOKMARK_MESSAGE, "User not found.")
+                                .body(false));
+                    }
+                    if (throwable instanceof BadUUIDException) {
+                        log.error("The provided IDs are not valid.");
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .header(X_BOOKMARK_DELETED, FALSE)
+                                .header(X_BOOKMARK_MESSAGE, "The provided IDs are not valid.")
+                                .body(false));
+                    }
+                    log.error("Unexpected error: {}", throwable.getMessage());
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .header(X_BOOKMARK_DELETED, FALSE)
+                            .header(X_BOOKMARK_MESSAGE, "Unexpected server error.")
                             .body(false));
                 });
 
