@@ -202,6 +202,7 @@ class ChallengeControllerTest {
 
         ChallengeDto challenge1 = new ChallengeDto();
         challenge1.setTitle("Challenge 1");
+        challenge1.setLevel(level);
 
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challenge1});
@@ -211,7 +212,7 @@ class ChallengeControllerTest {
 
         webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/challenge/challenges")
+                        .path("/itachallenge/api/v1/challenge/challenges/byFilter")
                         .queryParam("idLanguage", idLanguage)
                         .queryParam("level", level)
                         .queryParam("offset", String.valueOf(offset))
@@ -220,8 +221,10 @@ class ChallengeControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON);
-
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody()
+                .jsonPath("$.results[0].challenge_title").isEqualTo("Challenge 1")
+                .jsonPath("$.results[0].level").isEqualTo(level);
     }
 
     @Test
