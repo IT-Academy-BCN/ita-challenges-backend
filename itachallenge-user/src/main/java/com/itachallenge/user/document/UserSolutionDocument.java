@@ -29,9 +29,6 @@ public class UserSolutionDocument {
     @Field("language_id")
     private UUID languageId;
 
-    @Field("bookmarked")
-    private boolean bookmarked;
-
     @Field("status")
     private ChallengeStatus status;
 
