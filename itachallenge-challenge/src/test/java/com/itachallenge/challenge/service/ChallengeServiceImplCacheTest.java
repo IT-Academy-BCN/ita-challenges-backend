@@ -47,6 +47,9 @@ class ChallengeServiceImplCacheTest {
     private SolutionRepository solutionRepository;
 
     @Mock
+    private LanguageService languageService;
+
+    @Mock
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
 
     @Mock
@@ -127,7 +130,7 @@ class ChallengeServiceImplCacheTest {
         when(languageConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(languageDto1, languageDto2));
 
         // Act
-        Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
+        Mono<GenericResultDto<LanguageDto>> result = languageService.getAllLanguages();
 
         // Assert
         StepVerifier.create(result)
@@ -139,7 +142,7 @@ class ChallengeServiceImplCacheTest {
 
         verify(languageConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
 
-        Mono<GenericResultDto<LanguageDto>> resultCached = challengeService.getAllLanguages();
+        Mono<GenericResultDto<LanguageDto>> resultCached = languageService.getAllLanguages();
 
         StepVerifier.create(resultCached)
                 .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
