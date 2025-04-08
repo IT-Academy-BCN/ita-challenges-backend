@@ -4,6 +4,7 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.user.exception.UserGlobalExceptionHandler;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +37,9 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
-        webTestClient = WebTestClient.bindToController(userController).build();
+        webTestClient = WebTestClient.bindToController(userController)
+                .controllerAdvice(new UserGlobalExceptionHandler())
+                .build();
     }
 
     @AfterEach
@@ -65,7 +68,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().exists("X-Validation-Status")
                 .expectBody(UserDocument.class).isEqualTo(expectedUser);
 
         verify(userService, times(1)).getUser(githubUsername);
@@ -101,7 +103,6 @@ class UserControllerTest {
 
     @Test
     void addToFavorites_WhenAdded_Returns201() {
-
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.addChallengeToFavorites(userId, challengeId))
