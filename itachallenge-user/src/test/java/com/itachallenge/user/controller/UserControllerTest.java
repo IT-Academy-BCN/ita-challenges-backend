@@ -101,6 +101,7 @@ class UserControllerTest {
 
     @Test
     void addToFavorites_WhenAdded_Returns201() {
+
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.addChallengeToFavorites(userId, challengeId))
