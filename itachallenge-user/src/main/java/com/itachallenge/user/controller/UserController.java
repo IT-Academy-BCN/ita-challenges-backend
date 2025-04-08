@@ -30,18 +30,6 @@ import java.util.UUID;
 @RequestMapping(value = "/itachallenge/api/v1/user")
 public class UserController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    public static final String X_FAVORITE_ADDED = "X-Favorite-Added";
-    public static final String X_FAVORITE_DELETED = "X-Favorite-Deleted";
-    public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
-    public static final String X_BOOKMARK_ADDED = "X-Bookmark-Added";
-    public static final String X_BOOKMARK_DELETED = "X-Bookmark-Deleted";
-    public static final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
-    public static final String X_VALIDATION_STATUS = "X-Validation-Status";
-    public static final String X_ERROR_MESSAGE = "X-Error-Message";
-    public static final String X_GITHUB_USERNAME ="X-Github-Username";
-    public static final String FALSE = "False";
-
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -87,32 +75,10 @@ public class UserController {
                     )
             }
     )
-
     @GetMapping("/users/{githubUsername}")
     public Mono<ResponseEntity<UserDocument>> getUser(@PathVariable @ValidGithubUsername String githubUsername) {
         return userService.getUser(githubUsername)
-                .map(user -> {
-                    log.info("User found: {} (Role: {})", githubUsername, user.getRole());
-                    return ResponseEntity.ok()
-                            .header(X_VALIDATION_STATUS, "Success")
-                            .header(X_GITHUB_USERNAME, githubUsername)
-                            .body(user);
-                })
-                .switchIfEmpty(Mono.fromCallable(() -> {
-                    log.warn("User not found: {}", githubUsername);
-                    return ResponseEntity
-                            .status(HttpStatus.NOT_FOUND)
-                            .header(X_VALIDATION_STATUS, "Error")
-                            .header(X_ERROR_MESSAGE, "User not found")
-                            .body(null);
-                }))
-                .onErrorResume(e -> {
-                    log.error("Error retrieving user '{}': {}", githubUsername, e.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(X_VALIDATION_STATUS, "Error")
-                            .header(X_ERROR_MESSAGE, "An error occurred retrieving user.")
-                            .body(null));
-                });
+                .map(ResponseEntity::ok);
     }
 
     @Operation(
@@ -160,72 +126,12 @@ public class UserController {
                     )
             }
     )
-
     @PostMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.addChallengeToFavorites(userId, challengeId)
-                .map(added -> {
-                    if (Boolean.TRUE.equals(added)) {
-                        log.info("Challenge '{}' added to user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED)
-                                .header(X_FAVORITE_ADDED, "True")
-                                .header(X_FAVORITE_MESSAGE, "Challenge added to favorites.")
-                                .body(true);
-                    }
-                    log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
-                    return ResponseEntity.ok()
-                            .header(X_FAVORITE_ADDED, FALSE)
-                            .header(X_FAVORITE_MESSAGE, "Challenge is already in favorites.")
-                            .body(false);
-                })
-                .onErrorResume(throwable -> {
-                    if (throwable instanceof NotFoundException) {
-                        log.warn("No User not found with id: {}", userId);
-                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .header(X_FAVORITE_ADDED, FALSE)
-                                .header(X_FAVORITE_MESSAGE, "User not found.")
-                                .body(false));
-                    }
-                    if (throwable instanceof BadUUIDException) {
-                        log.error("The provided IDs are not valid.");
-                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .header(X_FAVORITE_ADDED, FALSE)
-                                .header(X_FAVORITE_MESSAGE, "The provided IDs are not valid.")
-                                .body(false));
-                    }
-                    log.error("Unexpected error: {}", throwable.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(X_FAVORITE_ADDED, FALSE)
-                            .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
-                            .body(false));
-                });
+                .map(added -> ResponseEntity.status(added ? HttpStatus.CREATED : HttpStatus.OK).body(added));
     }
 
-    @PutMapping(path = "/solution")
-    @Operation(
-            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
-                            mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Bad request",
-                            content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
-                            content = {@Content(schema = @Schema())})
-            }
-    )
-    public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
-            @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
-        
-        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
-                userSolutionRequestDto.getUserId(),
-                userSolutionRequestDto.getChallengeId(),
-                userSolutionRequestDto.getLanguageId(),
-                userSolutionRequestDto.getSolutionText()
-        );
-
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
-    }
-  
     @Operation(
             summary = "Add Challenge to User Bookmark Challenges",
             description = "Adds challenge to user Bookmarks",
@@ -271,47 +177,33 @@ public class UserController {
                     )
             }
     )
-
     @PostMapping("/users/{userId}/bookmarks/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.addChallengeToBookmarks(userId, challengeId)
-                .map(added -> {
-                    if (Boolean.TRUE.equals(added)) {
-                        log.info("Challenge '{}' added to user '{}' bookmarks", challengeId, userId);
-                        return ResponseEntity.status(HttpStatus.CREATED)
-                                .header(X_BOOKMARK_ADDED, "True")
-                                .header(X_BOOKMARK_MESSAGE, "Challenge added to Bookmarks.")
-                                .body(true);
-                    }
-                    log.info("User's '{}' bookmarks already contain Challenge '{}'", userId, challengeId);
-                    return ResponseEntity.ok()
-                            .header(X_BOOKMARK_ADDED, FALSE)
-                            .header(X_BOOKMARK_MESSAGE, "Challenge is already in Bookmarks.")
-                            .body(false);
-                })
-                .onErrorResume(throwable -> {
-                    if (throwable instanceof NotFoundException) {
-                        log.warn("No User not found with id: {}", userId);
-                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .header(X_BOOKMARK_ADDED, FALSE)
-                                .header(X_BOOKMARK_MESSAGE, "User not found.")
-                                .body(false));
-                    }
-                    if (throwable instanceof BadUUIDException) {
-                        log.error("The provided IDs are not valid.");
-                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .header(X_BOOKMARK_ADDED, FALSE)
-                                .header(X_BOOKMARK_MESSAGE, "The provided IDs are not valid.")
-                                .body(false));
-                    }
-                    log.error("Unexpected error: {}", throwable.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(X_BOOKMARK_ADDED, FALSE)
-                            .header(X_BOOKMARK_MESSAGE, "Unexpected server error.")
-                            .body(false));
-                });
+                .map(added -> ResponseEntity.status(added ? HttpStatus.CREATED : HttpStatus.OK).body(added));
     }
 
+    @Operation(
+            summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = UserSolutionRequestDto.class),
+                            mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Bad request",
+                            content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "500", description = "Challenge status: ended",
+                            content = {@Content(schema = @Schema())})
+            }
+    )
+    @PutMapping(path = "/solution")
+    public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(@Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
+        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
+                userSolutionRequestDto.getUserId(),
+                userSolutionRequestDto.getChallengeId(),
+                userSolutionRequestDto.getLanguageId(),
+                userSolutionRequestDto.getSolutionText()
+        );
+        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
+    }
 
     @Operation(
             summary = "Delete Challenge from User Favorite Challenges",
@@ -356,42 +248,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> deleteFromFavorites(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.deleteChallengeFromFavorites(userId, challengeId)
-                .map(deleted -> {
-                    if (Boolean.TRUE.equals(deleted)) {
-                        log.info("Challenge '{}' deleted from user '{}' favorites", challengeId, userId);
-                        return ResponseEntity.ok()
-                                .header(X_FAVORITE_DELETED, "True")
-                                .header(X_FAVORITE_MESSAGE, "Challenge deleted from favorites.")
-                                .body(true);
-                    }
-                    log.info("No change, User's '{}' favorites doesn't contain Challenge '{}'", userId, challengeId);
-                    return ResponseEntity.ok()
-                            .header(X_FAVORITE_DELETED, FALSE)
-                            .header(X_FAVORITE_MESSAGE, "Challenge not found in user's favorites.")
-                            .body(false);
-                })
-                .onErrorResume(throwable -> {
-                    if (throwable instanceof NotFoundException) {
-                        log.error("No User not found with id: {}", userId);
-                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .header(X_FAVORITE_DELETED, FALSE)
-                                .header(X_FAVORITE_MESSAGE, "User not found.")
-                                .body(false));
-                    }
-                    if (throwable instanceof BadUUIDException) {
-                        log.error("The provided IDs are not valid.");
-                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .header(X_FAVORITE_DELETED, FALSE)
-                                .header(X_FAVORITE_MESSAGE, "The provided IDs are not valid.")
-                                .body(false));
-                    }
-                    log.error("Unexpected error: {}", throwable.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(X_FAVORITE_DELETED, FALSE)
-                            .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
-                            .body(false));
-                });
-
+                .map(deleted -> ResponseEntity.status(deleted ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(deleted));
     }
 
     @Operation(
@@ -437,42 +294,7 @@ public class UserController {
     @DeleteMapping("/users/{userId}/bookmarks/{challengeId}")
     public Mono<ResponseEntity<Boolean>> deleteFromBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.deleteChallengeFromBookmarks(userId, challengeId)
-                .map(deleted -> {
-                    if (Boolean.TRUE.equals(deleted)) {
-                        log.info("Challenge '{}' deleted from user '{}' bookmarks", challengeId, userId);
-                        return ResponseEntity.ok()
-                                .header(X_BOOKMARK_DELETED, "True")
-                                .header(X_BOOKMARK_MESSAGE, "Challenge deleted from bookmarks.")
-                                .body(true);
-                    }
-                    log.info("No change, User's '{}' bookmarks doesn't contain Challenge '{}'", userId, challengeId);
-                    return ResponseEntity.ok()
-                            .header(X_BOOKMARK_DELETED, FALSE)
-                            .header(X_BOOKMARK_MESSAGE, "Challenge not found in user's bookmarks.")
-                            .body(false);
-                })
-                .onErrorResume(throwable -> {
-                    if (throwable instanceof NotFoundException) {
-                        log.error("No User not found with id: {}", userId);
-                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .header(X_BOOKMARK_DELETED, FALSE)
-                                .header(X_BOOKMARK_MESSAGE, "User not found.")
-                                .body(false));
-                    }
-                    if (throwable instanceof BadUUIDException) {
-                        log.error("The provided IDs are not valid.");
-                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .header(X_BOOKMARK_DELETED, FALSE)
-                                .header(X_BOOKMARK_MESSAGE, "The provided IDs are not valid.")
-                                .body(false));
-                    }
-                    log.error("Unexpected error: {}", throwable.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(X_BOOKMARK_DELETED, FALSE)
-                            .header(X_BOOKMARK_MESSAGE, "Unexpected server error.")
-                            .body(false));
-                });
-
+                .map(deleted -> ResponseEntity.status(deleted ? HttpStatus.OK : HttpStatus.NOT_FOUND).body(deleted));
     }
 
     @Operation(
@@ -493,37 +315,9 @@ public class UserController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-
     @GetMapping("/users/{userId}/favorites")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
         return userService.getUserFavorites(userId)
-                .map(favorites -> {
-                    log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
-                    return ResponseEntity.ok()
-                            .header(X_VALIDATION_STATUS, "Success")
-                            .body(favorites);
-                })
-                .onErrorResume(throwable -> {
-                    if (throwable instanceof NotFoundException) {
-                        log.warn("User not found with id: {}", userId);
-                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .header(X_VALIDATION_STATUS, "Error")
-                                .header(X_ERROR_MESSAGE, "User not found")
-                                .body(null));
-                    }
-                    if (throwable instanceof BadUUIDException) {
-                        log.error("Invalid UUID provided: {}", userId);
-                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .header(X_VALIDATION_STATUS, "Error")
-                                .header(X_ERROR_MESSAGE, "Invalid UUID format")
-                                .body(null));
-                    }
-                    log.error("Unexpected error getting favorites from user {}: {}", userId, throwable.getMessage());
-                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(X_VALIDATION_STATUS, "Error")
-                            .header(X_ERROR_MESSAGE, "Unexpected server error")
-                            .body(null));
-                });
+                .map(ResponseEntity::ok);
     }
-
 }

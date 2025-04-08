@@ -61,6 +61,4 @@ public class UserGlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
-
-
 }
