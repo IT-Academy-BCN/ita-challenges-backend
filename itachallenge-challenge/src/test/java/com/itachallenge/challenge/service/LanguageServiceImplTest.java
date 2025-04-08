@@ -5,6 +5,7 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.LanguageRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,9 +19,10 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class LanguageServiceImplTest {
@@ -135,6 +137,27 @@ public class LanguageServiceImplTest {
                 .expectErrorMatches(throwable -> throwable instanceof RuntimeException &&
                         throwable.getMessage().equals("Database error"))
                 .verify();
+    }
+
+    @DisplayName("Cache - getAllLanguages")
+    @Test
+    void getAllLanguages_cacheTest() {
+        // Arrange
+        LanguageDocument languageDocument1 = new LanguageDocument(UUID.randomUUID(), "Javascript", "https://image-default.com/javascript.png");
+        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1));
+
+        // Primera llamada
+        GenericResultDto<LanguageDto> result1 = languageService.getAllLanguages().block();
+        assertNotNull(result1);
+        assertEquals(1, result1.getResults().length);
+
+        // Segunda llamada usando cache
+        GenericResultDto<LanguageDto> result2 = languageService.getAllLanguages().block();
+        assertNotNull(result2);
+        assertEquals(1, result2.getResults().length);
+
+
+        verify(languageRepository, times(1)).findAll();
     }
 }
 

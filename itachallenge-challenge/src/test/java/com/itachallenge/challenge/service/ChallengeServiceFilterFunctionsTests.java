@@ -49,7 +49,7 @@ public class ChallengeServiceFilterFunctionsTests {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        languageService = new LanguageServiceImpl();
+        languageService = new LanguageServiceImpl(languageRepository);
         tagService = new TagServiceImpl(); // si no depende de nada
         challengeService = new ChallengeServiceImpl(); // idem
 
