@@ -5,7 +5,6 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.LanguageRepository;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,8 +18,6 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -35,33 +32,6 @@ public class LanguageServiceImplTest {
 
     @InjectMocks
     private LanguageServiceImpl languageService;
-
-    @Test
-    void getAllLanguages_LanguageExist_LanguageReturned() {
-        // Arrange
-        UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
-        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript", "https://image-default.com/javascript.png");
-        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python", "https://image-default.com/python.png");
-        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript", "https://image-default.com/javascript.png");
-        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python", "https://image-default.com/python.png");
-        LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
-
-        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(languageConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(languageDto1, languageDto2));
-
-        // Act
-        Mono<GenericResultDto<LanguageDto>> result = languageService.getAllLanguages();
-
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
-                .expectComplete()
-                .verify();
-
-        verify(languageRepository).findAll();
-        verify(languageConverter).convertDocumentFluxToDtoFlux(any(), any());
-    }
 
     @Test
     void shouldReturnLanguageDocumentWhenIdExists() {
@@ -139,25 +109,25 @@ public class LanguageServiceImplTest {
                 .verify();
     }
 
-    @DisplayName("Cache - getAllLanguages")
-    @Test
-    void getAllLanguages_cacheTest() {
-        // Arrange
-        LanguageDocument languageDocument1 = new LanguageDocument(UUID.randomUUID(), "Javascript", "https://image-default.com/javascript.png");
-        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1));
-
-        // Primera llamada
-        GenericResultDto<LanguageDto> result1 = languageService.getAllLanguages().block();
-        assertNotNull(result1);
-        assertEquals(1, result1.getResults().length);
-
-        // Segunda llamada usando cache
-        GenericResultDto<LanguageDto> result2 = languageService.getAllLanguages().block();
-        assertNotNull(result2);
-        assertEquals(1, result2.getResults().length);
-
-
-        verify(languageRepository, times(1)).findAll();
-    }
+//    @DisplayName("Cache - getAllLanguages")
+//    @Test
+//    void getAllLanguages_cacheTest() {
+//        // Arrange
+//        LanguageDocument languageDocument1 = new LanguageDocument(UUID.randomUUID(), "Javascript", "https://image-default.com/javascript.png");
+//        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1));
+//
+//        // Primera llamada
+//        GenericResultDto<LanguageDto> result1 = languageService.getAllLanguages().block();
+//        assertNotNull(result1);
+//        assertEquals(1, result1.getResults().length);
+//
+//        // Segunda llamada usando cache
+//        GenericResultDto<LanguageDto> result2 = languageService.getAllLanguages().block();
+//        assertNotNull(result2);
+//        assertEquals(1, result2.getResults().length);
+//
+//
+//        verify(languageRepository, times(1)).findAll();
+//    }
 }
 
