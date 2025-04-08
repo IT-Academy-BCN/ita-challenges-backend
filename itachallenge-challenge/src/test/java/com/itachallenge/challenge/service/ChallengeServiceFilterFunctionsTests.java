@@ -32,10 +32,10 @@ public class ChallengeServiceFilterFunctionsTests {
     private ChallengeRepository challengeRepository;
 
     @InjectMocks
-    private LanguageServiceImp languageService;
+    private LanguageServiceImpl languageService;
 
-    private TagService tagService;
-    private ChallengeServiceImp challengeService;
+    private TagServiceImpl tagService;
+    private ChallengeServiceImpl challengeService;
 
     private final String mockLanguageId = "123e4567-e89b-12d3-a456-426614174000";
 
@@ -49,9 +49,9 @@ public class ChallengeServiceFilterFunctionsTests {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        languageService = new LanguageServiceImp();
-        tagService = new TagService(); // si no depende de nada
-        challengeService = new ChallengeServiceImp(); // idem
+        languageService = new LanguageServiceImpl();
+        tagService = new TagServiceImpl(); // si no depende de nada
+        challengeService = new ChallengeServiceImpl(); // idem
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");

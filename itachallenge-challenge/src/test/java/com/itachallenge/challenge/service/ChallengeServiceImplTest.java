@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-class ChallengeServiceImpTest {
+class ChallengeServiceImplTest {
 
     @Mock
     private ChallengeRepository challengeRepository;
@@ -50,12 +50,12 @@ class ChallengeServiceImpTest {
     @Mock
     private IUserService userService;
     @Mock
-    private TagService tagService;
+    private TagServiceImpl tagService;
     @Mock
     private LanguageService languageService;
 
     @InjectMocks
-    private ChallengeServiceImp challengeService;
+    private ChallengeServiceImpl challengeService;
 
     String title = "Títol";
     String languageName = "language name";
@@ -106,7 +106,7 @@ class ChallengeServiceImpTest {
         LanguageDto languageDto = new LanguageDto(languageRandomId, languageName, languageImage);
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
-                Set.of(ChallengeServiceImpTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
+                Set.of(ChallengeServiceImplTest.this.languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
                 20, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,

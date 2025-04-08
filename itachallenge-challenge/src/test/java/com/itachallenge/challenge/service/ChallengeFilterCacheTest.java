@@ -2,7 +2,6 @@ package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,11 +9,8 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +25,7 @@ import static org.mockito.Mockito.*;
 class ChallengeFilterCacheTest {
 
     @Autowired
-    private ChallengeServiceImp challengeService;
+    private ChallengeServiceImpl challengeService;
 
     @MockBean
     private ChallengeRepository challengeRepository;
@@ -38,7 +34,7 @@ class ChallengeFilterCacheTest {
     private LanguageService languageService;
 
     @MockBean
-    private TagService tagService;
+    private TagServiceImpl tagService;
 
     @BeforeEach
     void setUp() {

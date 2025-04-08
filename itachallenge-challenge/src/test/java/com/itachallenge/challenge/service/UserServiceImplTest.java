@@ -17,10 +17,10 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserServiceTest {
+public class UserServiceImplTest {
 
     private MockWebServer mockWebServer;
-    private UserService userService;
+    private UserServiceImpl userService;
 
     private static final String USER_SERVICE_URL = "/itachallenge/api/v1/user/users/%s/favorites/%s";
     public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
@@ -30,7 +30,7 @@ public class UserServiceTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
 
-        userService = new UserService(
+        userService = new UserServiceImpl(
                 WebClient.builder(),
                 mockWebServer.url("").toString()
         );

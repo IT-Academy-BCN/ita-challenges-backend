@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 @ExtendWith(MockitoExtension.class)
-class ResourceServiceTest {
+class ResourceServiceImplTest {
 
     @Mock
     private ResourceRepository resourceRepository;
@@ -34,7 +34,7 @@ class ResourceServiceTest {
     private IChallengeService challengeService;
 
     @InjectMocks
-    private ResourceService resourceService;
+    private ResourceServiceImpl resourceService;
 
     @Test //
     void createResource_WithValidData_ResourceCreated() {

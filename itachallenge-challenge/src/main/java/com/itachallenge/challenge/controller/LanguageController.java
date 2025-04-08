@@ -3,6 +3,7 @@ package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.LanguageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,7 +21,7 @@ import reactor.core.publisher.Mono;
 @RequestMapping(value = "/itachallenge/api/v1/language")
 public class LanguageController {
 
-    private IChallengeService challengeService;
+    private LanguageService languageService;
 
     @GetMapping("/language")
     @Operation(
@@ -32,6 +33,6 @@ public class LanguageController {
             }
     )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        return challengeService.getAllLanguages();
+        return languageService.getAllLanguages();
     }
 }

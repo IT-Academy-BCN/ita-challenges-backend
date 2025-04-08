@@ -56,7 +56,7 @@ class ChallengeServiceImplCacheTest {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
 
     @InjectMocks
-    private ChallengeServiceImp challengeService;
+    private ChallengeServiceImpl challengeService;
 
     @Autowired
     private CacheManager cacheManager;

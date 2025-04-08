@@ -32,11 +32,11 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class ChallengeServiceImp implements IChallengeService {
+public class ChallengeServiceImpl implements IChallengeService {
 
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
-    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
+    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImpl.class);
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
 
@@ -47,21 +47,17 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private LanguageRepository languageRepository;
-    @Autowired
     private LanguageService languageService;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
     @Autowired
-    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
-    @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     @Autowired
     private IUserService userService;
     @Autowired
-    private TagService tagService;
+    private TagServiceImpl tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -120,19 +116,6 @@ public class ChallengeServiceImp implements IChallengeService {
         }
 
         return challenges;
-    }
-
-
-
-    @Cacheable(value = "allLanguages")
-    @Override
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
-        return languagesDto.collectList().map(language -> {
-            GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
-            return resultDto;
-        });
     }
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
@@ -196,7 +179,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
 
-                    return languageRepository.findByIdLanguage(languageId)
+                    return languageService.findByIdLanguage(languageId)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -260,7 +243,7 @@ public class ChallengeServiceImp implements IChallengeService {
             return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
         }
 
-        return languageRepository.findFirstByLanguageName(codingLanguage)
+        return languageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
                     SolutionDocument solution = SolutionDocument.builder()

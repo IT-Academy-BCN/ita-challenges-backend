@@ -7,7 +7,7 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.challenge.service.JwtService;
+import com.itachallenge.challenge.service.JwtServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +33,7 @@ public class ChallengeController {
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "200";  //if no limit, all elements (avoid exception with default value 200)
     private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]
+    private static final String NO_SERVICE = "No Services";
     private static final String INVALID_PARAM = "Invalid parameter";
     private static final String UUID_PATTERN = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
     private static final String STRING_PATTERN = "^[A-Za-z]{1,9}$";  //max 9 characters
@@ -44,10 +45,68 @@ public class ChallengeController {
     private final PropertiesConfig config;
 
     @Autowired
+    private DiscoveryClient discoveryClient;
+
+    @Autowired
     private IChallengeService challengeService;
+
+    @Autowired
+    private ITagService tagService;
+
+    @Autowired
+    private JwtServiceImpl jwtService;
+
+    @Value("${spring.application.version}")
+    private String version;
+
+    @Value("${spring.application.name}")
+    private String appName;
 
     public ChallengeController(PropertiesConfig config) {
         this.config = config;
+    }
+
+    @GetMapping(value = "/test")
+    public String test() {
+        log.info("** Saludos desde el logger **");
+
+        Optional<String> optChallengeService = discoveryClient.getInstances("itachallenge-challenge")
+                .stream()
+                .findAny()
+                .map(Object::toString);
+
+        Optional<String> userService = discoveryClient.getInstances("itachallenge-user")
+                .stream()
+                .findAny()
+                .map(Object::toString);
+
+
+        log.info("~~~~~~~~~~~~~~~~~~~~~~");
+        log.info("Scanning micros:");
+
+        StringBuilder logMessage = new StringBuilder("Scanning micros:");
+
+        if (userService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("User service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+        if (optChallengeService.isPresent()) {
+            logMessage.append(System.lineSeparator()).append("Challenge service available");
+        } else {
+            logMessage.append(System.lineSeparator()).append(NO_SERVICE);
+        }
+
+
+        String logMessageStr = logMessage.toString();
+        log.info(logMessageStr);
+
+
+        log.info("~~~~~~~~~~~~~~~~~~~~~~");
+
+
+        return "Hello from ITA Challenge!!!";
     }
 
     @GetMapping(path = "/challenges/{challengeId}")
@@ -86,8 +145,8 @@ public class ChallengeController {
 
     @GetMapping("/challenges/byFilter")
     @Operation(
-            operationId = "Get challenges on a page by FILTER (language and/or difficulty and/or tags).",
-            summary = "Get to see challenges on a page and their levels and/or language, and/or tags",
+            operationId = "Get challenges on a page by FILTER (language, difficulty, or tags).",
+            summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
@@ -97,7 +156,7 @@ public class ChallengeController {
             })
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
-        log.info("Entering in filter service");
+        log.info("Entrando en el Service de Filtro");
         return challengeService.getChallengesByFilter(
                 Optional.ofNullable(filter.getIdLanguage()),
                 Optional.ofNullable(filter.getLevel()),
@@ -105,6 +164,46 @@ public class ChallengeController {
                 filter.getLimit(),
                 Optional.ofNullable(filter.getTags())
         );
+    }
+
+    @GetMapping("/solution/challenge/{idChallenge}/language/{idLanguage}")
+    @Operation(
+            operationId = "Get the solutions from a chosen challenge and language.",
+            summary = "Get to see the Solution id, text and language.",
+            description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+            }
+    )
+    public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
+                                                                    idChallenge, @PathVariable("idLanguage") String idLanguage) {
+        return challengeService.getSolutions(idChallenge, idLanguage);
+
+    }
+
+    @PostMapping("/solution")
+    @Operation(
+            operationId = "Add solution to a chosen chosen challenge.",
+            summary = "Update the Challenge level, add accepted solution to the challenge.",
+            description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+            }
+    )
+    public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
+        return challengeService.addSolution(solutionDto)
+                .map(solution -> {
+                    Map<String, Object> response = new HashMap<>();
+                    response.put("uuid_challenge", solution.getIdChallenge());
+                    response.put("uuid_language", solution.getIdLanguage());
+                    response.put("solution_text", solution.getSolutionText());
+                    return response;
+                });
     }
 
     @PostMapping("/challenges")
@@ -122,6 +221,25 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
+    @GetMapping("/version")
+    @Operation(
+            summary = "Get Application Version",
+            description = "Retrieve the version of the application.",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Successful response with the application version and name.",
+                            content = @Content(schema = @Schema(implementation = Map.class))
+                    )
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> getVersion() {
+        Map<String, String> response = new HashMap<>();
+        response.put("application_name", appName);
+        response.put("version", version);
+        return Mono.just(ResponseEntity.ok(response));
+    }
+
     @DeleteMapping(path = "/challenges/{challengeId}")
     @Operation(
             operationId = "Delete a chosen challenge.",
@@ -137,6 +255,63 @@ public class ChallengeController {
 
         return challengeService.deleteChallengeById(id)
                 .map(dto -> ResponseEntity.ok().body(dto));
+    }
+
+    @PostMapping("/challenges/{challengeId}/favorites")
+    @Operation(
+            operationId = "Add a challenge to User's favorites.",
+            summary = "Add a challenge to favorites.",
+            description = "The ID Challenge sent through the URI is added to the user's favorites. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallengeToFavorites(challengeId, userId))
+                .doOnError(error -> log.error("Error adding challenge to favorites: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
+    @DeleteMapping("/challenges/{challengeId}/favorites")
+    @Operation(
+            operationId = "Remove a challenge from the User's favorites.",
+            summary = "Remove a challenge from favorites.",
+            description = "The ID Challenge sent through the URI is removed from the user's favorites. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<FavoriteDto>> removeChallengeFromFavorite(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.removeChallengeFromFavorites(challengeId, userId))
+                .doOnError(error -> log.error("Error removing challenge from favorites: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
+    @GetMapping("/tags")
+    @Operation(
+            operationId = "Get all stored tags from the Database for FrontEnd can print them.",
+            summary = "Get to see all id tags, name and description.",
+            description = "Requesting all the tags through the URI from the database.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+            }
+    )
+    public Mono<GenericResultDto<TagDto>> getAllTags() {
+        return tagService.getAllTags();
     }
 
 }
