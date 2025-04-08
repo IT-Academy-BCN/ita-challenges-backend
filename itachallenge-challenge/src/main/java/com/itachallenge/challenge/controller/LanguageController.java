@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +20,10 @@ import reactor.core.publisher.Mono;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping(value = "/itachallenge/api/v1/language")
+@RequestMapping(value = "/itachallenge/api/v1/languages")
 public class LanguageController {
 
+    @NonNull
     private LanguageService languageService;
 
     @GetMapping("/language")
