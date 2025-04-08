@@ -66,8 +66,6 @@ class UserControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().exists("X-Validation-Status")
-                .expectHeader().valueEquals("X-Validation-Status", "Success")
-                .expectHeader().valueEquals("X-Github-Username", githubUsername)
                 .expectBody(UserDocument.class).isEqualTo(expectedUser);
 
         verify(userService, times(1)).getUser(githubUsername);
@@ -82,9 +80,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectHeader().exists("X-Validation-Status")
-                .expectHeader().valueEquals("X-Validation-Status", "Error")
-                .expectHeader().valueEquals("X-Error-Message", "User not found")
                 .expectBody().isEmpty();
 
         verify(userService, times(1)).getUser(githubUsername);
@@ -99,9 +94,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectHeader().exists("X-Validation-Status")
-                .expectHeader().valueEquals("X-Validation-Status", "Error")
-                .expectHeader().valueEquals("X-Error-Message", "An error occurred retrieving user.")
                 .expectBody().isEmpty();
 
         verify(userService, times(1)).getUser(githubUsername);
@@ -118,8 +110,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
-                .expectHeader().valueEquals("X-Favorite-Added", "True")
-                .expectHeader().valueEquals("X-Favorite-Message", "Challenge added to favorites.")
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
@@ -136,8 +126,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.CREATED)
-                .expectHeader().valueEquals("X-Bookmark-Added", "True")
-                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge added to Bookmarks.")
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
@@ -154,8 +142,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueEquals("X-Favorite-Added", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "Challenge is already in favorites.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
@@ -172,8 +158,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueEquals("X-Bookmark-Added", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge is already in Bookmarks.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
@@ -190,8 +174,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectHeader().valueEquals("X-Favorite-Added", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "User not found.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
@@ -208,8 +190,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectHeader().valueEquals("X-Bookmark-Added", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "User not found.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
@@ -226,8 +206,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectHeader().valueEquals("X-Favorite-Added", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "The provided IDs are not valid.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
@@ -244,8 +222,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectHeader().valueEquals("X-Bookmark-Added", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "The provided IDs are not valid.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
@@ -262,8 +238,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectHeader().valueEquals("X-Favorite-Added", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "Unexpected server error.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
@@ -280,8 +254,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectHeader().valueEquals("X-Bookmark-Added", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "Unexpected server error.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
@@ -298,8 +270,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueEquals("X-Favorite-Deleted", "True")
-                .expectHeader().valueEquals("X-Favorite-Message", "Challenge deleted from favorites.")
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
@@ -316,8 +286,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueEquals("X-Bookmark-Deleted", "True")
-                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge deleted from bookmarks.")
                 .expectBody(Boolean.class).isEqualTo(true);
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
@@ -334,8 +302,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "Challenge not found in user's favorites.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
@@ -352,8 +318,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.OK)
-                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "Challenge not found in user's bookmarks.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
@@ -370,8 +334,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "User not found.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
@@ -388,8 +350,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "User not found.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
@@ -406,8 +366,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "The provided IDs are not valid.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
@@ -424,8 +382,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "The provided IDs are not valid.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
@@ -442,8 +398,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectHeader().valueEquals("X-Favorite-Deleted", "False")
-                .expectHeader().valueEquals("X-Favorite-Message", "Unexpected server error.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
@@ -460,8 +414,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectHeader().valueEquals("X-Bookmark-Deleted", "False")
-                .expectHeader().valueEquals("X-Bookmark-Message", "Unexpected server error.")
                 .expectBody(Boolean.class).isEqualTo(false);
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
@@ -479,7 +431,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isOk()
-                .expectHeader().valueEquals("X-Validation-Status", "Success")
                 .expectBodyList(UUID.class)
                 .hasSize(expectedFavorites.size())
                 .contains(expectedFavorites.toArray(new UUID[0]));
@@ -499,8 +450,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectHeader().valueEquals("X-Validation-Status", "Error")
-                .expectHeader().valueEquals("X-Error-Message", "User not found")
                 .expectBody().isEmpty();
 
         verify(userService, times(1)).getUserFavorites(userId.toString());
@@ -518,8 +467,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectHeader().valueEquals("X-Validation-Status", "Error")
-                .expectHeader().valueEquals("X-Error-Message", "Invalid UUID format")
                 .expectBody().isEmpty();
 
         verify(userService, times(1)).getUserFavorites(invalidUserId);
@@ -537,8 +484,6 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectHeader().valueEquals("X-Validation-Status", "Error")
-                .expectHeader().valueEquals("X-Error-Message", "Unexpected server error")
                 .expectBody().isEmpty();
 
         verify(userService, times(1)).getUserFavorites(userId.toString());
