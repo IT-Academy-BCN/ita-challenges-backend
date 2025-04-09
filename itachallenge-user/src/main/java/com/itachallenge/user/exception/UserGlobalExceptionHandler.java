@@ -43,6 +43,11 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+    @ExceptionHandler(BadUUIDException.class)
+    public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
+    }
+
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<String> handleDatabaseException(DatabaseException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database error: " + e.getMessage());
