@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.service;
 
+import com.itachallenge.challenge.enums.UserChallengeActionType;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.UserNotFoundException;
@@ -21,6 +22,8 @@ public class UserServiceImpl implements IUserService {
     private final WebClient.Builder webClientBuilder;
 
     private final String userServiceUrl;
+    private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
+    private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
 
     public UserServiceImpl(
             WebClient.Builder webClientBuilder,
@@ -31,49 +34,50 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-        return callFavoriteEndpoint(userId, challengeId, HttpMethod.POST);
+        return callEndpoint(userId, challengeId, UserChallengeActionType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.POST);
+    }
+
+    @Override
+    public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
+        return callEndpoint(userId, challengeId, UserChallengeActionType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> removeChallengeFromFavorites(String userId, String challengeId) {
-        return callFavoriteEndpoint(userId, challengeId, HttpMethod.DELETE);
+        return callEndpoint(userId, challengeId, UserChallengeActionType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.DELETE);
     }
 
-    private Mono<Boolean> callFavoriteEndpoint(String userId, String challengeId, HttpMethod method) {
-        String url = getFavoritesUrl(userId, challengeId);
-        log.debug("Call to endpoint({}): {}", method, url);
+    private Mono<Boolean> callEndpoint(String userId, String challengeId, UserChallengeActionType type, String errorHeader, HttpMethod method) {
+        String url = buildUrl(userId, challengeId, type.toString().toLowerCase());
+        log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
 
         return webClientBuilder.build()
                 .method(method)
                 .uri(url)
                 .retrieve()
-                .onStatus(
-                        HttpStatus.NOT_FOUND::equals, response -> {
-                            log.info("User not found {}", userId);
-                            return Mono.error(new UserNotFoundException("User not found"));
-                        })
-                .onStatus(
-                        HttpStatus.BAD_REQUEST::equals, response -> {
-                            String errorMessage = response.headers().header("X-Favorite-Message").stream()
-                                    .findFirst().orElse("Unknown error");
-                            log.warn("UserService returned 400: {}", errorMessage);
-                            return Mono.error(new BadRequestException(errorMessage));
-                        })
-                .onStatus(
-                        HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
-                            String errorMessage = response.headers().header("X-Favorite-Message").stream()
-                                    .findFirst().orElse("Unknown error");
-                            log.warn("UserService returned 500: {}", errorMessage);
-                            return Mono.error(new InternalServerErrorException(errorMessage));
-                        })
+                .onStatus(HttpStatus.NOT_FOUND::equals, response -> {
+                    log.info("User not found with id: {}", userId);
+                    return Mono.error(new UserNotFoundException("User not found"));
+                })
+                .onStatus(HttpStatus.BAD_REQUEST::equals, response -> {
+                    String errorMessage = response.headers().header(errorHeader).stream()
+                            .findFirst().orElse("Unknown error");
+                    log.warn("UserService returned 400: {}", errorMessage);
+                    return Mono.error(new BadRequestException(errorMessage));
+                })
+                .onStatus(HttpStatus.INTERNAL_SERVER_ERROR::equals, response -> {
+                    String errorMessage = response.headers().header(errorHeader).stream()
+                            .findFirst().orElse("Unknown error");
+                    log.warn("UserService returned 500: {}", errorMessage);
+                    return Mono.error(new InternalServerErrorException(errorMessage));
+                })
                 .bodyToMono(Boolean.class);
     }
 
-    private String getFavoritesUrl(String userId, String challengeId) {
+    private String buildUrl(String userId, String challengeId, String type){
         return UriComponentsBuilder.fromHttpUrl(userServiceUrl)
-                .path("/itachallenge/api/v1/user/users/{userId}/favorites/{challengeId}")
-                .buildAndExpand(userId, challengeId)
+                .path("/itachallenge/api/v1/user/users/{userId}/{type}/{challengeId}")
+                .buildAndExpand(userId, type, challengeId)
                 .toUriString();
     }
-
 }
