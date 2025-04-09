@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.enums.SavedItemType;
+import com.itachallenge.challenge.enums.UserChallengeActionType;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.exception.UserNotFoundException;
@@ -34,20 +34,20 @@ public class UserService implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToFavorites(String userId, String challengeId) {
-        return callEndpoint(userId, challengeId, SavedItemType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.POST);
+        return callEndpoint(userId, challengeId, UserChallengeActionType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
-        return callEndpoint(userId, challengeId, SavedItemType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
+        return callEndpoint(userId, challengeId, UserChallengeActionType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
     }
 
     @Override
     public Mono<Boolean> removeChallengeFromFavorites(String userId, String challengeId) {
-        return callEndpoint(userId, challengeId, SavedItemType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.DELETE);
+        return callEndpoint(userId, challengeId, UserChallengeActionType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.DELETE);
     }
 
-    private Mono<Boolean> callEndpoint(String userId, String challengeId, SavedItemType type, String errorHeader, HttpMethod method) {
+    private Mono<Boolean> callEndpoint(String userId, String challengeId, UserChallengeActionType type, String errorHeader, HttpMethod method) {
         String url = buildUrl(userId, challengeId, type.toString().toLowerCase());
         log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
 

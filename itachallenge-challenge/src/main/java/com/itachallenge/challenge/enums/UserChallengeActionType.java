@@ -1,6 +1,6 @@
 package com.itachallenge.challenge.enums;
 
-public enum SavedItemType {
+public enum UserChallengeActionType {
     BOOKMARKS,
     FAVORITES
 }
