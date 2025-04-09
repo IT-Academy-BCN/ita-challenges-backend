@@ -312,6 +312,28 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
+    @PostMapping("/challenges/{challengeId}/bookmarks")
+    @Operation(
+            operationId = "Add a challenge to User's bookmarks.",
+            summary = "Add a challenge to bookmarks.",
+            description = "The ID Challenge sent through the URI is added to the user's bookmarks. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkDto>> addChallengeToBookmarks(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallengeToBookmarks(challengeId, userId))
+                .doOnError(error -> log.error("Error adding challenge to bookmarks: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
     @GetMapping("/tags")
     @Operation(
             operationId = "Get all stored tags from the Database for FrontEnd can print them.",
