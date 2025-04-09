@@ -57,7 +57,6 @@ class UserSolutionDocumentTest {
     void noArgsBuilder_test(){
         assertNotNull(noArgsUserSolutionDocument);
     }
-
 }
 
 

@@ -82,15 +82,6 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 }));
     }
 
-//    private ChallengeStatus determineChallengeStatus(String status) {
-//
-//        ChallengeStatus challengeStatus = null;
-//
-//        if (status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
-//            challengeStatus = ChallengeStatus.ENDED;
-//        }
-//        return challengeStatus;
-//    }
 }
 
 

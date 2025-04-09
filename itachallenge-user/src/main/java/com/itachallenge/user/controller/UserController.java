@@ -220,8 +220,8 @@ public class UserController {
             @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
 
         return userSolutionService.addSolution(userSolutionDto)
-                .map(savedUserSolutionScoreDto ->
-                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionScoreDto)
+                .map(savedUserSolutionDto ->
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
                 );
     }
   
@@ -523,5 +523,4 @@ public class UserController {
                             .body(null));
                 });
     }
-
 }
