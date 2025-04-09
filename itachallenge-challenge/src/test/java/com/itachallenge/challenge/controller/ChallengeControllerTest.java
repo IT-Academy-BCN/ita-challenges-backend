@@ -207,7 +207,7 @@ class ChallengeControllerTest {
         GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
         expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challenge1});
 
-        when(challengeService.getChallengesByFilter(any(), any(), anyInt(), anyInt(), any()))
+        when(challengeService.getChallengesByFilter(any(), any(), any(), anyInt(), anyInt()))
                 .thenReturn(Mono.just(expectedResult));
 
         webTestClient.get()
@@ -762,9 +762,9 @@ class ChallengeControllerTest {
         when(challengeService.getChallengesByFilter(
                 Optional.of(languageMok.toString()),
                 Optional.of("EASY"),
+                Optional.of(List.of(mockTag)),
                 0,
-                2,
-                Optional.of(List.of(mockTag))
+                2
         )).thenReturn(Mono.just(resultDto));
 
         webTestClient.get()

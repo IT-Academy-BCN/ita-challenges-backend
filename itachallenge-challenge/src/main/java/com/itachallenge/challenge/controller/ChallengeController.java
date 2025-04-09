@@ -156,13 +156,13 @@ public class ChallengeController {
             })
 
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
-        log.info("Entering in filter service");
+        log.info("Entering in filter service with this filter:\n" + filter.toString());
         return challengeService.getChallengesByFilter(
                 Optional.ofNullable(filter.getIdLanguage()),
                 Optional.ofNullable(filter.getLevel()),
+                Optional.ofNullable(filter.getTags()),
                 filter.getOffset(),
-                filter.getLimit(),
-                Optional.ofNullable(filter.getTags())
+                filter.getLimit()
         );
     }
 

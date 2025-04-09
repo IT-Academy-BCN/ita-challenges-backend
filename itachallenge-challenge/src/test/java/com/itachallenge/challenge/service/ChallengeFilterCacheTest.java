@@ -63,10 +63,10 @@ class ChallengeFilterCacheTest {
         int limit = 10;
 
 
-        challengeService.getChallengesByFilter(idLanguage, level, offset, limit, tags).block();
+        challengeService.getChallengesByFilter(idLanguage, level, tags, offset, limit).block();
 
 
-        challengeService.getChallengesByFilter(idLanguage, level, offset, limit, tags).block();
+        challengeService.getChallengesByFilter(idLanguage, level, tags, offset, limit).block();
 
 
         verify(challengeRepository, times(1)).findAllByUuidNotNullExcludingTestingValues();

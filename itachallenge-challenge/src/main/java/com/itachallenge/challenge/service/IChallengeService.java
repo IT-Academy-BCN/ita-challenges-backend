@@ -25,9 +25,9 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(Optional<String> idLanguage,
                                                                Optional<String> level,
+                                                               Optional<List<UUID>> tags,
                                                                int offset,
-                                                               int limit,
-                                                               Optional<List<UUID>> tags);
+                                                               int limit);
 
     Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level);
 

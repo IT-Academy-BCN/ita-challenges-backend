@@ -76,16 +76,16 @@ public class ChallengeServiceImp implements IChallengeService {
 
     @Cacheable(
             value = "challengesByFilter",
-            key = "T(java.util.Objects).hash(#idLanguage.orElse(''), #level.orElse(''), T(java.util.Objects).hash(#tags.orElse(new java.util.ArrayList())), #offset, #limit)",
+            key = "#root.target.generateCacheKey(#idLanguage, #level, #tags, #offset, #limit)",
             unless = "#result == null"
     )
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(
             Optional<String> idLanguage,
             Optional<String> level,
+            Optional<List<UUID>> tags,
             int offset,
-            int limit,
-            Optional<List<UUID>> tags) {
+            int limit) {
 
         return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
                 .transform(challenges -> languageService.filterByLanguage(challenges, idLanguage))
