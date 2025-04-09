@@ -29,6 +29,7 @@ public class FavoritesController {
     @NonNull
     private final JwtServiceImpl jwtService;
 
+
     @NonNull
     private final IChallengeService challengeService;
 
