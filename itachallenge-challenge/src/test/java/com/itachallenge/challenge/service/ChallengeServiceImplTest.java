@@ -105,7 +105,7 @@ class ChallengeServiceImplTest {
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                20, tags);
+                20, 5, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
