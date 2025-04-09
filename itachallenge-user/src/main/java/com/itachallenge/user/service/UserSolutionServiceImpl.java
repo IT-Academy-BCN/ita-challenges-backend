@@ -39,7 +39,8 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                         .solutionText(userSolutionDto.getSolutionText())
                         .build()
         );
-        challengeStatus = determineChallengeStatus(status);
+
+        challengeStatus = ChallengeStatus.determineChallengeStatus(status);
 
         if (challengeStatus == null) {
             log.error("PUT operation failed due to invalid challenge status parameter");
@@ -81,15 +82,15 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 }));
     }
 
-    private ChallengeStatus determineChallengeStatus(String status) {
-
-        ChallengeStatus challengeStatus = null;
-
-        if (status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
-            challengeStatus = ChallengeStatus.ENDED;
-        }
-        return challengeStatus;
-    }
+//    private ChallengeStatus determineChallengeStatus(String status) {
+//
+//        ChallengeStatus challengeStatus = null;
+//
+//        if (status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())) {
+//            challengeStatus = ChallengeStatus.ENDED;
+//        }
+//        return challengeStatus;
+//    }
 }
 
 

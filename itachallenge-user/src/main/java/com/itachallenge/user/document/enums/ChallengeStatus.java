@@ -11,4 +11,9 @@ public enum ChallengeStatus {ENDED("ENDED");
         this.value = value;
     }
 
+    public static ChallengeStatus determineChallengeStatus(String status){
+        return status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue()) ?
+                ChallengeStatus.ENDED : null;
+    }
+
 }
