@@ -8,7 +8,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Issue #831: Added DELETE endpoint for user's bookmals in User Microservice.
 * Issue #826: Added GET endpoint to retrieve the list of challenges marked as favorites by a user.                                          
 * PR #828: Enable PUT endpoint("/solution") in User microservice to save a user solution in user database
-* Issue #826: Added GET endpoint to retrieve the list of challenges marked as favorites by a user.
 * PR #825: Removing score attribute in Dtos de UserSolution                                         
 * Issue #763: Modified POST endpoint for adding new challenge (in Challenge micro)  
               Created language image attribute in LanguageDocument and LanguageDto.
