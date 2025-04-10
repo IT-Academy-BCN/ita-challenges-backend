@@ -9,7 +9,8 @@ public enum Topic {
     LISTS("Lists"),
     STYLES("Styles"),
     DEBUGGING("Debugging"),
-    REACT_ROUTER("React Router");
+    REACT_ROUTER("React Router"),
+    DEFAULT_TOPIC("Default topic");
 
     private final String displayName;
 
