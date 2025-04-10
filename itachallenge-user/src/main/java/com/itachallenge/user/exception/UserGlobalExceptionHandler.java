@@ -62,5 +62,8 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
-
+    @ExceptionHandler(UnmodificableSolutionException.class)
+    public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
 }

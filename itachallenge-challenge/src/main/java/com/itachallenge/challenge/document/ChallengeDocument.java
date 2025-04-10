@@ -45,6 +45,9 @@ public class ChallengeDocument {
     @Field(name = "times_favorite")
     private Integer timesFavorite;
 
+    @Field(name="times_bookmark")
+    private Integer timesBookmark;
+
     @Field(name = "tags")
     private List<UUID> tags;
 
@@ -70,5 +73,8 @@ public class ChallengeDocument {
 
         }
 
+    public void increaseTimesBookmark() {
+        timesBookmark = timesBookmark == null ? 1 : timesBookmark + 1;
+    }
 
 }
