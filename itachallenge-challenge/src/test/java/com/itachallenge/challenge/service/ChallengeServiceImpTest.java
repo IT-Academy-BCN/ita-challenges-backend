@@ -51,8 +51,6 @@ class ChallengeServiceImpTest {
     private IUserService userService;
     @Mock
     private TagService tagService;
-    @Mock
-    private LanguageService languageService;
 
     @InjectMocks
     private ChallengeServiceImp challengeService;
@@ -78,7 +76,6 @@ class ChallengeServiceImpTest {
         ReflectionTestUtils.setField(challengeService, "solutionConverter", solutionConverter);
         ReflectionTestUtils.setField(challengeService, "userService", userService);
         ReflectionTestUtils.setField(challengeService, "tagService", tagService);
-        ReflectionTestUtils.setField(challengeService, "languageService", languageService);
 
         String description = "Detall";
         String level = "EASY";
