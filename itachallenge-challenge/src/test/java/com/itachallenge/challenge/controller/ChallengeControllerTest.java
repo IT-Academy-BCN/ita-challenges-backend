@@ -906,7 +906,7 @@ class ChallengeControllerTest {
                 .build();
 
         webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/update")
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(challengeCreateDto)
                 .exchange()
@@ -939,7 +939,7 @@ class ChallengeControllerTest {
                 .build();
 
         webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/update")
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(challengeCreateDto)
                 .exchange()
