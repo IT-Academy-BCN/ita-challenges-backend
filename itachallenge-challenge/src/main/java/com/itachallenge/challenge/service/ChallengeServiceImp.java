@@ -1,13 +1,6 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.*;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
@@ -16,6 +9,8 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +27,7 @@ import java.util.regex.Pattern;
 
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChallengeServiceImp implements IChallengeService {
 
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
@@ -46,22 +42,14 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String NOT_FOUND = "not found";
 
-    @Autowired
-    private ChallengeRepository challengeRepository;
-    @Autowired
-    private LanguageRepository languageRepository;
-    @Autowired
-    private SolutionRepository solutionRepository;
-    @Autowired
-    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    private TagService tagService;
+    private final ChallengeRepository challengeRepository;
+    private final LanguageRepository languageRepository;
+    private final SolutionRepository solutionRepository;
+    private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
+    private final DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
+    private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+    private final IUserService userService;
+    private final TagService tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
