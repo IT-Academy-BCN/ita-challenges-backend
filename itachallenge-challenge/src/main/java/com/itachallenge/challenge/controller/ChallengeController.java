@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import java.util.*;
 @RestController
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ChallengeController {
 
     private static final String DEFAULT_OFFSET = "0";
@@ -41,30 +44,17 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
-    @Autowired
     private final PropertiesConfig config;
-
-    @Autowired
-    private DiscoveryClient discoveryClient;
-
-    @Autowired
-    private IChallengeService challengeService;
-
-    @Autowired
-    private ITagService tagService;
-
-    @Autowired
-    private JwtService jwtService;
+    private final DiscoveryClient discoveryClient;
+    private final IChallengeService challengeService;
+    private final ITagService tagService;
+    private final JwtService jwtService;
 
     @Value("${spring.application.version}")
     private String version;
 
     @Value("${spring.application.name}")
     private String appName;
-
-    public ChallengeController(PropertiesConfig config) {
-        this.config = config;
-    }
 
     @GetMapping(value = "/test")
     public String test() {
