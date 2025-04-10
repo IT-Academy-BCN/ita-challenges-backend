@@ -16,5 +16,4 @@ public interface ITagService {
 
     Mono<GenericResultDto<TagDto>> getAllTags();
     Set<TagDocument> convertIdTagFromTagDocument(List<UUID> tags);
-    Flux<ChallengeDocument> filterByTags(Flux<ChallengeDocument> challenges, Optional<List<UUID>> optionalTagIds);
 }

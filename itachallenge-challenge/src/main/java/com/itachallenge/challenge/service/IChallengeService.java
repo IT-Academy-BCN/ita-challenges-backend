@@ -29,8 +29,6 @@ public interface IChallengeService {
                                                                int offset,
                                                                int limit);
 
-    Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level);
-
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
     Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto);

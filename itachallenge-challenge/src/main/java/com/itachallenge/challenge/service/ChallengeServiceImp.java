@@ -49,8 +49,6 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private LanguageRepository languageRepository;
     @Autowired
-    private LanguageService languageService;
-    @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
@@ -118,24 +116,6 @@ public class ChallengeServiceImp implements IChallengeService {
                     resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
                     return resultDto;
                 });
-    }
-
-
-
-
-    @Override
-    public Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level) {
-        if (challenges == null) {
-            return Flux.empty();
-        }
-        if (level.isPresent() && !level.get().isBlank()) {
-            return challenges.filter(challenge ->
-                    challenge.getLevel() != null &&
-                            challenge.getLevel().equalsIgnoreCase(level.get())
-            );
-        }
-
-        return challenges;
     }
 
     @Cacheable(value = "allLanguages")

@@ -46,26 +46,4 @@ public class TagService implements ITagService {
                 .collect(Collectors.toSet());
     }
 
-    public Flux<ChallengeDocument> filterByTags(Flux<ChallengeDocument> challenges, Optional<List<UUID>> optionalTagIds) {
-        if (challenges == null) {
-            return Flux.empty();
-        }
-        if (optionalTagIds.isEmpty() || optionalTagIds.get().isEmpty()) {
-            return challenges;
-        }
-
-        List<UUID> targetIds = optionalTagIds.get();
-
-        return challenges.filter(challenge ->
-                challenge.getTags() != null &&
-                        challenge.getTags().stream()
-                                .filter(Objects::nonNull)
-                                .anyMatch(targetIds::contains)
-        );
-
-    }
-
-
-
-
 }
