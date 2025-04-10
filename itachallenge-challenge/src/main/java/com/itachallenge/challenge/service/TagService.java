@@ -6,6 +6,9 @@ import com.itachallenge.challenge.dto.TagDto;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -18,13 +21,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TagService implements ITagService {
 
-    @Autowired
-    TagRepository tagRepository;
-
-    @Autowired
-    private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
+    private final TagRepository tagRepository;
+    private final DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
 
     @Cacheable(value = "allTags")
     @Override
