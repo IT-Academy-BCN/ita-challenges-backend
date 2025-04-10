@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
