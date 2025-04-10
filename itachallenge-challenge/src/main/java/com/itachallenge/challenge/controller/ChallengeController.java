@@ -21,6 +21,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -155,7 +156,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
         log.info("Entering in filter service with this filter:\n" + filter.toString());
         return challengeService.getChallengesByFilter(
                 Optional.ofNullable(filter.getIdLanguage()),

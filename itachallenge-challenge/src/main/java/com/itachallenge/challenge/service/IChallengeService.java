@@ -23,7 +23,7 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit);
 
-    Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(Optional<String> idLanguage,
+    Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(Optional<String> idLanguage,
                                                                Optional<String> level,
                                                                Optional<List<UUID>> tags,
                                                                int offset,

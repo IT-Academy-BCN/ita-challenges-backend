@@ -74,37 +74,53 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-    @Cacheable(
-            value = "challengesByFilter",
-            key = "#root.target.generateCacheKey(#idLanguage, #level, #tags, #offset, #limit)",
-            unless = "#result == null"
-    )
+
     @Override
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(
             Optional<String> idLanguage,
             Optional<String> level,
             Optional<List<UUID>> tags,
             int offset,
             int limit) {
 
+        Optional<UUID> uuidLanguage = idLanguage
+                .filter(lang -> !lang.isBlank())
+                .map(UUID::fromString);
+
+        boolean filterByLevel = level.isPresent() && !level.get().isBlank();
+
         return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                .transform(challenges -> languageService.filterByLanguage(challenges, idLanguage))
-                .transform(challenges -> filterByLevel(challenges, level))
-                .transform(challenges -> tagService.filterByTags(challenges, tags))
-                .collectList()
-                .flatMap(filteredList -> {
-                    long total = filteredList.size();
-                    List<ChallengeDto> pagedList = filteredList.stream()
-                            .skip(offset)
-                            .limit(limit == -1 ? total : limit)
-                            .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-                            .toList();
+                .filter(challenge ->
+                        uuidLanguage.isEmpty() ||
+                                (challenge.getLanguages() != null &&
+                                        challenge.getLanguages().stream()
+                                                .anyMatch(lang ->
+                                                        lang.getIdLanguage() != null &&
+                                                                lang.getIdLanguage().equals(uuidLanguage.get()))
+                                )
+                )
+                .filter(challenge ->
+                        !filterByLevel || level.get().equalsIgnoreCase(challenge.getLevel())
+                )
+                .filter(challenge ->
+                        tags.isEmpty() || (
+                                challenge.getTags() != null &&
+                                        challenge.getTags().stream().anyMatch(tags.get()::contains)
+                        )
+                )
+                .skip(offset)  // Aplica el offset
+                .take(limit == -1 ? Long.MAX_VALUE : limit)  // Aplica el limit
+                .map(challenge -> {
+                    // Convierte el Challenge a ChallengeDto
+                    ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
 
                     GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                    resultDto.setInfo(offset, limit, (int) total, pagedList.toArray(new ChallengeDto[0]));
-                    return Mono.just(resultDto);
+                    resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
+                    return resultDto;
                 });
     }
+
+
 
 
     @Override
@@ -121,8 +137,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
         return challenges;
     }
-
-
 
     @Cacheable(value = "allLanguages")
     @Override

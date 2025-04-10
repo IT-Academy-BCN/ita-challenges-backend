@@ -115,6 +115,7 @@ class ChallengeServiceImpTest {
                 popularity, percentage);
     }
 
+
     @Test
     void getChallengeById_ValidId_ChallengeFound() {
         // Arrange
