@@ -6,6 +6,7 @@ import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
+import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -43,9 +44,11 @@ public class UserController {
     public static final String FALSE = "False";
 
     private final UserService userService;
+    private final IUserSolutionService userSolutionService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
+        this.userSolutionService = userSolutionService;
     }
 
     @GetMapping(value = "/test")
@@ -214,16 +217,12 @@ public class UserController {
             }
     )
     public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
-            @Valid @RequestBody UserSolutionRequestDto userSolutionRequestDto) {
-        
-        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
-                userSolutionRequestDto.getUserId(),
-                userSolutionRequestDto.getChallengeId(),
-                userSolutionRequestDto.getLanguageId(),
-                userSolutionRequestDto.getSolutionText()
-        );
+            @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
 
-        return Mono.just(ResponseEntity.status(HttpStatus.OK).body(userSolutionResponseDto));
+        return userSolutionService.addSolution(userSolutionDto)
+                .map(savedUserSolutionDto ->
+                        ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
+                );
     }
   
     @Operation(
@@ -391,7 +390,6 @@ public class UserController {
                             .header(X_FAVORITE_MESSAGE, "Unexpected server error.")
                             .body(false));
                 });
-
     }
 
     @Operation(
@@ -525,5 +523,4 @@ public class UserController {
                             .body(null));
                 });
     }
-
 }
