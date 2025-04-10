@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -1319,6 +1321,175 @@ class ChallengeServiceImpTest {
         verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
         verify(challengeRepository, times(1)).save(challenge);
     }
+
+    @Test
+    void getChallengesByFilter_ValidParams_FiltersAppliedCorrectly() {
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();  // ID de lenguaje válido (String)
+        String level = "EASY";  // Dificultad válida
+        List<UUID> tags = List.of(UUID.randomUUID());  // Tags válidos
+        int offset = 0;
+        int limit = 10;
+
+        ChallengeDto challenge1 = new ChallengeDto();
+        challenge1.setTitle("Challenge 1");
+        challenge1.setLevel(level);
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challenge1});
+
+        UUID challengeId = UUID.randomUUID();
+        UUID languageId = UUID.fromString(idLanguage);  // ID de lenguaje para comparación
+        ChallengeDocument challengeDocument = new ChallengeDocument(
+                challengeId,
+                "Challenge 1",
+                level,
+                LocalDateTime.now(),
+                new DetailDocument("Description"),
+                Set.of(new LanguageDocument(languageId, "Language Name", "image.png")),
+                List.of(UUID.randomUUID()),
+                Topic.COMPONENTS,
+                0, 0, tags
+        );
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(challengeDocument));
+
+        when(challengeConverter.convertDocumentToDto(any(), eq(ChallengeDto.class)))
+                .thenReturn(challenge1);
+
+        // Act
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(
+                Optional.of(idLanguage),
+                Optional.of(level),
+                Optional.of(tags),
+                offset,
+                limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(genericResultDto -> {
+                    assertNotNull(genericResultDto);
+                    assertEquals(1, genericResultDto.getCount());
+                    assertEquals("Challenge 1", genericResultDto.getResults()[0].getTitle());
+                    assertEquals(level, genericResultDto.getResults()[0].getLevel());
+                    return true;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengesByFilter_NoLanguage_FilterAppliedCorrectly() {
+        // Arrange
+        String level = "EASY";
+        List<UUID> tags = List.of(UUID.randomUUID());
+        int offset = 0;
+        int limit = 10;
+
+        ChallengeDto challenge1 = new ChallengeDto();
+        challenge1.setTitle("Challenge 1");
+        challenge1.setLevel(level);
+
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challenge1});
+
+        UUID challengeId = UUID.randomUUID();
+        ChallengeDocument challengeDocument = new ChallengeDocument(
+                challengeId,
+                "Challenge 1",
+                level,
+                LocalDateTime.now(),
+                new DetailDocument("Description"),
+                Set.of(new LanguageDocument(UUID.randomUUID(), "Other Language", "image.png")),
+                List.of(UUID.randomUUID()),
+                Topic.COMPONENTS,
+                0, 0, tags
+        );
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(challengeDocument));
+
+        when(challengeConverter.convertDocumentToDto(any(), eq(ChallengeDto.class)))
+                .thenReturn(challenge1);
+
+        // Act
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(
+                Optional.empty(),  // No language filter
+                Optional.of(level),
+                Optional.of(tags),
+                offset,
+                limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(genericResultDto -> {
+                    assertNotNull(genericResultDto);
+                    assertEquals(1, genericResultDto.getCount());
+                    assertEquals("Challenge 1", genericResultDto.getResults()[0].getTitle());
+                    assertEquals(level, genericResultDto.getResults()[0].getLevel());
+                    return true;
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getChallengesByFilter_InvalidLevel_NoChallengesReturned() {
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();
+        String invalidLevel = "HARD";  // Nivel inválido
+        List<UUID> tags = List.of(UUID.randomUUID());
+        int offset = 0;
+        int limit = 10;
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.empty());
+
+        // Act
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(
+                Optional.of(UUID.randomUUID().toString()),
+                Optional.of(invalidLevel),
+                Optional.of(List.of(UUID.randomUUID())),
+                offset,
+                limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(genericResultDto -> {
+                    assertNotNull(genericResultDto);
+                    assertEquals(0, genericResultDto.getCount());
+                    return true;
+                });
+    }
+
+    @Test
+    void getChallengesByFilter_EmptyTags_NoChallengesReturned() {
+        // Arrange
+        String idLanguage = UUID.randomUUID().toString();
+        String level = "EASY";
+        List<UUID> tags = List.of();  // Tags vacíos
+        int offset = 0;
+        int limit = 10;
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.empty());
+
+        // Act
+        Flux<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByFilter(
+                Optional.of(idLanguage),
+                Optional.of(level),
+                Optional.of(tags),
+                offset,
+                limit);
+
+        // Assert
+        StepVerifier.create(result)
+                .expectNextMatches(genericResultDto -> {
+                    assertNotNull(genericResultDto);
+                    assertEquals(0, genericResultDto.getCount());
+                    return true;
+                });
+    }
+
 
     public static Stream<Integer> removeChallengeFromFavorites_WhenNotRemovedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToZeroAndReturnsFavoriteDTO() {
         return Stream.of(null, 0);
