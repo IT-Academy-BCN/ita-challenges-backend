@@ -47,5 +47,11 @@ public class TagServiceImpl implements ITagService {
                 .collect(Collectors.toSet());
     }
 
-
+    public Mono<Boolean> getValidatedTags(List<UUID> tagIds) {
+        return Flux.fromIterable(tagIds)
+                .flatMap(tagId -> tagRepository.findById(tagId)
+                        .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tagId))))
+                .count()
+                .map(count -> count == tagIds.size());
+    }
 }

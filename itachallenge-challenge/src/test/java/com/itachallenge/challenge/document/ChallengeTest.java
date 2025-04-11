@@ -234,7 +234,8 @@ class ChallengeTest {
     @Test
     void setTagsTest() {
         UUID firstTagId = UUID.randomUUID();
-        TagDocument firstTag = new TagDocument(firstTagId, "POO", "bla bla bla");
+        UUID secondTagId = UUID.randomUUID();
+        List<UUID> tags = List.of(firstTagId, secondTagId);
 
         ChallengeDocument challenge = new ChallengeDocument(
                 null, null, null, null, null, null, null,
@@ -242,17 +243,13 @@ class ChallengeTest {
                 20,
                 null,
                 null,
-                new ArrayList<UUID>(List.of(firstTag.getIdTag())) {
+                new ArrayList<UUID>() {
                 }
         );
 
-        UUID secondTagId = UUID.randomUUID();
-        TagDocument secondTag = new TagDocument(secondTagId, "Estructura", "bla bla bla");
+        challenge.setTags(tags);
 
-        challenge.setTags(secondTag.getIdTag());
-
-        List<UUID> tags = challenge.getTags();
-        assertEquals(2, tags.size(), "El challenge debería tener 2 tags");
+        assertEquals(2, challenge.getTags().size(), "El challenge debería tener 2 tags");
         assertTrue(tags.contains(firstTagId), "Debe contener el primer tag");
         assertTrue(tags.contains(secondTagId), "Debe contener el nuevo tag");
     }
