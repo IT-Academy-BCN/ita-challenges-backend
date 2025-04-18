@@ -35,7 +35,6 @@ public class DocumentController {
     @Value("${spring.application.name}")
     private String appName;
 
-    @Autowired
     public DocumentController(OpenApiConfig openApiConfig, DocumentService documentService) {
         this.openApiConfig = openApiConfig;
         this.documentService = documentService;
