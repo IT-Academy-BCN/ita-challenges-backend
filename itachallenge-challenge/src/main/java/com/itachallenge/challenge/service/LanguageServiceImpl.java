@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class LanguageServiceImpl implements LanguageService {
+public class LanguageServiceImpl implements ILanguageService {
 
     private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 

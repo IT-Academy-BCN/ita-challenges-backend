@@ -12,14 +12,12 @@ import com.itachallenge.challenge.repository.SolutionRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -54,7 +52,7 @@ class ChallengeServiceImplTest {
     @Mock
     private TagServiceImpl tagService;
     @Mock
-    private LanguageService languageService;
+    private ILanguageService ILanguageService;
 
     @InjectMocks
     private ChallengeServiceImpl challengeService;
@@ -335,7 +333,7 @@ class ChallengeServiceImplTest {
 
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
         when(challengeRepository.findByUuid(challengeId)).thenReturn(Mono.just(challengeDocument));
-        when(languageService.findByIdLanguage(languageId)).thenReturn(Mono.just(languageDocument));
+        when(ILanguageService.findByIdLanguage(languageId)).thenReturn(Mono.just(languageDocument));
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solution));
         when(solutionConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(solutionDto));
 
@@ -422,7 +420,7 @@ class ChallengeServiceImplTest {
 
     @Test
     void addChallenge_test_success() {
-        when(languageService.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
+        when(ILanguageService.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
         when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class))).thenReturn(challengeDto);
@@ -432,7 +430,7 @@ class ChallengeServiceImplTest {
                 .expectNext(challengeDto)
                 .verifyComplete();
 
-        verify(languageService, times(1)).findFirstByLanguageName(eq(languageName));
+        verify(ILanguageService, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
         verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
@@ -440,14 +438,14 @@ class ChallengeServiceImplTest {
 
     @Test
     void addChallenge_test_NonExistentLanguage() {
-        when(languageService.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
+        when(ILanguageService.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.empty()); // Not found language
 
         // Act & Assert
         StepVerifier.create(challengeService.addChallenge(formData))
                 .expectErrorMatches(throwable -> throwable instanceof LanguageNotFoundException)
                 .verify();
 
-        verify(languageService, times(1)).findFirstByLanguageName(eq(languageName));
+        verify(ILanguageService, times(1)).findFirstByLanguageName(eq(languageName));
     }
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,

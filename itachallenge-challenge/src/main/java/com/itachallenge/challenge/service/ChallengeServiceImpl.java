@@ -4,7 +4,6 @@ import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
@@ -14,7 +13,6 @@ import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
-import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +45,7 @@ public class ChallengeServiceImpl implements IChallengeService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private LanguageService languageService;
+    private ILanguageService ILanguageService;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
@@ -177,7 +175,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
 
-                    return languageService.findByIdLanguage(languageId)
+                    return ILanguageService.findByIdLanguage(languageId)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -241,7 +239,7 @@ public class ChallengeServiceImpl implements IChallengeService {
             return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
         }
 
-        return languageService.findFirstByLanguageName(codingLanguage)
+        return ILanguageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
                     SolutionDocument solution = SolutionDocument.builder()

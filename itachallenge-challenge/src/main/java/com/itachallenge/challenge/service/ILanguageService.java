@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface LanguageService {
+public interface ILanguageService {
 
     Flux<ChallengeDocument> filterByLanguage(Flux<ChallengeDocument> challenge, Optional<String> idLanguage);
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();

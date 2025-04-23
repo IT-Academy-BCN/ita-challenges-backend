@@ -2,13 +2,11 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
-import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.challenge.service.LanguageService;
+import com.itachallenge.challenge.service.ILanguageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +22,7 @@ import reactor.core.publisher.Mono;
 public class LanguageController {
 
     @NonNull
-    private LanguageService languageService;
+    private ILanguageService ILanguageService;
 
     @GetMapping("/language")
     @Operation(
@@ -36,6 +34,6 @@ public class LanguageController {
             }
     )
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        return languageService.getAllLanguages();
+        return ILanguageService.getAllLanguages();
     }
 }
