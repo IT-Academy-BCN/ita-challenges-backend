@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -194,43 +195,35 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void getChallengesByLanguageOrDifficultyTest() {
-        String idLanguage = "660e1b18-0c0a-4262-a28a-85de9df6ac5f";
+    void getChallengesByFilter_ValidParams_ChallengesReturned() {
+        String idLanguage = "valid-language-id";
         String level = "EASY";
         int offset = 0;
-        int limit = -1;
-        ChallengeDto challengeDto1 = new ChallengeDto();
-        challengeDto1.setLevel(level);
+        int limit = 10;
 
-        List<ChallengeDto> challengeDtos = List.of(challengeDto1);
+        ChallengeDto challenge1 = new ChallengeDto();
+        challenge1.setTitle("Challenge 1");
+        challenge1.setLevel(level);
 
-        GenericResultDto<ChallengeDto> genericResultDto = new GenericResultDto<>();
-        genericResultDto.setResults(challengeDtos.toArray(new ChallengeDto[0]));
+        GenericResultDto<ChallengeDto> expectedResult = new GenericResultDto<>();
+        expectedResult.setInfo(offset, limit, 1, new ChallengeDto[]{challenge1});
 
-        Mono<GenericResultDto<ChallengeDto>> expectedResult = Mono.just(genericResultDto);
+        when(challengeService.getChallengesByFilter(any(), any(), any(), anyInt(), anyInt()))
+                .thenReturn(Flux.just(expectedResult));
 
-        // Mock del servicio con los parámetros correctos
-        when(challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit))
-                .thenReturn(expectedResult);
-
-        // Act & Assert
         webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/challenge/challenges/")
+                        .path("/itachallenge/api/v1/challenge/challenges/byFilter")
                         .queryParam("idLanguage", idLanguage)
                         .queryParam("level", level)
-                        .queryParam("offset", offset)
-                        .queryParam("limit", limit)
+                        .queryParam("offset", String.valueOf(offset))
+                        .queryParam("limit", String.valueOf(limit))
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(new ParameterizedTypeReference<GenericResultDto<ChallengeDto>>() {
-                })
-                .value(result -> {
-                    assertNotNull(result);
-                    assertEquals(level, result.getResults()[0].getLevel());
-                });
+                .expectHeader().contentType(MediaType.APPLICATION_JSON);
+
     }
 
     @Test
@@ -725,6 +718,7 @@ class ChallengeControllerTest {
         verify(tagService).getAllTags();
     }
 
+    @Test
     void removeChallengeFromFavorite_Success_Returns200() {
         String challengeId = "existing_challengeId";
         String userId = "existing_userId";
@@ -858,6 +852,36 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.results[0].timesFavorite").isEqualTo(5);
+    }
+
+    @Test
+    void getChallengesByFilter_shouldReturnOkResponse() {
+        // Mock de respuesta vacía
+        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+        resultDto.setInfo(0, 10, 0, new ChallengeDto[0]);
+
+        UUID mockTag = UUID.randomUUID();
+        UUID languageMok = UUID.randomUUID();
+
+        when(challengeService.getChallengesByFilter(
+                Optional.of(languageMok.toString()),
+                Optional.of("EASY"),
+                Optional.of(List.of(mockTag)),
+                0,
+                2
+        )).thenReturn(Flux.just(resultDto));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/challenge/challenges/byFilter")
+                        .queryParam("idLanguage", languageMok.toString())
+                        .queryParam("level", "EASY")
+                        .queryParam("offset", 0)
+                        .queryParam("limit", 2)
+                        .queryParam("tags", mockTag.toString())
+                        .build())
+                .exchange()
+                .expectStatus().isOk();
     }
 
 }

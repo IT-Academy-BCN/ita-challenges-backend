@@ -82,3 +82,4 @@
 * Albert Marín Miranda - https://github.com/Almami679
 * Alexandra Bonet - https://github.com/AlexandraBonetCanela
 * Gwénaël Le Moing - https://github.com/g-lemoing
+* Matías Meza - https://github.com/RustyGearBox

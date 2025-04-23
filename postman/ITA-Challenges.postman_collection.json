@@ -801,6 +801,53 @@
 					"response": []
 				},
 				{
+					"name": "Challenge/tags",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/tags",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"tags"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Challenge/challenges/byFilter",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/byFilter?idLanguage=660e1b18-0c0a-4262-a28a-85de9df6ac5f&level=EASY&offset=0&limit=10&tags=tag1,tag2",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges",
+								"byFilter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Challenge/favorites",
 					"request": {
 						"method": "DELETE",

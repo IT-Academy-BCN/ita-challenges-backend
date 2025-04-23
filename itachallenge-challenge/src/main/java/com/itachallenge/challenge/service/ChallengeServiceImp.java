@@ -42,8 +42,6 @@ public class ChallengeServiceImp implements IChallengeService {
 
     private static final String LANGUAGE_NOT_FOUND_ERROR = "Language with id: %s not found";
 
-    private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
-
     private static final String NOT_FOUND = "not found";
 
     @Autowired
@@ -74,49 +72,54 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-    @Cacheable(value = "challengesByLanguageOrDifficulty", key = "{#idLanguage, #level, #offset, #limit}", unless = "#result == null")
+
     @Override
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
-        Flux<ChallengeDocument> challenges;
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(
+            Optional<String> idLanguage,
+            Optional<String> level,
+            Optional<List<UUID>> tags,
+            int offset,
+            int limit) {
 
-        if (idLanguage.isPresent() && level.isPresent()) {
-            challenges = validateUUID(idLanguage.get())
-                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)
-                                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found for language " + idLanguage.get())))
-                            )
-                    );
-        } else if (idLanguage.isPresent()) {
-            challenges = validateUUID(idLanguage.get())
-                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
-        } else if (level.isPresent()) {
-            challenges = challengeRepository.findByLevel(level.get())
-                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + NOT_FOUND)));
-        } else {
-            challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                    .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
-        }
+        Optional<UUID> uuidLanguage = idLanguage
+                .filter(lang -> !lang.isBlank())
+                .map(UUID::fromString);
 
-        Flux<ChallengeDocument> finalChallenges = challenges;
-        return challenges.count().flatMap(total -> {
-            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
-            if (limit != -1) {
-                pagedChallenges = pagedChallenges.take(limit);
-            }
-            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-                    .collectList()
-                    .map(challengeDtoList -> {
-                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
-                        return resultDto;
-                    });
-        });
+        boolean filterByLevel = level.isPresent() && !level.get().isBlank();
+
+        return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                .filter(challenge ->
+                        uuidLanguage.isEmpty() ||
+                                (challenge.getLanguages() != null &&
+                                        challenge.getLanguages().stream()
+                                                .anyMatch(lang ->
+                                                        lang.getIdLanguage() != null &&
+                                                                lang.getIdLanguage().equals(uuidLanguage.get()))
+                                )
+                )
+                .filter(challenge ->
+                        !filterByLevel || level.get().equalsIgnoreCase(challenge.getLevel())
+                )
+                .filter(challenge ->
+                        tags.isEmpty() || (
+                                challenge.getTags() != null &&
+                                        challenge.getTags().stream().anyMatch(tags.get()::contains)
+                        )
+                )
+                .skip(offset)  // Aplica el offset
+                .take(limit == -1 ? Long.MAX_VALUE : limit)  // Aplica el limit
+                .map(challenge -> {
+                    // Convierte el Challenge a ChallengeDto
+                    ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
+
+                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                    resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
+                    return resultDto;
+                });
     }
 
     @Cacheable(value = "allLanguages")
+    @Override
     public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
         Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
         return languagesDto.collectList().map(language -> {
@@ -145,6 +148,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
+    @Override
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -174,6 +178,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @CacheEvict(value = {"challenges", "solutions"}, allEntries = true)
+    @Override
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));
