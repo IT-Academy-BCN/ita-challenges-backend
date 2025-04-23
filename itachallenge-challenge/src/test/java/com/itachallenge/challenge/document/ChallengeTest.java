@@ -253,6 +253,4 @@ class ChallengeTest {
         assertTrue(tags.contains(firstTagId), "Debe contener el primer tag");
         assertTrue(tags.contains(secondTagId), "Debe contener el nuevo tag");
     }
-
-
 }
