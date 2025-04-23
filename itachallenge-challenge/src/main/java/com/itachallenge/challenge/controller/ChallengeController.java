@@ -6,6 +6,7 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.IJwtService;
 import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,7 +56,7 @@ public class ChallengeController {
     private ITagService tagService;
 
     @Autowired
-    private JwtServiceImpl jwtService;
+    private IJwtService jwtService;
 
     @Value("${spring.application.version}")
     private String version;

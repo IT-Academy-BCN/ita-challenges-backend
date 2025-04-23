@@ -36,7 +36,7 @@ class TagServiceImplTest {
     private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
 
     @InjectMocks
-    private TagServiceImpl tagService;
+    private ITagService tagService;
 
     @Test
     @DisplayName("return todos los tags y generar GenericResultDto<TagDto>")

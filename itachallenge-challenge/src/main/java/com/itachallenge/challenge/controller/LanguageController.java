@@ -24,7 +24,7 @@ public class LanguageController {
     @NonNull
     private ILanguageService ILanguageService;
 
-    @GetMapping("/language")
+    @GetMapping("/")
     @Operation(
             operationId = "Get all the stored languages into the Database.",
             summary = "Get to see all id language and name.",

@@ -12,7 +12,6 @@ import java.util.UUID;
 
 public interface ILanguageService {
 
-    Flux<ChallengeDocument> filterByLanguage(Flux<ChallengeDocument> challenge, Optional<String> idLanguage);
     Mono<GenericResultDto<LanguageDto>> getAllLanguages();
     Mono<LanguageDocument> findByIdLanguage(UUID id);
     Mono<LanguageDocument> findFirstByLanguageName(String languageName);

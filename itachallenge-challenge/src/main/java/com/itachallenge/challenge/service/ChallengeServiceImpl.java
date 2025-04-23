@@ -55,7 +55,7 @@ public class ChallengeServiceImpl implements IChallengeService {
     @Autowired
     private IUserService userService;
     @Autowired
-    private TagServiceImpl tagService;
+    private ITagService tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {

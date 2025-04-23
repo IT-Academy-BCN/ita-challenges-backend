@@ -30,7 +30,7 @@ class TagServiceImplCacheTest {
     private TagRepository tagRepository;
 
     @Autowired
-    private TagServiceImpl tagService;
+    private ITagService tagService;
 
     @Autowired
     private CacheManager cacheManager;

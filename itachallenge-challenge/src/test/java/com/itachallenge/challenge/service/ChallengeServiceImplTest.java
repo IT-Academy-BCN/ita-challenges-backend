@@ -50,7 +50,7 @@ class ChallengeServiceImplTest {
     @Mock
     private IUserService userService;
     @Mock
-    private TagServiceImpl tagService;
+    private ITagService tagService;
     @Mock
     private ILanguageService ILanguageService;
 

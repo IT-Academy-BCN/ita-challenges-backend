@@ -52,42 +52,6 @@ public class LanguageServiceImpl implements ILanguageService {
         return languageRepository.findFirstByLanguageName(languageName);
     }
 
-    @Override
-    public Flux<ChallengeDocument> filterByLanguage(Flux<ChallengeDocument> challenges, Optional<String> idLanguage) {
-        if (challenges == null) {
-            return Flux.empty();
-        }
-
-        if (idLanguage.isPresent() && !idLanguage.get().isBlank()) {
-            UUID finalLanguageUUID;
-            try {
-                finalLanguageUUID = UUID.fromString(idLanguage.get());
-            } catch (IllegalArgumentException e) {
-                return Flux.error(new IllegalArgumentException("El id del lenguaje no es un UUID válido"));
-            }
-
-            return challenges.filter(challenge -> {
-                if (challenge.getLanguages() == null || challenge.getLanguages().isEmpty()) {
-                    return false;
-                }
-
-                boolean match = challenge.getLanguages().stream()
-                        .filter(Objects::nonNull)
-                        .peek(lang -> System.out.printf(
-                                "Reto '%s': comparando %s con %s%n",
-                                challenge.getTitle(),
-                                lang.getIdLanguage(),
-                                finalLanguageUUID
-                        ))
-                        .map(LanguageDocument::getIdLanguage)
-                        .filter(Objects::nonNull)
-                        .anyMatch(langId -> langId.equals(finalLanguageUUID));
-
-                return match;
-            });
-        }
-        return challenges;
-    }
 
 }
 

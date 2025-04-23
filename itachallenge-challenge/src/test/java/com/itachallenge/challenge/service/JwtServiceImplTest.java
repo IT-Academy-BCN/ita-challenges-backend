@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JwtServiceImplTest {
 
-    JwtServiceImpl jwtService;
+    IJwtService jwtService;
 
     @BeforeEach
     void setUp() {

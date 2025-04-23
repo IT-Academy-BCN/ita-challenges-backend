@@ -34,7 +34,7 @@ class ResourceServiceImplTest {
     private IChallengeService challengeService;
 
     @InjectMocks
-    private ResourceServiceImpl resourceService;
+    private IResourceService resourceService;
 
     @Test //
     void createResource_WithValidData_ResourceCreated() {
