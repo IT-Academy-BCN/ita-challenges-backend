@@ -83,7 +83,7 @@ class UserControllerTest {
     @Test
     void getUser_WhenUserNotExists_Returns404() {
         String githubUsername = "nonExistentUser";
-        when(userService.getUser(githubUsername)).thenReturn(Mono.empty());
+        when(userService.getUser(githubUsername)).thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
