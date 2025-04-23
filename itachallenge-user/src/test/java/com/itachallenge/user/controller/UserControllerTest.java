@@ -5,6 +5,7 @@ import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
+import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
