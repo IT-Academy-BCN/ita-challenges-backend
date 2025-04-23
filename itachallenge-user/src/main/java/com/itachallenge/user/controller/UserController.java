@@ -4,7 +4,6 @@ import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
-import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,7 +84,6 @@ public class UserController {
     @GetMapping("/users/{githubUsername}")
     public Mono<ResponseEntity<UserDocument>> getUser(@PathVariable @ValidGithubUsername String githubUsername) {
         return userService.getUser(githubUsername)
-                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
                 .map(user -> {
                     log.info("User found: {} (Role: {})", githubUsername, user.getRole());
                     return ResponseEntity.ok()
