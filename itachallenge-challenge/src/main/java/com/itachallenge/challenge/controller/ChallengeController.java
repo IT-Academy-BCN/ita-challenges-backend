@@ -21,6 +21,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -155,14 +156,14 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
-        log.info("Entrando en el Service de Filtro");
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
+        log.info("Entering in filter service with this filter:\n" + filter.toString());
         return challengeService.getChallengesByFilter(
                 Optional.ofNullable(filter.getIdLanguage()),
                 Optional.ofNullable(filter.getLevel()),
+                Optional.ofNullable(filter.getTags()),
                 filter.getOffset(),
-                filter.getLimit(),
-                Optional.ofNullable(filter.getTags())
+                filter.getLimit()
         );
     }
 
@@ -301,6 +302,28 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
+    @PostMapping("/challenges/{challengeId}/bookmarks")
+    @Operation(
+            operationId = "Add a challenge to User's bookmarks.",
+            summary = "Add a challenge to bookmarks.",
+            description = "The ID Challenge sent through the URI is added to the user's bookmarks. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkDto>> addChallengeToBookmarks(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallengeToBookmarks(challengeId, userId))
+                .doOnError(error -> log.error("Error adding challenge to bookmarks: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
     @GetMapping("/tags")
     @Operation(
             operationId = "Get all stored tags from the Database for FrontEnd can print them.",
@@ -313,5 +336,4 @@ public class ChallengeController {
     public Mono<GenericResultDto<TagDto>> getAllTags() {
         return tagService.getAllTags();
     }
-
 }

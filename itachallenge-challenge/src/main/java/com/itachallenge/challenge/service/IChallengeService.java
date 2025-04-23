@@ -21,13 +21,11 @@ public interface IChallengeService {
 
     Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit);
 
-    Mono<GenericResultDto<ChallengeDto>> getChallengesByFilter(Optional<String> idLanguage,
+    Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(Optional<String> idLanguage,
                                                                Optional<String> level,
+                                                               Optional<List<UUID>> tags,
                                                                int offset,
-                                                               int limit,
-                                                               Optional<List<UUID>> tags);
-
-    Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level);
+                                                               int limit);
 
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
@@ -38,6 +36,8 @@ public interface IChallengeService {
     Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size);
 
     Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId);
+
+    Mono<BookmarkDto> addChallengeToBookmarks(String challengeId, String userId);
 
     Mono<FavoriteDto> removeChallengeFromFavorites(String challengeId, String userId);
 }

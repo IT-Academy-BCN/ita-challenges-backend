@@ -17,6 +17,5 @@ public interface UserService {
 
     Mono<Set<UUID>> getUserFavorites(String userId);
 
-
-
+    Mono<Boolean> deleteChallengeFromBookmarks(String userId, String challengeId);
 }

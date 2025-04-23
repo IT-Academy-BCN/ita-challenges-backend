@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
@@ -13,7 +12,9 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,27 +46,6 @@ public class TagServiceImpl implements ITagService {
                 )
                 .collect(Collectors.toSet());
     }
-
-    public Flux<ChallengeDocument> filterByTags(Flux<ChallengeDocument> challenges, Optional<List<UUID>> optionalTagIds) {
-        if (challenges == null) {
-            return Flux.empty();
-        }
-        if (optionalTagIds.isEmpty() || optionalTagIds.get().isEmpty()) {
-            return challenges;
-        }
-
-        List<UUID> targetIds = optionalTagIds.get();
-
-        return challenges.filter(challenge ->
-                challenge.getTags() != null &&
-                        challenge.getTags().stream()
-                                .filter(Objects::nonNull)
-                                .anyMatch(targetIds::contains)
-        );
-
-    }
-
-
 
 
 }

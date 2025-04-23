@@ -52,7 +52,9 @@ public class DocumentToDtoConverter<S,D> {
             mapper.createTypeMap(ChallengeDocument.class, ChallengeDto.class)
                     .addMapping(ChallengeDocument::getUuid, ChallengeDto::setChallengeId)
                     .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle)
-                    .addMapping(ChallengeDocument::getTimesFavorite, ChallengeDto::setTimesFavorite);
+                    .addMapping(ChallengeDocument::getTimesFavorite, ChallengeDto::setTimesFavorite)
+                    .addMapping(ChallengeDocument::getTags, ChallengeDto::setTags)
+                    .addMapping(ChallengeDocument::getTimesBookmark, ChallengeDto::setTimesBookmark);
             mapper.addConverter(converterFromLocalDateTimeToString);
         }
 

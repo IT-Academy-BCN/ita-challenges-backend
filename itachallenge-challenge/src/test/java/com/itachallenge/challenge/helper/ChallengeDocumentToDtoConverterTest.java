@@ -58,22 +58,23 @@ class ChallengeDocumentToDtoConverterTest {
 
         Topic topic = Topic.DEBUGGING;
         int timesFavorite = 20;
+        int timesBookmark = 30;
 
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, tags);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, timesBookmark, tags);
 
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, tags);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, timesBookmark, tags);
 
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
-                popularity, percentage);
+                popularity, percentage, tags);
 
         challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
-                popularity, percentage);
+                popularity, percentage, tags);
     }
 
     @Test
@@ -110,7 +111,7 @@ class ChallengeDocumentToDtoConverterTest {
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
-                                               List<UUID> solutions, Integer popularity, Float percentage) {
+                                               List<UUID> solutions, Integer popularity, Float percentage, List<UUID> tags) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
@@ -123,6 +124,8 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
         when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
         when(challengeDocMocked.getTimesFavorite()).thenReturn(20);
+        when(challengeDocMocked.getTimesBookmark()).thenReturn(30);
+        when(challengeDocMocked.getTags()).thenReturn(tags);
         return challengeDocMocked;
     }
 }
