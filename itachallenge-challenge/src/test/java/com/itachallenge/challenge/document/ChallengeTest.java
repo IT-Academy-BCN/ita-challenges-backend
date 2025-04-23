@@ -230,7 +230,6 @@ class ChallengeTest {
         assertEquals(4, challenge.getTimesSolved());
     }
 
-
     @Test
     void setTagsTest() {
         UUID firstTagId = UUID.randomUUID();
