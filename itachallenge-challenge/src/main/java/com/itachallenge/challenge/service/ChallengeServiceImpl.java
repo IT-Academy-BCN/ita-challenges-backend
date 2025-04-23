@@ -116,34 +116,6 @@ public class ChallengeServiceImpl implements IChallengeService {
                 });
     }
 
-    @Cacheable(value = "allLanguages")
-    @Override
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
-        return languagesDto.collectList().map(language -> {
-            GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
-            return resultDto;
-        });
-    }
-
-
-
-    @Override
-    public Flux<ChallengeDocument> filterByLevel(Flux<ChallengeDocument> challenges, Optional<String> level) {
-        if (challenges == null) {
-            return Flux.empty();
-        }
-        if (level.isPresent() && !level.get().isBlank()) {
-            return challenges.filter(challenge ->
-                    challenge.getLevel() != null &&
-                            challenge.getLevel().equalsIgnoreCase(level.get())
-            );
-        }
-
-        return challenges;
-    }
-
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
