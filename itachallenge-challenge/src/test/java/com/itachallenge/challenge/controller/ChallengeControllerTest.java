@@ -907,7 +907,11 @@ class ChallengeControllerTest {
                 .consumeWith(response ->{
                     ChallengeDto body = response.getResponseBody();
                     assert body != null;
+                    Assertions.assertEquals(challengeId, body.getChallengeId().toString());
                     Assertions.assertEquals(formData.getChallengeTitle(), body.getTitle());
+                    Assertions.assertEquals(String.valueOf(formData.getLevel()), body.getLevel());
+                    Assertions.assertEquals(solutionDocument.getUuid(), body.getSolutions().getFirst());
+
                 });
 
 >>>>>>> 8cdf4209 (Create put endpoint for update challenge calling to service)
