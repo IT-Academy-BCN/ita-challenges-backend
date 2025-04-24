@@ -27,6 +27,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -58,6 +60,20 @@ class ChallengeControllerTest {
 
     @MockBean
     private JwtServiceImpl jwtService;
+
+    UUID challengeId = UUID.randomUUID();
+    String challengeTitle = "Challenge modificat";
+    String level = "EASY";
+    String description = "Here are the details of the challenge.";
+    DetailDocument detail = new DetailDocument(description);
+    String language = "Java";
+    LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), language, "https://default-image.com/default.png");
+    UUID solutionUuid = UUID.fromString("d624bae4-9a43-4515-8979-801c0d6fd88c");
+    String solution = "Solution proposed by IT Academy";
+    Topic topic = Topic.ALL;
+    UUID tag = UUID.randomUUID();
+    List<UUID> tags = List.of(tag);
+    String localTimeStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
@@ -809,6 +825,76 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.results[0].timesFavorite").isEqualTo(5);
+    }
+
+    @Test
+    @DisplayName("PUT /challenges/{challengeId}/update must return a mock of the updated challenge")
+    void updateChallenge_allArgumentsCorrect_return200_OK_test(){
+
+        ChallengeDto expectedChallenge = ChallengeDto.builder()
+                .challengeId(challengeId)
+                .title(challengeTitle)
+                .level(level)
+                .creationDate(localTimeStr)
+                .detail(detail)
+                .popularity(10)
+                .percentage(0.5F)
+                .languages(Set.of(languageDto))
+                .solutions(List.of(solutionUuid))
+                .topic(topic)
+                .timesFavorite(10)
+                .timesBookmark(10)
+                .build();
+
+        ChallengeCreateDto challengeCreateDto = ChallengeCreateDto.builder()
+                .challengeTitle(challengeTitle)
+                .description(description)
+                .level(DifficultyLevel.EASY)
+                .language(language)
+                .solution(solution)
+                .topic(Topic.ALL)
+                .tags(tags)
+                .build();
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(challengeCreateDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeDto.class)
+                .consumeWith(data -> {
+                    ChallengeDto response = data.getResponseBody();
+                    assert response != null;
+                    Assertions.assertEquals(expectedChallenge.getChallengeId(), response.getChallengeId());
+                    Assertions.assertEquals(expectedChallenge.getTitle(), response.getTitle());
+                    Assertions.assertEquals(expectedChallenge.getLevel(), response.getLevel());
+                    Assertions.assertEquals(expectedChallenge.getCreationDate(), response.getCreationDate());
+                    Assertions.assertEquals(expectedChallenge.getDetail().getDescription(), response.getDetail().getDescription());
+                    Assertions.assertEquals(expectedChallenge.getTitle(), response.getTitle());
+                    Assertions.assertEquals(expectedChallenge.getPopularity(), response.getPopularity());
+                    Assertions.assertEquals(expectedChallenge.getPercentage(), response.getPercentage());
+                    Assertions.assertTrue(expectedChallenge.getLanguages().contains(languageDto));
+                    Assertions.assertTrue(expectedChallenge.getSolutions().contains(solutionUuid));
+                    Assertions.assertEquals(expectedChallenge.getTopic(), response.getTopic());
+                    Assertions.assertEquals(expectedChallenge.getTimesFavorite(), response.getTimesFavorite());
+                    Assertions.assertEquals(expectedChallenge.getTimesBookmark(), response.getTimesBookmark());
+                });
+    }
+
+    @Test
+    @DisplayName("PUT /challenges/{challengeId}/update must return Bad Request when not valid Request body")
+    void updateChallenge_badArgument_return400_BadRequest_test(){
+        ChallengeCreateDto challengeCreateDto = ChallengeCreateDto.builder()
+                .challengeTitle("Challenge Title")
+                .build();
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(challengeCreateDto)
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
