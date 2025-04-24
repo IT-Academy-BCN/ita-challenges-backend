@@ -8,7 +8,7 @@ import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.challenge.service.JwtService;
+import com.itachallenge.challenge.service.JwtServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -58,27 +57,7 @@ class ChallengeControllerTest {
     private PropertiesConfig config;
 
     @MockBean
-    private JwtService jwtService;
-
-    //TODO - pending externalize to service layer (internal comms)
-
-/*    @Test
-    void test() {
-        // Arrange
-        List<ServiceInstance> instances = Arrays.asList(
-                new DefaultServiceInstance("instanceId", "itachallenge-challenge", "localhost", 8080, false),
-                new DefaultServiceInstance("instanceId", "itachallenge-user", "localhost", 8081, false)
-        );
-        when(discoveryClient.getInstances("itachallenge-challenge")).thenReturn(instances);
-        when(discoveryClient.getInstances("itachallenge-user")).thenReturn(Collections.singletonList(instances.get(1)));
-
-        // Act & Assert
-        webTestClient.get().uri("/itachallenge/api/v1/challenge/test")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class).isEqualTo("Hello from ITA Challenge!!!");
-    }*/
-
+    private JwtServiceImpl jwtService;
 
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
@@ -145,28 +124,6 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ChallengeDto.class);
-    }
-
-    @Test
-    void getAllLanguages_LanguagesExist_LanguagesReturned() {
-        // Arrange
-        GenericResultDto<LanguageDto> expectedResult = new GenericResultDto<>();
-        expectedResult.setInfo(0, 2, 2, new LanguageDto[]{new LanguageDto(), new LanguageDto()});
-
-        when(challengeService.getAllLanguages()).thenReturn(Mono.just(expectedResult));
-
-        // Act & Assert
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/language")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(GenericResultDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                    assert dto.getCount() == 2;
-                    assert dto.getResults() != null;
-                    assert dto.getResults().length == 2;
-                });
     }
 
     @Test

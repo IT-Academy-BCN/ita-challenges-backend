@@ -4,7 +4,6 @@ import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
@@ -14,7 +13,6 @@ import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
-import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +30,11 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class ChallengeServiceImp implements IChallengeService {
+public class ChallengeServiceImpl implements IChallengeService {
 
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
-    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
+    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImpl.class);
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
 
@@ -47,19 +45,17 @@ public class ChallengeServiceImp implements IChallengeService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private LanguageRepository languageRepository;
+    private ILanguageService ILanguageService;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
     @Autowired
-    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
-    @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     @Autowired
     private IUserService userService;
     @Autowired
-    private TagService tagService;
+    private ITagService tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -116,17 +112,6 @@ public class ChallengeServiceImp implements IChallengeService {
                     resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
                     return resultDto;
                 });
-    }
-
-    @Cacheable(value = "allLanguages")
-    @Override
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
-        return languagesDto.collectList().map(language -> {
-            GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
-            return resultDto;
-        });
     }
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
@@ -190,7 +175,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
 
-                    return languageRepository.findByIdLanguage(languageId)
+                    return ILanguageService.findByIdLanguage(languageId)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -254,7 +239,7 @@ public class ChallengeServiceImp implements IChallengeService {
             return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
         }
 
-        return languageRepository.findFirstByLanguageName(codingLanguage)
+        return ILanguageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
                     SolutionDocument solution = SolutionDocument.builder()
