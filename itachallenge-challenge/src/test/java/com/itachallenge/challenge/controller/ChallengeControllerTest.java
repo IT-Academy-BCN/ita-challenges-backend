@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
@@ -865,24 +866,51 @@ class ChallengeControllerTest {
     @DisplayName("PUT update challenge when valid request returns 200")
 
     void updateChallengeValidRequest_test(){
+<<<<<<< HEAD
         String userId = "existing_userId";
         String authHeader = "validAuthHeader";
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
                 .thenReturn(Mono.just(createdChallenge));
+=======
+
+        SolutionDocument solutionDocument = new SolutionDocument(UUID.randomUUID(), formData.getSolution(), UUID.randomUUID());
+        LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), formData.getLanguage(), "default_image.png");
+        createdChallenge.setChallengeId(UUID.fromString(challengeId));
+        createdChallenge.setTitle(formData.getChallengeTitle());
+        createdChallenge.setLevel(formData.getLevel().toString());
+        createdChallenge.setSolutions(List.of(solutionDocument.getUuid()));
+        createdChallenge.setLanguages(Set.of(languageDto));
+        createdChallenge.setDetail(new DetailDocument(formData.getDescription()));
+        createdChallenge.setTopic(Topic.valueOf(formData.getTopic().toString()));
+
+        when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class))).thenReturn(Mono.just(createdChallenge));
+>>>>>>> 8cdf4209 (Create put endpoint for update challenge calling to service)
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
+<<<<<<< HEAD
                 .header("Authorization", authHeader)
+=======
+>>>>>>> 8cdf4209 (Create put endpoint for update challenge calling to service)
                 .bodyValue(formData)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
+<<<<<<< HEAD
                 .value(Assertions::assertNotNull);
 
         verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
+=======
+                .consumeWith(response ->{
+                    ChallengeDto body = response.getResponseBody();
+                    assert body != null;
+                    Assertions.assertEquals(formData.getChallengeTitle(), body.getTitle());
+                });
+
+>>>>>>> 8cdf4209 (Create put endpoint for update challenge calling to service)
         verify(challengeService, times(1))
                 .updateChallenge(anyString(), any(ChallengeCreateDto.class));
     }
@@ -945,6 +973,7 @@ class ChallengeControllerTest {
                 Arguments.of(String.format(baseJson, "EASY", "invalidTopic"))
         );
     }
+<<<<<<< HEAD
     @Test
     void removeChallengeFromBookmarks_Success_Returns200() {
         String challengeId = "existing_challengeId";
@@ -1051,6 +1080,8 @@ class ChallengeControllerTest {
 
     }
 
+=======
+>>>>>>> 8cdf4209 (Create put endpoint for update challenge calling to service)
 }
 
 
