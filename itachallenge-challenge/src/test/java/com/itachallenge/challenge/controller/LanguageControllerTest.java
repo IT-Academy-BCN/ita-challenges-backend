@@ -36,7 +36,7 @@ public class LanguageControllerTest {
 
         // Act & Assert
         webTestClient.get()
-                .uri("/itachallenge/api/v1/languages/language")
+                .uri("/itachallenge/api/v1/languages/")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GenericResultDto.class)
