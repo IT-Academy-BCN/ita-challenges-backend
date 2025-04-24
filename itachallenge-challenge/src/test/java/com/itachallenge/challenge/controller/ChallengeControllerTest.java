@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
@@ -832,11 +833,51 @@ class ChallengeControllerTest {
     }
 
     @Test
+    void getChallengesByFilter_shouldReturnOkResponse() {
+        // Mock de respuesta vacía
+        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+        resultDto.setInfo(0, 10, 0, new ChallengeDto[0]);
+
+        UUID mockTag = UUID.randomUUID();
+        UUID languageMok = UUID.randomUUID();
+
+        when(challengeService.getChallengesByFilter(
+                Optional.of(languageMok.toString()),
+                Optional.of("EASY"),
+                Optional.of(List.of(mockTag)),
+                0,
+                2
+        )).thenReturn(Flux.just(resultDto));
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/challenge/challenges/byFilter")
+                        .queryParam("idLanguage", languageMok.toString())
+                        .queryParam("level", "EASY")
+                        .queryParam("offset", 0)
+                        .queryParam("limit", 2)
+                        .queryParam("tags", mockTag.toString())
+                        .build())
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
     @DisplayName("PUT update challenge when valid request returns 200")
 
     void updateChallengeValidRequest_test(){
-        when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
-                .thenReturn(Mono.just(createdChallenge));
+
+        SolutionDocument solutionDocument = new SolutionDocument(UUID.randomUUID(), formData.getSolution(), UUID.randomUUID());
+        LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), formData.getLanguage(), "default_image.png");
+        createdChallenge.setChallengeId(UUID.fromString(challengeId));
+        createdChallenge.setTitle(formData.getChallengeTitle());
+        createdChallenge.setLevel(formData.getLevel().toString());
+        createdChallenge.setSolutions(List.of(solutionDocument.getUuid()));
+        createdChallenge.setLanguages(Set.of(languageDto));
+        createdChallenge.setDetail(new DetailDocument(formData.getDescription()));
+        createdChallenge.setTopic(Topic.valueOf(formData.getTopic().toString()));
+
+        when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class))).thenReturn(Mono.just(createdChallenge));
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
@@ -845,7 +886,11 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
-                .value(Assertions::assertNotNull);
+                .consumeWith(response ->{
+                    ChallengeDto body = response.getResponseBody();
+                    assert body != null;
+                    Assertions.assertEquals(formData.getChallengeTitle(), body.getTitle());
+                });
 
         verify(challengeService, times(1))
                 .updateChallenge(anyString(), any(ChallengeCreateDto.class));
@@ -909,37 +954,6 @@ class ChallengeControllerTest {
                 Arguments.of(String.format(baseJson, "EASY", "invalidTopic"))
         );
     }
-
-    @Test
-    void getChallengesByFilter_shouldReturnOkResponse() {
-        // Mock de respuesta vacía
-        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-        resultDto.setInfo(0, 10, 0, new ChallengeDto[0]);
-
-        UUID mockTag = UUID.randomUUID();
-        UUID languageMok = UUID.randomUUID();
-
-        when(challengeService.getChallengesByFilter(
-                Optional.of(languageMok.toString()),
-                Optional.of("EASY"),
-                Optional.of(List.of(mockTag)),
-                0,
-                2
-        )).thenReturn(Flux.just(resultDto));
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/challenge/challenges/byFilter")
-                        .queryParam("idLanguage", languageMok.toString())
-                        .queryParam("level", "EASY")
-                        .queryParam("offset", 0)
-                        .queryParam("limit", 2)
-                        .queryParam("tags", mockTag.toString())
-                        .build())
-                .exchange()
-                .expectStatus().isOk();
-    }
-
     @Test
     void removeChallengeFromBookmarks_Success_Returns200() {
         String challengeId = "existing_challengeId";
