@@ -3,7 +3,8 @@ package com.itachallenge.user.document.enums;
 import lombok.Getter;
 
 @Getter
-public enum ChallengeStatus {ENDED("ENDED");
+public enum ChallengeStatus {ENDED("ENDED"),
+    IN_PROGRESS("IN_PROGRESS");
 
     private final String value;
 
