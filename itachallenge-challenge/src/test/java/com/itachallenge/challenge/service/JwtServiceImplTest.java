@@ -6,13 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JwtServiceTest {
+class JwtServiceImplTest {
 
-    JwtService jwtService;
+    JwtServiceImpl jwtService;
 
     @BeforeEach
     void setUp() {
-        jwtService = new JwtService();
+        jwtService = new JwtServiceImpl();
     }
 
     @Test

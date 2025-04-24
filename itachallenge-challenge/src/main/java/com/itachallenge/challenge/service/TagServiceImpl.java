@@ -18,7 +18,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class TagService implements ITagService {
+public class TagServiceImpl implements ITagService {
 
     @Autowired
     TagRepository tagRepository;

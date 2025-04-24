@@ -15,9 +15,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements IUserService {
 
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final WebClient.Builder webClientBuilder;
 
@@ -25,7 +25,7 @@ public class UserService implements IUserService {
     private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
 
-    public UserService(
+    public UserServiceImpl(
             WebClient.Builder webClientBuilder,
             @Value("${user.service.url}") String userServiceUrl) {
         this.webClientBuilder = webClientBuilder;

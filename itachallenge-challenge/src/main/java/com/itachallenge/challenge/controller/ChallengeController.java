@@ -7,8 +7,9 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.IJwtService;
 import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.challenge.service.JwtService;
+import com.itachallenge.challenge.service.JwtServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +23,7 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -57,7 +59,7 @@ public class ChallengeController {
     private ITagService tagService;
 
     @Autowired
-    private JwtService jwtService;
+    private IJwtService jwtService;
 
     @Value("${spring.application.version}")
     private String version;
@@ -146,9 +148,9 @@ public class ChallengeController {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-    @GetMapping("/challenges/")
+    @GetMapping("/challenges/byFilter")
     @Operation(
-            operationId = "Get challenges on a page by language and difficulty, language or difficulty.",
+            operationId = "Get challenges on a page by FILTER (language, difficulty, or tags).",
             summary = "Get to see challenges on a page and their levels, details and their available languages by language and difficulty, language or difficulty.",
             description = "Requesting the challenges for a page sending page number and the number of items per page through the URI from the database.",
             responses = {
@@ -158,26 +160,15 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(
-            @RequestParam Optional<String> idLanguage,
-            @RequestParam Optional<String> level,
-            @RequestParam(defaultValue = DEFAULT_OFFSET) int offset,
-            @RequestParam(defaultValue = "-1") int limit) {
-        return challengeService.getChallengesByLanguageOrDifficulty(idLanguage, level, offset, limit);
-    }
-
-
-    @GetMapping("/language")
-    @Operation(
-            operationId = "Get all the stored languages into the Database.",
-            summary = "Get to see all id language and name.",
-            description = "Requesting all the languages through the URI from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-            }
-    )
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        return challengeService.getAllLanguages();
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(@ModelAttribute ChallengeFilterDto filter) {
+        log.info("Entering in filter service with this filter:\n" + filter.toString());
+        return challengeService.getChallengesByFilter(
+                Optional.ofNullable(filter.getIdLanguage()),
+                Optional.ofNullable(filter.getLevel()),
+                Optional.ofNullable(filter.getTags()),
+                filter.getOffset(),
+                filter.getLimit()
+        );
     }
 
     @GetMapping("/solution/challenge/{idChallenge}/language/{idLanguage}")
