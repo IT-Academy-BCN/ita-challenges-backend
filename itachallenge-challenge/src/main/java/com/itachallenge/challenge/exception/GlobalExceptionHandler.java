@@ -105,4 +105,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
+
 }
