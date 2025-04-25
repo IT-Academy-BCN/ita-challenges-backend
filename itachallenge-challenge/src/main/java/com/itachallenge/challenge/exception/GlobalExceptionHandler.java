@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -105,5 +106,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
-
 }
