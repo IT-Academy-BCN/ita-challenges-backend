@@ -912,6 +912,41 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update challenge",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"challengeTitle\": \"New challenge Title\",\n\"description\": \"This is the new description of this challenge\",\n\"level\": \"EASY\",\n\"language\": \"Java\",\n\"solution\": \"This is the new solution of this challenge.\",\n\"topic\": \"STYLES\",\n\"tags\": [\"08208208-2082-0820-8208-208208208207\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/challenge/c13d4f5a-3cf5-46f8-acea-f0db63088863/update",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges",
+								"challenge",
+								"c13d4f5a-3cf5-46f8-acea-f0db63088863",
+								"update"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
