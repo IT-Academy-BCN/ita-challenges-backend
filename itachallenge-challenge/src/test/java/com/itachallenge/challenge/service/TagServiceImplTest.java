@@ -7,6 +7,7 @@ import com.itachallenge.challenge.dto.TagDto;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -138,7 +139,6 @@ class TagServiceImplTest {
                 .expectNext(true).verifyComplete();
         verify(tagRepository).findById(tagDocument.getIdTag());
     }
-
 }
 
 

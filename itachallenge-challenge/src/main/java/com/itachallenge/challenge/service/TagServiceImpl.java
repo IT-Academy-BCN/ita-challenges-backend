@@ -47,6 +47,7 @@ public class TagServiceImpl implements ITagService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
     public Mono<Boolean> getValidatedTags(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
                 .flatMap(tagId -> tagRepository.findById(tagId)
