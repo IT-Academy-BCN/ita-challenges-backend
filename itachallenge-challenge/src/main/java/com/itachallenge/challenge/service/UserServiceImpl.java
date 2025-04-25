@@ -47,6 +47,11 @@ public class UserServiceImpl implements IUserService {
         return callEndpoint(userId, challengeId, UserChallengeActionType.FAVORITES, X_FAVORITE_MESSAGE, HttpMethod.DELETE);
     }
 
+    @Override
+    public Mono<Boolean> removeChallengeFromBookmarks(String userId, String challengeId) {
+        return callEndpoint(userId, challengeId, UserChallengeActionType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.DELETE);
+    }
+
     private Mono<Boolean> callEndpoint(String userId, String challengeId, UserChallengeActionType type, String errorHeader, HttpMethod method) {
         String url = buildUrl(userId, challengeId, type.toString().toLowerCase());
         log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
