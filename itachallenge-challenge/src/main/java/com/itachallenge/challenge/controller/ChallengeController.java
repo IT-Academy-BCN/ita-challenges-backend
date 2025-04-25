@@ -380,4 +380,26 @@ public class ChallengeController {
 
         return Mono.just(ResponseEntity.ok(challengeDto));
     }
+
+    @DeleteMapping("/challenges/{challengeId}/bookmarks")
+    @Operation(
+            operationId = "Remove a challenge from the User's bookmarks.",
+            summary = "Remove a challenge from bookmarks.",
+            description = "The ID Challenge sent through the URI is removed from the user's bookmarks. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<BookmarkDto>> removeChallengeFromBookmarks(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.removeChallengeFromBookmarks(challengeId, userId))
+                .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
 }
