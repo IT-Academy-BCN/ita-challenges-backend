@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ import java.util.*;
 @RestController
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class ChallengeController {
 
     private static final String DEFAULT_OFFSET = "0";
