@@ -422,4 +422,32 @@ public class ChallengeServiceImpl implements IChallengeService {
                                     .map(savedChallenge -> new BookmarkDto( true, savedChallenge.getTimesBookmark())));
                 });
     }
+
+    @Override
+    public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
+
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> userIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, userIdMono)
+                .flatMap(Uuidtuple -> {
+                    UUID challengeUuid = Uuidtuple.getT1();
+                    UUID userUuid = Uuidtuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isAddedToUsersSolved -> {
+                                        if (Boolean.TRUE.equals(isAddedToUsersSolved) ||
+                                                Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
+                                            challenge.increaseTimesSolved();
+                                            return challengeRepository.save(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new SolvedDto(true, savedChallenge.getTimesSolved())));
+                });
+    }
+
 }
