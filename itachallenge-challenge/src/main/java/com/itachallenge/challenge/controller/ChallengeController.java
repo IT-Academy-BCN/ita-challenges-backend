@@ -328,6 +328,28 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
+    @PostMapping("/challenges/{challengeId}/solved")
+    @Operation(
+            operationId = "Add a challenge to User's solved challenges.",
+            summary = "Add a challenge to solved challenges.",
+            description = "The ID Challenge sent through the URI is added to the user's solved challenges. User Id is determined from the headers.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolvedDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            }
+    )
+    public Mono<ResponseEntity<SolvedDto>> addChallengeToSolved(
+            @PathVariable String challengeId,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallengeToSolved(challengeId, userId))
+                .doOnError(error -> log.error("Error adding challenge to solved: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
+    }
+
     @GetMapping("/tags")
     @Operation(
             operationId = "Get all stored tags from the Database for FrontEnd can print them.",
