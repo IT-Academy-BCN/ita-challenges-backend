@@ -865,6 +865,9 @@ class ChallengeControllerTest {
     @DisplayName("PUT update challenge when valid request returns 200")
 
     void updateChallengeValidRequest_test(){
+        String userId = "existing_userId";
+        String authHeader = "validAuthHeader";
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
                 .thenReturn(Mono.just(createdChallenge));
@@ -872,12 +875,14 @@ class ChallengeControllerTest {
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", authHeader)
                 .bodyValue(formData)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
                 .value(Assertions::assertNotNull);
 
+        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
         verify(challengeService, times(1))
                 .updateChallenge(anyString(), any(ChallengeCreateDto.class));
     }
