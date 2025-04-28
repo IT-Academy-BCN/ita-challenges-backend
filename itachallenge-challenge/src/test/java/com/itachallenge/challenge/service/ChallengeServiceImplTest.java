@@ -104,7 +104,7 @@ class ChallengeServiceImplTest {
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                20, 30,tags);
+                20, 30, 40, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
@@ -1320,7 +1320,7 @@ class ChallengeServiceImplTest {
                 Set.of(new LanguageDocument(languageId, "Language Name", "image.png")),
                 List.of(UUID.randomUUID()),
                 Topic.COMPONENTS,
-                0, 0, tags
+                0, 0, 0, tags
         );
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
@@ -1374,7 +1374,7 @@ class ChallengeServiceImplTest {
                 Set.of(new LanguageDocument(UUID.randomUUID(), "Other Language", "image.png")),
                 List.of(UUID.randomUUID()),
                 Topic.COMPONENTS,
-                0, 0, tags
+                0, 0, 0, tags
         );
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
