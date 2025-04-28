@@ -34,6 +34,9 @@ public class UserDocument {
     @Field("bookmark_challenges")
     private Set<UUID> bookmarkChallenges;
 
+    @Field("solved_challenges")
+    private Set<UUID> solvedChallenges;
+
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "UserDocument{", "}");
@@ -56,6 +59,12 @@ public class UserDocument {
         if (bookmarkChallenges != null && !bookmarkChallenges.isEmpty()) {
             joiner.add("bookmarkChallenges='");
             joiner.add(bookmarkChallenges.stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", ")));
+        }
+        if (solvedChallenges != null && !solvedChallenges.isEmpty()) {
+            joiner.add("solvedChallenges='");
+            joiner.add(solvedChallenges.stream()
                     .map(String::valueOf)
                     .collect(Collectors.joining(", ")));
         }
