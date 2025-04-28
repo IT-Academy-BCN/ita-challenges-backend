@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -134,5 +135,21 @@ public class ResourceServiceImpl implements IResourceService {
                     return savedDto;
                 })
                 .doOnError(error -> log.error("Error occurred when creating resource {}", error.getMessage()));
+    }
+
+
+    public Flux<ResourceDto> getResourcesByChallengeId(UUID challengeId) {
+
+        if (challengeId == null) {
+            return Flux.error(new IllegalArgumentException("Challenge ID cannot be null"));
+        }
+
+
+        return resourceRepository.findByChallengeIdsContaining(challengeId)
+                .map(resourceDoc -> resourceConverter.convertDocumentToDto(resourceDoc, ResourceDto.class))
+                .onErrorResume(error -> {
+                    log.error("Error fetching resources: {}", error.getMessage());
+                    return Flux.error(new RuntimeException("Server error while fetching resources"));
+                });
     }
 }
