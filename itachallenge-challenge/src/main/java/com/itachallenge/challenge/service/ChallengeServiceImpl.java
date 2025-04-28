@@ -488,35 +488,34 @@ public class ChallengeServiceImpl implements IChallengeService {
                 });
     }
 
-@Override
-public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
-    Mono<UUID> challengeIdMono = validateUUID(challengeId);
-    Mono<UUID> userIdMono = validateUUID(userId);
+    @Override
+    public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
+        Mono<UUID> challengeIdMono = validateUUID(challengeId);
+        Mono<UUID> userIdMono = validateUUID(userId);
 
-    return Mono.zip(challengeIdMono, userIdMono)
-            .flatMap(uuidTuple -> {
-                UUID challengeUuid = uuidTuple.getT1();
-                UUID userUuid = uuidTuple.getT2();
+        return Mono.zip(challengeIdMono, userIdMono)
+                .flatMap(uuidTuple -> {
+                    UUID challengeUuid = uuidTuple.getT1();
+                    UUID userUuid = uuidTuple.getT2();
 
-                return challengeRepository.findByUuid(challengeUuid)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
-                                String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
-                        .flatMap(challenge -> {
-                            log.info("It should be connected to user service using the fields {} and {}", challengeUuid, userUuid);
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
+                                    String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> {
+                                log.info("It should be connected to user service using the fields {} and {}", challengeUuid, userUuid);
 
-                            //The part of the user service is not implemented yet, it should be connected to the user service in the future.
+                                //The part of the user service is not implemented yet, it should be connected to the user service in the future.
 
-                            if (Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
-                                challenge.increaseTimesSolved();
-                                return challengeRepository.save(challenge);
-                            }
+                                if (Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
+                                    challenge.increaseTimesSolved();
+                                    return challengeRepository.save(challenge);
+                                }
 
-                            return Mono.just(challenge);
-                        })
-                        .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
-            });
-}
-
+                                return Mono.just(challenge);
+                            })
+                            .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
+                });
+    }
 
     private SolutionDocument buildSolutionDocument(LanguageDocument language, ChallengeCreateDto challengeCreateDto){
         return SolutionDocument.builder()
