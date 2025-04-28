@@ -55,6 +55,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Mono<Boolean> addChallengeToSolved(String userId, String challengeId) {
+
+        return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
+                .flatMap(uuidTuple -> {
+                    UUID userUuid = uuidTuple.getT1();
+                    UUID challengeUuid = uuidTuple.getT2();
+
+                    return userRepository.findById(userUuid)
+                            .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                            .flatMap(user -> addToSolved(user, challengeUuid));
+                });
+    }
+
+    @Override
     public Mono<Boolean> deleteChallengeFromFavorites(String userId, String challengeId) {
         return Mono.zip(parseAndValidateUUID(userId), parseAndValidateUUID(challengeId))
                 .flatMap(uuidTuple -> {
@@ -102,6 +116,20 @@ public class UserServiceImpl implements UserService {
 
         if (added) {
             user.setBookmarkChallenges(bookmarks);
+            return userRepository.save(user).then(Mono.just(true));
+        }
+
+        return Mono.just(false);
+    }
+
+    private Mono<Boolean> addToSolved(UserDocument user, UUID challengeUuid) {
+        Set<UUID> solved = Optional.ofNullable(user.getSolvedChallenges())
+                .orElseGet(HashSet::new);
+
+        boolean added = solved.add(challengeUuid);
+
+        if (added) {
+            user.setSolvedChallenges(solved);
             return userRepository.save(user).then(Mono.just(true));
         }
 
