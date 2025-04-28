@@ -25,4 +25,5 @@ public interface ResourceRepository extends ReactiveSortingRepository<ResourceDo
     Flux<ResourceDocument> saveAll(Flux<ResourceDocument> resourceDocumentFlux);
     Mono<Void> deleteAll();
 
+    Flux<ResourceDocument> findByChallengeIdsContaining(UUID challengeId);
 }
