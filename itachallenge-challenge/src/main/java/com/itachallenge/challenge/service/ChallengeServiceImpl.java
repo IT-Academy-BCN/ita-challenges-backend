@@ -39,13 +39,13 @@ public class ChallengeServiceImpl implements IChallengeService {
     private static final String NOT_FOUND = "not found";
 
     private final ChallengeRepository challengeRepository;
-    private final LanguageRepository languageRepository;
     private final SolutionRepository solutionRepository;
     private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
     private final DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter;
     private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     private final IUserService userService;
-    private final TagService tagService;
+    private final ITagService tagService;
+    private final ILanguageService languageService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -165,7 +165,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
 
-                    return ILanguageService.findByIdLanguage(languageId)
+                    return languageService.findByIdLanguage(languageId)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -229,7 +229,7 @@ public class ChallengeServiceImpl implements IChallengeService {
             return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
         }
 
-        return ILanguageService.findFirstByLanguageName(codingLanguage)
+        return languageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
                     SolutionDocument solution = SolutionDocument.builder()
