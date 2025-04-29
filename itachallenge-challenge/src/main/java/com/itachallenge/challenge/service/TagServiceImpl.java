@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class TagServiceImpl implements ITagService {
 
     private final TagRepository tagRepository;
-    private final DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
+    private final DocumentToDtoConverter<TagDocument, TagDto> tagConverter;
 
     @Cacheable(value = "allTags")
     @Override
