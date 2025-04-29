@@ -27,6 +27,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -58,6 +60,20 @@ class ChallengeControllerTest {
 
     @MockBean
     private JwtServiceImpl jwtService;
+
+    UUID challengeId = UUID.randomUUID();
+    String challengeTitle = "Challenge modificat";
+    String level = "EASY";
+    String description = "Here are the details of the challenge.";
+    DetailDocument detail = new DetailDocument(description);
+    String language = "Java";
+    LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), language, "https://default-image.com/default.png");
+    UUID solutionUuid = UUID.fromString("d624bae4-9a43-4515-8979-801c0d6fd88c");
+    String solution = "Solution proposed by IT Academy";
+    Topic topic = Topic.ALL;
+    UUID tag = UUID.randomUUID();
+    List<UUID> tags = List.of(tag);
+    String localTimeStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
@@ -812,6 +828,76 @@ class ChallengeControllerTest {
     }
 
     @Test
+    @DisplayName("PUT /challenges/{challengeId}/update must return a mock of the updated challenge")
+    void updateChallenge_allArgumentsCorrect_return200_OK_test(){
+
+        ChallengeDto expectedChallenge = ChallengeDto.builder()
+                .challengeId(challengeId)
+                .title(challengeTitle)
+                .level(level)
+                .creationDate(localTimeStr)
+                .detail(detail)
+                .popularity(10)
+                .percentage(0.5F)
+                .languages(Set.of(languageDto))
+                .solutions(List.of(solutionUuid))
+                .topic(topic)
+                .timesFavorite(10)
+                .timesBookmark(10)
+                .build();
+
+        ChallengeCreateDto challengeCreateDto = ChallengeCreateDto.builder()
+                .challengeTitle(challengeTitle)
+                .description(description)
+                .level(DifficultyLevel.EASY)
+                .language(language)
+                .solution(solution)
+                .topic(Topic.ALL)
+                .tags(tags)
+                .build();
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(challengeCreateDto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeDto.class)
+                .consumeWith(data -> {
+                    ChallengeDto response = data.getResponseBody();
+                    assert response != null;
+                    Assertions.assertEquals(expectedChallenge.getChallengeId(), response.getChallengeId());
+                    Assertions.assertEquals(expectedChallenge.getTitle(), response.getTitle());
+                    Assertions.assertEquals(expectedChallenge.getLevel(), response.getLevel());
+                    Assertions.assertEquals(expectedChallenge.getCreationDate(), response.getCreationDate());
+                    Assertions.assertEquals(expectedChallenge.getDetail().getDescription(), response.getDetail().getDescription());
+                    Assertions.assertEquals(expectedChallenge.getTitle(), response.getTitle());
+                    Assertions.assertEquals(expectedChallenge.getPopularity(), response.getPopularity());
+                    Assertions.assertEquals(expectedChallenge.getPercentage(), response.getPercentage());
+                    Assertions.assertTrue(expectedChallenge.getLanguages().contains(languageDto));
+                    Assertions.assertTrue(expectedChallenge.getSolutions().contains(solutionUuid));
+                    Assertions.assertEquals(expectedChallenge.getTopic(), response.getTopic());
+                    Assertions.assertEquals(expectedChallenge.getTimesFavorite(), response.getTimesFavorite());
+                    Assertions.assertEquals(expectedChallenge.getTimesBookmark(), response.getTimesBookmark());
+                });
+    }
+
+    @Test
+    @DisplayName("PUT /challenges/{challengeId}/update must return Bad Request when not valid Request body")
+    void updateChallenge_badArgument_return400_BadRequest_test(){
+        ChallengeCreateDto challengeCreateDto = ChallengeCreateDto.builder()
+                .challengeTitle("Challenge Title")
+                .build();
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(challengeCreateDto)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
     void getChallengesByFilter_shouldReturnOkResponse() {
         // Mock de respuesta vacía
         GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -839,6 +925,112 @@ class ChallengeControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_Success_Returns200() {
+        String challengeId = "existing_challengeId";
+        String userId = "existing_userId";
+        String authHeader = "validAuthHeader";
+
+        BookmarkDto expectedResponse = new BookmarkDto(false, 20);
+
+        when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(BookmarkDto.class)
+                .isEqualTo(expectedResponse);
+
+        verify(challengeService, times(1)).removeChallengeFromBookmarks(challengeId, userId);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_ChallengeNotFound_Returns404() {
+        String challengeId = "nonExisting_challengeId";
+        String userId = "existing_userId";
+        String authHeader = "validAuthHeader";
+
+        String errorMessage = "ErrorMessage";
+
+        when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
+
+        verify(challengeService, times(1)).removeChallengeFromBookmarks(challengeId, userId);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_InternalServerError_Returns500() {
+        String challengeId = "Existing_challengeId";
+        String userId = "existing_userId";
+        String authHeader = "validAuthHeader";
+
+        String errorMessage = "ErrorMessage";
+
+        when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
+
+        verify(challengeService, times(1)).removeChallengeFromBookmarks(challengeId, userId);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_InvalidHeader_Returns400() {
+        String challengeId = "Existing_challengeId";
+        String authHeader = "BadHeader";
+        String errorMessage = "Error message";
+
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
+                .header("Authorization", authHeader)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
+
+        verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_MissingHeader_Returns400() {
+        String challengeId = "Existing_challengeId";
+        String errorMessage = "ErrorMessage";
+
+        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
+
+        webTestClient.delete()
+                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(MessageDto.class)
+                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
+
+        verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
+
     }
 
 }
