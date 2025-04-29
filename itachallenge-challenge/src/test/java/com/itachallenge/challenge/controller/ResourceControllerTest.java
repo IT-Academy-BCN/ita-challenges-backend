@@ -141,7 +141,7 @@ class ResourceControllerTest {
         // 3. Ejecutar y verificar la petición HTTP
         webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/resource")
+                        .path("/itachallenge/api/v1/resource/resources")
                         .queryParam("challengeId", challengeId.toString())
                         .build())
                 .exchange()
