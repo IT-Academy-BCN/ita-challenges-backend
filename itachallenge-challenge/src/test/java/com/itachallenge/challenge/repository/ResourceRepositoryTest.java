@@ -252,10 +252,7 @@ class ResourceRepositoryTest {
                 .verifyComplete();
     }
 
-    // Revisar + limpiar esto
-    // este test Verifica que el método findByChallengeIdsContaining
-    // del repositorio devuelve únicamente los recursos que contienen
-    // el challengeId especificado en su lista de retos asociados.
+
     @Test
     void findByChallengeIdsContaining_WhenChallengeIdExists_ReturnsResources() {
 
