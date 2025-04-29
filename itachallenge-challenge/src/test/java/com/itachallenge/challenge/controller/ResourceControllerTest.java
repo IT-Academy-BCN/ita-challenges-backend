@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.junit.Assert.*;
@@ -106,6 +107,57 @@ class ResourceControllerTest {
 
         verify(resourceService, never()).createResource(any(ResourceDto.class));
     }
+
+
+
+    @Test
+    void getResourcesByChallengeId_ValidId_ReturnsResources() {
+        // 1. Datos de prueba
+        UUID challengeId = UUID.randomUUID();
+        ResourceDto resource1 = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Resource 1")
+                .description("Desc 1")
+                .url("https://example.com/1")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .challengeIds(List.of(challengeId))
+                .build();
+
+        ResourceDto resource2 = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Resource 2")
+                .description("Desc 2")
+                .url("https://example.com/2")
+                .topic(Topic.COMPONENTS)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(challengeId))
+                .build();
+
+        // 2. Mock del servicio
+        when(resourceService.getResourcesByChallengeId(challengeId))
+                .thenReturn(Flux.just(resource1, resource2));
+
+        // 3. Ejecutar y verificar la petición HTTP
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/itachallenge/api/v1/resource")
+                        .queryParam("challengeId", challengeId.toString())
+                        .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ResourceDto.class)
+                .hasSize(2)
+                .value(resources -> {
+                    assertEquals(resource1.getTitle(), resources.get(0).getTitle());
+                    assertEquals(resource2.getUrl(), resources.get(1).getUrl());
+                });
+
+        // 4. Verificar interacción con el servicio
+        verify(resourceService, times(1)).getResourcesByChallengeId(challengeId);
+    }
+
+
 
 
 }
