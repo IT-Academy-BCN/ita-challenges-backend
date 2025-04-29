@@ -11,9 +11,9 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
-public class JwtService implements IJwtService {
+public class JwtServiceImpl implements IJwtService {
 
-    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
+    private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
 
     @Override
     public String getUserUuIdFromAuthenticationHeader(String authHeader) {

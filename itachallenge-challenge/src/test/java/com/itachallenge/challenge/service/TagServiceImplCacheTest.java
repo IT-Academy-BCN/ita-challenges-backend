@@ -24,13 +24,13 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Import(CacheConfig.class)
-class TagServiceCacheTest {
+class TagServiceImplCacheTest {
 
     @MockBean
     private TagRepository tagRepository;
 
     @Autowired
-    private TagService tagService;
+    private ITagService tagService;
 
     @Autowired
     private CacheManager cacheManager;
