@@ -206,6 +206,36 @@ class ChallengeTest {
         assertEquals(1, challenge.getTags().size());
     }
 
+    @Test
+    void increaseTimesSolved_whenTimesSolvedIsNull_shouldSetToOne() {
+        // Given
+        ChallengeDocument challenge = ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .timesSolved(null)
+                .build();
+
+        // When
+        challenge.increaseTimesSolved();
+
+        // Then
+        assertEquals(1, challenge.getTimesSolved());
+    }
+
+    @Test
+    void increaseTimesSolved_whenTimesSolvedIsNonNull_shouldIncrementByOne() {
+        // Given
+        ChallengeDocument challenge = ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .timesSolved(3)
+                .build();
+
+        // When
+        challenge.increaseTimesSolved();
+
+        // Then
+        assertEquals(4, challenge.getTimesSolved());
+    }
+
 
     @Test
     void setTagsTest() {
