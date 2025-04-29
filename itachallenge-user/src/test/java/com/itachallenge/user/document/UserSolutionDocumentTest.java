@@ -16,13 +16,9 @@ class UserSolutionDocumentTest {
     private final UUID languageId  = UUID.randomUUID();
     private final ChallengeStatus challengeStatus = ChallengeStatus.ENDED;
     UUID solutionId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
-    UUID solutionId2 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
     String solutionText1 = "Ipsum.. 1";
-    String solutionText2 = "Ipsum.. 2";
     SolutionAttemptDocument solutionAttemptDocument1 = new SolutionAttemptDocument(solutionId1, solutionText1);
-    SolutionAttemptDocument solutionAttemptDocument2 = new SolutionAttemptDocument(solutionId2, solutionText2);
-    List<SolutionAttemptDocument> solutionAttemptDocumentList = List.of(solutionAttemptDocument1, solutionAttemptDocument2);
-    UserSolutionDocument userSolutionDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, challengeStatus, solutionAttemptDocumentList);
+    UserSolutionDocument userSolutionDocument = new UserSolutionDocument(uuid, userId, challengeId, languageId, challengeStatus, solutionAttemptDocument1);
     UserSolutionDocument noArgsUserSolutionDocument = new UserSolutionDocument();
 
     @Test
@@ -49,8 +45,8 @@ class UserSolutionDocumentTest {
     }
 
     @Test
-    void getSolutionAttemptDocumentList(){
-        assertEquals(solutionAttemptDocumentList, userSolutionDocument.getSolutionAttemptDocument());
+    void getSolutionAttemptDocument(){
+        assertEquals(solutionAttemptDocument1, userSolutionDocument.getSolutionAttemptDocument());
     }
 
     @Test
