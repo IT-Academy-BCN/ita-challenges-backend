@@ -25,7 +25,7 @@ public class LanguageServiceImpl implements ILanguageService {
 
     private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 
-    @Autowired
+
     private final DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
 
     @NonNull
