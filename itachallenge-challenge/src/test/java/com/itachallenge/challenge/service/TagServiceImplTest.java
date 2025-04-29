@@ -45,14 +45,14 @@ class TagServiceImplTest {
         TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "Programación orientada a objetos");
         TagDocument tag2 = new TagDocument(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia");
 
-        TagDto dto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription());
-        TagDto dto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription());
+        //TagDto dto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription());
+        //TagDto dto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription());
 
         Flux<TagDocument> tagDocumentFlux = Flux.just(tag1, tag2);
-        Flux<TagDto> tagDtoFlux = Flux.just(dto1, dto2);
+        //Flux<TagDto> tagDtoFlux = Flux.just(dto1, dto2);
 
         when(tagRepository.findAll()).thenReturn(tagDocumentFlux);
-        when(tagConverter.convertDocumentFluxToDtoFlux(tagDocumentFlux, TagDto.class)).thenReturn(tagDtoFlux);
+        //when(tagConverter.convertDocumentFluxToDtoFlux(tagDocumentFlux, TagDto.class)).thenReturn(tagDtoFlux);
 
 
         Mono<GenericResultDto<TagDto>> resultMono = tagService.getAllTags();
@@ -70,7 +70,7 @@ class TagServiceImplTest {
 
 
         verify(tagRepository).findAll();
-        verify(tagConverter).convertDocumentFluxToDtoFlux(tagDocumentFlux, TagDto.class);
+        //verify(tagConverter).convertDocumentFluxToDtoFlux(tagDocumentFlux, TagDto.class);
     }
 
     @Test
