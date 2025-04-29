@@ -46,7 +46,7 @@ public class ResourceController {
                 .map(createdResource -> ResponseEntity.ok().body(createdResource));
     }
 
-    @GetMapping("/challenge/resources")
+    @GetMapping("/resources")
     @Operation(
             summary = "Get resources by Challenge ID",
             description = "Retrieve all resources associated with a specific challenge.",
