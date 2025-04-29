@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class TagService implements ITagService {
+public class TagServiceImpl implements ITagService {
 
     private final TagRepository tagRepository;
     private final DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();

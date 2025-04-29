@@ -23,7 +23,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Mono<UserDocument> getUser(String githubUsername) {
-        return userRepository.findByUsername(githubUsername);
+        return userRepository.findByUsername(githubUsername)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
 
     @Override
