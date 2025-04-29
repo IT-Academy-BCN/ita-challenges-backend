@@ -65,7 +65,7 @@ class UserSolutionServiceImplTest {
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .status(ChallengeStatus.ENDED)
-                .solutionAttemptDocument(List.of(SolutionAttemptDocument.builder().solutionText(solutionText).build()))
+                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText(solutionText).build())
                 .build();
 
     }
