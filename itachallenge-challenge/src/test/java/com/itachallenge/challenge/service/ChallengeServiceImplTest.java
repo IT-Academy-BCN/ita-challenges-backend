@@ -104,7 +104,7 @@ class ChallengeServiceImplTest {
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                20, 30,tags);
+                20, 30, 40, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
@@ -1320,7 +1320,7 @@ class ChallengeServiceImplTest {
                 Set.of(new LanguageDocument(languageId, "Language Name", "image.png")),
                 List.of(UUID.randomUUID()),
                 Topic.COMPONENTS,
-                0, 0, tags
+                0, 0, 0, tags
         );
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
@@ -1374,7 +1374,7 @@ class ChallengeServiceImplTest {
                 Set.of(new LanguageDocument(UUID.randomUUID(), "Other Language", "image.png")),
                 List.of(UUID.randomUUID()),
                 Topic.COMPONENTS,
-                0, 0, tags
+                0, 0, 0, tags
         );
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
@@ -1463,6 +1463,278 @@ class ChallengeServiceImplTest {
 
 
     public static Stream<Integer> removeChallengeFromFavorites_WhenNotRemovedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToZeroAndReturnsFavoriteDTO() {
+        return Stream.of(null, 0);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenChallengeUuidNotValid_ReturnsError() {
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks("InvalidUuid", UUID.randomUUID().toString()))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenUserUuidNotValid_ReturnsError() {
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(UUID.randomUUID().toString(), "InvalidUuid"))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenChallengeUuidIsNull_ReturnsError() {
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(null, UUID.randomUUID().toString()))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenUserUuidIsNull_ReturnsError() {
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(UUID.randomUUID().toString(), null))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenChallengeNotFound_ReturnsError() {
+        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
+        UUID challengeUuid = UUID.randomUUID();
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
+                .expectErrorMatches(error ->
+                        error instanceof ChallengeNotFoundReturn404Exception &&
+                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenUserNotFound_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new UserNotFoundException(message)));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof InternalServerErrorException &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof InternalServerErrorException &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenUserServiceReturnsCustomInternalServerErrorException_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof InternalServerErrorException &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenUserServiceReturnsAnyException_ReturnsError() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        String message = "Some error message";
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new Exception(message)));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectErrorMatches(error ->
+                        error instanceof Exception &&
+                                error.getMessage().equals(message))
+                .verify();
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenRemoved_DecreasesTimesBookmarkedAndReturnsBookmarkDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        int initialTimesBookmarked = 20;
+
+        challenge.setTimesBookmark(initialTimesBookmarked);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(bookmarkDto -> {
+                    return bookmarkDto.getTimesBookmarked() == initialTimesBookmarked - 1 &&
+                            !bookmarkDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(initialTimesBookmarked - 1, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenRemovedAndInitialTimesBookmarkedIsNull_SetsTimesBookmarkedToZeroAndReturnsBookmarkDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesFavorite(null);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(favoriteDto -> {
+                    return favoriteDto.getTimesBookmarked() == 0 &&
+                            !favoriteDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(0, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenRemovedAndInitialTimesBookmarkedIsZero_SetsTimesBookmarkedToZeroAndReturnsBookmarkDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesFavorite(0);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(favoriteDto -> {
+                    return favoriteDto.getTimesBookmarked() == 0 &&
+                            !favoriteDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(0, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
+    @Test
+    void removeChallengeFromBookmarks_WhenNotRemoved_NotChangeTimesBookmarkedAndReturnsBookmarkDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        int initialTimesBookmarked = 20;
+
+        challenge.setTimesBookmark(initialTimesBookmarked);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(favoriteDto -> {
+                    return favoriteDto.getTimesBookmarked() == initialTimesBookmarked &&
+                            !favoriteDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(initialTimesBookmarked, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(0)).save(any());
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void removeChallengeFromBookmarks_WhenNotRemovedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkedToZeroAndReturnsBookmarkDTO(Integer timesBookmarked) {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesBookmark(timesBookmarked);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), userUuid.toString()))
+                .expectNextMatches(favoriteDto -> {
+                    return favoriteDto.getTimesBookmarked() == 0 &&
+                            !favoriteDto.isBookmarked();
+                })
+                .verifyComplete();
+
+        Assertions.assertEquals(0, challenge.getTimesBookmark());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(userService, times(1)).removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString());
+        verify(challengeRepository, times(1)).save(challenge);
+    }
+
+    public static Stream<Integer> removeChallengeFromBookmarks_WhenNotRemovedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkedToZeroAndReturnsBookmarkDTO() {
         return Stream.of(null, 0);
     }
 }

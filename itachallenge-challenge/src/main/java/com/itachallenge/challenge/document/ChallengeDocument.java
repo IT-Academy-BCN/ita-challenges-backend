@@ -80,8 +80,13 @@ public class ChallengeDocument {
         timesBookmark = timesBookmark == null ? 1 : timesBookmark + 1;
     }
 
+    public void decreaseTimesBookmark() {
+        timesBookmark =Integer.max(timesBookmark == null ? 0 : timesBookmark - 1, 0);
+    }
+  
     public void increaseTimesSolved() {
         timesSolved = timesSolved == null ? 1 : timesSolved + 1;
     }
+
 
 }
