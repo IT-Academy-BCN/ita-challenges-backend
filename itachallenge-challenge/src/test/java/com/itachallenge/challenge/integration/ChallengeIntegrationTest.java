@@ -83,10 +83,10 @@ class ChallengeIntegrationTest {
 
         ChallengeDocument challenge = new ChallengeDocument
                 (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet,
-                        solutionList, Topic.LISTS, 20, 5, tags);
+                        solutionList, Topic.LISTS, 20, 5, 2, tags);
         ChallengeDocument challenge2 = new ChallengeDocument
                 (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet,
-                        solutionList, Topic.COMPONENTS, 20, 30, tags);
+                        solutionList, Topic.COMPONENTS, 20, 30, 2, tags);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
