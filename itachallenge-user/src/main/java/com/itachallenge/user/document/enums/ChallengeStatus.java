@@ -13,8 +13,13 @@ public enum ChallengeStatus {ENDED("ENDED"),
     }
 
     public static ChallengeStatus determineChallengeStatus(String status){
-        return status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue()) ?
-                ChallengeStatus.ENDED : null;
+        ChallengeStatus output = null;
+        if(status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())){
+            output = ChallengeStatus.ENDED;
+        } else if (status != null && status.equalsIgnoreCase(ChallengeStatus.IN_PROGRESS.getValue())) {
+            output = ChallengeStatus.IN_PROGRESS;
+        }
+        return output;
     }
 
 }
