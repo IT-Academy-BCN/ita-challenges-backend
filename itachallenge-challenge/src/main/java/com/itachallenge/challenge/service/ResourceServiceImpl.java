@@ -16,15 +16,15 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 
 @Service
-public class ResourceService implements IResourceService {
+public class ResourceServiceImpl implements IResourceService {
 
-    private static final Logger log = LoggerFactory.getLogger(ResourceService.class);
+    private static final Logger log = LoggerFactory.getLogger(ResourceServiceImpl.class);
     private final ResourceRepository resourceRepository;
     private final DocumentToDtoConverter<ResourceDocument, ResourceDto> resourceConverter;
     private final IChallengeService challengeService;
 
 
-    public ResourceService(ResourceRepository resourceRepository, DocumentToDtoConverter<ResourceDocument,
+    public ResourceServiceImpl(ResourceRepository resourceRepository, DocumentToDtoConverter<ResourceDocument,
             ResourceDto> resourceConverter, IChallengeService challengeService) {
         this.resourceRepository = resourceRepository;
         this.resourceConverter = resourceConverter;

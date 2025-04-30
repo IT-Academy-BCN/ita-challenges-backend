@@ -4,6 +4,7 @@ import com.itachallenge.challenge.config.CacheConfig;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
+import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.*;
 
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -20,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import reactor.core.publisher.Flux;
@@ -29,6 +31,8 @@ import reactor.test.StepVerifier;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -56,7 +60,10 @@ class ChallengeServiceImplCacheTest {
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
 
     @InjectMocks
-    private ChallengeServiceImp challengeService;
+    private ChallengeServiceImpl challengeService;
+
+    @MockBean
+    private LanguageServiceImpl languageService;
 
     @Autowired
     private CacheManager cacheManager;
@@ -64,6 +71,7 @@ class ChallengeServiceImplCacheTest {
     @BeforeEach
     void setUp() {
         Collection<String> cacheNames = cacheManager.getCacheNames();
+        this.languageService = new LanguageServiceImpl(languageRepository);
         for (String cacheName : cacheNames) {
             Cache cache = cacheManager.getCache(cacheName);
             assertThat(cache).as("Cache '" + cacheName + "' should not be null").isNotNull();
@@ -108,87 +116,6 @@ class ChallengeServiceImplCacheTest {
 
         verifyNoMoreInteractions(challengeRepository);
 
-    }
-
-    @DisplayName("Cache - getChallengesByLanguageOrDifficulty")
-    @Test
-    void testGetChallengesByLanguageOrDifficulty_cacheTest(){
-        // Arrange
-        String idLanguage = UUID.randomUUID().toString();
-        String level = "EASY";
-        int offset = 0;
-        int limit = 2;
-
-        ChallengeDocument challengeDocument = new ChallengeDocument();
-        ChallengeDto challengeDto = new ChallengeDto();
-
-        when(languageRepository.findByIdLanguage(UUID.fromString(idLanguage))).thenReturn(Mono.just(new LanguageDocument()));
-        when(challengeRepository.findByLevelAndLanguages_IdLanguage(level, UUID.fromString(idLanguage))).thenReturn(Flux.just(challengeDocument));
-        when(challengeConverter.convertDocumentToDto(challengeDocument, ChallengeDto.class)).thenReturn(challengeDto);
-
-        // Act
-        Mono<GenericResultDto<ChallengeDto>> result = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
-
-        // Assert
-        StepVerifier.create(result)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(1);
-                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
-                })
-                .verifyComplete();
-
-        verify(challengeConverter, times(1)).convertDocumentToDto(challengeDocument, ChallengeDto.class);
-
-        // Act - Cached Results
-        Mono<GenericResultDto<ChallengeDto>> resultCached = challengeService.getChallengesByLanguageOrDifficulty(Optional.of(idLanguage), Optional.of(level), offset, limit);
-
-        // Assert - Cached Results
-        StepVerifier.create(resultCached)
-                .assertNext(actualResult -> {
-                    assertThat(actualResult.getCount()).isEqualTo(1);
-                    assertThat(actualResult.getResults()).containsExactly(challengeDto);
-                })
-                .verifyComplete();
-
-        verifyNoMoreInteractions(challengeRepository, challengeConverter);
-    }
-
-    @DisplayName("Cache - getAllLanguages")
-    @Test
-    void getAllLanguages_cacheTest() {
-        // Arrange
-        UUID uuid1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
-        UUID uuid2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
-        LanguageDocument languageDocument1 = new LanguageDocument(uuid1, "Javascript", "https://image-default.com/javascript.png");
-        LanguageDocument languageDocument2 = new LanguageDocument(uuid2, "Python", "https://image-default.com/python.png");
-        LanguageDto languageDto1 = new LanguageDto(uuid1, "Javascript", "https://image-default.com/javascript.png");
-        LanguageDto languageDto2 = new LanguageDto(uuid2, "Python", "https://image-default.com/python.png");
-        LanguageDto[] expectedLanguages = {languageDto1, languageDto2};
-
-        when(languageRepository.findAll()).thenReturn(Flux.just(languageDocument1, languageDocument2));
-        when(languageConverter.convertDocumentFluxToDtoFlux(any(), any())).thenReturn(Flux.just(languageDto1, languageDto2));
-
-        // Act
-        Mono<GenericResultDto<LanguageDto>> result = challengeService.getAllLanguages();
-
-        // Assert
-        StepVerifier.create(result)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
-                .expectComplete()
-                .verify();
-
-        verify(languageRepository, times(1)).findAll();
-
-        verify(languageConverter, times(1)).convertDocumentFluxToDtoFlux(any(), any());
-
-        Mono<GenericResultDto<LanguageDto>> resultCached = challengeService.getAllLanguages();
-
-        StepVerifier.create(resultCached)
-                .expectNextMatches(dto -> dto.getCount() == 2 && Arrays.equals(dto.getResults(), expectedLanguages))
-                .expectComplete()
-                .verify();
-
-        verifyNoMoreInteractions(languageRepository, languageConverter);
     }
 
     @DisplayName("Cache - getAllChallenges")

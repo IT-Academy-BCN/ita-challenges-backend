@@ -58,13 +58,16 @@ class UserServiceImplTest {
     }
 
     @Test
-    void getUser_ShouldReturnEmptyMono_WhenUserDoesNotExist() {
+    void getUser_ShouldReturnNotFoundException_WhenUserDoesNotExist() {
         String username = "nonExistentUser";
         when(userRepository.findByUsername(username)).thenReturn(Mono.empty());
 
         StepVerifier.create(userService.getUser(username))
-                .expectNextCount(0)
-                .verifyComplete();
+                .expectErrorSatisfies(error -> {
+                    assertInstanceOf(NotFoundException.class, error);
+                    assertEquals("User not found", error.getMessage());
+                })
+                .verify();
 
         verify(userRepository, times(1)).findByUsername(username);
     }

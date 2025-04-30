@@ -4,7 +4,6 @@ import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.document.SolutionDocument;
@@ -14,7 +13,6 @@ import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
-import com.itachallenge.challenge.repository.LanguageRepository;
 import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,36 +30,32 @@ import java.util.regex.Pattern;
 
 
 @Service
-public class ChallengeServiceImp implements IChallengeService {
+public class ChallengeServiceImpl implements IChallengeService {
 
     private static final Pattern UUID_FORM = Pattern.compile("^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", Pattern.CASE_INSENSITIVE);
 
-    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImp.class);
+    private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImpl.class);
 
     private static final String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
 
     private static final String LANGUAGE_NOT_FOUND_ERROR = "Language with id: %s not found";
-
-    private static final String LANGUAGE_NOT_FOUND = "Language with id %s not found";
 
     private static final String NOT_FOUND = "not found";
 
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private LanguageRepository languageRepository;
+    private ILanguageService ILanguageService;
     @Autowired
     private SolutionRepository solutionRepository;
     @Autowired
     private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
     @Autowired
-    private DocumentToDtoConverter<LanguageDocument, LanguageDto> languageConverter = new DocumentToDtoConverter<>();
-    @Autowired
     private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     @Autowired
     private IUserService userService;
     @Autowired
-    private TagService tagService;
+    private ITagService tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -74,56 +68,50 @@ public class ChallengeServiceImp implements IChallengeService {
                 );
     }
 
-    @Cacheable(value = "challengesByLanguageOrDifficulty", key = "{#idLanguage, #level, #offset, #limit}", unless = "#result == null")
+
     @Override
-    public Mono<GenericResultDto<ChallengeDto>> getChallengesByLanguageOrDifficulty(Optional<String> idLanguage, Optional<String> level, int offset, int limit) {
-        Flux<ChallengeDocument> challenges;
+    public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(
+            Optional<String> idLanguage,
+            Optional<String> level,
+            Optional<List<UUID>> tags,
+            int offset,
+            int limit) {
 
-        if (idLanguage.isPresent() && level.isPresent()) {
-            challenges = validateUUID(idLanguage.get())
-                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLevelAndLanguages_IdLanguage(level.get(), uuid)
-                                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + " not found for language " + idLanguage.get())))
-                            )
-                    );
-        } else if (idLanguage.isPresent()) {
-            challenges = validateUUID(idLanguage.get())
-                    .flatMapMany(uuid -> languageRepository.findByIdLanguage(uuid)
-                            .switchIfEmpty(Mono.error(new NotFoundException(String.format(LANGUAGE_NOT_FOUND, idLanguage.get()))))
-                            .flatMapMany(language -> challengeRepository.findByLanguages_IdLanguage(uuid)));
-        } else if (level.isPresent()) {
-            challenges = challengeRepository.findByLevel(level.get())
-                    .switchIfEmpty(Mono.error(new NotFoundException("Level " + level.get() + NOT_FOUND)));
-        } else {
-            challenges = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                    .switchIfEmpty(Mono.error(new ChallengeNotFoundException("No challenges found")));
-        }
+        Optional<UUID> uuidLanguage = idLanguage
+                .filter(lang -> !lang.isBlank())
+                .map(UUID::fromString);
 
-        Flux<ChallengeDocument> finalChallenges = challenges;
-        return challenges.count().flatMap(total -> {
-            Flux<ChallengeDocument> pagedChallenges = finalChallenges.skip(offset);
-            if (limit != -1) {
-                pagedChallenges = pagedChallenges.take(limit);
-            }
-            return pagedChallenges.map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-                    .collectList()
-                    .map(challengeDtoList -> {
-                        GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                        resultDto.setInfo(offset, limit, total.intValue(), challengeDtoList.toArray(new ChallengeDto[0]));
-                        return resultDto;
-                    });
-        });
-    }
+        boolean filterByLevel = level.isPresent() && !level.get().isBlank();
 
-    @Cacheable(value = "allLanguages")
-    public Mono<GenericResultDto<LanguageDto>> getAllLanguages() {
-        Flux<LanguageDto> languagesDto = languageConverter.convertDocumentFluxToDtoFlux(languageRepository.findAll(), LanguageDto.class);
-        return languagesDto.collectList().map(language -> {
-            GenericResultDto<LanguageDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, language.size(), language.size(), language.toArray(new LanguageDto[0]));
-            return resultDto;
-        });
+        return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                .filter(challenge ->
+                        uuidLanguage.isEmpty() ||
+                                (challenge.getLanguages() != null &&
+                                        challenge.getLanguages().stream()
+                                                .anyMatch(lang ->
+                                                        lang.getIdLanguage() != null &&
+                                                                lang.getIdLanguage().equals(uuidLanguage.get()))
+                                )
+                )
+                .filter(challenge ->
+                        !filterByLevel || level.get().equalsIgnoreCase(challenge.getLevel())
+                )
+                .filter(challenge ->
+                        tags.isEmpty() || (
+                                challenge.getTags() != null &&
+                                        challenge.getTags().stream().anyMatch(tags.get()::contains)
+                        )
+                )
+                .skip(offset)  // Aplica el offset
+                .take(limit == -1 ? Long.MAX_VALUE : limit)  // Aplica el limit
+                .map(challenge -> {
+                    // Convierte el Challenge a ChallengeDto
+                    ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
+
+                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                    resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
+                    return resultDto;
+                });
     }
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
@@ -145,6 +133,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @Cacheable(value = "solutions", key = "{#idChallenge, #idLanguage}", unless = "#result==null")
+    @Override
     public Mono<GenericResultDto<SolutionDto>> getSolutions(String idChallenge, String idLanguage) {
         Mono<UUID> challengeIdMono = validateUUID(idChallenge);
         Mono<UUID> languageIdMono = validateUUID(idLanguage);
@@ -174,6 +163,7 @@ public class ChallengeServiceImp implements IChallengeService {
     }
 
     @CacheEvict(value = {"challenges", "solutions"}, allEntries = true)
+    @Override
     public Mono<SolutionDto> addSolution(SolutionDto solutionDto) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(solutionDto.getIdChallenge()));
@@ -185,7 +175,7 @@ public class ChallengeServiceImp implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
 
-                    return languageRepository.findByIdLanguage(languageId)
+                    return ILanguageService.findByIdLanguage(languageId)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -249,7 +239,7 @@ public class ChallengeServiceImp implements IChallengeService {
             return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
         }
 
-        return languageRepository.findFirstByLanguageName(codingLanguage)
+        return ILanguageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
                     SolutionDocument solution = SolutionDocument.builder()
@@ -432,4 +422,31 @@ public class ChallengeServiceImp implements IChallengeService {
                                     .map(savedChallenge -> new BookmarkDto( true, savedChallenge.getTimesBookmark())));
                 });
     }
+    @Override
+    public Mono<BookmarkDto> removeChallengeFromBookmarks(String challengeId, String userId) {
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
+
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(Uuidtuple -> {
+                    UUID challengeUuid = Uuidtuple.getT1();
+                    UUID userUuid = Uuidtuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isRemovedFromUsersBookmarks -> {
+                                        if (Boolean.TRUE.equals(isRemovedFromUsersBookmarks) ||
+                                                Optional.ofNullable(challenge.getTimesBookmark()).orElse(0) == 0) {
+                                            challenge.decreaseTimesBookmark();
+                                            return challengeRepository.save(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new BookmarkDto(false, savedChallenge.getTimesBookmark())));
+                });
+    }
+
+
 }

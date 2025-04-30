@@ -69,12 +69,12 @@ class ChallengeDocumentToDtoConverterTest {
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
-                popularity, percentage);
+                popularity, percentage, tags);
 
         challengeDto2 = getChallengeDtoMocked(challengeRandomId2, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
                 List.of(solutionsRandomId),
-                popularity, percentage);
+                popularity, percentage, tags);
     }
 
     @Test
@@ -111,7 +111,7 @@ class ChallengeDocumentToDtoConverterTest {
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
-                                               List<UUID> solutions, Integer popularity, Float percentage) {
+                                               List<UUID> solutions, Integer popularity, Float percentage, List<UUID> tags) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
@@ -125,6 +125,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
         when(challengeDocMocked.getTimesFavorite()).thenReturn(20);
         when(challengeDocMocked.getTimesBookmark()).thenReturn(30);
+        when(challengeDocMocked.getTags()).thenReturn(tags);
         return challengeDocMocked;
     }
 }

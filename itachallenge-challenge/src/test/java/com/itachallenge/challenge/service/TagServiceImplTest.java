@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TagServiceTest {
+class TagServiceImplTest {
 
     @Mock
     private TagRepository tagRepository;
@@ -36,7 +36,7 @@ class TagServiceTest {
     private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
 
     @InjectMocks
-    private TagService tagService;
+    private TagServiceImpl tagService;
 
     @Test
     @DisplayName("return todos los tags y generar GenericResultDto<TagDto>")

@@ -2,7 +2,7 @@
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
-
+* Issue #843: Added DELETE endpoint in the Challenge Microservice to unbookmark a challenge.
 * Issue #829: Added bookmark POST endpoint in the Challenge Microservice to bookmark a challenge.
 * Issue #827: Added bookmark POST endpoint in the User Microservice to bookmark a challenge.
 * Issue #831: Added DELETE endpoint for user's bookmals in User Microservice.
@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Issue #725: Removing all Score and Solution related code in User microservice
 * Issue #712: Refactoring in Challenge micro due to simplifying challenge entity
 * Issue #709: Removing Score microservice due to new approach
+* PR #825: Removing score attribute in Dtos de UserSolution
+* Feature #180 & #185: Filter revision at endpoint /GET Challenges
+    * Added DTO for filter with language, level and tags
+    * Refactored the filtering method in filterByLanguage(), FilterByLevel() and FilterByTags()
+    * Added ENDPOINT GET /allTags
 
 ### [itachallenge-challenge-2.0.4-RELEASE] - 2023-11-12
 * Issue #441b: Added Mongock to tracing database changes

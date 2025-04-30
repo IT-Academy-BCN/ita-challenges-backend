@@ -59,5 +59,8 @@ public class ChallengeDto {
     private Integer timesFavorite;
 
     @JsonProperty(index = 11)
+    private List<UUID> tags;
+
+    @JsonProperty(index = 11)
     private Integer timesBookmark;
 }
