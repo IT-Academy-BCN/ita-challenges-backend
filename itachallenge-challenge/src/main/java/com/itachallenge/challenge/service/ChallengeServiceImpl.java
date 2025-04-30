@@ -422,7 +422,32 @@ public class ChallengeServiceImpl implements IChallengeService {
                                     .map(savedChallenge -> new BookmarkDto( true, savedChallenge.getTimesBookmark())));
                 });
     }
+    @Override
+    public Mono<BookmarkDto> removeChallengeFromBookmarks(String challengeId, String userId) {
+        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
+        Mono<UUID> languageIdMono = validateUUID(String.valueOf(userId));
 
+        return Mono.zip(challengeIdMono, languageIdMono)
+                .flatMap(Uuidtuple -> {
+                    UUID challengeUuid = Uuidtuple.getT1();
+                    UUID userUuid = Uuidtuple.getT2();
+
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())
+                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
+                                    .flatMap(isRemovedFromUsersBookmarks -> {
+                                        if (Boolean.TRUE.equals(isRemovedFromUsersBookmarks) ||
+                                                Optional.ofNullable(challenge.getTimesBookmark()).orElse(0) == 0) {
+                                            challenge.decreaseTimesBookmark();
+                                            return challengeRepository.save(challenge);
+                                        }
+                                        return Mono.just(challenge);
+                                    })
+                                    .map(savedChallenge -> new BookmarkDto(false, savedChallenge.getTimesBookmark())));
+                });
+    }
+  
     @Override
     public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
 
