@@ -2,6 +2,8 @@ package com.itachallenge.user.document.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum ChallengeStatus {ENDED("ENDED"),
     IN_PROGRESS("IN_PROGRESS");
@@ -12,12 +14,13 @@ public enum ChallengeStatus {ENDED("ENDED"),
         this.value = value;
     }
 
-    public static ChallengeStatus determineChallengeStatus(String status){
+    public static ChallengeStatus challengeStatusFromString(String status) {
         ChallengeStatus output = null;
-        if(status != null  && status.equalsIgnoreCase(ChallengeStatus.ENDED.getValue())){
-            output = ChallengeStatus.ENDED;
-        } else if (status != null && status.equalsIgnoreCase(ChallengeStatus.IN_PROGRESS.getValue())) {
-            output = ChallengeStatus.IN_PROGRESS;
+        if (status != null) {
+            output = Arrays.stream(ChallengeStatus.values())
+                    .filter(s -> status.equalsIgnoreCase(s.getValue()))
+                    .findFirst()
+                    .orElse(null);
         }
         return output;
     }
