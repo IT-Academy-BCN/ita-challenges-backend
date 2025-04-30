@@ -85,3 +85,4 @@
 * Matías Meza - https://github.com/RustyGearBox
 * Marc Bernabeu Rodriguez - https://github.com/trisk910
 * Toni Jiménez - https://github.com/tonijimenez72
+* Enric Vicente - https://github.com/EnricW
