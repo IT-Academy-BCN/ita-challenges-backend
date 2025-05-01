@@ -7,6 +7,9 @@ import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
 import org.junit.jupiter.api.Test;
@@ -471,13 +474,11 @@ class ResourceServiceImplTest {
                 .verifyComplete();
     }
 
-    //ID Nulo
     @Test
-    void getResourcesByChallengeId_WhenIdIsNull_ThrowsIllegalArgumentException() {
-
+    void getResourcesByChallengeId_WhenIdIsNull_ThrowsBadRequestException() {
         StepVerifier.create(resourceService.getResourcesByChallengeId(null))
                 .expectErrorMatches(ex ->
-                        ex instanceof IllegalArgumentException &&
+                        ex instanceof BadRequestException &&
                                 ex.getMessage().equals("Challenge ID cannot be null")
                 )
                 .verify();
@@ -485,17 +486,32 @@ class ResourceServiceImplTest {
 
     //Error en el repo
     @Test
-    void getResourcesByChallengeId_WhenRepositoryFails_PropagatesError() {
-
+    void getResourcesByChallengeId_WhenRepositoryFails_ThrowsInternalServerErrorException() {
         UUID challengeId = UUID.randomUUID();
         when(resourceRepository.findByChallengeIdsContaining(challengeId))
                 .thenReturn(Flux.error(new RuntimeException("DB Connection Failed")));
 
-
         StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
                 .expectErrorMatches(ex ->
-                        ex instanceof RuntimeException &&
-                                ex.getMessage().equals("Server error while fetching resources")
+                        ex instanceof InternalServerErrorException &&
+                                ex.getMessage().equals("Failed to fetch resources for challenge ID: " + challengeId)
+                )
+                .verify();
+
+        verify(resourceRepository, times(1)).findByChallengeIdsContaining(challengeId);
+    }
+
+    @Test
+    void getResourcesByChallengeId_WhenResourceNotFound_PropagatesException() {
+        UUID challengeId = UUID.randomUUID();
+        ResourceNotFoundException ex = new ResourceNotFoundException("Not found");
+        when(resourceRepository.findByChallengeIdsContaining(challengeId))
+                .thenReturn(Flux.error(ex));
+
+        StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
+                .expectErrorMatches(thrownEx ->
+                        thrownEx instanceof ResourceNotFoundException &&
+                                thrownEx.getMessage().equals("Not found")
                 )
                 .verify();
     }
