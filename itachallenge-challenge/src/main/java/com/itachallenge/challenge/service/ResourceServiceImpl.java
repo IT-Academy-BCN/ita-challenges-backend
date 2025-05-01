@@ -5,6 +5,9 @@ import com.itachallenge.challenge.dto.ChallengeListDto;
 import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
 import org.slf4j.Logger;
@@ -141,15 +144,18 @@ public class ResourceServiceImpl implements IResourceService {
     public Flux<ResourceDto> getResourcesByChallengeId(UUID challengeId) {
 
         if (challengeId == null) {
-            return Flux.error(new IllegalArgumentException("Challenge ID cannot be null"));
+            throw new BadRequestException("Challenge ID cannot be null");
         }
 
 
         return resourceRepository.findByChallengeIdsContaining(challengeId)
                 .map(resourceDoc -> resourceConverter.convertDocumentToDto(resourceDoc, ResourceDto.class))
                 .onErrorResume(error -> {
-                    log.error("Error fetching resources: {}", error.getMessage());
-                    return Flux.error(new RuntimeException("Server error while fetching resources"));
+                    log.error("Error fetching resources for challenge ID {}: {}", challengeId, error.getMessage());
+                    if (error instanceof ResourceNotFoundException) {
+                        return Flux.error(error);
+                    }
+                    throw new InternalServerErrorException("Failed to fetch resources for challenge ID: " + challengeId);
                 });
     }
 }
