@@ -142,20 +142,18 @@ public class ResourceServiceImpl implements IResourceService {
 
 
     public Flux<ResourceDto> getResourcesByChallengeId(UUID challengeId) {
-
-        if (challengeId == null) {
-            throw new BadRequestException("Challenge ID cannot be null");
-        }
-
-
-        return resourceRepository.findByChallengeIdsContaining(challengeId)
-                .map(resourceDoc -> resourceConverter.convertDocumentToDto(resourceDoc, ResourceDto.class))
-                .onErrorResume(error -> {
-                    log.error("Error fetching resources for challenge ID {}: {}", challengeId, error.getMessage());
-                    if (error instanceof ResourceNotFoundException) {
-                        return Flux.error(error);
-                    }
-                    throw new InternalServerErrorException("Failed to fetch resources for challenge ID: " + challengeId);
-                });
+        return Mono.justOrEmpty(challengeId)
+                .switchIfEmpty(Mono.error(new BadRequestException("Challenge ID cannot be null")))
+                .flatMapMany(validChallengeId ->
+                        resourceRepository.findByChallengeIdsContaining(validChallengeId)
+                                .map(resourceDoc -> resourceConverter.convertDocumentToDto(resourceDoc, ResourceDto.class))
+                                .onErrorResume(error -> {
+                                    log.error("Error fetching resources for challenge ID {}: {}", validChallengeId, error.getMessage());
+                                    if (error instanceof ResourceNotFoundException) {
+                                        return Flux.error(error);
+                                    }
+                                    return Flux.error(new InternalServerErrorException("Failed to fetch resources for challenge ID: " + validChallengeId));
+                                })
+                );
     }
 }
