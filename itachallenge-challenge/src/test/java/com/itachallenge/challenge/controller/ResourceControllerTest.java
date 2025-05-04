@@ -1,9 +1,11 @@
 package com.itachallenge.challenge.controller;
 
+
 import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.service.IResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.UUID;
 
@@ -108,56 +111,78 @@ class ResourceControllerTest {
         verify(resourceService, never()).createResource(any(ResourceDto.class));
     }
 
-
-
     @Test
     void getResourcesByChallengeId_ValidId_ReturnsResources() {
-        // 1. Datos de prueba
+
         UUID challengeId = UUID.randomUUID();
-        ResourceDto resource1 = ResourceDto.builder()
+        ResourceDto mockResource = ResourceDto.builder()
                 .resourceId(UUID.randomUUID())
-                .title("Resource 1")
-                .description("Desc 1")
-                .url("https://example.com/1")
-                .topic(Topic.DEBUGGING)
+                .title("Test Resource")
+                .description("Test Description")
+                .url("http://test.com")
+                .topic(Topic.COMPONENTS)
                 .contentType(ResourceContentType.VIDEO)
                 .challengeIds(List.of(challengeId))
+                .associationType(AssociationType.ALLSAMETOPIC)
                 .build();
 
-        ResourceDto resource2 = ResourceDto.builder()
-                .resourceId(UUID.randomUUID())
-                .title("Resource 2")
-                .description("Desc 2")
-                .url("https://example.com/2")
-                .topic(Topic.COMPONENTS)
-                .contentType(ResourceContentType.BLOG)
-                .challengeIds(List.of(challengeId))
-                .build();
-
-        // 2. Mock del servicio
         when(resourceService.getResourcesByChallengeId(challengeId))
-                .thenReturn(Flux.just(resource1, resource2));
+                .thenReturn(Flux.just(mockResource));
 
-        // 3. Ejecutar y verificar la petición HTTP
+
         webTestClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/itachallenge/api/v1/resource/resources")
-                        .queryParam("challengeId", challengeId.toString())
-                        .build())
+                .uri("/itachallenge/api/v1/resource/challenge/" + challengeId) // Ruta completa
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(ResourceDto.class)
-                .hasSize(2)
-                .value(resources -> {
-                    assertEquals(resource1.getTitle(), resources.get(0).getTitle());
-                    assertEquals(resource2.getUrl(), resources.get(1).getUrl());
-                });
+                .hasSize(1)
+                .contains(mockResource);
 
-        // 4. Verificar interacción con el servicio
+        verify(resourceService, times(1)).getResourcesByChallengeId(challengeId);
+    }
+
+    @Test
+    void getResourcesByChallengeId_InvalidId_ReturnsBadRequest() {
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/resource/challenge/null") // Ruta completa con ID inválido
+                .exchange()
+                .expectStatus().isBadRequest();
+
+
+        verify(resourceService, never()).getResourcesByChallengeId(any());
+    }
+
+    @Test
+    void getResourcesByChallengeId_NoResources_ReturnsNotFoundWithMessage() {
+
+        UUID challengeId = UUID.randomUUID();
+        String errorMessage = "No resources found for challenge ID: " + challengeId;
+
+        when(resourceService.getResourcesByChallengeId(challengeId))
+                .thenReturn(Flux.error(new ResourceNotFoundException(errorMessage)));
+
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/resource/challenge/" + challengeId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo(errorMessage);
+
         verify(resourceService, times(1)).getResourcesByChallengeId(challengeId);
     }
 
 
-
-
 }
+
+
+
+
+
+
+
+
+
+
+

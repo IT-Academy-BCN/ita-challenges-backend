@@ -146,6 +146,7 @@ public class ResourceServiceImpl implements IResourceService {
                 .switchIfEmpty(Mono.error(new BadRequestException("Challenge ID cannot be null")))
                 .flatMapMany(validChallengeId ->
                         resourceRepository.findByChallengeIdsContaining(validChallengeId)
+                                .switchIfEmpty(Mono.error(new ResourceNotFoundException("No resources found for challenge ID: " + validChallengeId))) // Lanzar 404 si no se encuentra nada
                                 .map(resourceDoc -> resourceConverter.convertDocumentToDto(resourceDoc, ResourceDto.class))
                                 .onErrorResume(error -> {
                                     log.error("Error fetching resources for challenge ID {}: {}", validChallengeId, error.getMessage());

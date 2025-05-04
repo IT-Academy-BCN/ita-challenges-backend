@@ -1,17 +1,23 @@
 package com.itachallenge.challenge.controller;
 import com.itachallenge.challenge.dto.ResourceDto;
+
 import com.itachallenge.challenge.service.IResourceService;
 import io.swagger.v3.oas.annotations.Operation;
+
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -46,20 +52,15 @@ public class ResourceController {
                 .map(createdResource -> ResponseEntity.ok().body(createdResource));
     }
 
-    @GetMapping("/resources")
-    @Operation(
-            summary = "Get resources by Challenge ID",
-            description = "Retrieve all resources associated with a specific challenge.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Resources found", content = @Content(schema = @Schema(implementation = ResourceDto.class))),
-                    @ApiResponse(responseCode = "400", description = "Invalid challenge ID"),
-                    @ApiResponse(responseCode = "500", description = "Internal server error")
-            }
-    )
-    public Flux<ResourceDto> getResourcesByChallengeId(
-            @RequestParam @NotNull UUID challengeId
-    ) {
-        log.info("Fetching resources for challenge ID: {}", challengeId);
+
+    @GetMapping("/challenge/{challengeId}")
+    @Operation(summary = "Get resources by challenge ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Resources found"),
+            @ApiResponse(responseCode = "400", description = "Invalid challenge ID"),
+            @ApiResponse(responseCode = "404", description = "No resources found")
+    })
+    public Flux<ResourceDto> getResourcesByChallengeId(@PathVariable UUID challengeId) {
         return resourceService.getResourcesByChallengeId(challengeId);
     }
 }

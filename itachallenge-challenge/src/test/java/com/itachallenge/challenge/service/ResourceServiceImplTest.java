@@ -460,18 +460,16 @@ class ResourceServiceImplTest {
                 .verifyComplete();
     }
 
-    // Valido SIN recursos
     @Test
-    void getResourcesByChallengeId_WhenNoResourcesExist_ReturnsEmptyFlux() {
+    void getResourcesByChallengeId_WhenNoResourcesExist_ThrowsResourceNotFoundException() {
 
         UUID challengeId = UUID.randomUUID();
         when(resourceRepository.findByChallengeIdsContaining(challengeId))
-                .thenReturn(Flux.empty());
-
+                .thenReturn(Flux.empty()); // Simula que no hay recursos
 
         StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
-                .expectNextCount(0)
-                .verifyComplete();
+                .expectError(ResourceNotFoundException.class)
+                .verify();
     }
 
     @Test
@@ -484,7 +482,7 @@ class ResourceServiceImplTest {
                 .verify();
     }
 
-    //Error en el repo
+
     @Test
     void getResourcesByChallengeId_WhenRepositoryFails_ThrowsInternalServerErrorException() {
         UUID challengeId = UUID.randomUUID();
