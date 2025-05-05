@@ -179,13 +179,10 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testHandleResourceNotFoundException() {
-        // Arrange
+
         ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
 
-        // Act
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
-
-        // Assert
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
