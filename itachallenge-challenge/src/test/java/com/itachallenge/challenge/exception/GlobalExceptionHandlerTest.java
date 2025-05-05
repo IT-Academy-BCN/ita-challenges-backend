@@ -179,7 +179,7 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testHandleResourceNotFoundException() {
-
+        // Testgi
         ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
 
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
