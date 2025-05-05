@@ -88,3 +88,4 @@
 * Enric Vicente - https://github.com/EnricW
 * Ismael Peiró - https://github.com/IsmaPeiro
 * Santiago Hernandez Beltran - https://github.com/shernandez334
+* Inga Demetrashvili - https://github.com/IngaD89
