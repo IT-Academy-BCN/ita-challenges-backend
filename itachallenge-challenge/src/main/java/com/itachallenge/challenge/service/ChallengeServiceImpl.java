@@ -1,12 +1,6 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.*;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
@@ -448,31 +442,33 @@ public class ChallengeServiceImpl implements IChallengeService {
                 });
     }
 
-    @Override
-    public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
+@Override
+public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
+    Mono<UUID> challengeIdMono = validateUUID(challengeId);
+    Mono<UUID> userIdMono = validateUUID(userId);
 
-        Mono<UUID> challengeIdMono = validateUUID(challengeId);
-        Mono<UUID> userIdMono = validateUUID(userId);
+    return Mono.zip(challengeIdMono, userIdMono)
+            .flatMap(uuidTuple -> {
+                UUID challengeUuid = uuidTuple.getT1();
+                UUID userUuid = uuidTuple.getT2();
 
-        return Mono.zip(challengeIdMono, userIdMono)
-                .flatMap(uuidTuple -> {
-                    UUID challengeUuid = uuidTuple.getT1();
-                    UUID userUuid = uuidTuple.getT2();
+                return challengeRepository.findByUuid(challengeUuid)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
+                                String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                        .flatMap(challenge -> {
+                            log.info("It should be connected to user service using the fields {} and {}", challengeUuid, userUuid);
 
-                    return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
-                            .flatMap(challenge -> userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())
-                                    .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
-                                    .flatMap(challengeWasAddedToUserSolvedList -> {
-                                        if (Boolean.TRUE.equals(challengeWasAddedToUserSolvedList) ||
-                                                Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
-                                            challenge.increaseTimesSolved();
-                                            return challengeRepository.save(challenge);
-                                        }
-                                        return Mono.just(challenge);
-                                    })
-                                    .map(savedChallenge -> new SolvedDto(true, savedChallenge.getTimesSolved())));
-                });
-    }
+                            //The part of the user service is not implemented yet, it should be connected to the user service in the future.
+
+                            if (Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
+                                challenge.increaseTimesSolved();
+                                return challengeRepository.save(challenge);
+                            }
+
+                            return Mono.just(challenge);
+                        })
+                        .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
+            });
+}
 
 }
