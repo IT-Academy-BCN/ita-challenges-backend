@@ -316,6 +316,78 @@ class ChallengeServiceImplTest {
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
 
+@Test
+void addChallengeToSolved_WhenChallengeTimesSolvedIsNull_IncreasesTimesSolvedAndReturnsSolvedDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesSolved(null);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
+                        .expectNextMatches(solvedDto -> {
+                                return solvedDto.getTimesSolved() == 1 &&
+                                                solvedDto.isSolved();
+                        })
+                        .verifyComplete();
+
+        Assertions.assertEquals(1, challenge.getTimesSolved());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(challengeRepository, times(1)).save(challenge);
+}
+
+@Test
+void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAndReturnsSolvedDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesSolved(0);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
+                        .expectNextMatches(solvedDto -> {
+                                return solvedDto.getTimesSolved() == 1 &&
+                                                solvedDto.isSolved();
+                        })
+                        .verifyComplete();
+
+        Assertions.assertEquals(1, challenge.getTimesSolved());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(challengeRepository, times(1)).save(challenge);
+}
+
+@Test
+void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedAndReturnsSolvedDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+        UUID userUuid = UUID.randomUUID();
+        ChallengeDocument challenge = new ChallengeDocument();
+        int initialTimesSolved = 5;
+
+        challenge.setTimesSolved(initialTimesSolved);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
+                        .expectNextMatches(solvedDto -> {
+                                return solvedDto.getTimesSolved() == initialTimesSolved &&
+                                                solvedDto.isSolved();
+                        })
+                        .verifyComplete();
+
+        Assertions.assertEquals(initialTimesSolved, challenge.getTimesSolved());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(challengeRepository, times(0)).save(any());
+}
+
     @Test
     void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
         // Arrange
@@ -733,27 +805,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToSolved_WhenUserNotFound_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new UserNotFoundException(message)));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
     void addChallengeToFavorites_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -793,27 +844,6 @@ class ChallengeServiceImplTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void addChallengeToSolved_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
     }
 
     @Test
@@ -859,27 +889,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToSolved_WhenUserServiceReturnsCustomInternalServerErrorException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
     void addChallengeToFavorites_WhenUserServiceReturnsAnyException_ReturnsError() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -919,27 +928,6 @@ class ChallengeServiceImplTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void addChallengeToSolved_WhenUserServiceReturnsAnyException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new Exception(message)));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof Exception &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
     }
 
     @Test
@@ -997,33 +985,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToSolved_WhenAdded_IncreasesTimesSolvedAndReturnsSolvedDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        int initialTimesSolved = 20;
-
-        challenge.setTimesSolved(initialTimesSolved);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(solvedDto -> {
-                    return solvedDto.getTimesSolved() == initialTimesSolved + 1 &&
-                    solvedDto.isSolved();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(initialTimesSolved + 1, challenge.getTimesSolved());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
     void addChallengeToFavorites_WhenAddedAndInitialTimesFavoriteIsNull_IncreasesTimesFavoriteAndReturnsFavoriteDTO() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -1072,32 +1033,6 @@ class ChallengeServiceImplTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
-    void addChallengeToSolved_WhenAddedAndInitialTimesSolvedIsNull_IncreasesTimesSolvedAndReturnsSolvedDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesSolved(null);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(solvedDto -> {
-                    return solvedDto.getTimesSolved() == 1 &&
-                            solvedDto.isSolved();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(1, challenge.getTimesSolved());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
         verify(challengeRepository, times(1)).save(challenge);
     }
 
@@ -1153,32 +1088,6 @@ class ChallengeServiceImplTest {
         verify(challengeRepository, times(0)).save(any());
     }
 
-    @Test
-    void addChallengeToSolved_WhenNotAdded_NotIncreaseTimesSolvedAndReturnsSolvedDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        int initialTimesSolved = 20;
-
-        challenge.setTimesSolved(initialTimesSolved);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(solvedDto -> {
-                    return solvedDto.getTimesSolved() == initialTimesSolved &&
-                            solvedDto.isSolved();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(initialTimesSolved, challenge.getTimesSolved());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(0)).save(any());
-    }
-
     @ParameterizedTest
     @MethodSource
     void addChallengeToFavorites_WhenNotAddedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToOneAndReturnsFavoriteDTO(Integer timesFavorite) {
@@ -1230,33 +1139,6 @@ class ChallengeServiceImplTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    void addChallengeToSolved_WhenNotAddedAndTimesSolvedIsNullOrZero_SetTimesSolvedToOneAndReturnsSolvedDTO(Integer timesSolved) {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesSolved(timesSolved);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(solvedDto -> {
-                    return solvedDto.getTimesSolved() == 1 &&
-                            solvedDto.isSolved();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(1, challenge.getTimesSolved());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToSolved(userUuid.toString(), challengeUuid.toString());
         verify(challengeRepository, times(1)).save(challenge);
     }
 
