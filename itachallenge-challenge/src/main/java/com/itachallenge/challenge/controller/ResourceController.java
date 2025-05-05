@@ -58,7 +58,8 @@ public class ResourceController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Resources found"),
             @ApiResponse(responseCode = "400", description = "Invalid challenge ID"),
-            @ApiResponse(responseCode = "404", description = "No resources found")
+            @ApiResponse(responseCode = "404", description = "No resources found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     public Flux<ResourceDto> getResourcesByChallengeId(@PathVariable UUID challengeId) {
         return resourceService.getResourcesByChallengeId(challengeId);
