@@ -451,20 +451,20 @@ public class ChallengeServiceImpl implements IChallengeService {
     @Override
     public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
 
-        Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
-        Mono<UUID> userIdMono = validateUUID(String.valueOf(userId));
+        Mono<UUID> challengeIdMono = validateUUID(challengeId);
+        Mono<UUID> userIdMono = validateUUID(userId);
 
         return Mono.zip(challengeIdMono, userIdMono)
-                .flatMap(Uuidtuple -> {
-                    UUID challengeUuid = Uuidtuple.getT1();
-                    UUID userUuid = Uuidtuple.getT2();
+                .flatMap(uuidTuple -> {
+                    UUID challengeUuid = uuidTuple.getT1();
+                    UUID userUuid = uuidTuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())
                                     .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
-                                    .flatMap(isAddedToUsersSolved -> {
-                                        if (Boolean.TRUE.equals(isAddedToUsersSolved) ||
+                                    .flatMap(challengeWasAddedToUserSolvedList -> {
+                                        if (Boolean.TRUE.equals(challengeWasAddedToUserSolvedList) ||
                                                 Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
                                             challenge.increaseTimesSolved();
                                             return challengeRepository.save(challenge);
