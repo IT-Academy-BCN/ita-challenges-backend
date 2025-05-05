@@ -48,6 +48,9 @@ public class ChallengeDocument {
     @Field(name="times_bookmark")
     private Integer timesBookmark;
 
+    @Field(name="times_solved")
+    private Integer timesSolved;
+
     @Field(name = "tags")
     private List<UUID> tags;
 
@@ -80,5 +83,10 @@ public class ChallengeDocument {
     public void decreaseTimesBookmark() {
         timesBookmark =Integer.max(timesBookmark == null ? 0 : timesBookmark - 1, 0);
     }
+  
+    public void increaseTimesSolved() {
+        timesSolved = timesSolved == null ? 1 : timesSolved + 1;
+    }
+
 
 }

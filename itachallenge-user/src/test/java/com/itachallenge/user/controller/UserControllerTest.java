@@ -498,4 +498,75 @@ class UserControllerTest {
         verify(userService, times(1)).getUserFavorites(userId.toString());
     }
 
+    @Test
+    @DisplayName("GET /users/{userId}/bookmarks returns bookmarked challenges")
+    void getUserBookmarks_returnsBookmarks() {
+        UUID userId = UUID.randomUUID();
+        Set<UUID> expectedBookmarks = Set.of(UUID.randomUUID(), UUID.randomUUID());
+
+        when(userService.getUserBookmarks(userId.toString())).thenReturn(Mono.just(expectedBookmarks));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UUID.class)
+                .hasSize(expectedBookmarks.size())
+                .contains(expectedBookmarks.toArray(new UUID[0]));
+
+        verify(userService, times(1)).getUserBookmarks(userId.toString());
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/bookmarks returns 404 if user not found")
+    void getUserBookmarks_returns404IfUserNotFound() {
+        UUID userId = UUID.randomUUID();
+
+        when(userService.getUserBookmarks(userId.toString()))
+                .thenReturn(Mono.error(new NotFoundException("User not found")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(String.class).isEqualTo("User not found");
+
+        verify(userService, times(1)).getUserBookmarks(userId.toString());
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/bookmarks returns 400 if UUID is invalid")
+    void getUserBookmarks_returns400IfInvalidUUID() {
+        String invalidUserId = "invalid-uuid";
+
+        when(userService.getUserBookmarks(invalidUserId))
+                .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", invalidUserId)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
+
+        verify(userService, times(1)).getUserBookmarks(invalidUserId);
+    }
+
+    @Test
+    @DisplayName("GET /users/{userId}/bookmarks returns 500 if there is an internal error")
+    void getUserBookmarks_returns500IfUnexpectedError() {
+        UUID userId = UUID.randomUUID();
+
+        when(userService.getUserBookmarks(userId.toString()))
+                .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
+                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+
+        verify(userService, times(1)).getUserBookmarks(userId.toString());
+    }
+
+
 }

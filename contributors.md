@@ -83,3 +83,4 @@
 * Alexandra Bonet - https://github.com/AlexandraBonetCanela
 * Gwénaël Le Moing - https://github.com/g-lemoing
 * Matías Meza - https://github.com/RustyGearBox
+* Marc Bernabeu Rodriguez - https://github.com/trisk910

@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,7 +36,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 .solutionText(userSolutionDto.getSolutionText())
                 .build();
 
-        challengeStatus = ChallengeStatus.determineChallengeStatus(status);
+        challengeStatus = ChallengeStatus.challengeStatusFromString(status);
 
         if (challengeStatus == null) {
             log.error("PUT operation failed due to invalid challenge status parameter");

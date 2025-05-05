@@ -59,12 +59,13 @@ class ChallengeDocumentToDtoConverterTest {
         Topic topic = Topic.DEBUGGING;
         int timesFavorite = 20;
         int timesBookmark = 30;
+        int timesSolved = 40;
 
         challengeDoc1 = new ChallengeDocument(challengeRandomId1, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, timesBookmark, tags);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, timesBookmark, timesSolved, tags);
 
         challengeDoc2 = new ChallengeDocument(challengeRandomId2, title, level, localDateTime, detail,
-                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, timesBookmark, tags);
+                Set.of(languageDoc1, languageDoc2), List.of(solutionsRandomId), topic, timesFavorite, timesBookmark, timesSolved, tags);
 
         challengeDto1 = getChallengeDtoMocked(challengeRandomId1, title, level, creationDate, detail,
                 Set.of(languageDto1, languageDto2),
@@ -125,6 +126,7 @@ class ChallengeDocumentToDtoConverterTest {
         when(challengeDocMocked.getTopic()).thenReturn(Topic.DEBUGGING);
         when(challengeDocMocked.getTimesFavorite()).thenReturn(20);
         when(challengeDocMocked.getTimesBookmark()).thenReturn(30);
+        when(challengeDocMocked.getTimesSolved()).thenReturn(40);
         when(challengeDocMocked.getTags()).thenReturn(tags);
         return challengeDocMocked;
     }
