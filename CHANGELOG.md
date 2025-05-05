@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Issue #852: Added GET endpoint in the Challenge Microservice to retrieve resources associated to a challenge
 * Issue #849: Added GET endpoint to retrieve all User's bookmarked challenges.
 * Issue #843: Added DELETE endpoint in the Challenge Microservice to unbookmark a challenge.
+* Issue #843: Added DELETE endpoint in the Challenge Microservice to unbookmark a challenge.
 * Issue #852: Added GET endpoint for retrieving resources from a challenge
 * Issue #829: Added bookmark POST endpoint in the Challenge Microservice to bookmark a challenge.
 * Issue #827: Added bookmark POST endpoint in the User Microservice to bookmark a challenge.
