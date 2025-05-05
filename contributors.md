@@ -87,3 +87,4 @@
 * Toni Jiménez - https://github.com/tonijimenez72
 * Enric Vicente - https://github.com/EnricW
 * Ismael Peiró - https://github.com/IsmaPeiro
+* Santiago Hernandez Beltran - https://github.com/shernandez334
