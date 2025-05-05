@@ -45,7 +45,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Mono<Boolean> addChallengeToSolved(String userId, String challengeId) {
-        return callEndpoint(userId, challengeId, UserChallengeActionType.SOLVED, X_SOLVED_MESSAGE, HttpMethod.DELETE);
+        return callEndpoint(userId, challengeId, UserChallengeActionType.SOLVED, X_SOLVED_MESSAGE, HttpMethod.POST);
     }
 
     @Override
