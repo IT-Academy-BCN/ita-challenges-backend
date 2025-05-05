@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -39,7 +38,6 @@ public class AuthService implements IAuthService {
 
     private final String clientSecret;
 
-    @Autowired
     public AuthService(WebClient.Builder webClientBuilder,
                        @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
                        @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri,
