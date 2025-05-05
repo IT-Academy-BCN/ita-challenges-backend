@@ -24,6 +24,7 @@ public class UserServiceImpl implements IUserService {
     private final String userServiceUrl;
     private final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     private final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
+    private final String X_SOLVED_MESSAGE = "X-Solved-Message";
 
     public UserServiceImpl(
             WebClient.Builder webClientBuilder,
@@ -40,6 +41,11 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Mono<Boolean> addChallengeToBookmarks(String userId, String challengeId) {
         return callEndpoint(userId, challengeId, UserChallengeActionType.BOOKMARKS, X_BOOKMARK_MESSAGE, HttpMethod.POST);
+    }
+
+    @Override
+    public Mono<Boolean> addChallengeToSolved(String userId, String challengeId) {
+        return callEndpoint(userId, challengeId, UserChallengeActionType.SOLVED, X_SOLVED_MESSAGE, HttpMethod.POST);
     }
 
     @Override
