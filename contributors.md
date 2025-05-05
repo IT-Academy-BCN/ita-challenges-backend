@@ -86,3 +86,4 @@
 * Marc Bernabeu Rodriguez - https://github.com/trisk910
 * Toni Jiménez - https://github.com/tonijimenez72
 * Enric Vicente - https://github.com/EnricW
+* Ismael Peiró - https://github.com/IsmaPeiro
