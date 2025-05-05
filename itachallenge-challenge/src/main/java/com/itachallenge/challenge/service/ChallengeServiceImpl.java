@@ -1,6 +1,12 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.*;
+import com.itachallenge.challenge.dto.ChallengeDto;
+import com.itachallenge.challenge.dto.GenericResultDto;
+import com.itachallenge.challenge.dto.SolutionDto;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
+import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
