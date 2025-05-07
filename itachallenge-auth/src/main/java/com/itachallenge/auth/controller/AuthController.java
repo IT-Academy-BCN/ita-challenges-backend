@@ -29,6 +29,7 @@ public class AuthController {
     private static final String KEY_USERNAME = "username";
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
+    private static final String MESSAGE_KEY = "message";
 
     private final IAuthService authService;
 
@@ -99,7 +100,7 @@ public class AuthController {
                 .switchIfEmpty(Mono.defer(() -> {
                     response.put(KEY_USERNAME, null);
                     response.put(KEY_IS_VALID, false);
-                    response.put("message", "User does not exist in the database");
+                    response.put(MESSAGE_KEY, "User does not exist in the database");
                     return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .header("X-Validation-Status", "Forbidden")
                             .header(X_GITHUB_USERNAME, githubUsername)
@@ -119,7 +120,7 @@ public class AuthController {
                     }
                     response.put(KEY_USERNAME, null);
                     response.put(KEY_IS_VALID, false);
-                    response.put("message", message);
+                    response.put(MESSAGE_KEY, message);
                     return Mono.just(ResponseEntity.status(status)
                             .header("X-Validation-Status", "Forbidden")
                             .header(X_GITHUB_USERNAME, githubUsername)
@@ -150,7 +151,7 @@ public class AuthController {
             String jwt = authHeader.replace("Bearer ", "");
             log.info("Logout attempt for token: {}", jwt);
         }
-        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
+        return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
 
 }
