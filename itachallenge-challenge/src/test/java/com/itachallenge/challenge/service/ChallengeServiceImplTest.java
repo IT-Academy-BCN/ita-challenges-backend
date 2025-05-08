@@ -543,8 +543,26 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
         when(challengeDocMocked.getTags()).thenReturn(tags);
         return challengeDocMocked;
     }
-
-
+    
+    @Test
+    void addChallenge_test_invalidTags() {
+        when(ILanguageService.findFirstByLanguageName(eq(languageName)))
+                .thenReturn(Mono.just(languageDocument));
+        when(solutionRepository.save(any(SolutionDocument.class)))
+                .thenReturn(Mono.just(solutionDocument));
+                when(tagService.getValidatedTags(eq(formData.getTags())))
+                .thenReturn(Mono.just(false));
+        
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof TagNotFoundException
+                                && throwable.getMessage().equals("One or more tags are invalid")
+                )
+                .verify();
+        
+        verify(challengeRepository, never()).save(any(ChallengeDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(formData.getTags()));
+    }
 
     @Test
     void deleteChallengeById_NotFound() {
