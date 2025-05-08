@@ -10,9 +10,13 @@ import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.ITagService;
 import com.itachallenge.challenge.service.JwtServiceImpl;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,9 +31,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,19 +65,19 @@ class ChallengeControllerTest {
     @MockBean
     private JwtServiceImpl jwtService;
 
-    UUID challengeId = UUID.randomUUID();
-    String challengeTitle = "Challenge modificat";
-    String level = "EASY";
-    String description = "Here are the details of the challenge.";
-    DetailDocument detail = new DetailDocument(description);
-    String language = "Java";
-    LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), language, "https://default-image.com/default.png");
-    UUID solutionUuid = UUID.fromString("d624bae4-9a43-4515-8979-801c0d6fd88c");
-    String solution = "Solution proposed by IT Academy";
-    Topic topic = Topic.ALL;
-    UUID tag = UUID.randomUUID();
-    List<UUID> tags = List.of(tag);
-    String localTimeStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    private List<UUID> tags;
+    private String challengeId;
+    private ChallengeCreateDto formData;
+    private ChallengeDto createdChallenge;
+
+    @BeforeEach
+    void setup(){
+        tags = List.of(UUID.randomUUID());
+        challengeId = String.valueOf(UUID.randomUUID());
+        formData = new ChallengeCreateDto("títol", "descripció",
+                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS, tags);
+        createdChallenge = new ChallengeDto();
+    }
 
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
@@ -828,76 +832,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    @DisplayName("PUT /challenges/{challengeId}/update must return a mock of the updated challenge")
-    void updateChallenge_allArgumentsCorrect_return200_OK_test(){
-
-        ChallengeDto expectedChallenge = ChallengeDto.builder()
-                .challengeId(challengeId)
-                .title(challengeTitle)
-                .level(level)
-                .creationDate(localTimeStr)
-                .detail(detail)
-                .popularity(10)
-                .percentage(0.5F)
-                .languages(Set.of(languageDto))
-                .solutions(List.of(solutionUuid))
-                .topic(topic)
-                .timesFavorite(10)
-                .timesBookmark(10)
-                .build();
-
-        ChallengeCreateDto challengeCreateDto = ChallengeCreateDto.builder()
-                .challengeTitle(challengeTitle)
-                .description(description)
-                .level(DifficultyLevel.EASY)
-                .language(language)
-                .solution(solution)
-                .topic(Topic.ALL)
-                .tags(tags)
-                .build();
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(challengeCreateDto)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ChallengeDto.class)
-                .consumeWith(data -> {
-                    ChallengeDto response = data.getResponseBody();
-                    assert response != null;
-                    Assertions.assertEquals(expectedChallenge.getChallengeId(), response.getChallengeId());
-                    Assertions.assertEquals(expectedChallenge.getTitle(), response.getTitle());
-                    Assertions.assertEquals(expectedChallenge.getLevel(), response.getLevel());
-                    Assertions.assertEquals(expectedChallenge.getCreationDate(), response.getCreationDate());
-                    Assertions.assertEquals(expectedChallenge.getDetail().getDescription(), response.getDetail().getDescription());
-                    Assertions.assertEquals(expectedChallenge.getTitle(), response.getTitle());
-                    Assertions.assertEquals(expectedChallenge.getPopularity(), response.getPopularity());
-                    Assertions.assertEquals(expectedChallenge.getPercentage(), response.getPercentage());
-                    Assertions.assertTrue(expectedChallenge.getLanguages().contains(languageDto));
-                    Assertions.assertTrue(expectedChallenge.getSolutions().contains(solutionUuid));
-                    Assertions.assertEquals(expectedChallenge.getTopic(), response.getTopic());
-                    Assertions.assertEquals(expectedChallenge.getTimesFavorite(), response.getTimesFavorite());
-                    Assertions.assertEquals(expectedChallenge.getTimesBookmark(), response.getTimesBookmark());
-                });
-    }
-
-    @Test
-    @DisplayName("PUT /challenges/{challengeId}/update must return Bad Request when not valid Request body")
-    void updateChallenge_badArgument_return400_BadRequest_test(){
-        ChallengeCreateDto challengeCreateDto = ChallengeCreateDto.builder()
-                .challengeTitle("Challenge Title")
-                .build();
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(challengeCreateDto)
-                .exchange()
-                .expectStatus().isBadRequest();
-    }
-
-    @Test
     void getChallengesByFilter_shouldReturnOkResponse() {
         // Mock de respuesta vacía
         GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
@@ -925,6 +859,86 @@ class ChallengeControllerTest {
                         .build())
                 .exchange()
                 .expectStatus().isOk();
+    }
+
+    @Test
+    @DisplayName("PUT update challenge when valid request returns 200")
+
+    void updateChallengeValidRequest_test(){
+
+        when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
+                .thenReturn(Mono.just(createdChallenge));
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ChallengeDto.class)
+                .value(Assertions::assertNotNull);
+
+        verify(challengeService, times(1))
+                .updateChallenge(anyString(), any(ChallengeCreateDto.class));
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideEmptyFields")
+    void updateChallengeEmptyField_returnsBadRequest_test(Consumer<ChallengeCreateDto> fieldSetter){
+
+        fieldSetter.accept(formData);
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verifyNoInteractions(challengeService);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideInvalidEnumValues")
+    void updateChallengeInvalidEnumValue_returnsBadRequest_test(String jsonBody){
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(jsonBody)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verifyNoInteractions(challengeService);
+    }
+
+    private static Stream<Arguments> provideEmptyFields() {
+        return Stream.of(
+                Arguments.of((Consumer<ChallengeCreateDto>) dto -> dto.setChallengeTitle("")),
+                Arguments.of((Consumer<ChallengeCreateDto>) dto -> dto.setDescription("")),
+                Arguments.of((Consumer<ChallengeCreateDto>) dto -> dto.setLanguage("")),
+                Arguments.of((Consumer<ChallengeCreateDto>) dto -> dto.setSolution(null)),
+                Arguments.of((Consumer<ChallengeCreateDto>) dto -> dto.setTopic(null))
+        );
+    }
+
+    private static Stream<Arguments> provideInvalidEnumValues() {
+
+        String baseJson = """
+        {
+          "challengeTitle": "Title",
+          "description": "Description",
+          "level": "%s",
+          "language": "Java",
+          "solution": "valid solution",
+          "topic": "%s",
+          "tags": {}
+        }
+        """;
+
+        return Stream.of(
+                Arguments.of(String.format(baseJson, "invalidLevel", "ALL")),
+                Arguments.of(String.format(baseJson, "EASY", "invalidTopic"))
+        );
     }
 
     @Test
@@ -1032,7 +1046,6 @@ class ChallengeControllerTest {
         verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
 
     }
-
 }
 
 

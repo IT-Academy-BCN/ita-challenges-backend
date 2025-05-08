@@ -397,6 +397,45 @@ public class ChallengeServiceImpl implements IChallengeService {
     }
 
     @Override
+    public Mono<ChallengeDto> updateChallenge(String challengeId, ChallengeCreateDto challengeCreateDto) {
+        validateUUID(String.valueOf(challengeId));
+        String codingLanguage = challengeCreateDto.getLanguage();
+        return ILanguageService.findFirstByLanguageName(codingLanguage)
+                .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
+                .flatMap(newLanguage -> validateUUID(String.valueOf(challengeId))
+                        .flatMap(validId -> challengeRepository.findByUuid(validId)
+                                .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
+                                        String.format(CHALLENGE_NOT_FOUND_ERROR, validId))))
+                                .flatMap(challengeDocument -> {
+                                    log.info("Challenge found for challengeId: {}", validId);
+
+                                    return tagService.getValidatedTags(challengeCreateDto.getTags())
+                                            .flatMap(allTagsValid -> {
+                                                if (!allTagsValid) {
+                                                    return Mono.error(new TagNotFoundException("One or more tags are invalid"));
+                                                }
+
+                                                SolutionDocument solutionDocument = buildSolutionDocument(newLanguage, challengeCreateDto);
+                                                return solutionRepository.save(solutionDocument)
+                                                        .flatMap(savedSolution -> {
+                                                            log.info("New solution successfully saved for challengeId: {}", validId);
+                                                            ChallengeDocument newChallengeDocument = updateChallengeDocument(
+                                                                    challengeDocument, challengeCreateDto, newLanguage, solutionDocument.getUuid());
+
+                                                            return challengeRepository.save(newChallengeDocument)
+                                                                    .map(savedChallenge -> {
+                                                                        log.info("Challenge {} successfully updated in database.", validId);
+                                                                        log.debug("Saved challenge tags: {}", savedChallenge.getTags());
+                                                                        return challengeConverter.convertDocumentToDto(savedChallenge,
+                                                                                ChallengeDto.class);
+                                                                    });
+                                                        });
+                                            });
+                                }))
+                );
+    }
+
+    @Override
     public Mono<BookmarkDto> addChallengeToBookmarks(String challengeId, String userId) {
 
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
@@ -422,6 +461,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                                     .map(savedChallenge -> new BookmarkDto( true, savedChallenge.getTimesBookmark())));
                 });
     }
+
     @Override
     public Mono<BookmarkDto> removeChallengeFromBookmarks(String challengeId, String userId) {
         Mono<UUID> challengeIdMono = validateUUID(String.valueOf(challengeId));
@@ -448,33 +488,52 @@ public class ChallengeServiceImpl implements IChallengeService {
                 });
     }
 
-@Override
-public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
-    Mono<UUID> challengeIdMono = validateUUID(challengeId);
-    Mono<UUID> userIdMono = validateUUID(userId);
+    @Override
+    public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
+        Mono<UUID> challengeIdMono = validateUUID(challengeId);
+        Mono<UUID> userIdMono = validateUUID(userId);
 
-    return Mono.zip(challengeIdMono, userIdMono)
-            .flatMap(uuidTuple -> {
-                UUID challengeUuid = uuidTuple.getT1();
-                UUID userUuid = uuidTuple.getT2();
+        return Mono.zip(challengeIdMono, userIdMono)
+                .flatMap(uuidTuple -> {
+                    UUID challengeUuid = uuidTuple.getT1();
+                    UUID userUuid = uuidTuple.getT2();
 
-                return challengeRepository.findByUuid(challengeUuid)
-                        .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
-                                String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
-                        .flatMap(challenge -> {
-                            log.info("It should be connected to user service using the fields {} and {}", challengeUuid, userUuid);
+                    return challengeRepository.findByUuid(challengeUuid)
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
+                                    String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .flatMap(challenge -> {
+                                log.info("It should be connected to user service using the fields {} and {}", challengeUuid, userUuid);
 
-                            //The part of the user service is not implemented yet, it should be connected to the user service in the future.
+                                //The part of the user service is not implemented yet, it should be connected to the user service in the future.
 
-                            if (Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
-                                challenge.increaseTimesSolved();
-                                return challengeRepository.save(challenge);
-                            }
+                                if (Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
+                                    challenge.increaseTimesSolved();
+                                    return challengeRepository.save(challenge);
+                                }
 
-                            return Mono.just(challenge);
-                        })
-                        .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
-            });
-}
+                                return Mono.just(challenge);
+                            })
+                            .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
+                });
+    }
 
+    private SolutionDocument buildSolutionDocument(LanguageDocument language, ChallengeCreateDto challengeCreateDto){
+        return SolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .idLanguage(language.getIdLanguage())
+                .solutionText(challengeCreateDto.getSolution())
+                .build();
+    }
+
+    private static ChallengeDocument updateChallengeDocument (ChallengeDocument currentChallenge, ChallengeCreateDto dto, LanguageDocument language, UUID solutionId){
+        currentChallenge.setTitle(dto.getChallengeTitle());
+        currentChallenge.setLevel(String.valueOf(dto.getLevel()));
+        currentChallenge.setDetail(new DetailDocument(dto.getDescription()));
+        currentChallenge.setLanguages(Set.of(language));
+        currentChallenge.setSolutions(List.of(solutionId));
+        currentChallenge.setTopic(dto.getTopic());
+        currentChallenge.setTags(dto.getTags());
+
+        return currentChallenge;
+    }
 }

@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -93,5 +95,15 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(InternalServerErrorException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<MessageDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
 }
