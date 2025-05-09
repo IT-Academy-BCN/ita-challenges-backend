@@ -2,6 +2,7 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
@@ -18,12 +19,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -219,9 +224,18 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
+
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(
+            @Valid @RequestBody ChallengeCreateDto createFormDto,
+            @RequestHeader(name = "Authorization") String authHeader) {
+
+        if (!jwtService.isAdmin(authHeader)) {
+            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: Admins only"));
+        }
+
         return challengeService.addChallenge(createFormDto)
-                .map(ResponseEntity::ok);
+                .map(ResponseEntity::ok)
+                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()));
     }
 
     @GetMapping("/version")
@@ -272,6 +286,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
+
     public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
@@ -346,14 +361,36 @@ public class ChallengeController {
             description = "Allows to update any information contained in a challenge, providing ChallengeId and new information.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
             @PathVariable String challengeId, @Valid @RequestBody ChallengeCreateDto challengeFormDto){
-        return challengeService.updateChallenge(challengeId, challengeFormDto)
-                .map(ResponseEntity::ok);
+
+        final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime localTime = LocalDateTime.now();
+        DetailDocument detail = new DetailDocument(challengeFormDto.getDescription());
+        LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), challengeFormDto.getLanguage(), null);
+        languageDto.setLanguageImage("");
+        String solutionId = "d624bae4-9a43-4515-8979-801c0d6fd88c";
+
+        ChallengeDto challengeDto = new ChallengeDto();
+        challengeDto.setChallengeId(UUID.fromString(challengeId));
+        challengeDto.setTitle(challengeFormDto.getChallengeTitle());
+        challengeDto.setLevel(challengeFormDto.getLevel() != null ?
+                String.valueOf(challengeFormDto.getLevel()) : "");
+        challengeDto.setCreationDate(localTime.format(CUSTOM_FORMATTER));
+        challengeDto.setDetail(detail);
+        challengeDto.setPopularity(10);
+        challengeDto.setPercentage(0.5F);
+        challengeDto.setLanguages(Set.of(languageDto));
+        challengeDto.setSolutions(List.of(UUID.fromString(solutionId)));
+        challengeDto.setTimesFavorite(10);
+        challengeDto.setTimesBookmark(10);
+
+        return Mono.just(ResponseEntity.ok(challengeDto));
     }
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class JwtServiceImpl implements IJwtService {
@@ -45,4 +46,36 @@ public class JwtServiceImpl implements IJwtService {
         return objectMapper.readValue(claimsByte, Map.class);
     }
 
+    public String getUserRoleFromAuthenticationHeader(String authHeader) {
+        validateAuthHeader(authHeader);
+        String token = authHeader.substring(7);
+        Map<String, Object> claims = safelyExtractClaims(token)
+                .orElseThrow(() -> new JwtException("Invalid or malformed token."));
+
+        Object role = claims.get("role");
+        if (role == null) {
+            throw new JwtException("Role not found in token");
+        }
+        return role.toString();
+    }
+
+    private void validateAuthHeader(String authHeader){
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new JwtException("Missing or malformed Authorization header");
+        }
+    }
+
+    private Optional<Map<String, Object>> safelyExtractClaims(String token){
+        try {
+            return Optional.of(extractAllClaims(token));
+        } catch (IOException e){
+            log.error("Failed to parse claims: {}",  e.getMessage());
+            return Optional.empty();
+        }
+    }
+
+    public boolean isAdmin(String authHeader) {
+        String role = getUserRoleFromAuthenticationHeader(authHeader);
+        return "ADMIN".equalsIgnoreCase(role);
+    }
 }

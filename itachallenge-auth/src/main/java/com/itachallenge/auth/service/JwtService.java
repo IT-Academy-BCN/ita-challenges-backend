@@ -1,5 +1,7 @@
 package com.itachallenge.auth.service;
 
+import com.itachallenge.auth.exception.MissingAuthorizationHeaderException;
+import io.jsonwebtoken.Claims;
 import com.itachallenge.auth.controller.AuthController;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
@@ -63,5 +65,4 @@ public class JwtService implements IJwtService {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }

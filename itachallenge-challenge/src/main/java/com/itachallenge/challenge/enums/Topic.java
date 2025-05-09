@@ -30,7 +30,5 @@ public enum Topic {
         }
         throw new IllegalArgumentException("No enum constant with display name " + displayName);
     }
-
-
 }
 
