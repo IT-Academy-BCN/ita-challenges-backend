@@ -106,4 +106,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
     }
+
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<MessageDto> handleInvalidJwtException(InvalidJwtException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageDto(ex.getMessage()));
+    }
 }
