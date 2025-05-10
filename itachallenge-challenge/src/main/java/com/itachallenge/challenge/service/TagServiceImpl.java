@@ -3,6 +3,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.DuplicateTagUUIDException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
@@ -50,9 +51,21 @@ public class TagServiceImpl implements ITagService {
     @Override
     public Mono<Boolean> getValidatedTags(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
+                .groupBy(id -> id)
+                .flatMap(group -> group.count()
+                        .filter(cnt -> cnt > 1)
+                        .map(cnt -> group.key()))
+                .next()  // si hay al menos un grupo con >1, emite ese UUID
+                .flatMap(dup ->
+                        Mono.error(new DuplicateTagUUIDException("UUID de tag duplicada: " + dup))
+                )
+                .switchIfEmpty(
+                        // no hubo duplicados, continuar con la validación normal:
+                        Flux.fromIterable(tagIds)
                 .flatMap(tagId -> tagRepository.findById(tagId)
                         .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tagId))))
                 .count()
-                .map(count -> count == tagIds.size());
+                .map(count -> count == tagIds.size())
+                ).hasElement();
     }
 }
