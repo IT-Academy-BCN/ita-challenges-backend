@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import java.util.Arrays;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -99,7 +101,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+        if (UUID.class.equals(ex.getTargetType())) {
+            String badValue = ex.getValue().toString();
+            boolean fromTags = ex.getPath().stream()
+                    .map(Reference::getFieldName)
+                    .anyMatch("tags"::equals);
+            if (fromTags) {
+                MessageDto body = new MessageDto("invalid UUID tag: " + badValue);
+                return ResponseEntity
+                        .badRequest()
+                        .body(body);
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()));
     }
     
     @ExceptionHandler(DuplicateTagUUIDException.class)
@@ -108,4 +122,6 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(new MessageDto(ex.getMessage()));
     }
+    
+    
 }
