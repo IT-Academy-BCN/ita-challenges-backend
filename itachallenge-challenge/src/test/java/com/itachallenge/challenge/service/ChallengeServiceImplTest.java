@@ -728,7 +728,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -744,7 +744,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -760,7 +760,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1204,7 +1204,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1645,7 +1645,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1934,7 +1934,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)))
                 .verify();
 
