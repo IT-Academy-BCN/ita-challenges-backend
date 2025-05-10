@@ -114,17 +114,19 @@ class ChallengeIntegrationTest {
     }
 
     @Test
-    void shouldReturnOKForUnknownUserId() {
+    void shouldReturnNotFoundForInvalidChallengeId() {
         webTestClient
                 .get()
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_INVALID)
                 .exchange()
                 .expectStatus()
-                .isEqualTo(OK);
+                .isNotFound()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Challenge with id: " + UUID_INVALID + " not found");
     }
 
     @Test
-    void shouldReturnOk_ValidUserId() {
+    void shouldReturnOkForValidChallengeId() {
         webTestClient
                 .get()
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_VALID)
@@ -132,9 +134,7 @@ class ChallengeIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                });
+                .value(dto -> assertTrue(dto != null));
     }
 
     @Test
