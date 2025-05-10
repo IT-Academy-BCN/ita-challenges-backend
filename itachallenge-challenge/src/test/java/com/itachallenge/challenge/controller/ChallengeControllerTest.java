@@ -450,7 +450,7 @@ class ChallengeControllerTest {
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + id)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isNotFound()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("Challenge with id: non_existing_id not found");
     }
