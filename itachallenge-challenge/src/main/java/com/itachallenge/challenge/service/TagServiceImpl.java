@@ -57,7 +57,7 @@ public class TagServiceImpl implements ITagService {
                         .map(cnt -> group.key()))
                 .next()  // si hay al menos un grupo con >1, emite ese UUID
                 .flatMap(dup ->
-                        Mono.error(new DuplicateTagUUIDException("UUID de tag duplicada: " + dup))
+                        Mono.error(new DuplicateTagUUIDException("tag UUID duplicated: " + dup))
                 )
                 .switchIfEmpty(
                         // no hubo duplicados, continuar con la validación normal:
