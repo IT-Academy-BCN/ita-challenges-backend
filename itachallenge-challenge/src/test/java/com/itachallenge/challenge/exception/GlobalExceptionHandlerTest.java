@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -19,11 +20,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -237,5 +236,57 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Tag not found"));
+    }
+    
+    @Test
+    void testHandleInvalidFormat_TagsField() {
+        InvalidFormatException ex = InvalidFormatException.from(
+                /*parser*/ null,
+                "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
+                "invalid-uuid",
+                UUID.class
+        );
+        
+        ex.prependPath(new Reference(/*from*/ null, "tags"));
+        
+        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertEquals(
+                "invalid format UUID tag: invalid-uuid",
+                Objects.requireNonNull(resp.getBody()).getMessage()
+        );
+    }
+    
+    @Test
+    void testHandleInvalidFormat_OtherFieldFallback() {
+        InvalidFormatException ex = InvalidFormatException.from(
+                /*parser*/ null,
+                "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
+                "invalid-uuid",
+                UUID.class
+        );
+        ex.prependPath(new Reference(/*from*/ null, "otherField"));
+        
+        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertEquals(
+                ex.getOriginalMessage(),
+                Objects.requireNonNull(resp.getBody()).getMessage()
+        );
+    }
+    
+    @Test
+    void testHandleDuplicateTagUUIDException() {
+        DuplicateTagUUIDException ex = new DuplicateTagUUIDException("duplicated-uuid-value");
+        
+        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleDuplicateTagId(ex);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertEquals(
+                "duplicated-uuid-value",
+                Objects.requireNonNull(resp.getBody()).getMessage()
+        );
     }
 }

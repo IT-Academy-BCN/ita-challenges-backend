@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
                     .map(Reference::getFieldName)
                     .anyMatch("tags"::equals);
             if (fromTags) {
-                MessageDto body = new MessageDto("invalid UUID tag: " + badValue);
+                MessageDto body = new MessageDto("invalid format UUID tag: " + badValue);
                 return ResponseEntity
                         .badRequest()
                         .body(body);
