@@ -47,13 +47,13 @@ public class TagServiceImpl implements ITagService {
                 )
                 .collect(Collectors.toSet());
     }
-    
+
     @Override
     public Mono<Boolean> getValidatedTags(List<UUID> tagIds) {
         return validateNoDuplicatesUUIDTags(tagIds).
                 then(validateAllUUIDTagsExist(tagIds));
     }
-    
+
     private Mono<Boolean> validateNoDuplicatesUUIDTags(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
                 .groupBy(id -> id)
@@ -66,7 +66,7 @@ public class TagServiceImpl implements ITagService {
                 )
                 .hasElement();
     }
-    
+
     private Mono<Boolean> validateAllUUIDTagsExist(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
                 .flatMap(tagId -> tagRepository.findById(tagId)
@@ -75,5 +75,5 @@ public class TagServiceImpl implements ITagService {
                 .map(count -> count == tagIds.size())
                 .hasElement();
     }
-    
+
 }

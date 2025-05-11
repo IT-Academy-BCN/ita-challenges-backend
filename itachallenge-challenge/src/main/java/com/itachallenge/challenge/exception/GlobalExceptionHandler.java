@@ -123,8 +123,4 @@ public class GlobalExceptionHandler {
         return Optional.empty();
     }
 
-    @ExceptionHandler(InvalidJwtException.class)
-    public ResponseEntity<MessageDto> handleInvalidJwtException(InvalidJwtException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageDto(ex.getMessage()));
-    }
 }
