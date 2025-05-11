@@ -66,7 +66,7 @@ public class JwtServiceImpl implements IJwtService {
         }
     }
 
-    private Optional<Map<String, Object>> safelyExtractClaims(String token){
+    public Optional<Map<String, Object>> safelyExtractClaims(String token){
         try {
             return Optional.of(extractAllClaims(token));
         } catch (IOException e){

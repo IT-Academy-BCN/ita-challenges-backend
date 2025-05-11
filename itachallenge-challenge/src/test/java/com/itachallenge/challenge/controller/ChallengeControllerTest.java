@@ -1113,4 +1113,35 @@ class ChallengeControllerTest {
         assertEquals("Missing or malformed Authorization header", exception.getMessage());
     }
 
+    @Test
+    public void safelyExtractClaims_invalidToken_returnsEmptyOptional() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+        String malformedToken = "invalid.token.structure";
+
+        Optional<Map<String, Object>> result = jwtService.safelyExtractClaims(malformedToken);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getUserRoleFromAuthenticationHeader_invalidToken_throwsJwtException() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+        String malformedToken = "Bearer invalid.token.structure";
+
+        JwtException exception = assertThrows(JwtException.class, () ->
+                jwtService.getUserRoleFromAuthenticationHeader(malformedToken));
+
+        assertEquals("Invalid or malformed token.", exception.getMessage());
+    }
+
+    @Test
+    void getUserRoleFromAuthenticationHeader_missingRoleClaim_throwsJwtException() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+        String tokenWithoutRole = "Bearer eyJhbGciOiJIUzI1NiJ9.e30.fake-signature"; // payload = {}
+
+        JwtException exception = assertThrows(JwtException.class, () ->
+                jwtService.getUserRoleFromAuthenticationHeader(tokenWithoutRole));
+
+        assertEquals("Role not found in token", exception.getMessage());
+    }
 }
