@@ -330,6 +330,30 @@ class ChallengeControllerTest {
     }
 
     @Test
+    void addChallenge_whenUserIsNotAdmin_thenReturnsForbidden() {
+        List<UUID> tags = List.of(UUID.randomUUID());
+        ChallengeCreateDto formData = new ChallengeCreateDto(
+                "títol",
+                "descripció",
+                DifficultyLevel.EASY,
+                "Java",
+                "solució",
+                Topic.LISTS,
+                tags
+        );
+
+        when(jwtService.isAdmin("Bearer test-token")).thenReturn(false);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .header("Authorization", "Bearer test-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isForbidden();
+    }
+
+    @Test
     void addChallenge_test_validRequest() {
         List<UUID> tags = List.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
@@ -1048,6 +1072,45 @@ class ChallengeControllerTest {
         verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
 
     }
+
+    @Test
+    void getUserRoleFromAuthenticationHeader_validAdminToken_returnsAdmin() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+        String tokenWithAdminRole = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4ifQ.fake-signature";
+
+        String role = jwtService.getUserRoleFromAuthenticationHeader(tokenWithAdminRole);
+
+        assertEquals("ADMIN", role);
+    }
+
+    @Test
+    void isAdmin_validAdminToken_returnsTrue() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+        String tokenWithAdminRole = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4ifQ.fake-signature";
+
+        boolean result = jwtService.isAdmin(tokenWithAdminRole);
+
+        assertTrue(result);
+    }
+
+    @Test
+    void isAdmin_nonAdminToken_returnsFalse() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+        String tokenWithUserRole = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiJ9.fake-signature";
+
+        boolean result = jwtService.isAdmin(tokenWithUserRole);
+
+        assertFalse(result);
+    }
+
+    @Test
+    void getUserRoleFromAuthenticationHeader_missingHeader_throwsException() {
+        JwtServiceImpl jwtService = new JwtServiceImpl();
+
+        JwtException exception = assertThrows(JwtException.class, () ->
+                jwtService.getUserRoleFromAuthenticationHeader(null));
+
+        assertEquals("Missing or malformed Authorization header", exception.getMessage());
+    }
+
 }
-
-
