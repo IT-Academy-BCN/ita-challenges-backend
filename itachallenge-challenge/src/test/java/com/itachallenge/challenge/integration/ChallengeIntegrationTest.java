@@ -4,10 +4,7 @@ import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -134,7 +131,8 @@ class ChallengeIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
-                .value(dto -> assertTrue(dto != null));
+                .value(Assertions::assertNotNull);
+
     }
 
     @Test
