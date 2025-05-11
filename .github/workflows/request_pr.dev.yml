@@ -52,8 +52,9 @@ jobs:
           java -version
           ./gradlew --version
       # ✅ Ejecutar los tests y generar reportes, forzando que no use caché
-      - name: Run Tests
-        run: ./gradlew test --info --stacktrace --no-build-cache
+      - - name: Run Tests
+      - run: ./gradlew test --info --stacktrace --no-build-cache --warning-mode all
+
 
       # ✅ Debug: Mostrar si el directorio de reportes realmente existe
       - name: Debug Test Reports Directory
