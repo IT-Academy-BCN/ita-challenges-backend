@@ -15,13 +15,14 @@ import java.util.Optional;
 public class JwtServiceImpl implements IJwtService {
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
+    private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
     public String getUserUuIdFromAuthenticationHeader(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             throw new JwtException("Missing or bad formatted Authorization header");
         }
-        String userId = extractUuid(authHeader.replace("Bearer ", ""));
+        String userId = extractUuid(authHeader.replace(BEARER_PREFIX, ""));
         if (userId == null) {
             throw new JwtException("Invalid Authorization header content");
         }
@@ -60,7 +61,7 @@ public class JwtServiceImpl implements IJwtService {
     }
 
     private void validateAuthHeader(String authHeader){
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
             throw new JwtException("Missing or malformed Authorization header");
         }
     }
