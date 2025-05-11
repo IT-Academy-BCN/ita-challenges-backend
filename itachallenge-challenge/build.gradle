@@ -29,6 +29,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
