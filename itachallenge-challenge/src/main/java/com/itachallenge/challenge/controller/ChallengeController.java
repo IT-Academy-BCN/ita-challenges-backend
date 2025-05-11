@@ -366,29 +366,8 @@ public class ChallengeController {
     )
     public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
             @PathVariable String challengeId, @Valid @RequestBody ChallengeCreateDto challengeFormDto){
-
-        final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime localTime = LocalDateTime.now();
-        DetailDocument detail = new DetailDocument(challengeFormDto.getDescription());
-        LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), challengeFormDto.getLanguage(), null);
-        languageDto.setLanguageImage("");
-        String solutionId = "d624bae4-9a43-4515-8979-801c0d6fd88c";
-
-        ChallengeDto challengeDto = new ChallengeDto();
-        challengeDto.setChallengeId(UUID.fromString(challengeId));
-        challengeDto.setTitle(challengeFormDto.getChallengeTitle());
-        challengeDto.setLevel(challengeFormDto.getLevel() != null ?
-                String.valueOf(challengeFormDto.getLevel()) : "");
-        challengeDto.setCreationDate(localTime.format(CUSTOM_FORMATTER));
-        challengeDto.setDetail(detail);
-        challengeDto.setPopularity(10);
-        challengeDto.setPercentage(0.5F);
-        challengeDto.setLanguages(Set.of(languageDto));
-        challengeDto.setSolutions(List.of(UUID.fromString(solutionId)));
-        challengeDto.setTimesFavorite(10);
-        challengeDto.setTimesBookmark(10);
-
-        return Mono.just(ResponseEntity.ok(challengeDto));
+        return challengeService.updateChallenge(challengeId, challengeFormDto)
+                .map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")

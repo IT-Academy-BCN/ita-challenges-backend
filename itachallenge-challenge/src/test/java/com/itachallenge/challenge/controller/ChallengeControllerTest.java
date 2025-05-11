@@ -337,10 +337,12 @@ class ChallengeControllerTest {
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
+        when(jwtService.isAdmin("Bearer test-token")).thenReturn(true);
         when(challengeService.addChallenge(any())).thenReturn(Mono.just(createdChallenge));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
+                .header("Authorization", "Bearer test-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
