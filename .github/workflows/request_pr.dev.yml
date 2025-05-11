@@ -21,10 +21,10 @@ jobs:
           distribution: 'temurin'
           java-version: 21
 
-      - name: Setup Gradle 8.11
+      - name: Setup Gradle 8.8
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 8.11
+          gradle-version: 8.8
 
       # ✅ Eliminar la caché de Gradle antes de ejecutar los tests
       - name: Clear Gradle Cache
@@ -52,9 +52,8 @@ jobs:
           java -version
           ./gradlew --version
       # ✅ Ejecutar los tests y generar reportes, forzando que no use caché
-      - - name: Run Tests
-      - run: ./gradlew test --info --stacktrace --no-build-cache --warning-mode all
-
+      - name: Run Tests
+        run: ./gradlew test --info --stacktrace --no-build-cache
 
       # ✅ Debug: Mostrar si el directorio de reportes realmente existe
       - name: Debug Test Reports Directory
