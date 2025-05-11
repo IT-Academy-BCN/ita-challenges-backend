@@ -1,7 +1,5 @@
 package com.itachallenge.auth.service;
 
-import com.itachallenge.auth.exception.MissingAuthorizationHeaderException;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
