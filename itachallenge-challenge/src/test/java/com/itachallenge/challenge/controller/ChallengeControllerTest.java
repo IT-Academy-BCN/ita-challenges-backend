@@ -888,15 +888,14 @@ class ChallengeControllerTest {
     }
 
     @Test
-    @DisplayName("PUT update challenge when valid request returns 200")
-
-    void updateChallengeValidRequest_test(){
-
+    void updateChallengeValidRequest_AuthorizedUser_Returns200() {
+        when(jwtService.isAdmin("Bearer valid-token")).thenReturn(true);
         when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
                 .thenReturn(Mono.just(createdChallenge));
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .header("Authorization", "Bearer valid-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
@@ -904,15 +903,41 @@ class ChallengeControllerTest {
                 .expectBody(ChallengeDto.class)
                 .value(Assertions::assertNotNull);
 
-        verify(challengeService, times(1))
-                .updateChallenge(anyString(), any(ChallengeCreateDto.class));
+        verify(challengeService, times(1)).updateChallenge(anyString(), any(ChallengeCreateDto.class));
+    }
+
+    @Test
+    void updateChallenge_UnauthorizedUser_Returns403() {
+        when(jwtService.isAdmin("Bearer invalid-token")).thenReturn(false);
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .header("Authorization", "Bearer invalid-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isForbidden();
+
+        verifyNoInteractions(challengeService);
+    }
+
+    @Test
+    void updateChallenge_MissingAuthHeader_Returns400() {
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verifyNoInteractions(challengeService);
     }
 
     @ParameterizedTest
     @MethodSource("provideEmptyFields")
-    void updateChallengeEmptyField_returnsBadRequest_test(Consumer<ChallengeCreateDto> fieldSetter){
-
+    void updateChallengeEmptyField_returnsBadRequest_test(Consumer<ChallengeCreateDto> fieldSetter) {
         fieldSetter.accept(formData);
+
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
