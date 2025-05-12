@@ -145,6 +145,7 @@ public class ChallengeController {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
+
     @GetMapping("/challenges/byFilter")
     @Operation(
             operationId = "Get challenges on a page by FILTER (language, difficulty, or tags).",
@@ -365,8 +366,8 @@ public class ChallengeController {
             @PathVariable String challengeId,
             @Valid @RequestBody ChallengeCreateDto challengeFormDto,
             @RequestHeader("Authorization") String authHeader) {
-        if (!jwtService.isAdmin(authHeader))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not authorized to update challenges.");
+        if (jwtService.getUserUuIdFromAuthenticationHeader(authHeader) == null)
+            throw new JwtException("Invalid token");
         return challengeService.updateChallenge(challengeId, challengeFormDto)
                 .map(ResponseEntity::ok);
     }

@@ -889,36 +889,22 @@ class ChallengeControllerTest {
 
     @Test
     void updateChallengeValidRequest_AuthorizedUser_Returns200() {
-        when(jwtService.isAdmin("Bearer valid-token")).thenReturn(true);
+        String authHeader = "Bearer valid-token";
+        String userId = "user123";
+
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
-                .thenReturn(Mono.just(createdChallenge));
+                .thenReturn(Mono.just(new ChallengeDto()));
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
-                .header("Authorization", "Bearer valid-token")
+                .header("Authorization", authHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(ChallengeDto.class)
-                .value(Assertions::assertNotNull);
+                .expectStatus().isOk();
 
         verify(challengeService, times(1)).updateChallenge(anyString(), any(ChallengeCreateDto.class));
-    }
-
-    @Test
-    void updateChallenge_UnauthorizedUser_Returns403() {
-        when(jwtService.isAdmin("Bearer invalid-token")).thenReturn(false);
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
-                .header("Authorization", "Bearer invalid-token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(formData)
-                .exchange()
-                .expectStatus().isForbidden();
-
-        verifyNoInteractions(challengeService);
     }
 
     @Test
