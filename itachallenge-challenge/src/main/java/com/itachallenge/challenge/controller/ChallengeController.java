@@ -356,15 +356,21 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "403", description = "User is not authorized to perform this action."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
-            @PathVariable String challengeId, @Valid @RequestBody ChallengeCreateDto challengeFormDto){
+            @PathVariable String challengeId,
+            @Valid @RequestBody ChallengeCreateDto challengeFormDto,
+            @RequestHeader("Authorization") String authHeader) {
+        if (!jwtService.isAdmin(authHeader))
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not authorized to update challenges.");
         return challengeService.updateChallenge(challengeId, challengeFormDto)
                 .map(ResponseEntity::ok);
     }
+
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
     @Operation(
