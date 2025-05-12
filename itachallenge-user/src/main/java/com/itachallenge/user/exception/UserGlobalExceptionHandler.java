@@ -71,4 +71,14 @@ public class UserGlobalExceptionHandler {
     public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    @ExceptionHandler(InternalServerErrorException.class)
+    public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    }
+    
+    @ExceptionHandler(ChallengeNotFoundException.class)
+    public ResponseEntity<String> handleChallengeNotFoundException(ChallengeNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
 }
