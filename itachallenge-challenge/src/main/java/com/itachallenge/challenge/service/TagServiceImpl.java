@@ -55,12 +55,11 @@ public class TagServiceImpl implements ITagService {
                 .flatMap(group -> group.count()
                         .filter(cnt -> cnt > 1)
                         .map(cnt -> group.key()))
-                .next()  // si hay al menos un grupo con >1, emite ese UUID
+                .next()
                 .flatMap(dup ->
                         Mono.error(new DuplicateTagUUIDException("tag UUID duplicated: " + dup))
                 )
                 .switchIfEmpty(
-                        // no hubo duplicados, continuar con la validación normal:
                         Flux.fromIterable(tagIds)
                 .flatMap(tagId -> tagRepository.findById(tagId)
                         .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tagId))))

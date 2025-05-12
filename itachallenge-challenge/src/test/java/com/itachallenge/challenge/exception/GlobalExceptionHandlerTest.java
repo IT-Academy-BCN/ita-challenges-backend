@@ -241,13 +241,13 @@ class GlobalExceptionHandlerTest {
     @Test
     void testHandleInvalidFormat_TagsField() {
         InvalidFormatException ex = InvalidFormatException.from(
-                /*parser*/ null,
+                null,
                 "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
                 "invalid-uuid",
                 UUID.class
         );
         
-        ex.prependPath(new Reference(/*from*/ null, "tags"));
+        ex.prependPath(new Reference(null, "tags"));
         
         ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
         
@@ -261,12 +261,12 @@ class GlobalExceptionHandlerTest {
     @Test
     void testHandleInvalidFormat_OtherFieldFallback() {
         InvalidFormatException ex = InvalidFormatException.from(
-                /*parser*/ null,
+                null,
                 "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
                 "invalid-uuid",
                 UUID.class
         );
-        ex.prependPath(new Reference(/*from*/ null, "otherField"));
+        ex.prependPath(new Reference(null, "otherField"));
         
         ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
         
