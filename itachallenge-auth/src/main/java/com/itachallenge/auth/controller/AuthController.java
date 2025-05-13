@@ -148,7 +148,7 @@ public class AuthController {
         if (authHeader == null || !authHeader.startsWith("Bearer ")){
             log.warn("Logged out without token");
         }else{
-                log.info("Successfully logged out with token
+                log.info("Successfully logged out with token");
         }
         
         return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
