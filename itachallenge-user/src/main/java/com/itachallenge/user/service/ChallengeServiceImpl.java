@@ -7,6 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.stereotype.Service;
 
 import com.itachallenge.user.document.enums.ChallengeStatus;
 import com.itachallenge.user.exception.BadRequestException;
@@ -15,6 +16,7 @@ import com.itachallenge.user.exception.InternalServerErrorException;
 
 import reactor.core.publisher.Mono;
 
+@Service
 public class ChallengeServiceImpl implements IChallengeService {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeServiceImpl.class);
