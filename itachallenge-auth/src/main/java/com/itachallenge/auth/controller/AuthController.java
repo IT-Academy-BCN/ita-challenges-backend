@@ -145,12 +145,9 @@ public class AuthController {
 
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
             log.warn("Logout attempt without token");
-        } else {
-            String jwt = authHeader.replace("Bearer ", "");
-            log.info("Logout attempt for token: {}", jwt);
-        }
+        
         return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
 
