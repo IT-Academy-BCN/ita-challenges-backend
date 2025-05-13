@@ -507,7 +507,7 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
+        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
@@ -529,7 +529,7 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.addChallengeToBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
+        when(challengeService.addChallengeToBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
@@ -725,7 +725,7 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
+        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
@@ -971,7 +971,7 @@ class ChallengeControllerTest {
 
         String errorMessage = "ErrorMessage";
 
-        when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundReturn404Exception(errorMessage)));
+        when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
