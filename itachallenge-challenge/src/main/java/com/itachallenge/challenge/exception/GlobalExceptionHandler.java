@@ -114,13 +114,4 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()));
     }
-    
-    @ExceptionHandler(DuplicateTagUUIDException.class)
-    public ResponseEntity<MessageDto> handleDuplicateTagId(DuplicateTagUUIDException ex) {
-        return ResponseEntity
-                .badRequest()
-                .body(new MessageDto(ex.getMessage()));
-    }
-    
-    
 }
