@@ -3,6 +3,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.DuplicateTagUUIDException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -62,7 +63,7 @@ public class TagServiceImpl implements ITagService {
                         .map(cnt -> group.key()))
                 .next()
                 .flatMap(dup ->
-                        Mono.error(new DuplicateTagUUIDException("tag UUID duplicated: " + dup))
+                        Mono.error(new BadRequestException("tag UUID duplicated: " + dup))
                 )
                 .hasElement();
     }
