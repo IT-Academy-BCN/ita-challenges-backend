@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -100,6 +101,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
+        return buildTagUuidError(ex)
+                .orElseGet(() ->
+        ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
+                );
+    }
+    
+    private Optional<ResponseEntity<MessageDto>> buildTagUuidError(InvalidFormatException ex) {
         if (UUID.class.equals(ex.getTargetType())) {
             String badValue = ex.getValue().toString();
             boolean fromTags = ex.getPath().stream()
@@ -107,11 +115,11 @@ public class GlobalExceptionHandler {
                     .anyMatch("tags"::equals);
             if (fromTags) {
                 MessageDto body = new MessageDto("invalid format UUID tag: " + badValue);
-                return ResponseEntity
+                return Optional.of(ResponseEntity
                         .badRequest()
-                        .body(body);
+                        .body(body));
             }
         }
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()));
+        return Optional.empty();
     }
 }
