@@ -7,6 +7,7 @@ import com.itachallenge.challenge.dto.TagDto;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -115,6 +116,29 @@ class TagServiceImplTest {
         verify(tagRepository).findById(missingId);
     }
 
+    @Test
+    @DisplayName("Get exception when tag is not found")
+    void getValidatedTags_notFound_test(){
+        UUID missingId = UUID.randomUUID();
+        when(tagRepository.findById(missingId)).thenReturn(Mono.empty());
+        List<UUID> tagsAssigned = List.of(missingId);
+
+        StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
+                .expectError(TagNotFoundException.class)
+                .verify();
+        verify(tagRepository).findById(missingId);
+    }
+
+    @Test
+    @DisplayName("Returns Mono<true> when tag has been found")
+    void getValidatedTags_returnsTrue_test(){
+        TagDocument tagDocument = new TagDocument(UUID.randomUUID(), "Tag Title", "Tag Description");
+        when(tagRepository.findById(tagDocument.getIdTag())).thenReturn(Mono.just(tagDocument));
+        List<UUID> tagsAssigned = List.of(tagDocument.getIdTag());
+        StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
+                .expectNext(true).verifyComplete();
+        verify(tagRepository).findById(tagDocument.getIdTag());
+    }
 }
 
 

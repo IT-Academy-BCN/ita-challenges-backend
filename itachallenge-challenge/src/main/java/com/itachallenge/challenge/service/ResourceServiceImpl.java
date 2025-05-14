@@ -5,12 +5,16 @@ import com.itachallenge.challenge.dto.ChallengeListDto;
 import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.*;
@@ -134,5 +138,22 @@ public class ResourceServiceImpl implements IResourceService {
                     return savedDto;
                 })
                 .doOnError(error -> log.error("Error occurred when creating resource {}", error.getMessage()));
+    }
+
+
+    public Flux<ResourceDto> getResourcesByChallengeId(UUID challengeId) {
+        return Mono.justOrEmpty(challengeId)
+                .switchIfEmpty(Mono.error(new BadRequestException("Challenge ID cannot be null")))
+                .flatMapMany(validChallengeId ->
+                        resourceRepository.findByChallengeIdsContaining(validChallengeId)
+                                .map(resourceDoc -> resourceConverter.convertDocumentToDto(resourceDoc, ResourceDto.class))
+                                .onErrorResume(error -> {
+                                    log.error("Error fetching resources for challenge ID {}: {}", validChallengeId, error.getMessage());
+                                    if (error instanceof ResourceNotFoundException) {
+                                        return Flux.error(error);
+                                    }
+                                    return Flux.error(new InternalServerErrorException("Failed to fetch resources for challenge ID: " + validChallengeId));
+                                })
+                );
     }
 }
