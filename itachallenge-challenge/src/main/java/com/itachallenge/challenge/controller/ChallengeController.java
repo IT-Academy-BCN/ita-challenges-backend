@@ -117,8 +117,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
@@ -174,8 +174,9 @@ public class ChallengeController {
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "200", description = "Successful operation."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
@@ -191,9 +192,10 @@ public class ChallengeController {
             description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "Successful operation.", content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
@@ -248,8 +250,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to delete it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(@PathVariable("challengeId") String id) {
