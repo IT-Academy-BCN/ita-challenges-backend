@@ -18,9 +18,11 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImpl.class);
     private final IUserSolutionRepository userSolutionRepository;
+    private final ChallengeServiceImpl challengeService;
 
-    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository) {
+    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository, ChallengeServiceImpl challengeService) {
         this.userSolutionRepository = userSolutionRepository;
+        this.challengeService = challengeService;
     }
 
     @Override
@@ -63,7 +65,14 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                     }
                     existingSolution.setSolutionAttemptDocument(solutionAttempt);
                     existingSolution.setStatus(challengeStatus);
-                    return userSolutionRepository.save(existingSolution);
+                    return userSolutionRepository.save(existingSolution)
+                            .flatMap(savedSolution -> {
+                                if (ChallengeStatus.ENDED.equals(challengeStatus)) {
+                                    return challengeService.addChallengeToSolved(challengeUuid.toString())
+                                            .thenReturn(savedSolution);
+                                }
+                                return Mono.just(savedSolution);
+                            });
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
@@ -74,7 +83,14 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .status(challengeStatus)
                             .solutionAttemptDocument(solutionAttempt)
                             .build();
-                    return userSolutionRepository.save(userSolutionDocument);
+                    return userSolutionRepository.save(userSolutionDocument)
+                            .flatMap(savedSolution -> {
+                                if (ChallengeStatus.ENDED.equals(challengeStatus)) {
+                                    return challengeService.addChallengeToSolved(challengeUuid.toString())
+                                            .thenReturn(savedSolution);
+                                }
+                                return Mono.just(savedSolution);
+                            });
                 }));
     }
 
