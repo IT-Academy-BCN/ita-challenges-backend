@@ -234,14 +234,14 @@ class AuthControllerTest {
     }
 
     @Test
-    void logout_NoToken_ShouldReturn200() {
+    void logout_NoToken_ShouldReturn401() {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isUnauthorized()
                 .expectBody(Map.class)
                 .value(response -> {
-                    assert response.get("message").equals("Logout successful");
+                    assert response.get("message").equals("Authorization header is missing or malformed");
                 });
     }
 }

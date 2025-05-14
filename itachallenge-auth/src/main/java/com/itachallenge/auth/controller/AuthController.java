@@ -145,12 +145,13 @@ public class AuthController {
 
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")){
-            log.warn("Logged out without token");
-        }else{
-                log.info("Successfully logged out with token");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("Logout attempt without or malformed token");
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
         }
-        
+
+        log.info("Logout attempt with token");
         return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
 
