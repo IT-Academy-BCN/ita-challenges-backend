@@ -57,11 +57,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(ChallengeNotFoundReturn404Exception.class)
-    public ResponseEntity<MessageDto> handleChallengeNotFoundReturn404Exception(ChallengeNotFoundReturn404Exception ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<MessageDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
