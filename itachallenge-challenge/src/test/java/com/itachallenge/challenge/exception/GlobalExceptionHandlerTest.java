@@ -276,17 +276,4 @@ class GlobalExceptionHandlerTest {
                 Objects.requireNonNull(resp.getBody()).getMessage()
         );
     }
-    
-    @Test
-    void testHandleDuplicateTagUUIDException() {
-        DuplicateTagUUIDException ex = new DuplicateTagUUIDException("duplicated-uuid-value");
-        
-        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleDuplicateTagId(ex);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
-        assertEquals(
-                "duplicated-uuid-value",
-                Objects.requireNonNull(resp.getBody()).getMessage()
-        );
-    }
 }

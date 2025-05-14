@@ -4,6 +4,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.DuplicateTagUUIDException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
@@ -148,7 +149,7 @@ class TagServiceImplTest {
         
         StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
                 .expectErrorSatisfies(err -> {
-                    assert err instanceof DuplicateTagUUIDException;
+                    assert err instanceof BadRequestException;
                     assert err.getMessage().equals("tag UUID duplicated: " + duplicatedId);
                 })
                 .verify();
