@@ -251,4 +251,47 @@ class ResourceRepositoryTest {
                 .expectNext(0L)
                 .verifyComplete();
     }
+
+
+    @Test
+    void findByChallengeIdsContaining_WhenChallengeIdExists_ReturnsResources() {
+
+        UUID targetChallengeId = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
+
+
+        ResourceDocument resourceWithTargetChallenge = ResourceDocument.builder()
+                .resourceId(uuid1)
+                .title("Title1")
+                .description("Description1")
+                .url("http://example.com/resource1")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(targetChallengeId))
+                .build();
+
+        ResourceDocument resourceWithoutTargetChallenge = ResourceDocument.builder()
+                .resourceId(uuid2)
+                .title("Title2")
+                .description("Description2")
+                .url("http://example.com/resource2")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.BLOG)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .build();
+
+
+        resourceRepository.deleteAll().block();
+        resourceRepository.saveAll(Flux.just(resourceWithTargetChallenge, resourceWithoutTargetChallenge)).blockLast();
+
+
+        Flux<ResourceDocument> result = resourceRepository.findByChallengeIdsContaining(targetChallengeId);
+
+
+        StepVerifier.create(result)
+                .expectNextMatches(resource ->
+                        resource.getChallengeIds().contains(targetChallengeId) &&
+                                resource.getResourceId().equals(uuid1)
+                )
+                .verifyComplete();
+    }
 }

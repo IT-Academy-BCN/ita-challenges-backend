@@ -248,18 +248,24 @@ public class ChallengeServiceImpl implements IChallengeService {
                             .idLanguage(existingLanguage.getIdLanguage())
                             .build();
                     return solutionRepository.save(solution)
-                            .flatMap(savedSolution -> {
-                                ChallengeDocument challenge = buildChallengeDocument(
-                                        challengeCreateDto,
-                                        existingLanguage,
-                                        savedSolution.getUuid(),
-                                        topic,
-                                        challengeCreateDto.getTags());
-                                return challengeRepository.save(challenge)
-                                        .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
-                                                ChallengeDto.class));
-                            });
-                });
+                            .flatMap(savedSolution -> tagService.getValidatedTags(challengeCreateDto.getTags())
+                                    .flatMap(allTagsValid -> {
+                                        if (!allTagsValid) {
+                                            return Mono.error(new TagNotFoundException(
+                                                    "One or more tags are invalid"));
+                                        }
+                                        ChallengeDocument challenge = buildChallengeDocument(
+                                                challengeCreateDto,
+                                                existingLanguage,
+                                                savedSolution.getUuid(),
+                                                topic,
+                                                challengeCreateDto.getTags());
+                                        return challengeRepository.save(challenge);
+                                    })
+                            );
+                })
+                .map(savedChallenge ->
+                        challengeConverter.convertDocumentToDto(savedChallenge, ChallengeDto.class));
     }
 
     private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, List<UUID> tags) {
@@ -355,7 +361,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID userUuid = Uuidtuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())
                                     .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isAddedToUsersFavorites -> {
@@ -381,7 +387,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID userUuid = Uuidtuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())
                                     .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isRemovedFromUsersFavorites -> {
@@ -404,7 +410,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(newLanguage -> validateUUID(String.valueOf(challengeId))
                         .flatMap(validId -> challengeRepository.findByUuid(validId)
-                                .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
+                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(
                                         String.format(CHALLENGE_NOT_FOUND_ERROR, validId))))
                                 .flatMap(challengeDocument -> {
                                     log.info("Challenge found for challengeId: {}", validId);
@@ -447,7 +453,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID userUuid = Uuidtuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString())
                                     .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isAddedToUsersBookmarks -> {
@@ -473,7 +479,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID userUuid = Uuidtuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> userService.removeChallengeFromBookmarks(userUuid.toString(), challengeUuid.toString())
                                     .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isRemovedFromUsersBookmarks -> {
@@ -499,7 +505,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID userUuid = uuidTuple.getT2();
 
                     return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
+                            .switchIfEmpty(Mono.error(new ChallengeNotFoundException(
                                     String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                             .flatMap(challenge -> {
                                 log.info("It should be connected to user service using the fields {} and {}", challengeUuid, userUuid);

@@ -7,6 +7,9 @@ import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.exception.BadRequestException;
+import com.itachallenge.challenge.exception.InternalServerErrorException;
+import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ResourceRepository;
 import org.junit.jupiter.api.Test;
@@ -14,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import static org.mockito.ArgumentMatchers.*;
@@ -415,6 +419,104 @@ class ResourceServiceImplTest {
                         error.getMessage().equals("Conversion DTO to Document null"))
                 .verify();
     }
+
+    // ID CON recursos
+    @Test
+    void getResourcesByChallengeId_WhenResourcesExist_ReturnsFluxOfResources() {
+
+        UUID challengeId = UUID.randomUUID();
+        UUID resourceId1 = UUID.randomUUID();
+        UUID resourceId2 = UUID.randomUUID();
+
+
+        ResourceDocument doc1 = new ResourceDocument(
+                resourceId1, "Resource 1", "Desc 1", "https://example.com/1",
+                Topic.DEBUGGING, ResourceContentType.VIDEO, List.of(challengeId), AssociationType.ALLSAMETOPIC
+        );
+        ResourceDocument doc2 = new ResourceDocument(
+                resourceId2, "Resource 2", "Desc 2", "https://example.com/2",
+                Topic.COMPONENTS, ResourceContentType.BLOG, List.of(challengeId), AssociationType.CHOOSE
+        );
+
+        ResourceDto dto1 = new ResourceDto();
+        dto1.setResourceId(resourceId1);
+        dto1.setTitle("Resource 1");
+
+
+        ResourceDto dto2 = new ResourceDto();
+        dto2.setResourceId(resourceId2);
+        dto2.setTitle("Resource 2");
+
+
+        when(resourceRepository.findByChallengeIdsContaining(challengeId))
+                .thenReturn(Flux.just(doc1, doc2));
+        when(resourceConverter.convertDocumentToDto(doc1, ResourceDto.class)).thenReturn(dto1);
+        when(resourceConverter.convertDocumentToDto(doc2, ResourceDto.class)).thenReturn(dto2);
+
+
+        StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
+                .expectNext(dto1)
+                .expectNext(dto2)
+                .verifyComplete();
+    }
+
+    // Valido SIN recursos
+    @Test
+    void getResourcesByChallengeId_WhenNoResourcesExist_ReturnsEmptyFlux() {
+
+        UUID challengeId = UUID.randomUUID();
+        when(resourceRepository.findByChallengeIdsContaining(challengeId))
+                .thenReturn(Flux.empty());
+
+
+        StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    @Test
+    void getResourcesByChallengeId_WhenIdIsNull_ThrowsBadRequestException() {
+        StepVerifier.create(resourceService.getResourcesByChallengeId(null))
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("Challenge ID cannot be null")
+                )
+                .verify();
+    }
+
+    //Error en el repo
+    @Test
+    void getResourcesByChallengeId_WhenRepositoryFails_ThrowsInternalServerErrorException() {
+        UUID challengeId = UUID.randomUUID();
+        when(resourceRepository.findByChallengeIdsContaining(challengeId))
+                .thenReturn(Flux.error(new RuntimeException("DB Connection Failed")));
+
+        StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
+                .expectErrorMatches(ex ->
+                        ex instanceof InternalServerErrorException &&
+                                ex.getMessage().equals("Failed to fetch resources for challenge ID: " + challengeId)
+                )
+                .verify();
+
+        verify(resourceRepository, times(1)).findByChallengeIdsContaining(challengeId);
+    }
+
+    @Test
+    void getResourcesByChallengeId_WhenResourceNotFound_PropagatesException() {
+        UUID challengeId = UUID.randomUUID();
+        ResourceNotFoundException ex = new ResourceNotFoundException("Not found");
+        when(resourceRepository.findByChallengeIdsContaining(challengeId))
+                .thenReturn(Flux.error(ex));
+
+        StepVerifier.create(resourceService.getResourcesByChallengeId(challengeId))
+                .expectErrorMatches(thrownEx ->
+                        thrownEx instanceof ResourceNotFoundException &&
+                                thrownEx.getMessage().equals("Not found")
+                )
+                .verify();
+    }
+
+
 
 
 }
