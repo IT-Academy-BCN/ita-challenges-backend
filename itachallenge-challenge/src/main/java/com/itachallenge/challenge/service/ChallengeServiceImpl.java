@@ -248,18 +248,24 @@ public class ChallengeServiceImpl implements IChallengeService {
                             .idLanguage(existingLanguage.getIdLanguage())
                             .build();
                     return solutionRepository.save(solution)
-                            .flatMap(savedSolution -> {
-                                ChallengeDocument challenge = buildChallengeDocument(
-                                        challengeCreateDto,
-                                        existingLanguage,
-                                        savedSolution.getUuid(),
-                                        topic,
-                                        challengeCreateDto.getTags());
-                                return challengeRepository.save(challenge)
-                                        .map(savedChallenge -> challengeConverter.convertDocumentToDto(challenge,
-                                                ChallengeDto.class));
-                            });
-                });
+                            .flatMap(savedSolution -> tagService.getValidatedTags(challengeCreateDto.getTags())
+                                    .flatMap(allTagsValid -> {
+                                        if (!allTagsValid) {
+                                            return Mono.error(new TagNotFoundException(
+                                                    "One or more tags are invalid"));
+                                        }
+                                        ChallengeDocument challenge = buildChallengeDocument(
+                                                challengeCreateDto,
+                                                existingLanguage,
+                                                savedSolution.getUuid(),
+                                                topic,
+                                                challengeCreateDto.getTags());
+                                        return challengeRepository.save(challenge);
+                                    })
+                            );
+                })
+                .map(savedChallenge ->
+                        challengeConverter.convertDocumentToDto(savedChallenge, ChallengeDto.class));
     }
 
     private ChallengeDocument buildChallengeDocument(ChallengeCreateDto dto, LanguageDocument language, UUID solutionId, Topic topic, List<UUID> tags) {
