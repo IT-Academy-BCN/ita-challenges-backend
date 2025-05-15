@@ -218,21 +218,15 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeCreateDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
-    )
-
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(
             @Valid @RequestBody ChallengeCreateDto createFormDto,
-            @RequestHeader(name = "Authorization") String authHeader) {
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
-        if (!jwtService.isAdmin(authHeader)) {
-            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: Admins only"));
-        }
-
-        return challengeService.addChallenge(createFormDto)
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .flatMap(userId -> challengeService.addChallenge(createFormDto))
                 .map(ResponseEntity::ok)
-                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()));
+                .doOnError(error -> log.error("Error adding challenge", error));
     }
-
     @GetMapping("/version")
     @Operation(
             summary = "Get Application Version",
