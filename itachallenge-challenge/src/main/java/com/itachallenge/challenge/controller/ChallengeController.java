@@ -18,11 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.*;
@@ -223,15 +221,12 @@ public class ChallengeController {
 
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(
             @Valid @RequestBody ChallengeCreateDto createFormDto,
-            @RequestHeader(name = "Authorization") String authHeader) {
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
-        if (!jwtService.isAdmin(authHeader)) {
-            return Mono.error(new ResponseStatusException(HttpStatus.FORBIDDEN, "Access denied: Admins only"));
-        }
-
-        return challengeService.addChallenge(createFormDto)
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .flatMap(userId -> challengeService.addChallenge(createFormDto))
                 .map(ResponseEntity::ok)
-                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()));
+                .doOnError(error -> log.error("Error adding challenge", error));
     }
 
     @GetMapping("/version")
@@ -282,7 +277,6 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-
     public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {

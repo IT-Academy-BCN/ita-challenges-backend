@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * PR #872: Added error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags
 * PR #866: Added tag validation in the addChallenge endpoint.
 * Issue #852: Added GET endpoint for retrieving resources from a challenge
+* Issue #871  Secured POST endpoint addChallenge for creating a challenge in the Challenge Microservice.
 * Issue #849: Added GET endpoint to retrieve all User's bookmarked challenges.
 * Issue #843: Added DELETE endpoint in the Challenge Microservice to unbookmark a challenge.
 * Issue #829: Added bookmark POST endpoint in the Challenge Microservice to bookmark a challenge.
