@@ -1329,6 +1329,35 @@
 					"response": []
 				}
 			]
+		},
+		{
+		  "name": "Auth - Logout",
+		  "request": {
+		    "method": "POST",
+		    "header": [
+		      {
+		        "key": "Authorization",
+		        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0VXNlciIsInJvbGUiOiJBRS1JTiIsInV1aWQiOiI0MDc0MzUwMS1lMzViLTRjOTEtYmM5Ni1iMGM5ODM0ODhlN2MiLCJpYXQiOjE3NDE2MTM2MTIsImV4cCI6MTc0MTY0OTYxMn0=.S__qcscgi4JPuz27k5sNuSVIQbmJVB0htFR7vFnH-RI",
+		        "type": "text"
+		      }
+		    ],
+		    "url": {
+		      "raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/logout",
+		      "protocol": "http",
+		      "host": [
+		        "{{ip}}"
+		      ],
+		      "port": "{{auth_port}}",
+		      "path": [
+		        "itachallenge",
+		        "api",
+		        "v1",
+		        "auth",
+		        "logout"
+		      ]
+		    }
+		  },
+		  "response": []
 		}
 	]
 }
