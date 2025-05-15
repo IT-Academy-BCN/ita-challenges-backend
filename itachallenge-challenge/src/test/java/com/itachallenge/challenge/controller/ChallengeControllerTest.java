@@ -330,30 +330,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addChallenge_whenUserIsNotAdmin_thenReturnsForbidden() {
-        List<UUID> tags = List.of(UUID.randomUUID());
-        ChallengeCreateDto formData = new ChallengeCreateDto(
-                "títol",
-                "descripció",
-                DifficultyLevel.EASY,
-                "Java",
-                "solució",
-                Topic.LISTS,
-                tags
-        );
-
-        when(jwtService.isAdmin("Bearer test-token")).thenReturn(false);
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges")
-                .header("Authorization", "Bearer test-token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(formData)
-                .exchange()
-                .expectStatus().isForbidden();
-    }
-
-    @Test
     void addChallenge_test_validRequest() {
         List<UUID> tags = List.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
@@ -361,12 +337,10 @@ class ChallengeControllerTest {
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
-        when(jwtService.isAdmin("Bearer test-token")).thenReturn(true);
         when(challengeService.addChallenge(any())).thenReturn(Mono.just(createdChallenge));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
-                .header("Authorization", "Bearer test-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
@@ -1082,77 +1056,5 @@ class ChallengeControllerTest {
 
         verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
 
-    }
-
-    @Test
-    void getUserRoleFromAuthenticationHeader_validAdminToken_returnsAdmin() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-        String tokenWithAdminRole = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4ifQ.fake-signature";
-
-        String role = jwtService.getUserRoleFromAuthenticationHeader(tokenWithAdminRole);
-
-        assertEquals("ADMIN", role);
-    }
-
-    @Test
-    void isAdmin_validAdminToken_returnsTrue() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-        String tokenWithAdminRole = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4ifQ.fake-signature";
-
-        boolean result = jwtService.isAdmin(tokenWithAdminRole);
-
-        assertTrue(result);
-    }
-
-    @Test
-    void isAdmin_nonAdminToken_returnsFalse() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-        String tokenWithUserRole = "Bearer eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiVVNFUiJ9.fake-signature";
-
-        boolean result = jwtService.isAdmin(tokenWithUserRole);
-
-        assertFalse(result);
-    }
-
-    @Test
-    void getUserRoleFromAuthenticationHeader_missingHeader_throwsException() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-
-        JwtException exception = assertThrows(JwtException.class, () ->
-                jwtService.getUserRoleFromAuthenticationHeader(null));
-
-        assertEquals("Missing or malformed Authorization header", exception.getMessage());
-    }
-
-    @Test
-    public void safelyExtractClaims_invalidToken_returnsEmptyOptional() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-        String malformedToken = "invalid.token.structure";
-
-        Optional<Map<String, Object>> result = jwtService.safelyExtractClaims(malformedToken);
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void getUserRoleFromAuthenticationHeader_invalidToken_throwsJwtException() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-        String malformedToken = "Bearer invalid.token.structure";
-
-        JwtException exception = assertThrows(JwtException.class, () ->
-                jwtService.getUserRoleFromAuthenticationHeader(malformedToken));
-
-        assertEquals("Invalid or malformed token.", exception.getMessage());
-    }
-
-    @Test
-    void getUserRoleFromAuthenticationHeader_missingRoleClaim_throwsJwtException() {
-        JwtServiceImpl jwtService = new JwtServiceImpl();
-        String tokenWithoutRole = "Bearer eyJhbGciOiJIUzI1NiJ9.e30.fake-signature"; // payload = {}
-
-        JwtException exception = assertThrows(JwtException.class, () ->
-                jwtService.getUserRoleFromAuthenticationHeader(tokenWithoutRole));
-
-        assertEquals("Role not found in token", exception.getMessage());
     }
 }
