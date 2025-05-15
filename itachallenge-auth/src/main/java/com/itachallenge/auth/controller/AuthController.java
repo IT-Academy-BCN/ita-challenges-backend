@@ -159,14 +159,4 @@ public class AuthController {
                     .body(Map.of("message", "Invalid or expired token")));
         }
     }
-
-    @GetMapping("/dev")
-    public ResponseEntity<String> generateTestToken(
-            @RequestParam(defaultValue = "admin") String username,
-            @RequestParam(defaultValue = "USER") String role,
-            @RequestParam(defaultValue = "abc-123") String uuid) {
-
-        String token = jwtService.generateToken(username, role, uuid);
-        return ResponseEntity.ok(token);
-    }
 }
