@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 
@@ -42,9 +41,9 @@ class ChallengeSolvedControllerTest {
         SolvedDto solvedDto = new SolvedDto();
 
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-        when(challengeService.addChallengeToSolved(challengeId, userId)).thenReturn(Mono.just(solvedDto));
+        when(challengeService.addChallengeToSolved(challengeId)).thenReturn(Mono.just(solvedDto));
 
-        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
+        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
                 .assertNext(response -> {
@@ -53,8 +52,7 @@ class ChallengeSolvedControllerTest {
                 })
                 .verifyComplete();
 
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verify(challengeService, times(1)).addChallengeToSolved(challengeId, userId);
+        verify(challengeService, times(1)).addChallengeToSolved(challengeId);
     }
 
     @Test
@@ -64,7 +62,7 @@ class ChallengeSolvedControllerTest {
 
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException("Invalid token"));
 
-        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
+        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof BadRequestException &&
@@ -82,16 +80,15 @@ class ChallengeSolvedControllerTest {
         String userId = "user123";
 
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-        when(challengeService.addChallengeToSolved(challengeId, userId)).thenReturn(Mono.error(new RuntimeException("Service error")));
+        when(challengeService.addChallengeToSolved(challengeId)).thenReturn(Mono.error(new RuntimeException("Service error")));
 
-        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
+        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
                 .expectErrorMatches(throwable -> throwable instanceof RuntimeException &&
                         throwable.getMessage().equals("Service error"))
                 .verify();
 
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verify(challengeService, times(1)).addChallengeToSolved(challengeId, userId);
+        verify(challengeService, times(1)).addChallengeToSolved(challengeId);
     }
 }

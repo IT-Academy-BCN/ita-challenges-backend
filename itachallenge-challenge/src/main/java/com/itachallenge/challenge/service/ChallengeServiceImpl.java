@@ -1,12 +1,6 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.document.*;
-import com.itachallenge.challenge.dto.ChallengeDto;
-import com.itachallenge.challenge.dto.GenericResultDto;
-import com.itachallenge.challenge.dto.SolutionDto;
-import com.itachallenge.challenge.document.ChallengeDocument;
-import com.itachallenge.challenge.document.LanguageDocument;
-import com.itachallenge.challenge.document.SolutionDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
@@ -489,29 +483,21 @@ public class ChallengeServiceImpl implements IChallengeService {
     }
 
     @Override
-    public Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId) {
+    public Mono<SolvedDto> addChallengeToSolved(String challengeId) {
+                
         Mono<UUID> challengeIdMono = validateUUID(challengeId);
-        Mono<UUID> userIdMono = validateUUID(userId);
 
-        return Mono.zip(challengeIdMono, userIdMono)
-                .flatMap(uuidTuple -> {
-                    UUID challengeUuid = uuidTuple.getT1();
-                    UUID userUuid = uuidTuple.getT2();
-
-                    return challengeRepository.findByUuid(challengeUuid)
-                            .switchIfEmpty(Mono.error(new ChallengeNotFoundReturn404Exception(
-                                    String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
-                            .flatMap(challenge -> userService.addChallengeToSolved(userUuid.toString(), challengeUuid.toString())
-                                    .flatMap(isAddedToUserSolved -> {
-                                        if (Boolean.TRUE.equals(isAddedToUserSolved)) {
-                                            challenge.increaseTimesSolved();
-                                            return challengeRepository.save(challenge);
-                                        }
-                                        return Mono.just(challenge);
-                                    }))
-                            .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
-                });
-    }
+        return challengeIdMono
+             .flatMap(challengeUuid -> {
+                        return challengeRepository.findByUuid(challengeUuid)
+                                .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
+                                        .flatMap(challenge -> {
+                                                challenge.increaseTimesSolved();
+                                                return challengeRepository.save(challenge);
+                                        })
+                                        .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()));
+                        });
+        }
 
 
     private SolutionDocument buildSolutionDocument(LanguageDocument language, ChallengeCreateDto challengeCreateDto){
