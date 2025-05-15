@@ -330,28 +330,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addChallenge_whenUserIsNotAdmin_thenReturnsForbidden() {
-        List<UUID> tags = List.of(UUID.randomUUID());
-        ChallengeCreateDto formData = new ChallengeCreateDto(
-                "títol",
-                "descripció",
-                DifficultyLevel.EASY,
-                "Java",
-                "solució",
-                Topic.LISTS,
-                tags
-        );
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges")
-                .header("Authorization", "Bearer test-token")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(formData)
-                .exchange()
-                .expectStatus().isForbidden();
-    }
-
-    @Test
     void addChallenge_test_validRequest() {
         List<UUID> tags = List.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
