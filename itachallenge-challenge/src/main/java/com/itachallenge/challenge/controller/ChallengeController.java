@@ -220,6 +220,7 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeCreateDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
+    )
     public Mono<ResponseEntity<ChallengeDto>> addChallenge(
             @Valid @RequestBody ChallengeCreateDto createFormDto,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
