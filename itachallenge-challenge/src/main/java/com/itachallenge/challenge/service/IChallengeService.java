@@ -45,5 +45,5 @@ public interface IChallengeService {
 
     Mono<ChallengeDto> updateChallenge(String challengeId, ChallengeCreateDto challengeCreateDto);
 
-    Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId);
+    Mono<SolvedDto> addChallengeToSolved(String challengeId);
 }

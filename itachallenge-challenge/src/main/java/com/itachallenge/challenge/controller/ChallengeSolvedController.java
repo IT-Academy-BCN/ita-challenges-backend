@@ -46,7 +46,7 @@ public class ChallengeSolvedController {
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
         return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userId -> challengeService.addChallengeToSolved(challengeId, userId))
+                .flatMap(userId -> challengeService.addChallengeToSolved(challengeId))
                 .doOnError(error -> log.error("Error adding challenge to solved: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
