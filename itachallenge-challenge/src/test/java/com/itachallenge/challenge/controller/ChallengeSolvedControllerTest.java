@@ -42,7 +42,7 @@ class ChallengeSolvedControllerTest {
         SolvedDto solvedDto = new SolvedDto();
 
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-        when(challengeService.addChallengeToSolved(challengeId, userId)).thenReturn(Mono.just(solvedDto));
+        when(challengeService.addChallengeToSolved(challengeId)).thenReturn(Mono.just(solvedDto));
 
         Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
 
@@ -54,7 +54,7 @@ class ChallengeSolvedControllerTest {
                 .verifyComplete();
 
         verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verify(challengeService, times(1)).addChallengeToSolved(challengeId, userId);
+        verify(challengeService, times(1)).addChallengeToSolved(challengeId);
     }
 
     @Test
@@ -82,7 +82,7 @@ class ChallengeSolvedControllerTest {
         String userId = "user123";
 
         when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-        when(challengeService.addChallengeToSolved(challengeId, userId)).thenReturn(Mono.error(new RuntimeException("Service error")));
+        when(challengeService.addChallengeToSolved(challengeId)).thenReturn(Mono.error(new RuntimeException("Service error")));
 
         Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
 
@@ -92,6 +92,6 @@ class ChallengeSolvedControllerTest {
                 .verify();
 
         verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verify(challengeService, times(1)).addChallengeToSolved(challengeId, userId);
+        verify(challengeService, times(1)).addChallengeToSolved(challengeId);
     }
 }
