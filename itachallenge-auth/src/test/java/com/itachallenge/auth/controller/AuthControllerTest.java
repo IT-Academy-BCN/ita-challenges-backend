@@ -210,8 +210,7 @@ class AuthControllerTest {
     @Test
     void logout_ValidToken_ShouldReturn200() {
         String validToken = "valid.jwt.token";
-
-        when(jwtService.validateToken(validToken)).thenReturn(true);
+        doNothing().when(jwtService).validateToken(validToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -224,11 +223,12 @@ class AuthControllerTest {
                 });
     }
 
+
     @Test
     void logout_ExpiredToken_ShouldReturn200() {
         String expiredToken = "expired.jwt.token";
 
-        Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired"))
+        doThrow(new ExpiredJwtException(null, null, "Token expired"))
                 .when(jwtService).validateToken(expiredToken);
 
         webTestClient.post()
@@ -242,12 +242,13 @@ class AuthControllerTest {
                 });
     }
 
+
     @Test
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
 
-        when(jwtService.getSigningKey()).thenReturn(Keys.hmacShaKeyFor("someRandomStringToProtectThisAppFromAttacks".getBytes()));
-        when(jwtService.validateToken(invalidToken)).thenThrow(new JwtException("Invalid token"));
+        doThrow(new JwtException("Invalid token"))
+                .when(jwtService).validateToken(invalidToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -259,6 +260,7 @@ class AuthControllerTest {
                     assert response.get("message").equals("Invalid or tampered token");
                 });
     }
+
 
     @Test
     void logout_NoToken_ShouldReturn401() {
