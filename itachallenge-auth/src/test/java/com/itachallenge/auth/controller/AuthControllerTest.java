@@ -210,7 +210,7 @@ class AuthControllerTest {
     @Test
     void logout_ValidToken_ShouldReturn200() {
         String validToken = "valid.jwt.token";
-        doNothing().when(jwtService).validateToken(validToken);
+        Mockito.when(jwtService.validateToken(validToken)).thenReturn(true);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -223,32 +223,10 @@ class AuthControllerTest {
                 });
     }
 
-
-    @Test
-    void logout_ExpiredToken_ShouldReturn200() {
-        String expiredToken = "expired.jwt.token";
-
-        doThrow(new ExpiredJwtException(null, null, "Token expired"))
-                .when(jwtService).validateToken(expiredToken);
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/auth/logout")
-                .header("Authorization", "Bearer " + expiredToken)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(Map.class)
-                .value(response -> {
-                    assert response.get("message").equals("Logout successful");
-                });
-    }
-
-
     @Test
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
-
-        doThrow(new JwtException("Invalid token"))
-                .when(jwtService).validateToken(invalidToken);
+        Mockito.when(jwtService.validateToken(invalidToken)).thenReturn(false);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -261,9 +239,34 @@ class AuthControllerTest {
                 });
     }
 
+    @Test
+    void logout_EmptyAuthorizationHeader_ShouldReturn401() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody(Map.class)
+                .value(response -> {
+                    assert response.get("message").equals("Authorization header is missing or malformed");
+                });
+    }
 
     @Test
-    void logout_NoToken_ShouldReturn401() {
+    void logout_MalformedAuthorizationHeader_ShouldReturn401() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "Token xyz")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody(Map.class)
+                .value(response -> {
+                    assert response.get("message").equals("Authorization header is missing or malformed");
+                });
+    }
+
+    @Test
+    void logout_MissingAuthorizationHeader_ShouldReturn401() {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
                 .exchange()
