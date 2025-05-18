@@ -149,29 +149,23 @@ public class AuthController {
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("Logout attempt without or malformed token");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Authorization header is missing or malformed")));
         }
+
         String token = authHeader.replace("Bearer ", "").trim();
-        try {
-            jwtService.validateToken(token);
 
-            log.info("Logout attempt with valid token");
-            return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
-
-        } catch (ExpiredJwtException e) {
-            log.info("Logout with expired token (accepted): {}", e.getMessage());
-            return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
-
-        } catch (JwtException e) {
-            log.warn("Logout attempt with invalid JWT: {}", e.getMessage());
+        if (!jwtService.validateToken(token)) {
+            log.warn("Logout attempt with invalid or expired token");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Invalid or tampered token")));
         }
+
+        log.info("Logout attempt with valid token");
+        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
     }
-
-
 }
 
