@@ -3,6 +3,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
@@ -47,11 +48,32 @@ public class TagServiceImpl implements ITagService {
                 .collect(Collectors.toSet());
     }
 
+    @Override
     public Mono<Boolean> getValidatedTags(List<UUID> tagIds) {
+        return validateNoDuplicatesUUIDTags(tagIds).
+                then(validateAllUUIDTagsExist(tagIds));
+    }
+    
+    private Mono<Boolean> validateNoDuplicatesUUIDTags(List<UUID> tagIds) {
+        return Flux.fromIterable(tagIds)
+                .groupBy(id -> id)
+                .flatMap(group -> group.count()
+                        .filter(cnt -> cnt > 1)
+                        .map(cnt -> group.key()))
+                .next()
+                .flatMap(dup ->
+                        Mono.error(new BadRequestException("tag UUID duplicated: " + dup))
+                )
+                .hasElement();
+    }
+    
+    private Mono<Boolean> validateAllUUIDTagsExist(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
                 .flatMap(tagId -> tagRepository.findById(tagId)
                         .switchIfEmpty(Mono.error(new TagNotFoundException("Tag not found: " + tagId))))
                 .count()
-                .map(count -> count == tagIds.size());
+                .map(count -> count == tagIds.size())
+                .hasElement();
     }
+    
 }
