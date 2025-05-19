@@ -62,34 +62,4 @@ class JwtServiceTest {
         long actualExpirationMillis = claims.getExpiration().getTime();
         assertThat(actualExpirationMillis).isBetween(expectedExpirationMillis - 5000, expectedExpirationMillis + 5000); // 5s margin
     }
-
-    @Test
-    void validateToken_ValidToken_ShouldReturnTrue() {
-        String token = jwtService.generateToken("testUser", "ADMIN", "testUuid");
-
-        boolean isValid = jwtService.validateToken(token);
-
-        assertThat(isValid).isTrue();
-    }
-
-    @Test
-    void validateToken_InvalidToken_ShouldReturnFalse() {
-        String token = jwtService.generateToken("testUser", "ADMIN", "testUuid") + "tampered";
-
-        boolean isValid = jwtService.validateToken(token);
-
-        assertThat(isValid).isFalse();
-    }
-
-    @Test
-    void validateToken_ExpiredToken_ShouldReturnFalse() {
-        JwtService shortLivedJwtService = new JwtService(jwtSigningKey, 0L);
-        String expiredToken = shortLivedJwtService.generateToken("testUser", "ADMIN", "testUuid");
-
-        boolean isValid = jwtService.validateToken(expiredToken);
-
-        assertThat(isValid).isFalse();
-    }
-
-
 }

@@ -13,9 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 import reactor.core.publisher.Mono;
 
@@ -33,6 +34,8 @@ public class AuthController {
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
     private static final String MESSAGE_KEY = "message";
+    private static final Map<String, String> SUCCESS_RESPONSE =
+            Map.of("message", "Logout successful");
 
     private final IAuthService authService;
 
@@ -149,23 +152,24 @@ public class AuthController {
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Logout attempt without or malformed token");
+            log.warn("Logout attempt without token or malformed header");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Authorization header is missing or malformed")));
         }
-
         String token = authHeader.replace("Bearer ", "").trim();
-
-        if (!jwtService.validateToken(token)) {
-            log.warn("Logout attempt with invalid or expired token");
+        try {
+            jwtService.validateToken(token);
+            log.info("Logout with valid token");
+            return Mono.just(ResponseEntity.ok(SUCCESS_RESPONSE));
+        } catch (ExpiredJwtException e) {
+            log.info("Logout with expired token: {}", e.getMessage());
+            return Mono.just(ResponseEntity.ok(SUCCESS_RESPONSE));
+        } catch (JwtException e) {
+            log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid or tampered token")));
+                    .body(Map.of(MESSAGE_KEY, "Invalid or tampered token")));
         }
-
-        log.info("Logout attempt with valid token");
-        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
     }
 }
 

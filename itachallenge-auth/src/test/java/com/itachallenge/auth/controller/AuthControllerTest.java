@@ -210,7 +210,8 @@ class AuthControllerTest {
     @Test
     void logout_ValidToken_ShouldReturn200() {
         String validToken = "valid.jwt.token";
-        Mockito.when(jwtService.validateToken(validToken)).thenReturn(true);
+
+        Mockito.doNothing().when(jwtService).validateToken(validToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -224,9 +225,29 @@ class AuthControllerTest {
     }
 
     @Test
+    void logout_ExpiredToken_ShouldReturn200() {
+        String expiredToken = "expired.jwt.token";
+
+        Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired"))
+                .when(jwtService).validateToken(expiredToken);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "Bearer " + expiredToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .value(response -> {
+                    assert response.get("message").equals("Logout successful");
+                });
+    }
+
+    @Test
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
-        Mockito.when(jwtService.validateToken(invalidToken)).thenReturn(false);
+
+        Mockito.doThrow(new JwtException("Invalid token"))
+                .when(jwtService).validateToken(invalidToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -252,7 +273,7 @@ class AuthControllerTest {
                 });
     }
 
-    @Test
+   @Test
     void logout_MalformedAuthorizationHeader_ShouldReturn401() {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")

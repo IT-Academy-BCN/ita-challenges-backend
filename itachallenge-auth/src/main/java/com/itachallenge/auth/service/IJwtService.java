@@ -2,7 +2,6 @@ package com.itachallenge.auth.service;
 import javax.crypto.SecretKey;
 
 public interface IJwtService {
-    SecretKey getSigningKey();
     String generateToken(String username, String role, String uuid);
-    boolean validateToken(String token);
+    void validateToken(String token);
 }

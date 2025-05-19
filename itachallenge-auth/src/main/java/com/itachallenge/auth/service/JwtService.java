@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.ExpiredJwtException;
+
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -39,18 +41,20 @@ public class JwtService implements IJwtService {
         return builder.compact();
     }
 
-    public boolean validateToken(String token) {
+    @Override
+    public void validateToken(String token) {
+        SecretKey key = getSigningKey();
         try {
-            SecretKey key =  getSigningKey();
             Jwts.parser()
-                    .verifyWith(key)
+                    .setSigningKey(key)
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-            return true;
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            log.warn("Expired Token: {}", e.getMessage());
+            throw e;
         } catch (JwtException e) {
-            log.warn("Invalid or expired token: {}", e.getMessage());
-            return false;
+            log.warn("Invalid Token: {}", e.getMessage());
+            throw e;
         }
     }
 
