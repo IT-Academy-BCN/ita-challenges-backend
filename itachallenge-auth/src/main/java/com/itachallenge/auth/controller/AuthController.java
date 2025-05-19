@@ -15,8 +15,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 
 import reactor.core.publisher.Mono;
 
@@ -34,8 +32,7 @@ public class AuthController {
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
     private static final String MESSAGE_KEY = "message";
-    private static final Map<String, String> SUCCESS_RESPONSE =
-            Map.of("message", "Logout successful");
+    private static final String LOGOUT_SUCCESS = "Logout successful";
 
     private final IAuthService authService;
 
@@ -161,10 +158,10 @@ public class AuthController {
         try {
             jwtService.validateToken(token);
             log.info("Logout with valid token");
-            return Mono.just(ResponseEntity.ok(SUCCESS_RESPONSE));
+            return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, LOGOUT_SUCCESS)));
         } catch (ExpiredJwtException e) {
             log.info("Logout with expired token: {}", e.getMessage());
-            return Mono.just(ResponseEntity.ok(SUCCESS_RESPONSE));
+            return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, LOGOUT_SUCCESS)));
         } catch (JwtException e) {
             log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
