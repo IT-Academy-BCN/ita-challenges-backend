@@ -19,7 +19,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.Keys;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -224,7 +223,7 @@ class AuthControllerTest {
                 });
     }
 
-    @Test
+   @Test
     void logout_ExpiredToken_ShouldReturn200() {
         String expiredToken = "expired.jwt.token";
 
@@ -238,7 +237,7 @@ class AuthControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Map.class)
                 .value(response -> {
-                    assert response.get("message").equals("Logout successful");
+                    assert response.get("message").equals("Token expired but logout successful");
                 });
     }
 
