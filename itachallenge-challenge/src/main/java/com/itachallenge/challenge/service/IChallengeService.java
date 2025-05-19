@@ -43,5 +43,7 @@ public interface IChallengeService {
 
     Mono<BookmarkDto> removeChallengeFromBookmarks(String challengeId, String userId);
 
+    Mono<ChallengeDto> updateChallenge(String challengeId, ChallengeCreateDto challengeCreateDto);
+
     Mono<SolvedDto> addChallengeToSolved(String challengeId, String userId);
 }

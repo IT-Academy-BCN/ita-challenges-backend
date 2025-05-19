@@ -54,19 +54,6 @@ public class ChallengeDocument {
     @Field(name = "tags")
     private List<UUID> tags;
 
-    public void setTags(UUID tag) {
-        if (tags == null) {
-            tags = new ArrayList<>();
-        }
-
-        if (tags.contains(tag)) {
-            tags.remove(tag);
-        } else {
-            tags.add(tag);
-        }
-    }
-
-
     public void increaseTimesFavorite () {
             timesFavorite = timesFavorite == null ? 1 : timesFavorite + 1;
         }

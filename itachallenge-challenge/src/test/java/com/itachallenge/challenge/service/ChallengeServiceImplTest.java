@@ -24,7 +24,10 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
@@ -81,7 +84,8 @@ class ChallengeServiceImplTest {
         String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
-        List<UUID> tags = List.of(UUID.randomUUID());
+        List<UUID> tags = new ArrayList<>();
+        tags.add(UUID.randomUUID());
 
         formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level),
                 languageName, solutionBody, Topic.LISTS, tags);
@@ -110,7 +114,7 @@ class ChallengeServiceImplTest {
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
                 List.of(solutionsRandomId),
-                popularity, percentage);
+                popularity, percentage, tags);
     }
 
 
@@ -495,6 +499,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
     void addChallenge_test_success() {
         when(ILanguageService.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
+        when(tagService.getValidatedTags(eq(formData.getTags()))).thenReturn(Mono.just(true));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
         when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class))).thenReturn(challengeDto);
 
@@ -505,6 +510,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         verify(ILanguageService, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(formData.getTags()));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
         verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
@@ -523,7 +529,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
-                                               List<UUID> solutions, Integer popularity, Float percentage) {
+                                               List<UUID> solutions, Integer popularity, Float percentage, List<UUID> tags) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
@@ -534,10 +540,55 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
         when(challengeDocMocked.getSolutions()).thenReturn(solutions);
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
+        when(challengeDocMocked.getTags()).thenReturn(tags);
         return challengeDocMocked;
     }
-
-
+    
+    @Test
+    void addChallenge_test_invalidTags() {
+        when(ILanguageService.findFirstByLanguageName(eq(languageName)))
+                .thenReturn(Mono.just(languageDocument));
+        when(solutionRepository.save(any(SolutionDocument.class)))
+                .thenReturn(Mono.just(solutionDocument));
+                when(tagService.getValidatedTags(eq(formData.getTags())))
+                .thenReturn(Mono.just(false));
+        
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof TagNotFoundException
+                                && throwable.getMessage().equals("One or more tags are invalid")
+                )
+                .verify();
+        
+        verify(challengeRepository, never()).save(any(ChallengeDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(formData.getTags()));
+    }
+    
+    @Test
+    void addChallenge_test_emptyTags() {
+        formData.setTags(Collections.emptyList());
+        when(ILanguageService.findFirstByLanguageName(eq(languageName)))
+                .thenReturn(Mono.just(languageDocument));
+        when(solutionRepository.save(any(SolutionDocument.class)))
+                .thenReturn(Mono.just(solutionDocument));
+        when(tagService.getValidatedTags(eq(Collections.emptyList())))
+                .thenReturn(Mono.just(true));
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenReturn(Mono.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
+                .thenReturn(challengeDto);
+        
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectNext(challengeDto)
+                .verifyComplete();
+                
+        verify(ILanguageService, times(1)).findFirstByLanguageName(eq(languageName));
+        verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(Collections.emptyList()));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+        verify(challengeConverter, times(1))
+                .convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
+    }
 
     @Test
     void deleteChallengeById_NotFound() {
@@ -723,7 +774,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -739,7 +790,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -755,7 +806,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1199,7 +1250,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1640,7 +1691,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1866,7 +1917,141 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
     public static Stream<Integer> removeChallengeFromBookmarks_WhenNotRemovedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkedToZeroAndReturnsBookmarkDTO() {
         return Stream.of(null, 0);
     }
+
+    @Test
+    void updateChallenge_success_test(){
+
+        String challengeId = challengeDocument.getUuid().toString();
+        AtomicReference<SolutionDocument> savedSolutionDocument = new AtomicReference<>();
+
+        when(ILanguageService.findFirstByLanguageName(anyString()))
+                .thenReturn(Mono.just(languageDocument));
+        when(challengeRepository.findByUuid(UUID.fromString(challengeId))).thenReturn(Mono.just(challengeDocument));
+        when(tagService.getValidatedTags(formData.getTags())).thenReturn(Mono.just(true));
+        when(solutionRepository.save(any(SolutionDocument.class))).thenAnswer(resp -> {
+            SolutionDocument solutionDocument1 = resp.getArgument(0);
+            savedSolutionDocument.set(solutionDocument1);
+            return Mono.just(solutionDocument1);
+        });
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenAnswer(resp -> {
+                    ChallengeDocument updatedChallengeDocument = resp.getArgument(0);
+                    return Mono.just(updatedChallengeDocument);
+                });
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
+                .thenAnswer(invocation -> buildChallengeDtoFromDocument(invocation.getArgument(0)));
+
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .consumeNextWith(responseDto ->{
+                    boolean languageMatch = responseDto.getLanguages().stream()
+                            .anyMatch(lang -> formData.getLanguage().equals(lang.getLanguageName()));
+                    SolutionDocument solutionDocument1 = savedSolutionDocument.get();
+
+                    Assertions.assertAll(
+                            () -> Assertions.assertEquals(challengeId, responseDto.getChallengeId().toString()),
+                            () -> Assertions.assertEquals(formData.getChallengeTitle(), responseDto.getTitle()),
+                            () -> Assertions.assertEquals(String.valueOf(formData.getLevel()), responseDto.getLevel()),
+                            () -> Assertions.assertEquals("2023-06-05", responseDto.getCreationDate()),
+                            () -> Assertions.assertEquals(formData.getDescription(), responseDto.getDetail().getDescription()),
+                            () -> Assertions.assertEquals(challengeDocument.getTimesFavorite(), responseDto.getTimesFavorite()),
+                            () -> Assertions.assertEquals(1, responseDto.getLanguages().size()),
+                            () -> Assertions.assertTrue(languageMatch, "language does not match."),
+                            () -> Assertions.assertEquals(formData.getSolution(), solutionDocument1.getSolutionText()),
+                            () -> Assertions.assertEquals(formData.getTopic(), responseDto.getTopic()),
+                            () -> Assertions.assertEquals(challengeDocument.getTimesBookmark(), responseDto.getTimesBookmark()),
+                            () -> Assertions.assertEquals(formData.getTags(), responseDto.getTags())
+                    );
+                })
+                .verifyComplete();
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verify(challengeRepository, times(1)).findByUuid(UUID.fromString(challengeId));
+        verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+        verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
+    }
+
+    @Test
+    void updateChallengeWhenChallengeDoesNotExist_returnsError_test(){
+        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
+        String challengeId = challengeDocument.getUuid().toString();
+        when(ILanguageService.findFirstByLanguageName(anyString()))
+                .thenReturn(Mono.just(languageDocument));
+        when(challengeRepository.findByUuid(UUID.fromString(challengeId))).thenReturn(Mono.empty());
+
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .expectErrorMatches(error ->
+                        error instanceof ChallengeNotFoundException &&
+                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)))
+                .verify();
+
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verify(challengeRepository, times(1)).findByUuid(UUID.fromString(challengeId));
+        verifyNoInteractions(solutionRepository, challengeConverter, tagService);
+        verifyNoMoreInteractions(challengeRepository);
+    }
+
+    @Test
+    void updateChallengeWhenLanguageDoesNotExist_returnsError_test(){
+
+        String LANGUAGE_NOT_FOUND_ERROR = "Language %s is not valid";
+        String challengeId = challengeDocument.getUuid().toString();
+        when(ILanguageService.findFirstByLanguageName(anyString()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .expectErrorMatches(error ->
+                        error instanceof LanguageNotFoundException &&
+                                error.getMessage().equals(String.format(LANGUAGE_NOT_FOUND_ERROR, formData.getLanguage())))
+                .verify();
+
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verifyNoInteractions(challengeRepository, solutionRepository, challengeConverter, tagService);
+    }
+
+    @Test
+    void updateChallengeWhenChallengeIdNotValid_returnError_test(){
+        String challengeId = "InvalidId";
+        when(ILanguageService.findFirstByLanguageName(anyString())).thenReturn(Mono.just(languageDocument));
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verifyNoInteractions(challengeRepository, solutionRepository, challengeConverter, tagService);
+    }
+
+    @Test
+    void updateChallengeWhenChallengeUuidIsNull_ReturnsError() {
+
+        when(ILanguageService.findFirstByLanguageName(anyString())).thenReturn(Mono.just(languageDocument));
+
+        StepVerifier.create(challengeService.updateChallenge(null, formData))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verifyNoInteractions(challengeRepository, solutionRepository, challengeConverter, tagService);
+    }
+
+    private ChallengeDto buildChallengeDtoFromDocument(ChallengeDocument doc) {
+        Set<LanguageDto> languageDtos = doc.getLanguages().stream()
+                .map(lang -> new LanguageDto(lang.getIdLanguage(), lang.getLanguageName(), lang.getLanguageImage()))
+                .collect(Collectors.toSet());
+
+        return ChallengeDto.builder()
+                .challengeId(doc.getUuid())
+                .title(doc.getTitle())
+                .level(doc.getLevel())
+                .creationDate(doc.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .detail(doc.getDetail())
+                .languages(languageDtos)
+                .solutions(doc.getSolutions())
+                .topic(doc.getTopic())
+                .timesFavorite(doc.getTimesFavorite())
+                .tags(doc.getTags())
+                .timesBookmark(doc.getTimesBookmark())
+                .build();
+    }
 }
-
-
-

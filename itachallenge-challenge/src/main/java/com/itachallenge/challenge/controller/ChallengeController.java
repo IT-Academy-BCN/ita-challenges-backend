@@ -2,14 +2,12 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.IJwtService;
 import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.challenge.service.JwtServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,8 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -121,8 +117,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
@@ -178,8 +174,9 @@ public class ChallengeController {
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "200", description = "Successful operation."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
@@ -195,9 +192,10 @@ public class ChallengeController {
             description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "Successful operation.", content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
@@ -252,8 +250,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to delete it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(@PathVariable("challengeId") String id) {
@@ -348,37 +346,14 @@ public class ChallengeController {
             description = "Allows to update any information contained in a challenge, providing ChallengeId and new information.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
             @PathVariable String challengeId, @Valid @RequestBody ChallengeCreateDto challengeFormDto){
-
-        final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime localTime = LocalDateTime.now();
-        DetailDocument detail = new DetailDocument(challengeFormDto.getDescription());
-        LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), challengeFormDto.getLanguage(), null);
-        languageDto.setLanguageImage("");
-        String solutionId = "d624bae4-9a43-4515-8979-801c0d6fd88c";
-
-        ChallengeDto challengeDto = new ChallengeDto();
-        challengeDto.setChallengeId(UUID.fromString(challengeId));
-        challengeDto.setTitle(challengeFormDto.getChallengeTitle());
-        challengeDto.setLevel(challengeFormDto.getLevel() != null ?
-                String.valueOf(challengeFormDto.getLevel()) : "");
-        challengeDto.setCreationDate(localTime.format(CUSTOM_FORMATTER));
-        challengeDto.setDetail(detail);
-        challengeDto.setPopularity(10);
-        challengeDto.setPercentage(0.5F);
-        challengeDto.setLanguages(Set.of(languageDto));
-        challengeDto.setSolutions(List.of(UUID.fromString(solutionId)));
-        challengeDto.setTopic(challengeFormDto.getTopic());
-        challengeDto.setTimesFavorite(10);
-        challengeDto.setTimesBookmark(10);
-
-        return Mono.just(ResponseEntity.ok(challengeDto));
+        return challengeService.updateChallenge(challengeId, challengeFormDto)
+                .map(ResponseEntity::ok);
     }
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
