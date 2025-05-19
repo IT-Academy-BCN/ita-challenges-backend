@@ -20,7 +20,6 @@ public class JwtService implements IJwtService {
 
     private final String jwtSigningKey;
     private final long minutesTillExpiration;
-    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     public JwtService(
             @Value("${token.signing.key}") String jwtSigningKey,
@@ -46,17 +45,16 @@ public class JwtService implements IJwtService {
         SecretKey key = getSigningKey();
         try {
             Jwts.parser()
-                    .setSigningKey(key)
+                    .verifyWith(key)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
         } catch (ExpiredJwtException e) {
-            log.warn("Expired Token: {}", e.getMessage());
-            throw e;
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired during logout validation", e);
         } catch (JwtException e) {
-            log.warn("Invalid Token: {}", e.getMessage());
-            throw e;
+            throw new JwtException("Token validation failed: " + e.getMessage(), e);
         }
     }
+
 
     public SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
