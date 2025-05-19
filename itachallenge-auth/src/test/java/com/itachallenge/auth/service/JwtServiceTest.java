@@ -62,4 +62,11 @@ class JwtServiceTest {
         long actualExpirationMillis = claims.getExpiration().getTime();
         assertThat(actualExpirationMillis).isBetween(expectedExpirationMillis - 5000, expectedExpirationMillis + 5000); // 5s margin
     }
+
+    @Test
+    void validateToken_WithValidToken_DoesNotThrow() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-1234");
+        jwtService.validateToken(token);
+    }
+
 }
