@@ -152,7 +152,7 @@ public class AuthController {
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             log.warn("Logout attempt without token or malformed header");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Authorization header is missing or malformed")));
+                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
         }
         String token = authHeader.replace("Bearer ", "").trim();
         try {
@@ -161,7 +161,8 @@ public class AuthController {
             return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, LOGOUT_SUCCESS)));
         } catch (ExpiredJwtException e) {
             log.info("Logout with expired token: {}", e.getMessage());
-            return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, LOGOUT_SUCCESS)));
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of(MESSAGE_KEY, "Token has expired")));
         } catch (JwtException e) {
             log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
