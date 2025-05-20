@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Issue #875: Secured PUT endpoint for updating a challenge in the Challenge Microservice.
 * PR #872: Added error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags
 * PR #866: Added tag validation in the addChallenge endpoint.
+* Issue #864: Added JWT authentication to logout endpoint in User microservice.
 * Issue #852: Added GET endpoint for retrieving resources from a challenge
 * Issue #849: Added GET endpoint to retrieve all User's bookmarked challenges.
 * Issue #843: Added DELETE endpoint in the Challenge Microservice to unbookmark a challenge.
