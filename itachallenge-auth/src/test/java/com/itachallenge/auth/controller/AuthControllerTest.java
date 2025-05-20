@@ -226,7 +226,6 @@ class AuthControllerTest {
 
         Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired"))
                 .when(jwtService).validateToken(expiredToken);
-
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
                 .header("Authorization", "Bearer " + expiredToken)
@@ -256,7 +255,6 @@ class AuthControllerTest {
     @Test
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
-
         Mockito.doThrow(new JwtException("Invalid token"))
                 .when(jwtService).validateToken(invalidToken);
 
