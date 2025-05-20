@@ -1,6 +1,8 @@
 package com.itachallenge.auth.service;
 
 
+import com.itachallenge.auth.config.ClientConfig;
+import com.itachallenge.auth.config.GithubClientProperties;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -13,6 +15,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,12 +34,22 @@ class AuthServiceTest {
         String githubTokenUri = baseUrl + "login/oauth/access_token";
         String githubUserInfoUri = baseUrl + "user";
 
+        ClientConfig testClientConfig = new ClientConfig();
+        testClientConfig.setClientId("test-client-id");
+        testClientConfig.setClientSecret("test-client-secret");
+
+        GithubClientProperties githubClientProperties = new GithubClientProperties();
+        Map<String, ClientConfig> envs = new HashMap<>();
+        envs.put("local", testClientConfig);
+        githubClientProperties.setEnvironments(envs);
+
         authService = new AuthService(
                 WebClient.builder(),
+                githubClientProperties,
                 githubTokenUri,
-                githubUserInfoUri,
-                "test-client-id",
-                "test-client-secret");
+                githubUserInfoUri);
+                //"test-client-id",
+                //"test-client-secret");
     }
 
     @AfterEach
@@ -55,7 +68,7 @@ class AuthServiceTest {
                 .setResponseCode(200)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<String> result = authService.exchangeCodeForToken(code);
+        Mono<String> result = authService.exchangeCodeForToken(code, "");
 
         StepVerifier.create(result)
                 .expectNext(accessToken)
@@ -76,7 +89,7 @@ class AuthServiceTest {
                 .setResponseCode(400) // Simulate GitHub rejecting the code
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<String> result = authService.exchangeCodeForToken(code);
+        Mono<String> result = authService.exchangeCodeForToken(code, "");
 
         StepVerifier.create(result)
                 .expectError(WebClientResponseException.BadRequest.class)
@@ -90,7 +103,7 @@ class AuthServiceTest {
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(500));
 
-        Mono<String> result = authService.exchangeCodeForToken(code);
+        Mono<String> result = authService.exchangeCodeForToken(code, "");
 
         StepVerifier.create(result)
                 .expectError(WebClientResponseException.class)

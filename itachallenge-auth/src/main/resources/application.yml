@@ -5,6 +5,8 @@ spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  profiles:
+    active: local
   jmx:
     enabled: true
   security:
@@ -12,8 +14,16 @@ spring:
       client:
         registration:
           github:
-            client-id: ${GITHUB_CLIENT_ID}
-            client-secret: ${GITHUB_CLIENT_SECRET}
+            environments:
+              local:
+                client-id: ${GITHUB_CLIENT_ID}
+                client-secret: ${GITHUB_CLIENT_SECRET}
+                redirect-uri: http://localhost:4200/ita-challenge/challenges
+              dev:
+                client-id: ${GITHUB_CLIENT_ID}
+                client-secret: ${GITHUB_CLIENT_SECRET}
+               # redirect-uri: http://localhost:4200/ita-challenge/challenges
+                redirect-uri: https://dev.ita-challenges.eurecatacademy.org/ita-challenge/challenges #redirect_uri real de dev
         provider:
           github:
             authorization-uri: https://github.com/login/oauth/authorize

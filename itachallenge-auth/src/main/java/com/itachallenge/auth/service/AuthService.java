@@ -3,6 +3,8 @@ package com.itachallenge.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.auth.config.ClientConfig;
+import com.itachallenge.auth.config.GithubClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ public class AuthService implements IAuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final WebClient.Builder webClientBuilder;
+    private final GithubClientProperties githubClientProperties;
 
     private static final String KEY_IS_VALID = "isValid";
     private static final String KEY_USERNAME = "username";
@@ -29,50 +32,101 @@ public class AuthService implements IAuthService {
     private static final String CODE_KEY = "code";
     private static final String ACCESS_TOKEN_KEY = "access_token";
     private static final String GITHUB_LOGIN_KEY = "login";
+    private static final String REDIRECT_URI = "redirect_uri";
 
     private final String githubUserInfoUri;
 
     private final String githubTokenUri;
 
-    private final String clientId;
+    //private final String clientId;
 
-    private final String clientSecret;
+   // private final String clientSecret;
 
-    public AuthService(WebClient.Builder webClientBuilder,
+    public AuthService(WebClient.Builder webClientBuilder, GithubClientProperties githubClientProperties,
                        @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
-                       @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri,
-                       @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
-                       @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret
+                       @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri
+                      // @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
+                      // @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret
                        ) {
         this.webClientBuilder = webClientBuilder;
+        this.githubClientProperties = githubClientProperties;
         this.githubTokenUri = githubTokenUri;
         this.githubUserInfoUri = githubUserInfoUri;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+        //this.clientId = clientId;
+        //this.clientSecret = clientSecret;
     }
 
-    public Mono<String> exchangeCodeForToken(String code) {
+    private String determineEnvironment(String redirectUri) {
+        if (redirectUri.contains("localhost")) {
+            return "local";
+        } else if (redirectUri.contains("dev.ita-challenges.eurecatacademy.org")) {
+            return "dev";
+        } else {
+            throw new IllegalArgumentException("Unknown environment for redirect URI: " + redirectUri);
+        }
+    }
+
+
+    public Mono<String> exchangeCodeForToken(String code, String redirectUri) {
+        String env = determineEnvironment(redirectUri);
+        ClientConfig clientConfig = githubClientProperties.getEnvironments().get(env);
+
+        if (clientConfig == null) {
+            return Mono.error(new IllegalStateException("No client config found for environment: " + env));
+        }
+
         WebClient webClient = webClientBuilder.build();
+
+        Map<String, String> requestBody = createRequestBody(
+                clientConfig.getClientId(),
+                clientConfig.getClientSecret(),
+                code,
+                clientConfig.getRedirectUri()
+        );
 
         return webClient
                 .post()
                 .uri(githubTokenUri)
                 .header("Accept", "application/json")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(createRequestBody(clientId, clientSecret, code))
+                .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(String.class)
                 .flatMap(this::processTokenResponse)
                 .onErrorResume(this::handleTokenError);
     }
 
-    private Map<String, String> createRequestBody(String clientId, String clientSecret, String code) {
+//
+//    public Mono<String> exchangeCodeForToken(String code) {
+//        WebClient webClient = webClientBuilder.build();
+//        return webClient
+//                .post()
+//                .uri(githubTokenUri)
+//                .header("Accept", "application/json")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .bodyValue(createRequestBody(clientId, clientSecret, code))
+//                .retrieve()
+//                .bodyToMono(String.class)
+//                .flatMap(this::processTokenResponse)
+//                .onErrorResume(this::handleTokenError);
+//    }
+
+    private Map<String, String> createRequestBody(String clientId, String clientSecret, String code, String redirectUri) {
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put(CLIENT_ID_KEY, clientId);
         requestBody.put(CLIENT_SECRET_KEY, clientSecret);
         requestBody.put(CODE_KEY, code);
+        requestBody.put(REDIRECT_URI, redirectUri);
         return requestBody;
     }
+
+//    private Map<String, String> createRequestBody(String clientId, String clientSecret, String code) {
+//        Map<String, String> requestBody = new HashMap<>();
+//        requestBody.put(CLIENT_ID_KEY, clientId);
+//        requestBody.put(CLIENT_SECRET_KEY, clientSecret);
+//        requestBody.put(CODE_KEY, code);
+//        return requestBody;
+//    }
 
     private Mono<String> processTokenResponse(String response) {
         try {

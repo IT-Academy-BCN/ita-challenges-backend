@@ -7,6 +7,6 @@ import java.util.Map;
 public interface IAuthService {
 
     Mono<Map<String, Object>> validateTokenWithGithub(String token);
-    Mono<String> exchangeCodeForToken(String code);
+    Mono<String> exchangeCodeForToken(String code, String redirectUri);
 
 }
