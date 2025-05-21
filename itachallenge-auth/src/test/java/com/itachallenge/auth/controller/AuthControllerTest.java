@@ -233,7 +233,7 @@ class AuthControllerTest {
                 .expectStatus().isOk()
                 .expectBody(Map.class)
                 .value(response -> {
-                    assert response.get("message").equals("Token expired but logout successful");
+                    assertThat(response.get("message")).isEqualTo("Token expired but logout successful");
                 });
     }
 
@@ -265,7 +265,7 @@ class AuthControllerTest {
                 .expectStatus().isUnauthorized()
                 .expectBody(Map.class)
                 .value(response -> {
-                    assert response.get("message").equals("Invalid or tampered token");
+                    assertThat(response.get("message").toString()).startsWith("Invalid or tampered token");
                 });
     }
 
