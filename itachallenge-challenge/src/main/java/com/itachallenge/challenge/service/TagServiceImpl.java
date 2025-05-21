@@ -53,7 +53,7 @@ public class TagServiceImpl implements ITagService {
         return validateNoDuplicatesUUIDTags(tagIds).
                 then(validateAllUUIDTagsExist(tagIds));
     }
-
+    
     private Mono<Boolean> validateNoDuplicatesUUIDTags(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
                 .groupBy(id -> id)
