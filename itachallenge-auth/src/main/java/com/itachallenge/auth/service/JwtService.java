@@ -1,10 +1,13 @@
 package com.itachallenge.auth.service;
 
+import com.itachallenge.auth.controller.AuthController;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -16,6 +19,7 @@ import java.util.Date;
 @Service
 public class JwtService implements IJwtService {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     private final String jwtSigningKey;
     private final long minutesTillExpiration;
 
@@ -47,8 +51,10 @@ public class JwtService implements IJwtService {
                     .build()
                     .parseSignedClaims(token);
         } catch (ExpiredJwtException e) {
+            log.info("Logout with expired token: {}", e.getMessage());
             throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired during logout validation", e);
         } catch (JwtException e) {
+            log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
             throw new JwtException("Token validation failed: " + e.getMessage(), e);
         }
     }
