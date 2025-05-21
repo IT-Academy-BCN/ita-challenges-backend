@@ -52,10 +52,10 @@ public class JwtService implements IJwtService {
                     .parseSignedClaims(token);
         } catch (ExpiredJwtException e) {
             log.info("Logout with expired token: {}", e.getMessage());
-            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired during logout validation", e);
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired but logout successful", e);
         } catch (JwtException e) {
             log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
-            throw new JwtException("Token validation failed: " + e.getMessage(), e);
+            throw new JwtException("Invalid or tampered token: " + e.getMessage(), e);
         }
     }
 
