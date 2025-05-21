@@ -66,7 +66,7 @@ public class TagServiceImpl implements ITagService {
                 )
                 .hasElement();
     }
-
+    
     private Mono<Boolean> validateAllUUIDTagsExist(List<UUID> tagIds) {
         return Flux.fromIterable(tagIds)
                 .flatMap(tagId -> tagRepository.findById(tagId)
@@ -75,5 +75,5 @@ public class TagServiceImpl implements ITagService {
                 .map(count -> count == tagIds.size())
                 .hasElement();
     }
-
+    
 }
