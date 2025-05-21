@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 
 import reactor.core.publisher.Mono;
 
@@ -29,6 +32,7 @@ public class AuthController {
     private static final String KEY_USERNAME = "username";
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
+    private static final String MESSAGE_KEY = "message";
 
     private final IAuthService authService;
 
@@ -99,7 +103,7 @@ public class AuthController {
                 .switchIfEmpty(Mono.defer(() -> {
                     response.put(KEY_USERNAME, null);
                     response.put(KEY_IS_VALID, false);
-                    response.put("message", "User does not exist in the database");
+                    response.put(MESSAGE_KEY, "User does not exist in the database");
                     return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .header("X-Validation-Status", "Forbidden")
                             .header(X_GITHUB_USERNAME, githubUsername)
@@ -119,7 +123,7 @@ public class AuthController {
                     }
                     response.put(KEY_USERNAME, null);
                     response.put(KEY_IS_VALID, false);
-                    response.put("message", message);
+                    response.put(MESSAGE_KEY, message);
                     return Mono.just(ResponseEntity.status(status)
                             .header("X-Validation-Status", "Forbidden")
                             .header(X_GITHUB_USERNAME, githubUsername)
@@ -143,22 +147,25 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Mono<ResponseEntity<Map<String, String>>> logout(@RequestHeader (value = "Authorization", required = false) String authHeader){
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Unauthorized: No token provided")));
-        }
-        String jwt = authHeader.replace("Bearer ", "");
+    public Mono<ResponseEntity<Map<String, String>>> logout(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-        if (jwtService.validateToken(jwt)) {
-            log.info("Logout successful for token: {}", jwt);
-            return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
-        } else {
-            log.warn("Invalid or expired token during logout");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("Logout attempt without or malformed token");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid or expired token")));
+                    .body(Map.of("message", "Authorization header is missing or malformed")));
         }
+
+        String token = authHeader.replace("Bearer ", "").trim();
+
+        if (!jwtService.validateToken(token)) {
+            log.warn("Logout attempt with invalid or expired token");
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid or tampered token")));
+        }
+
+        log.info("Logout attempt with valid token");
+        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
     }
-
 }
 
