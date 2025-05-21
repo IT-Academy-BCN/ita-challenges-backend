@@ -220,12 +220,12 @@ class AuthControllerTest {
                 .value(response -> assertThat(response.get("message")).isEqualTo("Logout successful"));
     }
 
-   @Test
+    @Test
     void logout_ExpiredToken_ShouldReturn200() {
         String expiredToken = "expired.jwt.token";
-
-        Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired"))
+        Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired but logout successful"))
                 .when(jwtService).validateToken(expiredToken);
+
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
                 .header("Authorization", "Bearer " + expiredToken)
@@ -251,11 +251,10 @@ class AuthControllerTest {
                 .value(response -> assertThat(response.get("message")).isEqualTo("Logout successful"));
     }
 
-
     @Test
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
-        Mockito.doThrow(new JwtException("Invalid token"))
+        Mockito.doThrow(new JwtException("Invalid or tampered token: JWT parsing failed"))
                 .when(jwtService).validateToken(invalidToken);
 
         webTestClient.post()
