@@ -64,7 +64,7 @@ public class ChallengeDto {
     @JsonProperty(index = 12)
     private Integer timesBookmark;
 
-    @JsonProperty(index = 12)
+    @JsonProperty(index = 13)
     private Integer timesSolved;
     
 }
