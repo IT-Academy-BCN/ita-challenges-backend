@@ -9,7 +9,6 @@ import com.itachallenge.challenge.service.IFavoriteService;
 import com.itachallenge.challenge.service.IJwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -27,9 +26,7 @@ public class FavoriteControllerTest {
     void setUp() {
         favoriteService = mock(IFavoriteService.class);
         jwtService = mock(IJwtService.class);
-        favoriteController = new FavoriteController();
-        favoriteController.favoriteService = favoriteService;
-        favoriteController.jwtService = jwtService;
+        favoriteController = new FavoriteController(favoriteService, jwtService);
     }
 
     @Test
