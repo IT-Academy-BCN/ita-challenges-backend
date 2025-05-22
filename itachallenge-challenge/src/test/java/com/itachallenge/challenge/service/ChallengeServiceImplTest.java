@@ -368,29 +368,31 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
         verify(challengeRepository, times(1)).save(challenge);
 }
 
-@Test
-void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedAndReturnsSolvedDTO() {
+    @Test
+    void addChallengeToSolved_AlwaysIncreasesTimesSolvedAndReturnsSolvedDTO() {
         UUID challengeUuid = UUID.randomUUID();
 
         ChallengeDocument challenge = new ChallengeDocument();
         int initialTimesSolved = 5;
-
         challenge.setTimesSolved(initialTimesSolved);
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-    StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
-                        .expectNextMatches(solvedDto -> {
-                                return solvedDto.getTimesSolved() == initialTimesSolved &&
-                                                solvedDto.isSolved();
-                        })
-                        .verifyComplete();
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .expectNextMatches(solvedDto ->
+                        solvedDto.getTimesSolved() == initialTimesSolved + 1 &&
+                                solvedDto.isSolved()
+                )
+                .verifyComplete();
 
-        Assertions.assertEquals(initialTimesSolved, challenge.getTimesSolved());
+        Assertions.assertEquals(initialTimesSolved + 1, challenge.getTimesSolved());
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(challengeRepository, times(0)).save(any());
-}
+        verify(challengeRepository, times(1)).save(any());
+    }
+
 
     @Test
     void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {

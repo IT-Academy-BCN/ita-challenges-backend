@@ -451,11 +451,8 @@ public class ChallengeServiceImpl implements IChallengeService {
                                 .switchIfEmpty(Mono.error(new ChallengeNotFoundException(
                                         String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid))))
                                 .flatMap(challenge -> {
-                                    if (Optional.ofNullable(challenge.getTimesSolved()).orElse(0) == 0) {
-                                        challenge.increaseTimesSolved();
-                                        return challengeRepository.save(challenge);
-                                    }
-                                    return Mono.just(challenge);
+                                    challenge.increaseTimesSolved();
+                                    return challengeRepository.save(challenge);
                                 })
                                 .map(updatedChallenge -> new SolvedDto(true, updatedChallenge.getTimesSolved()))
                 );
