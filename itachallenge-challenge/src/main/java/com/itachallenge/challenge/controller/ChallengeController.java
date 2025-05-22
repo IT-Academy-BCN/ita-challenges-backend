@@ -363,10 +363,11 @@ public class ChallengeController {
             @PathVariable String challengeId,
             @Valid @RequestBody ChallengeCreateDto challengeFormDto,
             @RequestHeader("Authorization") String authHeader) {
-        if (jwtService.getUserUuIdFromAuthenticationHeader(authHeader) == null)
-            throw new JwtException("Invalid token");
-        return challengeService.updateChallenge(challengeId, challengeFormDto)
-                .map(ResponseEntity::ok);
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .switchIfEmpty(Mono.error(new JwtException("Invalid token")))
+                .flatMap(userId -> challengeService.updateChallenge(challengeId, challengeFormDto))
+                .map(ResponseEntity::ok)
+                .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
     }
 
 
