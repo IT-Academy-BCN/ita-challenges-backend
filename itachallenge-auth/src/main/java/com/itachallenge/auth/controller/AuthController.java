@@ -161,3 +161,4 @@ public class AuthController {
         return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
 }
+
