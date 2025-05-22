@@ -225,9 +225,10 @@ public class ChallengeController {
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
         return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> challengeService.addChallenge(createFormDto))
-                .map(ResponseEntity::ok)
-                .doOnError(error -> log.error("Error adding challenge", error));
+                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()))
+                .map(ResponseEntity::ok);
     }
 
     @GetMapping("/version")

@@ -14,14 +14,13 @@ import java.util.Map;
 public class JwtServiceImpl implements IJwtService {
 
     private static final Logger log = LoggerFactory.getLogger(JwtServiceImpl.class);
-    private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
     public String getUserUuIdFromAuthenticationHeader(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith(BEARER_PREFIX)) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             throw new JwtException("Missing or bad formatted Authorization header");
         }
-        String userId = extractUuid(authHeader.replace(BEARER_PREFIX, ""));
+        String userId = extractUuid(authHeader.replace("Bearer ", ""));
         if (userId == null) {
             throw new JwtException("Invalid Authorization header content");
         }
