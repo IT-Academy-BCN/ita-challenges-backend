@@ -19,7 +19,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.Keys;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -209,24 +209,53 @@ class AuthControllerTest {
 
     @Test
     void logout_ValidToken_ShouldReturn200() {
-        String validToken = "valid.jwt.token";
-        Mockito.when(jwtService.validateToken(validToken)).thenReturn(true);
+        String token = "valid.jwt.token";
+        Mockito.doNothing().when(jwtService).validateToken(token);
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .value(response -> assertThat(response.get("message")).isEqualTo("Logout successful"));
+    }
+
+    @Test
+    void logout_ExpiredToken_ShouldReturn200() {
+        String expiredToken = "expired.jwt.token";
+        Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired but logout successful"))
+                .when(jwtService).validateToken(expiredToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
-                .header("Authorization", "Bearer " + validToken)
+                .header("Authorization", "Bearer " + expiredToken)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Map.class)
                 .value(response -> {
-                    assert response.get("message").equals("Logout successful");
+                    assertThat(response.get("message")).isEqualTo("Token expired but logout successful");
                 });
+    }
+
+    @Test
+    void logout_TokenJustWithinTry_ShouldReturn200() {
+        String token = "any.jwt.token";
+        Mockito.doNothing().when(jwtService).validateToken(token);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/logout")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Map.class)
+                .value(response -> assertThat(response.get("message")).isEqualTo("Logout successful"));
     }
 
     @Test
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
-        Mockito.when(jwtService.validateToken(invalidToken)).thenReturn(false);
+        Mockito.doThrow(new JwtException("Invalid or tampered token: JWT parsing failed"))
+                .when(jwtService).validateToken(invalidToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -235,7 +264,7 @@ class AuthControllerTest {
                 .expectStatus().isUnauthorized()
                 .expectBody(Map.class)
                 .value(response -> {
-                    assert response.get("message").equals("Invalid or tampered token");
+                    assertThat(response.get("message").toString()).startsWith("Invalid or tampered token");
                 });
     }
 
@@ -252,7 +281,7 @@ class AuthControllerTest {
                 });
     }
 
-    @Test
+   @Test
     void logout_MalformedAuthorizationHeader_ShouldReturn401() {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")

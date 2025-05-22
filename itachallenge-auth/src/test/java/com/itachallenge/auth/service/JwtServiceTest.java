@@ -1,6 +1,8 @@
 package com.itachallenge.auth.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +11,14 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JwtServiceTest {
 
     private JwtService jwtService;
 
-    private final String jwtSigningKey = "mySecretSigningKeyWhichIsVerySecureAndNobodyCouldGuess";
+    // Clave en Base64, válida para HMAC-SHA con al menos 256 bits
+    private final String jwtSigningKey = "bXlTZWNyZXRTaWduaW5nS2V5V2hpY2hJc1ZlcnlTZWN1cmVBbmRub2JvZHlDb3VsZEd1ZXNz";
     private final long minutesTillExpiration = 10L;
 
     @BeforeEach
@@ -60,36 +64,34 @@ class JwtServiceTest {
                 .getPayload();
 
         long actualExpirationMillis = claims.getExpiration().getTime();
-        assertThat(actualExpirationMillis).isBetween(expectedExpirationMillis - 5000, expectedExpirationMillis + 5000); // 5s margin
+        assertThat(actualExpirationMillis)
+                .isBetween(expectedExpirationMillis - 5000, expectedExpirationMillis + 5000); // margen de 5s
     }
 
     @Test
-    void validateToken_ValidToken_ShouldReturnTrue() {
-        String token = jwtService.generateToken("testUser", "ADMIN", "testUuid");
-
-        boolean isValid = jwtService.validateToken(token);
-
-        assertThat(isValid).isTrue();
+    void validateToken_WithValidToken_DoesNotThrow() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-1234");
+        jwtService.validateToken(token); // No debe lanzar excepción
     }
 
     @Test
-    void validateToken_InvalidToken_ShouldReturnFalse() {
-        String token = jwtService.generateToken("testUser", "ADMIN", "testUuid") + "tampered";
-
-        boolean isValid = jwtService.validateToken(token);
-
-        assertThat(isValid).isFalse();
+    void validateToken_WithInvalidToken_ShouldThrowJwtException() {
+        String invalidToken = "this.is.an.invalid.token";
+        assertThatThrownBy(() -> jwtService.validateToken(invalidToken))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Invalid or tampered token");
     }
 
     @Test
-    void validateToken_ExpiredToken_ShouldReturnFalse() {
-        JwtService shortLivedJwtService = new JwtService(jwtSigningKey, 0L);
-        String expiredToken = shortLivedJwtService.generateToken("testUser", "ADMIN", "testUuid");
+    void validateToken_WithExpiredToken_ShouldThrowExpiredJwtException() {
+        JwtService shortLivedService = new JwtService(jwtSigningKey, 0L); // 0 min duración
+        String token = shortLivedService.generateToken("expiredUser", "USER", "uuid");
+        try {
+            Thread.sleep(1000); // Esperar 1 segundo para garantizar que expire
+        } catch (InterruptedException ignored) {}
 
-        boolean isValid = jwtService.validateToken(expiredToken);
-
-        assertThat(isValid).isFalse();
+        assertThatThrownBy(() -> shortLivedService.validateToken(token))
+                .isInstanceOf(ExpiredJwtException.class)
+                .hasMessageContaining("Token expired but logout successful");
     }
-
-
 }
