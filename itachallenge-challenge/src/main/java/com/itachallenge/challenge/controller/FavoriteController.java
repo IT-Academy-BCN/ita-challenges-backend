@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/itachallenge/api/v1/challenges/favorites")
+@RequestMapping("/itachallenge/api/v1/favorite/challenges/")
 public class FavoriteController {
 
     private final IFavoriteService favoriteService;
@@ -29,7 +29,7 @@ public class FavoriteController {
         this.jwtService = jwtService;
     }
 
-    @PostMapping("/{challengeId}/favorites")
+    @PostMapping("/{challengeId}")
     @Operation(
             operationId = "Add a challenge to User's favorites.",
             summary = "Add a challenge to favorites.",
@@ -51,7 +51,7 @@ public class FavoriteController {
                 .map(ResponseEntity::ok);
     }
 
-    @DeleteMapping("/{challengeId}/favorites")
+    @DeleteMapping("/{challengeId}")
     @Operation(
             operationId = "Remove a challenge from the User's favorites.",
             summary = "Remove a challenge from favorites.",
