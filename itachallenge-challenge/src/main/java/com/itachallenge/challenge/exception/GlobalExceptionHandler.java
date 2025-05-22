@@ -106,7 +106,6 @@ public class GlobalExceptionHandler {
         ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
                 );
     }
-
     private Optional<ResponseEntity<MessageDto>> buildTagUuidError(InvalidFormatException ex) {
         if (UUID.class.equals(ex.getTargetType())) {
             String badValue = ex.getValue().toString();
