@@ -24,7 +24,7 @@ public class FavoriteController {
     @Autowired
     IJwtService jwtService;
 
-    @PostMapping("/{challengeId}")
+    @PostMapping("add/{challengeId}")
     @Operation(
             operationId = "Add a challenge to User's favorites.",
             summary = "Add a challenge to favorites.",
@@ -45,7 +45,7 @@ public class FavoriteController {
                 .map(ResponseEntity::ok);
     }
 
-    @DeleteMapping("/{challengeId}")
+    @DeleteMapping("remove/{challengeId}")
     @Operation(
             operationId = "Remove a challenge from the User's favorites.",
             summary = "Remove a challenge from favorites.",
