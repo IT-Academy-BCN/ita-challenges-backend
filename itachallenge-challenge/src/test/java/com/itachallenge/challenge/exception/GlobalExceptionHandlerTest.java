@@ -257,7 +257,7 @@ class GlobalExceptionHandlerTest {
                 Objects.requireNonNull(resp.getBody()).getMessage()
         );
     }
-
+test
     @Test
     void testHandleInvalidFormat_OtherFieldFallback() {
         InvalidFormatException ex = InvalidFormatException.from(
