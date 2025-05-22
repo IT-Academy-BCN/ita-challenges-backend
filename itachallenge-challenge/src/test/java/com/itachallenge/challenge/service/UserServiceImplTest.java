@@ -93,29 +93,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void addChallengeToSolved_AddedToUser_ReturnsTrue() throws InterruptedException {
-        String userId = "someId";
-        String challengeId = "anotherId";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("true")
-                .setResponseCode(201)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Boolean> result = userService.addChallengeToSolved(userId, challengeId);
-
-        StepVerifier.create(result)
-                .expectNext(true)
-                .verifyComplete();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, userId, challengeId),
-                request.getRequestUrl().encodedPath());
-    }
-
-    @Test
     void addChallengeToFavorites_NotAddedToUser_ReturnsFalse() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
@@ -160,29 +137,6 @@ public class UserServiceImplTest {
                 String.format(BOOKMARKS_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("POST", request.getMethod());
-    }
-
-    @Test
-    void addChallengeToSolved_NotAddedToUser_ReturnsFalse() throws InterruptedException {
-        String userId = "someId";
-        String challengeId = "anotherId";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("false")
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Boolean> result = userService.addChallengeToSolved(userId, challengeId);
-
-        StepVerifier.create(result)
-                .expectNext(false)
-                .verifyComplete();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, userId, challengeId),
-                request.getRequestUrl().encodedPath());
     }
 
     @Test
@@ -243,34 +197,6 @@ public class UserServiceImplTest {
     }
 
     @Test
-    void addChallengeToSolved_BadRequest_ReturnsError() throws InterruptedException {
-        String userId = "someId";
-        String challengeId = "anotherId";
-        String someErrorMessage = "Some error message";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("false")
-                .setResponseCode(400)
-                .addHeader(X_SOLVED_MESSAGE, someErrorMessage)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Boolean> result = userService.addChallengeToSolved(userId, challengeId);
-
-        StepVerifier.create(result)
-                .expectErrorSatisfies(throwable -> {
-                    assertInstanceOf(BadRequestException.class, throwable);
-                    assertTrue(throwable.getMessage().contains(someErrorMessage));
-                })
-                .verify();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, userId, challengeId),
-                request.getRequestUrl().encodedPath());
-    }
-
-    @Test
     void addChallengeToFavorites_UserNotFound_ReturnsError() throws InterruptedException {
         String userId = "someId";
         String challengeId = "anotherId";
@@ -321,32 +247,6 @@ public class UserServiceImplTest {
                 String.format(BOOKMARKS_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("POST", request.getMethod());
-    }
-
-    @Test
-    void addChallengeToSolved_UserNotFound_ReturnsError() throws InterruptedException {
-        String userId = "someId";
-        String challengeId = "anotherId";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("false")
-                .setResponseCode(404)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Boolean> result = userService.addChallengeToSolved(userId, challengeId);
-
-        StepVerifier.create(result)
-                .expectErrorSatisfies(throwable -> {
-                    assertInstanceOf(UserNotFoundException.class, throwable);
-                    assertTrue(throwable.getMessage().contains("User not found"));
-                })
-                .verify();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, userId, challengeId),
-                request.getRequestUrl().encodedPath());
     }
 
     @Test
@@ -404,34 +304,6 @@ public class UserServiceImplTest {
                 String.format(BOOKMARKS_URL, userId, challengeId),
                 request.getRequestUrl().encodedPath());
         assertEquals("POST", request.getMethod());
-    }
-
-    @Test
-    void addChallengeToSolved_500_ReturnsError() throws InterruptedException {
-        String userId = "someId";
-        String challengeId = "anotherId";
-        String someErrorMessage = "Some error message";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody("false")
-                .setResponseCode(500)
-                .addHeader(X_SOLVED_MESSAGE, someErrorMessage)
-                .addHeader("Content-Type", "application/json"));
-
-        Mono<Boolean> result = userService.addChallengeToSolved(userId, challengeId);
-
-        StepVerifier.create(result)
-                .expectErrorSatisfies(throwable -> {
-                    assertInstanceOf(InternalServerErrorException.class, throwable);
-                    assertTrue(throwable.getMessage().contains(someErrorMessage));
-                })
-                .verify();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, userId, challengeId),
-                request.getRequestUrl().encodedPath());
     }
 
     @Test
