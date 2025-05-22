@@ -3,7 +3,6 @@ package com.itachallenge.user.repository;
 import com.itachallenge.user.document.UserSolutionDocument;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -12,6 +11,5 @@ import java.util.UUID;
 public interface IUserSolutionRepository extends ReactiveMongoRepository<UserSolutionDocument, UUID> {
 
     Mono<UserSolutionDocument> findByUserIdAndChallengeIdAndLanguageId(UUID userId, UUID challengeId, UUID languageId);
-    Flux<UserSolutionDocument> findAllByUserId(UUID userId);
 }
 
