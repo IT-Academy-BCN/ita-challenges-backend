@@ -1,97 +1,80 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.SolvedDto;
-import com.itachallenge.challenge.exception.BadRequestException;
-import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.challenge.service.IJwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ChallengeSolvedControllerTest {
 
-    @Mock
     private IChallengeService challengeService;
-
-    @Mock
-    private IJwtService jwtService;
-
-    @InjectMocks
-    private ChallengeSolvedController challengeSolvedController;
+    private ChallengeSolvedController controller;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        challengeService = mock(IChallengeService.class);
+        controller = new ChallengeSolvedController(challengeService);
     }
 
     @Test
-    void addChallengeToSolved_Success() {
+    void testAddChallengeToSolved_ReturnsCreated_WhenSolvedIsTrue() {
+
         String challengeId = "123";
-        String authHeader = "Bearer validToken";
-        String userId = "user123";
         SolvedDto solvedDto = new SolvedDto();
+        solvedDto.setSolved(true);
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-        when(challengeService.addChallengeToSolved(challengeId, userId)).thenReturn(Mono.just(solvedDto));
+        when(challengeService.addChallengeToSolved(challengeId))
+                .thenReturn(Mono.just(solvedDto));
 
-        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
 
-        StepVerifier.create(result)
+        StepVerifier.create(controller.addChallengeToSolved(challengeId))
                 .assertNext(response -> {
-                    assertEquals(200, response.getStatusCodeValue());
-                    assertEquals(solvedDto, response.getBody());
+                    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                    assertNotNull(response.getBody());
+                    assertTrue(response.getBody().isSolved());
                 })
                 .verifyComplete();
-
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verify(challengeService, times(1)).addChallengeToSolved(challengeId, userId);
     }
 
     @Test
-    void addChallengeToSolved_InvalidAuthHeader() {
-        String challengeId = "123";
-        String authHeader = "invalidToken";
+    void testAddChallengeToSolved_ReturnsOk_WhenSolvedIsFalse() {
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException("Invalid token"));
+        String challengeId = "456";
+        SolvedDto solvedDto = new SolvedDto();
+        solvedDto.setSolved(false);
 
-        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
+        when(challengeService.addChallengeToSolved(challengeId))
+                .thenReturn(Mono.just(solvedDto));
 
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof BadRequestException &&
-                        throwable.getMessage().equals("Invalid token"))
-                .verify();
 
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verifyNoInteractions(challengeService);
+        StepVerifier.create(controller.addChallengeToSolved(challengeId))
+                .assertNext(response -> {
+                    assertEquals(HttpStatus.OK, response.getStatusCode());
+                    assertNotNull(response.getBody());
+                    assertFalse(response.getBody().isSolved());
+                })
+                .verifyComplete();
     }
 
     @Test
-    void addChallengeToSolved_ServiceError() {
-        String challengeId = "123";
-        String authHeader = "Bearer validToken";
-        String userId = "user123";
+    void testAddChallengeToSolved_PropagatesError() {
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-        when(challengeService.addChallengeToSolved(challengeId, userId)).thenReturn(Mono.error(new RuntimeException("Service error")));
+        String challengeId = "999";
+        when(challengeService.addChallengeToSolved(challengeId))
+                .thenReturn(Mono.error(new RuntimeException("Test error")));
 
-        Mono<ResponseEntity<SolvedDto>> result = challengeSolvedController.addChallengeToSolved(challengeId, authHeader);
 
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable -> throwable instanceof RuntimeException &&
-                        throwable.getMessage().equals("Service error"))
+        StepVerifier.create(controller.addChallengeToSolved(challengeId))
+                .expectErrorMatches(error ->
+                        error instanceof RuntimeException &&
+                                error.getMessage().equals("Test error")
+                )
                 .verify();
-
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
-        verify(challengeService, times(1)).addChallengeToSolved(challengeId, userId);
     }
 }
