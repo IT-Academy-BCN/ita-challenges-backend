@@ -67,8 +67,8 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-        assertEquals(expectedStatus, responseEntity.getStatusCode());
-        assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
+            assertEquals(expectedStatus, responseEntity.getStatusCode());
+            assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -85,7 +85,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-        assertEquals(expectedStatus, responseEntity.getStatusCode());
+            assertEquals(expectedStatus, responseEntity.getStatusCode());
         assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
     }
 
@@ -142,7 +142,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
-        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+            assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
     }
