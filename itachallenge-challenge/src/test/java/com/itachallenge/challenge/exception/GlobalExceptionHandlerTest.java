@@ -237,7 +237,7 @@ class GlobalExceptionHandlerTest {
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Tag not found"));
     }
-
+    
     @Test
     void testHandleInvalidFormat_TagsField() {
         InvalidFormatException ex = InvalidFormatException.from(
@@ -246,18 +246,18 @@ class GlobalExceptionHandlerTest {
                 "invalid-uuid",
                 UUID.class
         );
-
+        
         ex.prependPath(new Reference(null, "tags"));
-
+        
         ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
-
+        
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
         assertEquals(
                 "invalid format UUID tag: invalid-uuid",
                 Objects.requireNonNull(resp.getBody()).getMessage()
         );
     }
-
+    
     @Test
     void testHandleInvalidFormat_OtherFieldFallback() {
         InvalidFormatException ex = InvalidFormatException.from(
@@ -267,9 +267,9 @@ class GlobalExceptionHandlerTest {
                 UUID.class
         );
         ex.prependPath(new Reference(null, "otherField"));
-
+        
         ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
-
+        
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
         assertEquals(
                 ex.getOriginalMessage(),
