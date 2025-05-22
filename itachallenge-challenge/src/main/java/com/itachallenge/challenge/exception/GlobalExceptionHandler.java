@@ -103,7 +103,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
         return buildTagUuidError(ex)
                 .orElseGet(() ->
-                ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
+        ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
                 );
     }
 
