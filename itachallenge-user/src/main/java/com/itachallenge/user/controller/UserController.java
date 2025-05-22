@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
@@ -397,5 +398,32 @@ public class UserController {
                     log.info("Retrieved {} bookmarked challenges for user {}", bookmarks.size(), userId);
                     return ResponseEntity.ok().body(bookmarks);
                 });
+    }
+    
+    @Operation(
+            summary = "Retrieve all solutions for a user.",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "User UUID")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Solutions found"),
+                    @ApiResponse(responseCode = "404", description = "Solutions not found"),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID"),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+    @GetMapping(
+            path = "/users/{userId}/solutions"
+    )
+    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutions(
+            @PathVariable String userId
+    ) {
+        return Mono.just(ResponseEntity.ok()
+                .body(userSolutionService.getAllSolutionsByUser(userId))
+        );
     }
 }
