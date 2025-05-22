@@ -13,9 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -304,5 +306,74 @@ class AuthControllerTest {
                 .value(response -> {
                     assert response.get("message").equals("Authorization header is missing or malformed");
                 });
+    }
+
+    @Test
+    void switchRole_WithValidToken_ShouldReturnNewToken() {
+        String token = "valid.jwt.token";
+        String newToken = "new.jwt.token";
+
+        when(jwtService.switchRole(token)).thenReturn(newToken);
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.token").isEqualTo(newToken);
+    }
+
+    @Test
+    void switchRole_WithExpiredToken_ShouldReturn200WithMessage() {
+        String token = "expired.jwt.token";
+
+        when(jwtService.switchRole(token))
+                .thenThrow(new ResponseStatusException(HttpStatus.OK, "Token is expired."));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Token is expired.");
+    }
+
+    @Test
+    void switchRole_WithInvalidToken_ShouldReturn401() {
+        String token = "invalid.jwt.token";
+
+        when(jwtService.switchRole(token))
+                .thenThrow(new JwtException("Invalid or tampered token."));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .header("Authorization", "Bearer " + token)
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Invalid or tampered token.");
+    }
+
+    @Test
+    void switchRole_WithMissingAuthorizationHeader_ShouldReturn401() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Authorization header is missing or malformed");
+    }
+
+    @Test
+    void switchRole_WithMalformedAuthorizationHeader_ShouldReturn401() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .header("Authorization", "Token not-bearer")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Authorization header is missing or malformed");
     }
 }

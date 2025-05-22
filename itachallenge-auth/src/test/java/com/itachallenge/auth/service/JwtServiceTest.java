@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Date;
 
@@ -94,4 +95,61 @@ class JwtServiceTest {
                 .isInstanceOf(ExpiredJwtException.class)
                 .hasMessageContaining("Token expired but logout successful");
     }
+
+    @Test
+    void switchRole_ShouldChangeRoleFromAdminToUser() {
+        String username = "testUser";
+        String uuid = "uuid-1234";
+        String originalToken = jwtService.generateToken(username, "ADMIN", uuid);
+
+        String switchedToken = jwtService.switchRole(originalToken);
+        Claims claims = jwtService.extractAllClaims(switchedToken);
+
+        assertThat(claims.getSubject()).isEqualTo(username);
+        assertThat(claims.get("role", String.class)).isEqualTo("USER");
+        assertThat(claims.get("uuid", String.class)).isEqualTo(uuid);
+
+        Claims originalClaims = jwtService.extractAllClaims(originalToken);
+        assertThat(claims.getIssuedAt()).isEqualTo(originalClaims.getIssuedAt());
+        assertThat(claims.getExpiration()).isEqualTo(originalClaims.getExpiration());
+    }
+
+    @Test
+    void switchRole_ShouldChangeRoleFromUserToAdmin() {
+        String username = "anotherUser";
+        String uuid = "uuid-5678";
+        String originalToken = jwtService.generateToken(username, "USER", uuid);
+
+        String switchedToken = jwtService.switchRole(originalToken);
+        Claims claims = jwtService.extractAllClaims(switchedToken);
+
+        assertThat(claims.get("role", String.class)).isEqualTo("ADMIN");
+        assertThat(claims.getSubject()).isEqualTo(username);
+        assertThat(claims.get("uuid", String.class)).isEqualTo(uuid);
+    }
+
+    @Test
+    void switchRole_WithInvalidToken_ShouldThrowJwtException() {
+        String invalidToken = "invalid.token.value";
+
+        assertThatThrownBy(() -> jwtService.switchRole(invalidToken))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Invalid or tampered token");
+    }
+
+    @Test
+    void switchRole_WithExpiredToken_ShouldThrowResponseStatusExceptionWith200() throws InterruptedException {
+        JwtService shortLivedJwtService = new JwtService(jwtSigningKey, 0L);
+        String expiredToken = shortLivedJwtService.generateToken("expiredUser", "USER", "uuid");
+        Thread.sleep(1000); // asegurar que expire
+
+        assertThatThrownBy(() -> shortLivedJwtService.switchRole(expiredToken))
+                .isInstanceOf(ResponseStatusException.class)
+                .satisfies(e -> {
+                    ResponseStatusException ex = (ResponseStatusException) e;
+                    assertThat(ex.getStatusCode().value()).isEqualTo(200);
+                    assertThat(ex.getReason()).isEqualTo("Token is expired.");
+                });
+    }
+
 }
