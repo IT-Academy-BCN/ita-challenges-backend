@@ -1,6 +1,7 @@
 package com.itachallenge.auth.service;
 
 import com.itachallenge.auth.controller.AuthController;
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -75,7 +76,7 @@ public class JwtService implements IJwtService {
             log.info("Token expired at {} for subject {}",
                     e.getClaims().getExpiration(),
                     e.getClaims().getSubject());
-            throw new ResponseStatusException(HttpStatus.OK, "Token is expired.");
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired ", e);
         } catch (JwtException e) {
             log.warn("Invalid or tampered token: {}", e.getMessage());
             throw new JwtException("Invalid or tampered token: " + e.getMessage(), e);
@@ -83,19 +84,42 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public String switchRole(String token) {
+    public String switchRole(String token, String requestedRole) {
         Claims claims = extractAllClaims(token);
-
         String currentRole = claims.get("role", String.class);
-        String newRole = currentRole.equals("ADMIN") ? "USER" : "ADMIN";
 
-        String username = claims.getSubject();
-        String uuid = claims.get("uuid", String.class);
+        validateRoleChange(currentRole, requestedRole);
 
-        Date issuedAt = claims.getIssuedAt();
-        Date expiration = claims.getExpiration();
+        return generateTokenWithTemporaryRole(
+                claims.getSubject(),
+                requestedRole.toUpperCase(),
+                claims.get("uuid", String.class),
+                claims.getIssuedAt(),
+                claims.getExpiration()
+        );
+    }
 
-        return generateTokenWithTemporaryRole(username, newRole, uuid, issuedAt, expiration);
+    private void validateRoleChange(String currentRole, String requestedRole) {
+        if (requestedRole == null || requestedRole.isBlank()) {
+            log.warn("Role change failed: requested role is null or blank.");
+            throw new InvalidRoleChangeRequestException("New role must be provided.");
+        }
+
+        if (requestedRole.equalsIgnoreCase(currentRole)) {
+            log.warn("Role change rejected: requested role '{}' is same as current role '{}'.",
+                    requestedRole, currentRole);
+            throw new InvalidRoleChangeRequestException("New role is the same as current role.");
+        }
+
+        boolean isAllowed =
+                ("ADMIN".equalsIgnoreCase(currentRole) && "USER".equalsIgnoreCase(requestedRole)) ||
+                        ("USER".equalsIgnoreCase(currentRole) && "ADMIN".equalsIgnoreCase(requestedRole));
+
+        if (!isAllowed) {
+            log.warn("Role change rejected: requested change from '{}' to '{}' is not allowed.",
+                    currentRole, requestedRole);
+            throw new InvalidRoleChangeRequestException("Requested role change is not allowed.");
+        }
     }
 
     private String generateTokenWithTemporaryRole(String username, String role, String uuid, Date issuedAt, Date expiration) {

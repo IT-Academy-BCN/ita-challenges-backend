@@ -1,6 +1,7 @@
 package com.itachallenge.auth.controller;
 
 
+import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
@@ -21,7 +22,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -173,33 +173,27 @@ public class AuthController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Token generated successfully or expired.",
                             content = @Content(schema = @Schema(implementation = Map.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid role requested."),
                     @ApiResponse(responseCode = "401", description = "Missing or malformed Authorization header or invalid token."),
                     @ApiResponse(responseCode = "500", description = "Unexpected error occurred.")
             }
     )
     public Mono<ResponseEntity<Map<String, String>>> switchRole(
-            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody SwitchRoleRequest request) {
 
-        if (authHeader == null || !authHeader.startsWith(BEARER_KEY)) {
-            log.warn("Switch-role attempt without token or malformed header");
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
-        }
-
-        String token = authHeader.replace(BEARER_KEY, "").trim();
-
-        try {
-            String newToken = jwtService.switchRole(token);
-            log.info("Switch-role successful for token");
-            return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
-        } catch (ResponseStatusException e) {
-            log.info("Switch-role ended with status {}: {}", e.getStatusCode(), e.getReason());
-            return Mono.just(ResponseEntity.status(e.getStatusCode())
-                    .body(Map.of(MESSAGE_KEY, e.getReason())));
-        } catch (JwtException e) {
-            log.warn("Switch-role failed due to invalid token: {}", e.getMessage());
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(MESSAGE_KEY, e.getMessage())));
-        }
+        String token = extractBearerToken(authHeader);
+        String newToken = jwtService.switchRole(token, request.getNewRole());
+        log.info("Switch-role successful for token");
+        return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
     }
+
+
+    private String extractBearerToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_KEY)) {
+            throw new JwtException("Authorization header is missing or malformed");
+        }
+        return authHeader.replace(BEARER_KEY, "").trim();
+    }
+
 }

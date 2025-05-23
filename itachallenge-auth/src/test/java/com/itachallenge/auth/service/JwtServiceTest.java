@@ -1,5 +1,6 @@
 package com.itachallenge.auth.service;
 
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -97,59 +98,46 @@ class JwtServiceTest {
     }
 
     @Test
-    void switchRole_ShouldChangeRoleFromAdminToUser() {
-        String username = "testUser";
-        String uuid = "uuid-1234";
-        String originalToken = jwtService.generateToken(username, "ADMIN", uuid);
+    void switchRole_ShouldReturnTokenWithUpdatedRole() {
+        String token = jwtService.generateToken("user1", "ADMIN", "uuid-1");
+        String newToken = jwtService.switchRole(token, "USER");
 
-        String switchedToken = jwtService.switchRole(originalToken);
-        Claims claims = jwtService.extractAllClaims(switchedToken);
-
-        assertThat(claims.getSubject()).isEqualTo(username);
+        Claims claims = jwtService.extractAllClaims(newToken);
         assertThat(claims.get("role", String.class)).isEqualTo("USER");
-        assertThat(claims.get("uuid", String.class)).isEqualTo(uuid);
-
-        Claims originalClaims = jwtService.extractAllClaims(originalToken);
-        assertThat(claims.getIssuedAt()).isEqualTo(originalClaims.getIssuedAt());
-        assertThat(claims.getExpiration()).isEqualTo(originalClaims.getExpiration());
+        assertThat(claims.get("isTemporaryRole", Boolean.class)).isTrue();
     }
 
     @Test
-    void switchRole_ShouldChangeRoleFromUserToAdmin() {
-        String username = "anotherUser";
-        String uuid = "uuid-5678";
-        String originalToken = jwtService.generateToken(username, "USER", uuid);
+    void switchRole_WithSameRole_ShouldThrowException() {
+        String token = jwtService.generateToken("user1", "USER", "uuid-1");
 
-        String switchedToken = jwtService.switchRole(originalToken);
-        Claims claims = jwtService.extractAllClaims(switchedToken);
-
-        assertThat(claims.get("role", String.class)).isEqualTo("ADMIN");
-        assertThat(claims.getSubject()).isEqualTo(username);
-        assertThat(claims.get("uuid", String.class)).isEqualTo(uuid);
+        assertThatThrownBy(() -> jwtService.switchRole(token, "USER"))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessage("New role is the same as current role.");
     }
 
     @Test
-    void switchRole_WithInvalidToken_ShouldThrowJwtException() {
-        String invalidToken = "invalid.token.value";
+    void switchRole_WithInvalidCurrentRole_ShouldThrowException() {
+        String invalidRoleToken = Jwts.builder()
+                .subject("user2")
+                .claim("role", "GUEST")
+                .claim("uuid", "uuid-2")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 600000))
+                .signWith(Keys.hmacShaKeyFor(io.jsonwebtoken.io.Decoders.BASE64.decode(jwtSigningKey)))
+                .compact();
 
-        assertThatThrownBy(() -> jwtService.switchRole(invalidToken))
-                .isInstanceOf(JwtException.class)
-                .hasMessageContaining("Invalid or tampered token");
+        assertThatThrownBy(() -> jwtService.switchRole(invalidRoleToken, "USER"))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessage("Requested role change is not allowed.");
     }
 
     @Test
-    void switchRole_WithExpiredToken_ShouldThrowResponseStatusExceptionWith200() throws InterruptedException {
-        JwtService shortLivedJwtService = new JwtService(jwtSigningKey, 0L);
-        String expiredToken = shortLivedJwtService.generateToken("expiredUser", "USER", "uuid");
-        Thread.sleep(1000); // asegurar que expire
+    void switchRole_WithNullRequestedRole_ShouldThrowException() {
+        String token = jwtService.generateToken("user3", "ADMIN", "uuid-3");
 
-        assertThatThrownBy(() -> shortLivedJwtService.switchRole(expiredToken))
-                .isInstanceOf(ResponseStatusException.class)
-                .satisfies(e -> {
-                    ResponseStatusException ex = (ResponseStatusException) e;
-                    assertThat(ex.getStatusCode().value()).isEqualTo(200);
-                    assertThat(ex.getReason()).isEqualTo("Token is expired.");
-                });
+        assertThatThrownBy(() -> jwtService.switchRole(token, null))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessage("New role must be provided.");
     }
-
 }

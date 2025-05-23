@@ -8,5 +8,5 @@ public interface IJwtService {
     String generateToken(String username, String role, String uuid);
     void validateToken(String token);
     Claims extractAllClaims(String token);
-    String switchRole(String token);
+    String switchRole(String token, String requestedRole);
 }

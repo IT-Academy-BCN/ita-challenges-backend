@@ -1,6 +1,7 @@
 package com.itachallenge.auth.controller;
 
 import com.itachallenge.auth.dto.User;
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
@@ -311,13 +312,15 @@ class AuthControllerTest {
     @Test
     void switchRole_WithValidToken_ShouldReturnNewToken() {
         String token = "valid.jwt.token";
+        String requestedRole = "USER";
         String newToken = "new.jwt.token";
 
-        when(jwtService.switchRole(token)).thenReturn(newToken);
+        when(jwtService.switchRole(token, requestedRole)).thenReturn(newToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .header("Authorization", "Bearer " + token)
+                .bodyValue(Map.of("newRole", requestedRole))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -327,13 +330,15 @@ class AuthControllerTest {
     @Test
     void switchRole_WithExpiredToken_ShouldReturn200WithMessage() {
         String token = "expired.jwt.token";
+        String requestedRole = "ADMIN";
 
-        when(jwtService.switchRole(token))
-                .thenThrow(new ResponseStatusException(HttpStatus.OK, "Token is expired."));
+        when(jwtService.switchRole(token, requestedRole))
+                .thenThrow(new ExpiredJwtException(null, null, "Token is expired."));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .header("Authorization", "Bearer " + token)
+                .bodyValue(Map.of("newRole", requestedRole))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -343,13 +348,15 @@ class AuthControllerTest {
     @Test
     void switchRole_WithInvalidToken_ShouldReturn401() {
         String token = "invalid.jwt.token";
+        String requestedRole = "USER";
 
-        when(jwtService.switchRole(token))
+        when(jwtService.switchRole(token, requestedRole))
                 .thenThrow(new JwtException("Invalid or tampered token."));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .header("Authorization", "Bearer " + token)
+                .bodyValue(Map.of("newRole", requestedRole))
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody()
@@ -360,6 +367,7 @@ class AuthControllerTest {
     void switchRole_WithMissingAuthorizationHeader_ShouldReturn401() {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
+                .bodyValue(Map.of("newRole", "ADMIN"))
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody()
@@ -371,9 +379,28 @@ class AuthControllerTest {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .header("Authorization", "Token not-bearer")
+                .bodyValue(Map.of("newRole", "ADMIN"))
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("Authorization header is missing or malformed");
+    }
+
+    @Test
+    void switchRole_WithSameRequestedRole_ShouldReturn400() {
+        String token = "valid.jwt.token";
+        String requestedRole = "USER";
+
+        when(jwtService.switchRole(token, requestedRole))
+                .thenThrow(new InvalidRoleChangeRequestException("New role is the same as current role."));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .header("Authorization", "Bearer " + token)
+                .bodyValue(Map.of("newRole", requestedRole))
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("New role is the same as current role.");
     }
 }
