@@ -272,7 +272,6 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-
     public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
@@ -353,16 +352,16 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
-            @PathVariable String challengeId,
-            @Valid @RequestBody ChallengeCreateDto challengeFormDto,
-            @RequestHeader("Authorization") String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
-                .switchIfEmpty(Mono.error(new JwtException("Invalid token")))
-                .flatMap(userId -> challengeService.updateChallenge(challengeId, challengeFormDto))
-                .map(ResponseEntity::ok)
-                .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
-    }
+   public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
+           @PathVariable String challengeId,
+           @Valid @RequestBody ChallengeCreateDto challengeFormDto,
+           @RequestHeader(name = "Authorization", required = false) String authHeader) {
+       return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+               .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+               .flatMap(userId -> challengeService.updateChallenge(challengeId, challengeFormDto))
+               .map(ResponseEntity::ok)
+               .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
+   }
 
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
