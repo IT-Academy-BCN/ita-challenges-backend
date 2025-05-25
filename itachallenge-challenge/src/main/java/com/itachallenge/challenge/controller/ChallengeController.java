@@ -145,7 +145,6 @@ public class ChallengeController {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
     }
 
-
     @GetMapping("/challenges/byFilter")
     @Operation(
             operationId = "Get challenges on a page by FILTER (language, difficulty, or tags).",
@@ -221,14 +220,9 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> addChallenge(
-            @Valid @RequestBody ChallengeCreateDto createFormDto,
-            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
-                .flatMap(userId -> challengeService.addChallenge(createFormDto))
-                .map(ResponseEntity::ok)
-                .doOnError(error -> log.error("Error adding challenge", error));
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
+        return challengeService.addChallenge(createFormDto)
+                .map(ResponseEntity::ok);
     }
     @GetMapping("/version")
     @Operation(
