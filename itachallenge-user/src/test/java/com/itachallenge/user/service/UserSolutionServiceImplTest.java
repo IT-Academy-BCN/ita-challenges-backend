@@ -37,9 +37,6 @@ class UserSolutionServiceImplTest {
     @Mock
     IUserSolutionRepository userSolutionRepository;
     
-    @Mock
-    UserServiceImpl userService;
-
     @InjectMocks
     UserSolutionServiceImpl userSolutionService;
 
