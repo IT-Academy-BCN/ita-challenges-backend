@@ -33,7 +33,6 @@ public class AuthController {
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
     private static final String MESSAGE_KEY = "message";
-    private static final String LOGOUT_SUCCESS = "Logout successful";
 
     private final IAuthService authService;
 
@@ -150,16 +149,23 @@ public class AuthController {
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Logout attempt without token or malformed header");
+            log.warn("Logout attempt without or malformed token");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
+                    .body(Map.of("message", "Authorization header is missing or malformed")));
         }
 
         String token = authHeader.replace("Bearer ", "").trim();
-        jwtService.validateToken(token);
-        return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
-    }
 
+        if (!jwtService.validateToken(token)) {
+            log.warn("Logout attempt with invalid or expired token");
+            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "Invalid or tampered token")));
+        }
+
+        log.info("Logout attempt with valid token");
+        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
+    }
 }
 

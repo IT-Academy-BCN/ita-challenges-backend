@@ -3,11 +3,6 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-* Issue #871  Secured POST endpoint addChallenge for creating a challenge in the Challenge Microservice.
-* Issue #864: Added JWT authentication to logout endpoint in User microservice.
-* PR #872: Added error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags
-* PR #866: Added tag validation in the addChallenge endpoint.
-* Issue #852: Added GET endpoint for retrieving resources from a challenge
 * Issue #864: Added JWT authentication to logout endpoint in User microservice.
 * PR #872: Added error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags
 * PR #866: Added tag validation in the addChallenge endpoint.
