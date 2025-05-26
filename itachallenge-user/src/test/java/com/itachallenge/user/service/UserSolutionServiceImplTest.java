@@ -38,6 +38,9 @@ class UserSolutionServiceImplTest {
     @Mock
     IUserSolutionRepository userSolutionRepository;
     
+    @Mock
+    UserService userService;
+    
     @InjectMocks
     UserSolutionServiceImpl userSolutionService;
 
@@ -177,6 +180,10 @@ class UserSolutionServiceImplTest {
     @DisplayName("getAllSolutionsByUser throws a NotFoundException if there are no solutions for the user")
     @Test
     void getAllSolutionsByUser_noSolutionsFound_test() {
+        when(userService.getUserById(userUuid.toString())).thenReturn(Mono.just(
+                com.itachallenge.user.document.UserDocument.builder().uuid(userUuid).build()
+        ));
+        
         when(userSolutionRepository.findAllByUserId(userUuid))
                 .thenReturn(Flux.empty());
         
@@ -186,11 +193,12 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(resultFlux)
                 .expectNextCount(0)
                 .verifyComplete();
-       
+        
+        verify(userService).getUserById(userUuid.toString());
         verify(userSolutionRepository).findAllByUserId(userUuid);
     }
     
-    @DisplayName("getAllSolutionsByUser returns all solutions")
+    @DisplayName("getAllSolutionsByUser returns all solutions when user exist")
     @Test
     void getAllSolutionsByUser_returnsSolutions_test() {
         UserSolutionDocument doc1 = UserSolutionDocument.builder()
@@ -208,6 +216,10 @@ class UserSolutionServiceImplTest {
                         .solutionText("Solution 2").build())
                 .build();
         
+        when(userService.getUserById(userUuid.toString()))
+                .thenReturn(Mono.just(
+                        com.itachallenge.user.document.UserDocument.builder().uuid(userUuid).build()
+                ));
         when(userSolutionRepository.findAllByUserId(userUuid))
                 .thenReturn(Flux.just(doc1, doc2));
         
@@ -224,6 +236,7 @@ class UserSolutionServiceImplTest {
                                 dto.getSolutionText().equals("Solution 2"))
                 .verifyComplete();
         
+        verify(userService).getUserById(userUuid.toString());
         verify(userSolutionRepository).findAllByUserId(userUuid);
     }
     
