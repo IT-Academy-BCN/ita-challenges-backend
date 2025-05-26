@@ -423,7 +423,13 @@ public class UserController {
             @PathVariable String userId
     ) {
         return Mono.just(ResponseEntity.ok()
-                .body(userSolutionService.getAllSolutionsByUser(userId))
+                .body(userSolutionService.getAllSolutionsByUser(userId).doOnNext(dto ->
+                                log.info("→ Solution retrieved for user {}: challengeId={}", userId, dto.getChallengeId()))
+                        .switchIfEmpty(Flux.defer(() -> {
+                            log.warn("No solutions found for user {}", userId);
+                            return Flux.empty();
+                        }))
+                )
         );
     }
 }
