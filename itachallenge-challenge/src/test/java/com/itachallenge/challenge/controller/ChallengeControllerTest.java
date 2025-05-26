@@ -331,23 +331,29 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_validRequest() {
+        String authHeader = "Bearer valid-token";
+        String userId = "user123";
+
         List<UUID> tags = List.of(UUID.randomUUID());
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
-                DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS,tags );
+                DifficultyLevel.EASY, "Java", "solució", Topic.LISTS, tags);
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.addChallenge(any())).thenReturn(Mono.just(createdChallenge));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
+                .header("Authorization", authHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class);
 
-        verify(challengeService).addChallenge(any(ChallengeCreateDto.class));
+        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
+        verify(challengeService, times(1)).addChallenge(any(ChallengeCreateDto.class));
     }
 
     @Test
@@ -372,24 +378,26 @@ class ChallengeControllerTest {
 
     @Test
     void addChallenge_test_invalidLanguage_statusBadRequest() {
-        List<UUID> tags = List.of(UUID.randomUUID());
-        ChallengeCreateDto formData = new ChallengeCreateDto("títol",
-                "descripció",
-                DifficultyLevel.valueOf("EASY"),
-                "Invalid language",
-                "solució",
-                Topic.COMPONENTS,
-                tags);
+        String authHeader = "Bearer valid-token";
+        String userId = "user123";
 
-        when(challengeService.addChallenge(any()))
-                .thenThrow(new LanguageNotFoundException("Language not found: Invalid language"));
+        List<UUID> tags = List.of(UUID.randomUUID());
+        ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
+                DifficultyLevel.EASY, "InvalidLanguage", "solució", Topic.LISTS, tags);
+
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeService.addChallenge(any())).thenThrow(new BadRequestException("Invalid language"));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
+                .header("Authorization", authHeader)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
                 .expectStatus().isBadRequest();
+
+        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
+        verify(challengeService, times(1)).addChallenge(any(ChallengeCreateDto.class));
     }
 
     @Test
@@ -1046,6 +1054,7 @@ class ChallengeControllerTest {
         verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
 
     }
+
 }
 
 
