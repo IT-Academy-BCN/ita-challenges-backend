@@ -419,7 +419,7 @@ public class UserController {
     @GetMapping(
             path = "/users/{userId}/solutions"
     )
-    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutions(
+    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
             @PathVariable String userId
     ) {
         return Mono.just(ResponseEntity.ok()
