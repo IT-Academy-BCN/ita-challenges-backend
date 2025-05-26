@@ -81,6 +81,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
+        // TODO: Replace this mock logic with an actual MongoDB query that fetches the user's solutions.
         UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
                 .userId("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
                 .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
