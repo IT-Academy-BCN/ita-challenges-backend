@@ -220,8 +220,15 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
-        return challengeService.addChallenge(createFormDto)
+
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(
+            @Valid @RequestBody ChallengeCreateDto createFormDto,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallenge(createFormDto))
+                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
     @GetMapping("/version")
