@@ -3,6 +3,7 @@ package com.itachallenge.auth.controller;
 
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
+import com.itachallenge.auth.service.AuthService;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
@@ -65,6 +66,48 @@ public class AuthController {
 
     @PostMapping("/github/authenticate")
     public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
+        String code = codeRequest.get("code");
+        String redirectUri = codeRequest.get("redirect_uri");
+
+        if (code == null || redirectUri == null) {
+            return Mono.just(ResponseEntity.badRequest().body(Map.of(
+                    "message", "Missing 'code' or 'redirectUri' in the request",
+                    "isValid", false,
+                    "username", null
+            )));
+        }
+
+        if (!(authService instanceof AuthService concreteAuthService)) {
+            return Mono.error(new IllegalStateException("authService is not an instance of AuthService"));
+        }
+
+        return concreteAuthService.exchangeCodeForToken(code, redirectUri)
+                .flatMap(authService::validateTokenWithGithub)
+                .flatMap(response -> {
+                    if (!(boolean) response.get("isValid")) {
+                        return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                .header("X-Authentication-Status", "Failed")
+                                .body(response));
+                    }
+                    String githubUsername = (String) response.get("username");
+                    return getUserDetailsFromGithubUsername(response, githubUsername);
+                })
+                .onErrorResume(ex -> {
+                    log.error("GitHub authentication error: {}", ex.getMessage());
+
+                    Map<String, Object> errorResponse = new HashMap<>();
+                    errorResponse.put("isValid", false);
+                    errorResponse.put("username", null);
+
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .header("X-Authentication-Status", "Error")
+                            .header("X-Error-Message", "An error occurred during authentication.")
+                            .body(errorResponse));
+                });
+    }
+
+    /*@PostMapping("/github/authenticate")
+    public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
         return authService.exchangeCodeForToken(codeRequest.get("code"))
                 .flatMap(authService::validateTokenWithGithub)
                 .flatMap(response -> {
@@ -88,7 +131,7 @@ public class AuthController {
                             .header("X-Error-Message", "An error occurred during authentication.")
                             .body(errorResponse));
                 });
-    }
+    }*/
 
     private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
 
