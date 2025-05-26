@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,9 @@ class UserSolutionServiceImplTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
+    
+    @Mock
+    UserServiceImpl userService;
 
     @InjectMocks
     UserSolutionServiceImpl userSolutionService;
@@ -172,29 +176,58 @@ class UserSolutionServiceImplTest {
 
     }
     
-    @DisplayName("UserSolutionServiceImplTest - getAllSolutionsByUser")
+    @DisplayName("getAllSolutionsByUser throws a NotFoundException if there are no solutions for the user")
     @Test
-    void getAllSolutionsByUser_returnsTwoStaticSolutions_test() {
-        String anyUserId = "cualquier-uuid";
+    void getAllSolutionsByUser_noSolutionsFound_test() {
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.empty());
         
-        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(anyUserId);
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService
+                .getAllSolutionsByUser(userUuid.toString());
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof NotFoundException &&
+                                ex.getMessage().equals("Solutions not found."))
+                .verify();
+       
+        verify(userSolutionRepository).findAllByUserId(userUuid);
+    }
+    
+    @DisplayName("getAllSolutionsByUser returns all solutions")
+    @Test
+    void getAllSolutionsByUser_returnsSolutions_test() {
+        UserSolutionDocument doc1 = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .solutionAttemptDocument(SolutionAttemptDocument.builder()
+                        .solutionText("Solution 1").build())
+                .build();
+        UserSolutionDocument doc2 = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .solutionAttemptDocument(SolutionAttemptDocument.builder()
+                        .solutionText("Solution 2").build())
+                .build();
+        
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.just(doc1, doc2));
+        
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService
+                .getAllSolutionsByUser(userUuid.toString());
         
         StepVerifier.create(resultFlux)
                 .expectNextMatches(dto ->
-                        dto.getUserId().equals("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
-                                && dto.getChallengeId().equals("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
-                                && dto.getLanguageId().equals("409c9fe8-74de-4db3-81a1-a55280cf92ef")
-                                && dto.getSolutionText().equals("This is the submitted solution")
-                )
+                        dto.getUserId().equals(userUuid.toString()) &&
+                                dto.getChallengeId().equals(challengeUuid.toString()) &&
+                                dto.getSolutionText().equals("Solution 1"))
                 .expectNextMatches(dto ->
-                        dto.getUserId().equals("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
-                                && dto.getChallengeId().equals("b5c06903-f27b-4057-8220-ad9d957cdce4")
-                                && dto.getLanguageId().equals("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
-                                && dto.getSolutionText().equals("This is the submitted solution")
-                )
+                        dto.getUserId().equals(userUuid.toString()) &&
+                                dto.getSolutionText().equals("Solution 2"))
                 .verifyComplete();
+        
+        verify(userSolutionRepository).findAllByUserId(userUuid);
     }
-    
 }
-
-
