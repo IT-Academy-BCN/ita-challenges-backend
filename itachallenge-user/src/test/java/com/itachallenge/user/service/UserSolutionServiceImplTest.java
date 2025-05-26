@@ -240,6 +240,25 @@ class UserSolutionServiceImplTest {
         verify(userSolutionRepository).findAllByUserId(userUuid);
     }
     
+    @DisplayName("getAllSolutionsByUser throws a NotFoundException if the user does not exist")
+    @Test
+    void getAllSolutionsByUser_userNotFound_test() {
+        when(userService.getUserById(userUuid.toString())).thenReturn(Mono.empty());
+        when(userSolutionRepository.findAllByUserId(userUuid)).thenReturn(Flux.empty());
+        
+        Flux<UserSolutionResponseDto> resultFlux =
+                userSolutionService.getAllSolutionsByUser(userUuid.toString());
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof NotFoundException &&
+                                ex.getMessage().equals("User not found"))
+                .verify();
+        
+        verify(userService).getUserById(userUuid.toString());
+    }
+    
+    
     @Test
     @DisplayName("getAllSolutionsByUser(null) emits BadRequestException for null userId")
     void getAllSolutionsByUser_nullUserId_throwsBadRequest() {
