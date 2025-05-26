@@ -6,8 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Issue #875: Secured PUT endpoint for updating a challenge in the Challenge Microservice.
 * Issue #871  Secured POST endpoint addChallenge for creating a challenge in the Challenge Microservice.
 * PR #884: Added a hardcoded GET endpoint to return all of a user’s challenge solutions.
-* Issue #864: Added JWT authentication to logout endpoint in User microservice.
 * PR #872: Added error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags
+* Issue #864: Added JWT authentication to logout endpoint in User microservice.
 * PR #866: Added tag validation in the addChallenge endpoint.
 * Issue #852: Added GET endpoint for retrieving resources from a challenge
 * Issue #849: Added GET endpoint to retrieve all User's bookmarked challenges.
