@@ -9,6 +9,7 @@ import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -77,7 +78,28 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                     return userSolutionRepository.save(userSolutionDocument);
                 }));
     }
-
+    
+    @Override
+    public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
+        // TODO: Replace this mock logic with an actual MongoDB query that fetches the user's solutions.
+        UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
+                .userId("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
+                .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
+                .languageId("409c9fe8-74de-4db3-81a1-a55280cf92ef")
+                .solutionText("This is the submitted solution")
+                .build();
+        
+        UserSolutionResponseDto sol2 = UserSolutionResponseDto.builder()
+                .userId("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
+                .challengeId("b5c06903-f27b-4057-8220-ad9d957cdce4")
+                .languageId("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
+                .solutionText("This is the submitted solution")
+                .build();
+        
+        return Flux.just(sol1, sol2);
+    }
+    
+    
 }
 
 
