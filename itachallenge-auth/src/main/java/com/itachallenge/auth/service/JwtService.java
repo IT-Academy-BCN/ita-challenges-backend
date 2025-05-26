@@ -1,5 +1,6 @@
 package com.itachallenge.auth.service;
 
+import com.itachallenge.auth.controller.AuthController;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.ExpiredJwtException;
+
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -16,9 +19,9 @@ import java.util.Date;
 @Service
 public class JwtService implements IJwtService {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     private final String jwtSigningKey;
     private final long minutesTillExpiration;
-    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     public JwtService(
             @Value("${token.signing.key}") String jwtSigningKey,
@@ -39,18 +42,20 @@ public class JwtService implements IJwtService {
         return builder.compact();
     }
 
-    public boolean validateToken(String token) {
+    @Override
+    public void validateToken(String token) {
+        SecretKey key = getSigningKey();
         try {
-            SecretKey key =  getSigningKey();
             Jwts.parser()
                     .verifyWith(key)
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-            return true;
+                    .parseSignedClaims(token);
+        } catch (ExpiredJwtException e) {
+            log.info("Logout with expired token: {}", e.getMessage());
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired but logout successful", e);
         } catch (JwtException e) {
-            log.warn("Invalid or expired token: {}", e.getMessage());
-            return false;
+            log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
+            throw new JwtException("Invalid or tampered token: " + e.getMessage(), e);
         }
     }
 
