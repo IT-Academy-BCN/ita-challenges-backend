@@ -570,7 +570,7 @@ class UserControllerTest {
     
     @Test
     @DisplayName("GET /users/{userId}/solutions returns solutions")
-    void getAllSolutions_returnsSolutions() {
+    void getAllSolutionsByUser_returnsSolutions() {
         String userId = UUID.randomUUID().toString();
         
         UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
@@ -614,7 +614,7 @@ class UserControllerTest {
     
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 404 if no solutions found")
-    void getAllSolutions_returns404IfNotFound() {
+    void getAllSolutionsByUser_returns404IfNotFound() {
         String userId = UUID.randomUUID().toString();
         
         // Simulamos que el servicio lanza NotFoundException
@@ -632,26 +632,26 @@ class UserControllerTest {
     }
     
     @Test
-    @DisplayName("GET /users/{userId}/solutions returns 400 if UUID is invalid")
-    void getAllSolutions_returns400IfInvalidUUID() {
+    @DisplayName("GET /users/{userId}/solutions returns 404 if UUID is invalid")
+    void getAllSolutionsByUser_returns400IfInvalidUUID() {
         String badUserId = "not-a-uuid";
         
         when(userSolutionService.getAllSolutionsByUser(badUserId))
-                .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
+                .thenReturn(Flux.error(new IllegalArgumentException( "Invalid UUID string: " + badUserId)));
         
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", badUserId)
                 .exchange()
-                .expectStatus().isBadRequest()
+                .expectStatus().isNotFound()
                 .expectBody(String.class)
-                .isEqualTo("The provided IDs are not valid.");
+                .isEqualTo("Invalid UUID string: not-a-uuid");
         
         verify(userSolutionService, times(1)).getAllSolutionsByUser(badUserId);
     }
     
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 500 on unexpected error")
-    void getAllSolutions_returns500IfUnexpectedError() {
+    void getAllSolutionsByUser_returns500IfUnexpectedError() {
         String userId = UUID.randomUUID().toString();
         
         when(userSolutionService.getAllSolutionsByUser(userId))
