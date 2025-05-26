@@ -19,6 +19,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -170,6 +171,30 @@ class UserSolutionServiceImplTest {
         verifyNoInteractions(userSolutionRepository);
 
     }
+    
+    @DisplayName("UserSolutionServiceImplTest - getAllSolutionsByUser")
+    @Test
+    void getAllSolutionsByUser_returnsTwoStaticSolutions_test() {
+        String anyUserId = "cualquier-uuid";
+        
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(anyUserId);
+        
+        StepVerifier.create(resultFlux)
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
+                                && dto.getChallengeId().equals("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
+                                && dto.getLanguageId().equals("409c9fe8-74de-4db3-81a1-a55280cf92ef")
+                                && dto.getSolutionText().equals("This is the submitted solution")
+                )
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
+                                && dto.getChallengeId().equals("b5c06903-f27b-4057-8220-ad9d957cdce4")
+                                && dto.getLanguageId().equals("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
+                                && dto.getSolutionText().equals("This is the submitted solution")
+                )
+                .verifyComplete();
+    }
+    
 }
 
 
