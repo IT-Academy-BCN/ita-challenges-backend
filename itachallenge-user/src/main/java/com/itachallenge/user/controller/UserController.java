@@ -32,7 +32,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static final String X_VALIDATION_STATUS = "X-Validation-Status";
-    public static final String X_GITHUB_USERNAME = "X-Github-Username";
+    public static final String X_GITHUB_USERNAME ="X-Github-Username";
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
