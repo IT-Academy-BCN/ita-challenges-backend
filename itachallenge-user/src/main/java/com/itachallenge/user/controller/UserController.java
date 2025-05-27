@@ -29,24 +29,24 @@ import java.util.UUID;
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/user")
 public class UserController {
-    
+
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static final String X_VALIDATION_STATUS = "X-Validation-Status";
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
-    
+
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
-    
+
     public UserController(UserService userService, IUserSolutionService userSolutionService) {
         this.userService = userService;
         this.userSolutionService = userSolutionService;
     }
-    
+
     @GetMapping(value = "/test")
     public String test() {
         return "Hello from ITA Challenge UserController!!!";
     }
-    
+
     @Operation(
             summary = "Retrieve User",
             description = "Retrieves user details for the given GitHub username if it exists in the database.",
@@ -81,7 +81,7 @@ public class UserController {
                     )
             }
     )
-    
+
     @GetMapping("/users/{githubUsername}")
     public Mono<ResponseEntity<UserDocument>> getUser(@PathVariable @ValidGithubUsername String githubUsername) {
         return userService.getUser(githubUsername)
@@ -93,7 +93,7 @@ public class UserController {
                             .body(user);
                 });
     }
-    
+
     @Operation(
             summary = "Add Challenge to User Favorite Challenges",
             description = "Adds challenge to user favorites",
@@ -139,7 +139,7 @@ public class UserController {
                     )
             }
     )
-    
+
     @PostMapping("/users/{userId}/favorites/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToFavorites(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.addChallengeToFavorites(userId, challengeId)
@@ -153,7 +153,7 @@ public class UserController {
                     }
                 });
     }
-    
+
     @PutMapping(path = "/solution")
     @Operation(
             summary = "perform a solution, adding challenge,language,user, status and the corresponding solution text.",
@@ -168,7 +168,7 @@ public class UserController {
     )
     public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
             @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
-        
+
         return userSolutionService.addSolution(userSolutionDto)
                 .map(savedUserSolutionDto ->
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
@@ -220,7 +220,7 @@ public class UserController {
                     )
             }
     )
-    
+
     @PostMapping("/users/{userId}/bookmarks/{challengeId}")
     public Mono<ResponseEntity<Boolean>> addToBookmarks(@PathVariable String userId, @PathVariable String challengeId) {
         return userService.addChallengeToBookmarks(userId, challengeId)
@@ -234,8 +234,8 @@ public class UserController {
                     }
                 });
     }
-    
-    
+
+
     @Operation(
             summary = "Delete Challenge from User Favorite Challenges",
             description = "Deletes challenge from user favorites",
@@ -289,7 +289,7 @@ public class UserController {
                     }
                 });
     }
-    
+
     @Operation(
             summary = "Delete Challenge from User Bookmark Challenges",
             description = "Deletes challenge from user bookmarks",
@@ -343,7 +343,7 @@ public class UserController {
                     }
                 });
     }
-    
+
     @Operation(
             summary = "Gets challenges marked as favorites by a user",
             description = "Returns a set of challenge IDs that the specified user has marked as favorites",
@@ -362,7 +362,7 @@ public class UserController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    
+
     @GetMapping("/users/{userId}/favorites")
     public Mono<ResponseEntity<Set<UUID>>> getUserFavorites(@PathVariable String userId) {
         return userService.getUserFavorites(userId)
@@ -371,7 +371,7 @@ public class UserController {
                     return ResponseEntity.ok().body(favorites);
                 });
     }
-    
+
     @Operation(
             summary = "Gets challenges marked as bookmarks by a user",
             description = "Returns a set of challenge IDs that the specified user has marked as bookmarked",
@@ -390,7 +390,7 @@ public class UserController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    
+
     @GetMapping("/users/{userId}/bookmarks")
     public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
         return userService.getUserBookmarks(userId)
