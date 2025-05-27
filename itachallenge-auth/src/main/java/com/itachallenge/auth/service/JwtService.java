@@ -1,16 +1,13 @@
 package com.itachallenge.auth.service;
 
-import com.itachallenge.auth.controller.AuthController;
-import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
+import com.itachallenge.auth.enums.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 
 import javax.crypto.SecretKey;
@@ -86,40 +83,19 @@ public class JwtService implements IJwtService {
     @Override
     public String switchRole(String token, String requestedRole) {
         Claims claims = extractAllClaims(token);
-        String currentRole = claims.get("role", String.class);
 
-        validateRoleChange(currentRole, requestedRole);
+        String currentRole = claims.get("role", String.class);
+        UserRole.validateRoleChange(currentRole, requestedRole);
+
+        UserRole requested = UserRole.fromString(requestedRole).get();
 
         return generateTokenWithTemporaryRole(
                 claims.getSubject(),
-                requestedRole.toUpperCase(),
+                requested.name(),
                 claims.get("uuid", String.class),
                 claims.getIssuedAt(),
                 claims.getExpiration()
         );
-    }
-
-    private void validateRoleChange(String currentRole, String requestedRole) {
-        if (requestedRole == null || requestedRole.isBlank()) {
-            log.warn("Role change failed: requested role is null or blank.");
-            throw new InvalidRoleChangeRequestException("New role must be provided.");
-        }
-
-        if (requestedRole.equalsIgnoreCase(currentRole)) {
-            log.warn("Role change rejected: requested role '{}' is same as current role '{}'.",
-                    requestedRole, currentRole);
-            throw new InvalidRoleChangeRequestException("New role is the same as current role.");
-        }
-
-        boolean isAllowed =
-                ("ADMIN".equalsIgnoreCase(currentRole) && "USER".equalsIgnoreCase(requestedRole)) ||
-                        ("USER".equalsIgnoreCase(currentRole) && "ADMIN".equalsIgnoreCase(requestedRole));
-
-        if (!isAllowed) {
-            log.warn("Role change rejected: requested change from '{}' to '{}' is not allowed.",
-                    currentRole, requestedRole);
-            throw new InvalidRoleChangeRequestException("Requested role change is not allowed.");
-        }
     }
 
     private String generateTokenWithTemporaryRole(String username, String role, String uuid, Date issuedAt, Date expiration) {
