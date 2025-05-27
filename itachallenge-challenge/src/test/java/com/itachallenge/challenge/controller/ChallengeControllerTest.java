@@ -399,7 +399,6 @@ class ChallengeControllerTest {
         verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
         verify(challengeService, times(1)).addChallenge(any(ChallengeCreateDto.class));
     }
-
     @Test
     void addChallenge_test_invalidLevel_statusBadRequest() {
         String invalidFormData = """
@@ -870,31 +869,44 @@ class ChallengeControllerTest {
     }
 
     @Test
-    @DisplayName("PUT update challenge when valid request returns 200")
+    void updateChallengeValidRequest_AuthorizedUser_Returns200() {
+        String authHeader = "Bearer valid-token";
+        String userId = "user123";
 
-    void updateChallengeValidRequest_test(){
-
+        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
-                .thenReturn(Mono.just(createdChallenge));
+                .thenReturn(Mono.just(new ChallengeDto()));
+
+        webTestClient.put()
+                .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
+                .header("Authorization", authHeader)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(formData)
+                .exchange()
+                .expectStatus().isOk();
+
+        verify(challengeService, times(1)).updateChallenge(anyString(), any(ChallengeCreateDto.class));
+    }
+
+   @Test
+    void updateChallenge_MissingAuthHeader_Returns400() {
+        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException("Missing auth header"));
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(formData)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(ChallengeDto.class)
-                .value(Assertions::assertNotNull);
+                .expectStatus().isBadRequest();
 
-        verify(challengeService, times(1))
-                .updateChallenge(anyString(), any(ChallengeCreateDto.class));
+        verifyNoInteractions(challengeService);
     }
 
     @ParameterizedTest
     @MethodSource("provideEmptyFields")
-    void updateChallengeEmptyField_returnsBadRequest_test(Consumer<ChallengeCreateDto> fieldSetter){
-
+    void updateChallengeEmptyField_returnsBadRequest_test(Consumer<ChallengeCreateDto> fieldSetter) {
         fieldSetter.accept(formData);
+
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -1056,5 +1068,3 @@ class ChallengeControllerTest {
     }
 
 }
-
-

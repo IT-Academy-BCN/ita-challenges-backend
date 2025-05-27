@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simplified challenge entity in Challenge microservice and applied structural refactor (PR #712)
 
 ### Security
+- Secured POST endpoint `addChallenge` for creating a challenge in Challenge microservice (PR #871)
+- Secured PUT endpoint for updating a challenge in Challenge microservice (PR #875)
 
 ### [itachallenge-challenge-2.0.4-RELEASE] - 2023-11-12
 * Issue #441b: Added Mongock to tracing database changes
