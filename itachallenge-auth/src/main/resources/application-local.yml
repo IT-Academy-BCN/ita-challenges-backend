@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+uri_validate_token: http://localhost:8081/api/v1/tokens/validate
+
+user:
+  service:
+    url: http://localhost:8764
