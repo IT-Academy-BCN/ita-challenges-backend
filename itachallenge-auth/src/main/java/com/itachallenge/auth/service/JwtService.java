@@ -1,6 +1,7 @@
 package com.itachallenge.auth.service;
 
 import com.itachallenge.auth.enums.UserRole;
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -8,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -87,7 +87,8 @@ public class JwtService implements IJwtService {
         String currentRole = claims.get("role", String.class);
         UserRole.validateRoleChange(currentRole, requestedRole);
 
-        UserRole requested = UserRole.fromString(requestedRole).get();
+        UserRole requested = UserRole.fromString(requestedRole)
+                .orElseThrow(() -> new InvalidRoleChangeRequestException("Requested role is invalid."));
 
         return generateTokenWithTemporaryRole(
                 claims.getSubject(),
