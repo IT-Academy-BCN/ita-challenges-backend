@@ -4,6 +4,7 @@ import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.exception.BadRequestException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -82,10 +83,11 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
-        return
+        return validateAndParseUuid(userId)
+                .flatMapMany(uuid ->
                 userSolutionRepository
                         .findAllByUserId(UUID.fromString(userId))
-                        .switchIfEmpty(Mono.error(new NotFoundException("Solutions not found.")))
+                        .switchIfEmpty(Mono.error(new NotFoundException("Solutions not found."))))
                         .map(doc -> UserSolutionResponseDto.builder()
                                 .userId(doc.getUserId().toString())
                                 .challengeId(doc.getChallengeId().toString())
@@ -93,6 +95,17 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                                 .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
                                 .build()
                         );
+    }
+    
+    private Mono<UUID> validateAndParseUuid(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
+        }
+        try {
+            return Mono.just(UUID.fromString(userId.trim()));
+        } catch (IllegalArgumentException ex) {
+            return Mono.error(new BadRequestException("The 'userId' parameter must be a valid UUID: " + userId));
+        }
     }
 }
 

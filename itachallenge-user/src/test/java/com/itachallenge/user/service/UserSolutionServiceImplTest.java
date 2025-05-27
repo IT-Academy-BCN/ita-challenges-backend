@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.exception.BadRequestException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
@@ -226,5 +227,51 @@ class UserSolutionServiceImplTest {
                 .verifyComplete();
         
         verify(userSolutionRepository).findAllByUserId(userUuid);
+    }
+    
+    @Test
+    @DisplayName("getAllSolutionsByUser(null) emits BadRequestException for null userId")
+    void getAllSolutionsByUser_nullUserId_throwsBadRequest() {
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(null);
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("The 'userId' parameter cannot be null or empty.")
+                )
+                .verify();
+        
+        verify(userSolutionRepository, never()).findAllByUserId(any());
+    }
+    
+    @Test
+    @DisplayName("getAllSolutionsByUser(\"\") emits BadRequestException for empty userId")
+    void getAllSolutionsByUser_emptyUserId_throwsBadRequest() {
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser("   ");
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("The 'userId' parameter cannot be null or empty.")
+                )
+                .verify();
+        
+        verify(userSolutionRepository, never()).findAllByUserId(any());
+    }
+    
+    @Test
+    @DisplayName("getAllSolutionsByUser(invalid) emits BadRequestException for malformed UUID")
+    void getAllSolutionsByUser_invalidFormat_throwsBadRequest() {
+        String bad = "not-a-uuid";
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(bad);
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("The 'userId' parameter must be a valid UUID: " + bad)
+                )
+                .verify();
+        
+        verify(userSolutionRepository, never()).findAllByUserId(any());
     }
 }
