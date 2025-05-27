@@ -2,10 +2,10 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
-import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.dto.UserSolutionRequestDto;
+import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -21,11 +21,11 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImpl.class);
     private final IUserSolutionRepository userSolutionRepository;
-    private final UserService userService;
+    private final IChallengeService challengeService;
 
-    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository, UserService userService) {
+    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository, IChallengeService challengeService) {
         this.userSolutionRepository = userSolutionRepository;
-        this.userService = userService;
+        this.challengeService = challengeService;
     }
 
     @Override
@@ -68,7 +68,8 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                     }
                     existingSolution.setSolutionAttemptDocument(solutionAttempt);
                     existingSolution.setStatus(challengeStatus);
-                    return userSolutionRepository.save(existingSolution);
+                    return userSolutionRepository.save(existingSolution)
+                            .flatMap(savedSolution -> handlePostSave(savedSolution, challengeStatus, challengeUuid));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
@@ -79,32 +80,37 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .status(challengeStatus)
                             .solutionAttemptDocument(solutionAttempt)
                             .build();
-                    return userSolutionRepository.save(userSolutionDocument);
+                    return userSolutionRepository.save(userSolutionDocument)
+                            .flatMap(savedSolution -> handlePostSave(savedSolution, challengeStatus, challengeUuid));
                 }));
     }
-    
+
+    private Mono<UserSolutionDocument> handlePostSave(UserSolutionDocument savedSolution, ChallengeStatus status, UUID challengeUuid) {
+        if (ChallengeStatus.ENDED.equals(status)) {
+            return challengeService.addChallengeToSolved(challengeUuid.toString())
+                    .thenReturn(savedSolution);
+        }
+        return Mono.just(savedSolution);
+    }
+
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
-        return  validateAndParseUuid(userId)
+        return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
-                userService.getUserById(userId)
-                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                .thenMany(
-        
-                userSolutionRepository
-                        .findAllByUserId(UUID.fromString(userId))
-                        .map(doc -> {
-                            log.info("→ Solution retrieved for user {}: challengeId={}", userId, doc.getChallengeId());
-                            return UserSolutionResponseDto.builder()
-                                            .userId(doc.getUserId().toString())
-                                            .challengeId(doc.getChallengeId().toString())
-                                            .languageId(doc.getLanguageId().toString())
-                                            .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
-                                            .build();
-                                }
-                        )));
+                        userSolutionRepository
+                                .findAllByUserId(UUID.fromString(userId))
+                                .map(doc -> {
+                                            log.info("→ Solution retrieved for user {}: challengeId={}", userId, doc.getChallengeId());
+                                            return UserSolutionResponseDto.builder()
+                                                    .userId(doc.getUserId().toString())
+                                                    .challengeId(doc.getChallengeId().toString())
+                                                    .languageId(doc.getLanguageId().toString())
+                                                    .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                                    .build();
+                                        }
+                                ));
     }
-    
+
     private Mono<UUID> validateAndParseUuid(String userId) {
         if (userId == null || userId.trim().isEmpty()) {
             return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
@@ -116,6 +122,3 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         }
     }
 }
-
-
-
