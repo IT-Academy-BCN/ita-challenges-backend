@@ -90,6 +90,10 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 .thenMany(
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
+                userService.getUserById(userId)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                .thenMany(
+        
                 userSolutionRepository
                         .findAllByUserId(UUID.fromString(userId))
                         .map(doc -> {
