@@ -174,7 +174,7 @@ public class UserController {
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
                 );
     }
-    
+
     @Operation(
             summary = "Add Challenge to User Bookmark Challenges",
             description = "Adds challenge to user Bookmarks",
