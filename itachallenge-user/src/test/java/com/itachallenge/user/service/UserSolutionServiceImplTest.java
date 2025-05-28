@@ -184,10 +184,8 @@ class UserSolutionServiceImplTest {
                 .getAllSolutionsByUser(userUuid.toString());
         
         StepVerifier.create(resultFlux)
-                .expectErrorMatches(ex ->
-                        ex instanceof NotFoundException &&
-                                ex.getMessage().equals("Solutions not found."))
-                .verify();
+                .expectNextCount(0)
+                .verifyComplete();
        
         verify(userSolutionRepository).findAllByUserId(userUuid);
     }

@@ -87,12 +87,15 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 .flatMapMany(uuid ->
                 userSolutionRepository
                         .findAllByUserId(UUID.fromString(userId))
-                        .map(doc -> UserSolutionResponseDto.builder()
-                                .userId(doc.getUserId().toString())
-                                .challengeId(doc.getChallengeId().toString())
-                                .languageId(doc.getLanguageId().toString())
-                                .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
-                                .build()
+                        .map(doc -> {
+                            log.info("→ Solution retrieved for user {}: challengeId={}", userId, doc.getChallengeId());
+                            return UserSolutionResponseDto.builder()
+                                            .userId(doc.getUserId().toString())
+                                            .challengeId(doc.getChallengeId().toString())
+                                            .languageId(doc.getLanguageId().toString())
+                                            .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                            .build();
+                                }
                         ));
     }
     
