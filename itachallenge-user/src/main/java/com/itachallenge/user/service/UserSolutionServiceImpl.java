@@ -4,6 +4,8 @@ import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.exception.BadRequestException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
@@ -81,25 +83,32 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
-        // TODO: Replace this mock logic with an actual MongoDB query that fetches the user's solutions.
-        UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
-                .userId("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
-                .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
-                .languageId("409c9fe8-74de-4db3-81a1-a55280cf92ef")
-                .solutionText("This is the submitted solution")
-                .build();
-        
-        UserSolutionResponseDto sol2 = UserSolutionResponseDto.builder()
-                .userId("1a2b3c4d-5e6f-6a8b-9c0d-1e2f3a4b5c6d")
-                .challengeId("b5c06903-f27b-4057-8220-ad9d957cdce4")
-                .languageId("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
-                .solutionText("This is the submitted solution")
-                .build();
-        
-        return Flux.just(sol1, sol2);
+        return validateAndParseUuid(userId)
+                .flatMapMany(uuid ->
+                userSolutionRepository
+                        .findAllByUserId(UUID.fromString(userId))
+                        .map(doc -> {
+                            log.info("→ Solution retrieved for user {}: challengeId={}", userId, doc.getChallengeId());
+                            return UserSolutionResponseDto.builder()
+                                            .userId(doc.getUserId().toString())
+                                            .challengeId(doc.getChallengeId().toString())
+                                            .languageId(doc.getLanguageId().toString())
+                                            .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                            .build();
+                                }
+                        ));
     }
     
-    
+    private Mono<UUID> validateAndParseUuid(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
+        }
+        try {
+            return Mono.just(UUID.fromString(userId.trim()));
+        } catch (IllegalArgumentException ex) {
+            return Mono.error(new BadRequestException("The 'userId' parameter must be a valid UUID: " + userId));
+        }
+    }
 }
 
 
