@@ -18,27 +18,11 @@ public enum UserRole {
     }
 
     public static void validateRoleChange(String currentRoleStr, String requestedRoleStr) {
-        if (currentRoleStr == null || currentRoleStr.isBlank()) {
-            throw new InvalidRoleChangeRequestException("Current role must be provided.");
-        }
+        validateNotBlank(currentRoleStr, "Current role must be provided.");
+        validateNotBlank(requestedRoleStr, "New role must be provided.");
 
-        if (requestedRoleStr == null || requestedRoleStr.isBlank()) {
-            throw new InvalidRoleChangeRequestException("New role must be provided.");
-        }
-
-        Optional<UserRole> currentOpt = fromString(currentRoleStr);
-        Optional<UserRole> requestedOpt = fromString(requestedRoleStr);
-
-        if (currentOpt.isEmpty()) {
-            throw new InvalidRoleChangeRequestException("Current role is not allowed.");
-        }
-
-        if (requestedOpt.isEmpty()) {
-            throw new InvalidRoleChangeRequestException("Requested role change is not allowed.");
-        }
-
-        UserRole current = currentOpt.get();
-        UserRole requested = requestedOpt.get();
+        UserRole current = parseRole(currentRoleStr, "Current role is not allowed.");
+        UserRole requested = parseRole(requestedRoleStr, "Requested role change is not allowed.");
 
         if (current == requested) {
             throw new InvalidRoleChangeRequestException("New role is the same as current role.");
@@ -47,6 +31,17 @@ public enum UserRole {
         if (!current.canSwitchTo(requested)) {
             throw new InvalidRoleChangeRequestException("Requested role change is not allowed.");
         }
+    }
+
+    private static void validateNotBlank(String value, String errorMessage) {
+        if (value == null || value.isBlank()) {
+            throw new InvalidRoleChangeRequestException(errorMessage);
+        }
+    }
+
+    private static UserRole parseRole(String value, String errorMessage) {
+        return fromString(value)
+                .orElseThrow(() -> new InvalidRoleChangeRequestException(errorMessage));
     }
 
     private boolean canSwitchTo(UserRole requestedRole) {

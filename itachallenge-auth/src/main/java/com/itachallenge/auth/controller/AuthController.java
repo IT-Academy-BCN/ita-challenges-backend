@@ -1,6 +1,5 @@
 package com.itachallenge.auth.controller;
 
-
 import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
@@ -18,9 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 
 import reactor.core.publisher.Mono;
 
@@ -39,7 +35,6 @@ public class AuthController {
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
     private static final String MESSAGE_KEY = "message";
     private static final String LOGOUT_SUCCESS = "Logout successful";
-    private static final String BEARER_KEY = "Bearer ";
 
     private final IAuthService authService;
 
@@ -182,18 +177,9 @@ public class AuthController {
             @RequestHeader(value = "Authorization", required = false) String authHeader,
             @RequestBody SwitchRoleRequest request) {
 
-        String token = extractBearerToken(authHeader);
+        String token = jwtService.extractBearerToken(authHeader);
         String newToken = jwtService.switchRole(token, request.getNewRole());
         log.info("Switch-role successful for token");
         return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
     }
-
-
-    private String extractBearerToken(String authHeader) {
-        if (authHeader == null || !authHeader.startsWith(BEARER_KEY)) {
-            throw new JwtException("Authorization header is missing or malformed");
-        }
-        return authHeader.replace(BEARER_KEY, "").trim();
-    }
-
 }

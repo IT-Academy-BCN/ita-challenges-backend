@@ -1,5 +1,6 @@
 package com.itachallenge.auth.controller;
 
+import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
@@ -310,17 +311,18 @@ class AuthControllerTest {
     }
 
     @Test
-    void switchRole_WithValidToken_ShouldReturnNewToken() {
-        String token = "valid.jwt.token";
-        String requestedRole = "USER";
+    void switchRole_WithValidTokenAndValidRole_ReturnsNewToken() {
+        String originalToken = "valid.jwt.token";
+        String newRole = "ADMIN";
         String newToken = "new.jwt.token";
 
-        when(jwtService.switchRole(token, requestedRole)).thenReturn(newToken);
+        when(jwtService.extractBearerToken("Bearer " + originalToken)).thenReturn(originalToken);
+        when(jwtService.switchRole(originalToken, newRole)).thenReturn(newToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(Map.of("newRole", requestedRole))
+                .header("Authorization", "Bearer " + originalToken)
+                .bodyValue(new SwitchRoleRequest(newRole))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -328,17 +330,18 @@ class AuthControllerTest {
     }
 
     @Test
-    void switchRole_WithExpiredToken_ShouldReturn200WithMessage() {
-        String token = "expired.jwt.token";
-        String requestedRole = "ADMIN";
+    void switchRole_WithExpiredToken_Returns200WithMessage() {
+        String expiredToken = "expired.jwt.token";
+        String newRole = "ADMIN";
 
-        when(jwtService.switchRole(token, requestedRole))
+        when(jwtService.extractBearerToken("Bearer " + expiredToken)).thenReturn(expiredToken);
+        when(jwtService.switchRole(expiredToken, newRole))
                 .thenThrow(new ExpiredJwtException(null, null, "Token is expired."));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(Map.of("newRole", requestedRole))
+                .header("Authorization", "Bearer " + expiredToken)
+                .bodyValue(new SwitchRoleRequest(newRole))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -346,61 +349,53 @@ class AuthControllerTest {
     }
 
     @Test
-    void switchRole_WithInvalidToken_ShouldReturn401() {
-        String token = "invalid.jwt.token";
-        String requestedRole = "USER";
+    void switchRole_WithInvalidToken_Returns401() {
+        String invalidToken = "invalid.jwt.token";
+        String newRole = "ADMIN";
 
-        when(jwtService.switchRole(token, requestedRole))
+        when(jwtService.extractBearerToken("Bearer " + invalidToken)).thenReturn(invalidToken);
+        when(jwtService.switchRole(invalidToken, newRole))
                 .thenThrow(new JwtException("Invalid or tampered token."));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
-                .header("Authorization", "Bearer " + token)
-                .bodyValue(Map.of("newRole", requestedRole))
+                .header("Authorization", "Bearer " + invalidToken)
+                .bodyValue(new SwitchRoleRequest(newRole))
                 .exchange()
                 .expectStatus().isUnauthorized()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("Invalid or tampered token.");
+                .jsonPath("$.message").value(msg -> assertThat(msg).isEqualTo("Invalid or tampered token."));
     }
 
     @Test
-    void switchRole_WithMissingAuthorizationHeader_ShouldReturn401() {
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/auth/switch-role")
-                .bodyValue(Map.of("newRole", "ADMIN"))
-                .exchange()
-                .expectStatus().isUnauthorized()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo("Authorization header is missing or malformed");
-    }
-
-    @Test
-    void switchRole_WithMalformedAuthorizationHeader_ShouldReturn401() {
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/auth/switch-role")
-                .header("Authorization", "Token not-bearer")
-                .bodyValue(Map.of("newRole", "ADMIN"))
-                .exchange()
-                .expectStatus().isUnauthorized()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo("Authorization header is missing or malformed");
-    }
-
-    @Test
-    void switchRole_WithSameRequestedRole_ShouldReturn400() {
+    void switchRole_WithSameRole_Throws400() {
         String token = "valid.jwt.token";
-        String requestedRole = "USER";
 
-        when(jwtService.switchRole(token, requestedRole))
+        when(jwtService.extractBearerToken("Bearer " + token)).thenReturn(token);
+        when(jwtService.switchRole(token, "USER"))
                 .thenThrow(new InvalidRoleChangeRequestException("New role is the same as current role."));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .header("Authorization", "Bearer " + token)
-                .bodyValue(Map.of("newRole", requestedRole))
+                .bodyValue(new SwitchRoleRequest("USER"))
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("New role is the same as current role.");
+    }
+
+    @Test
+    void switchRole_MissingAuthorizationHeader_Returns401() {
+        when(jwtService.extractBearerToken(null))
+                .thenThrow(new JwtException("Authorization header is missing or malformed"));
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/switch-role")
+                .bodyValue(new SwitchRoleRequest("ADMIN"))
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Authorization header is missing or malformed");
     }
 }

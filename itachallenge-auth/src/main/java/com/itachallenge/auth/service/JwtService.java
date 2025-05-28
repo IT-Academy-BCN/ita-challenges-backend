@@ -16,6 +16,7 @@ import java.util.Date;
 @Service
 public class JwtService implements IJwtService {
 
+    private static final String BEARER_KEY = "Bearer ";
     private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     private final String jwtSigningKey;
     private final long minutesTillExpiration;
@@ -80,34 +81,29 @@ public class JwtService implements IJwtService {
         }
     }
 
+    public String extractBearerToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_KEY)) {
+            throw new JwtException("Authorization header is missing or malformed");
+        }
+        return authHeader.replace(BEARER_KEY, "").trim();
+    }
+
     @Override
     public String switchRole(String token, String requestedRole) {
         Claims claims = extractAllClaims(token);
-
         String currentRole = claims.get("role", String.class);
+
         UserRole.validateRoleChange(currentRole, requestedRole);
 
-        UserRole requested = UserRole.fromString(requestedRole)
-                .orElseThrow(() -> new InvalidRoleChangeRequestException("Requested role is invalid."));
-
-        return generateTokenWithTemporaryRole(
-                claims.getSubject(),
-                requested.name(),
-                claims.get("uuid", String.class),
-                claims.getIssuedAt(),
-                claims.getExpiration()
-        );
-    }
-
-    private String generateTokenWithTemporaryRole(String username, String role, String uuid, Date issuedAt, Date expiration) {
         return Jwts.builder()
-                .subject(username)
-                .claim("role", role)
-                .claim("uuid", uuid)
+                .subject(claims.getSubject())
+                .claim("role", requestedRole.toUpperCase()) // seguro: ya validado
+                .claim("uuid", claims.get("uuid", String.class))
                 .claim("isTemporaryRole", true)
-                .issuedAt(issuedAt)
-                .expiration(expiration)
+                .issuedAt(claims.getIssuedAt())
+                .expiration(claims.getExpiration())
                 .signWith(getSigningKey())
                 .compact();
     }
+
 }

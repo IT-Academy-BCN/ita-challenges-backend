@@ -9,4 +9,5 @@ public interface IJwtService {
     void validateToken(String token);
     Claims extractAllClaims(String token);
     String switchRole(String token, String requestedRole);
+    String extractBearerToken(String authHeader);
 }

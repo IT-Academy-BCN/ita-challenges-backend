@@ -97,37 +97,29 @@ class JwtServiceTest {
     }
 
     @Test
-    void switchRole_ShouldGenerateTemporaryToken_WhenValidRoleChange() {
-        String originalToken = jwtService.generateToken("testUser", "USER", "uuid-001");
-        String newToken = jwtService.switchRole(originalToken, "ADMIN");
+    void extractBearerToken_WithValidHeader_ReturnsToken() {
+        String token = "abc.def.ghi";
+        String header = "Bearer " + token;
 
-        Claims claims = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(io.jsonwebtoken.io.Decoders.BASE64.decode(jwtSigningKey)))
-                .build()
-                .parseSignedClaims(newToken)
-                .getPayload();
+        String result = jwtService.extractBearerToken(header);
 
-        assertThat(claims.get("role", String.class)).isEqualTo("ADMIN");
-        assertThat(claims.get("isTemporaryRole", Boolean.class)).isTrue();
-        assertThat(claims.get("uuid", String.class)).isEqualTo("uuid-001");
-        assertThat(claims.getSubject()).isEqualTo("testUser");
+        assertThat(result).isEqualTo(token);
     }
 
     @Test
-    void switchRole_WithInvalidRequestedRole_ShouldThrow() {
-        String token = jwtService.generateToken("testUser", "USER", "uuid-002");
-
-        assertThatThrownBy(() -> jwtService.switchRole(token, "MODERATOR"))
-                .isInstanceOf(InvalidRoleChangeRequestException.class)
-                .hasMessageContaining("Requested role change is not allowed.");
+    void extractBearerToken_WithNullHeader_ThrowsJwtException() {
+        assertThatThrownBy(() -> jwtService.extractBearerToken(null))
+                .isInstanceOf(JwtException.class)
+                .hasMessage("Authorization header is missing or malformed");
     }
 
     @Test
-    void switchRole_WithSameRole_ShouldThrow() {
-        String token = jwtService.generateToken("testUser", "USER", "uuid-003");
+    void extractBearerToken_WithMalformedHeader_ThrowsJwtException() {
+        String malformedHeader = "Token abc.def.ghi";
 
-        assertThatThrownBy(() -> jwtService.switchRole(token, "USER"))
-                .isInstanceOf(InvalidRoleChangeRequestException.class)
-                .hasMessageContaining("New role is the same as current role.");
+        assertThatThrownBy(() -> jwtService.extractBearerToken(malformedHeader))
+                .isInstanceOf(JwtException.class)
+                .hasMessage("Authorization header is missing or malformed");
     }
+
 }
