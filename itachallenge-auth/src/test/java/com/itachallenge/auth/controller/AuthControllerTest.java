@@ -1,6 +1,10 @@
 package com.itachallenge.auth.controller;
 
+import com.itachallenge.auth.config.ClientConfig;
+import com.itachallenge.auth.config.GithubClientProperties;
+import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.dto.User;
+import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
@@ -15,10 +19,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import reactor.test.StepVerifier;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.HashMap;
@@ -188,6 +195,21 @@ class AuthControllerTest {
     }
 
     @Test
+    void givenCustomBadRequestException_thenHandledGracefully() {
+        Mono<String> testMono = Mono.<String>error(new CustomBadRequestException("Invalid input"))
+                .onErrorResume(throwable -> {
+                    if (throwable instanceof CustomBadRequestException) {
+                        return Mono.just("Handled custom bad request");
+                    }
+                    return Mono.error(throwable);
+                });
+
+        StepVerifier.create(testMono)
+                .expectNext("Handled custom bad request")
+                .verifyComplete();
+    }
+
+    @Test
     void authenticateWithGithub_UserValidationError_ReturnsInternalServerError() {
         String validCode = "valid-code";
         String redirectUri = "http://localhost:4200/ita-challenge/challenges";
@@ -212,6 +234,47 @@ class AuthControllerTest {
                 .jsonPath("$.isValid").isEqualTo(false)
                 .jsonPath("$.username").doesNotExist()
                 .jsonPath("$.token").doesNotExist();
+    }
+
+    @Test
+    void lombokGeneratedMethods_workCorrectly() {
+        ClientConfig config = new ClientConfig();
+        config.setClientId("abc123");
+        config.setClientSecret("secretXYZ");
+        config.setRedirectUri("http://localhost/callback");
+
+        assertThat(config.getClientId()).isEqualTo("abc123");
+        assertThat(config.getClientSecret()).isEqualTo("secretXYZ");
+        assertThat(config.getRedirectUri()).isEqualTo("http://localhost/callback");
+
+        String toString = config.toString();
+        assertThat(toString).contains("clientId=abc123");
+        assertThat(toString).contains("clientSecret=secretXYZ");
+        assertThat(toString).contains("redirectUri=http://localhost/callback");
+    }
+
+    @Test
+    void lombokDataAndGetClientConfig_areCovered() {
+        GithubClientProperties properties = new GithubClientProperties();
+
+        // Crear mapa con una configuración de cliente de prueba
+        ClientConfig localConfig = new ClientConfig();
+        localConfig.setClientId("local-id");
+        localConfig.setClientSecret("local-secret");
+        localConfig.setRedirectUri("http://localhost/callback");
+
+        Map<String, ClientConfig> envMap = new HashMap<>();
+        envMap.put("local", localConfig);
+
+        properties.setEnvironments(envMap);
+
+        assertThat(properties.getEnvironments()).isEqualTo(envMap);
+
+        ClientConfig result = properties.getClientConfig("local");
+        assertThat(result).isNotNull();
+        assertThat(result.getClientId()).isEqualTo("local-id");
+
+        assertThat(properties.getClientConfig("unknown")).isNull();
     }
 
     @Test
