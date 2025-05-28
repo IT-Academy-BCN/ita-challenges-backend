@@ -85,10 +85,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
-        return userService.getUserById(userId)
-                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
-                .thenMany(
-        return validateAndParseUuid(userId)
+        return  validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
                 userService.getUserById(userId)
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
@@ -105,7 +102,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                                             .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
                                             .build();
                                 }
-                        ));
+                        )));
     }
     
     private Mono<UUID> validateAndParseUuid(String userId) {

@@ -177,7 +177,7 @@ class UserSolutionServiceImplTest {
 
     }
     
-    @DisplayName("getAllSolutionsByUser throws a NotFoundException if there are no solutions for the user")
+    @DisplayName("getAllSolutionsByUser throws a empty array if there are no solutions for the user")
     @Test
     void getAllSolutionsByUser_noSolutionsFound_test() {
         when(userService.getUserById(userUuid.toString())).thenReturn(Mono.just(
