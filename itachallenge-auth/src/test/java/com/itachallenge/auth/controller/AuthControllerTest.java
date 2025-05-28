@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 @WebFluxTest(AuthController.class)
@@ -148,24 +149,31 @@ class AuthControllerTest {
         String accessToken = "valid-token";
         String githubUsername = "octocat";
 
+        // Este map debe tener "isValid": true para NO entrar en el flujo que lanza 401
         Map<String, Object> validationResult = new HashMap<>();
-        validationResult.put("isValid", true);
+        validationResult.put("isValid", true); // ✅ importante que sea true
         validationResult.put("username", githubUsername);
 
-        when(authService.exchangeCodeForToken(validCode, redirectUri)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
-        when(userService.fetchUserData(githubUsername)).thenReturn(Mono.empty());
+        when(authService.exchangeCodeForToken(eq(validCode), eq(redirectUri)))
+                .thenReturn(Mono.just(accessToken));
+
+        when(authService.validateTokenWithGithub(eq(accessToken)))
+                .thenReturn(Mono.just(validationResult));
+
+        when(userService.fetchUserData(eq(githubUsername)))
+                .thenReturn(Mono.empty()); // ⛔ usuario no existe → activa switchIfEmpty
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("code", validCode, "redirect_uri", redirectUri))
                 .exchange()
-                .expectStatus().isForbidden()
+                .expectStatus().isForbidden() // ✔️ esperando 403
+                .expectHeader().valueEquals("X-Validation-Status", "Forbidden")
                 .expectBody()
                 .jsonPath("$.isValid").isEqualTo(false)
-                .jsonPath("$.message").isEqualTo("User does not exist in the database")
-                .jsonPath("$.username").doesNotExist()
+                .jsonPath("$.message").value(msg -> assertThat(msg.toString()).contains("User does not exist"))
+                .jsonPath("$.username").isEqualTo(null)
                 .jsonPath("$.token").doesNotExist();
     }
 

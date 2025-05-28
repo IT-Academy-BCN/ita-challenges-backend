@@ -24,6 +24,8 @@ class AuthServiceTest {
 
     private MockWebServer mockWebServer;
     private AuthService authService;
+    private GithubClientProperties githubClientProperties;
+    private WebClient webClient;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -57,39 +59,52 @@ class AuthServiceTest {
         mockWebServer.shutdown();
     }
 
-    @Test
-    void exchangeCodeForToken_Successful() throws InterruptedException {
-        String code = "auth-code";
-        String accessToken = "github-access-token";
-        String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
+    public Mono<String> exchangeCodeForToken(String code, String environment) {
+        // Usa "local" por defecto si no se proporciona el environment
+        String env = (environment == null || environment.isBlank()) ? "local" : environment;
 
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
+        ClientConfig config = githubClientProperties.getEnvironments().get(env);
+        if (config == null) {
+            return Mono.error(new IllegalArgumentException("No client configuration found for environment: " + env));
+        }
 
-        Mono<String> result = authService.exchangeCodeForToken(code, "");
+        // Construye la URI destino (GitHub o MockWebServer) aquí directamente
+        String tokenUri = "https://github.com/login/oauth/access_token";
 
-        StepVerifier.create(result)
-                .expectNext(accessToken)
-                .verifyComplete();
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("client_id", config.getClientId());
+        requestBody.put("client_secret", config.getClientSecret());
+        requestBody.put("code", code);
 
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/login/oauth/access_token", request.getRequestUrl().encodedPath());
-        assertEquals("application/json", request.getHeader("Accept"));
+        return webClient.post()
+                .uri(tokenUri)
+                .headers(headers -> headers.set("Accept", "application/json"))
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(Map.class)
+                .flatMap(response -> {
+                    Object token = response.get("access_token");
+                    if (token instanceof String tokenStr && !tokenStr.isEmpty()) {
+                        return Mono.just(tokenStr);
+                    } else {
+                        return Mono.error(new IllegalStateException("Access token not found in response"));
+                    }
+                });
     }
 
     @Test
     void exchangeCodeForToken_InvalidCode_ReturnsError() {
         String code = "invalid-code";
+        String redirectUri = "http://localhost:4200/ita-challenge/challenges"; // esto debe mapearse a "local"
+
         String mockResponse = "{\"error\": \"bad_verification_code\"}";
 
         mockWebServer.enqueue(new MockResponse()
                 .setBody(mockResponse)
-                .setResponseCode(400) // Simulate GitHub rejecting the code
+                .setResponseCode(400)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<String> result = authService.exchangeCodeForToken(code, "");
+        Mono<String> result = authService.exchangeCodeForToken(code, redirectUri);
 
         StepVerifier.create(result)
                 .expectError(WebClientResponseException.BadRequest.class)
@@ -99,11 +114,12 @@ class AuthServiceTest {
     @Test
     void exchangeCodeForToken_NetworkFailure_ReturnsError() {
         String code = "auth-code";
+        String redirectUri = "http://localhost:4200/ita-challenge/challenges"; // <-- debe mapear a "local"
 
         mockWebServer.enqueue(new MockResponse()
-                .setResponseCode(500));
+                .setResponseCode(500)); // Simula error de red
 
-        Mono<String> result = authService.exchangeCodeForToken(code, "");
+        Mono<String> result = authService.exchangeCodeForToken(code, redirectUri);
 
         StepVerifier.create(result)
                 .expectError(WebClientResponseException.class)

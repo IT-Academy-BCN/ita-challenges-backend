@@ -77,11 +77,7 @@ public class AuthController {
             )));
         }
 
-        if (!(authService instanceof AuthService concreteAuthService)) {
-            return Mono.error(new IllegalStateException("authService is not an instance of AuthService"));
-        }
-
-        return concreteAuthService.exchangeCodeForToken(code, redirectUri)
+        return authService.exchangeCodeForToken(code, redirectUri)
                 .flatMap(authService::validateTokenWithGithub)
                 .flatMap(response -> {
                     if (!(boolean) response.get("isValid")) {
