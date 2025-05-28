@@ -1,5 +1,6 @@
 package com.itachallenge.auth.service;
 
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -93,5 +94,40 @@ class JwtServiceTest {
         assertThatThrownBy(() -> shortLivedService.validateToken(token))
                 .isInstanceOf(ExpiredJwtException.class)
                 .hasMessageContaining("Token expired but logout successful");
+    }
+
+    @Test
+    void switchRole_ShouldGenerateTemporaryToken_WhenValidRoleChange() {
+        String originalToken = jwtService.generateToken("testUser", "USER", "uuid-001");
+        String newToken = jwtService.switchRole(originalToken, "ADMIN");
+
+        Claims claims = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(io.jsonwebtoken.io.Decoders.BASE64.decode(jwtSigningKey)))
+                .build()
+                .parseSignedClaims(newToken)
+                .getPayload();
+
+        assertThat(claims.get("role", String.class)).isEqualTo("ADMIN");
+        assertThat(claims.get("isTemporaryRole", Boolean.class)).isTrue();
+        assertThat(claims.get("uuid", String.class)).isEqualTo("uuid-001");
+        assertThat(claims.getSubject()).isEqualTo("testUser");
+    }
+
+    @Test
+    void switchRole_WithInvalidRequestedRole_ShouldThrow() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-002");
+
+        assertThatThrownBy(() -> jwtService.switchRole(token, "MODERATOR"))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessageContaining("Requested role change is not allowed.");
+    }
+
+    @Test
+    void switchRole_WithSameRole_ShouldThrow() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-003");
+
+        assertThatThrownBy(() -> jwtService.switchRole(token, "USER"))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessageContaining("New role is the same as current role.");
     }
 }

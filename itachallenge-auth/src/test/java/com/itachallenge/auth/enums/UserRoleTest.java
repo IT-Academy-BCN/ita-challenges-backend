@@ -70,4 +70,13 @@ class UserRoleTest {
         );
         assertEquals("Current role must be provided.", ex.getMessage());
     }
+
+    @Test
+    void validateRoleChange_invalidRequested_shouldThrow() {
+        InvalidRoleChangeRequestException ex = assertThrows(
+                InvalidRoleChangeRequestException.class,
+                () -> UserRole.validateRoleChange("ADMIN", "GUEST")
+        );
+        assertEquals("Requested role change is not allowed.", ex.getMessage());
+    }
 }
