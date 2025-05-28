@@ -87,14 +87,13 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 .flatMapMany(uuid ->
                 userSolutionRepository
                         .findAllByUserId(UUID.fromString(userId))
-                        .switchIfEmpty(Mono.error(new NotFoundException("Solutions not found."))))
                         .map(doc -> UserSolutionResponseDto.builder()
                                 .userId(doc.getUserId().toString())
                                 .challengeId(doc.getChallengeId().toString())
                                 .languageId(doc.getLanguageId().toString())
                                 .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
                                 .build()
-                        );
+                        ));
     }
     
     private Mono<UUID> validateAndParseUuid(String userId) {
