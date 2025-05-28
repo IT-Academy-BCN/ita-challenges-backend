@@ -106,4 +106,18 @@ class UserRoleTest {
         );
         assertEquals("New role is the same as current role.", ex.getMessage());
     }
+
+    @Test
+    void validateRoleChange_userToAdmin_thenAdminToUserAllowed_butOtherDirectionRejected() {
+        assertDoesNotThrow(() -> UserRole.validateRoleChange("USER", "ADMIN"));
+
+        assertDoesNotThrow(() -> UserRole.validateRoleChange("ADMIN", "USER"));
+
+        InvalidRoleChangeRequestException ex = assertThrows(
+                InvalidRoleChangeRequestException.class,
+                () -> UserRole.validateRoleChange("ADMIN", "ADMIN")
+        );
+        assertEquals("New role is the same as current role.", ex.getMessage());
+    }
+
 }
