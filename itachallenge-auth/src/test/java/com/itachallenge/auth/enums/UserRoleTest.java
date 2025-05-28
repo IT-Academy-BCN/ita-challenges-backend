@@ -79,4 +79,31 @@ class UserRoleTest {
         );
         assertEquals("Requested role change is not allowed.", ex.getMessage());
     }
+
+    @Test
+    void validateRoleChange_notAllowedTransition_shouldThrow() {
+        InvalidRoleChangeRequestException ex = assertThrows(
+                InvalidRoleChangeRequestException.class,
+                () -> UserRole.validateRoleChange("ADMIN", "GUEST")
+        );
+        assertEquals("Requested role change is not allowed.", ex.getMessage());
+    }
+
+    @Test
+    void validateAdminRoleChange_invalidTransition_shouldThrow() {
+        InvalidRoleChangeRequestException ex = assertThrows(
+                InvalidRoleChangeRequestException.class,
+                () -> UserRole.validateRoleChange("ADMIN", "ADMIN")
+        );
+        assertEquals("New role is the same as current role.", ex.getMessage());
+    }
+
+    @Test
+    void validateUserRoleChange_invalidTransition_shouldThrow() {
+        InvalidRoleChangeRequestException ex = assertThrows(
+                InvalidRoleChangeRequestException.class,
+                () -> UserRole.validateRoleChange("USER", "USER")
+        );
+        assertEquals("New role is the same as current role.", ex.getMessage());
+    }
 }

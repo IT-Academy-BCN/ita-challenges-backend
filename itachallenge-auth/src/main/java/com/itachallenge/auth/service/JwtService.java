@@ -97,7 +97,7 @@ public class JwtService implements IJwtService {
 
         return Jwts.builder()
                 .subject(claims.getSubject())
-                .claim("role", requestedRole.toUpperCase()) // seguro: ya validado
+                .claim("role", requestedRole.toUpperCase())
                 .claim("uuid", claims.get("uuid", String.class))
                 .claim("isTemporaryRole", true)
                 .issuedAt(claims.getIssuedAt())

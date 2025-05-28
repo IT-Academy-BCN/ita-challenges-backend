@@ -122,4 +122,81 @@ class JwtServiceTest {
                 .hasMessage("Authorization header is missing or malformed");
     }
 
+    @Test
+    void extractAllClaims_WithValidToken_ShouldReturnClaims() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-123");
+        Claims claims = jwtService.extractAllClaims(token);
+
+        assertThat(claims.getSubject()).isEqualTo("testUser");
+        assertThat(claims.get("role", String.class)).isEqualTo("USER");
+        assertThat(claims.get("uuid", String.class)).isEqualTo("uuid-123");
+    }
+
+    @Test
+    void extractAllClaims_WithExpiredToken_ShouldThrowExpiredJwtException() {
+        JwtService shortLivedJwtService = new JwtService(jwtSigningKey, 0L);
+        String token = shortLivedJwtService.generateToken("expiredUser", "USER", "uuid-456");
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {}
+
+        assertThatThrownBy(() -> shortLivedJwtService.extractAllClaims(token))
+                .isInstanceOf(ExpiredJwtException.class)
+                .hasMessageContaining("Token expired");
+    }
+
+    @Test
+    void extractAllClaims_WithInvalidToken_ShouldThrowJwtException() {
+        String invalidToken = "this.is.not.valid";
+
+        assertThatThrownBy(() -> jwtService.extractAllClaims(invalidToken))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Invalid or tampered token");
+    }
+
+    @Test
+    void switchRole_WithValidChange_ShouldReturnNewToken() {
+        String originalToken = jwtService.generateToken("testUser", "USER", "uuid-001");
+
+        String switchedToken = jwtService.switchRole(originalToken, "ADMIN");
+
+        Claims claims = Jwts.parser()
+                .verifyWith(Keys.hmacShaKeyFor(io.jsonwebtoken.io.Decoders.BASE64.decode(jwtSigningKey)))
+                .build()
+                .parseSignedClaims(switchedToken)
+                .getPayload();
+
+        assertThat(claims.get("role", String.class)).isEqualTo("ADMIN");
+        assertThat(claims.get("isTemporaryRole", Boolean.class)).isTrue();
+        assertThat(claims.get("uuid", String.class)).isEqualTo("uuid-001");
+        assertThat(claims.getSubject()).isEqualTo("testUser");
+    }
+
+    @Test
+    void switchRole_SameRole_ShouldThrowException() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-002");
+
+        assertThatThrownBy(() -> jwtService.switchRole(token, "USER"))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessage("New role is the same as current role.");
+    }
+
+    @Test
+    void switchRole_InvalidRequestedRole_ShouldThrowException() {
+        String token = jwtService.generateToken("testUser", "USER", "uuid-003");
+
+        assertThatThrownBy(() -> jwtService.switchRole(token, "GUEST"))
+                .isInstanceOf(InvalidRoleChangeRequestException.class)
+                .hasMessage("Requested role change is not allowed.");
+    }
+
+    @Test
+    void switchRole_InvalidToken_ShouldThrowJwtException() {
+        String invalidToken = "not.a.valid.token";
+
+        assertThatThrownBy(() -> jwtService.switchRole(invalidToken, "ADMIN"))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Invalid or tampered token");
+    }
 }
