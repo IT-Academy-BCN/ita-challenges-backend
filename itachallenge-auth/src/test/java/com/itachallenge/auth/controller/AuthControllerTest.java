@@ -50,6 +50,16 @@ class AuthControllerTest {
     private AuthController authController;
 
     @Test
+    void testEndpoint_ReturnsGreetingMessage() {
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/auth/test") // ajusta el path si es necesario
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .isEqualTo("Hello from ITA ChallengeAuth!!!");
+    }
+
+    @Test
     void authenticateWithGithub_ValidCode_ReturnsJwt() {
         String validCode = "valid-code";
         String redirectUri = "http://localhost:4200/ita-challenge/challenges";

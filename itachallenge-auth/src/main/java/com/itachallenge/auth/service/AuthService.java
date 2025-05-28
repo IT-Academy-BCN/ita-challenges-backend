@@ -38,9 +38,6 @@ public class AuthService implements IAuthService {
 
     private final String githubTokenUri;
 
-    //private final String clientId;
-
-    //private final String clientSecret;
 
     public AuthService(WebClient.Builder webClientBuilder, GithubClientProperties githubClientProperties,
                        @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
@@ -52,8 +49,6 @@ public class AuthService implements IAuthService {
         this.githubClientProperties = githubClientProperties;
         this.githubTokenUri = githubTokenUri;
         this.githubUserInfoUri = githubUserInfoUri;
-        //this.clientId = clientId;
-        //this.clientSecret = clientSecret;
     }
 
     private String determineEnvironment(String redirectUri) {

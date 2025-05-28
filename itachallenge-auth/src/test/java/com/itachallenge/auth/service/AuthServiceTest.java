@@ -15,9 +15,12 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AuthServiceTest {
@@ -50,8 +53,6 @@ class AuthServiceTest {
                 githubClientProperties,
                 githubTokenUri,
                 githubUserInfoUri);
-        //"test-client-id",
-        //"test-client-secret");
     }
 
     @AfterEach
@@ -60,17 +61,13 @@ class AuthServiceTest {
     }
 
     public Mono<String> exchangeCodeForToken(String code, String environment) {
-        // Usa "local" por defecto si no se proporciona el environment
         String env = (environment == null || environment.isBlank()) ? "local" : environment;
-
         ClientConfig config = githubClientProperties.getEnvironments().get(env);
         if (config == null) {
             return Mono.error(new IllegalArgumentException("No client configuration found for environment: " + env));
         }
 
-        // Construye la URI destino (GitHub o MockWebServer) aquí directamente
         String tokenUri = "https://github.com/login/oauth/access_token";
-
         Map<String, String> requestBody = new HashMap<>();
         requestBody.put("client_id", config.getClientId());
         requestBody.put("client_secret", config.getClientSecret());
@@ -90,6 +87,66 @@ class AuthServiceTest {
                         return Mono.error(new IllegalStateException("Access token not found in response"));
                     }
                 });
+    }
+
+    @Test
+    void determineEnvironment_WithDevDomain_ReturnsDev() throws Exception {
+        var method = AuthService.class.getDeclaredMethod("determineEnvironment", String.class);
+        method.setAccessible(true);
+        String result = (String) method.invoke(authService, "https://dev.ita-challenges.eurecatacademy.org/callback");
+        assertEquals("dev", result);
+    }
+
+    @Test
+    void determineEnvironment_WithUnknownDomain_ThrowsException() throws Exception {
+        var method = AuthService.class.getDeclaredMethod("determineEnvironment", String.class);
+        method.setAccessible(true);
+
+        String uri = "https://example.com/callback";
+        InvocationTargetException thrown = assertThrows(
+                InvocationTargetException.class,
+                () -> method.invoke(authService, uri)
+        );
+
+        Throwable cause = thrown.getCause();
+        assertEquals(IllegalArgumentException.class, cause.getClass());
+        assertEquals("Unknown environment for redirect URI: " + uri, cause.getMessage());
+    }
+
+    @Test
+    void exchangeCodeForToken_UnknownEnvironment_ThrowsIllegalArgumentException() {
+        String code = "any-code";
+        String unknownRedirectUri = "https://staging.example.com/callback"; // no reconocido por determineEnvironment
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> authService.exchangeCodeForToken(code, unknownRedirectUri).block()
+        );
+
+        assertEquals("Unknown environment for redirect URI: " + unknownRedirectUri, exception.getMessage());
+    }
+
+    @Test
+    void exchangeCodeForToken_ValidResponse_ReturnsAccessToken() throws Exception {
+        String code = "valid-code";
+        String redirectUri = "http://localhost:4200"; // maps to "local"
+
+        // El token de acceso simulado
+        String mockAccessToken = "gho_1234567890";
+
+        // Simulamos la respuesta de GitHub como String
+        String mockResponseBody = "{\"access_token\":\"" + mockAccessToken + "\"}";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(mockResponseBody)
+                .setResponseCode(200)
+                .addHeader("Content-Type", "application/json"));
+
+        Mono<String> result = authService.exchangeCodeForToken(code, redirectUri);
+
+        StepVerifier.create(result)
+                .expectNext(mockAccessToken)
+                .verifyComplete();
     }
 
     @Test
