@@ -65,7 +65,15 @@ public class AuthController {
 
 
     @PostMapping("/github/authenticate")
-    public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody Map<String, String> codeRequest) {
+    public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody(required = false) Map<String, String> codeRequest) {
+        if (codeRequest == null || !codeRequest.containsKey("code") || !codeRequest.containsKey("redirect_uri")) {
+            Map<String, Object> body = new HashMap<>();
+            body.put("message", "Missing 'code' or 'redirectUri' in the request");
+            body.put("isValid", false);
+            body.put("username", null);
+
+            return Mono.just(ResponseEntity.badRequest().body(body));
+        }
         String code = codeRequest.get("code");
         String redirectUri = codeRequest.get("redirect_uri");
 

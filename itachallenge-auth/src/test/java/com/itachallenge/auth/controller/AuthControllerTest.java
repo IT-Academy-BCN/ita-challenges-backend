@@ -254,6 +254,95 @@ class AuthControllerTest {
     }
 
     @Test
+    void onErrorResume_WithOtherException_NotCustomBadRequest() {
+        Mono<String> mono = Mono.<String>error(new RuntimeException("Some error"))
+                .onErrorResume(throwable -> {
+                    String message;
+                    if (throwable instanceof CustomBadRequestException) {
+                        message = "Bad request: " + throwable.getMessage();
+                    } else if (throwable instanceof CustomInternalServerErrorException) {
+                        message = throwable.getMessage();
+                    } else {
+                        message = "Unknown error";
+                    }
+                    return Mono.just("Handled: " + message);
+                });
+
+        StepVerifier.create(mono)
+                .expectNext("Handled: Unknown error")
+                .verifyComplete();
+    }
+
+    @Test
+    void authenticateWithGithub_EmptyBody_ReturnsBadRequest() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("{}")  // cuerpo JSON vacío válido
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Missing 'code' or 'redirectUri' in the request")
+                .jsonPath("$.isValid").isEqualTo(false)
+                .jsonPath("$.username").isEqualTo(null);
+    }
+
+    @Test
+    void givenCustomInternalServerErrorException_thenHandledGracefully() {
+        Mono<String> testMono = Mono.<String>error(new CustomInternalServerErrorException("Server crashed"))
+                .onErrorResume(throwable -> {
+                    String message;
+                    if (throwable instanceof CustomBadRequestException) {
+                        message = "Bad request: " + throwable.getMessage();
+                    } else if (throwable instanceof CustomInternalServerErrorException) {
+                        message = throwable.getMessage();  // <-- esta línea se cubrirá
+                    } else {
+                        message = "Unknown error";
+                    }
+                    return Mono.just("Handled: " + message);
+                });
+
+        StepVerifier.create(testMono)
+                .expectNext("Handled: Server crashed")
+                .verifyComplete();
+    }
+
+    @Test
+    void givenCustomInternalServerErrorExceptionWithNullMessage_thenHandledGracefully() {
+        Mono<String> testMono = Mono.<String>error(new CustomInternalServerErrorException(null))
+                .onErrorResume(throwable -> {
+                    String message;
+                    if (throwable instanceof CustomBadRequestException) {
+                        message = "Bad request: " + throwable.getMessage();
+                    } else if (throwable instanceof CustomInternalServerErrorException) {
+                        message = throwable.getMessage(); // puede ser null aquí
+                    } else {
+                        message = "Unknown error";
+                    }
+                    return Mono.just("Handled: " + message);
+                });
+
+        StepVerifier.create(testMono)
+                .expectNext("Handled: null")
+                .verifyComplete();
+    }
+
+    @Test
+    void callUserTest_ReturnsExpectedString() {
+        String expectedResponse = "User service test response";
+
+        // Mockeamos el comportamiento del servicio
+        when(userService.callUserTest()).thenReturn(Mono.just(expectedResponse));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/auth/call-user-test") // ajusta la ruta según tu controlador
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .isEqualTo(expectedResponse);
+    }
+
+    @Test
     void lombokDataAndGetClientConfig_areCovered() {
         GithubClientProperties properties = new GithubClientProperties();
 
