@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PUT endpoint `/solution` in User microservice to save a user solution in the database (PR #828)
 
 ### Changed
+- Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (PR #887)
 - POST endpoint for adding new challenges in Challenge microservice: added `languageImage` to `LanguageDocument` and `LanguageDto`, persisted image URL, updated tests, and created endpoints to bookmark and unbookmark challenges (PR #763)
 - Improved filtering at `/GET Challenges`: added DTO for filters (language, level, tags), refactored `filterByLanguage()`, `filterByLevel()`, and `filterByTags()` methods, and added `GET /allTags` endpoint (PR #180 & PR #185)
 
