@@ -60,9 +60,7 @@ public class AuthService implements IAuthService {
 
     public Mono<String> exchangeCodeForToken(String code, String redirectUri) {
         String env = determineEnvironment(redirectUri);
-
         GithubClientProperties.ClientConfig clientConfig = githubClientProperties.getClientConfig(env);
-
         if (clientConfig == null) {
             return Mono.error(new IllegalStateException("No client config found for environment: " + env));
         }
@@ -74,7 +72,6 @@ public class AuthService implements IAuthService {
                 code,
                 clientConfig.getRedirectUri()
         );
-
         return webClient
                 .post()
                 .uri(githubTokenUri)
@@ -180,5 +177,4 @@ public class AuthService implements IAuthService {
         errorResult.put(KEY_USERNAME, null);
         return errorResult;
     }
-
 }
