@@ -463,28 +463,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addChallengeToFavorites_Success_Returns200() {
-        String challengeId = "existing_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        FavoriteDto expectedResponse = new FavoriteDto(true, 20);
-
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(FavoriteDto.class)
-                .isEqualTo(expectedResponse);
-
-        verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
-    }
-
-    @Test
     void addChallengeToBookmarks_Success_Returns200() {
         String challengeId = "existing_challengeId";
         String userId = "existing_userId";
@@ -507,28 +485,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addChallengeToFavorites_ChallengeNotFound_Returns404() {
-        String challengeId = "nonExisting_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        String errorMessage = "ErrorMessage";
-
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
-    }
-
-    @Test
     void addChallengeToBookmarks_ChallengeNotFound_Returns404() {
         String challengeId = "nonExisting_challengeId";
         String userId = "existing_userId";
@@ -548,29 +504,6 @@ class ChallengeControllerTest {
                 .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(1)).addChallengeToBookmarks(challengeId, userId);
-    }
-
-    @Test
-    void addChallengeToFavorites_InternalServerError_Returns500() {
-        String challengeId = "Existing_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        String errorMessage = "ErrorMessage";
-
-        when(challengeService.addChallengeToFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus()
-                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(1)).addChallengeToFavorites(challengeId, userId);
     }
 
     @Test
@@ -597,26 +530,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-    void addChallengeToFavorites_InvalidHeader_Returns400() {
-        String challengeId = "Existing_challengeId";
-        String authHeader = "badHeader";
-        String errorMessage = "ErrorMessage";
-
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus()
-                .isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
-    }
-
-    @Test
     void addChallengeToBookmarks_InvalidHeader_Returns400() {
         String challengeId = "Existing_challengeId";
         String authHeader = "badHeader";
@@ -634,24 +547,6 @@ class ChallengeControllerTest {
                 .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
 
         verify(challengeService, times(0)).addChallengeToBookmarks(anyString(), anyString());
-    }
-
-    @Test
-    void addChallengeToFavorites_MissingHeader_Returns400() {
-        String challengeId = "Existing_challengeId";
-        String errorMessage = "ErrorMessage";
-
-        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
-
-        webTestClient.post()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .exchange()
-                .expectStatus()
-                .isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(0)).addChallengeToFavorites(anyString(), anyString());
     }
 
     @Test
@@ -700,112 +595,6 @@ class ChallengeControllerTest {
                 .jsonPath("$.limit").isEqualTo(2);
 
         verify(tagService).getAllTags();
-    }
-
-    @Test
-    void removeChallengeFromFavorite_Success_Returns200() {
-        String challengeId = "existing_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        FavoriteDto expectedResponse = new FavoriteDto(false, 20);
-
-        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(FavoriteDto.class)
-                .isEqualTo(expectedResponse);
-
-        verify(challengeService, times(1)).removeChallengeFromFavorites(challengeId, userId);
-    }
-
-    @Test
-    void removeChallengeFromFavorite_ChallengeNotFound_Returns404() {
-        String challengeId = "nonExisting_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        String errorMessage = "ErrorMessage";
-
-        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(1)).removeChallengeFromFavorites(challengeId, userId);
-    }
-
-    @Test
-    void removeChallengeFromFavorite_InternalServerError_Returns500() {
-        String challengeId = "Existing_challengeId";
-        String userId = "existing_userId";
-        String authHeader = "validAuthHeader";
-
-        String errorMessage = "ErrorMessage";
-
-        when(challengeService.removeChallengeFromFavorites(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus()
-                .isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(1)).removeChallengeFromFavorites(challengeId, userId);
-    }
-
-    @Test
-    void removeChallengeFromFavorite_InvalidHeader_Returns400() {
-        String challengeId = "Existing_challengeId";
-        String authHeader = "BadHeader";
-        String errorMessage = "Error message";
-
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .header("Authorization", authHeader)
-                .exchange()
-                .expectStatus()
-                .isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(0)).removeChallengeFromFavorites(anyString(), anyString());
-    }
-
-    @Test
-    void removeChallengeFromFavorite_MissingHeader_Returns400() {
-        String challengeId = "Existing_challengeId";
-        String errorMessage = "ErrorMessage";
-
-        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
-
-        webTestClient.delete()
-                .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/favorites")
-                .exchange()
-                .expectStatus()
-                .isEqualTo(HttpStatus.BAD_REQUEST)
-                .expectBody(MessageDto.class)
-                .value(messageDto -> Assertions.assertEquals(errorMessage, messageDto.getMessage()));
-
-        verify(challengeService, times(0)).removeChallengeFromFavorites(anyString(), anyString());
-
     }
 
     @Test
