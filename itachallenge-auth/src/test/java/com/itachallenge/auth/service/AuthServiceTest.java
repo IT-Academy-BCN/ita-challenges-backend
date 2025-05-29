@@ -170,4 +170,42 @@ class AuthServiceTest {
                 .verifyComplete();
     }
 
+    @Test
+    void exchangeCodeForToken_Successful_Dev() throws InterruptedException {
+        String code = "auth-code";
+        String accessToken = "github-access-token";
+        String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
+
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(mockResponse)
+                .setResponseCode(200)
+                .addHeader("Content-Type", "application/json"));
+
+        // Use a redirectUri that triggers "dev" environment detection
+        String devRedirectUri = "https://dev.ita-challenges.eurecatacademy.org/callback";
+
+        Mono<String> result = authService.exchangeCodeForToken(code, devRedirectUri);
+
+        StepVerifier.create(result)
+                .expectNext(accessToken)
+                .verifyComplete();
+
+        RecordedRequest request = mockWebServer.takeRequest();
+        assertEquals("/login/oauth/access_token", request.getRequestUrl().encodedPath());
+        assertEquals("application/json", request.getHeader("Accept"));
+    }
+
+    @Test
+    void exchangeCodeForToken_UnknownEnvironment_ThrowsException() {
+        String code = "auth-code";
+        String unknownRedirectUri = "https://unknown-environment.com/callback";
+
+        Mono<String> result = authService.exchangeCodeForToken(code, unknownRedirectUri);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(throwable ->
+                        throwable instanceof IllegalArgumentException &&
+                                throwable.getMessage().contains("Unknown environment for redirect URI"))
+                .verify();
+    }
 }

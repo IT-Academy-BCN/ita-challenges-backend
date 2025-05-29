@@ -39,7 +39,6 @@ public class GithubClientPropertiesTest {
         config2.setClientId("id1");
         config2.setClientSecret("secret1");
         config2.setRedirectUri("redirect1");
-
         GithubClientProperties.ClientConfig config3 = new GithubClientProperties.ClientConfig();
         config3.setClientId("id2");
         config3.setClientSecret("secret2");
@@ -57,4 +56,32 @@ public class GithubClientPropertiesTest {
         assertEquals(config1.hashCode(), config2.hashCode());
         assertNotEquals(config1.hashCode(), config3.hashCode());
     }
+
+    @Test
+    void clientConfig_ToString_NotEmpty() {
+        GithubClientProperties.ClientConfig config = new GithubClientProperties.ClientConfig();
+        config.setClientId("id");
+        config.setClientSecret("secret");
+        config.setRedirectUri("redirect");
+
+        String str = config.toString();
+        assertTrue(str.contains("id"));
+        assertTrue(str.contains("secret"));
+        assertTrue(str.contains("redirect"));
+    }
+
+    @Test
+    void clientConfig_EqualsAndHashCode_NullFields() {
+        GithubClientProperties.ClientConfig config1 = new GithubClientProperties.ClientConfig();
+        GithubClientProperties.ClientConfig config2 = new GithubClientProperties.ClientConfig();
+
+        // Both empty (all nulls) → should be equal
+        assertEquals(config1, config2);
+        assertEquals(config1.hashCode(), config2.hashCode());
+
+        config1.setClientId("id");
+        // One has field set, the other null → not equal
+        assertNotEquals(config1, config2);
+    }
+
 }

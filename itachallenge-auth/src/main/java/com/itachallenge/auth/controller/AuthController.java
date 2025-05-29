@@ -67,7 +67,6 @@ public class AuthController {
         return "Hello from ITA ChallengeAuth!!!";
     }
 
-
     @PostMapping("/github/authenticate")
     public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody(required = false) Map<String, String> codeRequest) {
         if (codeRequest == null || !codeRequest.containsKey("code") || !codeRequest.containsKey("redirect_uri")) {
