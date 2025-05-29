@@ -146,4 +146,48 @@ public class GithubClientPropertiesTest {
 
         assertEquals(config1.hashCode(), config2.hashCode());
     }
+
+    @Test
+    void clientConfig_EqualsAndHashCode_WithNullFields() {
+        GithubClientProperties.ClientConfig config1 = new GithubClientProperties.ClientConfig();
+        GithubClientProperties.ClientConfig config2 = new GithubClientProperties.ClientConfig();
+
+        // Ambos con todos campos null: deberían ser iguales
+        assertEquals(config1, config2);
+        assertEquals(config1.hashCode(), config2.hashCode());
+
+        // Uno con un campo no nulo, el otro con null: no son iguales
+        config1.setClientId("id");
+        assertNotEquals(config1, config2);
+        assertNotEquals(config1.hashCode(), config2.hashCode());
+
+        config2.setClientId("id");
+        // Ahora iguales otra vez
+        assertEquals(config1, config2);
+        assertEquals(config1.hashCode(), config2.hashCode());
+
+        // Otro campo distinto causa desigualdad
+        config2.setClientSecret("secret");
+        assertNotEquals(config1, config2);
+
+        // Igualdad con null y con otro tipo de objeto
+        assertNotEquals(config1, null);
+        assertNotEquals(config1, new Object());
+    }
+
+    @Test
+    void clientConfig_ToString_WithNullFields() {
+        GithubClientProperties.ClientConfig config = new GithubClientProperties.ClientConfig();
+
+        config.setClientId(null);
+        config.setClientSecret("secret");
+        config.setRedirectUri(null);
+
+        String str = config.toString();
+
+        // toString debe incluir valores conocidos y representar null explícitamente
+        assertTrue(str.contains("secret"));
+        assertTrue(str.contains("null"));
+        assertTrue(str.contains("clientSecret"));
+    }
 }
