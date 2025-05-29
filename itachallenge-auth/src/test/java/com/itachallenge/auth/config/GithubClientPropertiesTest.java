@@ -152,25 +152,20 @@ public class GithubClientPropertiesTest {
         GithubClientProperties.ClientConfig config1 = new GithubClientProperties.ClientConfig();
         GithubClientProperties.ClientConfig config2 = new GithubClientProperties.ClientConfig();
 
-        // Ambos con todos campos null: deberían ser iguales
         assertEquals(config1, config2);
         assertEquals(config1.hashCode(), config2.hashCode());
 
-        // Uno con un campo no nulo, el otro con null: no son iguales
         config1.setClientId("id");
         assertNotEquals(config1, config2);
         assertNotEquals(config1.hashCode(), config2.hashCode());
 
         config2.setClientId("id");
-        // Ahora iguales otra vez
         assertEquals(config1, config2);
         assertEquals(config1.hashCode(), config2.hashCode());
 
-        // Otro campo distinto causa desigualdad
         config2.setClientSecret("secret");
         assertNotEquals(config1, config2);
 
-        // Igualdad con null y con otro tipo de objeto
         assertNotEquals(config1, null);
         assertNotEquals(config1, new Object());
     }
@@ -185,9 +180,45 @@ public class GithubClientPropertiesTest {
 
         String str = config.toString();
 
-        // toString debe incluir valores conocidos y representar null explícitamente
         assertTrue(str.contains("secret"));
         assertTrue(str.contains("null"));
         assertTrue(str.contains("clientSecret"));
+    }
+
+    @Test
+    void testEnvironmentsGetterSetter() {
+        GithubClientProperties props = new GithubClientProperties();
+        Map<String, GithubClientProperties.ClientConfig> map = new HashMap<>();
+        GithubClientProperties.ClientConfig config = new GithubClientProperties.ClientConfig();
+        map.put("test", config);
+
+        props.setEnvironments(map);
+
+        assertNotNull(props.getEnvironments());
+        assertEquals(config, props.getEnvironments().get("test"));
+    }
+
+    @Test
+    void testGetClientConfigWithExistingKey() {
+        GithubClientProperties props = new GithubClientProperties();
+        Map<String, GithubClientProperties.ClientConfig> map = new HashMap<>();
+        GithubClientProperties.ClientConfig config = new GithubClientProperties.ClientConfig();
+        map.put("existing", config);
+
+        props.setEnvironments(map);
+
+        assertEquals(config, props.getClientConfig("existing"));
+    }
+
+    @Test
+    void testGetClientConfigWithNonExistingKey() {
+        GithubClientProperties props = new GithubClientProperties();
+        Map<String, GithubClientProperties.ClientConfig> map = new HashMap<>();
+        GithubClientProperties.ClientConfig config = new GithubClientProperties.ClientConfig();
+        map.put("existing", config);
+
+        props.setEnvironments(map);
+
+        assertNull(props.getClientConfig("missing"));
     }
 }

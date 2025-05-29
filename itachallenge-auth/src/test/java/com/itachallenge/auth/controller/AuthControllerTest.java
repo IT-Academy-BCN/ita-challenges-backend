@@ -169,7 +169,6 @@ class AuthControllerTest {
         String accessToken = "valid-token";
         String githubUsername = "octocat";
 
-        // Este map debe tener "isValid": true para NO entrar en el flujo que lanza 401
         Map<String, Object> validationResult = new HashMap<>();
         validationResult.put("isValid", true); // ✅ importante que sea true
         validationResult.put("username", githubUsername);
@@ -181,7 +180,7 @@ class AuthControllerTest {
                 .thenReturn(Mono.just(validationResult));
 
         when(userService.fetchUserData(eq(githubUsername)))
-                .thenReturn(Mono.empty()); // ⛔ usuario no existe → activa switchIfEmpty
+                .thenReturn(Mono.empty());
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
