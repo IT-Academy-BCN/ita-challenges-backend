@@ -15,4 +15,11 @@ public class GithubClientProperties {
     public ClientConfig getClientConfig(String env) {
         return environments.get(env);
     }
+
+    @Data
+    public static class ClientConfig {
+        private String clientId;
+        private String clientSecret;
+        private String redirectUri;
+    }
 }

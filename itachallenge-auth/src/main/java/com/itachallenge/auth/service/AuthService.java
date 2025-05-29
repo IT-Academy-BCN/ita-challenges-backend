@@ -3,7 +3,6 @@ package com.itachallenge.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.auth.config.ClientConfig;
 import com.itachallenge.auth.config.GithubClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +41,6 @@ public class AuthService implements IAuthService {
     public AuthService(WebClient.Builder webClientBuilder, GithubClientProperties githubClientProperties,
                        @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
                        @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri
-                       // @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
-                       // @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret
     ) {
         this.webClientBuilder = webClientBuilder;
         this.githubClientProperties = githubClientProperties;
@@ -63,14 +60,14 @@ public class AuthService implements IAuthService {
 
     public Mono<String> exchangeCodeForToken(String code, String redirectUri) {
         String env = determineEnvironment(redirectUri);
-        ClientConfig clientConfig = githubClientProperties.getEnvironments().get(env);
+
+        GithubClientProperties.ClientConfig clientConfig = githubClientProperties.getClientConfig(env);
 
         if (clientConfig == null) {
             return Mono.error(new IllegalStateException("No client config found for environment: " + env));
         }
 
         WebClient webClient = webClientBuilder.build();
-
         Map<String, String> requestBody = createRequestBody(
                 clientConfig.getClientId(),
                 clientConfig.getClientSecret(),

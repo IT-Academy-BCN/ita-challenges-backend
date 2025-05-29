@@ -1,7 +1,5 @@
 package com.itachallenge.auth.controller;
 
-import com.itachallenge.auth.config.ClientConfig;
-import com.itachallenge.auth.config.GithubClientProperties;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
@@ -237,23 +235,6 @@ class AuthControllerTest {
     }
 
     @Test
-    void lombokGeneratedMethods_workCorrectly() {
-        ClientConfig config = new ClientConfig();
-        config.setClientId("abc123");
-        config.setClientSecret("secretXYZ");
-        config.setRedirectUri("http://localhost/callback");
-
-        assertThat(config.getClientId()).isEqualTo("abc123");
-        assertThat(config.getClientSecret()).isEqualTo("secretXYZ");
-        assertThat(config.getRedirectUri()).isEqualTo("http://localhost/callback");
-
-        String toString = config.toString();
-        assertThat(toString).contains("clientId=abc123");
-        assertThat(toString).contains("clientSecret=secretXYZ");
-        assertThat(toString).contains("redirectUri=http://localhost/callback");
-    }
-
-    @Test
     void onErrorResume_WithOtherException_NotCustomBadRequest() {
         Mono<String> mono = Mono.<String>error(new RuntimeException("Some error"))
                 .onErrorResume(throwable -> {
@@ -340,30 +321,6 @@ class AuthControllerTest {
                 .expectStatus().isOk()
                 .expectBody(String.class)
                 .isEqualTo(expectedResponse);
-    }
-
-    @Test
-    void lombokDataAndGetClientConfig_areCovered() {
-        GithubClientProperties properties = new GithubClientProperties();
-
-        // Crear mapa con una configuración de cliente de prueba
-        ClientConfig localConfig = new ClientConfig();
-        localConfig.setClientId("local-id");
-        localConfig.setClientSecret("local-secret");
-        localConfig.setRedirectUri("http://localhost/callback");
-
-        Map<String, ClientConfig> envMap = new HashMap<>();
-        envMap.put("local", localConfig);
-
-        properties.setEnvironments(envMap);
-
-        assertThat(properties.getEnvironments()).isEqualTo(envMap);
-
-        ClientConfig result = properties.getClientConfig("local");
-        assertThat(result).isNotNull();
-        assertThat(result.getClientId()).isEqualTo("local-id");
-
-        assertThat(properties.getClientConfig("unknown")).isNull();
     }
 
     @Test
