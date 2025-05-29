@@ -18,12 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 import java.util.*;
 
 @RestController
@@ -219,11 +220,17 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
-        return challengeService.addChallenge(createFormDto)
+
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(
+            @Valid @RequestBody ChallengeCreateDto createFormDto,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallenge(createFormDto))
+                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
-
     @GetMapping("/version")
     @Operation(
             summary = "Get Application Version",
@@ -258,50 +265,6 @@ public class ChallengeController {
 
         return challengeService.deleteChallengeById(id)
                 .map(dto -> ResponseEntity.ok().body(dto));
-    }
-
-    @PostMapping("/challenges/{challengeId}/favorites")
-    @Operation(
-            operationId = "Add a challenge to User's favorites.",
-            summary = "Add a challenge to favorites.",
-            description = "The ID Challenge sent through the URI is added to the user's favorites. User Id is determined from the headers.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
-            }
-    )
-    public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
-            @PathVariable String challengeId,
-            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
-                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userId -> challengeService.addChallengeToFavorites(challengeId, userId))
-                .doOnError(error -> log.error("Error adding challenge to favorites: {}", error.getMessage()))
-                .map(ResponseEntity::ok);
-    }
-
-    @DeleteMapping("/challenges/{challengeId}/favorites")
-    @Operation(
-            operationId = "Remove a challenge from the User's favorites.",
-            summary = "Remove a challenge from favorites.",
-            description = "The ID Challenge sent through the URI is removed from the user's favorites. User Id is determined from the headers.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
-            }
-    )
-    public Mono<ResponseEntity<FavoriteDto>> removeChallengeFromFavorite(
-            @PathVariable String challengeId,
-            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
-                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userId -> challengeService.removeChallengeFromFavorites(challengeId, userId))
-                .doOnError(error -> log.error("Error removing challenge from favorites: {}", error.getMessage()))
-                .map(ResponseEntity::ok);
     }
 
     @PostMapping("/challenges/{challengeId}/bookmarks")
@@ -346,15 +309,23 @@ public class ChallengeController {
             description = "Allows to update any information contained in a challenge, providing ChallengeId and new information.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "403", description = "User is not authorized to perform this action."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
-            @PathVariable String challengeId, @Valid @RequestBody ChallengeCreateDto challengeFormDto){
-        return challengeService.updateChallenge(challengeId, challengeFormDto)
-                .map(ResponseEntity::ok);
-    }
+   public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
+           @PathVariable String challengeId,
+           @Valid @RequestBody ChallengeCreateDto challengeFormDto,
+           @RequestHeader(name = "Authorization", required = false) String authHeader) {
+       return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+               .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+               .flatMap(userId -> challengeService.updateChallenge(challengeId, challengeFormDto))
+               .map(ResponseEntity::ok)
+               .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
+   }
+
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
     @Operation(

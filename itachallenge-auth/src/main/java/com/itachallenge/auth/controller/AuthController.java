@@ -1,12 +1,16 @@
 package com.itachallenge.auth.controller;
 
-
+import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.AuthService;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 
 import reactor.core.publisher.Mono;
 
@@ -180,5 +181,25 @@ public class AuthController {
         jwtService.validateToken(token);
         return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
-}
 
+    @PostMapping("/switch-role")
+    @Operation(
+            summary = "Temporarily switch the user's role and return a new token.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Token generated successfully or expired.",
+                            content = @Content(schema = @Schema(implementation = Map.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid role requested."),
+                    @ApiResponse(responseCode = "401", description = "Missing or malformed Authorization header or invalid token."),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error occurred.")
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> switchRole(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody SwitchRoleRequest request) {
+
+        String token = jwtService.extractBearerToken(authHeader);
+        String newToken = jwtService.switchRole(token, request.getNewRole());
+        log.info("Switch-role successful for token");
+        return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
+    }
+}

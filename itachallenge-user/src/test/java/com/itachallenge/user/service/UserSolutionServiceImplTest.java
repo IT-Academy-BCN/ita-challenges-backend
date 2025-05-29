@@ -5,6 +5,8 @@ import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.exception.BadRequestException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.mockito.InjectMocks;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -34,7 +37,7 @@ class UserSolutionServiceImplTest {
 
     @Mock
     IUserSolutionRepository userSolutionRepository;
-
+    
     @InjectMocks
     UserSolutionServiceImpl userSolutionService;
 
@@ -170,6 +173,103 @@ class UserSolutionServiceImplTest {
         verifyNoInteractions(userSolutionRepository);
 
     }
+    
+    @DisplayName("getAllSolutionsByUser throws a NotFoundException if there are no solutions for the user")
+    @Test
+    void getAllSolutionsByUser_noSolutionsFound_test() {
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.empty());
+        
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService
+                .getAllSolutionsByUser(userUuid.toString());
+        
+        StepVerifier.create(resultFlux)
+                .expectNextCount(0)
+                .verifyComplete();
+       
+        verify(userSolutionRepository).findAllByUserId(userUuid);
+    }
+    
+    @DisplayName("getAllSolutionsByUser returns all solutions")
+    @Test
+    void getAllSolutionsByUser_returnsSolutions_test() {
+        UserSolutionDocument doc1 = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .solutionAttemptDocument(SolutionAttemptDocument.builder()
+                        .solutionText("Solution 1").build())
+                .build();
+        UserSolutionDocument doc2 = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(UUID.randomUUID())
+                .languageId(UUID.randomUUID())
+                .solutionAttemptDocument(SolutionAttemptDocument.builder()
+                        .solutionText("Solution 2").build())
+                .build();
+        
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.just(doc1, doc2));
+        
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService
+                .getAllSolutionsByUser(userUuid.toString());
+        
+        StepVerifier.create(resultFlux)
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals(userUuid.toString()) &&
+                                dto.getChallengeId().equals(challengeUuid.toString()) &&
+                                dto.getSolutionText().equals("Solution 1"))
+                .expectNextMatches(dto ->
+                        dto.getUserId().equals(userUuid.toString()) &&
+                                dto.getSolutionText().equals("Solution 2"))
+                .verifyComplete();
+        
+        verify(userSolutionRepository).findAllByUserId(userUuid);
+    }
+    
+    @Test
+    @DisplayName("getAllSolutionsByUser(null) emits BadRequestException for null userId")
+    void getAllSolutionsByUser_nullUserId_throwsBadRequest() {
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(null);
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("The 'userId' parameter cannot be null or empty.")
+                )
+                .verify();
+        
+        verify(userSolutionRepository, never()).findAllByUserId(any());
+    }
+    
+    @Test
+    @DisplayName("getAllSolutionsByUser(\"\") emits BadRequestException for empty userId")
+    void getAllSolutionsByUser_emptyUserId_throwsBadRequest() {
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser("   ");
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("The 'userId' parameter cannot be null or empty.")
+                )
+                .verify();
+        
+        verify(userSolutionRepository, never()).findAllByUserId(any());
+    }
+    
+    @Test
+    @DisplayName("getAllSolutionsByUser(invalid) emits BadRequestException for malformed UUID")
+    void getAllSolutionsByUser_invalidFormat_throwsBadRequest() {
+        String bad = "not-a-uuid";
+        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(bad);
+        
+        StepVerifier.create(resultFlux)
+                .expectErrorMatches(ex ->
+                        ex instanceof BadRequestException &&
+                                ex.getMessage().equals("The 'userId' parameter must be a valid UUID: " + bad)
+                )
+                .verify();
+        
+        verify(userSolutionRepository, never()).findAllByUserId(any());
+    }
 }
-
-

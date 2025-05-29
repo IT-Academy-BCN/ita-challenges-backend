@@ -24,4 +24,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of(MESSAGE_KEY, ex.getMessage()));
     }
+
+    @ExceptionHandler(InvalidRoleChangeRequestException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidRoleChange(InvalidRoleChangeRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(MESSAGE_KEY, ex.getMessage()));
+    }
 }

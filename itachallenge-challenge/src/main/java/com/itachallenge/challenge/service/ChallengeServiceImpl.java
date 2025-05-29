@@ -56,8 +56,6 @@ public class ChallengeServiceImpl implements IChallengeService {
     private IUserService userService;
     @Autowired
     private ITagService tagService;
-    @Autowired
-    private IFavoriteService favoriteService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -349,16 +347,6 @@ public class ChallengeServiceImpl implements IChallengeService {
                         .total(0)
                         .build()));
 
-    }
-
-    @Override
-    public Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId) {
-        return favoriteService.addChallengeToFavorites(challengeId, userId);
-    }
-
-    @Override
-    public Mono<FavoriteDto> removeChallengeFromFavorites(String challengeId, String userId) {
-        return favoriteService.removeChallengeFromFavorites(challengeId, userId);
     }
 
     @Override
