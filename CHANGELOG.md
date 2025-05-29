@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- POST endpoint in Auth microservice to allow user role change at runtime (PR #882)
 - Hardcoded GET endpoint to return all of a user’s challenge solutions (PR #884)
 - JWT authentication to logout endpoint in User microservice (PR #864)
 - Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (PR #872)
