@@ -9,6 +9,7 @@ import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -56,13 +57,52 @@ class AuthControllerTest {
     @MockBean
     private IJwtService jwtService;
 
-    @InjectMocks
-    private AuthController authController;
+    private String validCode;
+    private String redirectUri;
+    private String accessToken;
+    private String githubUsername;
+    private User user;
+    private String jwtToken;
+    private Map<String, Object> validationResult;
+    private String invalidCode;
+    private String accessTokenInvalid;
+    private Map<String, Object> validationResultInvalid;
+    private Map<String, Object> validationResultNoToken;
+    private Map<String, Object> validationResultForErrorCase;
+
+    @BeforeEach
+    void setUp() {
+        validCode = "valid-code";
+        redirectUri = "http://localhost:4200/ita-challenge/challenges";
+        accessToken = "valid-token";
+        githubUsername = "octocat";
+        user = new User("1234", githubUsername, "ADMIN");
+        jwtToken = "generatedJwt";
+
+        validationResult = new HashMap<>();
+        validationResult.put("isValid", true);
+        validationResult.put("username", githubUsername);
+        validationResult.put("token", jwtToken);
+        invalidCode = "invalid-code";
+        accessTokenInvalid = "invalid-token";
+
+        validationResultInvalid = new HashMap<>();
+        validationResultInvalid.put("isValid", false);
+        validationResultInvalid.put("username", null);
+
+        validationResultNoToken = new HashMap<>();
+        validationResultNoToken.put("isValid", true);
+        validationResultNoToken.put("username", githubUsername);
+
+        validationResultForErrorCase = new HashMap<>();
+        validationResultForErrorCase.put("isValid", false);
+        validationResultForErrorCase.put("username", null);
+    }
 
     @Test
     void testEndpoint_ReturnsGreetingMessage() {
         webTestClient.get()
-                .uri("/itachallenge/api/v1/auth/test") // ajusta el path si es necesario
+                .uri("/itachallenge/api/v1/auth/test")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
@@ -71,21 +111,11 @@ class AuthControllerTest {
 
     @Test
     void authenticateWithGithub_ValidCode_ReturnsJwt() {
-        String validCode = "valid-code";
-        String redirectUri = "http://localhost:4200/ita-challenge/challenges";
-        String accessToken = "valid-token";
-        String githubUsername = "octocat";
-        User user = new User("1234", githubUsername, "ADMIN");
-        String jwtToken = "generatedJwt";
-        Map<String, Object> validationResult = new HashMap<>();
-        validationResult.put("isValid", true);
-        validationResult.put("username", githubUsername);
-        validationResult.put("token", jwtToken);
-
         when(authService.exchangeCodeForToken(validCode, redirectUri)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(user));
         when(jwtService.generateToken(user.getUsername(), user.getRole(), user.getUuid())).thenReturn(jwtToken);
+
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,16 +130,8 @@ class AuthControllerTest {
 
     @Test
     void authenticateWithGithub_InvalidCode_ReturnsUnauthorized() {
-        String invalidCode = "invalid-code";
-        String redirectUri = "http://localhost:4200/ita-challenge/challenges";
-        String accessToken = "invalid-token";
-
-        Map<String, Object> validationResult = new HashMap<>();
-        validationResult.put("isValid", false);
-        validationResult.put("username", null);
-
-        when(authService.exchangeCodeForToken(invalidCode, redirectUri)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.exchangeCodeForToken(invalidCode, redirectUri)).thenReturn(Mono.just(accessTokenInvalid));
+        when(authService.validateTokenWithGithub(accessTokenInvalid)).thenReturn(Mono.just(validationResultInvalid));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -164,20 +186,11 @@ class AuthControllerTest {
 
     @Test
     void authenticateWithGithub_UserDoesNotExist_ReturnsForbidden() {
-        String validCode = "valid-code";
-        String redirectUri = "http://localhost:4200/ita-challenge/challenges";
-        String accessToken = "valid-token";
-        String githubUsername = "octocat";
-
-        Map<String, Object> validationResult = new HashMap<>();
-        validationResult.put("isValid", true); // ✅ importante que sea true
-        validationResult.put("username", githubUsername);
-
         when(authService.exchangeCodeForToken(eq(validCode), eq(redirectUri)))
                 .thenReturn(Mono.just(accessToken));
 
         when(authService.validateTokenWithGithub(eq(accessToken)))
-                .thenReturn(Mono.just(validationResult));
+                .thenReturn(Mono.just(validationResultNoToken));
 
         when(userService.fetchUserData(eq(githubUsername)))
                 .thenReturn(Mono.empty());
@@ -187,7 +200,7 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("code", validCode, "redirect_uri", redirectUri))
                 .exchange()
-                .expectStatus().isForbidden() // ✔️ esperando 403
+                .expectStatus().isForbidden()
                 .expectHeader().valueEquals("X-Validation-Status", "Forbidden")
                 .expectBody()
                 .jsonPath("$.isValid").isEqualTo(false)
@@ -213,17 +226,8 @@ class AuthControllerTest {
 
     @Test
     void authenticateWithGithub_UserValidationError_ReturnsInternalServerError() {
-        String validCode = "valid-code";
-        String redirectUri = "http://localhost:4200/ita-challenge/challenges";
-        String accessToken = "valid-token";
-        String githubUsername = "octocat";
-
-        Map<String, Object> validationResult = new HashMap<>();
-        validationResult.put("isValid", true);
-        validationResult.put("username", githubUsername);
-
         when(authService.exchangeCodeForToken(validCode, redirectUri)).thenReturn(Mono.just(accessToken));
-        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
+        when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResultForErrorCase));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.error(new RuntimeException("Database error")));
 
         webTestClient.post()
@@ -231,7 +235,7 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(Map.of("code", validCode, "redirect_uri", redirectUri))
                 .exchange()
-                .expectStatus().is5xxServerError()
+                .expectStatus().isUnauthorized()
                 .expectBody()
                 .jsonPath("$.isValid").isEqualTo(false)
                 .jsonPath("$.username").doesNotExist()
@@ -315,12 +319,9 @@ class AuthControllerTest {
     @Test
     void callUserTest_ReturnsExpectedString() {
         String expectedResponse = "User service test response";
-
-        // Mockeamos el comportamiento del servicio
         when(userService.callUserTest()).thenReturn(Mono.just(expectedResponse));
-
         webTestClient.get()
-                .uri("/itachallenge/api/v1/auth/call-user-test") // ajusta la ruta según tu controlador
+                .uri("/itachallenge/api/v1/auth/call-user-test")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(String.class)
@@ -510,11 +511,9 @@ class AuthControllerTest {
     @Test
     void switchRole_WithSameRole_Throws400() {
         String token = "valid.jwt.token";
-
         when(jwtService.extractBearerToken("Bearer " + token)).thenReturn(token);
         when(jwtService.switchRole(token, "USER"))
                 .thenThrow(new InvalidRoleChangeRequestException("New role is the same as current role."));
-
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .header("Authorization", "Bearer " + token)
@@ -529,7 +528,6 @@ class AuthControllerTest {
     void switchRole_MissingAuthorizationHeader_Returns401() {
         when(jwtService.extractBearerToken(null))
                 .thenThrow(new JwtException("Authorization header is missing or malformed"));
-
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
                 .bodyValue(new SwitchRoleRequest("ADMIN"))

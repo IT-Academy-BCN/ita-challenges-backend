@@ -32,7 +32,6 @@ class AuthServiceTest {
     void setUp() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
-
         String baseUrl = mockWebServer.url("").toString();
         String githubTokenUri = baseUrl + "login/oauth/access_token";
         String githubUserInfoUri = baseUrl + "user";
@@ -41,7 +40,6 @@ class AuthServiceTest {
         localConfig.setClientId("local-client-id");
         localConfig.setClientSecret("local-client-secret");
         localConfig.setRedirectUri("http://localhost/callback");
-
         GithubClientProperties.ClientConfig devConfig = new GithubClientProperties.ClientConfig();
         devConfig.setClientId("dev-client-id");
         devConfig.setClientSecret("dev-client-secret");
@@ -71,18 +69,15 @@ class AuthServiceTest {
         String code = "auth-code";
         String accessToken = "github-access-token";
         String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
-
         mockWebServer.enqueue(new MockResponse()
                 .setBody(mockResponse)
                 .setResponseCode(200)
                 .addHeader("Content-Type", "application/json"));
 
         Mono<String> result = authService.exchangeCodeForToken(code, "http://localhost:8080/callback");
-
         StepVerifier.create(result)
                 .expectNext(accessToken)
                 .verifyComplete();
-
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("/user", request.getRequestUrl().encodedPath());
         assertEquals("application/json", request.getHeader("Accept"));
@@ -92,15 +87,12 @@ class AuthServiceTest {
     void exchangeCodeForToken_InvalidCode_ReturnsError() {
         String code = "invalid-code";
         String mockResponse = "{\"error\": \"bad_verification_code\"}";
-
         mockWebServer.enqueue(new MockResponse()
                 .setBody(mockResponse)
                 .setResponseCode(400) // Simulate GitHub rejecting the code
                 .addHeader("Content-Type", "application/json"));
 
-        // Usa un redirectUri válido para evitar IllegalArgumentException
         Mono<String> result = authService.exchangeCodeForToken(code, "http://localhost:8080/callback");
-
         StepVerifier.create(result)
                 .expectError(WebClientResponseException.BadRequest.class)
                 .verify();
@@ -112,9 +104,7 @@ class AuthServiceTest {
 
         mockWebServer.enqueue(new MockResponse()
                 .setResponseCode(500));
-
         String redirectUri = "http://localhost:4200/ita-challenge/challenges";
-
         Mono<String> result = authService.exchangeCodeForToken(code, redirectUri);
 
         StepVerifier.create(result)
@@ -126,16 +116,12 @@ class AuthServiceTest {
     void validateTokenWithGithub_ValidToken_ReturnsUsername() {
         AuthService authService = mock(AuthService.class);
         Map<String, Object> expectedResult = Map.of("isValid", true, "username", "octocat");
-
         when(authService.validateTokenWithGithub("valid-token"))
                 .thenReturn(Mono.just(expectedResult));
-
         Mono<Map<String, Object>> resultMono = authService.validateTokenWithGithub("valid-token");
-
         StepVerifier.create(resultMono)
                 .expectNextMatches(map -> map.get("isValid").equals(true))
                 .verifyComplete();
-
         resultMono.subscribe(map -> assertTrue((Boolean) map.get("isValid")));
     }
 
@@ -179,11 +165,9 @@ class AuthServiceTest {
     void exchangeCodeForToken_UnknownEnvironment_ThrowsException() {
         String code = "auth-code";
         String unknownRedirectUri = "https://unknown-environment.com/callback";
-
         IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             authService.exchangeCodeForToken(code, unknownRedirectUri);
         });
-
         assertTrue(thrown.getMessage().contains("Unknown environment for redirect URI"));
     }
 }
