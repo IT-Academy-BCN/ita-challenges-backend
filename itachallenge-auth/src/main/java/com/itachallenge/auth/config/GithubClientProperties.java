@@ -19,7 +19,10 @@ public class GithubClientProperties {
         return environments.get(env);
     }
 
-    @Data
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ClientConfig {
         private String clientId;
         private String clientSecret;
