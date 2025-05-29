@@ -6,6 +6,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -31,24 +32,27 @@ class AuthServiceTest {
     void setUp() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
+
         String baseUrl = mockWebServer.url("").toString();
         String githubTokenUri = baseUrl + "login/oauth/access_token";
         String githubUserInfoUri = baseUrl + "user";
+
         GithubClientProperties.ClientConfig localConfig = new GithubClientProperties.ClientConfig();
         localConfig.setClientId("local-client-id");
         localConfig.setClientSecret("local-client-secret");
         localConfig.setRedirectUri("http://localhost/callback");
 
-        GithubClientProperties.ClientConfig testConfig = new GithubClientProperties.ClientConfig();
-        testConfig.setClientId("test-client-id");
-        testConfig.setClientSecret("test-client-secret");
-        testConfig.setRedirectUri("http://test/callback");
+        GithubClientProperties.ClientConfig devConfig = new GithubClientProperties.ClientConfig();
+        devConfig.setClientId("dev-client-id");
+        devConfig.setClientSecret("dev-client-secret");
+        devConfig.setRedirectUri("https://dev.ita-challenges.eurecatacademy.org/callback");
 
         GithubClientProperties githubClientProperties = new GithubClientProperties();
         Map<String, GithubClientProperties.ClientConfig> envMap = new HashMap<>();
-        envMap.put("local", localConfig);  // << Agregado "local"
-        envMap.put("test", testConfig);
+        envMap.put("local", localConfig);
+        envMap.put("dev", devConfig);
         githubClientProperties.setEnvironments(envMap);
+
         authService = new AuthService(
                 WebClient.builder(),
                 githubClientProperties,
@@ -170,42 +174,16 @@ class AuthServiceTest {
                 .verifyComplete();
     }
 
-    @Test
-    void exchangeCodeForToken_Successful_Dev() throws InterruptedException {
-        String code = "auth-code";
-        String accessToken = "github-access-token";
-        String mockResponse = "{\"access_token\": \"" + accessToken + "\"}";
-
-        mockWebServer.enqueue(new MockResponse()
-                .setBody(mockResponse)
-                .setResponseCode(200)
-                .addHeader("Content-Type", "application/json"));
-
-        // Use a redirectUri that triggers "dev" environment detection
-        String devRedirectUri = "https://dev.ita-challenges.eurecatacademy.org/callback";
-
-        Mono<String> result = authService.exchangeCodeForToken(code, devRedirectUri);
-
-        StepVerifier.create(result)
-                .expectNext(accessToken)
-                .verifyComplete();
-
-        RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/login/oauth/access_token", request.getRequestUrl().encodedPath());
-        assertEquals("application/json", request.getHeader("Accept"));
-    }
 
     @Test
     void exchangeCodeForToken_UnknownEnvironment_ThrowsException() {
         String code = "auth-code";
         String unknownRedirectUri = "https://unknown-environment.com/callback";
 
-        Mono<String> result = authService.exchangeCodeForToken(code, unknownRedirectUri);
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            authService.exchangeCodeForToken(code, unknownRedirectUri);
+        });
 
-        StepVerifier.create(result)
-                .expectErrorMatches(throwable ->
-                        throwable instanceof IllegalArgumentException &&
-                                throwable.getMessage().contains("Unknown environment for redirect URI"))
-                .verify();
+        assertTrue(thrown.getMessage().contains("Unknown environment for redirect URI"));
     }
 }

@@ -75,13 +75,41 @@ public class GithubClientPropertiesTest {
         GithubClientProperties.ClientConfig config1 = new GithubClientProperties.ClientConfig();
         GithubClientProperties.ClientConfig config2 = new GithubClientProperties.ClientConfig();
 
-        // Both empty (all nulls) → should be equal
         assertEquals(config1, config2);
         assertEquals(config1.hashCode(), config2.hashCode());
 
         config1.setClientId("id");
-        // One has field set, the other null → not equal
         assertNotEquals(config1, config2);
+    }
+
+    @Test
+    void environmentsGetterSetterAndGetClientConfigTest() {
+        GithubClientProperties props = new GithubClientProperties();
+        Map<String, GithubClientProperties.ClientConfig> envs = new HashMap<>();
+
+        GithubClientProperties.ClientConfig devConfig = new GithubClientProperties.ClientConfig();
+        devConfig.setClientId("dev-client-id");
+        devConfig.setClientSecret("dev-client-secret");
+        devConfig.setRedirectUri("https://dev.example.com/callback");
+
+        envs.put("dev", devConfig);
+        props.setEnvironments(envs);
+        assertNotNull(props.getEnvironments());
+        assertEquals(devConfig, props.getClientConfig("dev"));
+        assertNull(props.getClientConfig("unknown"));
+    }
+
+    @Test
+    void clientConfigGetterSetterTest() {
+        GithubClientProperties.ClientConfig config = new GithubClientProperties.ClientConfig();
+
+        config.setClientId("client-id");
+        config.setClientSecret("client-secret");
+        config.setRedirectUri("https://example.com/callback");
+
+        assertEquals("client-id", config.getClientId());
+        assertEquals("client-secret", config.getClientSecret());
+        assertEquals("https://example.com/callback", config.getRedirectUri());
     }
 
 }
