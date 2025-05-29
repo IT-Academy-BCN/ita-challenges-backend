@@ -112,4 +112,38 @@ public class GithubClientPropertiesTest {
         assertEquals("https://example.com/callback", config.getRedirectUri());
     }
 
+    @Test
+    void clientConfig_EqualsWithNullFields() {
+        GithubClientProperties.ClientConfig config1 = new GithubClientProperties.ClientConfig();
+        GithubClientProperties.ClientConfig config2 = new GithubClientProperties.ClientConfig();
+
+        config1.setClientId(null);
+        config1.setClientSecret("secret");
+        config1.setRedirectUri("redirect");
+
+        config2.setClientId("id");
+        config2.setClientSecret("secret");
+        config2.setRedirectUri("redirect");
+
+        assertNotEquals(config1, config2);
+
+        config1.setClientId("id");
+        config2.setClientId(null);
+        assertNotEquals(config1, config2);
+    }
+
+    @Test
+    void clientConfig_HashCodeWithNullFields() {
+        GithubClientProperties.ClientConfig config1 = new GithubClientProperties.ClientConfig();
+        config1.setClientId(null);
+        config1.setClientSecret("secret");
+        config1.setRedirectUri("redirect");
+
+        GithubClientProperties.ClientConfig config2 = new GithubClientProperties.ClientConfig();
+        config2.setClientId(null);
+        config2.setClientSecret("secret");
+        config2.setRedirectUri("redirect");
+
+        assertEquals(config1.hashCode(), config2.hashCode());
+    }
 }
