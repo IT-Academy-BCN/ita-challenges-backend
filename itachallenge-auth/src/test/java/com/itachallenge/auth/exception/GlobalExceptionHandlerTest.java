@@ -42,4 +42,16 @@ class GlobalExceptionHandlerTest {
         assertNotNull(response.getBody());
         assertEquals(message, response.getBody().get("message"));
     }
+
+    @Test
+    void handleInvalidRoleChange_ShouldReturnBadRequestWithMessage() {
+        String message = "Invalid role.";
+        InvalidRoleChangeRequestException exception = new InvalidRoleChangeRequestException(message);
+
+        ResponseEntity<Map<String, String>> response = handler.handleInvalidRoleChange(exception);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(message, response.getBody().get("message"));
+    }
 }

@@ -174,7 +174,7 @@ public class UserController {
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
                 );
     }
-  
+
     @Operation(
             summary = "Add Challenge to User Bookmark Challenges",
             description = "Adds challenge to user Bookmarks",
@@ -410,8 +410,7 @@ public class UserController {
                             description = "User UUID")
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Solutions found"),
-                    @ApiResponse(responseCode = "404", description = "Solutions not found"),
+                    @ApiResponse(responseCode = "200", description = "Solutions found, if none are found, returns an empty array"),
                     @ApiResponse(responseCode = "400", description = "Invalid UUID"),
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
@@ -423,7 +422,8 @@ public class UserController {
             @PathVariable String userId
     ) {
         return Mono.just(ResponseEntity.ok()
-                .body(userSolutionService.getAllSolutionsByUser(userId))
+                .body(userSolutionService.getAllSolutionsByUser(userId)
+                )
         );
     }
 }
