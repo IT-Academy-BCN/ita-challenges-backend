@@ -89,3 +89,4 @@
 * Ismael Peiró - https://github.com/IsmaPeiro
 * Santiago Hernandez Beltran - https://github.com/shernandez334
 * Inga Demetrashvili - https://github.com/IngaD89
+* Jofre Coca - https://github.com/JofreCoca
