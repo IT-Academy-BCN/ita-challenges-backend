@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Added POST endpoint in Auth microservice for GitHub OAuth authentication and JWT token generation, supporting both local and dev environments (PR #892)
 - FavoriteController and extracted endpoints from ChallengeController. (#PR 886)
 - POST endpoint in Auth microservice to allow user role change at runtime (PR #882)
 - Hardcoded GET endpoint to return all of a user’s challenge solutions (PR #884)

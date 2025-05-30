@@ -4,7 +4,6 @@ import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.dto.SwitchRoleRequest;
-import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
@@ -76,6 +75,7 @@ class AuthControllerTest {
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(user));
         when(jwtService.generateToken(user.getUsername(), user.getRole(), user.getUuid())).thenReturn(jwtToken);
+
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -257,26 +257,6 @@ class AuthControllerTest {
                 .jsonPath("$.message").isEqualTo("Missing 'code' or 'redirectUri' in the request")
                 .jsonPath("$.isValid").isEqualTo(false)
                 .jsonPath("$.username").isEqualTo(null);
-    }
-
-    @Test
-    void givenCustomInternalServerErrorException_thenHandledGracefully() {
-        Mono<String> testMono = Mono.<String>error(new CustomInternalServerErrorException("Server crashed"))
-                .onErrorResume(throwable -> {
-                    String message;
-                    if (throwable instanceof CustomBadRequestException) {
-                        message = "Bad request: " + throwable.getMessage();
-                    } else if (throwable instanceof CustomInternalServerErrorException) {
-                        message = throwable.getMessage();  // <-- esta línea se cubrirá
-                    } else {
-                        message = "Unknown error";
-                    }
-                    return Mono.just("Handled: " + message);
-                });
-
-        StepVerifier.create(testMono)
-                .expectNext("Handled: Server crashed")
-                .verifyComplete();
     }
 
     @Test

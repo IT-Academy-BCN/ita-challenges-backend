@@ -78,6 +78,7 @@ class AuthServiceTest {
         StepVerifier.create(result)
                 .expectNext(accessToken)
                 .verifyComplete();
+
         RecordedRequest request = mockWebServer.takeRequest();
         assertEquals("/user", request.getRequestUrl().encodedPath());
         assertEquals("application/json", request.getHeader("Accept"));
@@ -87,6 +88,7 @@ class AuthServiceTest {
     void exchangeCodeForToken_InvalidCode_ReturnsError() {
         String code = "invalid-code";
         String mockResponse = "{\"error\": \"bad_verification_code\"}";
+
         mockWebServer.enqueue(new MockResponse()
                 .setBody(mockResponse)
                 .setResponseCode(400) // Simulate GitHub rejecting the code
@@ -124,7 +126,6 @@ class AuthServiceTest {
                 .verifyComplete();
         resultMono.subscribe(map -> assertTrue((Boolean) map.get("isValid")));
     }
-
 
     @Test
     void validateTokenWithGithub_ExpiredToken_ReturnsInvalid() {
