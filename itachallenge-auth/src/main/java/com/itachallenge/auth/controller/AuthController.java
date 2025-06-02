@@ -1,11 +1,15 @@
 package com.itachallenge.auth.controller;
 
-
+import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 
 import reactor.core.publisher.Mono;
 
@@ -33,6 +34,7 @@ public class AuthController {
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
     private static final String MESSAGE_KEY = "message";
+    private static final String LOGOUT_SUCCESS = "Logout successful";
 
     private final IAuthService authService;
 
@@ -149,23 +151,35 @@ public class AuthController {
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
-
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Logout attempt without or malformed token");
+            log.warn("Logout attempt without token or malformed header");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Authorization header is missing or malformed")));
+                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
         }
 
         String token = authHeader.replace("Bearer ", "").trim();
+        jwtService.validateToken(token);
+        return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
+    }
 
-        if (!jwtService.validateToken(token)) {
-            log.warn("Logout attempt with invalid or expired token");
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid or tampered token")));
-        }
+    @PostMapping("/switch-role")
+    @Operation(
+            summary = "Temporarily switch the user's role and return a new token.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Token generated successfully or expired.",
+                            content = @Content(schema = @Schema(implementation = Map.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid role requested."),
+                    @ApiResponse(responseCode = "401", description = "Missing or malformed Authorization header or invalid token."),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error occurred.")
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> switchRole(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody SwitchRoleRequest request) {
 
-        log.info("Logout attempt with valid token");
-        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
+        String token = jwtService.extractBearerToken(authHeader);
+        String newToken = jwtService.switchRole(token, request.getNewRole());
+        log.info("Switch-role successful for token");
+        return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
     }
 }
-

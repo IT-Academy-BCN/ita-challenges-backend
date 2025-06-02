@@ -4,11 +4,14 @@ import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.dto.*;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.exception.BadRequestException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -77,7 +80,35 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                     return userSolutionRepository.save(userSolutionDocument);
                 }));
     }
-
+    
+    @Override
+    public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
+        return validateAndParseUuid(userId)
+                .flatMapMany(uuid ->
+                userSolutionRepository
+                        .findAllByUserId(UUID.fromString(userId))
+                        .map(doc -> {
+                            log.info("→ Solution retrieved for user {}: challengeId={}", userId, doc.getChallengeId());
+                            return UserSolutionResponseDto.builder()
+                                            .userId(doc.getUserId().toString())
+                                            .challengeId(doc.getChallengeId().toString())
+                                            .languageId(doc.getLanguageId().toString())
+                                            .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                            .build();
+                                }
+                        ));
+    }
+    
+    private Mono<UUID> validateAndParseUuid(String userId) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return Mono.error(new BadRequestException("The 'userId' parameter cannot be null or empty."));
+        }
+        try {
+            return Mono.just(UUID.fromString(userId.trim()));
+        } catch (IllegalArgumentException ex) {
+            return Mono.error(new BadRequestException("The 'userId' parameter must be a valid UUID: " + userId));
+        }
+    }
 }
 
 

@@ -4,10 +4,10 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
@@ -138,6 +137,22 @@ class TagServiceImplTest {
         StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
                 .expectNext(true).verifyComplete();
         verify(tagRepository).findById(tagDocument.getIdTag());
+    }
+    
+    @Test
+    @DisplayName("Get exception when there are duplicate tag UUIDs")
+    void getValidatedTags_duplicateIds_test() {
+        UUID duplicatedId = UUID.randomUUID();
+        List<UUID> tagsAssigned = List.of(duplicatedId, duplicatedId);
+        
+        StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
+                .expectErrorSatisfies(err -> {
+                    assert err instanceof BadRequestException;
+                    assert err.getMessage().equals("tag UUID duplicated: " + duplicatedId);
+                })
+                .verify();
+        
+        verify(tagRepository, never()).findById(duplicatedId);
     }
 }
 
