@@ -33,7 +33,6 @@ public class ChallengeSolvedController {
             description = "The ID Challenge sent through the URI is added to the user's solved challenges. User Id is determined from the headers.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolvedDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
@@ -41,11 +40,11 @@ public class ChallengeSolvedController {
     public Mono<ResponseEntity<SolvedDto>> addChallengeToSolved(@PathVariable String challengeId) {
         return challengeService.addChallengeToSolved(challengeId)
                 .map(solvedDto -> {
-                    if (Boolean.TRUE.equals(solvedDto.isSolved())) {
+                    if (solvedDto.isSolved()) {
                         log.info("Challenge '{}' has increased his value timesSolved", challengeId);
                         return ResponseEntity.status(HttpStatus.CREATED).body(solvedDto);
                     } else {
-                        log.info("Challenge '{}' has not increased his value timesSolved", challengeId);
+                        log.info("Challenge '{}' could not be found, so the value timesSoved has not been increased", challengeId);
                         return ResponseEntity.ok(solvedDto);
                     }
                 });
