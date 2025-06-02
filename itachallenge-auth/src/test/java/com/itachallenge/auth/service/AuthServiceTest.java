@@ -76,14 +76,13 @@ class AuthServiceTest {
                 .setBody(mockResponse)
                 .setResponseCode(200)
                 .addHeader("Content-Type", "application/json"));
-
         Mono<String> result = authService.exchangeCodeForToken(code, "http://localhost:8080/callback");
         StepVerifier.create(result)
                 .expectNext(accessToken)
                 .verifyComplete();
 
         RecordedRequest request = mockWebServer.takeRequest();
-        assertEquals("/user", request.getRequestUrl().encodedPath());
+        assertEquals("/login/oauth/access_token", request.getRequestUrl().encodedPath());
         assertEquals("application/json", request.getHeader("Accept"));
     }
 
