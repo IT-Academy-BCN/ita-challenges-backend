@@ -1,5 +1,6 @@
 package com.itachallenge.auth.controller;
 
+import com.itachallenge.auth.config.ClientConfig;
 import com.itachallenge.auth.config.GithubClientProperties;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.dto.User;
@@ -294,21 +295,15 @@ class AuthControllerTest {
 
     @Test
     void noArgsConstructor_andSetters_WorkAsExpected() {
-        // (1) Construimos usando el constructor sin argumentos:
         GithubClientProperties props = new GithubClientProperties();
 
-        // (2) Creamos un map vacío y lo asignamos con el setter:
-        Map<String, GithubClientProperties.ClientConfig> envMap = new HashMap<>();
+        Map<String, ClientConfig> envMap = new HashMap<>();
         props.setEnvironments(envMap);
 
-        // (3) Comprobamos que inicialmente está vacío:
         assertThat(props.getEnvironments()).isEmpty();
         assertThat(props.getClientConfig("cualquier")).isNull();
 
-        // (4) Añadimos una nueva configuración al map y volvemos a asignar:
-        GithubClientProperties.ClientConfig customConfig =
-                new GithubClientProperties.ClientConfig();
-        // Con NoArgsConstructor, podemos luego usar setters:
+        ClientConfig customConfig = new ClientConfig();
         customConfig.setClientId("cid");
         customConfig.setClientSecret("csecret");
         customConfig.setRedirectUri("http://redirect");
@@ -316,8 +311,7 @@ class AuthControllerTest {
         envMap.put("custom", customConfig);
         props.setEnvironments(envMap);
 
-        // (5) Verificamos que getClientConfig("custom") recoge lo que acabamos de poner:
-        GithubClientProperties.ClientConfig fetched = props.getClientConfig("custom");
+        ClientConfig fetched = props.getClientConfig("custom");
         assertThat(fetched).isNotNull();
         assertThat(fetched.getClientId()).isEqualTo("cid");
         assertThat(fetched.getClientSecret()).isEqualTo("csecret");

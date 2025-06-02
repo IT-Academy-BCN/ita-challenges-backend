@@ -19,13 +19,4 @@ public class GithubClientProperties {
         return environments.get(env);
     }
 
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class ClientConfig {
-        private String clientId;
-        private String clientSecret;
-        private String redirectUri;
-    }
 }

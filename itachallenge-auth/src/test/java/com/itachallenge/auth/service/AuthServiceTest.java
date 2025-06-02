@@ -1,6 +1,7 @@
 package com.itachallenge.auth.service;
 
 
+import com.itachallenge.auth.config.ClientConfig;
 import com.itachallenge.auth.config.GithubClientProperties;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -32,30 +33,32 @@ class AuthServiceTest {
     void setUp() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
+
         String baseUrl = mockWebServer.url("").toString();
-        String githubTokenUri = baseUrl + "login/oauth/access_token";
+        String githubTokenUri    = baseUrl + "login/oauth/access_token";
         String githubUserInfoUri = baseUrl + "user";
 
-        GithubClientProperties.ClientConfig localConfig = new GithubClientProperties.ClientConfig();
+        ClientConfig localConfig = new ClientConfig();
         localConfig.setClientId("local-client-id");
         localConfig.setClientSecret("local-client-secret");
         localConfig.setRedirectUri("http://localhost/callback");
-        GithubClientProperties.ClientConfig devConfig = new GithubClientProperties.ClientConfig();
+
+        ClientConfig devConfig = new ClientConfig();
         devConfig.setClientId("dev-client-id");
         devConfig.setClientSecret("dev-client-secret");
         devConfig.setRedirectUri("https://dev.ita-challenges.eurecatacademy.org/callback");
 
         GithubClientProperties githubClientProperties = new GithubClientProperties();
-        Map<String, GithubClientProperties.ClientConfig> envMap = new HashMap<>();
+        Map<String, ClientConfig> envMap = new HashMap<>();
         envMap.put("local", localConfig);
-        envMap.put("dev", devConfig);
+        envMap.put("dev",   devConfig);
         githubClientProperties.setEnvironments(envMap);
 
         authService = new AuthService(
                 WebClient.builder(),
                 githubClientProperties,
-                githubUserInfoUri,
-                githubTokenUri
+                githubTokenUri,
+                githubUserInfoUri
         );
     }
 

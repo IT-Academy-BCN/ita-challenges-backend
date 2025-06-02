@@ -3,6 +3,7 @@ package com.itachallenge.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.auth.config.ClientConfig;
 import com.itachallenge.auth.config.GithubClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ public class AuthService implements IAuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final WebClient.Builder webClientBuilder;
     private final GithubClientProperties githubClientProperties;
+    private ClientConfig clientConfig;
 
     private static final String KEY_IS_VALID = "isValid";
     private static final String KEY_USERNAME = "username";
@@ -32,27 +34,32 @@ public class AuthService implements IAuthService {
     private static final String ACCESS_TOKEN_KEY = "access_token";
     private static final String GITHUB_LOGIN_KEY = "login";
     private static final String REDIRECT_URI = "redirect_uri";
+    private static final String ENV_LOCAL = "local";
+    private static final String ENV_DEV   = "dev";
+    private static final String HOST_LOCAL = "localhost";
+    private static final String HOST_DEV   = "dev.ita-challenges.eurecatacademy.org";
+
 
     private final String githubUserInfoUri;
 
     private final String githubTokenUri;
 
 
-    public AuthService(WebClient.Builder webClientBuilder, GithubClientProperties githubClientProperties,
+    public AuthService(WebClient.Builder webClientBuilder,
+                       GithubClientProperties githubClientProperties,
                        @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
-                       @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri
-    ) {
-        this.webClientBuilder = webClientBuilder;
+                       @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri) {
+        this.webClientBuilder       = webClientBuilder;
         this.githubClientProperties = githubClientProperties;
-        this.githubTokenUri = githubTokenUri;
-        this.githubUserInfoUri = githubUserInfoUri;
+        this.githubTokenUri         = githubTokenUri;
+        this.githubUserInfoUri      = githubUserInfoUri;
     }
 
     private String determineEnvironment(String redirectUri) {
-        if (redirectUri.contains("localhost")) {
-            return "local";
-        } else if (redirectUri.contains("dev.ita-challenges.eurecatacademy.org")) {
-            return "dev";
+        if (redirectUri.contains(HOST_LOCAL)) {
+            return ENV_LOCAL;
+        } else if (redirectUri.contains(HOST_DEV)) {
+            return ENV_DEV;
         } else {
             throw new IllegalArgumentException("Unknown environment for redirect URI: " + redirectUri);
         }
@@ -60,7 +67,7 @@ public class AuthService implements IAuthService {
 
     public Mono<String> exchangeCodeForToken(String code, String redirectUri) {
         String env = determineEnvironment(redirectUri);
-        GithubClientProperties.ClientConfig clientConfig = githubClientProperties.getClientConfig(env);
+        clientConfig = githubClientProperties.getClientConfig(env);
         if (clientConfig == null) {
             return Mono.error(new IllegalStateException("No client config found for environment: " + env));
         }
