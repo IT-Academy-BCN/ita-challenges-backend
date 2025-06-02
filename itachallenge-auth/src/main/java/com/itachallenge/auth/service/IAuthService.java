@@ -1,5 +1,6 @@
 package com.itachallenge.auth.service;
 
+import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;

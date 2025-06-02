@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,6 +68,13 @@ public class AuthController {
         return "Hello from ITA ChallengeAuth!!!";
     }
 
+    @Operation(summary = "GitHub OAuth2 Authentication", description = "Authenticate a user using GitHub OAuth2 code and redirect URI.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Authentication successful"),
+            @ApiResponse(responseCode = "400", description = "Missing 'code' or 'redirectUri'"),
+            @ApiResponse(responseCode = "401", description = "Invalid GitHub token"),
+            @ApiResponse(responseCode = "500", description = "Internal server error during authentication")
+    })
     @PostMapping("/github/authenticate")
     public Mono<ResponseEntity<Map<String, Object>>> authenticateWithGithub(@RequestBody(required = false) Map<String, String> codeRequest) {
         if (codeRequest == null || !codeRequest.containsKey("code") || !codeRequest.containsKey("redirect_uri")) {
@@ -87,27 +95,30 @@ public class AuthController {
                     "username", null
             )));
         }
+        return processGithubAuthentication(code, redirectUri);
+    }
 
+    public Mono<ResponseEntity<Map<String, Object>>> processGithubAuthentication(String code, String redirectUri) {
         return authService.exchangeCodeForToken(code, redirectUri)
                 .flatMap(authService::validateTokenWithGithub)
                 .flatMap(response -> {
-                    if (!(boolean) response.get("isValid")) {
+                    if (!(boolean) response.get(KEY_IS_VALID)) {
                         return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                                .header("X-Authentication-Status", "Failed")
+                                .header(X_AUTHENTICATION_STATUS, "Failed")
                                 .body(response));
                     }
-                    String githubUsername = (String) response.get("username");
+                    String githubUsername = (String) response.get(KEY_USERNAME);
                     return getUserDetailsFromGithubUsername(response, githubUsername);
                 })
                 .onErrorResume(ex -> {
                     log.error("GitHub authentication error: {}", ex.getMessage());
 
                     Map<String, Object> errorResponse = new HashMap<>();
-                    errorResponse.put("isValid", false);
-                    errorResponse.put("username", null);
+                    errorResponse.put(KEY_IS_VALID, false);
+                    errorResponse.put(KEY_USERNAME, null);
 
                     return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header("X-Authentication-Status", "Error")
+                            .header(X_AUTHENTICATION_STATUS, "Error")
                             .header("X-Error-Message", "An error occurred during authentication.")
                             .body(errorResponse));
                 });
@@ -155,7 +166,6 @@ public class AuthController {
                     );
                 });
     }
-
 
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
