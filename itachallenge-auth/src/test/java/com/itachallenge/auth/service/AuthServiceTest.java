@@ -35,7 +35,7 @@ class AuthServiceTest {
         mockWebServer.start();
 
         String baseUrl = mockWebServer.url("").toString();
-        String githubTokenUri    = baseUrl + "login/oauth/access_token";
+        String githubTokenUri = baseUrl + "login/oauth/access_token";
         String githubUserInfoUri = baseUrl + "user";
 
         ClientConfig localConfig = new ClientConfig();

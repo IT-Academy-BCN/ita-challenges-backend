@@ -167,6 +167,7 @@ public class AuthController {
                 });
     }
 
+
     @GetMapping("/version")
     public Mono<ResponseEntity<Map<String, String>>> getVersion() {
         Map<String, String> response = new HashMap<>();
