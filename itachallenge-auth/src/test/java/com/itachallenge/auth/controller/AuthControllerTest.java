@@ -64,6 +64,7 @@ class AuthControllerTest {
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .header("Origin")
                 .bodyValue(Map.of("code", validCode))
                 .exchange()
                 .expectStatus().isOk()
@@ -86,6 +87,7 @@ class AuthControllerTest {
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
+                //.header("Origin", "https://localhost:4200")
                 .bodyValue(Map.of("code", invalidCode))
                 .exchange()
                 .expectStatus().isUnauthorized()
@@ -103,6 +105,7 @@ class AuthControllerTest {
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .header("Origin", "https://localhost:4200")
                 .bodyValue(Map.of("code", invalidCode))
                 .exchange()
                 .expectStatus().is5xxServerError()
@@ -122,6 +125,7 @@ class AuthControllerTest {
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .header("Origin")
                 .bodyValue(Map.of("code", validCode))
                 .exchange()
                 .expectStatus().is5xxServerError()
@@ -145,6 +149,7 @@ class AuthControllerTest {
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
+                .header("Origin", "https://localhost:4200")
                 .bodyValue(Map.of("code", validCode))
                 .exchange()
                 .expectStatus().isForbidden()
