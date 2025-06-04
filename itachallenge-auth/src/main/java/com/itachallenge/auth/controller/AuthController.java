@@ -67,6 +67,8 @@ public class AuthController {
     public String test() {
         return "Hello from ITA ChallengeAuth!!!";
     }
+
+
     @Operation(summary = "GitHub OAuth2 Authentication", description = "Authenticate a user using GitHub OAuth2 code and redirect URI.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Authentication successful"),
