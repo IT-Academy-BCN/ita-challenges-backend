@@ -63,6 +63,7 @@ public class AuthController {
         this.appName = appName;
     }
 
+    
     @GetMapping(value = "/test")
     public String test() {
         return "Hello from ITA ChallengeAuth!!!";
