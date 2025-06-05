@@ -42,11 +42,11 @@ class TagServiceImplTest {
     @DisplayName("return todos los tags y generar GenericResultDto<TagDto>")
     void testGetAllTags() {
 
-        TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "Programación orientada a objetos");
-        TagDocument tag2 = new TagDocument(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia");
+        TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "Programación orientada a objetos", UUID.randomUUID());
+        TagDocument tag2 = new TagDocument(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia", UUID.randomUUID());
 
-        TagDto dto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription());
-        TagDto dto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription());
+        TagDto dto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription(), UUID.randomUUID());
+        TagDto dto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription(), UUID.randomUUID());
 
         Flux<TagDocument> tagDocumentFlux = Flux.just(tag1, tag2);
         Flux<TagDto> tagDtoFlux = Flux.just(dto1, dto2);
@@ -79,8 +79,8 @@ class TagServiceImplTest {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
 
-        TagDocument tag1 = new TagDocument(id1, "POO", "Programación orientada a objetos");
-        TagDocument tag2 = new TagDocument(id2, "Lógica", "Retos de lógica");
+        TagDocument tag1 = new TagDocument(id1, "POO", "Programación orientada a objetos", UUID.randomUUID());
+        TagDocument tag2 = new TagDocument(id2, "Lógica", "Retos de lógica", UUID.randomUUID());
 
         when(tagRepository.findById(id1)).thenReturn(Mono.just(tag1));
         when(tagRepository.findById(id2)).thenReturn(Mono.just(tag2));
@@ -131,7 +131,7 @@ class TagServiceImplTest {
     @Test
     @DisplayName("Returns Mono<true> when tag has been found")
     void getValidatedTags_returnsTrue_test(){
-        TagDocument tagDocument = new TagDocument(UUID.randomUUID(), "Tag Title", "Tag Description");
+        TagDocument tagDocument = new TagDocument(UUID.randomUUID(), "Tag Title", "Tag Description", UUID.randomUUID());
         when(tagRepository.findById(tagDocument.getIdTag())).thenReturn(Mono.just(tagDocument));
         List<UUID> tagsAssigned = List.of(tagDocument.getIdTag());
         StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
