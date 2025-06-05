@@ -13,14 +13,14 @@ public class TagTest {
     @Test
     void getTestName() {
         String tagNameTest = "POO";
-        TagDocument tag = new TagDocument(null, tagNameTest, null);
+        TagDocument tag = new TagDocument(null, tagNameTest, null, UUID.randomUUID());
         assertEquals(tagNameTest, tag.getTagName());
     }
 
     @Test
     void getDescriptionTest() {
         String tagDescriptionTest = "Programació orientada a objectes";
-        TagDocument tag = new TagDocument(null, "POO", tagDescriptionTest);
+        TagDocument tag = new TagDocument(null, "POO", tagDescriptionTest, UUID.randomUUID());
         assertEquals(tagDescriptionTest, tag.getTagDescription());
     }
 
@@ -28,7 +28,7 @@ public class TagTest {
     void setTestName() {
         String firstTagName = "POO";
         String tagNameTest = "TEST";
-        TagDocument tag = new TagDocument(null, firstTagName, null);
+        TagDocument tag = new TagDocument(null, firstTagName, null, UUID.randomUUID());
         tag.setTagName(tagNameTest);
         assertEquals(tagNameTest, tag.getTagName());
     }
@@ -37,7 +37,7 @@ public class TagTest {
     void setDescriptionTest() {
         String firstTagDescription = "Programació orientada a objectes";
         String tagDescriptionTest = "TEST";
-        TagDocument tag = new TagDocument(null, "POO", firstTagDescription);
+        TagDocument tag = new TagDocument(null, "POO", firstTagDescription, UUID.randomUUID());
         tag.setTagDescription(tagDescriptionTest);
         assertEquals(tagDescriptionTest, tag.getTagDescription());
     }
@@ -48,7 +48,7 @@ public class TagTest {
         String name = "POO";
         String desc = "Programació orientada a objectes";
 
-        TagDocument tag = new TagDocument(id, name, desc);
+        TagDocument tag = new TagDocument(id, name, desc, UUID.randomUUID());
 
         assertEquals(id, tag.getIdTag());
         assertEquals(name, tag.getTagName());
