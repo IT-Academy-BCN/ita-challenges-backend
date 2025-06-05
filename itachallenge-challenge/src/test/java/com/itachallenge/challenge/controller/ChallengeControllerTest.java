@@ -572,8 +572,8 @@ class ChallengeControllerTest {
     @DisplayName("GET recibir respuesta 200 a getTags")
     void getTags_test_validRequest() {
 
-        TagDto tag1 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos");
-        TagDto tag2 = new TagDto(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia");
+        TagDto tag1 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos",UUID.randomUUID());
+        TagDto tag2 = new TagDto(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia",UUID.randomUUID());
 
         GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
         resultDto.setInfo(0, 2, 2, new TagDto[]{tag1, tag2});
