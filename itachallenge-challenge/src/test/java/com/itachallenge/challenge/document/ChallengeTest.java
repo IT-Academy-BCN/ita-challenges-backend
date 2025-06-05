@@ -185,7 +185,8 @@ class ChallengeTest {
     @Test
     void getTagsTest() {
         UUID uuid = UUID.randomUUID();
-        TagDocument tag = new TagDocument(uuid, "POO", "bla bla bla");
+        UUID idLanguage = UUID.randomUUID();
+        TagDocument tag = new TagDocument(uuid, "POO", "bla bla bla",idLanguage);
 
         ChallengeDocument challenge = new ChallengeDocument(
                 null,

@@ -38,11 +38,11 @@ class TagDocumentToDtoConverterTest {
         String[] tagsNames = new String[]{"POO", "Refactorizacion"};
         String description = "bla bla bla";
 
-        tagDocument1 = new TagDocument(tagsID[0], tagsNames[0], description);
-        tagDocument2 = new TagDocument(tagsID[1], tagsNames[1], description);
+        tagDocument1 = new TagDocument(tagsID[0], tagsNames[0], description, UUID.randomUUID());
+        tagDocument2 = new TagDocument(tagsID[1], tagsNames[1], description, UUID.randomUUID());
 
-        tagDto1 = new TagDto(tagsID[0], tagsNames[0], description);
-        tagDto2 = new TagDto(tagsID[1], tagsNames[1], description);
+        tagDto1 = new TagDto(tagsID[0], tagsNames[0], description, UUID.randomUUID());
+        tagDto2 = new TagDto(tagsID[1], tagsNames[1], description, UUID.randomUUID());
 
     }
 

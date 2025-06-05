@@ -42,7 +42,7 @@ class TagServiceImplCacheTest {
 
     @Test
     void testGetAllTagsUsesCache() {
-        TagDocument tag = new TagDocument(UUID.randomUUID(), "Algoritmos", "bla bla");
+        TagDocument tag = new TagDocument(UUID.randomUUID(), "Algoritmos", "bla bla", UUID.randomUUID());
         when(tagRepository.findAll()).thenReturn(Flux.just(tag));
 
         // Primera llamada
