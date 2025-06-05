@@ -23,4 +23,8 @@ public class TagDto {
 
     @JsonProperty(value = "tag_description", index = 2)
     private String tagDescription;
+
+    @JsonProperty("uuid_language")
+    private UUID idLanguage;
+
 }

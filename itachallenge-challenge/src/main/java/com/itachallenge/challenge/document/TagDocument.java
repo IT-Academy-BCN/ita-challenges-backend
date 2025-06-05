@@ -23,5 +23,7 @@ public class TagDocument {
     @Field(name="tag_description")
     private String tagDescription;
 
+    @Field(name = "language")
+    private UUID idLanguage;
 
 }
