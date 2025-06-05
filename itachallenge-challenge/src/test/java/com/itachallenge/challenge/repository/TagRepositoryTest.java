@@ -66,6 +66,7 @@ public class TagRepositoryTest {
 
         TagDocument tag1 = new TagDocument(uuidTag1, "POO", "Programació orientada a objectes", uuidLang1);
         TagDocument tag2 = new TagDocument(uuidTag2, "Bucles", "Bucles 'for' y 'while'", uuidLang2);
+
         Set<TagDocument> tagSet = new HashSet<>(Arrays.asList(tag1, tag2));
 
         tagRepository.saveAll(Flux.just(tag1, tag2)).blockLast();
