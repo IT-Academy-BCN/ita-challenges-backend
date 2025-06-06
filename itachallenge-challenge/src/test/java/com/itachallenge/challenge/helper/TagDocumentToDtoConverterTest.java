@@ -32,17 +32,19 @@ class TagDocumentToDtoConverterTest {
 
     @BeforeEach
     public void setUp() {
-        mapper  = new DocumentToDtoConverter();
+        mapper = new DocumentToDtoConverter<>();
 
         UUID[] tagsID = new UUID[]{UUID.randomUUID(), UUID.randomUUID()};
         String[] tagsNames = new String[]{"POO", "Refactorizacion"};
         String description = "bla bla bla";
+        UUID idLanguage1 = UUID.fromString("7bcf4ad3-092d-4c13-8f78-685c2a8803a9");
+        UUID idLanguage2 = UUID.fromString("bf893476-bf0f-464a-927c-4fee3b207123");
 
-        tagDocument1 = new TagDocument(tagsID[0], tagsNames[0], description, UUID.randomUUID());
-        tagDocument2 = new TagDocument(tagsID[1], tagsNames[1], description, UUID.randomUUID());
+        tagDocument1 = new TagDocument(tagsID[0], tagsNames[0], description, idLanguage1);
+        tagDocument2 = new TagDocument(tagsID[1], tagsNames[1], description, idLanguage2);
 
-        tagDto1 = new TagDto(tagsID[0], tagsNames[0], description, UUID.randomUUID());
-        tagDto2 = new TagDto(tagsID[1], tagsNames[1], description, UUID.randomUUID());
+        tagDto1 = new TagDto(tagsID[0], tagsNames[0], description, idLanguage1);
+        tagDto2 = new TagDto(tagsID[1], tagsNames[1], description, idLanguage2);
 
     }
 
