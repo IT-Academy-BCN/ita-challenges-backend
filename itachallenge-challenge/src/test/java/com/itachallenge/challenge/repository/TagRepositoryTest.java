@@ -113,7 +113,7 @@ class TagRepositoryTest {
     @DisplayName("Find by Language ID")
     @Test
     void findByIdLanguageTest() {
-        Flux<TagDocument> tagsByLanguage = tagRepository.findByIdLanguage(uuidLang1);
+        Flux<TagDocument> tagsByLanguage = tagRepository.findByLanguageId(uuidLang1);
 
         StepVerifier.create(tagsByLanguage)
                 .expectNextMatches(tag -> tag.getTagName().equals("POO") && tag.getLanguageId().equals(uuidLang1))

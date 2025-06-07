@@ -11,5 +11,5 @@ import java.util.UUID;
 @Repository
 public interface TagRepository extends ReactiveMongoRepository<TagDocument, UUID> {
     Mono<TagDocument> findByTagName(String tagName);
-    Flux<TagDocument> findByIdLanguage(UUID idLanguage);
+    Flux<TagDocument> findByLanguageId(UUID languageId);
 }
