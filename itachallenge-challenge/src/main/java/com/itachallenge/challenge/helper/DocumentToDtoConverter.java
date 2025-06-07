@@ -69,7 +69,7 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(TagDocument::getIdTag,TagDto::setTagId)
                     .addMapping(TagDocument::getTagName, TagDto::setTagName)
                     .addMapping(TagDocument::getTagDescription, TagDto::setTagDescription)
-                    .addMapping(TagDocument::getIdLanguage, TagDto::setIdLanguage);
+                    .addMapping(TagDocument::getLanguageId, TagDto::setLanguageId);
         }
 
         if (dtoClass.isAssignableFrom(ResourceDto.class) && document instanceof ResourceDocument) {
