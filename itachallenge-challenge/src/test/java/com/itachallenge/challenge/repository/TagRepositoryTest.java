@@ -31,7 +31,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class TagRepositoryTest {
+class TagRepositoryTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -116,7 +116,7 @@ public class TagRepositoryTest {
         Flux<TagDocument> tagsByLanguage = tagRepository.findByIdLanguage(uuidLang1);
 
         StepVerifier.create(tagsByLanguage)
-                .expectNextMatches(tag -> tag.getTagName().equals("POO") && tag.getIdLanguage().equals(uuidLang1))
+                .expectNextMatches(tag -> tag.getTagName().equals("POO") && tag.getLanguageId().equals(uuidLang1))
                 .verifyComplete();
     }
 
