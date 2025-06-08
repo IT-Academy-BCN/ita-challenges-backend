@@ -6,24 +6,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- FavoriteController and extracted endpoints from ChallengeController. (#PR 886)
-- POST endpoint in Auth microservice to allow user role change at runtime (PR #882)
-- Hardcoded GET endpoint to return all of a user’s challenge solutions (PR #884)
-- JWT authentication to logout endpoint in User microservice (PR #864)
-- Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (PR #872)
-- Tag validation in the addChallenge endpoint (PR #866)
-- GET endpoint for retrieving resources from a challenge (PR #852)
-- GET endpoint to retrieve all user's bookmarked challenges (PR #849)
-- DELETE endpoint in Challenge microservice to unbookmark a challenge (PR #843)
-- POST endpoint in Challenge microservice to bookmark a challenge (PR #829)
-- POST endpoint in User microservice to bookmark a challenge (PR #827)
-- DELETE endpoint for user's bookmarks in User microservice (PR #831)
-- GET endpoint to retrieve the list of challenges marked as favorites by a user (PR #826)
-- PUT endpoint `/solution` in User microservice to save a user solution in the database (PR #828)
+- Add validation to verify that the provided user ID exists for the getAllSolutionsByUser endpoint. (Taiga [#437], PR [#889])
+- FavoriteController and extracted endpoints from ChallengeController. (Taiga [#418], PR [#886]) 
+- POST endpoint in Auth microservice to allow user role change at runtime (Taiga [#404], PR [#882])  
+- Hardcoded GET endpoint to return all of a user’s challenge solutions (Taiga [#435], PR [#884])  
+- JWT authentication to logout endpoint in User microservice (Taiga [#399], PR [#864])  
+- Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (Taiga [#355], PR [#872]) 
+- Tag validation in the addChallenge endpoint (Taiga [#354], PR [#866])  
+- GET endpoint for retrieving resources from a challenge (Taiga [#281], PR [#852])
+- GET endpoint to retrieve all user's bookmarked challenges (Taiga [#255], PR [#849]) 
+- DELETE endpoint in Challenge microservice to unbookmark a challenge (Taiga [#205], PR [#843]) 
+- POST endpoint in Challenge microservice to bookmark a challenge (Taiga [#183], PR [#829])
+- POST endpoint in User microservice to bookmark a challenge (Taiga [#183], PR [#827])
+- DELETE endpoint for user's bookmarks in User microservice (Taiga [#205], PR [#831])
+- GET endpoint to retrieve the list of challenges marked as favorites by a user (Taiga [#181], PR [#826])
+- PUT endpoint `/solution` in User microservice to save a user solution in the database (Taiga [#198], PR [#828])
 
 ### Changed
-- Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (PR #887)
-- POST endpoint for adding new challenges in Challenge microservice: added `languageImage` to `LanguageDocument` and `LanguageDto`, persisted image URL, updated tests, and created endpoints to bookmark and unbookmark challenges (PR #763)
+- Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (Taiga [#406], PR [#887])
+- POST endpoint for adding new challenges in Challenge microservice (PR #763)
 - Improved filtering at `/GET Challenges`: added DTO for filters (language, level, tags), refactored `filterByLanguage()`, `filterByLevel()`, and `filterByTags()` methods, and added `GET /allTags` endpoint (PR #180 & PR #185)
 
 ### Removed
