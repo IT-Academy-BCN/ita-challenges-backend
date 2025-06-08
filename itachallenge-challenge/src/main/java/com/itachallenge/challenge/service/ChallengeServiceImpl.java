@@ -126,7 +126,6 @@ public class ChallengeServiceImpl implements IChallengeService {
                 ChallengeDto.class);
 
         return countMono.zipWith(challengeDtoFlux.collectList(), (totalCount, challenges) -> {
-            challenges.forEach(dto -> dto.setCreationDate("2025-06-05T00:00:00Z"));
             ChallengeDto[] challengeArray = challenges.toArray(new ChallengeDto[0]);
             return new GenericResultDto<>(offset, limit, totalCount.intValue(), challengeArray);
         }).onErrorResume(e -> Mono.just(new GenericResultDto<>(offset, limit, 0, new ChallengeDto[0])));
