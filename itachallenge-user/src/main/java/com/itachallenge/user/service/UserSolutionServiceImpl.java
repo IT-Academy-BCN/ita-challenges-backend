@@ -21,9 +21,11 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImpl.class);
     private final IUserSolutionRepository userSolutionRepository;
+    private final UserService userService;
 
-    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository) {
+    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository, UserService userService) {
         this.userSolutionRepository = userSolutionRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -83,8 +85,12 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
-        return validateAndParseUuid(userId)
+        return  validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
+                userService.getUserById(userId)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                .thenMany(
+        
                 userSolutionRepository
                         .findAllByUserId(UUID.fromString(userId))
                         .map(doc -> {
@@ -96,7 +102,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                                             .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
                                             .build();
                                 }
-                        ));
+                        )));
     }
     
     private Mono<UUID> validateAndParseUuid(String userId) {
