@@ -6,7 +6,7 @@ ENV_FILE="conf/.env.CI.dev"
 
 # Simulación de microservicios cambiados - normalmente se haría con git diff
 # Aquí puedes cambiar la lista para probar diferentes combinaciones
-CHANGED_SERVICES=("itachallenge_auth" "itachallenge_user")
+CHANGED_SERVICES=("itachallenge-auth" "itachallenge-user")
 
 echo "Simulando deploy para servicios cambiados: ${CHANGED_SERVICES[*]}"
 echo ""
