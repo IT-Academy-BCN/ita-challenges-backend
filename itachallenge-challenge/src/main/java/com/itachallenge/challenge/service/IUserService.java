@@ -10,5 +10,4 @@ public interface IUserService {
 
     Mono<Boolean> removeChallengeFromBookmarks(String userId, String challengeId);
 
-    Mono<Boolean> addChallengeToSolved(String userId, String challengeId);
 }

@@ -323,7 +323,7 @@ class ChallengeServiceImplTest {
 @Test
 void addChallengeToSolved_WhenChallengeTimesSolvedIsNull_IncreasesTimesSolvedAndReturnsSolvedDTO() {
         UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
+
         ChallengeDocument challenge = new ChallengeDocument();
 
         challenge.setTimesSolved(null);
@@ -331,7 +331,7 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsNull_IncreasesTimesSolvedAnd
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
         when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
 
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
+    StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
                         .expectNextMatches(solvedDto -> {
                                 return solvedDto.getTimesSolved() == 1 &&
                                                 solvedDto.isSolved();
@@ -347,7 +347,7 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsNull_IncreasesTimesSolvedAnd
 @Test
 void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAndReturnsSolvedDTO() {
         UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
+
         ChallengeDocument challenge = new ChallengeDocument();
 
         challenge.setTimesSolved(0);
@@ -355,7 +355,7 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
         when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
 
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
+    StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
                         .expectNextMatches(solvedDto -> {
                                 return solvedDto.getTimesSolved() == 1 &&
                                                 solvedDto.isSolved();
@@ -368,29 +368,31 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
         verify(challengeRepository, times(1)).save(challenge);
 }
 
-@Test
-void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedAndReturnsSolvedDTO() {
+    @Test
+    void addChallengeToSolved_AlwaysIncreasesTimesSolvedAndReturnsSolvedDTO() {
         UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
+
         ChallengeDocument challenge = new ChallengeDocument();
         int initialTimesSolved = 5;
-
         challenge.setTimesSolved(initialTimesSolved);
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), userUuid.toString()))
-                        .expectNextMatches(solvedDto -> {
-                                return solvedDto.getTimesSolved() == initialTimesSolved &&
-                                                solvedDto.isSolved();
-                        })
-                        .verifyComplete();
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .expectNextMatches(solvedDto ->
+                        solvedDto.getTimesSolved() == initialTimesSolved + 1 &&
+                                solvedDto.isSolved()
+                )
+                .verifyComplete();
 
-        Assertions.assertEquals(initialTimesSolved, challenge.getTimesSolved());
+        Assertions.assertEquals(initialTimesSolved + 1, challenge.getTimesSolved());
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(challengeRepository, times(0)).save(any());
-}
+        verify(challengeRepository, times(1)).save(any());
+    }
+
 
     @Test
     void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
@@ -668,7 +670,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
     @Test
     void addChallengeToSolved_WhenChallengeUuidNotValid_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToSolved("InvalidUuid", UUID.randomUUID().toString()))
+        StepVerifier.create(challengeService.addChallengeToSolved("InvalidUuid"))
                 .expectErrorMatches(error ->
                         error instanceof BadUUIDException &&
                                 error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
@@ -685,15 +687,6 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
     }
 
     @Test
-    void addChallengeToSolved_WhenUserUuidNotValid_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToSolved(UUID.randomUUID().toString(), "InvalidUuid"))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenChallengeUuidIsNull_ReturnsError() {
         StepVerifier.create(challengeService.addChallengeToBookmarks(null, UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
@@ -703,26 +696,8 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
     }
 
     @Test
-    void addChallengeToSolved_WhenChallengeUuidIsNull_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToSolved(null, UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenUserUuidIsNull_ReturnsError() {
         StepVerifier.create(challengeService.addChallengeToBookmarks(UUID.randomUUID().toString(), null))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
-    void addChallengeToSolved_WhenUserUuidIsNull_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToSolved(UUID.randomUUID().toString(), null))
                 .expectErrorMatches(error ->
                         error instanceof BadUUIDException &&
                                 error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
@@ -752,7 +727,7 @@ void addChallengeToSolved_WhenChallengeAlreadySolved_DoesNotIncreaseTimesSolvedA
 
         when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
 
-        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString(), UUID.randomUUID().toString()))
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .expectErrorMatches(error ->
                         error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
