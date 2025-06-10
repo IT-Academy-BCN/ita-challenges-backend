@@ -90,3 +90,4 @@
 * Santiago Hernandez Beltran - https://github.com/shernandez334
 * Inga Demetrashvili - https://github.com/IngaD89
 * Angel Pelaez -  https://github.com/AngelPelaezS1
+* Fernando Giménez - https://github.com/FerGimenezRoglia
