@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - DELETE endpoint for user's bookmarks in User microservice (Taiga [#205], PR [#831])
 - GET endpoint to retrieve the list of challenges marked as favorites by a user (Taiga [#181], PR [#826])
 - PUT endpoint `/solution` in User microservice to save a user solution in the database (Taiga [#198], PR [#828])
+- Added the class ChallengeServiceImpl to comunicate with the Challenge microservice (Taiga [#413], PR [#890])
 
 ### Changed
 - Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (Taiga [#406], PR [#887])
