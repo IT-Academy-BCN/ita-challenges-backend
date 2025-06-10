@@ -76,9 +76,4 @@ public class UserGlobalExceptionHandler {
     public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
-
-    @ExceptionHandler(ChallengeNotFoundException.class)
-    public ResponseEntity<String> handleChallengeNotFoundException(ChallengeNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
 }

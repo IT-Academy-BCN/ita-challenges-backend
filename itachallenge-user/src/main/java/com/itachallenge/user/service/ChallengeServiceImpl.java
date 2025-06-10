@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.itachallenge.user.document.enums.ChallengeStatus;
 import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.InternalServerErrorException;
 
 import reactor.core.publisher.Mono;
@@ -47,7 +47,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .retrieve()
                 .onStatus(HttpStatus.NOT_FOUND::equals, response -> {
                     log.info("Challenge not found with id: {}", challengeId);
-                    return Mono.error(new ChallengeNotFoundException("Challenge not found"));
+                    return Mono.error(new NotFoundException("Challenge not found"));
                 })
                 .onStatus(HttpStatus.BAD_REQUEST::equals, response -> {
                     String errorMessage = response.headers().header(errorHeader).stream()

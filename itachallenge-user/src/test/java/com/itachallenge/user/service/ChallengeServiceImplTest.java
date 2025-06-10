@@ -1,8 +1,8 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.ChallengeNotFoundException;
 import com.itachallenge.user.exception.InternalServerErrorException;
+import com.itachallenge.user.exception.NotFoundException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -125,7 +125,7 @@ public class ChallengeServiceImplTest {
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
-                    assertInstanceOf(ChallengeNotFoundException.class, throwable);
+                    assertInstanceOf(NotFoundException.class, throwable);
                     assertTrue(throwable.getMessage().contains("Challenge not found"));
                 })
                 .verify();
