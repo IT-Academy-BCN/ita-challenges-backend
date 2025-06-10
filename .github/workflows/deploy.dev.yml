@@ -3,7 +3,7 @@ name: Upload Image to Docker Hub & Deploy to Dev
 on:
   push:
     branches:
-      - workflow #develop
+      - feature/465-refine-build-versioning #workflow # develop
   pull_request:
     types:
       - closed
