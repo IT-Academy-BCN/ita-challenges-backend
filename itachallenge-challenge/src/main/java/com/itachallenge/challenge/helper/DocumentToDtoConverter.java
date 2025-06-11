@@ -54,7 +54,8 @@ public class DocumentToDtoConverter<S,D> {
                     .addMapping(ChallengeDocument::getTitle, ChallengeDto::setTitle)
                     .addMapping(ChallengeDocument::getTimesFavorite, ChallengeDto::setTimesFavorite)
                     .addMapping(ChallengeDocument::getTags, ChallengeDto::setTags)
-                    .addMapping(ChallengeDocument::getTimesBookmark, ChallengeDto::setTimesBookmark);
+                    .addMapping(ChallengeDocument::getTimesBookmark, ChallengeDto::setTimesBookmark)
+                    .addMapping(ChallengeDocument::getTimesSolved, ChallengeDto::setTimesSolved);
             mapper.addConverter(converterFromLocalDateTimeToString);
         }
 

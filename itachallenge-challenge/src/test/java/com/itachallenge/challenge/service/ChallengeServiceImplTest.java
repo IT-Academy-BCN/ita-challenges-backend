@@ -24,12 +24,16 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -80,7 +84,8 @@ class ChallengeServiceImplTest {
         String description = "Detall";
         String level = "EASY";
         String solutionBody = "Solution Text";
-        List<UUID> tags = List.of(UUID.randomUUID());
+        List<UUID> tags = new ArrayList<>();
+        tags.add(UUID.randomUUID());
 
         formData = new ChallengeCreateDto(title, description, DifficultyLevel.valueOf(level),
                 languageName, solutionBody, Topic.LISTS, tags);
@@ -104,12 +109,12 @@ class ChallengeServiceImplTest {
 
         challengeDocument = new ChallengeDocument(challengeRandomId, title, level, localDateTime, detail,
                 Set.of(languageDocument), List.of(solutionsRandomId), Topic.COMPONENTS,
-                20, 30,tags);
+                20, 30, 40, tags);
 
         challengeDto = getChallengeDtoMocked(challengeRandomId, title, level, creationDate, detail,
                 Set.of(languageDto),
                 List.of(solutionsRandomId),
-                popularity, percentage);
+                popularity, percentage, tags);
     }
 
 
@@ -315,6 +320,80 @@ class ChallengeServiceImplTest {
         verify(solutionConverter, never()).convertDocumentFluxToDtoFlux(any(), any());
     }
 
+@Test
+void addChallengeToSolved_WhenChallengeTimesSolvedIsNull_IncreasesTimesSolvedAndReturnsSolvedDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesSolved(null);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+    StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                        .expectNextMatches(solvedDto -> {
+                                return solvedDto.getTimesSolved() == 1 &&
+                                                solvedDto.isSolved();
+                        })
+                        .verifyComplete();
+
+        Assertions.assertEquals(1, challenge.getTimesSolved());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(challengeRepository, times(1)).save(challenge);
+}
+
+@Test
+void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAndReturnsSolvedDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+
+        ChallengeDocument challenge = new ChallengeDocument();
+
+        challenge.setTimesSolved(0);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
+
+    StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                        .expectNextMatches(solvedDto -> {
+                                return solvedDto.getTimesSolved() == 1 &&
+                                                solvedDto.isSolved();
+                        })
+                        .verifyComplete();
+
+        Assertions.assertEquals(1, challenge.getTimesSolved());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(challengeRepository, times(1)).save(challenge);
+}
+
+    @Test
+    void addChallengeToSolved_AlwaysIncreasesTimesSolvedAndReturnsSolvedDTO() {
+        UUID challengeUuid = UUID.randomUUID();
+
+        ChallengeDocument challenge = new ChallengeDocument();
+        int initialTimesSolved = 5;
+        challenge.setTimesSolved(initialTimesSolved);
+
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .expectNextMatches(solvedDto ->
+                        solvedDto.getTimesSolved() == initialTimesSolved + 1 &&
+                                solvedDto.isSolved()
+                )
+                .verifyComplete();
+
+        Assertions.assertEquals(initialTimesSolved + 1, challenge.getTimesSolved());
+
+        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
+        verify(challengeRepository, times(1)).save(any());
+    }
+
+
     @Test
     void addSolution_ValidChallengeIdAndLanguageId_SolutionAdded() {
         // Arrange
@@ -422,6 +501,7 @@ class ChallengeServiceImplTest {
     void addChallenge_test_success() {
         when(ILanguageService.findFirstByLanguageName(eq(languageName))).thenReturn(Mono.just(languageDocument)); // Valid language
         when(solutionRepository.save(any(SolutionDocument.class))).thenReturn(Mono.just(solutionDocument));
+        when(tagService.getValidatedTags(eq(formData.getTags()))).thenReturn(Mono.just(true));
         when(challengeRepository.save(any(ChallengeDocument.class))).thenReturn(Mono.just(challengeDocument));
         when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class))).thenReturn(challengeDto);
 
@@ -432,6 +512,7 @@ class ChallengeServiceImplTest {
 
         verify(ILanguageService, times(1)).findFirstByLanguageName(eq(languageName));
         verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(formData.getTags()));
         verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
         verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
     }
@@ -450,7 +531,7 @@ class ChallengeServiceImplTest {
 
     private ChallengeDto getChallengeDtoMocked(UUID challengeId, String title, String level, String creationDate, DetailDocument detail,
                                                Set<LanguageDto> languages,
-                                               List<UUID> solutions, Integer popularity, Float percentage) {
+                                               List<UUID> solutions, Integer popularity, Float percentage, List<UUID> tags) {
         ChallengeDto challengeDocMocked = mock(ChallengeDto.class);
         when(challengeDocMocked.getChallengeId()).thenReturn(challengeId);
         when(challengeDocMocked.getTitle()).thenReturn(title);
@@ -461,10 +542,55 @@ class ChallengeServiceImplTest {
         when(challengeDocMocked.getSolutions()).thenReturn(solutions);
         when(challengeDocMocked.getPopularity()).thenReturn(popularity);
         when(challengeDocMocked.getPercentage()).thenReturn(percentage);
+        when(challengeDocMocked.getTags()).thenReturn(tags);
         return challengeDocMocked;
     }
-
-
+    
+    @Test
+    void addChallenge_test_invalidTags() {
+        when(ILanguageService.findFirstByLanguageName(eq(languageName)))
+                .thenReturn(Mono.just(languageDocument));
+        when(solutionRepository.save(any(SolutionDocument.class)))
+                .thenReturn(Mono.just(solutionDocument));
+                when(tagService.getValidatedTags(eq(formData.getTags())))
+                .thenReturn(Mono.just(false));
+        
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof TagNotFoundException
+                                && throwable.getMessage().equals("One or more tags are invalid")
+                )
+                .verify();
+        
+        verify(challengeRepository, never()).save(any(ChallengeDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(formData.getTags()));
+    }
+    
+    @Test
+    void addChallenge_test_emptyTags() {
+        formData.setTags(Collections.emptyList());
+        when(ILanguageService.findFirstByLanguageName(eq(languageName)))
+                .thenReturn(Mono.just(languageDocument));
+        when(solutionRepository.save(any(SolutionDocument.class)))
+                .thenReturn(Mono.just(solutionDocument));
+        when(tagService.getValidatedTags(eq(Collections.emptyList())))
+                .thenReturn(Mono.just(true));
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenReturn(Mono.just(challengeDocument));
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
+                .thenReturn(challengeDto);
+        
+        StepVerifier.create(challengeService.addChallenge(formData))
+                .expectNext(challengeDto)
+                .verifyComplete();
+                
+        verify(ILanguageService, times(1)).findFirstByLanguageName(eq(languageName));
+        verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(tagService, times(1)).getValidatedTags(eq(Collections.emptyList()));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+        verify(challengeConverter, times(1))
+                .convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
+    }
 
     @Test
     void deleteChallengeById_NotFound() {
@@ -534,15 +660,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenChallengeUuidNotValid_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToFavorites("InvalidUuid", UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenChallengeUuidNotValid_ReturnsError() {
         StepVerifier.create(challengeService.addChallengeToBookmarks("InvalidUuid", UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
@@ -552,8 +669,8 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenUserUuidNotValid_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToFavorites(UUID.randomUUID().toString(), "InvalidUuid"))
+    void addChallengeToSolved_WhenChallengeUuidNotValid_ReturnsError() {
+        StepVerifier.create(challengeService.addChallengeToSolved("InvalidUuid"))
                 .expectErrorMatches(error ->
                         error instanceof BadUUIDException &&
                                 error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
@@ -570,26 +687,8 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenChallengeUuidIsNull_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToFavorites(null, UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenChallengeUuidIsNull_ReturnsError() {
         StepVerifier.create(challengeService.addChallengeToBookmarks(null, UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
-    void addChallengeToFavorites_WhenUserUuidIsNull_ReturnsError() {
-        StepVerifier.create(challengeService.addChallengeToFavorites(UUID.randomUUID().toString(), null))
                 .expectErrorMatches(error ->
                         error instanceof BadUUIDException &&
                                 error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
@@ -606,22 +705,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenChallengeNotFound_ReturnsError() {
-        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
-        UUID challengeUuid = UUID.randomUUID();
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
-                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenChallengeNotFound_ReturnsError() {
         String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
         UUID challengeUuid = UUID.randomUUID();
@@ -630,7 +713,7 @@ class ChallengeServiceImplTest {
 
         StepVerifier.create(challengeService.addChallengeToBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -638,24 +721,19 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenUserNotFound_ReturnsError() {
+    void addChallengeToSolved_WhenChallengeNotFound_ReturnsError() {
+        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
         UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
 
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
+        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
 
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new UserNotFoundException(message)));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
+        StepVerifier.create(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
+                        error instanceof ChallengeNotFoundException &&
+                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
     }
 
     @Test
@@ -680,27 +758,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -719,27 +776,6 @@ class ChallengeServiceImplTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void addChallengeToFavorites_WhenUserServiceReturnsCustomInternalServerErrorException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
     }
 
     @Test
@@ -764,27 +800,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenUserServiceReturnsAnyException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new Exception(message)));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof Exception &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenUserServiceReturnsAnyException_ReturnsError() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -803,33 +818,6 @@ class ChallengeServiceImplTest {
 
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void addChallengeToFavorites_WhenAdded_IncreasesTimesFavoriteAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        int initialTimesFavorite = 20;
-
-        challenge.setTimesFavorite(initialTimesFavorite);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                        return favoriteDto.getTimesFavorited() == initialTimesFavorite + 1 &&
-                                favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(initialTimesFavorite + 1, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
     }
 
     @Test
@@ -860,32 +848,6 @@ class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToFavorites_WhenAddedAndInitialTimesFavoriteIsNull_IncreasesTimesFavoriteAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesFavorite(null);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == 1 &&
-                            favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(1, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
     void addChallengeToBookmarks_WhenAddedAndInitialTimesFavoriteIsNull_IncreasesTimesBookmarkAndReturnsBookmarkDTO() {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -909,32 +871,6 @@ class ChallengeServiceImplTest {
         verify(challengeRepository, times(1)).findByUuid(challengeUuid);
         verify(userService, times(1)).addChallengeToBookmarks(userUuid.toString(), challengeUuid.toString());
         verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
-    void addChallengeToFavorites_WhenNotAdded_NotIncreaseTimesFavoriteAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        int initialTimesFavorite = 20;
-
-        challenge.setTimesFavorite(initialTimesFavorite);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == initialTimesFavorite &&
-                            favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(initialTimesFavorite, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(0)).save(any());
     }
 
     @Test
@@ -965,33 +901,6 @@ class ChallengeServiceImplTest {
 
     @ParameterizedTest
     @MethodSource
-    void addChallengeToFavorites_WhenNotAddedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToOneAndReturnsFavoriteDTO(Integer timesFavorite) {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesFavorite(timesFavorite);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.addChallengeToFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.addChallengeToFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == 1 &&
-                            favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(1, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).addChallengeToFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @ParameterizedTest
-    @MethodSource
     void addChallengeToBookmarks_WhenNotAddedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkToOneAndReturnsBookmarkDTO(Integer timesBookmark) {
         UUID challengeUuid = UUID.randomUUID();
         UUID userUuid = UUID.randomUUID();
@@ -1017,280 +926,12 @@ class ChallengeServiceImplTest {
         verify(challengeRepository, times(1)).save(challenge);
     }
 
-    public static Stream<Integer> addChallengeToFavorites_WhenNotAddedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToOneAndReturnsFavoriteDTO() {
-        return Stream.of(null, 0);
-    }
-
     public static Stream<Integer> addChallengeToBookmarks_WhenNotAddedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkToOneAndReturnsBookmarkDTO() {
         return Stream.of(null, 0);
     }
 
-    @Test
-    void removeChallengeFromFavorites_WhenChallengeUuidNotValid_ReturnsError() {
-        StepVerifier.create(challengeService.removeChallengeFromFavorites("InvalidUuid", UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenUserUuidNotValid_ReturnsError() {
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(UUID.randomUUID().toString(), "InvalidUuid"))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenChallengeUuidIsNull_ReturnsError() {
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(null, UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenUserUuidIsNull_ReturnsError() {
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(UUID.randomUUID().toString(), null))
-                .expectErrorMatches(error ->
-                        error instanceof BadUUIDException &&
-                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
-                .verify();
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenChallengeNotFound_ReturnsError() {
-        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
-        UUID challengeUuid = UUID.randomUUID();
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.empty());
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), UUID.randomUUID().toString()))
-                .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
-                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenUserNotFound_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new UserNotFoundException(message)));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenUserServiceReturnsCustomBadRequestException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new BadRequestException(message)));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenUserServiceReturnsCustomInternalServerErrorException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new InternalServerErrorException(message)));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof InternalServerErrorException &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenUserServiceReturnsAnyException_ReturnsError() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        String message = "Some error message";
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.error(new Exception(message)));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectErrorMatches(error ->
-                        error instanceof Exception &&
-                                error.getMessage().equals(message))
-                .verify();
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenRemoved_DecreasesTimesFavoriteAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        int initialTimesFavorite = 20;
-
-        challenge.setTimesFavorite(initialTimesFavorite);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == initialTimesFavorite - 1 &&
-                            !favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(initialTimesFavorite - 1, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenRemovedAndInitialTimesFavoriteIsNull_SetsTimesFavoriteToZeroAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesFavorite(null);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == 0 &&
-                            !favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(0, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenRemovedAndInitialTimesFavoriteIsZero_SetsTimesFavoriteToZeroAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesFavorite(0);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(true));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == 0 &&
-                            !favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(0, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
-    }
-
-    @Test
-    void removeChallengeFromFavorites_WhenNotRemoved_NotChangeTimesFavoriteAndReturnsFavoriteDTO() {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-        int initialTimesFavorite = 20;
-
-        challenge.setTimesFavorite(initialTimesFavorite);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == initialTimesFavorite &&
-                            !favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(initialTimesFavorite, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(0)).save(any());
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    void removeChallengeFromFavorites_WhenNotRemovedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToZeroAndReturnsFavoriteDTO(Integer timesFavorite) {
-        UUID challengeUuid = UUID.randomUUID();
-        UUID userUuid = UUID.randomUUID();
-        ChallengeDocument challenge = new ChallengeDocument();
-
-        challenge.setTimesFavorite(timesFavorite);
-
-        when(challengeRepository.findByUuid(challengeUuid)).thenReturn(Mono.just(challenge));
-        when(userService.removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString())).thenReturn(Mono.just(false));
-        when(challengeRepository.save(challenge)).thenReturn(Mono.just(challenge));
-
-        StepVerifier.create(challengeService.removeChallengeFromFavorites(challengeUuid.toString(), userUuid.toString()))
-                .expectNextMatches(favoriteDto -> {
-                    return favoriteDto.getTimesFavorited() == 0 &&
-                            !favoriteDto.isFavorite();
-                })
-                .verifyComplete();
-
-        Assertions.assertEquals(0, challenge.getTimesFavorite());
-
-        verify(challengeRepository, times(1)).findByUuid(challengeUuid);
-        verify(userService, times(1)).removeChallengeFromFavorites(userUuid.toString(), challengeUuid.toString());
-        verify(challengeRepository, times(1)).save(challenge);
+    public static Stream<Integer> addChallengeToSolved_WhenNotAddedAndTimesSolvedIsNullOrZero_SetTimesSolvedToOneAndReturnsSolvedDTO() {
+        return Stream.of(null, 0);
     }
 
     @Test
@@ -1320,7 +961,7 @@ class ChallengeServiceImplTest {
                 Set.of(new LanguageDocument(languageId, "Language Name", "image.png")),
                 List.of(UUID.randomUUID()),
                 Topic.COMPONENTS,
-                0, 0, tags
+                0, 0, 0, tags
         );
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
@@ -1374,7 +1015,7 @@ class ChallengeServiceImplTest {
                 Set.of(new LanguageDocument(UUID.randomUUID(), "Other Language", "image.png")),
                 List.of(UUID.randomUUID()),
                 Topic.COMPONENTS,
-                0, 0, tags
+                0, 0, 0, tags
         );
 
         when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
@@ -1461,11 +1102,6 @@ class ChallengeServiceImplTest {
                 });
     }
 
-
-    public static Stream<Integer> removeChallengeFromFavorites_WhenNotRemovedAndTimesFavoriteIsNullOrZero_SetTimesFavoriteToZeroAndReturnsFavoriteDTO() {
-        return Stream.of(null, 0);
-    }
-
     @Test
     void removeChallengeFromBookmarks_WhenChallengeUuidNotValid_ReturnsError() {
         StepVerifier.create(challengeService.removeChallengeFromBookmarks("InvalidUuid", UUID.randomUUID().toString()))
@@ -1511,7 +1147,7 @@ class ChallengeServiceImplTest {
 
         StepVerifier.create(challengeService.removeChallengeFromBookmarks(challengeUuid.toString(), UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
-                        error instanceof ChallengeNotFoundReturn404Exception &&
+                        error instanceof ChallengeNotFoundException &&
                                 error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeUuid.toString())))
                 .verify();
 
@@ -1737,7 +1373,141 @@ class ChallengeServiceImplTest {
     public static Stream<Integer> removeChallengeFromBookmarks_WhenNotRemovedAndTimesBookmarkIsNullOrZero_SetTimesBookmarkedToZeroAndReturnsBookmarkDTO() {
         return Stream.of(null, 0);
     }
+
+    @Test
+    void updateChallenge_success_test(){
+
+        String challengeId = challengeDocument.getUuid().toString();
+        AtomicReference<SolutionDocument> savedSolutionDocument = new AtomicReference<>();
+
+        when(ILanguageService.findFirstByLanguageName(anyString()))
+                .thenReturn(Mono.just(languageDocument));
+        when(challengeRepository.findByUuid(UUID.fromString(challengeId))).thenReturn(Mono.just(challengeDocument));
+        when(tagService.getValidatedTags(formData.getTags())).thenReturn(Mono.just(true));
+        when(solutionRepository.save(any(SolutionDocument.class))).thenAnswer(resp -> {
+            SolutionDocument solutionDocument1 = resp.getArgument(0);
+            savedSolutionDocument.set(solutionDocument1);
+            return Mono.just(solutionDocument1);
+        });
+        when(challengeRepository.save(any(ChallengeDocument.class)))
+                .thenAnswer(resp -> {
+                    ChallengeDocument updatedChallengeDocument = resp.getArgument(0);
+                    return Mono.just(updatedChallengeDocument);
+                });
+        when(challengeConverter.convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class)))
+                .thenAnswer(invocation -> buildChallengeDtoFromDocument(invocation.getArgument(0)));
+
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .consumeNextWith(responseDto ->{
+                    boolean languageMatch = responseDto.getLanguages().stream()
+                            .anyMatch(lang -> formData.getLanguage().equals(lang.getLanguageName()));
+                    SolutionDocument solutionDocument1 = savedSolutionDocument.get();
+
+                    Assertions.assertAll(
+                            () -> Assertions.assertEquals(challengeId, responseDto.getChallengeId().toString()),
+                            () -> Assertions.assertEquals(formData.getChallengeTitle(), responseDto.getTitle()),
+                            () -> Assertions.assertEquals(String.valueOf(formData.getLevel()), responseDto.getLevel()),
+                            () -> Assertions.assertEquals("2023-06-05", responseDto.getCreationDate()),
+                            () -> Assertions.assertEquals(formData.getDescription(), responseDto.getDetail().getDescription()),
+                            () -> Assertions.assertEquals(challengeDocument.getTimesFavorite(), responseDto.getTimesFavorite()),
+                            () -> Assertions.assertEquals(1, responseDto.getLanguages().size()),
+                            () -> Assertions.assertTrue(languageMatch, "language does not match."),
+                            () -> Assertions.assertEquals(formData.getSolution(), solutionDocument1.getSolutionText()),
+                            () -> Assertions.assertEquals(formData.getTopic(), responseDto.getTopic()),
+                            () -> Assertions.assertEquals(challengeDocument.getTimesBookmark(), responseDto.getTimesBookmark()),
+                            () -> Assertions.assertEquals(formData.getTags(), responseDto.getTags())
+                    );
+                })
+                .verifyComplete();
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verify(challengeRepository, times(1)).findByUuid(UUID.fromString(challengeId));
+        verify(solutionRepository, times(1)).save(any(SolutionDocument.class));
+        verify(challengeRepository, times(1)).save(any(ChallengeDocument.class));
+        verify(challengeConverter, times(1)).convertDocumentToDto(any(ChallengeDocument.class), eq(ChallengeDto.class));
+    }
+
+    @Test
+    void updateChallengeWhenChallengeDoesNotExist_returnsError_test(){
+        String CHALLENGE_NOT_FOUND_ERROR = "Challenge with id: %s not found";
+        String challengeId = challengeDocument.getUuid().toString();
+        when(ILanguageService.findFirstByLanguageName(anyString()))
+                .thenReturn(Mono.just(languageDocument));
+        when(challengeRepository.findByUuid(UUID.fromString(challengeId))).thenReturn(Mono.empty());
+
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .expectErrorMatches(error ->
+                        error instanceof ChallengeNotFoundException &&
+                                error.getMessage().equals(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId)))
+                .verify();
+
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verify(challengeRepository, times(1)).findByUuid(UUID.fromString(challengeId));
+        verifyNoInteractions(solutionRepository, challengeConverter, tagService);
+        verifyNoMoreInteractions(challengeRepository);
+    }
+
+    @Test
+    void updateChallengeWhenLanguageDoesNotExist_returnsError_test(){
+
+        String LANGUAGE_NOT_FOUND_ERROR = "Language %s is not valid";
+        String challengeId = challengeDocument.getUuid().toString();
+        when(ILanguageService.findFirstByLanguageName(anyString()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .expectErrorMatches(error ->
+                        error instanceof LanguageNotFoundException &&
+                                error.getMessage().equals(String.format(LANGUAGE_NOT_FOUND_ERROR, formData.getLanguage())))
+                .verify();
+
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verifyNoInteractions(challengeRepository, solutionRepository, challengeConverter, tagService);
+    }
+
+    @Test
+    void updateChallengeWhenChallengeIdNotValid_returnError_test(){
+        String challengeId = "InvalidId";
+        when(ILanguageService.findFirstByLanguageName(anyString())).thenReturn(Mono.just(languageDocument));
+        StepVerifier.create(challengeService.updateChallenge(challengeId, formData))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verifyNoInteractions(challengeRepository, solutionRepository, challengeConverter, tagService);
+    }
+
+    @Test
+    void updateChallengeWhenChallengeUuidIsNull_ReturnsError() {
+
+        when(ILanguageService.findFirstByLanguageName(anyString())).thenReturn(Mono.just(languageDocument));
+
+        StepVerifier.create(challengeService.updateChallenge(null, formData))
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format. Please indicate the correct format."))
+                .verify();
+        verify(ILanguageService, times(1)).findFirstByLanguageName(languageName);
+        verifyNoInteractions(challengeRepository, solutionRepository, challengeConverter, tagService);
+    }
+
+    private ChallengeDto buildChallengeDtoFromDocument(ChallengeDocument doc) {
+        Set<LanguageDto> languageDtos = doc.getLanguages().stream()
+                .map(lang -> new LanguageDto(lang.getIdLanguage(), lang.getLanguageName(), lang.getLanguageImage()))
+                .collect(Collectors.toSet());
+
+        return ChallengeDto.builder()
+                .challengeId(doc.getUuid())
+                .title(doc.getTitle())
+                .level(doc.getLevel())
+                .creationDate(doc.getCreationDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
+                .detail(doc.getDetail())
+                .languages(languageDtos)
+                .solutions(doc.getSolutions())
+                .topic(doc.getTopic())
+                .timesFavorite(doc.getTimesFavorite())
+                .tags(doc.getTags())
+                .timesBookmark(doc.getTimesBookmark())
+                .build();
+    }
 }
-
-
-

@@ -727,4 +727,98 @@ class UserServiceImplTest {
                 .verify();
     }
 
+    @Test
+    @DisplayName("getUserBookmarks returns bookmarked challenges when the user exists and has challenges")
+    void getUserBookmarks_WhenUserExistsWithBookmarks_ReturnsSet() {
+        UUID userId = UUID.randomUUID();
+        UUID challengeId1 = UUID.randomUUID();
+        UUID challengeId2 = UUID.randomUUID();
+
+        Set<UUID> bookmarks = Set.of(challengeId1, challengeId2);
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+        user.setBookmarkChallenges(bookmarks);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        userService.getUserBookmarks(userId.toString())
+                .as(StepVerifier::create)
+                .expectNextMatches(result -> result.size() == 2 && result.contains(challengeId1))
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("getUserBookmarks returns an empty set when the user has no challenges marked.")
+    void getUserBookmarks_WhenUserHasNoBookmarks_ReturnsEmptySet() {
+        UUID userId = UUID.randomUUID();
+
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+        user.setFavoriteChallenges(null); // explícitely null
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        userService.getUserBookmarks(userId.toString())
+                .as(StepVerifier::create)
+                .expectNextMatches(Set::isEmpty)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("getUserBookmarks returns NotFoundException error when the user does not exist")
+    void getUserBookmarks_WhenUserNotFound_ReturnsError() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.findById(userId)).thenReturn(Mono.empty());
+
+        userService.getUserBookmarks(userId.toString())
+                .as(StepVerifier::create)
+                .expectErrorMatches(error ->
+                        error instanceof NotFoundException &&
+                                error.getMessage().equals("User not found with id: " + userId))
+                .verify();
+    }
+
+    @Test
+    @DisplayName("getUserBookmarks throws BadUUIDException when the UUID format is invalid")
+    void getUserBookmarks_WhenInvalidUUID_ReturnsBadUUIDException() {
+        String invalidUUID = "invalid-uuid";
+
+        userService.getUserBookmarks(invalidUUID)
+                .as(StepVerifier::create)
+                .expectErrorMatches(error ->
+                        error instanceof BadUUIDException &&
+                                error.getMessage().equals("Invalid ID format"))
+                .verify();
+    }
+    
+    @Test
+    @DisplayName("getUserById returns the user when the user exists")
+    void getUserById_ShouldReturnUser_WhenUserExists() {
+        String username = "existingUser";
+        UUID userId=UUID.randomUUID();
+        UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null);
+        when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
+        
+        StepVerifier.create(userService.getUserById(userId.toString()))
+                .expectNext(existingUser)
+                .verifyComplete();
+        
+        verify(userRepository, times(1)).findById(userId);
+    }
+    
+    @Test
+    @DisplayName("getUserById throws NotFoundException when the user does not exist")
+    void getUserById_ShouldReturnNotFoundException_WhenUserDoesNotExist() {
+        UUID userId=UUID.randomUUID();
+        when(userRepository.findById(userId)).thenReturn(Mono.empty());
+        
+        StepVerifier.create(userService.getUserById(userId.toString()))
+                .expectErrorSatisfies(error -> {
+                    assertInstanceOf(NotFoundException.class, error);
+                    assertEquals("User not found", error.getMessage());
+                })
+                .verify();
+        verify(userRepository, times(1)).findById(userId);
+    }
 }

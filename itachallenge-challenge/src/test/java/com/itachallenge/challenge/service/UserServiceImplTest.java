@@ -24,8 +24,10 @@ public class UserServiceImplTest {
 
     private static final String FAVORITES_URL = "/itachallenge/api/v1/user/users/%s/favorites/%s";
     private static final String BOOKMARKS_URL = "/itachallenge/api/v1/user/users/%s/bookmarks/%s";
+    private static final String SOLVED_URL = "/itachallenge/api/v1/user/users/%s/solved/%s";
     public static final String X_FAVORITE_MESSAGE = "X-Favorite-Message";
     public static final String X_BOOKMARK_MESSAGE = "X-Bookmark-Message";
+    public static final String X_SOLVED_MESSAGE = "X-Solved-Message";
 
     @BeforeEach
     void setUp() throws IOException {

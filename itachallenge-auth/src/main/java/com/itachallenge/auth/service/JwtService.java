@@ -1,8 +1,8 @@
 package com.itachallenge.auth.service;
 
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import com.itachallenge.auth.enums.UserRole;
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -16,9 +16,10 @@ import java.util.Date;
 @Service
 public class JwtService implements IJwtService {
 
+    private static final String BEARER_KEY = "Bearer ";
+    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
     private final String jwtSigningKey;
     private final long minutesTillExpiration;
-    private static final Logger log = LoggerFactory.getLogger(JwtService.class);
 
     public JwtService(
             @Value("${token.signing.key}") String jwtSigningKey,
@@ -39,24 +40,70 @@ public class JwtService implements IJwtService {
         return builder.compact();
     }
 
-    public boolean validateToken(String token) {
+    @Override
+    public void validateToken(String token) {
+        SecretKey key = getSigningKey();
         try {
-            SecretKey key =  getSigningKey();
             Jwts.parser()
                     .verifyWith(key)
                     .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
-            return true;
+                    .parseSignedClaims(token);
+        } catch (ExpiredJwtException e) {
+            log.info("Logout with expired token: {}", e.getMessage());
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired but logout successful", e);
         } catch (JwtException e) {
-            log.warn("Invalid or expired token: {}", e.getMessage());
-            return false;
+            log.warn("Logout attempt with invalid or tampered token: {}", e.getMessage());
+            throw new JwtException("Invalid or tampered token: " + e.getMessage(), e);
         }
     }
 
-    private SecretKey getSigningKey() {
+    public SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    @Override
+    public Claims extractAllClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            log.info("Token expired at {} for subject {}",
+                    e.getClaims().getExpiration(),
+                    e.getClaims().getSubject());
+            throw new ExpiredJwtException(e.getHeader(), e.getClaims(), "Token expired ", e);
+        } catch (JwtException e) {
+            log.warn("Invalid or tampered token: {}", e.getMessage());
+            throw new JwtException("Invalid or tampered token: " + e.getMessage(), e);
+        }
+    }
+
+    public String extractBearerToken(String authHeader) {
+        if (authHeader == null || !authHeader.startsWith(BEARER_KEY)) {
+            throw new JwtException("Authorization header is missing or malformed");
+        }
+        return authHeader.replace(BEARER_KEY, "").trim();
+    }
+
+    @Override
+    public String switchRole(String token, String requestedRole) {
+        Claims claims = extractAllClaims(token);
+        String currentRole = claims.get("role", String.class);
+
+        UserRole.validateRoleChange(currentRole, requestedRole);
+
+        return Jwts.builder()
+                .subject(claims.getSubject())
+                .claim("role", requestedRole.toUpperCase())
+                .claim("uuid", claims.get("uuid", String.class))
+                .claim("isTemporaryRole", true)
+                .issuedAt(claims.getIssuedAt())
+                .expiration(claims.getExpiration())
+                .signWith(getSigningKey())
+                .compact();
     }
 
 }

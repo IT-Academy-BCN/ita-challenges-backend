@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -19,11 +20,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.server.ResponseStatusException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -158,20 +157,6 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
-        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Challenge not found"));
-    }
-
-    @Test
-    void testHandleChallengeNotFoundReturn404Exception() {
-        // Arrange
-        ChallengeNotFoundReturn404Exception challengeNotFoundException = new ChallengeNotFoundReturn404Exception("Challenge not found");
-
-        // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundReturn404Exception(challengeNotFoundException);
-
-        // Assert
         assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Challenge not found"));
@@ -179,14 +164,12 @@ class GlobalExceptionHandlerTest {
 
     @Test
     void testHandleResourceNotFoundException() {
-        // Arrange
+        // Testgi
         ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
 
-        // Act
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
 
-        // Assert
-                    assertEquals(OK_REQUEST, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Resource not found"));
     }
@@ -253,5 +236,44 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Tag not found"));
+    }
+    
+    @Test
+    void testHandleInvalidFormat_TagsField() {
+        InvalidFormatException ex = InvalidFormatException.from(
+                null,
+                "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
+                "invalid-uuid",
+                UUID.class
+        );
+        
+        ex.prependPath(new Reference(null, "tags"));
+        
+        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertEquals(
+                "invalid format UUID tag: invalid-uuid",
+                Objects.requireNonNull(resp.getBody()).getMessage()
+        );
+    }
+    
+    @Test
+    void testHandleInvalidFormat_OtherFieldFallback() {
+        InvalidFormatException ex = InvalidFormatException.from(
+                null,
+                "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
+                "invalid-uuid",
+                UUID.class
+        );
+        ex.prependPath(new Reference(null, "otherField"));
+        
+        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
+        
+        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
+        assertEquals(
+                ex.getOriginalMessage(),
+                Objects.requireNonNull(resp.getBody()).getMessage()
+        );
     }
 }

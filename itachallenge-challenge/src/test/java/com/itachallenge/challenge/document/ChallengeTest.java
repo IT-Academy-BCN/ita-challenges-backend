@@ -28,6 +28,7 @@ class ChallengeTest {
                 Topic.LISTS,
                 null,
                 null,
+                null,
                 tags);
         assertEquals(uuid, challenge.getUuid());
     }
@@ -43,6 +44,7 @@ class ChallengeTest {
                 null,
                 null,
                 Topic.COMPONENTS,
+                null,
                 null,
                 null,
                 tags);
@@ -62,6 +64,7 @@ class ChallengeTest {
                 Topic.COMPONENTS,
                 null,
                 null,
+                null,
                 tags);
         assertEquals(level, challenge.getLevel());
     }
@@ -77,6 +80,7 @@ class ChallengeTest {
                 null,
                 null,
                 Topic.COMPONENTS,
+                null,
                 null,
                 null,
                 tags);
@@ -96,6 +100,7 @@ class ChallengeTest {
                 Topic.COMPONENTS,
                 null,
                 null,
+                null,
                 tags);
         assertEquals(detail, challenge.getDetail());
     }
@@ -108,7 +113,7 @@ class ChallengeTest {
                 "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Javascript_asgn04.svg"),
                 new LanguageDocument(uuid2, "Python", "https://res.cloudinary.com/itachallenge/image/upload/v1739361249/language_icon_Python_rphody.svg"));
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS, null, null, tags);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, languages, null, Topic.COMPONENTS, null, null,null, tags);
         assertEquals(languages, challenge.getLanguages());
     }
 
@@ -124,6 +129,7 @@ class ChallengeTest {
                 null,
                 solutions,
                 Topic.COMPONENTS,
+                null,
                 null,
                 null,
                 tags);
@@ -144,6 +150,7 @@ class ChallengeTest {
                 Topic.COMPONENTS,
                 timesFavorite,
                 null,
+                null,
                 tags);
         assertEquals(timesFavorite, challenge.getTimesFavorite());
     }
@@ -152,8 +159,27 @@ class ChallengeTest {
     void getTimesBookmark(){
         int timesBookmark = 30;
 
-        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, Topic.COMPONENTS, null, timesBookmark, tags);
+        ChallengeDocument challenge = new ChallengeDocument(null, null, null, null, null, null, null, Topic.COMPONENTS, null, timesBookmark,null, tags);
         assertEquals(timesBookmark, challenge.getTimesBookmark());
+    }
+
+    @Test
+    void getTimesSolved() {
+        int timesSolved = 21;
+
+        ChallengeDocument challenge = new ChallengeDocument(null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                Topic.COMPONENTS,
+                null,
+                null,
+                timesSolved,
+                tags);
+        assertEquals(timesSolved, challenge.getTimesSolved());
     }
 
     @Test
@@ -172,6 +198,7 @@ class ChallengeTest {
                 Topic.COMPONENTS,
                 20,
                 null,
+                null,
                 List.of(tag.getIdTag())
         );
 
@@ -179,31 +206,50 @@ class ChallengeTest {
         assertEquals(1, challenge.getTags().size());
     }
 
+    @Test
+    void increaseTimesSolved_whenTimesSolvedIsNull_shouldSetToOne() {
+        ChallengeDocument challenge = ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .timesSolved(null)
+                .build();
+
+        challenge.increaseTimesSolved();
+
+        assertEquals(1, challenge.getTimesSolved());
+    }
+
+    @Test
+    void increaseTimesSolved_whenTimesSolvedIsNonNull_shouldIncrementByOne() {
+        ChallengeDocument challenge = ChallengeDocument.builder()
+                .uuid(UUID.randomUUID())
+                .timesSolved(3)
+                .build();
+
+        challenge.increaseTimesSolved();
+
+        assertEquals(4, challenge.getTimesSolved());
+    }
 
     @Test
     void setTagsTest() {
         UUID firstTagId = UUID.randomUUID();
-        TagDocument firstTag = new TagDocument(firstTagId, "POO", "bla bla bla");
+        UUID secondTagId = UUID.randomUUID();
+        List<UUID> tags = List.of(firstTagId, secondTagId);
 
         ChallengeDocument challenge = new ChallengeDocument(
                 null, null, null, null, null, null, null,
                 Topic.COMPONENTS,
                 20,
                 null,
-                new ArrayList<UUID>(List.of(firstTag.getIdTag())) {
+                null,
+                new ArrayList<UUID>() {
                 }
         );
 
-        UUID secondTagId = UUID.randomUUID();
-        TagDocument secondTag = new TagDocument(secondTagId, "Estructura", "bla bla bla");
+        challenge.setTags(tags);
 
-        challenge.setTags(secondTag.getIdTag());
-
-        List<UUID> tags = challenge.getTags();
-        assertEquals(2, tags.size(), "El challenge debería tener 2 tags");
+        assertEquals(2, challenge.getTags().size(), "El challenge debería tener 2 tags");
         assertTrue(tags.contains(firstTagId), "Debe contener el primer tag");
         assertTrue(tags.contains(secondTagId), "Debe contener el nuevo tag");
     }
-
-
 }

@@ -2,14 +2,12 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.annotations.ValidGenericPattern;
 import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.IJwtService;
 import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.challenge.service.JwtServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -20,14 +18,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
@@ -121,8 +118,8 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to retrieve it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<ResponseEntity<ChallengeDto>> getOneChallenge(@PathVariable("challengeId") String id) {
@@ -178,8 +175,9 @@ public class ChallengeController {
             description = "Sending the ID Challenge and ID Language through the URI to retrieve the Solution from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "200", description = "Successful operation."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<GenericResultDto<SolutionDto>> getSolutions(@PathVariable("idChallenge") String
@@ -195,9 +193,10 @@ public class ChallengeController {
             description = "Sending the ID Challenge, ID Lenguage and the solution through the body URI to update it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = SolutionDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "200", description = "The Challenge or Language with given Id was not found.", content = {@Content(schema = @Schema())}),
+                    @ApiResponse(responseCode = "200", description = "Successful operation.", content = {@Content(schema = @Schema())}),
                     @ApiResponse(responseCode = "400", description = "The solution cannot be null and the solution text cannot be empty.", content = {@Content(schema = @Schema())}),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<Map<String, Object>> addSolution(@Valid @RequestBody SolutionDto solutionDto) {
@@ -221,11 +220,17 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Missing parameter(s)"),
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> addChallenge(@Valid @RequestBody ChallengeCreateDto createFormDto) {
-        return challengeService.addChallenge(createFormDto)
+
+    public Mono<ResponseEntity<ChallengeDto>> addChallenge(
+            @Valid @RequestBody ChallengeCreateDto createFormDto,
+            @RequestHeader(name = "Authorization", required = false) String authHeader) {
+
+        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+                .flatMap(userId -> challengeService.addChallenge(createFormDto))
+                .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
-
     @GetMapping("/version")
     @Operation(
             summary = "Get Application Version",
@@ -252,58 +257,14 @@ public class ChallengeController {
             description = "Sending the ID Challenge through the URI to delete it from the database.",
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found.")
             }
     )
     public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(@PathVariable("challengeId") String id) {
 
         return challengeService.deleteChallengeById(id)
                 .map(dto -> ResponseEntity.ok().body(dto));
-    }
-
-    @PostMapping("/challenges/{challengeId}/favorites")
-    @Operation(
-            operationId = "Add a challenge to User's favorites.",
-            summary = "Add a challenge to favorites.",
-            description = "The ID Challenge sent through the URI is added to the user's favorites. User Id is determined from the headers.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
-            }
-    )
-    public Mono<ResponseEntity<FavoriteDto>> addChallengeToFavorite(
-            @PathVariable String challengeId,
-            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
-                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userId -> challengeService.addChallengeToFavorites(challengeId, userId))
-                .doOnError(error -> log.error("Error adding challenge to favorites: {}", error.getMessage()))
-                .map(ResponseEntity::ok);
-    }
-
-    @DeleteMapping("/challenges/{challengeId}/favorites")
-    @Operation(
-            operationId = "Remove a challenge from the User's favorites.",
-            summary = "Remove a challenge from favorites.",
-            description = "The ID Challenge sent through the URI is removed from the user's favorites. User Id is determined from the headers.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = FavoriteDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
-                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
-            }
-    )
-    public Mono<ResponseEntity<FavoriteDto>> removeChallengeFromFavorite(
-            @PathVariable String challengeId,
-            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
-                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
-                .flatMap(userId -> challengeService.removeChallengeFromFavorites(challengeId, userId))
-                .doOnError(error -> log.error("Error removing challenge from favorites: {}", error.getMessage()))
-                .map(ResponseEntity::ok);
     }
 
     @PostMapping("/challenges/{challengeId}/bookmarks")
@@ -349,37 +310,22 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "400", description = "Missing or invalid authorization header."),
+                    @ApiResponse(responseCode = "403", description = "User is not authorized to perform this action."),
                     @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found."),
                     @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
-    public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
-            @PathVariable String challengeId, @Valid @RequestBody ChallengeCreateDto challengeFormDto){
+   public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
+           @PathVariable String challengeId,
+           @Valid @RequestBody ChallengeCreateDto challengeFormDto,
+           @RequestHeader(name = "Authorization", required = false) String authHeader) {
+       return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+               .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
+               .flatMap(userId -> challengeService.updateChallenge(challengeId, challengeFormDto))
+               .map(ResponseEntity::ok)
+               .doOnError(error -> log.error("Error updating challenge: {}", error.getMessage()));
+   }
 
-        final DateTimeFormatter CUSTOM_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime localTime = LocalDateTime.now();
-        DetailDocument detail = new DetailDocument(challengeFormDto.getDescription());
-        LanguageDto languageDto = new LanguageDto(UUID.randomUUID(), challengeFormDto.getLanguage(), null);
-        languageDto.setLanguageImage("");
-        String solutionId = "d624bae4-9a43-4515-8979-801c0d6fd88c";
-
-        ChallengeDto challengeDto = new ChallengeDto();
-        challengeDto.setChallengeId(UUID.fromString(challengeId));
-        challengeDto.setTitle(challengeFormDto.getChallengeTitle());
-        challengeDto.setLevel(challengeFormDto.getLevel() != null ?
-                String.valueOf(challengeFormDto.getLevel()) : "");
-        challengeDto.setCreationDate(localTime.format(CUSTOM_FORMATTER));
-        challengeDto.setDetail(detail);
-        challengeDto.setPopularity(10);
-        challengeDto.setPercentage(0.5F);
-        challengeDto.setLanguages(Set.of(languageDto));
-        challengeDto.setSolutions(List.of(UUID.fromString(solutionId)));
-        challengeDto.setTopic(challengeFormDto.getTopic());
-        challengeDto.setTimesFavorite(10);
-        challengeDto.setTimesBookmark(10);
-
-        return Mono.just(ResponseEntity.ok(challengeDto));
-    }
 
     @DeleteMapping("/challenges/{challengeId}/bookmarks")
     @Operation(

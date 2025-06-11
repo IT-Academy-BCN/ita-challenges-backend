@@ -4,6 +4,7 @@ package com.itachallenge.challenge.service;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
@@ -23,8 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
@@ -115,6 +115,45 @@ class TagServiceImplTest {
         verify(tagRepository).findById(missingId);
     }
 
+    @Test
+    @DisplayName("Get exception when tag is not found")
+    void getValidatedTags_notFound_test(){
+        UUID missingId = UUID.randomUUID();
+        when(tagRepository.findById(missingId)).thenReturn(Mono.empty());
+        List<UUID> tagsAssigned = List.of(missingId);
+
+        StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
+                .expectError(TagNotFoundException.class)
+                .verify();
+        verify(tagRepository).findById(missingId);
+    }
+
+    @Test
+    @DisplayName("Returns Mono<true> when tag has been found")
+    void getValidatedTags_returnsTrue_test(){
+        TagDocument tagDocument = new TagDocument(UUID.randomUUID(), "Tag Title", "Tag Description");
+        when(tagRepository.findById(tagDocument.getIdTag())).thenReturn(Mono.just(tagDocument));
+        List<UUID> tagsAssigned = List.of(tagDocument.getIdTag());
+        StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
+                .expectNext(true).verifyComplete();
+        verify(tagRepository).findById(tagDocument.getIdTag());
+    }
+    
+    @Test
+    @DisplayName("Get exception when there are duplicate tag UUIDs")
+    void getValidatedTags_duplicateIds_test() {
+        UUID duplicatedId = UUID.randomUUID();
+        List<UUID> tagsAssigned = List.of(duplicatedId, duplicatedId);
+        
+        StepVerifier.create(tagService.getValidatedTags(tagsAssigned))
+                .expectErrorSatisfies(err -> {
+                    assert err instanceof BadRequestException;
+                    assert err.getMessage().equals("tag UUID duplicated: " + duplicatedId);
+                })
+                .verify();
+        
+        verify(tagRepository, never()).findById(duplicatedId);
+    }
 }
 
 

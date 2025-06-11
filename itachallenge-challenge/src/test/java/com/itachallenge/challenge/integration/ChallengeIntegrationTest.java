@@ -4,10 +4,7 @@ import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.repository.ChallengeRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -83,10 +80,10 @@ class ChallengeIntegrationTest {
 
         ChallengeDocument challenge = new ChallengeDocument
                 (uuid_1, title1, "Level 1", LocalDateTime.now(), detail, languageSet,
-                        solutionList, Topic.LISTS, 20, 5, tags);
+                        solutionList, Topic.LISTS, 20, 5,2, tags);
         ChallengeDocument challenge2 = new ChallengeDocument
                 (uuid_2, title2, "Level 2", LocalDateTime.now(), detail, languageSet,
-                        solutionList, Topic.COMPONENTS, 20, 30, tags);
+                        solutionList, Topic.COMPONENTS, 20, 30,2, tags);
 
         challengeRepository.saveAll(Flux.just(challenge, challenge2)).blockLast();
     }
@@ -114,17 +111,19 @@ class ChallengeIntegrationTest {
     }
 
     @Test
-    void shouldReturnOKForUnknownUserId() {
+    void shouldReturnNotFoundForInvalidChallengeId() {
         webTestClient
                 .get()
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_INVALID)
                 .exchange()
                 .expectStatus()
-                .isEqualTo(OK);
+                .isNotFound()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Challenge with id: " + UUID_INVALID + " not found");
     }
 
     @Test
-    void shouldReturnOk_ValidUserId() {
+    void shouldReturnOkForValidChallengeId() {
         webTestClient
                 .get()
                 .uri(CHALLENGE_BASE_URL + "/challenges/{challengeId}", UUID_VALID)
@@ -132,9 +131,8 @@ class ChallengeIntegrationTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class)
-                .value(dto -> {
-                    assert dto != null;
-                });
+                .value(Assertions::assertNotNull);
+
     }
 
     @Test

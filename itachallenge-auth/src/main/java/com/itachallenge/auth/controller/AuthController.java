@@ -1,11 +1,15 @@
 package com.itachallenge.auth.controller;
 
-
+import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +33,8 @@ public class AuthController {
     private static final String KEY_USERNAME = "username";
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
+    private static final String MESSAGE_KEY = "message";
+    private static final String LOGOUT_SUCCESS = "Logout successful";
 
     private final IAuthService authService;
 
@@ -99,7 +105,7 @@ public class AuthController {
                 .switchIfEmpty(Mono.defer(() -> {
                     response.put(KEY_USERNAME, null);
                     response.put(KEY_IS_VALID, false);
-                    response.put("message", "User does not exist in the database");
+                    response.put(MESSAGE_KEY, "User does not exist in the database");
                     return Mono.just(ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .header("X-Validation-Status", "Forbidden")
                             .header(X_GITHUB_USERNAME, githubUsername)
@@ -119,7 +125,7 @@ public class AuthController {
                     }
                     response.put(KEY_USERNAME, null);
                     response.put(KEY_IS_VALID, false);
-                    response.put("message", message);
+                    response.put(MESSAGE_KEY, message);
                     return Mono.just(ResponseEntity.status(status)
                             .header("X-Validation-Status", "Forbidden")
                             .header(X_GITHUB_USERNAME, githubUsername)
@@ -143,22 +149,37 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Mono<ResponseEntity<Map<String, String>>> logout(@RequestHeader (value = "Authorization", required = false) String authHeader){
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+    public Mono<ResponseEntity<Map<String, String>>> logout(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.warn("Logout attempt without token or malformed header");
             return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Unauthorized: No token provided")));
+                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
         }
-        String jwt = authHeader.replace("Bearer ", "");
 
-        if (jwtService.validateToken(jwt)) {
-            log.info("Logout successful for token: {}", jwt);
-            return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
-        } else {
-            log.warn("Invalid or expired token during logout");
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid or expired token")));
-        }
+        String token = authHeader.replace("Bearer ", "").trim();
+        jwtService.validateToken(token);
+        return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
 
-}
+    @PostMapping("/switch-role")
+    @Operation(
+            summary = "Temporarily switch the user's role and return a new token.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Token generated successfully or expired.",
+                            content = @Content(schema = @Schema(implementation = Map.class))),
+                    @ApiResponse(responseCode = "400", description = "Invalid role requested."),
+                    @ApiResponse(responseCode = "401", description = "Missing or malformed Authorization header or invalid token."),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error occurred.")
+            }
+    )
+    public Mono<ResponseEntity<Map<String, String>>> switchRole(
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            @RequestBody SwitchRoleRequest request) {
 
+        String token = jwtService.extractBearerToken(authHeader);
+        String newToken = jwtService.switchRole(token, request.getNewRole());
+        log.info("Switch-role successful for token");
+        return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
+    }
+}

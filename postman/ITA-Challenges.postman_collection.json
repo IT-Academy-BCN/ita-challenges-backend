@@ -612,6 +612,41 @@
 					"response": []
 				},
 				{
+					"name": "Update challenge",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"challengeTitle\": \"New challenge Title\",\n\"description\": \"This is the new description of this challenge\",\n\"level\": \"EASY\",\n\"language\": \"Java\",\n\"solution\": \"This is the new solution of this challenge.\",\n\"topic\": \"STYLES\",\n\"tags\": [\"08208208-2082-0820-8208-208208208207\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/challenge/c13d4f5a-3cf5-46f8-acea-f0db63088863/update",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges",
+								"challenge",
+								"c13d4f5a-3cf5-46f8-acea-f0db63088863",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Challenges/{idChallenge}/related",
 					"request": {
 						"method": "GET",
@@ -873,6 +908,41 @@
 								"challenges",
 								"9ebfef53-9520-4f9f-abbb-d43353700865",
 								"favorites"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update challenge",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"challengeTitle\": \"New challenge Title\",\n\"description\": \"This is the new description of this challenge\",\n\"level\": \"EASY\",\n\"language\": \"Java\",\n\"solution\": \"This is the new solution of this challenge.\",\n\"topic\": \"STYLES\",\n\"tags\": [\"08208208-2082-0820-8208-208208208207\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:{{challenge_port}}/itachallenge/api/v1/challenge/challenges/challenge/c13d4f5a-3cf5-46f8-acea-f0db63088863/update",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"challenge",
+								"challenges",
+								"challenge",
+								"c13d4f5a-3cf5-46f8-acea-f0db63088863",
+								"update"
 							]
 						}
 					},
@@ -1329,6 +1399,35 @@
 					"response": []
 				}
 			]
+		},
+		{
+		  "name": "Auth - Logout",
+		  "request": {
+		    "method": "POST",
+		    "header": [
+		      {
+		        "key": "Authorization",
+		        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0VXNlciIsInJvbGUiOiJBRS1JTiIsInV1aWQiOiI0MDc0MzUwMS1lMzViLTRjOTEtYmM5Ni1iMGM5ODM0ODhlN2MiLCJpYXQiOjE3NDE2MTM2MTIsImV4cCI6MTc0MTY0OTYxMn0=.S__qcscgi4JPuz27k5sNuSVIQbmJVB0htFR7vFnH-RI",
+		        "type": "text"
+		      }
+		    ],
+		    "url": {
+		      "raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/logout",
+		      "protocol": "http",
+		      "host": [
+		        "{{ip}}"
+		      ],
+		      "port": "{{auth_port}}",
+		      "path": [
+		        "itachallenge",
+		        "api",
+		        "v1",
+		        "auth",
+		        "logout"
+		      ]
+		    }
+		  },
+		  "response": []
 		}
 	]
 }

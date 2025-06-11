@@ -5,13 +5,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @RestController
 @Validated
@@ -40,6 +44,19 @@ public class ResourceController {
         log.info("Creating a new resource {}", resourceDto);
         return resourceService.createResource(resourceDto)
                 .map(createdResource -> ResponseEntity.ok().body(createdResource));
+    }
+
+
+    @GetMapping("/challenge/{challengeId}")
+    @Operation(summary = "Get resources by challenge ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Resources found"),
+            @ApiResponse(responseCode = "400", description = "Invalid challenge ID"),
+            @ApiResponse(responseCode = "404", description = "No resources found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    public Flux<ResourceDto> getResourcesByChallengeId(@PathVariable UUID challengeId) {
+        return resourceService.getResourcesByChallengeId(challengeId);
     }
 }
 
