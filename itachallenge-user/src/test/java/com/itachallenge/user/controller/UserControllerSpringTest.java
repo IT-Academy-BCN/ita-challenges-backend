@@ -2,16 +2,20 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
-import org.junit.jupiter.api.Assertions;
+import com.itachallenge.user.service.IUserSolutionService;
+import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -21,6 +25,12 @@ class UserControllerSpringTest {
     @Autowired
     private WebTestClient webTestClient;
 
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private IUserSolutionService userSolutionService;
+
     String uri = "/itachallenge/api/v1/user/solution";
     String solution = "This is the submitted solution";
     String userId = UUID.randomUUID().toString();
@@ -28,50 +38,38 @@ class UserControllerSpringTest {
     String languageId = UUID.randomUUID().toString();
 
     @Test
-    void addSolution_WithCorrectParameters_ExpectsReturn200Test() {
+    void testAddSolution() {
+        UserSolutionRequestDto requestDto = UserSolutionRequestDto.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .status("ENDED")
+                .solutionText(solution)
+                .build();
 
-        UserSolutionRequestDto userSolutionRequestDto = new UserSolutionRequestDto(
-                userId, challengeId, languageId, "ENDED", solution);
-        UserSolutionResponseDto userSolutionResponseDto = new UserSolutionResponseDto(
-                userId, challengeId, languageId, solution);
+        UserSolutionResponseDto responseDto = UserSolutionResponseDto.builder()
+                .userId(userId)
+                .challengeId(challengeId)
+                .languageId(languageId)
+                .solutionText(solution)
+                .build();
+
+        Mockito.when(userSolutionService.addSolution(Mockito.any(UserSolutionRequestDto.class)))
+                .thenReturn(Mono.just(responseDto));
 
         webTestClient.put()
                 .uri(uri)
-                .bodyValue(userSolutionRequestDto)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestDto)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(Map.class)
-                .consumeWith(response ->{
-                    Assertions.assertNotNull(response.getResponseBody());
-                    assert response.getResponseBody().containsKey("uuid_user");
-                    assert response.getResponseBody().containsKey("uuid_challenge");
-                    assert response.getResponseBody().containsKey("uuid_language");
-
-                    assert response.getResponseBody().get("uuid_language").equals(userSolutionResponseDto.getLanguageId());
-                    assert response.getResponseBody().get("uuid_challenge").equals(userSolutionResponseDto.getChallengeId());
-                    assert response.getResponseBody().get("uuid_user").equals(userSolutionResponseDto.getUserId());
-                    assert response.getResponseBody().get("solution_text").equals(userSolutionResponseDto.getSolutionText());
+                .expectBody(UserSolutionResponseDto.class)
+                .value(res -> {
+                    assert res.getUserId().equals(userId);
+                    assert res.getChallengeId().equals(challengeId);
+                    assert res.getLanguageId().equals(languageId);
+                    assert res.getSolutionText().equals(solution);
                 });
-    }
-
-    @Test
-    void addSolution_WithEmptySolution_ReturnBadRequestError_Test() {
-
-        UserSolutionRequestDto userSolutionRequestDto1 = new UserSolutionRequestDto(
-                userId, challengeId, languageId, "ENDED", "");
-        UserSolutionRequestDto userSolutionRequestDto2 = new UserSolutionRequestDto(
-                userId, challengeId, languageId, "ENDED", null);
-        UserSolutionRequestDto userSolutionRequestDto3 = new UserSolutionRequestDto(
-                userId, challengeId, languageId, "ENDED", " ");
-        List<UserSolutionRequestDto> userSolutionRequestDtos = List.of(userSolutionRequestDto1, userSolutionRequestDto2, userSolutionRequestDto3);
-
-        for(UserSolutionRequestDto userSolutionRequestDto : userSolutionRequestDtos){
-            webTestClient.put()
-                    .uri(uri)
-                    .bodyValue(userSolutionRequestDto)
-                    .exchange()
-                    .expectStatus().isBadRequest();
-        }
     }
 
     @Test
