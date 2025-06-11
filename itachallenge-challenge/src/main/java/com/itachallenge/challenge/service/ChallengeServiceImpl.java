@@ -278,7 +278,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .uuid(UUID.randomUUID())
                 .title(dto.getChallengeTitle())
                 .level(dto.getLevel().toString())
-                .creationDate(LocalDateTime.ofInstant(Instant.now(), ZoneId.of("Europe/Madrid")))
+                .creationDate(LocalDateTime.now())
                 .detail(detail)
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))
