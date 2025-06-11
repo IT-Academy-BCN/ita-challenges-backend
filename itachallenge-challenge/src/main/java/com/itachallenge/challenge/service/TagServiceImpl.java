@@ -75,5 +75,17 @@ public class TagServiceImpl implements ITagService {
                 .map(count -> count == tagIds.size())
                 .hasElement();
     }
-    
+
+
+    @Cacheable(value = "tagsByLanguage")
+    @Override
+    public Mono<GenericResultDto<TagDto>> getTagsByLanguageId(UUID languageId) {
+        Flux<TagDto> tagDtoFlux = tagConverter.convertDocumentFluxToDtoFlux(tagRepository.findByLanguageId(languageId), TagDto.class);
+        return tagDtoFlux.collectList().map(tagList -> {
+            GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
+            resultDto.setInfo(0, tagList.size(), tagList.size(), tagList.toArray(new TagDto[0]));
+            return resultDto;
+        });
+    }
+
 }

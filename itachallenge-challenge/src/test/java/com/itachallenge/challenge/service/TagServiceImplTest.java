@@ -154,6 +154,42 @@ class TagServiceImplTest {
         
         verify(tagRepository, never()).findById(duplicatedId);
     }
-}
+
+        @Test
+        @DisplayName("Return tags filtered by languageId")
+        void testGetTagsByLanguageId() {
+            UUID languageId = UUID.randomUUID();
+
+            TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "Programación orientada a objetos", languageId);
+            TagDocument tag2 = new TagDocument(UUID.randomUUID(), "Algoritmos", "Retos de lógica", languageId);
+            TagDto tagDto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription(), languageId);
+            TagDto tagDto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription(), languageId);
+
+            Flux<TagDocument> tagDocuments = Flux.just(tag1, tag2);
+            Flux<TagDto> tagDtos = Flux.just(tagDto1, tagDto2);
+
+
+            when(tagRepository.findByLanguageId(languageId)).thenReturn(tagDocuments);
+            when(tagConverter.convertDocumentFluxToDtoFlux(tagDocuments, TagDto.class)).thenReturn(tagDtos);
+
+
+            Mono<GenericResultDto<TagDto>> resultMono = tagService.getTagsByLanguageId(languageId);
+
+
+            StepVerifier.create(resultMono)
+                    .assertNext(result -> {
+                        assertNotNull(result);
+                        assertEquals(2, result.getResults().length);
+                        assertEquals("POO", result.getResults()[0].getTagName());
+                        assertEquals("Algoritmos", result.getResults()[1].getTagName());
+                    })
+                    .verifyComplete();
+
+
+            verify(tagRepository).findByLanguageId(languageId);
+            verify(tagConverter).convertDocumentFluxToDtoFlux(tagDocuments, TagDto.class);
+        }
+    }
+
 
 
