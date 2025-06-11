@@ -14,4 +14,5 @@ public interface ITagService {
     Mono<GenericResultDto<TagDto>> getAllTags();
     Set<TagDocument> convertIdTagFromTagDocument(List<UUID> tags);
     Mono<Boolean> getValidatedTags(List<UUID> tagIds);
+    Mono<GenericResultDto<TagDto>> getTagsByLanguageId(UUID LanguageId);
 }
