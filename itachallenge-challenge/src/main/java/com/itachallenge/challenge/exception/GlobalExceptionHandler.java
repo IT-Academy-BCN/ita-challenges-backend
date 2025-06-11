@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -11,8 +12,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import java.util.Arrays;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -47,7 +51,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(TagNotFoundException.class)
@@ -55,14 +59,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(ChallengeNotFoundReturn404Exception.class)
-    public ResponseEntity<MessageDto> handleChallengeNotFoundReturn404Exception(ChallengeNotFoundReturn404Exception ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
-    }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<MessageDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
     }
 
     @ExceptionHandler(LanguageNotFoundException.class)
@@ -93,5 +92,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(InternalServerErrorException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDto(ex.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<MessageDto> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
+        return buildTagUuidError(ex)
+                .orElseGet(() ->
+        ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
+                );
+    }
+    
+    private Optional<ResponseEntity<MessageDto>> buildTagUuidError(InvalidFormatException ex) {
+        if (UUID.class.equals(ex.getTargetType())) {
+            String badValue = ex.getValue().toString();
+            boolean fromTags = ex.getPath().stream()
+                    .map(Reference::getFieldName)
+                    .anyMatch("tags"::equals);
+            if (fromTags) {
+                MessageDto body = new MessageDto("invalid format UUID tag: " + badValue);
+                return Optional.of(ResponseEntity
+                        .badRequest()
+                        .body(body));
+            }
+        }
+        return Optional.empty();
     }
 }

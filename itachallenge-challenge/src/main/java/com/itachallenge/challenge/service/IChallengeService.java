@@ -35,11 +35,11 @@ public interface IChallengeService {
 
     Mono<ChallengeListDto> getChallengesByTopic(Topic topic, int page, int size);
 
-    Mono<FavoriteDto> addChallengeToFavorites(String challengeId, String userId);
-
     Mono<BookmarkDto> addChallengeToBookmarks(String challengeId, String userId);
 
-    Mono<FavoriteDto> removeChallengeFromFavorites(String challengeId, String userId);
-
     Mono<BookmarkDto> removeChallengeFromBookmarks(String challengeId, String userId);
+
+    Mono<ChallengeDto> updateChallenge(String challengeId, ChallengeCreateDto challengeCreateDto);
+
+    Mono<SolvedDto> addChallengeToSolved(String challengeId);
 }

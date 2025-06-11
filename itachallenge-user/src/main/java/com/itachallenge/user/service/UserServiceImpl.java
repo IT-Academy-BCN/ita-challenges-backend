@@ -159,4 +159,20 @@ public class UserServiceImpl implements UserService {
                 );
     }
 
+    @Override
+    public Mono<Set<UUID>> getUserBookmarks(String userId) {
+        return parseAndValidateUUID(userId)
+                .flatMap(userUuid ->
+                        userRepository.findById(userUuid)
+                                .switchIfEmpty(Mono.error(new NotFoundException("User not found with id: " + userId)))
+                                .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
+                );
+    }
+    
+    @Override
+    public Mono<UserDocument> getUserById(String userId) {
+        return userRepository.findById(UUID.fromString(userId))
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
+    }
+    
 }

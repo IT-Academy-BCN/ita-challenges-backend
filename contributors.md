@@ -83,3 +83,12 @@
 * Alexandra Bonet - https://github.com/AlexandraBonetCanela
 * Gwénaël Le Moing - https://github.com/g-lemoing
 * Matías Meza - https://github.com/RustyGearBox
+* Marc Bernabeu Rodriguez - https://github.com/trisk910
+* Toni Jiménez - https://github.com/tonijimenez72
+* Enric Vicente - https://github.com/EnricW
+* Ismael Peiró - https://github.com/IsmaPeiro
+* Santiago Hernandez Beltran - https://github.com/shernandez334
+* Inga Demetrashvili - https://github.com/IngaD89
+* Angel Pelaez -  https://github.com/AngelPelaezS1
+* Fernando Giménez - https://github.com/FerGimenezRoglia
+* Jofre Coca - https://github.com/JofreCoca

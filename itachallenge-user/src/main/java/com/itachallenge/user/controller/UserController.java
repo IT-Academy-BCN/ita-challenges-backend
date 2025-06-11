@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
@@ -173,7 +174,7 @@ public class UserController {
                         ResponseEntity.status(HttpStatus.OK).body(savedUserSolutionDto)
                 );
     }
-  
+
     @Operation(
             summary = "Add Challenge to User Bookmark Challenges",
             description = "Adds challenge to user Bookmarks",
@@ -369,5 +370,60 @@ public class UserController {
                     log.info("Retrieved {} favorite challenges for user {}", favorites.size(), userId);
                     return ResponseEntity.ok().body(favorites);
                 });
+    }
+
+    @Operation(
+            summary = "Gets challenges marked as bookmarks by a user",
+            description = "Returns a set of challenge IDs that the specified user has marked as bookmarked",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            description = "UUID of the user",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Set of bookmarked challengeIds by user"),
+                    @ApiResponse(responseCode = "404", description = "User not found"),
+                    @ApiResponse(responseCode = "400", description = "The provided IDs are not valid."),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+
+    @GetMapping("/users/{userId}/bookmarks")
+    public Mono<ResponseEntity<Set<UUID>>> getUserBookmarks(@PathVariable String userId) {
+        return userService.getUserBookmarks(userId)
+                .map(bookmarks -> {
+                    log.info("Retrieved {} bookmarked challenges for user {}", bookmarks.size(), userId);
+                    return ResponseEntity.ok().body(bookmarks);
+                });
+    }
+    
+    @Operation(
+            summary = "Retrieve all solutions for a user.",
+            parameters = {
+                    @Parameter(
+                            name = "userId",
+                            in = ParameterIn.PATH,
+                            required = true,
+                            description = "User UUID")
+            },
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Solutions found, if none are found, returns an empty array"),
+                    @ApiResponse(responseCode = "400", description = "Invalid UUID"),
+                    @ApiResponse(responseCode = "500", description = "Unexpected error")
+            }
+    )
+    @GetMapping(
+            path = "/users/{userId}/solutions"
+    )
+    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
+            @PathVariable String userId
+    ) {
+        return Mono.just(ResponseEntity.ok()
+                .body(userSolutionService.getAllSolutionsByUser(userId)
+                )
+        );
     }
 }

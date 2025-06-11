@@ -1,27 +1,44 @@
 ## CHANGELOG
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). 
-* Issue #843: Added DELETE endpoint in the Challenge Microservice to unbookmark a challenge.
-* Issue #829: Added bookmark POST endpoint in the Challenge Microservice to bookmark a challenge.
-* Issue #827: Added bookmark POST endpoint in the User Microservice to bookmark a challenge.
-* Issue #831: Added DELETE endpoint for user's bookmals in User Microservice.
-* Issue #826: Added GET endpoint to retrieve the list of challenges marked as favorites by a user.                                          
-* PR #828: Enable PUT endpoint("/solution") in User microservice to save a user solution in user database
-* PR #825: Removing score attribute in Dtos de UserSolution                                         
-* Issue #763: Modified POST endpoint for adding new challenge (in Challenge micro)  
-              Created language image attribute in LanguageDocument and LanguageDto.
-              Added language image's URL to the database and updated Challenge tests.
-              Created POST endpoint to add a new challenge to users favorites (in Challenge micro)
-              Created DELETE endpoint to remove a challenge from users favorites (in Challenge micro)
-* Issue #725: Removing all Score and Solution related code in User microservice
-* Issue #712: Refactoring in Challenge micro due to simplifying challenge entity
-* Issue #709: Removing Score microservice due to new approach
-* PR #825: Removing score attribute in Dtos de UserSolution
-* Feature #180 & #185: Filter revision at endpoint /GET Challenges
-    * Added DTO for filter with language, level and tags
-    * Refactored the filtering method in filterByLanguage(), FilterByLevel() and FilterByTags()
-    * Added ENDPOINT GET /allTags
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+### Added
+- Add validation to verify that the provided user ID exists for the getAllSolutionsByUser endpoint. (Taiga [#437], PR [#889])
+- FavoriteController and extracted endpoints from ChallengeController. (Taiga [#418], PR [#886]) 
+- POST endpoint in Auth microservice to allow user role change at runtime (Taiga [#404], PR [#882])  
+- Hardcoded GET endpoint to return all of a user’s challenge solutions (Taiga [#435], PR [#884])  
+- JWT authentication to logout endpoint in User microservice (Taiga [#399], PR [#864])  
+- Error handling for malformed tag UUIDs and duplicate UUID detection in TagServiceImpl.getValidatedTags (Taiga [#355], PR [#872]) 
+- Tag validation in the addChallenge endpoint (Taiga [#354], PR [#866])  
+- GET endpoint for retrieving resources from a challenge (Taiga [#281], PR [#852])
+- GET endpoint to retrieve all user's bookmarked challenges (Taiga [#255], PR [#849]) 
+- DELETE endpoint in Challenge microservice to unbookmark a challenge (Taiga [#205], PR [#843]) 
+- POST endpoint in Challenge microservice to bookmark a challenge (Taiga [#183], PR [#829])
+- POST endpoint in User microservice to bookmark a challenge (Taiga [#183], PR [#827])
+- DELETE endpoint for user's bookmarks in User microservice (Taiga [#205], PR [#831])
+- GET endpoint to retrieve the list of challenges marked as favorites by a user (Taiga [#181], PR [#826])
+- PUT endpoint `/solution` in User microservice to save a user solution in the database (Taiga [#198], PR [#828])
+- Added the class ChallengeServiceImpl to comunicate with the Challenge microservice (Taiga [#413], PR [#890])
+
+### Changed
+- Replaced Hardcoded GET endpoint to return all of a user’s challenge solutions with actual solutions (Taiga [#406], PR [#887])
+- POST endpoint for adding new challenges in Challenge microservice (PR #763)
+- Improved filtering at `/GET Challenges`: added DTO for filters (language, level, tags), refactored `filterByLanguage()`, `filterByLevel()`, and `filterByTags()` methods, and added `GET /allTags` endpoint (PR #180 & PR #185)
+- Modify method to increase times solved counter (Taiga [#415], PR [#885]) 
+
+### Removed
+- Removed `score` attribute from `UserSolution` DTOs and cleaned up all score/solution-related code in User microservice (PR #825, PR #725)
+- Removed Score microservice due to updated architectural approach (PR #709)
+
+### Refactored
+- Simplified challenge entity in Challenge microservice and applied structural refactor (PR #712)
+
+### Security
+- Secured POST endpoint `addChallenge` for creating a challenge in Challenge microservice (PR #871)
+- Secured PUT endpoint for updating a challenge in Challenge microservice (PR #875)
 
 ### [itachallenge-challenge-2.0.4-RELEASE] - 2023-11-12
 * Issue #441b: Added Mongock to tracing database changes
