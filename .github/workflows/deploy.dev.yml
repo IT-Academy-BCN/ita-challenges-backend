@@ -12,106 +12,103 @@ on:
 
 jobs:
   docker:
-    if: (github.event_name == 'push' ) || (github.event.pull_request.merged == true)
+    if: (github.event_name == 'push') || (github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
-      -
-        name: Load env from file
+
+      - name: Detect changed microservices
+        id: detect_services
         run: |
-          echo "Loading env vars from .env file"
-          while IFS='=' read -r key value
-          do
-            key=$(echo $key | tr '.' '_')
-            echo "$key=$value" >> $GITHUB_ENV
-          done < conf/.env.CI.dev
-          echo "Done"
+          echo "Detecting changed microservices..."
+          CHANGED_SERVICES=$(git diff --name-only origin/develop...HEAD | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u)
+          if [ -z "$CHANGED_SERVICES" ]; then
+            echo "No microservices changed. Exiting workflow."
+            echo "changed_services=$(echo $CHANGED_SERVICES | tr '\n' ' ')" >> $GITHUB_ENV
+            exit 0
+          fi
+          echo "Changed microservices: $CHANGED_SERVICES"
+          echo "changed_services=$(echo $CHANGED_SERVICES | tr '\n' ' ')" >> $GITHUB_ENV
 
-      #- name: Setup git-crypt
-        #run: |
-          #sudo apt-get update
-          #sudo apt-get install -y git-crypt
-
-      #- name: Decrypt secrets
-        #env:
-          #GIT_CRYPT_KEY: ${{ secrets.GIT_CRYPT_KEY }}
-        #run: |
-          #echo "$GIT_CRYPT_KEY" | base64 --decode > git_crypt.key
-          #git-crypt unlock git_crypt.key
-          #rm git_crypt.key
-
-      -
-        name: Set up JDK 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: 21
+
       - name: Setup Gradle 8.8
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.8
-      -
-        name: Cache Gradle packages
+
+      - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
           path: |
-            ~/.gradle/caches
-            ~/gradle/wrapper
+           ~/.gradle/caches
+           ~/gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
-      -
-        name: Build
-        run:  |
-          ./gradlew :${{ env.MICROSERVICE_DEPLOY }}:build -PMICROSERVICE_VERSION=${{ env.MICROSERVICE_VERSION }}
-          cp ${{ env.MICROSERVICE_DEPLOY }}/build/libs/${{ env.MICROSERVICE_DEPLOY}}-${{ env.MICROSERVICE_VERSION }}.jar ${GITHUB_WORKSPACE}/${{ env.MICROSERVICE_DEPLOY }}
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: ${{ env.MICROSERVICE_DEPLOY }}
-          push: true
-          tags: itacademybcn/itachallenges:${{ env.MICROSERVICE_DEPLOY}}-${{ env.MICROSERVICE_VERSION }}
+
+      - name: Load env and Build & Push for each changed microservice
+        if: env.changed_services != ''
+        run: |
+          for SERVICE in $changed_services; do
+            echo "Building microservice: $SERVICE"
+
+            # Load environment variables from .env.CI.dev
+            while IFS='=' read -r key value; do
+              if [[ "$key" == *"_$SERVICE" ]]; then
+                new_key=$(echo "$key" | sed "s/_$SERVICE//")
+                export "$new_key=$value"
+                echo "$new_key=$value" >> $GITHUB_ENV
+              fi
+            done < conf/.env.CI.dev
+
+            echo "Compiling and building Docker image..."
+            ./gradlew :${SERVICE}:clean :${SERVICE}:build -PMICROSERVICE_VERSION=${MICROSERVICE_VERSION}
+            cp ${SERVICE}/build/libs/${SERVICE}-${MICROSERVICE_VERSION}.jar ${GITHUB_WORKSPACE}/${SERVICE}
+
+            echo "Building Docker image for $SERVICE..."
+            docker build -t itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION} ${SERVICE}
+
+            echo "Pushing image to Docker Hub..."
+            echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+            docker push itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION}
+          done
 
   deploy:
-    if: (github.event_name == 'push' ) || (github.event.pull_request.merged == true)
+    if: (github.event_name == 'push') || (github.event.pull_request.merged == true)
     needs: docker
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
-      -
-        name: Load env from file
-        run: |
-          echo "Loading env vars from .env file"
-          while IFS='=' read -r key value
-          do
-            key=$(echo $key | tr '.' '_')
-            echo "$key=$value" >> $GITHUB_ENV
-            echo "$key=$value"
-          done < conf/.env.CI.dev
-          echo "Done"
 
-      -
-        name: Execute SSH
+      - name: Load env and prepare deploy for each changed microservice
+        if: env.changed_services != ''
+        run: |
+          for SERVICE in $changed_services; do
+            echo "Preparing deploy for microservice: $SERVICE"
+
+            # Load environment variables from .env.CI.dev
+            while IFS='=' read -r key value; do
+              if [[ "$key" == *"_$SERVICE" ]]; then
+                new_key=$(echo "$key" | sed "s/_$SERVICE//")
+                export "$new_key=$value"
+                echo "$new_key=$value" >> $GITHUB_ENV
+              fi
+            done < conf/.env.CI.dev
+          done
+
+      - name: Execute SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST_URL }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            ./deploy_backend_dev.sh ${{ env.MICROSERVICE_DEPLOY }} ${{ env.MICROSERVICE_VERSION }}
+            for SERVICE in $changed_services; do
+              ./deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION
+            done
