@@ -302,6 +302,25 @@ public class ChallengeController {
         return tagService.getAllTags();
     }
 
+    @GetMapping("/tags/{languageId}")
+    @Operation(
+            operationId = "Get tags by languageId",
+            summary = "Get all tags filtered by languageId.",
+            description = "Retrieve all tags that match the specified languageId.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "404", description = "No tags found for the specified languageId."),
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s).")
+            }
+    )
+    public Mono<ResponseEntity<GenericResultDto<TagDto>>> getTagsByLanguageId(@PathVariable UUID languageId) {
+        return tagService.getTagsByLanguageId(languageId)
+                .map(ResponseEntity::ok)
+                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()))
+                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()));
+    }
+
+
     @PutMapping("/challenge/{challengeId}/update")
     @Operation(
             operationId = "Updates an existing challenge.",
@@ -348,4 +367,5 @@ public class ChallengeController {
                 .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
                 .map(ResponseEntity::ok);
     }
+
 }

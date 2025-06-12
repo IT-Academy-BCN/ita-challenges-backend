@@ -856,4 +856,56 @@ class ChallengeControllerTest {
 
     }
 
+    @Test
+    void testGetTagsByLanguageId_WhenTagsExist_ReturnsOk() {
+        UUID languageId = UUID.randomUUID();
+
+        TagDto tag1 = new TagDto(UUID.randomUUID(), "Java", "Lenguaje de programación", languageId);
+        TagDto tag2 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos", languageId);
+        TagDto[] tagArray = new TagDto[]{tag1, tag2};
+
+        GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
+        resultDto.setInfo(0, 2, 2, tagArray);
+
+        when(tagService.getTagsByLanguageId(languageId)).thenReturn(Mono.just(resultDto));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/tags/" + languageId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.results.length()").isEqualTo(2)
+                .jsonPath("$.results[0].tag_name").isEqualTo("Java")
+                .jsonPath("$.results[1].tag_name").isEqualTo("POO");
+
+        verify(tagService).getTagsByLanguageId(languageId);
+    }
+
+    @Test
+    void testGetTagsByLanguageId_WhenNoTagsExist_Returns404() {
+        UUID languageId = UUID.randomUUID();
+
+        when(tagService.getTagsByLanguageId(languageId)).thenReturn(Mono.empty());
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/tags/" + languageId)
+                .exchange()
+                .expectStatus().isNotFound();
+
+        verify(tagService).getTagsByLanguageId(languageId);
+    }
+
+    @Test
+    void testGetTagsByLanguageId_WhenErrorOccurs_Returns500() {
+        UUID languageId = UUID.randomUUID();
+
+        when(tagService.getTagsByLanguageId(languageId)).thenReturn(Mono.error(new RuntimeException("DB error")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/tags/" + languageId)
+                .exchange()
+                .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        verify(tagService).getTagsByLanguageId(languageId);
+    }
 }
