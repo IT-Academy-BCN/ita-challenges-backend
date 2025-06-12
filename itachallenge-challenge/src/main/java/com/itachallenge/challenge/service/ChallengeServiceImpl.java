@@ -25,8 +25,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
+
+
 
 
 @Service
@@ -275,6 +278,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .uuid(UUID.randomUUID())
                 .title(dto.getChallengeTitle())
                 .level(dto.getLevel().toString())
+                .creationDate(LocalDateTime.now())
                 .detail(detail)
                 .languages(Set.of(language))
                 .solutions(List.of(solutionId))

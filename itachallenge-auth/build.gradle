@@ -18,6 +18,7 @@ jacoco{
 }
 
 group = 'ita.challenges'
+version = System.getenv('MICROSERVICE_VERSION') ?: '2.0.4-RELEASE'
 
 repositories {
     mavenCentral()

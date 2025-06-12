@@ -3,7 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+### [itachallenge-challenge-2.1.0-RELEASE] - 2025-06-12
+
+### Added
+-Save and return challenge creation date (Taiga [#478], PR [#902])
+
+### [itachallenge-challenge-2.0.4-RELEASE] - 2023-06-03
 
 ### Added
 - Add validation to verify that the provided user ID exists for the getAllSolutionsByUser endpoint. (Taiga [#437], PR [#889])
@@ -40,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Secured POST endpoint `addChallenge` for creating a challenge in Challenge microservice (PR #871)
 - Secured PUT endpoint for updating a challenge in Challenge microservice (PR #875)
 
-### [itachallenge-challenge-2.0.4-RELEASE] - 2023-11-12
+### [itachallenge-challenge-2.0.3-RELEASE] - 2023-11-12
 * Issue #441b: Added Mongock to tracing database changes
 
 ### [itachallenge-challenge-1.6.0-RELEASE] - 2023-05-16
