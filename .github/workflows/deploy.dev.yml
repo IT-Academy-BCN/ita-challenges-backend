@@ -22,7 +22,7 @@ jobs:
         id: detect_services
         run: |
           echo "Detecting changed microservices..."
-          CHANGED_SERVICES=$(git diff --name-only origin/develop...HEAD | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u)
+          CHANGED_SERVICES=$(git diff --name-only HEAD~1 HEAD | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u)
           if [ -z "$CHANGED_SERVICES" ]; then
             echo "No microservices changed. Exiting workflow."
             echo "changed_services=$(echo $CHANGED_SERVICES | tr '\n' ' ')" >> $GITHUB_ENV
