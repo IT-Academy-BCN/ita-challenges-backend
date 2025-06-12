@@ -106,12 +106,8 @@ public class DatabaseUpdater {
                 update(STATE_FIELD, "ACTIVE"),
                 COLLECTION_NAME
         ).doOnSuccess(result -> {
-            if (result != null && result.wasAcknowledged()) {
-                logger.info("Matched count: {}", result.getMatchedCount());
-                logger.info("Modified count: {}", result.getModifiedCount());
-            } else {
-                logger.warn("Update result was null or not acknowledged");
-            }
+            logger.info("Matched count: {}", result.getMatchedCount());
+            logger.info("Modified count: {}", result.getModifiedCount());
         }).doOnError(error -> logger.error(ERROR_UPDATE, error.getMessage())).subscribe();
     }
 
@@ -121,12 +117,8 @@ public class DatabaseUpdater {
         reactiveMongoTemplate.updateMulti(query, new Update().unset(STATE_FIELD), COLLECTION_NAME)
                 .defaultIfEmpty(UpdateResult.unacknowledged())
                 .doOnSuccess(result -> {
-                    if (result != null && result.wasAcknowledged()) {
-                        logger.info("Matched count: {}", result.getMatchedCount());
-                        logger.info("Modified count: {}", result.getModifiedCount());
-                    } else {
-                        logger.warn("Update result was null or not acknowledged");
-                    }
+                    logger.info("Matched count: {}", result.getMatchedCount());
+                    logger.info("Modified count: {}", result.getModifiedCount());
                 })
                 .doOnError(error -> logger.error(ERROR_UPDATE, error.getMessage()))
                 .subscribe();
