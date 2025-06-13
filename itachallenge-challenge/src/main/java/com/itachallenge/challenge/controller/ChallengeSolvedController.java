@@ -18,7 +18,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @Validated
-@RequestMapping(value = "/itachallenge/api/v1/challenge")
+@RequestMapping(value = "/itachallenge/api/v1/challenge/solved")
 @RequiredArgsConstructor
 public class ChallengeSolvedController {
 
@@ -26,7 +26,7 @@ public class ChallengeSolvedController {
 
     private final IChallengeService challengeService;
 
-    @PostMapping("/challenges/ended/{challengeId}")
+    @PostMapping("/ended/{challengeId}")
     @Operation(
             operationId = "Add a challenge to User's solved challenges.",
             summary = "Add a challenge to solved challenges.",
