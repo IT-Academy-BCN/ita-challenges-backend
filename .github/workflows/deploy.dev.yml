@@ -22,7 +22,6 @@ jobs:
         run: |
           echo "Detecting changed microservices..."
 
-          # Usar commit base y commit squash merge
           BEFORE_SHA="${{ github.event.pull_request.base.sha }}"
           AFTER_SHA="${{ github.event.pull_request.merge_commit_sha }}"
 

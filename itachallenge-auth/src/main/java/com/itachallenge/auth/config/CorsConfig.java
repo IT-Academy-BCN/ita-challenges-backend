@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
-//TODO eliminar esta linea de pueba al terminar testeo de flujo CI
+
     // TODO - Pending add restrictions to CORS in pro env
     @Override
     public void addCorsMappings(CorsRegistry registry) {
