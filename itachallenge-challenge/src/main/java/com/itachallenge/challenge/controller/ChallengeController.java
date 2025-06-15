@@ -310,7 +310,8 @@ public class ChallengeController {
             responses = {
                     @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
                     @ApiResponse(responseCode = "404", description = "No tags found for the specified languageId."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s).")
+                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)."),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
             }
     )
     public Mono<ResponseEntity<GenericResultDto<TagDto>>> getTagsByLanguageId(@PathVariable UUID languageId) {
