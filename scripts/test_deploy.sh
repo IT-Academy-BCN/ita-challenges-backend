@@ -1,20 +1,34 @@
 #!/bin/bash
 set -e
 
-# Ruta del archivo de configuración
 ENV_FILE="conf/.env.CI.dev"
 
-# Simulación de microservicios cambiados - normalmente se haría con git diff
-# Aquí puedes cambiar la lista para probar diferentes combinaciones
-CHANGED_SERVICES=("itachallenge-auth" "itachallenge-user")
+# Detectar commits de comparación
+BASE_COMMIT=${1:-HEAD~1}
+TARGET_COMMIT=${2:-HEAD}
 
-echo "Simulando deploy para servicios cambiados: ${CHANGED_SERVICES[*]}"
+echo "Detectando cambios entre commits: $BASE_COMMIT...$TARGET_COMMIT"
+CHANGED_FILES=$(git diff --name-only "$BASE_COMMIT" "$TARGET_COMMIT")
+
+echo "Archivos modificados:"
+echo "$CHANGED_FILES"
 echo ""
 
-for SERVICE in "${CHANGED_SERVICES[@]}"; do
+# Extraer microservicios modificados
+CHANGED_SERVICES=$(echo "$CHANGED_FILES" | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u)
+
+if [[ -z "$CHANGED_SERVICES" ]]; then
+  echo "⚠️  No se detectaron microservicios cambiados. Fin del script."
+  exit 0
+fi
+
+echo "Microservicios detectados como cambiados:"
+echo "$CHANGED_SERVICES"
+echo ""
+
+for SERVICE in $CHANGED_SERVICES; do
   echo "==== Procesando microservicio: $SERVICE ===="
 
-  # Extraer versión del .env.CI.dev
   MICROSERVICE_VERSION=""
   while IFS='=' read -r key value; do
     if [[ "$key" == "MICROSERVICE_VERSION_$SERVICE" ]]; then
@@ -29,30 +43,23 @@ for SERVICE in "${CHANGED_SERVICES[@]}"; do
   fi
 
   echo "Versión detectada para $SERVICE: $MICROSERVICE_VERSION"
-
-  # Simular build con Gradle
   echo "Ejecutando build con Gradle para $SERVICE..."
   echo "./gradlew :$SERVICE:clean :$SERVICE:build -PMICROSERVICE_VERSION=$MICROSERVICE_VERSION"
 
-  # Simular verificación JAR
   JAR_PATH="$SERVICE/build/libs/$SERVICE-$MICROSERVICE_VERSION.jar"
   echo "Simulando comprobación existencia JAR en: $JAR_PATH"
-  # Aquí podrías incluso hacer [ -f "$JAR_PATH" ] para probar si existe (en test real)
 
-  # Simular docker build
-  echo "Simulando build de imagen Docker para $SERVICE: itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION}"
-
-  # Simular push a Docker Hub
-  echo "Simulando login en Docker Hub con usuario \$DOCKERHUB_USERNAME y token \$DOCKERHUB_TOKEN"
-  echo "Simulando push de imagen itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION}"
+  echo "Simulando build de imagen Docker: itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION}"
+  echo "Simulando login y push a Docker Hub"
+  echo "docker push itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION}"
 
   echo "----"
 done
 
-# Simular despliegue remoto vía SSH
-echo "Simulando despliegue remoto via SSH para servicios: ${CHANGED_SERVICES[*]}"
-for SERVICE in "${CHANGED_SERVICES[@]}"; do
-  echo "ssh $SSH_USERNAME@$SSH_HOST_URL './deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION'"
+# Simular despliegue remoto
+echo "Simulando despliegue remoto via SSH:"
+for SERVICE in $CHANGED_SERVICES; do
+  echo "ssh \$SSH_USERNAME@\$SSH_HOST_URL './deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION'"
 done
 
-echo "Simulación completa."
+echo "✅ Simulación completa."
