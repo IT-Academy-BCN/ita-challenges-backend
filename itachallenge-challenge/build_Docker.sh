@@ -19,6 +19,8 @@ now="$(date +'%d-%m-%Y %H:%M:%S:%3N')"
 base_dir=`pwd`
 
 ./gradlew :itachallenge-challenge:clean && ./gradlew :itachallenge-challenge:build
+# Copiar el JAR generado con versión al nombre fijo que espera el Dockerfile
+cp itachallenge-challenge/build/libs/itachallenge-challenge-${MICROSERVICE_VERSION}.jar itachallenge-challenge/build/libs/itachallenge-challenge.jar
 
 cd itachallenge-challenge
 docker build -t=${REGISTRY_NAME}:itachallenge-challenge-${MICROSERVICE_VERSION} .
