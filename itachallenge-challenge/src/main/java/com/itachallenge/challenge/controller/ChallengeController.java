@@ -18,20 +18,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.*;
+
+
 
 @RestController
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
-//TODO: este comentario se debe de eliminar despues de haber hecho testeo de deploy automatico
+
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "200";  //if no limit, all elements (avoid exception with default value 200)
     private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]
