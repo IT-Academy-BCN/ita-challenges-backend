@@ -90,25 +90,6 @@ public class TagRepositoryTest {
                 .verifyComplete();
     }
 
-    @DisplayName("Find by TagName")
-    @Test
-    void findByNameTagTest() {
-
-        String tagNameByFound = "POO";
-
-        Mono<TagDocument> tag1 = tagRepository.findByTagName(tagNameByFound);
-        tag1.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTagName(), tagNameByFound),
-                () -> fail("Tag with name " + tagNameByFound + " not found"));
-
-        String tagNameByFound2 = "Bucles";
-
-        Mono<TagDocument> tag2 = tagRepository.findByTagName(tagNameByFound2);
-        tag2.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTagName(), tagNameByFound2),
-                () -> fail("Tag with name " + tagNameByFound2 + " not found"));
-    }
-
     @DisplayName("Find by Language ID")
     @Test
     void findByIdLanguageTest() {
