@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-challenge-2.0.4-RELEASE] - 2023-06-03
 
 ### Added
+- Added method in `TagService` to retrieve tags by `languageId`. (Taiga [#485], PR [#905])
 - Add validation to verify that the provided user ID exists for the getAllSolutionsByUser endpoint. (Taiga [#437], PR [#889])
 - FavoriteController and extracted endpoints from ChallengeController. (Taiga [#418], PR [#886]) 
 - POST endpoint in Auth microservice to allow user role change at runtime (Taiga [#404], PR [#882])  
