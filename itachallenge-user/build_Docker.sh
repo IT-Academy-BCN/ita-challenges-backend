@@ -20,6 +20,8 @@ base_dir=`pwd`
 
 ./gradlew :itachallenge-user:clean && ./gradlew :itachallenge-user:build
 
+cp itachallenge-user/build/libs/itachallenge-user-${MICROSERVICE_VERSION}.jar itachallenge-user/build/libs/itachallenge-user.jar
+
 cd itachallenge-user
 docker build -t=${REGISTRY_NAME}:itachallenge-user-${MICROSERVICE_VERSION} .
 
