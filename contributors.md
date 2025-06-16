@@ -91,4 +91,6 @@
 * Inga Demetrashvili - https://github.com/IngaD89
 * Angel Pelaez -  https://github.com/AngelPelaezS1
 * Fernando Giménez - https://github.com/FerGimenezRoglia
+* Antonio Carrasco - https://github.com/Deimus23
 * Jofre Coca - https://github.com/JofreCoca
+
