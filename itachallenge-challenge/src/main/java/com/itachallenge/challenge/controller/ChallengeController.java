@@ -31,7 +31,7 @@ import java.util.*;
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
-//TODO: delete this line after testing
+
     private static final String DEFAULT_OFFSET = "0";
     private static final String DEFAULT_LIMIT = "200";  //if no limit, all elements (avoid exception with default value 200)
     private static final String LIMIT = "^([1-9]\\d?|1\\d{2}|200)$";  // Integer in range [1, 200]

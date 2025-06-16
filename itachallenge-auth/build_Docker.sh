@@ -25,6 +25,8 @@ base_dir=`pwd`
 
 ./gradlew :itachallenge-auth:clean && ./gradlew :itachallenge-auth:build
 
+cp itachallenge-auth/build/libs/itachallenge-auth-${MICROSERVICE_VERSION}.jar itachallenge-auth/build/libs/itachallenge-auth.jar
+
 cd itachallenge-auth
 docker build --build-arg GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID} \
              --build-arg GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET} \
