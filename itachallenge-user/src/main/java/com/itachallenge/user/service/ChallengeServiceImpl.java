@@ -66,7 +66,7 @@ public class ChallengeServiceImpl implements IChallengeService {
 
     private String buildUrl(String challengeId, String type){
         return UriComponentsBuilder.fromHttpUrl(challengeServiceUrl)
-                .path("/itachallenge/api/v1/challenge/challenges/{type}/{challengeId}")
+                .path("/itachallenge/api/v1/challenge/solved/{type}/{challengeId}")
                 .buildAndExpand(type, challengeId)
                 .toUriString();
     }
