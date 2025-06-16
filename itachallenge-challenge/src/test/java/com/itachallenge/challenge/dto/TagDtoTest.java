@@ -25,6 +25,7 @@ class TagDtoTest {
         assertEquals(id, tagDto.getTagId());
         assertEquals(name, tagDto.getTagName());
         assertEquals(description, tagDto.getTagDescription());
+        assertNotNull(tagDto.getLanguageId());
     }
 
     @Test
