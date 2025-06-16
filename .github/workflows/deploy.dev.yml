@@ -1,9 +1,6 @@
 name: Upload Image to Docker Hub & Deploy to Dev
 
 on:
-  push:
-    branches:
-      - workflow #develop
   pull_request:
     types:
       - closed
@@ -12,24 +9,39 @@ on:
 
 jobs:
   docker:
-    if: (github.event_name == 'push') || (github.event.pull_request.merged == true)
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for accurate diff
 
       - name: Detect changed microservices
         id: detect_services
         run: |
           echo "Detecting changed microservices..."
-          CHANGED_SERVICES=$(git diff --name-only HEAD~1 HEAD | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u)
+
+          BEFORE_SHA="${{ github.event.pull_request.base.sha }}"
+          AFTER_SHA="${{ github.event.pull_request.merge_commit_sha }}"
+
+          echo "Diff from $BEFORE_SHA to $AFTER_SHA"
+
+          CHANGED_FILES=$(git diff --name-only $BEFORE_SHA $AFTER_SHA)
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          CHANGED_SERVICES=$(echo "$CHANGED_FILES" | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u || true)
+
           if [ -z "$CHANGED_SERVICES" ]; then
             echo "No microservices changed. Exiting workflow."
-            echo "changed_services=$(echo $CHANGED_SERVICES | tr '\n' ' ')" >> $GITHUB_ENV
+            echo "changed_services=" >> $GITHUB_ENV
             exit 0
+          else
+            echo "Changed microservices: $CHANGED_SERVICES"
+            echo "changed_services=$CHANGED_SERVICES" >> $GITHUB_ENV
           fi
-          echo "Changed microservices: $CHANGED_SERVICES"
-          echo "changed_services=$(echo $CHANGED_SERVICES | tr '\n' ' ')" >> $GITHUB_ENV
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
