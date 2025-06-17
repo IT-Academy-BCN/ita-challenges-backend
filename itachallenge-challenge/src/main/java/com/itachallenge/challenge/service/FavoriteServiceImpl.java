@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.service;
 
-import com.itachallenge.challenge.document.ChallengeDocument;
 import com.itachallenge.challenge.dto.FavoriteDto;
 import com.itachallenge.challenge.exception.BadUUIDException;
 import com.itachallenge.challenge.exception.ChallengeNotFoundException;
