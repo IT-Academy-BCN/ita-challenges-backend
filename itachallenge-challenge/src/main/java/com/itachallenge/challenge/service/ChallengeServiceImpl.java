@@ -30,7 +30,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 
-//TODO borrar este comentario cuando termine de testar. esto es una prueba
+
 
 @Service
 public class ChallengeServiceImpl implements IChallengeService {

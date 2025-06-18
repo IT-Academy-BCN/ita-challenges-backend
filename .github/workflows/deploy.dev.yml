@@ -80,8 +80,10 @@ jobs:
 
             echo "Compiling and building Docker image..."
             ./gradlew :${SERVICE}:clean :${SERVICE}:build -PMICROSERVICE_VERSION=${MICROSERVICE_VERSION}
-            cp ${SERVICE}/build/libs/${SERVICE}-${MICROSERVICE_VERSION}.jar ${GITHUB_WORKSPACE}/${SERVICE}
-
+            echo "Versión: $MICROSERVICE_VERSION"
+            ls -lh ${SERVICE}/build/libs/
+            cp ${SERVICE}/build/libs/${SERVICE}-${MICROSERVICE_VERSION}.jar ${SERVICE}/build/libs/${SERVICE}.jar
+            ls -lh ${SERVICE}/build/libs/
             echo "Building Docker image for $SERVICE..."
             docker build -t itacademybcn/itachallenges:${SERVICE}-${MICROSERVICE_VERSION} ${SERVICE}
 
