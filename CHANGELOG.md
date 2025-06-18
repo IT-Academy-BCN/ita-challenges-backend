@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[itachallenge-user-1.1.0-RELEASE] - 2025-06-18
+
+### Added
+- isSolved and timesSolved information in the PUT /solution endpoint response (Taiga [#531], PR [#919])
+
 ### [itachallenge-challenge-2.1.0-RELEASE] - 2025-06-12
 
 ### Added

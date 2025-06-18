@@ -3,6 +3,7 @@ package com.itachallenge.user.service;
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.enums.ChallengeStatus;
+import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadRequestException;
@@ -29,50 +30,40 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     }
 
     @Override
-    public Mono<UserSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
+    public Mono<SubmitSolutionResponseDto> addSolution(UserSolutionRequestDto userSolutionDto) {
         UUID challengeUuid = UUID.fromString(userSolutionDto.getChallengeId());
         UUID languageUuid = UUID.fromString(userSolutionDto.getLanguageId());
         UUID userUuid = UUID.fromString(userSolutionDto.getUserId());
-        String status = userSolutionDto.getStatus();
-        ChallengeStatus challengeStatus;
+
+        ChallengeStatus challengeStatus = ChallengeStatus.challengeStatusFromString(userSolutionDto.getStatus());
+        if (challengeStatus == null) {
+            log.error("PUT operation failed due to invalid challenge status parameter");
+            return Mono.error(new IllegalArgumentException("Status null or not allowed"));
+        }
 
         SolutionAttemptDocument solutionAttempt = SolutionAttemptDocument.builder()
                 .uuid(UUID.randomUUID())
                 .solutionText(userSolutionDto.getSolutionText())
                 .build();
 
-        challengeStatus = ChallengeStatus.challengeStatusFromString(status);
-
-        if (challengeStatus == null) {
-            log.error("PUT operation failed due to invalid challenge status parameter");
-            return Mono.error(new IllegalArgumentException("Status null or not allowed"));
-        }
-
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
-                .map(savedDocument -> UserSolutionResponseDto.builder()
-                        .userId(String.valueOf(savedDocument.getUserId()))
-                        .languageId(String.valueOf(savedDocument.getLanguageId()))
-                        .challengeId(String.valueOf(savedDocument.getChallengeId()))
-                        .solutionText(savedDocument.getSolutionAttemptDocument().getSolutionText())
-                        .build())
-                .doOnSuccess(userSolutionDocument -> log.info("PUT request successfully processed and solution added to challenge {} for user {}.", userUuid, challengeUuid))
-                .doOnError(error -> log.error("PUT operation failed with error message: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
+                .flatMap(this::buildSubmitSolutionResponse)
+                .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
+                .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
     }
 
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
-                    if (existingSolution.getStatus() != null && existingSolution.getStatus().equals(ChallengeStatus.ENDED)) {
-                        return Mono.error(new UnmodificableSolutionException("Existing solution for user " + userUuid +
-                                " and challenge " + challengeUuid + " has status 'ENDED', and thus cannot be modified."));
+                    if (ChallengeStatus.ENDED.equals(existingSolution.getStatus())) {
+                        return Mono.error(new UnmodificableSolutionException("Existing solution is already ENDED and cannot be modified."));
                     }
                     existingSolution.setSolutionAttemptDocument(solutionAttempt);
                     existingSolution.setStatus(challengeStatus);
-                    return userSolutionRepository.save(existingSolution)
-                            .flatMap(savedSolution -> handlePostSave(savedSolution, challengeStatus, challengeUuid));
+                    return userSolutionRepository.save(existingSolution);
                 })
                 .switchIfEmpty(Mono.defer(() -> {
-                    UserSolutionDocument userSolutionDocument = UserSolutionDocument.builder()
+                    UserSolutionDocument newSolution = UserSolutionDocument.builder()
                             .uuid(UUID.randomUUID())
                             .userId(userUuid)
                             .challengeId(challengeUuid)
@@ -80,35 +71,42 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .status(challengeStatus)
                             .solutionAttemptDocument(solutionAttempt)
                             .build();
-                    return userSolutionRepository.save(userSolutionDocument)
-                            .flatMap(savedSolution -> handlePostSave(savedSolution, challengeStatus, challengeUuid));
+                    return userSolutionRepository.save(newSolution);
                 }));
     }
 
-    private Mono<UserSolutionDocument> handlePostSave(UserSolutionDocument savedSolution, ChallengeStatus status, UUID challengeUuid) {
+    private Mono<SubmitSolutionResponseDto> buildSubmitSolutionResponse(UserSolutionDocument savedDocument) {
+        String solutionText = savedDocument.getSolutionAttemptDocument().getSolutionText();
+        ChallengeStatus status = savedDocument.getStatus();
+
         if (ChallengeStatus.ENDED.equals(status)) {
-            return challengeService.addChallengeToSolved(challengeUuid.toString())
-                    .thenReturn(savedSolution);
+            return challengeService.addChallengeToSolved(savedDocument.getChallengeId().toString())
+                    .map(solvedDto -> SubmitSolutionResponseDto.builder()
+                            .solutionText(solutionText)
+                            .isSolved(solvedDto.isSolved())
+                            .timesSolved(solvedDto.getTimesSolved())
+                            .build());
+        } else {
+            // TODO: Enhance the response for non-ended statuses like IN_PROGRESS if additional info is needed
+            return Mono.just(SubmitSolutionResponseDto.builder()
+                    .solutionText(solutionText)
+                    .isSolved(false)
+                    .build());
         }
-        return Mono.just(savedSolution);
     }
 
     @Override
     public Flux<UserSolutionResponseDto> getAllSolutionsByUser(String userId) {
         return validateAndParseUuid(userId)
                 .flatMapMany(uuid ->
-                        userSolutionRepository
-                                .findAllByUserId(UUID.fromString(userId))
-                                .map(doc -> {
-                                            log.info("→ Solution retrieved for user {}: challengeId={}", userId, doc.getChallengeId());
-                                            return UserSolutionResponseDto.builder()
-                                                    .userId(doc.getUserId().toString())
-                                                    .challengeId(doc.getChallengeId().toString())
-                                                    .languageId(doc.getLanguageId().toString())
-                                                    .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
-                                                    .build();
-                                        }
-                                ));
+                        userSolutionRepository.findAllByUserId(uuid)
+                                .map(doc -> UserSolutionResponseDto.builder()
+                                        .userId(doc.getUserId().toString())
+                                        .challengeId(doc.getChallengeId().toString())
+                                        .languageId(doc.getLanguageId().toString())
+                                        .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                        .build())
+                );
     }
 
     private Mono<UUID> validateAndParseUuid(String userId) {

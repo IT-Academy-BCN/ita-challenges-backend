@@ -1,9 +1,10 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.dto.SolvedDto;
 import reactor.core.publisher.Mono;
 
 public interface IChallengeService {
 
-    Mono<Boolean> addChallengeToSolved(String challengeId);
+    Mono<SolvedDto> addChallengeToSolved(String challengeId);
 
 }
