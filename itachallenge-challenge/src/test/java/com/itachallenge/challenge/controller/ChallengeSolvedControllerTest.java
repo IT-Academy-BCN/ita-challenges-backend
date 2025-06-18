@@ -23,8 +23,7 @@ class ChallengeSolvedControllerTest {
     }
 
     @Test
-    void testAddChallengeToSolved_ReturnsCreated_WhenSolvedIsTrue() {
-
+    void testAddChallengeToSolved_ReturnsOk_WhenSolvedIsTrue() {
         String challengeId = "123";
         SolvedDto solvedDto = new SolvedDto();
         solvedDto.setSolved(true);
@@ -32,10 +31,9 @@ class ChallengeSolvedControllerTest {
         when(challengeService.addChallengeToSolved(challengeId))
                 .thenReturn(Mono.just(solvedDto));
 
-
         StepVerifier.create(controller.addChallengeToSolved(challengeId))
                 .assertNext(response -> {
-                    assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                    assertEquals(HttpStatus.OK, response.getStatusCode());
                     assertNotNull(response.getBody());
                     assertTrue(response.getBody().isSolved());
                 })
@@ -44,14 +42,12 @@ class ChallengeSolvedControllerTest {
 
     @Test
     void testAddChallengeToSolved_ReturnsOk_WhenSolvedIsFalse() {
-
         String challengeId = "456";
         SolvedDto solvedDto = new SolvedDto();
         solvedDto.setSolved(false);
 
         when(challengeService.addChallengeToSolved(challengeId))
                 .thenReturn(Mono.just(solvedDto));
-
 
         StepVerifier.create(controller.addChallengeToSolved(challengeId))
                 .assertNext(response -> {
@@ -64,17 +60,14 @@ class ChallengeSolvedControllerTest {
 
     @Test
     void testAddChallengeToSolved_PropagatesError() {
-
         String challengeId = "999";
         when(challengeService.addChallengeToSolved(challengeId))
                 .thenReturn(Mono.error(new RuntimeException("Test error")));
 
-
         StepVerifier.create(controller.addChallengeToSolved(challengeId))
                 .expectErrorMatches(error ->
                         error instanceof RuntimeException &&
-                                error.getMessage().equals("Test error")
-                )
+                                error.getMessage().equals("Test error"))
                 .verify();
     }
 }

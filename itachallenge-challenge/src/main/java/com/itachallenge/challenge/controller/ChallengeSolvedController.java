@@ -42,7 +42,7 @@ public class ChallengeSolvedController {
                 .map(solvedDto -> {
                     if (solvedDto.isSolved()) {
                         log.info("Challenge '{}' has increased his value timesSolved", challengeId);
-                        return ResponseEntity.status(HttpStatus.CREATED).body(solvedDto);
+                        return ResponseEntity.ok(solvedDto);
                     }
                     log.info("Challenge '{}' could not be found, so the value timesSoved has not been increased", challengeId);
                     return ResponseEntity.ok(solvedDto);
