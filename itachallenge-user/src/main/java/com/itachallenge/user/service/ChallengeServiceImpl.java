@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.user.dto.SolvedDto;
 import com.itachallenge.user.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,11 @@ public class ChallengeServiceImpl implements IChallengeService {
     }
 
     @Override
-    public Mono<Boolean> addChallengeToSolved(String challengeId) {
+    public Mono<SolvedDto> addChallengeToSolved(String challengeId) {
         return callEndpoint(challengeId, ChallengeStatus.ENDED, X_SOLVED_MESSAGE, HttpMethod.POST);
     }
 
-    private Mono<Boolean> callEndpoint(String challengeId, ChallengeStatus type, String errorHeader, HttpMethod method) {
+    private Mono<SolvedDto> callEndpoint(String challengeId, ChallengeStatus type, String errorHeader, HttpMethod method) {
         String url = buildUrl(challengeId, type.toString().toLowerCase());
         log.debug("Calling {} endpoint with method={} and URL={}", type.name().toLowerCase(), method, url);
 
@@ -61,7 +62,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     log.warn("ChallengeService returned 500: {}", errorMessage);
                     return Mono.error(new InternalServerErrorException(errorMessage));
                 })
-                .bodyToMono(Boolean.class);
+                .bodyToMono(SolvedDto.class);
     }
 
     private String buildUrl(String challengeId, String type){

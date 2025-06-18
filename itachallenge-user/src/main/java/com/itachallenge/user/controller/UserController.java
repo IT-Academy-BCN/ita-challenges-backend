@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.annotations.ValidGithubUsername;
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.service.IUserSolutionService;
@@ -166,7 +167,7 @@ public class UserController {
                             content = {@Content(schema = @Schema())})
             }
     )
-    public Mono<ResponseEntity<UserSolutionResponseDto>> addSolution(
+    public Mono<ResponseEntity<SubmitSolutionResponseDto>> addSolution(
             @Valid @RequestBody UserSolutionRequestDto userSolutionDto) {
 
         return userSolutionService.addSolution(userSolutionDto)
