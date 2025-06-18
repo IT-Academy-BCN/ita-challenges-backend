@@ -23,5 +23,8 @@ public class UserSolutionResponseDto {
 
     @JsonProperty(value ="solution_text")
     private String solutionText;
+
+    @JsonProperty("status")
+    private String status;
 }
 
