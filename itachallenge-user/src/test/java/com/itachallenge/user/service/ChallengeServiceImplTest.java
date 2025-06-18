@@ -1,5 +1,7 @@
 package com.itachallenge.user.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.user.dto.SolvedDto;
 import com.itachallenge.user.exception.BadRequestException;
 import com.itachallenge.user.exception.InternalServerErrorException;
 import com.itachallenge.user.exception.NotFoundException;
@@ -42,18 +44,25 @@ public class ChallengeServiceImplTest {
     }
 
     @Test
-    void addChallengeToSolved_AddedToUser_ReturnsTrue() throws InterruptedException {
+    void addChallengeToSolved_AddedToUser_ReturnsTrue() throws Exception {
         String challengeId = "someId";
 
+        SolvedDto solvedDto = new SolvedDto(true, 5);
+
+        String responseBody = new ObjectMapper().writeValueAsString(solvedDto);
+
         mockWebServer.enqueue(new MockResponse()
-                .setBody("true")
+                .setBody(responseBody)
                 .setResponseCode(201)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = challengeService.addChallengeToSolved(challengeId);
+        Mono<SolvedDto> result = challengeService.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
-                .expectNext(true)
+                .assertNext(dto -> {
+                    assertTrue(dto.isSolved(), "Expected isSolved to be true");
+                    assertEquals(5, dto.getTimesSolved(), "Expected timesSolved to be 5");
+                })
                 .verifyComplete();
 
         RecordedRequest request = mockWebServer.takeRequest();
@@ -63,26 +72,28 @@ public class ChallengeServiceImplTest {
                 request.getRequestUrl().encodedPath());
     }
 
+
     @Test
     void addChallengeToSolved_NotAddedToUser_ReturnsFalse() throws InterruptedException {
         String challengeId = "someId";
 
         mockWebServer.enqueue(new MockResponse()
-                .setBody("false")
+                .setBody("{\"isSolved\":false,\"timesSolved\":0}")
                 .setResponseCode(200)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = challengeService.addChallengeToSolved(challengeId);
+        Mono<SolvedDto> result = challengeService.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
-                .expectNext(false)
+                .assertNext(dto -> {
+                    assertFalse(dto.isSolved());
+                    assertEquals(0, dto.getTimesSolved());
+                })
                 .verifyComplete();
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, challengeId),
-                request.getRequestUrl().encodedPath());
+        assertEquals(String.format(SOLVED_URL, challengeId), request.getRequestUrl().encodedPath());
     }
 
     @Test
@@ -96,7 +107,7 @@ public class ChallengeServiceImplTest {
                 .addHeader(X_SOLVED_MESSAGE, someErrorMessage)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = challengeService.addChallengeToSolved(challengeId);
+        Mono<SolvedDto> result = challengeService.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
@@ -107,9 +118,7 @@ public class ChallengeServiceImplTest {
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, challengeId),
-                request.getRequestUrl().encodedPath());
+        assertEquals(String.format(SOLVED_URL, challengeId), request.getRequestUrl().encodedPath());
     }
 
     @Test
@@ -121,7 +130,7 @@ public class ChallengeServiceImplTest {
                 .setResponseCode(404)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = challengeService.addChallengeToSolved(challengeId);
+        Mono<SolvedDto> result = challengeService.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
@@ -132,9 +141,7 @@ public class ChallengeServiceImplTest {
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, challengeId),
-                request.getRequestUrl().encodedPath());
+        assertEquals(String.format(SOLVED_URL, challengeId), request.getRequestUrl().encodedPath());
     }
 
     @Test
@@ -148,7 +155,7 @@ public class ChallengeServiceImplTest {
                 .addHeader(X_SOLVED_MESSAGE, someErrorMessage)
                 .addHeader("Content-Type", "application/json"));
 
-        Mono<Boolean> result = challengeService.addChallengeToSolved(challengeId);
+        Mono<SolvedDto> result = challengeService.addChallengeToSolved(challengeId);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(throwable -> {
@@ -159,8 +166,6 @@ public class ChallengeServiceImplTest {
 
         RecordedRequest request = mockWebServer.takeRequest();
         assertNotNull(request.getRequestUrl());
-        assertEquals(
-                String.format(SOLVED_URL, challengeId),
-                request.getRequestUrl().encodedPath());
+        assertEquals(String.format(SOLVED_URL, challengeId), request.getRequestUrl().encodedPath());
     }
 }

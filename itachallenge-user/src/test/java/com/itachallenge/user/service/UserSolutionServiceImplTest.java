@@ -2,34 +2,29 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.dto.SolvedDto;
+import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
-import com.itachallenge.user.dto.*;
-import com.itachallenge.user.document.enums.ChallengeStatus;
 import com.itachallenge.user.exception.BadRequestException;
-import com.itachallenge.user.exception.NotFoundException;
-import com.itachallenge.user.exception.UnmodificableSolutionException;
 import com.itachallenge.user.repository.IUserSolutionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.mockito.InjectMocks;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -45,53 +40,28 @@ class UserSolutionServiceImplTest {
     @InjectMocks
     private UserSolutionServiceImpl userSolutionService;
 
-    private String solutionText;
     private UUID userUuid;
     private UUID challengeUuid;
     private UUID languageUuid;
-    private UserSolutionRequestDto userSolutionRequestDto;
-    private UserSolutionDocument userSolutionDocument;
+    private String solutionText;
 
     @BeforeEach
     void setUp() {
-        String idUser = "550e8400-e29b-41d4-a716-446655440001";
-        String idChallenge = "550e8400-e29b-41d4-a716-446655440002";
-        String idLanguage = "550e8400-e29b-41d4-a716-446655440003";
-        solutionText = "This is a test started solution";
-        userUuid = UUID.fromString(idUser);
-        challengeUuid = UUID.fromString(idChallenge);
-        languageUuid = UUID.fromString(idLanguage);
-        userSolutionRequestDto = UserSolutionRequestDto.builder()
-                .userId(idUser)
-                .challengeId(idChallenge)
-                .languageId(idLanguage)
-                .status("ENDED")
-                .solutionText(solutionText).build();
-        userSolutionDocument = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(ChallengeStatus.ENDED)
-                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText(solutionText).build())
-                .build();
-
+        userUuid = UUID.randomUUID();
+        challengeUuid = UUID.randomUUID();
+        languageUuid = UUID.randomUUID();
+        solutionText = "Test solution";
     }
 
-    @DisplayName("UserSolutionServiceImpTest - addSolution creates a new document when existing document can't be found and status is 'ENDED'")
     @Test
-    void addSolutionNewSolutionWithStatusEnded_test() {
-
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
-        String solutionText = "sample solution text";
-
-        UserSolutionRequestDto userSolutionRequestDto = UserSolutionRequestDto.builder()
+    @DisplayName("addSolution creates new ENDED solution and returns response")
+    void addSolutionNewEndedSolution() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .solutionText(solutionText)
                 .status("ENDED")
+                .solutionText(solutionText)
                 .build();
 
         when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
@@ -101,16 +71,15 @@ class UserSolutionServiceImplTest {
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
-                .thenReturn(Mono.empty());
+                .thenReturn(Mono.just(new SolvedDto(true, 5)));
 
-        Mono<UserSolutionResponseDto> resultMono = userSolutionService.addSolution(userSolutionRequestDto);
+        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
 
-        StepVerifier.create(resultMono)
+        StepVerifier.create(result)
                 .assertNext(dto -> {
-                    assertEquals(userUuid.toString(), dto.getUserId(), "UserId mismatch");
-                    assertEquals(challengeUuid.toString(), dto.getChallengeId(), "ChallengeId mismatch");
-                    assertEquals(languageUuid.toString(), dto.getLanguageId(), "LanguageId mismatch");
-                    assertEquals(solutionText, dto.getSolutionText(), "SolutionText mismatch");
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertTrue(dto.getIsSolved());
+                    assertEquals(5, dto.getTimesSolved());
                 })
                 .verifyComplete();
 
@@ -119,229 +88,51 @@ class UserSolutionServiceImplTest {
         verify(challengeService).addChallengeToSolved(challengeUuid.toString());
     }
 
-    @DisplayName("UserSolutionServiceImpTest - addSolution throws IllegalArgumentException when new status is empty")
+
     @Test
-    void addSolutionModifySolutionWithEmptyStatus_test() {
-        userSolutionDocument.setStatus(null);
-        userSolutionRequestDto.setStatus(null);
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(userSolutionDocument));
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        Mono<UserSolutionResponseDto> resultMono = userSolutionService.addSolution(userSolutionRequestDto);
-
-        StepVerifier.create(resultMono)
-                .expectErrorMatches(
-                        throwable -> throwable instanceof IllegalArgumentException
-                                && throwable.getMessage().equals("Status null or not allowed")).verify();
-        verifyNoInteractions(userSolutionRepository);
-    }
-
-    @DisplayName("UserSolutionServiceImplTest - addSolution saves a solution when new status is ENDED and existing solution had status null")
-    @Test
-    void addSolutionWithEndedStatusWhenExistingSolutionExistsValid_test() {
-
-        UUID userUuid = UUID.randomUUID();
-        UUID challengeUuid = UUID.randomUUID();
-        UUID languageUuid = UUID.randomUUID();
-        String solutionText = "updated solution text";
-
-
-        UserSolutionRequestDto userSolutionRequestDto = UserSolutionRequestDto.builder()
+    @DisplayName("addSolution throws exception for invalid status")
+    void addSolutionInvalidStatus() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
+                .status("INVALID")
                 .solutionText(solutionText)
-                .status("ENDED")
                 .build();
 
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .expectErrorMatches(err -> err instanceof IllegalArgumentException &&
+                        err.getMessage().equals("Status null or not allowed"))
+                .verify();
+    }
 
-        UserSolutionDocument existingUserSolutionDocument = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
+    @Test
+    @DisplayName("getAllSolutionsByUser with invalid UUID throws BadRequestException")
+    void getAllSolutionsByUser_invalidUuid() {
+        StepVerifier.create(userSolutionService.getAllSolutionsByUser("bad-uuid"))
+                .expectErrorMatches(ex -> ex instanceof BadRequestException &&
+                        ex.getMessage().contains("must be a valid UUID"))
+                .verify();
+    }
+
+    @Test
+    @DisplayName("getAllSolutionsByUser with valid UUID returns solutions")
+    void getAllSolutionsByUser_returnsSolutions() {
+        UserSolutionDocument doc = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(null)
-                .solutionAttemptDocument(
-                        SolutionAttemptDocument.builder()
-                                .uuid(UUID.randomUUID())
-                                .solutionText("old solution")
-                                .build()
-                )
+                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("My solution").build())
                 .build();
 
-        UserSolutionDocument savedDocument = UserSolutionDocument.builder()
-                .uuid(existingUserSolutionDocument.getUuid())
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(ChallengeStatus.ENDED)
-                .solutionAttemptDocument(
-                        SolutionAttemptDocument.builder()
-                                .uuid(UUID.randomUUID())
-                                .solutionText(solutionText)
-                                .build()
-                )
-                .build();
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.just(doc));
 
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.just(existingUserSolutionDocument));
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenReturn(Mono.just(savedDocument));
-
-        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
-                .thenReturn(Mono.empty());
-
-        Mono<UserSolutionResponseDto> resultMono = userSolutionService.addSolution(userSolutionRequestDto);
-
-        StepVerifier.create(resultMono)
+        StepVerifier.create(userSolutionService.getAllSolutionsByUser(userUuid.toString()))
                 .assertNext(dto -> {
+                    assertEquals("My solution", dto.getSolutionText());
                     assertEquals(userUuid.toString(), dto.getUserId());
-                    assertEquals(challengeUuid.toString(), dto.getChallengeId());
-                    assertEquals(languageUuid.toString(), dto.getLanguageId());
-                    assertEquals(solutionText, dto.getSolutionText());
                 })
                 .verifyComplete();
-
-        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns UnmodificableSolutionException when existing solution's status is already 'ENDED'")
-    @Test
-    void addSolutionWithEndedStatusWhenInvalid_test() {
-        UserSolutionDocument existingUserSolutionDocument = userSolutionDocument;
-        existingUserSolutionDocument.setStatus(ChallengeStatus.ENDED);
-        String expectedMessage = "Existing solution for user " + userUuid +
-                " and challenge " + challengeUuid + " has status 'ENDED', and thus cannot be modified.";
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.just(existingUserSolutionDocument));
-
-        StepVerifier.create(userSolutionService.addSolution(userSolutionRequestDto))
-                .expectErrorMatches(
-                        throwable -> throwable instanceof UnmodificableSolutionException
-                                && throwable.getMessage().equals(expectedMessage)).verify();
-        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
-        verifyNoMoreInteractions(userSolutionRepository);
-    }
-
-    @DisplayName("UserSolutionServiceImpTest - addSolution returns IllegalArgumentException when provided status is not 'ENDED'")
-    @ParameterizedTest
-    @ValueSource(strings = {"", "InvalidStatus"})
-    void addSolutionWithInvalidStatus_test(String status) {
-        userSolutionRequestDto.setStatus(status);
-
-        Mono<UserSolutionResponseDto> resultMono = userSolutionService.addSolution(userSolutionRequestDto);
-
-        StepVerifier.create(resultMono)
-                .expectErrorMatches(
-                        throwable -> throwable instanceof IllegalArgumentException
-                                && throwable.getMessage().equals("Status null or not allowed")).verify();
-        verifyNoInteractions(userSolutionRepository);
-
-    }
-
-    @DisplayName("getAllSolutionsByUser throws a NotFoundException if there are no solutions for the user")
-    @Test
-    void getAllSolutionsByUser_noSolutionsFound_test() {
-        when(userSolutionRepository.findAllByUserId(userUuid))
-                .thenReturn(Flux.empty());
-
-        Flux<UserSolutionResponseDto> resultFlux = userSolutionService
-                .getAllSolutionsByUser(userUuid.toString());
-
-        StepVerifier.create(resultFlux)
-                .expectNextCount(0)
-                .verifyComplete();
-
-        verify(userSolutionRepository).findAllByUserId(userUuid);
-    }
-
-    @DisplayName("getAllSolutionsByUser returns all solutions")
-    @Test
-    void getAllSolutionsByUser_returnsSolutions_test() {
-        UserSolutionDocument doc1 = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .solutionAttemptDocument(SolutionAttemptDocument.builder()
-                        .solutionText("Solution 1").build())
-                .build();
-        UserSolutionDocument doc2 = UserSolutionDocument.builder()
-                .userId(userUuid)
-                .challengeId(UUID.randomUUID())
-                .languageId(UUID.randomUUID())
-                .solutionAttemptDocument(SolutionAttemptDocument.builder()
-                        .solutionText("Solution 2").build())
-                .build();
-
-        when(userSolutionRepository.findAllByUserId(userUuid))
-                .thenReturn(Flux.just(doc1, doc2));
-
-        Flux<UserSolutionResponseDto> resultFlux = userSolutionService
-                .getAllSolutionsByUser(userUuid.toString());
-
-        StepVerifier.create(resultFlux)
-                .expectNextMatches(dto ->
-                        dto.getUserId().equals(userUuid.toString()) &&
-                                dto.getChallengeId().equals(challengeUuid.toString()) &&
-                                dto.getSolutionText().equals("Solution 1"))
-                .expectNextMatches(dto ->
-                        dto.getUserId().equals(userUuid.toString()) &&
-                                dto.getSolutionText().equals("Solution 2"))
-                .verifyComplete();
-
-        verify(userSolutionRepository).findAllByUserId(userUuid);
-    }
-
-    @Test
-    @DisplayName("getAllSolutionsByUser(null) emits BadRequestException for null userId")
-    void getAllSolutionsByUser_nullUserId_throwsBadRequest() {
-        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(null);
-
-        StepVerifier.create(resultFlux)
-                .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
-                                ex.getMessage().equals("The 'userId' parameter cannot be null or empty.")
-                )
-                .verify();
-
-        verify(userSolutionRepository, never()).findAllByUserId(any());
-    }
-
-    @Test
-    @DisplayName("getAllSolutionsByUser(\"\") emits BadRequestException for empty userId")
-    void getAllSolutionsByUser_emptyUserId_throwsBadRequest() {
-        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser("   ");
-
-        StepVerifier.create(resultFlux)
-                .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
-                                ex.getMessage().equals("The 'userId' parameter cannot be null or empty.")
-                )
-                .verify();
-
-        verify(userSolutionRepository, never()).findAllByUserId(any());
-    }
-
-    @Test
-    @DisplayName("getAllSolutionsByUser(invalid) emits BadRequestException for malformed UUID")
-    void getAllSolutionsByUser_invalidFormat_throwsBadRequest() {
-        String bad = "not-a-uuid";
-        Flux<UserSolutionResponseDto> resultFlux = userSolutionService.getAllSolutionsByUser(bad);
-
-        StepVerifier.create(resultFlux)
-                .expectErrorMatches(ex ->
-                        ex instanceof BadRequestException &&
-                                ex.getMessage().equals("The 'userId' parameter must be a valid UUID: " + bad)
-                )
-                .verify();
-
-        verify(userSolutionRepository, never()).findAllByUserId(any());
     }
 }

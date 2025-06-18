@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [itachallenge-user-1.1.0-RELEASE] - 2025-06-18
 
 ### Added
--Información isSolved y timesSolved en la respuesta del endpoint PUT /solution (Taiga [#531], PR [#🟦])
+- isSolved and timesSolved information in the PUT /solution endpoint response (Taiga [#531], PR [#🟦])
 
 ### [itachallenge-challenge-2.1.0-RELEASE] - 2025-06-12
 
