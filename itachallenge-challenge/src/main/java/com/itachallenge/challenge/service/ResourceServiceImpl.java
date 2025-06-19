@@ -21,12 +21,10 @@ import java.util.*;
 
 @Service
 public class ResourceServiceImpl implements IResourceService {
-
     private static final Logger log = LoggerFactory.getLogger(ResourceServiceImpl.class);
     private final ResourceRepository resourceRepository;
     private final DocumentToDtoConverter<ResourceDocument, ResourceDto> resourceConverter;
     private final IChallengeService challengeService;
-
 
     public ResourceServiceImpl(ResourceRepository resourceRepository, DocumentToDtoConverter<ResourceDocument,
             ResourceDto> resourceConverter, IChallengeService challengeService) {
