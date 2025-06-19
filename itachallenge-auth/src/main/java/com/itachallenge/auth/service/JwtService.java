@@ -1,7 +1,6 @@
 package com.itachallenge.auth.service;
 
 import com.itachallenge.auth.enums.UserRole;
-import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+
 
 @Service
 public class JwtService implements IJwtService {
