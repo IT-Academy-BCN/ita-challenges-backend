@@ -28,7 +28,6 @@ jobs:
           CHANGED_SERVICES=$(echo "$CHANGED_FILES" | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u | tr '\n' ' ')
 
           echo "Changed microservices: $CHANGED_SERVICES"
-
           echo "changed_services=$CHANGED_SERVICES" >> $GITHUB_OUTPUT
 
       - name: Set up JDK 21
@@ -75,8 +74,19 @@ jobs:
             fi
 
             ./gradlew :${SERVICE}:clean :${SERVICE}:build -PMICROSERVICE_VERSION=${MICROSERVICE_VERSION}
-            cp ${SERVICE}/build/libs/${SERVICE}-${MICROSERVICE_VERSION}.jar ${SERVICE}/build/libs/${SERVICE}.jar
 
+            echo "🔍 Looking for .jar to copy in ${SERVICE}/build/libs..."
+            JAR_PATH=$(find ${SERVICE}/build/libs -maxdepth 1 -name "*.jar" | head -n 1)
+
+            if [ -z "$JAR_PATH" ]; then
+              echo "❌ No .jar file found for $SERVICE. Exiting."
+              exit 1
+            fi
+
+            cp "$JAR_PATH" ${SERVICE}/build/libs/${SERVICE}.jar
+            echo "✅ Copied $JAR_PATH to ${SERVICE}/build/libs/${SERVICE}.jar"
+
+            echo "🐳 Building Docker image..."
             if [ "$SERVICE" = "itachallenge-auth" ]; then
               docker build --build-arg GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID \
                            --build-arg GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET \
