@@ -123,6 +123,9 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            REPO_ROOT=$(git rev-parse --show-toplevel)
+            cd "$REPO_ROOT"
+            chmod +x ./deploy_backend_dev.sh
             for SERVICE in $changed_services; do
               ./deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION
             done
