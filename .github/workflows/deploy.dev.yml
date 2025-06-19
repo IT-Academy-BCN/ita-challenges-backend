@@ -158,7 +158,7 @@ jobs:
             ls -la
 
             # Cambia esta ruta fija por la ruta real de tu proyecto en el servidor remoto
-            REPO_ROOT="/home/ubuntu/ita-challenges-backend"
+            REPO_ROOT="/root"
             echo "Using fixed REPO_ROOT: $REPO_ROOT"
 
             cd "$REPO_ROOT" || { echo "ERROR: Could not change directory to $REPO_ROOT"; exit 1; }
