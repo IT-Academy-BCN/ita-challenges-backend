@@ -20,7 +20,7 @@ class TagDtoTest {
         String name = "POO";
         String description = "Programación orientada a objetos";
 
-        TagDto tagDto = new TagDto(id, name, description);
+        TagDto tagDto = new TagDto(id, name, description,UUID.randomUUID());
 
         assertEquals(id, tagDto.getTagId());
         assertEquals(name, tagDto.getTagName());
@@ -48,7 +48,7 @@ class TagDtoTest {
         ObjectMapper mapper = new ObjectMapper();
         TagDto tagDto = new TagDto(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
                 "Recursividad",
-                "Funciones que se llaman a sí mismas");
+                "Funciones que se llaman a sí mismas",UUID.randomUUID());
 
         String json = mapper.writeValueAsString(tagDto);
 

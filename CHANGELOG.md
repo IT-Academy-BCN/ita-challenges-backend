@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-challenge-2.2.0-RELEASE] - 2025-06-19
+
+### Added
+- Added `idLanguage` field to `Tag` model and `findByLanguageUuid` method to the Tag repository to filter tags by language UUID. (Taiga [#481], PR [#906])
+
 ### [itachallenge-challenge-2.1.1-RELEASE] - 2025-06-18
 
 #### Fixed

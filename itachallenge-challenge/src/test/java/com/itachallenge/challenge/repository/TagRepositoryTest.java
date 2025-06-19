@@ -31,7 +31,7 @@ import static org.springframework.test.util.AssertionErrors.fail;
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class TagRepositoryTest {
+class TagRepositoryTest {
 
     @Container
     static MongoDBContainer container = new MongoDBContainer("mongo")
@@ -59,10 +59,14 @@ public class TagRepositoryTest {
         uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
 
+        UUID uuidTag1 = UUID.randomUUID();
+        UUID uuidTag2 = UUID.randomUUID();
+
         tagRepository.deleteAll().block();
 
-        TagDocument tag1 = new TagDocument(uuidLang1, "POO", "Programació orientada a objectes");
-        TagDocument tag2 = new TagDocument(uuidLang2, "Bucles", "Bucles 'for' y 'while'");
+        TagDocument tag1 = new TagDocument(uuidTag1, "POO", "Programació orientada a objectes", uuidLang1);
+        TagDocument tag2 = new TagDocument(uuidTag2, "Bucles", "Bucles 'for' y 'while'", uuidLang2);
+
         Set<TagDocument> tagSet = new HashSet<>(Arrays.asList(tag1, tag2));
 
         tagRepository.saveAll(Flux.just(tag1, tag2)).blockLast();
@@ -87,25 +91,15 @@ public class TagRepositoryTest {
                 .verifyComplete();
     }
 
-    @DisplayName("Find by TagName")
+    @DisplayName("Find by Language ID")
     @Test
-    void findByNameTagTest() {
+    void findByIdLanguageTest() {
+        Flux<TagDocument> tagsByLanguage = tagRepository.findByLanguageId(uuidLang1);
 
-        String tagNameByFound = "POO";
-
-        Mono<TagDocument> tag1 = tagRepository.findByTagName(tagNameByFound);
-        tag1.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTagName(), tagNameByFound),
-                () -> fail("Tag with name " + tagNameByFound + " not found"));
-
-        String tagNameByFound2 = "Bucles";
-
-        Mono<TagDocument> tag2 = tagRepository.findByTagName(tagNameByFound2);
-        tag2.blockOptional().ifPresentOrElse(
-                u -> assertEquals(u.getTagName(), tagNameByFound2),
-                () -> fail("Tag with name " + tagNameByFound2 + " not found"));
+        StepVerifier.create(tagsByLanguage)
+                .expectNextMatches(tag -> tag.getTagName().equals("POO") && tag.getLanguageId().equals(uuidLang1))
+                .verifyComplete();
     }
-
 
 
 }
