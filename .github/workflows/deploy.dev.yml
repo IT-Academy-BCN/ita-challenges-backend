@@ -11,37 +11,25 @@ jobs:
   docker:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    outputs:
+      changed_services: ${{ steps.detect_services.outputs.changed_services }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 # Fetch all history for accurate diff
+          fetch-depth: 0
 
       - name: Detect changed microservices
         id: detect_services
         run: |
-          echo "Detecting changed microservices..."
-
           BEFORE_SHA="${{ github.event.pull_request.base.sha }}"
           AFTER_SHA="${{ github.event.pull_request.merge_commit_sha }}"
-
-          echo "Diff from $BEFORE_SHA to $AFTER_SHA"
-
           CHANGED_FILES=$(git diff --name-only $BEFORE_SHA $AFTER_SHA)
+          CHANGED_SERVICES=$(echo "$CHANGED_FILES" | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u | tr '\n' ' ')
 
-          echo "Changed files:"
-          echo "$CHANGED_FILES"
+          echo "Changed microservices: $CHANGED_SERVICES"
 
-          CHANGED_SERVICES=$(echo "$CHANGED_FILES" | grep -E '^(itachallenge-auth|itachallenge-user|itachallenge-challenge|itachallenge-document|itachallenge-mock)/' | cut -d/ -f1 | sort -u || true)
-
-          if [ -z "$CHANGED_SERVICES" ]; then
-            echo "No microservices changed. Exiting workflow."
-            echo "changed_services=" >> $GITHUB_ENV
-            exit 0
-          else
-            echo "Changed microservices: $CHANGED_SERVICES"
-            echo "changed_services=$(echo $CHANGED_SERVICES | tr '\n' ' ')" >> $GITHUB_ENV
-          fi
+          echo "changed_services=$CHANGED_SERVICES" >> $GITHUB_OUTPUT
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -58,50 +46,37 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-           ~/.gradle/caches
-           ~/gradle/wrapper
+            ~/.gradle/caches
+            ~/gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Login to Docker Hub
         run: |
-          echo "Logging into Docker Hub..."
           echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          echo "Docker Hub login successful."
 
-      - name: Load env and Build & Push for each changed microservice
-        if: env.changed_services != ''
+      - name: Build & Push for each changed microservice
         run: |
-          echo "Starting build and push process for changed microservices..."
-          for SERVICE in $changed_services; do
-            echo "---------------------------------------------"
-            echo "Processing microservice: $SERVICE"
+          for SERVICE in ${{ steps.detect_services.outputs.changed_services }}; do
+            echo "🔧 Processing microservice: $SERVICE"
 
             MICROSERVICE_VERSION=$(grep "^MICROSERVICE_VERSION_${SERVICE}=" conf/.env.CI.dev | cut -d '=' -f2)
-            export MICROSERVICE_VERSION
             if [ -z "$MICROSERVICE_VERSION" ]; then
-              echo "ERROR: MICROSERVICE_VERSION for $SERVICE not found in conf/.env.CI.dev"
+              echo "❌ ERROR: MICROSERVICE_VERSION for $SERVICE not found"
               exit 1
             fi
-            echo "Found version $MICROSERVICE_VERSION for $SERVICE"
 
-            # Variables comunes
             export ENV=dev
             export REGISTRY_NAME=itacademybcn/itachallenges
 
-            # Variables específicas para itachallenge-auth
             if [ "$SERVICE" = "itachallenge-auth" ]; then
               export GITHUB_CLIENT_ID=${{ secrets.GITHUB_CLIENT_ID }}
               export GITHUB_CLIENT_SECRET=${{ secrets.GITHUB_CLIENT_SECRET }}
-              echo "Exported GitHub credentials for $SERVICE"
             fi
 
-            echo "Running Gradle build for $SERVICE..."
             ./gradlew :${SERVICE}:clean :${SERVICE}:build -PMICROSERVICE_VERSION=${MICROSERVICE_VERSION}
             cp ${SERVICE}/build/libs/${SERVICE}-${MICROSERVICE_VERSION}.jar ${SERVICE}/build/libs/${SERVICE}.jar
-            echo "Gradle build completed for $SERVICE"
 
-            echo "Building Docker image for $SERVICE..."
             if [ "$SERVICE" = "itachallenge-auth" ]; then
               docker build --build-arg GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID \
                            --build-arg GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET \
@@ -109,65 +84,52 @@ jobs:
             else
               docker build -t ${REGISTRY_NAME}:${SERVICE}-${MICROSERVICE_VERSION} ${SERVICE}
             fi
-            echo "Docker image built for $SERVICE"
 
-            echo "Pushing Docker image for $SERVICE to Docker Hub..."
             docker push ${REGISTRY_NAME}:${SERVICE}-${MICROSERVICE_VERSION}
-            echo "Docker image pushed for $SERVICE"
-
-            echo "Finished processing $SERVICE"
+            echo "✅ Pushed $SERVICE:$MICROSERVICE_VERSION"
           done
-          echo "Build and push process completed for all changed microservices."
 
   deploy:
-    if: (github.event_name == 'pull_request') || (github.event.pull_request.merged == true)
+    if: github.event_name == 'pull_request' || github.event.pull_request.merged == true
     needs: docker
     runs-on: ubuntu-latest
+    env:
+      changed_services: ${{ needs.docker.outputs.changed_services }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Load env and prepare deploy for each changed microservice
+      - name: Prepare environment for deploy
         if: env.changed_services != ''
         run: |
-          echo "Changed services: $changed_services"
           for SERVICE in $changed_services; do
-            echo "Preparing deploy for microservice: $SERVICE"
-
-            # Load environment variables from .env.CI.dev
             while IFS='=' read -r key value; do
               if [[ "$key" == *"_$SERVICE" ]]; then
                 new_key=$(echo "$key" | sed "s/_$SERVICE//")
                 export "$new_key=$value"
-                echo "$new_key=$value" >> $GITHUB_ENV
               fi
             done < conf/.env.CI.dev
           done
 
-      - name: Execute SSH
+      - name: Deploy changed microservices via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SSH_HOST_URL }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            echo "Starting deploy on remote server..."
-            echo "Current working directory:"
-            pwd
-            echo "Listing files here:"
-            ls -la
-
-            # Cambia esta ruta fija por la ruta real de tu proyecto en el servidor remoto
+            echo "🚀 Starting remote deploy..."
             REPO_ROOT="/root"
-            echo "Using fixed REPO_ROOT: $REPO_ROOT"
-
-            cd "$REPO_ROOT" || { echo "ERROR: Could not change directory to $REPO_ROOT"; exit 1; }
-            echo "Changed directory to:"
-            pwd
+            cd "$REPO_ROOT" || { echo "❌ ERROR: Cannot access $REPO_ROOT"; exit 1; }
 
             chmod +x ./deploy_backend_dev.sh
             for SERVICE in $changed_services; do
-              echo "Deploying service: $SERVICE with version $MICROSERVICE_VERSION"
+              MICROSERVICE_VERSION=$(grep "^MICROSERVICE_VERSION_${SERVICE}=" conf/.env.CI.dev | cut -d '=' -f2)
+              if [ -z "$MICROSERVICE_VERSION" ]; then
+                echo "❌ ERROR: No version for $SERVICE, skipping"
+                continue
+              fi
+              echo "🛠 Deploying $SERVICE version $MICROSERVICE_VERSION"
               ./deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION
             done
-            echo "Deploy finished."
+            echo "✅ Remote deploy complete."
