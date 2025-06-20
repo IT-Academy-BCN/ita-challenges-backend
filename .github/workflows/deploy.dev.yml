@@ -130,16 +130,28 @@ jobs:
           script: |
             echo "🚀 Starting remote deploy..."
             REPO_ROOT="/root"
+            echo "📁 Switching to $REPO_ROOT"
             cd "$REPO_ROOT" || { echo "❌ ERROR: Cannot access $REPO_ROOT"; exit 1; }
 
+            echo "🔐 Making deploy script executable"
             chmod +x ./deploy_backend_dev.sh
+
             for SERVICE in $changed_services; do
+              echo "📦 Processing service: $SERVICE"
               MICROSERVICE_VERSION=$(grep "^MICROSERVICE_VERSION_${SERVICE}=" conf/.env.CI.dev | cut -d '=' -f2)
+
               if [ -z "$MICROSERVICE_VERSION" ]; then
                 echo "❌ ERROR: No version for $SERVICE, skipping"
                 continue
               fi
-              echo "🛠 Deploying $SERVICE version $MICROSERVICE_VERSION"
+
+              echo "👉 Preparing to deploy $SERVICE with image tag $MICROSERVICE_VERSION"
+              echo "📁 Executing: ./deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION"
+
               ./deploy_backend_dev.sh $SERVICE $MICROSERVICE_VERSION
+
+              echo "✅ Finished deploy for $SERVICE"
+              echo "---------------------------------------------"
             done
-            echo "✅ Remote deploy complete."
+
+            echo "🎉 All remote deployments completed."

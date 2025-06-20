@@ -26,8 +26,6 @@ import reactor.core.publisher.Mono;
 import java.util.*;
 import org.springframework.http.HttpStatus;
 
-
-
 @RestController
 @Validated
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
