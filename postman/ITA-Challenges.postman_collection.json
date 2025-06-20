@@ -779,7 +779,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"challengeTitle\": \"títol\",\r\n    \"description\": \"descripció\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"solució\"\r\n}",
+							"raw": "{\r\n    \"challengeTitle\": \"t\u00edtol\",\r\n    \"description\": \"descripci\u00f3\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"soluci\u00f3\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1401,33 +1401,61 @@
 			]
 		},
 		{
-		  "name": "Auth - Logout",
-		  "request": {
-		    "method": "POST",
-		    "header": [
-		      {
-		        "key": "Authorization",
-		        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0VXNlciIsInJvbGUiOiJBRS1JTiIsInV1aWQiOiI0MDc0MzUwMS1lMzViLTRjOTEtYmM5Ni1iMGM5ODM0ODhlN2MiLCJpYXQiOjE3NDE2MTM2MTIsImV4cCI6MTc0MTY0OTYxMn0=.S__qcscgi4JPuz27k5sNuSVIQbmJVB0htFR7vFnH-RI",
-		        "type": "text"
-		      }
-		    ],
-		    "url": {
-		      "raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/logout",
-		      "protocol": "http",
-		      "host": [
-		        "{{ip}}"
-		      ],
-		      "port": "{{auth_port}}",
-		      "path": [
-		        "itachallenge",
-		        "api",
-		        "v1",
-		        "auth",
-		        "logout"
-		      ]
-		    }
-		  },
-		  "response": []
+			"name": "Auth - Logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0VXNlciIsInJvbGUiOiJBRS1JTiIsInV1aWQiOiI0MDc0MzUwMS1lMzViLTRjOTEtYmM5Ni1iMGM5ODM0ODhlN2MiLCJpYXQiOjE3NDE2MTM2MTIsImV4cCI6MTc0MTY0OTYxMn0=.S__qcscgi4JPuz27k5sNuSVIQbmJVB0htFR7vFnH-RI",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{ip}}:{{auth_port}}/itachallenge/api/v1/auth/logout",
+					"protocol": "http",
+					"host": [
+						"{{ip}}"
+					],
+					"port": "{{auth_port}}",
+					"path": [
+						"itachallenge",
+						"api",
+						"v1",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Tags by Language",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{dns}}:{{challenge_port}}/itachallenge/api/v1/tags/660e1b18-0c0a-4262-a28a-85de9df6ac5f",
+							"protocol": "http",
+							"host": [
+								"{{dns}}"
+							],
+							"port": "{{challenge_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"tags",
+								"660e1b18-0c0a-4262-a28a-85de9df6ac5f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

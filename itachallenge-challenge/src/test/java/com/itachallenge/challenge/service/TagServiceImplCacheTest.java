@@ -37,28 +37,9 @@ class TagServiceImplCacheTest {
 
     @BeforeEach
     void setup() {
-        cacheManager.getCache("allTags").clear();
         cacheManager.getCache("tagsByLanguage").clear();
     }
 
-    @Test
-    void testGetAllTagsUsesCache() {
-        TagDocument tag = new TagDocument(UUID.randomUUID(), "Algoritmos", "bla bla", UUID.randomUUID());
-        when(tagRepository.findAll()).thenReturn(Flux.just(tag));
-
-        // Primera llamada
-        GenericResultDto<TagDto> result1 = tagService.getAllTags().block();
-        assertNotNull(result1);
-        assertEquals(1, result1.getResults().length);
-
-        // Segunda llamada usando cache
-        GenericResultDto<TagDto> result2 = tagService.getAllTags().block();
-        assertNotNull(result2);
-        assertEquals(1, result2.getResults().length);
-
-
-        verify(tagRepository, times(1)).findAll();
-    }
 
     @Test
     void testGetTagsByLanguageIdUsesCache() {

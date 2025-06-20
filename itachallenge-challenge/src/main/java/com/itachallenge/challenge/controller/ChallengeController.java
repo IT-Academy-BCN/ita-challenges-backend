@@ -7,7 +7,6 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.IJwtService;
-import com.itachallenge.challenge.service.ITagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,8 +22,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.util.*;
-import org.springframework.http.HttpStatus;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @Validated
@@ -50,9 +51,6 @@ public class ChallengeController {
 
     @Autowired
     private IChallengeService challengeService;
-
-    @Autowired
-    private ITagService tagService;
 
     @Autowired
     private IJwtService jwtService;
@@ -287,39 +285,6 @@ public class ChallengeController {
                 .doOnError(error -> log.error("Error adding challenge to bookmarks: {}", error.getMessage()))
                 .map(ResponseEntity::ok);
     }
-
-    @GetMapping("/tags")
-    @Operation(
-            operationId = "Get all stored tags from the Database for FrontEnd can print them.",
-            summary = "Get to see all id tags, name and description.",
-            description = "Requesting all the tags through the URI from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-            }
-    )
-    public Mono<GenericResultDto<TagDto>> getAllTags() {
-        return tagService.getAllTags();
-    }
-
-    @GetMapping("/tags/{languageId}")
-    @Operation(
-            operationId = "Get tags by languageId",
-            summary = "Get all tags filtered by languageId.",
-            description = "Retrieve all tags that match the specified languageId.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-                    @ApiResponse(responseCode = "404", description = "No tags found for the specified languageId."),
-                    @ApiResponse(responseCode = "400", description = "Malformed or invalid parameter(s)."),
-                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
-            }
-    )
-    public Mono<ResponseEntity<GenericResultDto<TagDto>>> getTagsByLanguageId(@PathVariable UUID languageId) {
-        return tagService.getTagsByLanguageId(languageId)
-                .map(ResponseEntity::ok)
-                .switchIfEmpty(Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).build()))
-                .onErrorResume(e -> Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build()));
-    }
-
 
     @PutMapping("/challenge/{challengeId}/update")
     @Operation(

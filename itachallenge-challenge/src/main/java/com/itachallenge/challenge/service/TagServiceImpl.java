@@ -7,6 +7,8 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -21,21 +23,33 @@ import java.util.stream.Collectors;
 @Service
 public class TagServiceImpl implements ITagService {
 
+    private static final Logger log = LoggerFactory.getLogger(TagServiceImpl.class);
+
     @Autowired
     TagRepository tagRepository;
 
     @Autowired
     private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
 
-    @Cacheable(value = "allTags")
+    @Cacheable(value = "tagsByLanguage")
     @Override
-    public Mono<GenericResultDto<TagDto>> getAllTags() {
-        Flux<TagDto> tagDto = tagConverter.convertDocumentFluxToDtoFlux(tagRepository.findAll(), TagDto.class);
-        return tagDto.collectList().map(tag -> {
-            GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, tag.size(), tag.size(), tag.toArray(new TagDto[0]));
-            return resultDto;
-        });
+    public Mono<GenericResultDto<TagDto>> getTagsByLanguageId(UUID languageId) {
+        if (languageId == null) {
+            log.warn("[TagService] languageId is null");
+            return Mono.error(new IllegalArgumentException("languageId cannot be null"));
+        }
+
+        return tagConverter.convertDocumentFluxToDtoFlux(tagRepository.findByLanguageId(languageId), TagDto.class)
+                .doOnError(e -> log.error("[TagService] Error converting documents to DTO:", e))
+                .collectList()
+                .doOnError(e -> log.error("[TagService] Error collecting tag list:", e))
+                .map(tagList -> {
+                    log.debug("[TagService] Total tags found: {}", tagList.size());
+                    GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
+                    resultDto.setInfo(0, tagList.size(), tagList.size(), tagList.toArray(new TagDto[0]));
+                    return resultDto;
+                })
+                .doOnError(e -> log.error("[TagService] Error mapping final result:", e));
     }
 
     @Override
@@ -75,17 +89,4 @@ public class TagServiceImpl implements ITagService {
                 .map(count -> count == tagIds.size())
                 .hasElement();
     }
-
-
-    @Cacheable(value = "tagsByLanguage")
-    @Override
-    public Mono<GenericResultDto<TagDto>> getTagsByLanguageId(UUID languageId) {
-        Flux<TagDto> tagDtoFlux = tagConverter.convertDocumentFluxToDtoFlux(tagRepository.findByLanguageId(languageId), TagDto.class);
-        return tagDtoFlux.collectList().map(tagList -> {
-            GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
-            resultDto.setInfo(0, tagList.size(), tagList.size(), tagList.toArray(new TagDto[0]));
-            return resultDto;
-        });
-    }
-
 }

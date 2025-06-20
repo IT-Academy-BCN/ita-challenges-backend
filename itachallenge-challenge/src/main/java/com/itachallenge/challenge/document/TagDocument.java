@@ -18,6 +18,7 @@ import java.util.UUID;
 public class TagDocument {
 
     @Id
+    @Field(name="id_")
     private UUID idTag;
 
     @Field(name="tag_name")
