@@ -568,36 +568,6 @@ class ChallengeControllerTest {
     }
 
     @Test
-
-    @DisplayName("GET recibir respuesta 200 a getTags")
-    void getTags_test_validRequest() {
-
-        TagDto tag1 = new TagDto(UUID.randomUUID(), "POO", "Programación orientada a objetos",UUID.randomUUID());
-        TagDto tag2 = new TagDto(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia",UUID.randomUUID());
-
-        GenericResultDto<TagDto> resultDto = new GenericResultDto<>();
-        resultDto.setInfo(0, 2, 2, new TagDto[]{tag1, tag2});
-
-        when(tagService.getAllTags()).thenReturn(Mono.just(resultDto));
-
-        webTestClient.get()
-                .uri("/itachallenge/api/v1/challenge/tags")
-                .exchange()
-                .expectStatus().isOk()
-                .expectHeader().contentType("application/json")
-                .expectBody()
-                .jsonPath("$.results.length()").isEqualTo(2)
-                .jsonPath("$.results[0].tag_name").isEqualTo("POO")
-                .jsonPath("$.results[1].tag_name").isEqualTo("Algoritmos")
-                .jsonPath("$.results[0].tag_description").value(desc ->
-                        assertTrue(desc.toString().contains("Programación orientada")))
-                .jsonPath("$.offset").isEqualTo(0)
-                .jsonPath("$.limit").isEqualTo(2);
-
-        verify(tagService).getAllTags();
-    }
-
-    @Test
     @DisplayName("GET /challenges must return the timesFavorite field in the JSON")
     void getChallenges_IncludesTimesFavorite() {
         ChallengeDto challenge = ChallengeDto.builder()
@@ -855,5 +825,4 @@ class ChallengeControllerTest {
         verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
 
     }
-
 }

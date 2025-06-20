@@ -7,7 +7,6 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.IJwtService;
-import com.itachallenge.challenge.service.ITagService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -23,7 +22,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @Validated
@@ -49,9 +51,6 @@ public class ChallengeController {
 
     @Autowired
     private IChallengeService challengeService;
-
-    @Autowired
-    private ITagService tagService;
 
     @Autowired
     private IJwtService jwtService;
@@ -287,19 +286,6 @@ public class ChallengeController {
                 .map(ResponseEntity::ok);
     }
 
-    @GetMapping("/tags")
-    @Operation(
-            operationId = "Get all stored tags from the Database for FrontEnd can print them.",
-            summary = "Get to see all id tags, name and description.",
-            description = "Requesting all the tags through the URI from the database.",
-            responses = {
-                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = GenericResultDto.class), mediaType = "application/json")}),
-            }
-    )
-    public Mono<GenericResultDto<TagDto>> getAllTags() {
-        return tagService.getAllTags();
-    }
-
     @PutMapping("/challenge/{challengeId}/update")
     @Operation(
             operationId = "Updates an existing challenge.",
@@ -346,4 +332,5 @@ public class ChallengeController {
                 .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
                 .map(ResponseEntity::ok);
     }
+
 }

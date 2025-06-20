@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-challenge-2.3.0-RELEASE] - 2025-06-20
+
+### Added
+- Added GET endpoint in `TagController` to retrieve tags filtered by language. (Taiga [#485], PR [#909])
+
 ### [itachallenge-challenge-2.2.0-RELEASE] - 2025-06-19
 
 ### Added

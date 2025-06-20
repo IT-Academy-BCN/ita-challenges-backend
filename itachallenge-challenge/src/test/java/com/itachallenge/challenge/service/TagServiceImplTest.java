@@ -39,41 +39,6 @@ class TagServiceImplTest {
     private TagServiceImpl tagService;
 
     @Test
-    @DisplayName("return todos los tags y generar GenericResultDto<TagDto>")
-    void testGetAllTags() {
-
-        TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "Programación orientada a objetos", UUID.randomUUID());
-        TagDocument tag2 = new TagDocument(UUID.randomUUID(), "Algoritmos", "Retos de lógica y eficiencia", UUID.randomUUID());
-
-        TagDto dto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription(), UUID.randomUUID());
-        TagDto dto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription(), UUID.randomUUID());
-
-        Flux<TagDocument> tagDocumentFlux = Flux.just(tag1, tag2);
-        Flux<TagDto> tagDtoFlux = Flux.just(dto1, dto2);
-
-        when(tagRepository.findAll()).thenReturn(tagDocumentFlux);
-        when(tagConverter.convertDocumentFluxToDtoFlux(tagDocumentFlux, TagDto.class)).thenReturn(tagDtoFlux);
-
-
-        Mono<GenericResultDto<TagDto>> resultMono = tagService.getAllTags();
-
-        StepVerifier.create(resultMono)
-                .assertNext(result -> {
-                    assertNotNull(result);
-                    assertEquals(2, result.getResults().length);
-                    assertEquals("POO", result.getResults()[0].getTagName());
-                    assertEquals("Algoritmos", result.getResults()[1].getTagName());
-                    assertEquals(0, result.getOffset());
-                    assertEquals(2, result.getLimit());
-                })
-                .verifyComplete();
-
-
-        verify(tagRepository).findAll();
-        verify(tagConverter).convertDocumentFluxToDtoFlux(tagDocumentFlux, TagDto.class);
-    }
-
-    @Test
     @DisplayName("convertir UUIDs en TagDocuments")
     void testConvertIdTagFromTag_Document_Success() {
         UUID id1 = UUID.randomUUID();
@@ -154,6 +119,73 @@ class TagServiceImplTest {
         
         verify(tagRepository, never()).findById(duplicatedId);
     }
+
+    @Test
+    @DisplayName("Return tags filtered by languageId")
+    void testGetTagsByLanguageId() {
+        UUID languageId = UUID.randomUUID();
+
+        TagDocument tag1 = new TagDocument(UUID.randomUUID(), "POO", "Programación orientada a objetos", languageId);
+        TagDocument tag2 = new TagDocument(UUID.randomUUID(), "Algoritmos", "Retos de lógica", languageId);
+        TagDto tagDto1 = new TagDto(tag1.getIdTag(), tag1.getTagName(), tag1.getTagDescription(), languageId);
+        TagDto tagDto2 = new TagDto(tag2.getIdTag(), tag2.getTagName(), tag2.getTagDescription(), languageId);
+
+        Flux<TagDocument> tagDocuments = Flux.just(tag1, tag2);
+        Flux<TagDto> tagDtos = Flux.just(tagDto1, tagDto2);
+
+
+        when(tagRepository.findByLanguageId(languageId)).thenReturn(tagDocuments);
+        when(tagConverter.convertDocumentFluxToDtoFlux(tagDocuments, TagDto.class)).thenReturn(tagDtos);
+
+
+        Mono<GenericResultDto<TagDto>> resultMono = tagService.getTagsByLanguageId(languageId);
+
+
+        StepVerifier.create(resultMono)
+                .assertNext(result -> {
+                    assertNotNull(result);
+                    assertEquals(2, result.getResults().length);
+                    assertEquals("POO", result.getResults()[0].getTagName());
+                    assertEquals("Algoritmos", result.getResults()[1].getTagName());
+                })
+                .verifyComplete();
+
+
+        verify(tagRepository).findByLanguageId(languageId);
+        verify(tagConverter).convertDocumentFluxToDtoFlux(tagDocuments, TagDto.class);
+    }
+
+    @Test
+    @DisplayName("Throws IllegalArgumentException when languageId is null")
+    void getTagsByLanguageId_nullLanguageId_test() {
+        StepVerifier.create(tagService.getTagsByLanguageId(null))
+                .expectErrorMatches(error ->
+                        error instanceof IllegalArgumentException &&
+                                error.getMessage().equals("languageId cannot be null")
+                )
+                .verify();
+    }
+
+    @Test
+    @DisplayName("Returns empty GenericResultDto when no tags found for languageId")
+    void getTagsByLanguageId_returnsEmptyList_test() {
+        UUID languageId = UUID.randomUUID();
+
+        when(tagRepository.findByLanguageId(languageId)).thenReturn(Flux.empty());
+
+        when(tagConverter.convertDocumentFluxToDtoFlux(Flux.empty(), TagDto.class)).thenReturn(Flux.empty());
+
+        StepVerifier.create(tagService.getTagsByLanguageId(languageId))
+                .assertNext(result -> {
+                    assertNotNull(result);
+                    assertEquals(0, result.getCount());
+                    assertEquals(0, result.getOffset());
+                    assertEquals(0, result.getLimit());
+                    assertEquals(0, result.getResults().length);
+                })
+                .verifyComplete();
+
+        verify(tagRepository).findByLanguageId(languageId);
+        verify(tagConverter).convertDocumentFluxToDtoFlux(Flux.empty(), TagDto.class);
+    }
 }
-
-
