@@ -1,6 +1,7 @@
 package com.itachallenge.user.dto;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.user.document.enums.ChallengeStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,7 @@ class UserSolutionResponseDtoTest {
     String challengeId = UUID.randomUUID().toString();
     String languageId = UUID.randomUUID().toString();
     String solutionText = "This is my solution";
+    String status = ChallengeStatus.IN_PROGRESS.name();
     UserSolutionResponseDto solutionScoreDto = new UserSolutionResponseDto();
     UserSolutionResponseDto dto1 = UserSolutionResponseDto.builder().build();
 
@@ -70,10 +72,11 @@ class UserSolutionResponseDtoTest {
     @Test
     void requiredArgsConstructor_userSolutionScoreDto_test(){
         UserSolutionResponseDto userSolutionResponseDto1 = new UserSolutionResponseDto(
-                userId, challengeId, languageId, solutionText);
+                userId, challengeId, languageId, solutionText,status);
         assertThat(userSolutionResponseDto1.getUserId()).isEqualTo(userId);
         assertThat(userSolutionResponseDto1.getChallengeId()).isEqualTo(challengeId);
         assertThat(userSolutionResponseDto1.getLanguageId()).isEqualTo(languageId);
         assertThat(userSolutionResponseDto1.getSolutionText()).isEqualTo(solutionText);
+        assertThat(userSolutionResponseDto1.getStatus()).isEqualTo(status);
     }
 }
