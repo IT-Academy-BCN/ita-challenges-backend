@@ -204,6 +204,7 @@ class UserSolutionServiceImplTest {
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("My solution").build())
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.IN_PROGRESS)
                 .build();
 
         when(userSolutionRepository.findAllByUserId(userUuid))
