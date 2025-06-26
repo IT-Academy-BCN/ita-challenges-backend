@@ -79,4 +79,36 @@ class UserSolutionResponseDtoTest {
         assertThat(userSolutionResponseDto1.getSolutionText()).isEqualTo(solutionText);
         assertThat(userSolutionResponseDto1.getStatus()).isEqualTo(status);
     }
+
+    @Test
+    void jsonSerialization_includesStatusField_withEndedStatus() throws Exception {
+        UserSolutionResponseDto dto = UserSolutionResponseDto.builder()
+                .userId("validUserId")
+                .challengeId("validChallengeId")
+                .languageId("validLanguageId")
+                .solutionText("Valid solution text")
+                .status("ENDED")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(dto);
+
+        assertTrue(json.contains("\"status\":\"ENDED\""));
+    }
+
+    @Test
+    void jsonSerialization_includesStatusField_withInProgressStatus() throws Exception {
+        UserSolutionResponseDto dto = UserSolutionResponseDto.builder()
+                .userId("validUserId")
+                .challengeId("validChallengeId")
+                .languageId("validLanguageId")
+                .solutionText("Valid solution text")
+                .status("IN_PROGRESS")
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(dto);
+
+        assertTrue(json.contains("\"status\":\"IN_PROGRESS\""));
+    }
 }
