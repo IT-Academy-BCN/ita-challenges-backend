@@ -20,4 +20,7 @@ public class SubmitSolutionResponseDto {
 
     @JsonProperty("timesSolved")
     private Integer timesSolved;
+
+    @JsonProperty("status")
+    private String status;
 }
