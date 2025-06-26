@@ -1140,6 +1140,38 @@
 					"response": []
 				},
 				{
+					"name": "User/solution - IN_PROGRESS",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"uuid_challenge\": \"dcacb291-b4aa-4029-8e9b-284c8ca80296\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n  \"status\": \"IN_PROGRESS\",\n  \"solution_text\": \"This is a solution still in progress.\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{user_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"user",
+								"solution"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "User/challenges/solutions",
 					"request": {
 						"method": "GET",
