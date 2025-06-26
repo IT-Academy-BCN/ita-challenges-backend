@@ -79,7 +79,7 @@
    Remplace "branch-name"  with a descriptive name indicating  the changes you plan to make
 
 
-6. Open the "contributors.mdf" file and add your name and your GitHub.
+6. Open the "contributors.md" file and add your name and your GitHub.
 
 
 7. After doing a git add and git commit, do the following git push:
