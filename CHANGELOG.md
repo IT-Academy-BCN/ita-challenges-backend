@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Fixed
 - Changed HTTP status from 201 Created to 200 OK in ChallengeSolvedController to fix client error handling (Taiga [#533], PR [#921])
 
+### [itachallenge-user-1.3.0-RELEASE] - 2025-06-19
+
+### Added
+- Mapped and returned `status` field in `UserSolutionServiceImpl` methods: `addSolution()` and `getAllSolutionsByUser()` (Taiga [#523], PR [#923])
+
 ### [itachallenge-user-1.2.0-RELEASE] - 2025-06-19
 
 ### Added

@@ -204,6 +204,7 @@ class UserSolutionServiceImplTest {
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("My solution").build())
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.IN_PROGRESS)
                 .build();
 
         when(userSolutionRepository.findAllByUserId(userUuid))
@@ -215,5 +216,71 @@ class UserSolutionServiceImplTest {
                     assertEquals(userUuid.toString(), dto.getUserId());
                 })
                 .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("getAllSolutionsByUser returns ENDED solution")
+    void getAllSolutionsByUser_returnsEndedSolution() {
+        UserSolutionDocument doc = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Ended solution").build())
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.ENDED)
+                .build();
+
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.just(doc));
+
+        StepVerifier.create(userSolutionService.getAllSolutionsByUser(userUuid.toString()))
+                .assertNext(dto -> {
+                    assertEquals("Ended solution", dto.getSolutionText());
+                    assertEquals(userUuid.toString(), dto.getUserId());
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("getAllSolutionsByUser returns empty when user has no solutions")
+    void getAllSolutionsByUser_returnsEmptyWhenNoSolutions() {
+        when(userSolutionRepository.findAllByUserId(userUuid))
+                .thenReturn(Flux.empty());
+
+        StepVerifier.create(userSolutionService.getAllSolutionsByUser(userUuid.toString()))
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+
+    @Test
+    @DisplayName("addSolution creates new IN_PROGRESS solution and returns response")
+    void addSolutionNewInProgressSolution() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("IN_PROGRESS")  // ⬅️ acá cambiamos ENDED por IN_PROGRESS
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
+
+        StepVerifier.create(result)
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertFalse(dto.getIsSolved());
+                    assertEquals("IN_PROGRESS", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verifyNoInteractions(challengeService);
     }
 }

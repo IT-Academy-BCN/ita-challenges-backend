@@ -85,12 +85,14 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                             .solutionText(solutionText)
                             .isSolved(solvedDto.isSolved())
                             .timesSolved(solvedDto.getTimesSolved())
+                            .status(status.name())
                             .build());
         } else {
             // TODO: Enhance the response for non-ended statuses like IN_PROGRESS if additional info is needed
             return Mono.just(SubmitSolutionResponseDto.builder()
                     .solutionText(solutionText)
                     .isSolved(false)
+                    .status(status.name())
                     .build());
         }
     }
@@ -105,6 +107,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                                         .challengeId(doc.getChallengeId().toString())
                                         .languageId(doc.getLanguageId().toString())
                                         .solutionText(doc.getSolutionAttemptDocument().getSolutionText())
+                                        .status(doc.getStatus().name())
                                         .build())
                 );
     }
