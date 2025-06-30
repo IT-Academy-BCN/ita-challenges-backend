@@ -95,3 +95,4 @@
 * Jofre Coca - https://github.com/JofreCoca
 * Alfonso Cocinas - https://github.com/acocinas
 * Marc Luque - https://github.com/Heyvkram
+* Isaac Díez - https://github.com/isaac-diez
