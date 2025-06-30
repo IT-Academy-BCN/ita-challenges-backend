@@ -93,5 +93,7 @@
 * Fernando Giménez - https://github.com/FerGimenezRoglia
 * Antonio Carrasco - https://github.com/Deimus23
 * Jofre Coca - https://github.com/JofreCoca
+* Alfonso Cocinas - https://github.com/acocinas
+* Marc Luque - https://github.com/Heyvkram
+* Isaac Díez - https://github.com/isaac-diez
 * Vanina Vega - https://github.com/vaninavega
-
