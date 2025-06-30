@@ -94,3 +94,4 @@
 * Antonio Carrasco - https://github.com/Deimus23
 * Jofre Coca - https://github.com/JofreCoca
 * Alfonso Cocinas - https://github.com/acocinas
+* Marc Luque - https://github.com/Heyvkram
