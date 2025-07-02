@@ -27,6 +27,8 @@ public interface IChallengeService {
                                                                int offset,
                                                                int limit);
 
+    Flux<GenericResultDto<ChallengeDto>> getRelatedChallenges(UUID challengeId);
+
     Mono<String> updateResourceByUuid(String id, Map<String, Object> updates);
 
     Mono<ChallengeDto> addChallenge(ChallengeCreateDto challengeCreateDto);

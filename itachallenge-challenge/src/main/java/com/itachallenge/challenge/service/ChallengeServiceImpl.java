@@ -117,6 +117,44 @@ public class ChallengeServiceImpl implements IChallengeService {
                 });
     }
 
+    @Override
+    public Flux<GenericResultDto<ChallengeDto>> getRelatedChallenges(UUID challengeId) {
+        return challengeRepository.findByUuid(challengeId)
+                .flux()
+                .flatMap(currentChallenge -> {
+                    // Extraemos criterios del reto actual
+                    Optional<UUID> languageId = currentChallenge.getLanguages().stream()
+                            .map(LanguageDocument::getIdLanguage)
+                            .filter(Objects::nonNull)
+                            .findFirst();
+                    Optional<String> level = Optional.ofNullable(currentChallenge.getLevel());
+                    Optional<List<UUID>> tags = Optional.ofNullable(currentChallenge.getTags());
+
+                    return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                            .filter(challenge -> !challenge.getUuid().equals(challengeId)) // Excluimos el reto actual
+                            .filter(challenge -> languageId.isEmpty() || (
+                                    challenge.getLanguages() != null &&
+                                            challenge.getLanguages().stream()
+                                                    .anyMatch(lang -> lang.getIdLanguage() != null &&
+                                                            lang.getIdLanguage().equals(languageId.get()))
+                            ))
+                            .filter(challenge -> level.isEmpty() ||
+                                    level.get().equalsIgnoreCase(challenge.getLevel()))
+                            .filter(challenge -> tags.isEmpty() || (
+                                    challenge.getTags() != null &&
+                                            challenge.getTags().stream().anyMatch(tags.get()::contains)
+                            ))
+                            .take(3) // Limitamos a 3 resultados
+                            .map(challenge -> {
+                                ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
+                                GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
+                                resultDto.setInfo(0, 3, 1, new ChallengeDto[]{challengeDto});
+                                return resultDto;
+                            });
+                })
+                .switchIfEmpty(Flux.empty()); // Si no se encuentra el reto actual, devolver vacío
+    }
+
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
     @Override
     public Mono<GenericResultDto<ChallengeDto>> getAllChallenges(int offset, int limit) {
