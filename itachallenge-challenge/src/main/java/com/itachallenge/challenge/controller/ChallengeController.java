@@ -26,6 +26,7 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @Validated
@@ -140,6 +141,23 @@ public class ChallengeController {
             @RequestParam(defaultValue = DEFAULT_OFFSET) @ValidGenericPattern(message = INVALID_PARAM) String offset,
             @RequestParam(defaultValue = DEFAULT_LIMIT) @ValidGenericPattern(pattern = LIMIT, message = INVALID_PARAM) String limit) {
         return challengeService.getAllChallenges(Integer.parseInt(offset), Integer.parseInt(limit));
+    }
+
+    @GetMapping("/challenges/{challengeId}/related")
+    @Operation(
+            operationId = "Get 3 related challenges on the \"Relacionat\" tab of a Challenge detail by (language, difficulty, or tags).",
+            summary = "Get to see 3 related challenges on a challenge detail page and their levels, details and their depending on the first language, difficulty and any tags.",
+            description = "Requesting 3 related challenges for the challenge the user is actually looking at or working on.",
+            responses = {
+                    @ApiResponse(responseCode = "200", content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "200", description = "The language with given Id was not found."),
+                    @ApiResponse(responseCode = "400", description = "Missing or unexpected parameters"),
+                    @ApiResponse(responseCode = "400", description = "Malformed UUID")
+            })
+
+    public Flux<GenericResultDto<ChallengeDto>> getRelatedChallenges(@PathVariable("idChallenge") UUID idChallenge) {
+        log.info("Getting related challenges for challenge ID: " + idChallenge);
+        return challengeService.getRelatedChallenges(idChallenge);
     }
 
     @GetMapping("/challenges/byFilter")
