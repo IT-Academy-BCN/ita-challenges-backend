@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,6 @@ public class AuthController {
     public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String X_AUTHENTICATION_STATUS = "X-Authentication-Status";
     private static final String MESSAGE_KEY = "message";
-    private static final String LOGOUT_SUCCESS = "Logout successful";
 
     private final IAuthService authService;
 
@@ -148,18 +148,25 @@ public class AuthController {
         return userService.callUserTest();
     }
 
+    @Operation(summary = "Logout del usuario",
+            description ="Ends the user session by removing the token from the client (without persistence).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Logout exitoso",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(example = "{\"message\": \"Logout successful\"}"))),
+            @ApiResponse(responseCode = "401", description = "Token inválido o mal formado",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(example = "{\"message\": \"Invalid or expired token\"}")))
+    })
     @PostMapping("/logout")
     public Mono<ResponseEntity<Map<String, String>>> logout(
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            log.warn("Logout attempt without token or malformed header");
-            return Mono.just(ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of(MESSAGE_KEY, "Authorization header is missing or malformed")));
-        }
 
-        String token = authHeader.replace("Bearer ", "").trim();
+        String token = jwtService.extractBearerToken(authHeader);
         jwtService.validateToken(token);
-        return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
+        log.info("Logout successful for token");
+
+        return Mono.just(ResponseEntity.ok(Map.of("message", "Logout successful")));
     }
 
     @PostMapping("/switch-role")
