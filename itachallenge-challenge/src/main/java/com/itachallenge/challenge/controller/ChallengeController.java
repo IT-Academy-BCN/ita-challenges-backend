@@ -155,9 +155,9 @@ public class ChallengeController {
                     @ApiResponse(responseCode = "400", description = "Malformed UUID")
             })
 
-    public Flux<GenericResultDto<ChallengeDto>> getRelatedChallenges(@PathVariable("idChallenge") UUID idChallenge) {
-        log.info("Getting related challenges for challenge ID: " + idChallenge);
-        return challengeService.getRelatedChallenges(idChallenge);
+    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(@PathVariable("challengeId") String challengeId) {
+        log.info("Getting related challenges for challenge ID: " + challengeId);
+        return challengeService.getRelatedChallenges(challengeId);
     }
 
     @GetMapping("/challenges/byFilter")
