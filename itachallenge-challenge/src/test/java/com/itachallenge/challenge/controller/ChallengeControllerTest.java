@@ -206,7 +206,7 @@ class ChallengeControllerTest {
     @Test
     void getRelatedChallenges_ValidId_RelatedChallengesReturned() {
         // Arrange
-        String challengeId = "8514dd47-9800-4fde-a376-f31d450fcd07";
+        challengeId = "8514dd47-9800-4fde-a376-f31d450fcd07";
 
         ChallengeDto challenge1 = new ChallengeDto();
         challenge1.setChallengeId(UUID.randomUUID());
