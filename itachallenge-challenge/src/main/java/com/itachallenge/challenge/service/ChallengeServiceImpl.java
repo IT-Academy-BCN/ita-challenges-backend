@@ -117,7 +117,11 @@ public class ChallengeServiceImpl implements IChallengeService {
                 });
     }
 
-    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String challengeId) { return null;}
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String challengeId) {
+        return Mono.just(new GenericResultDto<>());
+    }
+
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
     @Override
