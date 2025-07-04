@@ -1121,6 +1121,93 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
                 .verifyComplete();
     }
 
+    @Test
+    void getRelatedChallenges_LanguageIdEmpty_ShouldNotFilterByLanguage() {
+        // Arrange
+        ChallengeDocument baseChallenge = new ChallengeDocument(
+                UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(), List.of(), Topic.COMPONENTS, 0, 0, 0, challengeDocument.getTags());
+
+        ChallengeDocument other = new ChallengeDocument(
+                UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(languageDocument), List.of(), Topic.COMPONENTS, 0, 0, 0, challengeDocument.getTags());
+
+        when(challengeRepository.findByUuid(baseChallenge.getUuid()))
+                .thenReturn(Mono.just(baseChallenge));
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(other));
+        when(challengeConverter.convertDocumentToDto(any(), eq(ChallengeDto.class)))
+                .thenReturn(new ChallengeDto());
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(baseChallenge.getUuid().toString()))
+                .assertNext(result -> assertEquals(1, result.getCount()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getRelatedChallenges_ChallengeWithNullLanguageId_ShouldBeExcluded() {
+        // Arrange
+        LanguageDocument langNull = new LanguageDocument(null, "lang", "img");
+        ChallengeDocument other = new ChallengeDocument(
+                UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(langNull), List.of(), Topic.COMPONENTS, 0, 0, 0, challengeDocument.getTags());
+
+        when(challengeRepository.findByUuid(challengeDocument.getUuid()))
+                .thenReturn(Mono.just(challengeDocument));
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(other));
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(challengeDocument.getUuid().toString()))
+                .assertNext(result -> assertEquals(0, result.getCount()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getRelatedChallenges_LevelEmpty_ShouldNotFilterByLevel() {
+        // Arrange
+        ChallengeDocument base = new ChallengeDocument(
+                UUID.randomUUID(), title, null, LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(languageDocument), List.of(), Topic.COMPONENTS, 0, 0, 0, challengeDocument.getTags());
+
+        ChallengeDocument other = new ChallengeDocument(
+                UUID.randomUUID(), title, "MEDIUM", LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(languageDocument), List.of(), Topic.COMPONENTS, 0, 0, 0, challengeDocument.getTags());
+
+        when(challengeRepository.findByUuid(base.getUuid()))
+                .thenReturn(Mono.just(base));
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(other));
+        when(challengeConverter.convertDocumentToDto(any(), eq(ChallengeDto.class)))
+                .thenReturn(new ChallengeDto());
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(base.getUuid().toString()))
+                .assertNext(result -> assertEquals(1, result.getCount()))
+                .verifyComplete();
+    }
+
+    @Test
+    void getRelatedChallenges_TagsExistButChallengeHasNoTags_ShouldBeExcluded() {
+        // Arrange
+        ChallengeDocument other = new ChallengeDocument(
+                UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(languageDocument), List.of(), Topic.COMPONENTS, 0, 0, 0, null);
+
+        when(challengeRepository.findByUuid(challengeDocument.getUuid()))
+                .thenReturn(Mono.just(challengeDocument));
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(other));
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(challengeDocument.getUuid().toString()))
+                .assertNext(result -> assertEquals(0, result.getCount()))
+                .verifyComplete();
+    }
+
+
+
 
     @Test
     void getRelatedChallenges_LessThanThreeRelatedChallenges_ReturnsAll() {
