@@ -1103,6 +1103,101 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
     }
 
     @Test
+    void getRelatedChallenges_NoRelatedChallenges_ReturnsEmptyList() {
+        // Arrange
+        when(challengeRepository.findByUuid(challengeDocument.getUuid()))
+                .thenReturn(Mono.just(challengeDocument));
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.empty());
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(challengeDocument.getUuid().toString()))
+                .assertNext(result -> {
+                    assertNotNull(result);
+                    assertEquals(0, result.getCount());
+                    assertEquals(0, result.getResults().length);
+                })
+                .verifyComplete();
+    }
+
+
+    @Test
+    void getRelatedChallenges_LessThanThreeRelatedChallenges_ReturnsAll() {
+        // Arrange: se crean 2 retos relacionados compatibles en idioma, nivel y tags
+        ChallengeDocument related1 = new ChallengeDocument(
+                UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(languageDocument), List.of(), Topic.COMPONENTS,
+                10, 20, 30, challengeDocument.getTags()
+        );
+
+        ChallengeDocument related2 = new ChallengeDocument(
+                UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                Set.of(languageDocument), List.of(), Topic.COMPONENTS,
+                15, 25, 35, challengeDocument.getTags()
+        );
+
+        when(challengeRepository.findByUuid(challengeDocument.getUuid()))
+                .thenReturn(Mono.just(challengeDocument));
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.just(related1, related2));
+
+        when(challengeConverter.convertDocumentToDto(any(), eq(ChallengeDto.class)))
+                .thenAnswer(invocation -> {
+                    ChallengeDocument doc = invocation.getArgument(0);
+                    ChallengeDto dto = new ChallengeDto();
+                    dto.setChallengeId(doc.getUuid());
+                    return dto;
+                });
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(challengeDocument.getUuid().toString()))
+                .assertNext(result -> {
+                    assertNotNull(result);
+                    assertEquals(2, result.getCount());
+                    assertEquals(2, result.getResults().length);
+                })
+                .verifyComplete();
+    }
+
+    @Test
+    void getRelatedChallenges_MoreThanThreeRelatedChallenges_ReturnsThreeRandom() {
+        // Arrange: 4 retos compatibles
+        Integer[] indices = {0, 1, 2, 3};
+        List<ChallengeDocument> relatedChallenges = Arrays.stream(indices)
+                .map(i -> new ChallengeDocument(
+                        UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
+                        Set.of(languageDocument), List.of(), Topic.COMPONENTS,
+                        10, 20, 30, challengeDocument.getTags()))
+                .collect(Collectors.toList());
+
+        when(challengeRepository.findByUuid(challengeDocument.getUuid()))
+                .thenReturn(Mono.just(challengeDocument));
+
+        when(challengeRepository.findAllByUuidNotNullExcludingTestingValues())
+                .thenReturn(Flux.fromIterable(relatedChallenges));
+
+        when(challengeConverter.convertDocumentToDto(any(), eq(ChallengeDto.class)))
+                .thenAnswer(invocation -> {
+                    ChallengeDocument doc = invocation.getArgument(0);
+                    ChallengeDto dto = new ChallengeDto();
+                    dto.setChallengeId(doc.getUuid());
+                    return dto;
+                });
+
+        // Act & Assert
+        StepVerifier.create(challengeService.getRelatedChallenges(challengeDocument.getUuid().toString()))
+                .assertNext(result -> {
+                    assertNotNull(result);
+                    assertEquals(3, result.getCount());
+                    assertEquals(3, result.getResults().length);
+                })
+                .verifyComplete();
+    }
+
+
+    @Test
     void removeChallengeFromBookmarks_WhenChallengeUuidNotValid_ReturnsError() {
         StepVerifier.create(challengeService.removeChallengeFromBookmarks("InvalidUuid", UUID.randomUUID().toString()))
                 .expectErrorMatches(error ->
