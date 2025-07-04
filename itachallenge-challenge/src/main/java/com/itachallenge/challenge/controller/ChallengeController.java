@@ -178,7 +178,7 @@ public class ChallengeController {
             })
 
     public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(@PathVariable("challengeId") String challengeId) {
-        log.info("Getting related challenges for challenge ID: " + challengeId);
+
         return challengeService.getRelatedChallenges(challengeId);
     }
 
