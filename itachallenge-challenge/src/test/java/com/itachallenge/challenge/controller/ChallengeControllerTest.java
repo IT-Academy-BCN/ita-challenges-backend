@@ -204,6 +204,36 @@ class ChallengeControllerTest {
     }
 
     @Test
+    void getRelatedChallenges_ValidId_RelatedChallengesReturned() {
+        // Arrange
+        String challengeId = "8514dd47-9800-4fde-a376-f31d450fcd07";
+
+        ChallengeDto challenge1 = new ChallengeDto();
+        challenge1.setChallengeId(UUID.randomUUID());
+
+        ChallengeDto challenge2 = new ChallengeDto();
+        challenge2.setChallengeId(UUID.randomUUID());
+
+        ChallengeDto challenge3 = new ChallengeDto();
+        challenge3.setChallengeId(UUID.randomUUID());
+
+        GenericResultDto<ChallengeDto> expectedResponse = new GenericResultDto<>();
+        expectedResponse.setInfo(0, 3, 3, new ChallengeDto[]{challenge1, challenge2, challenge3});
+
+        when(challengeService.getRelatedChallenges(challengeId))
+                .thenReturn(Mono.just(expectedResponse));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}/related", challengeId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(GenericResultDto.class);
+    }
+
+    @Test
     void AddSolution_validIdChallenge_validIdLanguage() {
         // Mock del servicio
         SolutionDto inputDto = new SolutionDto();
