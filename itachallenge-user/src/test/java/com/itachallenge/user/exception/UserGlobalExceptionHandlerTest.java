@@ -95,5 +95,16 @@ class UserGlobalExceptionHandlerTest {
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals(message, response.getBody());
     }
+
+    @Test
+    void testHandleUsernameAlreadyExistsException() {
+        String username = "alfonso79";
+        UsernameAlreadyExistsException exception = new UsernameAlreadyExistsException(username);
+        ResponseEntity<String> response = exceptionHandler.handleUsernameAlreadyExistsException(exception);
+
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals("The username 'alfonso79' is already registered.", response.getBody());
+    }
+
 }
 
