@@ -1257,7 +1257,7 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
                         UUID.randomUUID(), title, challengeDocument.getLevel(), LocalDateTime.now(), challengeDocument.getDetail(),
                         Set.of(languageDocument), List.of(), Topic.COMPONENTS,
                         10, 20, 30, challengeDocument.getTags()))
-                .collect(Collectors.toList());
+                .toList();
 
         when(challengeRepository.findByUuid(challengeDocument.getUuid()))
                 .thenReturn(Mono.just(challengeDocument));
