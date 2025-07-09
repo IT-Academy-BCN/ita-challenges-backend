@@ -1249,6 +1249,16 @@ void addChallengeToSolved_WhenChallengeTimesSolvedIsZero_IncreasesTimesSolvedAnd
     }
 
     @Test
+    void getRelatedChallenges_InvalidUUID_ThrowsBadUUIDException() {
+        String invalidId = "invalid-uuid";
+
+        StepVerifier.create(challengeService.getRelatedChallenges(invalidId))
+                .expectError(BadUUIDException.class)
+                .verify();
+    }
+
+
+    @Test
     void getRelatedChallenges_MoreThanThreeRelatedChallenges_ReturnsThreeRandom() {
         // Arrange: 4 retos compatibles
         Integer[] indices = {0, 1, 2, 3};
