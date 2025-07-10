@@ -167,57 +167,14 @@ public class ChallengeServiceImpl implements IChallengeService {
             boolean matchesLevel = level.isEmpty() ||
                     level.get().equalsIgnoreCase(challenge.getLevel());
 
-//            boolean matchesTags = tags.isEmpty() || (
-//                    challenge.getTags() != null &&
-//                            challenge.getTags().stream().anyMatch(tags.get()::contains)
-//            );
+            boolean matchesTags = tags.isEmpty() || (
+                    challenge.getTags() != null &&
+                            challenge.getTags().stream().anyMatch(tags.get()::contains)
+            );
 
-            return matchesLanguage && matchesLevel;
+            return matchesLanguage && matchesLevel && matchesTags;
         };
     }
-
-
-
-
-//    @Override
-//    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String challengeId) {
-//        return challengeRepository.findByUuid(UUID.fromString(challengeId))
-//                .flatMap(currentChallenge -> {
-//                    Optional<UUID> languageId = currentChallenge.getLanguages().stream()
-//                            .map(LanguageDocument::getIdLanguage)
-//                            .filter(Objects::nonNull)
-//                            .findFirst();
-//                    Optional<String> level = Optional.ofNullable(currentChallenge.getLevel());
-//                    Optional<List<UUID>> tags = Optional.ofNullable(currentChallenge.getTags());
-//
-//                    return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-//                            .filter(challenge -> !challenge.getUuid().toString().equals(challengeId))
-//                            .filter(challenge -> languageId.isEmpty() || (
-//                                    challenge.getLanguages() != null &&
-//                                            challenge.getLanguages().stream()
-//                                                    .anyMatch(lang -> lang.getIdLanguage() != null &&
-//                                                            lang.getIdLanguage().equals(languageId.get()))
-//                            ))
-//                            .filter(challenge -> level.isEmpty() ||
-//                                    level.get().equalsIgnoreCase(challenge.getLevel()))
-//                            .filter(challenge -> tags.isEmpty() || (
-//                                    challenge.getTags() != null &&
-//                                            challenge.getTags().stream().anyMatch(tags.get()::contains)
-//                            ))
-//                            .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
-//                            .collectList()
-//                            .map(challengeDtos -> {
-//                                Collections.shuffle(challengeDtos);
-//                                List<ChallengeDto> selectedChallenges = challengeDtos.stream()
-//                                        .limit(3)
-//                                        .toList();
-//                                GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-//                                resultDto.setInfo(0, 3, selectedChallenges.size(), selectedChallenges.toArray(new ChallengeDto[0]));
-//                                return resultDto;
-//                            });
-//                })
-//                .switchIfEmpty(Mono.just(new GenericResultDto<>()));
-//    }
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
     @Override
