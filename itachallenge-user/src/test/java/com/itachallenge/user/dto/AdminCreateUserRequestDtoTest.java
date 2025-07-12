@@ -11,7 +11,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CreateUserRequestTest {
+class AdminCreateUserRequestDtoTest {
 
     private static Validator validator;
 
@@ -24,10 +24,10 @@ class CreateUserRequestTest {
 
     @Test
     void whenUsernameIsBlank_thenValidationFails() {
-        CreateUserRequest request = new CreateUserRequest();
+        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsername("");
 
-        Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(request);
+        Set<ConstraintViolation<AdminCreateUserRequestDto>> violations = validator.validate(request);
 
         assertEquals(1, violations.size());
         assertEquals("Username must not be blank", violations.iterator().next().getMessage());

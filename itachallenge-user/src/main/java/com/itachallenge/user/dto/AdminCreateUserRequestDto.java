@@ -5,7 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
-public class CreateUserRequest {
+public class AdminCreateUserRequestDto {
 
     @NotBlank(message = "Username must not be blank")
     private String username;
