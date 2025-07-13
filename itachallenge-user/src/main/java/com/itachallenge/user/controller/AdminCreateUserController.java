@@ -27,18 +27,19 @@ public class AdminCreateUserController {
     }
 
     @PostMapping("/users/create")
-    public Mono<ResponseEntity<AdminCreateUserResponseDto>> createUser(
+    public Mono<ResponseEntity<AdminCreateUserResponseDto>> createUsers(
             @RequestHeader(AUTHORIZATION_HEADER) String token,
             @Valid @RequestBody AdminCreateUserRequestDto request) {
 
         return jwtService.extractRoleFromToken(token)
                 .switchIfEmpty(Mono.error(new UnauthorizedException("Token is invalid or missing")))
-                .flatMap(role -> {
+                .flatMap((String role) -> {
                     if (!ROLE_ADMIN.equals(role)) {
                         return Mono.just(new ResponseEntity<>(HttpStatus.FORBIDDEN));
                     }
-                    return adminCreateUserService.createUser(request)
-                            .map(userDto -> new ResponseEntity<>(userDto, HttpStatus.CREATED));
+                    // Llamamos al nuevo método del servicio que procesa la lista
+                    return adminCreateUserService.createUsers(request)
+                            .map(responseDto -> new ResponseEntity<>(responseDto, HttpStatus.CREATED));
                 });
     }
 }

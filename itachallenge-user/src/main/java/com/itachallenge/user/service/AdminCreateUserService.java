@@ -4,10 +4,13 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,26 +22,41 @@ public class AdminCreateUserService {
         this.userRepository = userRepository;
     }
 
-    public Mono<AdminCreateUserResponseDto> createUser(AdminCreateUserRequestDto request) {
-        final String username = request.getUsername();
+    public Mono<AdminCreateUserResponseDto> createUsers(AdminCreateUserRequestDto request) {
+        List<AdminCreateUserResponseDto.UserCreatedDto> createdUsers = new ArrayList<>();
+        List<String> existingUsers = new ArrayList<>();
 
-        return userRepository.findByUsername(username)
-                .flatMap(existingUser ->
-                        Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException("Username " + username + " already exists."))
+        return Flux.fromIterable(request.getUsernames())
+                .concatMap(username ->
+                        // Comprobamos si el usuario ya existe
+                        userRepository.findByUsername(username)
+                                .hasElement()
+                                .flatMap(exists -> {
+                                    if (exists) {
+                                        // Si existe, lo añadimos a la lista y devolvemos un Mono vacío
+                                        existingUsers.add(username);
+                                        return Mono.empty();
+                                    } else {
+                                        // Si no existe, creamos el nuevo usuario
+                                        UserDocument newUser = UserDocument.builder()
+                                                .uuid(UUID.randomUUID())
+                                                .username(username)
+                                                .role(Role.USER)
+                                                .build();
+                                        return userRepository.save(newUser);
+                                    }
+                                })
                 )
-                .switchIfEmpty(Mono.defer(() -> {
-                    UserDocument newUser = UserDocument.builder()
-                            .uuid(UUID.randomUUID())
-                            .username(username)
-                            .role(Role.USER)
-                            .build();
-
-                    return userRepository.save(newUser)
-                            .map(savedUser -> AdminCreateUserResponseDto.builder()
-                                    .uuid(savedUser.getUuid().toString())
-                                    .username(savedUser.getUsername())
-                                    .role(savedUser.getRole().toString())
-                                    .build());
-                }));
+                .doOnNext(savedUser ->
+                        createdUsers.add(AdminCreateUserResponseDto.UserCreatedDto.builder()
+                                .uuid(savedUser.getUuid())
+                                .username(savedUser.getUsername())
+                                .build()))
+                .then(Mono.fromCallable(() ->
+                        AdminCreateUserResponseDto.builder()
+                                .createdUsers(createdUsers)
+                                .existingUsers(existingUsers)
+                                .build()
+                ));
     }
 }
