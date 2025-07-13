@@ -3,11 +3,19 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+### [itachallenge-user-1.4.0-RELEASE] - 2025-07-08
+
+### Added
+- Enhanced the `POST /itachallenge/api/v1/admin/users/create` endpoint to support bulk user creation from a list of usernames. (Taiga [#553], PR [#948])
+- Updated `AdminCreateUserRequestDto` to accept a `List<String>` of usernames.
+- Replaced `AdminCreateUserResponseDto` with a new structure to report on successfully created users versus users that already exist.
+- Refactored `AdminCreateUserService` to process the list of usernames, creating only new users and identifying duplicates in a single transaction.
+
 ### [itachallenge-challenge-2.4.0-RELEASE] - 2025-07-08
 
 ### Added
 - Added GET endpoint in `ChallengeController` to retrieve related challenges to the one on screen of same language, difficulty and tag (Taiga [#563], PR [#947])
-
 
 ### [itachallenge-challenge-2.3.0-RELEASE] - 2025-06-20
 

@@ -984,6 +984,49 @@
 						}
 					},
 					"response": []
+				},{
+					"name": "Admin/Create Bulk Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"usernames\": [\n    \"newUserFromPostman1\",\n    \"existingUser\",\n    \"newUserFromPostman2\"\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ip}}:{{gateway_port}}/itachallenge/api/v1/admin/users/create",
+							"protocol": "http",
+							"host": [
+								"{{ip}}"
+							],
+							"port": "{{gateway_port}}",
+							"path": [
+								"itachallenge",
+								"api",
+								"v1",
+								"admin",
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
 				},
 				{
 					"name": "User/bookmark",
