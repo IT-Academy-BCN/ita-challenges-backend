@@ -2,7 +2,6 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.service.AdminCreateUserService;
 import com.itachallenge.user.service.IJwtService;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,39 +35,42 @@ class AdminCreateUserControllerUnitTest {
     private AdminCreateUserController adminCreateUserController;
 
     @Test
-    @DisplayName("Unit Test: Controller should propagate error when user already exists")
-    void createUser_existingUsername_shouldPropagateError() {
-
+    @DisplayName("Unit Test: Controller should call service and return its response for an ADMIN user")
+    void createUsers_validAdminRequest_shouldReturnServiceResponse() {
         String token = "Bearer mockAdminToken";
-        String username = "existingUser";
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
-        request.setUsername(username);
+        request.setUsernames(List.of("newUser1"));
 
-        String errorMessage = "The username '" + username + "' is already registered.";
+        AdminCreateUserResponseDto serviceResponse = AdminCreateUserResponseDto.builder()
+                .createdUsers(Collections.emptyList())
+                .existingUsers(Collections.emptyList())
+                .build();
 
         when(jwtService.extractRoleFromToken(token)).thenReturn(Mono.just("ADMIN"));
-        when(adminCreateUserService.createUser(any()))
-                .thenReturn(Mono.error(new UsernameAlreadyExistsException(errorMessage)));
+        when(adminCreateUserService.createUsers(any())).thenReturn(Mono.just(serviceResponse));
 
         Mono<ResponseEntity<AdminCreateUserResponseDto>> result =
-                adminCreateUserController.createUser(token, request);
+                adminCreateUserController.createUsers(token, request);
 
         StepVerifier.create(result)
-                .expectError(UsernameAlreadyExistsException.class)
-                .verify();
+                .assertNext(response -> {
+                    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+                    assertThat(response.getBody()).isEqualTo(serviceResponse);
+                })
+                .verifyComplete();
     }
 
     @Test
-    @DisplayName("Unit Test: Create user when role is not ADMIN should return 403 Forbidden")
-    void createUser_whenRoleIsNotAdmin_shouldReturnForbidden() {
+    @DisplayName("Unit Test: Controller should return 403 Forbidden when role is not ADMIN")
+    void createUsers_whenRoleIsNotAdmin_shouldReturnForbidden() {
         String token = "Bearer mockUserToken";
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
-        request.setUsername("anyUser");
+        request.setUsernames(Collections.singletonList("anyUser"));
 
         when(jwtService.extractRoleFromToken(token)).thenReturn(Mono.just("USER"));
 
         Mono<ResponseEntity<AdminCreateUserResponseDto>> result =
-                adminCreateUserController.createUser(token, request);
+                adminCreateUserController.createUsers(token, request);
 
         StepVerifier.create(result)
                 .assertNext(response -> {
@@ -73,6 +78,6 @@ class AdminCreateUserControllerUnitTest {
                 })
                 .verifyComplete();
 
-        verify(adminCreateUserService, never()).createUser(any());
+        verify(adminCreateUserService, never()).createUsers(any());
     }
 }

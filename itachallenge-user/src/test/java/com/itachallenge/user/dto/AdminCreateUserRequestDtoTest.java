@@ -1,35 +1,36 @@
 package com.itachallenge.user.dto;
 
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import java.util.Set;
-
+import java.util.Collections;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class AdminCreateUserRequestDtoTest {
 
-    private static Validator validator;
-
-    @BeforeAll
-    static void setUpValidator() {
-        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-            validator = factory.getValidator();
-        }
+    @Test
+    void testNoArgsConstructor() {
+        AdminCreateUserRequestDto dto = new AdminCreateUserRequestDto();
+        assertNotNull(dto);
     }
 
     @Test
-    void whenUsernameIsBlank_thenValidationFails() {
+    void testSetAndGetUsernames() {
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
-        request.setUsername("");
+        List<String> usernames = List.of("user1", "user2", "user3");
 
-        Set<ConstraintViolation<AdminCreateUserRequestDto>> violations = validator.validate(request);
+        request.setUsernames(usernames);
 
-        assertEquals(1, violations.size());
-        assertEquals("Username must not be blank", violations.iterator().next().getMessage());
+        assertEquals(usernames, request.getUsernames());
+    }
+
+    @Test
+    void testSetAndGetEmptyUsernames() {
+        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
+        List<String> emptyList = Collections.emptyList();
+
+        request.setUsernames(emptyList);
+
+        assertEquals(emptyList, request.getUsernames());
     }
 }

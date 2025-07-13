@@ -1,10 +1,8 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,8 +13,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.UUID;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -30,52 +29,35 @@ class AdminCreateUserServiceTest {
     private AdminCreateUserService adminCreateUserService;
 
     @Test
-    @DisplayName("Test: Create user when username does not exist")
-    void createUser_whenUserDoesNotExist_shouldCreateAndReturnUser() {
-
+    @DisplayName("Test: Create users with a mixed list of new and existing usernames")
+    void createUsers_withMixedList_shouldReturnCorrectResponse() {
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
-        request.setUsername("newUser");
+        request.setUsernames(List.of("newUser1", "existingUser", "newUser2"));
 
-        UserDocument savedUser = UserDocument.builder()
-                .uuid(UUID.randomUUID())
-                .username("newUser")
-                .role(Role.USER)
-                .build();
+        UserDocument existingUser = UserDocument.builder().username("existingUser").build();
 
-        when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
-
-        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
-
-        StepVerifier.create(result)
-                .expectNextMatches(response -> {
-                    // Assertions on the response DTO.
-                    return response.getUsername().equals("newUser") &&
-                            response.getRole().equals("USER") &&
-                            response.getUuid() != null;
-                })
-                .verifyComplete();
-
-        verify(userRepository).save(any(UserDocument.class));
-    }
-
-    @Test
-    @DisplayName("Test: Attempt to create a user that already exists")
-    void createUser_whenUserAlreadyExists_shouldThrowException() {
-        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
-        request.setUsername("existingUser");
-
-        UserDocument existingUser = new UserDocument();
-        existingUser.setUsername("existingUser");
+        when(userRepository.findByUsername("newUser1")).thenReturn(Mono.empty());
+        when(userRepository.findByUsername("newUser2")).thenReturn(Mono.empty());
+        when(userRepository.save(any(UserDocument.class))).thenAnswer(invocation ->
+                Mono.just(invocation.getArgument(0))
+        );
 
         when(userRepository.findByUsername("existingUser")).thenReturn(Mono.just(existingUser));
 
-        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
+        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUsers(request);
 
         StepVerifier.create(result)
-                .expectError(UsernameAlreadyExistsException.class)
-                .verify();
+                .assertNext(response -> {
+                    assertThat(response.getCreatedUsers()).hasSize(2);
+                    assertThat(response.getCreatedUsers())
+                            .extracting(AdminCreateUserResponseDto.UserCreatedDto::getUsername)
+                            .containsExactlyInAnyOrder("newUser1", "newUser2");
 
-        verify(userRepository, never()).save(any());
+                    assertThat(response.getExistingUsers()).hasSize(1);
+                    assertThat(response.getExistingUsers().get(0)).isEqualTo("existingUser");
+                })
+                .verifyComplete();
+
+        verify(userRepository, times(2)).save(any(UserDocument.class));
     }
 }
