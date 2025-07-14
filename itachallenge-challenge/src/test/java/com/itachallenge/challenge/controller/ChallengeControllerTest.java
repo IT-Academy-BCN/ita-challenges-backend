@@ -77,7 +77,22 @@ class ChallengeControllerTest {
         formData = new ChallengeCreateDto("títol", "descripció",
                 DifficultyLevel.valueOf("EASY"), "Java", "solució", Topic.LISTS, tags);
         createdChallenge = new ChallengeDto();
+
+        when(challengeService.getRelatedChallenges(argThat(id -> !isValidUUID(id))))
+                .thenReturn(Mono.error(new BadUUIDException("Invalid ID format. Please indicate the correct format.")));
+
+
     }
+
+        private boolean isValidUUID(String id) {
+            try {
+                UUID.fromString(id);
+                return true;
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
+        }
+
 
     @Test
     void getOneChallenge_ChallengeFound_ReturnsOkResponse() {
@@ -202,6 +217,85 @@ class ChallengeControllerTest {
                 .expectHeader().contentType(MediaType.APPLICATION_JSON);
 
     }
+
+    @Test
+    void getRelatedChallenges_ValidId_Returns200_RelatedChallengesReturned() {
+        // Arrange
+        challengeId = "8514dd47-9800-4fde-a376-f31d450fcd07";
+
+        ChallengeDto challenge1 = new ChallengeDto();
+        challenge1.setChallengeId(UUID.randomUUID());
+
+        ChallengeDto challenge2 = new ChallengeDto();
+        challenge2.setChallengeId(UUID.randomUUID());
+
+        ChallengeDto challenge3 = new ChallengeDto();
+        challenge3.setChallengeId(UUID.randomUUID());
+
+        GenericResultDto<ChallengeDto> expectedResponse = new GenericResultDto<>();
+        expectedResponse.setInfo(0, 3, 3, new ChallengeDto[]{challenge1, challenge2, challenge3});
+
+        when(challengeService.getRelatedChallenges(challengeId))
+                .thenReturn(Mono.just(expectedResponse));
+
+        // Act & Assert
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}/related", challengeId)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody(GenericResultDto.class)
+                .consumeWith(response -> {
+                    GenericResultDto<?> body = response.getResponseBody();
+                    assertNotNull(body);
+                    assertEquals(3, body.getCount());
+                });
+    }
+
+    @Test
+    void getRelatedChallenges_InvalidUUID_Returns400() {
+        String invalidUuid = "not-a-valid-uuid";
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}/related", invalidUuid)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody(MessageDto.class)
+                .consumeWith(response -> assertNotNull(response.getResponseBody()));
+    }
+
+    @Test
+    void getRelatedChallenges_NotFound_Returns404() {
+        String uuid = UUID.randomUUID().toString();
+
+        when(challengeService.getRelatedChallenges(uuid))
+                .thenReturn(Mono.error(new ChallengeNotFoundException("Challenge not found")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}/related", uuid)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(MessageDto.class)
+                .consumeWith(response -> assertNotNull(response.getResponseBody()));
+    }
+
+    @Test
+    void getRelatedChallenges_NoContent_Returns204() {
+        String uuid = UUID.randomUUID().toString();
+
+        GenericResultDto<ChallengeDto> emptyResult = new GenericResultDto<>();
+        emptyResult.setInfo(0, 3, 0, new ChallengeDto[0]);
+
+        when(challengeService.getRelatedChallenges(uuid))
+                .thenReturn(Mono.just(emptyResult));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/challenge/challenges/{challengeId}/related", uuid)
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
 
     @Test
     void AddSolution_validIdChallenge_validIdLanguage() {

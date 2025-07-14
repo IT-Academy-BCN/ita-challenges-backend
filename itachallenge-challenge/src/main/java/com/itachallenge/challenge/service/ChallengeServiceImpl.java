@@ -27,6 +27,7 @@ import reactor.core.publisher.Mono;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 
@@ -115,6 +116,64 @@ public class ChallengeServiceImpl implements IChallengeService {
                     resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
                     return resultDto;
                 });
+    }
+
+    @Override
+    public Mono<GenericResultDto<ChallengeDto>> getRelatedChallenges(String challengeId) {
+        return validateUUID(challengeId)
+                .flatMap(validId -> challengeRepository.findByUuid(validId)
+                        .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, validId))))
+                        .flatMap(currentChallenge -> {
+                            Optional<UUID> languageId = currentChallenge.getLanguages().stream()
+                                    .map(LanguageDocument::getIdLanguage)
+                                    .filter(Objects::nonNull)
+                                    .findFirst();
+                            Optional<String> level = Optional.ofNullable(currentChallenge.getLevel());
+                            Optional<List<UUID>> tags = Optional.ofNullable(currentChallenge.getTags());
+
+                            Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(languageId, level, tags);
+
+                            return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                                    .filter(challenge -> !challenge.getUuid().equals(validId))
+                                    .filter(filterPredicate)
+                                    .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                                    .collectList()
+                                    .map(challengeDtos -> {
+                                        Collections.shuffle(challengeDtos);
+                                        List<ChallengeDto> selected = challengeDtos.stream()
+                                                .limit(3)
+                                                .toList();
+
+                                        GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
+                                        result.setInfo(0, 3, selected.size(), selected.toArray(new ChallengeDto[0]));
+                                        return result;
+                                    });
+                        }))
+                .onErrorResume(BadUUIDException.class, e -> Mono.error(e))
+                .switchIfEmpty(Mono.error(new BadRequestException("Challenge ID cannot be empty or invalid")));
+    }
+
+    private Predicate<ChallengeDocument> buildFilterPredicate(Optional<UUID> languageId,
+                                                              Optional<String> level,
+                                                              Optional<List<UUID>> tags) {
+        return challenge -> {
+            boolean matchesLanguage = languageId.isEmpty() || (
+                    challenge.getLanguages() != null &&
+                            challenge.getLanguages().stream()
+                                    .anyMatch(lang -> lang.getIdLanguage() != null &&
+                                            lang.getIdLanguage().equals(languageId.get()))
+            );
+
+            boolean matchesLevel = level.isEmpty() ||
+                    level.get().equalsIgnoreCase(challenge.getLevel());
+
+            boolean matchesTags = tags.isEmpty() || (
+                    challenge.getTags() != null &&
+                            challenge.getTags().stream().anyMatch(tags.get()::contains)
+            );
+
+            return matchesLanguage && matchesLevel && matchesTags;
+        };
     }
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")

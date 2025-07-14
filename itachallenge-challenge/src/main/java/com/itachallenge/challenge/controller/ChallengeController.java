@@ -165,6 +165,30 @@ public class ChallengeController {
         );
     }
 
+    @GetMapping("/challenges/{challengeId}/related")
+    @Operation(
+            operationId = "Get 3 related challenges on the \"Relacionat\" tab of a Challenge detail by (language, difficulty, or tags).",
+            summary = "Get to see 3 related challenges on a challenge detail page and their levels, details and their depending on the first language, difficulty and any tags.",
+            description = "Requesting 3 related challenges for the challenge the user is actually looking at or working on.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfully retrieved related challenges",
+                            content = {@Content(schema = @Schema(implementation = ChallengeDto.class), mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "204", description = "No related challenges found"),
+                    @ApiResponse(responseCode = "404", description = "The Challenge with given Id was not found"),
+                    @ApiResponse(responseCode = "400", description = "Malformed, missing or invalid parameters")
+            })
+
+    public Mono<ResponseEntity<GenericResultDto<ChallengeDto>>> getRelatedChallenges(@PathVariable String challengeId) {
+        return challengeService.getRelatedChallenges(challengeId)
+                .map(result -> {
+                    if (result.getCount() == 0) {
+                        return ResponseEntity.noContent().<GenericResultDto<ChallengeDto>>build();
+                    }
+                    return ResponseEntity.ok(result);
+                });
+    }
+
+
     @GetMapping("/solution/challenge/{idChallenge}/language/{idLanguage}")
     @Operation(
             operationId = "Get the solutions from a chosen challenge and language.",
