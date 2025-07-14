@@ -28,16 +28,13 @@ public class AdminCreateUserService {
 
         return Flux.fromIterable(request.getUsernames())
                 .concatMap(username ->
-                        // Comprobamos si el usuario ya existe
                         userRepository.findByUsername(username)
                                 .hasElement()
                                 .flatMap(exists -> {
-                                    if (exists) {
-                                        // Si existe, lo añadimos a la lista y devolvemos un Mono vacío
+                                    if (Boolean.TRUE.equals(exists)){
                                         existingUsers.add(username);
                                         return Mono.empty();
                                     } else {
-                                        // Si no existe, creamos el nuevo usuario
                                         UserDocument newUser = UserDocument.builder()
                                                 .uuid(UUID.randomUUID())
                                                 .username(username)
