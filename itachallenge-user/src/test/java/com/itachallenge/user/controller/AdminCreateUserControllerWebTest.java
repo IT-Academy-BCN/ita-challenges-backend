@@ -34,7 +34,7 @@ class AdminCreateUserControllerWebTest {
     @Test
     @DisplayName("Web Test: POST /users/create with a list of users should return 201 Created")
     void createUsers_validRequest_shouldReturn201() {
-        // GIVEN
+
         String token = "Bearer mockAdminToken";
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsernames(List.of("newUser1", "existingUser"));

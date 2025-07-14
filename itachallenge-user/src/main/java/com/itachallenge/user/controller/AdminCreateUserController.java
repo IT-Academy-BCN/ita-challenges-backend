@@ -37,7 +37,6 @@ public class AdminCreateUserController {
                     if (!ROLE_ADMIN.equals(role)) {
                         return Mono.just(new ResponseEntity<>(HttpStatus.FORBIDDEN));
                     }
-                    // Llamamos al nuevo método del servicio que procesa la lista
                     return adminCreateUserService.createUsers(request)
                             .map(responseDto -> new ResponseEntity<>(responseDto, HttpStatus.CREATED));
                 });
