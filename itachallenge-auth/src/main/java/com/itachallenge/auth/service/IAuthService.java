@@ -1,6 +1,7 @@
 package com.itachallenge.auth.service;
 
 import org.springframework.http.ResponseEntity;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
@@ -9,4 +10,6 @@ public interface IAuthService {
 
     Mono<Map<String, Object>> validateTokenWithGithub(String token);
     Mono<String> exchangeCodeForToken(String code, String redirectUri);
+    Flux<String> determineEnvironmentFromOrigin(String origin);
+    Mono <String> getClientConfigForEnv(String env);
 }

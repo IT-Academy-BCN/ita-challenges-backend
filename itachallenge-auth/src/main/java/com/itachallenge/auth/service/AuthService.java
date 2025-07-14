@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -138,6 +139,24 @@ public class AuthService implements IAuthService {
 
                 .onErrorResume(WebClientResponseException.class, this::handleGithubApiError)
                 .onErrorResume(this::handleUnexpectedError);
+    }
+
+    public Flux<String> determineEnvironmentFromOrigin(String origin) {
+    if (origin.contains("localhost")) {
+        return Flux.just("local");
+    } else if (origin.contains("dev.ita-challenges.eurecatacademy.org")) {
+        return Flux.just("dev");
+    } else {
+        return Flux.error(new IllegalArgumentException("Unknown environment for origin: " + origin));
+    }
+    }
+
+    public Mono<String> getClientConfigForEnv(String env) {
+        ClientConfig config = githubClientProperties.getClientConfig(env);
+        if (config == null) {
+            return Mono.error(new IllegalArgumentException("No client config for environment: " + env));
+        }
+        return Mono.just("config");
     }
 
     private Mono<Map<String, Object>> processGithubResponse(String response, String token) {
