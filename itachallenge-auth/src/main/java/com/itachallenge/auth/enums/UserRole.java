@@ -1,6 +1,6 @@
 package com.itachallenge.auth.enums;
 
-import com.itachallenge.jwtcore.exception.InvalidRoleChangeRequestException;
+import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 
 import java.util.Optional;
 
