@@ -85,33 +85,15 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .filter(lang -> !lang.isBlank())
                 .map(UUID::fromString);
 
-        boolean filterByLevel = level.isPresent() && !level.get().isBlank();
+        Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(uuidLanguage, level, tags);
 
         return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                .filter(challenge ->
-                        uuidLanguage.isEmpty() ||
-                                (challenge.getLanguages() != null &&
-                                        challenge.getLanguages().stream()
-                                                .anyMatch(lang ->
-                                                        lang.getIdLanguage() != null &&
-                                                                lang.getIdLanguage().equals(uuidLanguage.get()))
-                                )
-                )
-                .filter(challenge ->
-                        !filterByLevel || level.get().equalsIgnoreCase(challenge.getLevel())
-                )
-                .filter(challenge ->
-                        tags.isEmpty() || (
-                                challenge.getTags() != null &&
-                                        challenge.getTags().stream().anyMatch(tags.get()::contains)
-                        )
-                )
-                .skip(offset)  // Aplica el offset
-                .take(limit == -1 ? Long.MAX_VALUE : limit)  // Aplica el limit
+                // 2. Se aplica el predicado en un único filtro
+                .filter(filterPredicate)
+                .skip(offset)
+                .take(limit == -1 ? Long.MAX_VALUE : limit)
                 .map(challenge -> {
-                    // Convierte el Challenge a ChallengeDto
                     ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
-
                     GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
                     resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
                     return resultDto;
@@ -130,7 +112,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                                     .findFirst();
                             Optional<String> level = Optional.ofNullable(currentChallenge.getLevel());
                             Optional<List<UUID>> tags = Optional.ofNullable(currentChallenge.getTags());
-
+//Esta línea importante
                             Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(languageId, level, tags);
 
                             return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
@@ -155,7 +137,8 @@ public class ChallengeServiceImpl implements IChallengeService {
 
     private Predicate<ChallengeDocument> buildFilterPredicate(Optional<UUID> languageId,
                                                               Optional<String> level,
-                                                              Optional<List<UUID>> tags) {
+                                                              Optional<List<UUID>> tags)
+    {
         return challenge -> {
             boolean matchesLanguage = languageId.isEmpty() || (
                     challenge.getLanguages() != null &&
