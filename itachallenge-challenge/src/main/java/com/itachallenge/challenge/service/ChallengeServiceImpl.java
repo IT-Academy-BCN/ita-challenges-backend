@@ -88,7 +88,6 @@ public class ChallengeServiceImpl implements IChallengeService {
         Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(uuidLanguage, level, tags);
 
         return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                // 2. Se aplica el predicado en un único filtro
                 .filter(filterPredicate)
                 .skip(offset)
                 .take(limit == -1 ? Long.MAX_VALUE : limit)
@@ -112,7 +111,6 @@ public class ChallengeServiceImpl implements IChallengeService {
                                     .findFirst();
                             Optional<String> level = Optional.ofNullable(currentChallenge.getLevel());
                             Optional<List<UUID>> tags = Optional.ofNullable(currentChallenge.getTags());
-//Esta línea importante
                             Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(languageId, level, tags);
 
                             return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
