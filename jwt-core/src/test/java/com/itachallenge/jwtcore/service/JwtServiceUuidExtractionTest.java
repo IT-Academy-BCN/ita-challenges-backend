@@ -5,6 +5,10 @@ import io.jsonwebtoken.JwtException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -54,4 +58,78 @@ class JwtServiceUuidExtractionTest {
                 .isInstanceOf(JwtException.class)
                 .hasMessageContaining("Invalid or tampered token");
     }
+
+    @Test
+    void getUserUuIdFromAuthenticationHeader_validToken_returnsUuid() {
+        String uuid = "uuid-1234";
+        String token = jwtService.generateToken("testuser", "USER", uuid);
+        String authHeader = "Bearer " + token;
+
+        String result = jwtService.getUserUuIdFromAuthenticationHeader(authHeader);
+
+        assertThat(result).isEqualTo(uuid);
+    }
+
+    @Test
+    void getUserUuIdFromAuthenticationHeader_nullHeader_throwsJwtException() {
+        assertThatThrownBy(() -> jwtService.getUserUuIdFromAuthenticationHeader(null))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Missing or bad formatted Authorization header");
+    }
+
+    @Test
+    void getUserUuIdFromAuthenticationHeader_malformedHeader_throwsJwtException() {
+        assertThatThrownBy(() -> jwtService.getUserUuIdFromAuthenticationHeader("Token something"))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Missing or bad formatted Authorization header");
+    }
+
+    @Test
+    void getUserUuIdFromAuthenticationHeader_invalidToken_throwsJwtException() {
+        String invalidToken = "Bearer invalid.token.value";
+        assertThatThrownBy(() -> jwtService.getUserUuIdFromAuthenticationHeader(invalidToken))
+                .isInstanceOf(JwtException.class)
+                .hasMessageContaining("Invalid Authorization header content");
+    }
+
+    @Test
+    void extractUuid_invalidToken_returnsNull() {
+        String result = invokeExtractUuid("invalid.token.structure");
+        assertThat(result).isNull();
+    }
+
+    // Acceso al método privado mediante reflexión
+    private String invokeExtractUuid(String token) {
+        try {
+            var method = JwtService.class.getDeclaredMethod("extractUuid", String.class);
+            method.setAccessible(true);
+            return (String) method.invoke(jwtService, token);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void extractAllClaimsMap_validToken_returnsMap() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        String token = jwtService.generateToken("testuser", "USER", "uuid-9876");
+        var method = JwtService.class.getDeclaredMethod("extractAllClaimsMap", String.class);
+        method.setAccessible(true);
+        Map<String, Object> claims = (Map<String, Object>) method.invoke(null, token);
+
+        assertThat(claims).isNotNull();
+        assertThat(claims.get("sub")).isEqualTo("testuser");
+        assertThat(claims.get("role")).isEqualTo("USER");
+        assertThat(claims.get("uuid")).isEqualTo("uuid-9876");
+    }
+
+    @Test
+    void extractAllClaimsMap_invalidToken_throwsException() {
+        assertThatThrownBy(() -> {
+            var method = JwtService.class.getDeclaredMethod("extractAllClaimsMap", String.class);
+            method.setAccessible(true);
+            method.invoke(null, "invalid.token");
+        }).hasRootCauseInstanceOf(StringIndexOutOfBoundsException.class);
+    }
+
+
 }
