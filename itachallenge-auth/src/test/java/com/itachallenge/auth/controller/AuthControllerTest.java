@@ -2,9 +2,10 @@ package com.itachallenge.auth.controller;
 
 import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.dto.User;
+import com.itachallenge.auth.service.JwtRoleSwitchService;
 import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
-import com.itachallenge.auth.service.IJwtService;
+import com.itachallenge.jwtcore.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +43,9 @@ class AuthControllerTest {
 
     @MockBean
     private IAuthService authService;
+
+    @MockBean
+    private JwtRoleSwitchService jwtRoleSwitchService;
 
     @MockBean
     private IUserService userService;
@@ -285,7 +289,7 @@ class AuthControllerTest {
                 });
     }
 
-   @Test
+    @Test
     void logout_MalformedAuthorizationHeader_ShouldReturn401() {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -317,7 +321,7 @@ class AuthControllerTest {
         String newToken = "new.jwt.token";
 
         when(jwtService.extractBearerToken("Bearer " + originalToken)).thenReturn(originalToken);
-        when(jwtService.switchRole(originalToken, newRole)).thenReturn(newToken);
+        when(jwtRoleSwitchService.switchRole(originalToken, newRole)).thenReturn(newToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/switch-role")
@@ -335,7 +339,7 @@ class AuthControllerTest {
         String newRole = "ADMIN";
 
         when(jwtService.extractBearerToken("Bearer " + expiredToken)).thenReturn(expiredToken);
-        when(jwtService.switchRole(expiredToken, newRole))
+        when(jwtRoleSwitchService.switchRole(expiredToken, newRole))
                 .thenThrow(new ExpiredJwtException(null, null, "Token is expired."));
 
         webTestClient.post()
@@ -354,7 +358,7 @@ class AuthControllerTest {
         String newRole = "ADMIN";
 
         when(jwtService.extractBearerToken("Bearer " + invalidToken)).thenReturn(invalidToken);
-        when(jwtService.switchRole(invalidToken, newRole))
+        when(jwtRoleSwitchService.switchRole(invalidToken, newRole))
                 .thenThrow(new JwtException("Invalid or tampered token."));
 
         webTestClient.post()
@@ -372,7 +376,7 @@ class AuthControllerTest {
         String token = "valid.jwt.token";
 
         when(jwtService.extractBearerToken("Bearer " + token)).thenReturn(token);
-        when(jwtService.switchRole(token, "USER"))
+        when(jwtRoleSwitchService.switchRole(token, "USER"))
                 .thenThrow(new InvalidRoleChangeRequestException("New role is the same as current role."));
 
         webTestClient.post()

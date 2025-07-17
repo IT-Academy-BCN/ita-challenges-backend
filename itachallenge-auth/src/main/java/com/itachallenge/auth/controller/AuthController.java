@@ -4,7 +4,8 @@ import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
-import com.itachallenge.auth.service.IJwtService;
+import com.itachallenge.auth.service.JwtRoleSwitchService;
+import com.itachallenge.jwtcore.service.IJwtService;
 import com.itachallenge.auth.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,16 +47,19 @@ public class AuthController {
 
     private final String appName;
 
+    private final JwtRoleSwitchService jwtRoleSwitchService;
+
     public AuthController(IAuthService authService,
                           IUserService userService,
                           IJwtService jwtService,
                           @Value("${spring.application.version}") String version,
-                          @Value("${spring.application.name}") String appName) {
+                          @Value("${spring.application.name}") String appName, JwtRoleSwitchService jwtRoleSwitchService) {
         this.authService = authService;
         this.userService = userService;
         this.jwtService = jwtService;
         this.version = version;
         this.appName = appName;
+        this.jwtRoleSwitchService = jwtRoleSwitchService;
     }
 
     @GetMapping(value = "/test")
@@ -178,7 +182,7 @@ public class AuthController {
             @RequestBody SwitchRoleRequest request) {
 
         String token = jwtService.extractBearerToken(authHeader);
-        String newToken = jwtService.switchRole(token, request.getNewRole());
+        String newToken = jwtRoleSwitchService.switchRole(token, request.getNewRole());
         log.info("Switch-role successful for token");
         return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
     }
