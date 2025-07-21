@@ -30,8 +30,7 @@ class AdminCreateUserControllerTest {
     @Test
     @DisplayName("Test: POST /admin/users/create with new user should return 201 Created")
     void createUser_withNewUser_shouldReturn201Created() {
-        // ARRANGE
-        // Usar los DTOs correctos
+
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsername("newUser");
 
@@ -43,7 +42,6 @@ class AdminCreateUserControllerTest {
 
         when(adminCreateUserService.createUser(any(AdminCreateUserRequestDto.class))).thenReturn(Mono.just(serviceResponse));
 
-        // ACT & ASSERT
         webTestClient.post()
                 .uri("/itachallenge/api/v1/admin/users/create")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -60,14 +58,13 @@ class AdminCreateUserControllerTest {
     @Test
     @DisplayName("Test: POST /admin/users/create with existing user should return 409 Conflict")
     void createUser_withExistingUser_shouldReturn409Conflict() {
-        // ARRANGE
+
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsername("existingUser");
 
         when(adminCreateUserService.createUser(any(AdminCreateUserRequestDto.class)))
                 .thenReturn(Mono.error(new UsernameAlreadyExistsException("Username existingUser already exists.")));
 
-        // ACT & ASSERT
         webTestClient.post()
                 .uri("/itachallenge/api/v1/admin/users/create")
                 .contentType(MediaType.APPLICATION_JSON)
