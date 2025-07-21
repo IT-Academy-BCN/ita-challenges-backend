@@ -5,3 +5,4 @@ include 'itachallenge-mock'
 include 'itachallenge-auth'
 include 'itachallenge-document'
 
+include 'jwt-core'
