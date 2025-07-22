@@ -2,16 +2,21 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
+import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.ITagService;
+import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -29,6 +34,42 @@ public class TagControllerTest {
 
     @MockBean
     private ITagService tagService;
+
+    @MockBean
+    private DiscoveryClient discoveryClient;
+
+    @MockBean
+    private ChallengeRepository challengeRepository;
+
+    @MockBean
+    private SolutionRepository solutionRepository;
+
+    @MockBean
+    private WebClient.Builder webClientBuilder;
+
+    @MockBean
+    private TagRepository tagRepository;
+
+    @MockBean
+    private ChallengeController challengeController;
+
+    @MockBean
+    private FavoriteController favoriteController;
+
+    @MockBean
+    private ResourceRepository resourceRepository;
+
+    @MockBean
+    private IJwtService jwtService;
+
+    @MockBean
+    private MappingMongoConverter mappingMongoConverter;
+
+    @MockBean
+    private ChallengeSolvedController challengeSolvedController;
+
+    @MockBean
+    private LanguageRepository languageRepository;
 
     @Test
     void testGetTagsByLanguageId_WhenTagsExist_ReturnsOk() {
