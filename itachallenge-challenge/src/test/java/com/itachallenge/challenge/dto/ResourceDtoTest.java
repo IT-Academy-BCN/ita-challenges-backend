@@ -9,6 +9,7 @@ import com.itachallenge.challenge.enums.Topic;
 import jakarta.validation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Collections;
 import java.util.Set;
@@ -22,6 +23,10 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
+@TestPropertySource(properties = { // <-- New Annotation
+        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
+        "token.expiration.minutes=600"
+})
 class ResourceDtoTest {
 
     @Test
