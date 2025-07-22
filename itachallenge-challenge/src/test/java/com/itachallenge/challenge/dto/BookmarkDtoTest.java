@@ -1,11 +1,8 @@
 package com.itachallenge.challenge.dto;
 
-import com.itachallenge.challenge.controller.ChallengeController;
-import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -17,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
         "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
         "token.expiration.minutes=600"
 })
-public class BookmarkDtoTest {
+class BookmarkDtoTest {
 
     @Test
     void testAllArgsConstructorAndGetters() {
