@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.integration;
 
 import com.itachallenge.challenge.config.dbchangelog.TestDatabaseInitializer;
+import com.itachallenge.jwtcore.service.IJwtService;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
@@ -11,8 +12,10 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -27,9 +30,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
+@TestPropertySource(properties = { // <-- New Annotation
+        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
+        "token.expiration.minutes=600"
+})
 class MongockIntegrationTest {
     @Mock
     MongoDatabase mongoDatabase;
+
+    @MockBean
+    private IJwtService jwtService;
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")

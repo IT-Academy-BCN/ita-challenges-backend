@@ -1,18 +1,26 @@
 package com.itachallenge.challenge.integration;
 
+import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.*;
+import com.itachallenge.challenge.service.*;
+import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -32,6 +40,10 @@ import static org.springframework.http.HttpStatus.OK;
 @AutoConfigureWebTestClient
 @Testcontainers
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@TestPropertySource(properties = { // <-- New Annotation
+        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
+        "token.expiration.minutes=600"
+})
 class ChallengeIntegrationTest {
 
     @Container
@@ -49,6 +61,9 @@ class ChallengeIntegrationTest {
 
     @Autowired
     private ChallengeRepository challengeRepository;
+
+    @MockBean
+    private IJwtService jwtService;
 
     private final String UUID_VALID = "8ecbfe54-fec8-11ed-be56-0242ac120002";
     private final String UUID_INVALID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
