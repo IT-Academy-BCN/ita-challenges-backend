@@ -113,13 +113,4 @@ public class JwtService implements IJwtService {
         }
     }
 
-//    private static Map<String, Object> extractAllClaimsMap(String token) throws IOException {
-//        int n1 = token.indexOf(".");
-//        int n2 = token.lastIndexOf(".");
-//        String claimsBase64 = token.substring(n1 + 1, n2);
-//        byte[] claimsByte = Decoders.BASE64.decode(claimsBase64);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        return objectMapper.readValue(claimsByte, Map.class);
-//    }
-
 }
