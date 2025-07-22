@@ -6,7 +6,7 @@ import com.itachallenge.challenge.exception.ChallengeNotFoundException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.exception.InternalServerErrorException;
 import com.itachallenge.challenge.service.IFavoriteService;
-import com.itachallenge.challenge.service.IJwtService;
+import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
