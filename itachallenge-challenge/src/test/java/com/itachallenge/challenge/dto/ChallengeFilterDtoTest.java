@@ -5,6 +5,7 @@ package com.itachallenge.challenge.dto;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -14,6 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@TestPropertySource(properties = { // <-- New Annotation
+        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
+        "token.expiration.minutes=600"
+})
 public class ChallengeFilterDtoTest {
 
     @Test
