@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 class JwtServiceUuidExtractionTest {
 
@@ -110,11 +111,9 @@ class JwtServiceUuidExtractionTest {
     }
 
     @Test
-    void extractAllClaimsMap_validToken_returnsMap() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    void extractAllClaims_validToken_returnsClaims() throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         String token = jwtService.generateToken("testuser", "USER", "uuid-9876");
-        var method = JwtService.class.getDeclaredMethod("extractAllClaimsMap", String.class);
-        method.setAccessible(true);
-        Map<String, Object> claims = (Map<String, Object>) method.invoke(null, token);
+        Claims claims = jwtService.extractAllClaims(token);
 
         assertThat(claims).isNotNull();
         assertThat(claims.get("sub")).isEqualTo("testuser");
@@ -123,12 +122,12 @@ class JwtServiceUuidExtractionTest {
     }
 
     @Test
-    void extractAllClaimsMap_invalidToken_throwsException() {
-        assertThatThrownBy(() -> {
-            var method = JwtService.class.getDeclaredMethod("extractAllClaimsMap", String.class);
-            method.setAccessible(true);
-            method.invoke(null, "invalid.token");
-        }).hasRootCauseInstanceOf(StringIndexOutOfBoundsException.class);
+    void extractAllClaims_invalidToken_throwsException() {
+        String invalidToken = "malformed.token.string"; // An invalid JWT string
+
+        assertThatExceptionOfType(JwtException.class)
+                .isThrownBy(() -> jwtService.extractAllClaims(invalidToken))
+                .withMessageContaining("Invalid or tampered token");
     }
 
 
