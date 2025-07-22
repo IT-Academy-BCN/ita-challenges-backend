@@ -29,8 +29,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
-
-
+import java.util.function.UnaryOperator;
 
 
 @Service
@@ -72,7 +71,6 @@ public class ChallengeServiceImpl implements IChallengeService {
                 );
     }
 
-
     @Override
     public Flux<GenericResultDto<ChallengeDto>> getChallengesByFilter(
             Optional<String> idLanguage,
@@ -84,38 +82,12 @@ public class ChallengeServiceImpl implements IChallengeService {
         Optional<UUID> uuidLanguage = idLanguage
                 .filter(lang -> !lang.isBlank())
                 .map(UUID::fromString);
+        Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(uuidLanguage, level, tags);
 
-        boolean filterByLevel = level.isPresent() && !level.get().isBlank();
+        UnaryOperator<Flux<ChallengeDto>> paginator = flux -> flux.skip(offset)
+                .take(limit == -1 ? Long.MAX_VALUE : limit);
 
-        return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                .filter(challenge ->
-                        uuidLanguage.isEmpty() ||
-                                (challenge.getLanguages() != null &&
-                                        challenge.getLanguages().stream()
-                                                .anyMatch(lang ->
-                                                        lang.getIdLanguage() != null &&
-                                                                lang.getIdLanguage().equals(uuidLanguage.get()))
-                                )
-                )
-                .filter(challenge ->
-                        !filterByLevel || level.get().equalsIgnoreCase(challenge.getLevel())
-                )
-                .filter(challenge ->
-                        tags.isEmpty() || (
-                                challenge.getTags() != null &&
-                                        challenge.getTags().stream().anyMatch(tags.get()::contains)
-                        )
-                )
-                .skip(offset)  // Aplica el offset
-                .take(limit == -1 ? Long.MAX_VALUE : limit)  // Aplica el limit
-                .map(challenge -> {
-                    // Convierte el Challenge a ChallengeDto
-                    ChallengeDto challengeDto = challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class);
-
-                    GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>();
-                    resultDto.setInfo(offset, limit, 1, new ChallengeDto[]{challengeDto});
-                    return resultDto;
-                });
+        return getAndProcessChallenges(filterPredicate, paginator, offset, limit).flux();
     }
 
     @Override
@@ -131,26 +103,19 @@ public class ChallengeServiceImpl implements IChallengeService {
                             Optional<String> level = Optional.ofNullable(currentChallenge.getLevel());
                             Optional<List<UUID>> tags = Optional.ofNullable(currentChallenge.getTags());
 
-                            Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(languageId, level, tags);
+                            Predicate<ChallengeDocument> filterPredicate = buildFilterPredicate(languageId, level, tags)
+                                    .and(challenge -> !challenge.getUuid().equals(validId));
 
-                            return challengeRepository.findAllByUuidNotNullExcludingTestingValues()
-                                    .filter(challenge -> !challenge.getUuid().equals(validId))
-                                    .filter(filterPredicate)
-                                    .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class))
+                            UnaryOperator<Flux<ChallengeDto>> shufflerAndLimiter = flux -> flux
                                     .collectList()
-                                    .map(challengeDtos -> {
-                                        Collections.shuffle(challengeDtos);
-                                        List<ChallengeDto> selected = challengeDtos.stream()
-                                                .limit(3)
-                                                .toList();
-
-                                        GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
-                                        result.setInfo(0, 3, selected.size(), selected.toArray(new ChallengeDto[0]));
-                                        return result;
-                                    });
-                        }))
-                .onErrorResume(BadUUIDException.class, e -> Mono.error(e))
-                .switchIfEmpty(Mono.error(new BadRequestException("Challenge ID cannot be empty or invalid")));
+                                    .flatMapMany(list -> {
+                                        Collections.shuffle(list);
+                                        return Flux.fromIterable(list);
+                                    })
+                                    .take(3);
+                            return getAndProcessChallenges(filterPredicate, shufflerAndLimiter, 0, 3);
+                        })
+                );
     }
 
     private Predicate<ChallengeDocument> buildFilterPredicate(Optional<UUID> languageId,
@@ -174,6 +139,25 @@ public class ChallengeServiceImpl implements IChallengeService {
 
             return matchesLanguage && matchesLevel && matchesTags;
         };
+    }
+
+    private Mono<GenericResultDto<ChallengeDto>> getAndProcessChallenges(
+            Predicate<ChallengeDocument> predicate,
+            UnaryOperator<Flux<ChallengeDto>> postProcessing,
+            int offset, int limit) {
+
+        Flux<ChallengeDto> filteredFlux = challengeRepository.findAllByUuidNotNullExcludingTestingValues()
+                .filter(predicate)
+                .map(challenge -> challengeConverter.convertDocumentToDto(challenge, ChallengeDto.class));
+
+        Flux<ChallengeDto> processedFlux = postProcessing.apply(filteredFlux);
+
+        return processedFlux.collectList()
+                .map(challenges -> {
+                    GenericResultDto<ChallengeDto> result = new GenericResultDto<>();
+                    result.setInfo(offset, limit, challenges.size(), challenges.toArray(new ChallengeDto[0]));
+                    return result;
+                });
     }
 
     @Cacheable(value = "challenges", key = "{#offset, #limit}", unless = "#result==null")
@@ -373,7 +357,7 @@ public class ChallengeServiceImpl implements IChallengeService {
         Logger log = LoggerFactory.getLogger(getClass());
         challengeRepository.findByTopic(topic)
                 .count()
-                .doOnSuccess(count -> log.info("All challenges found: {}", count))                .subscribe();
+                .doOnSuccess(count -> log.info("All challenges found: {}", count)).subscribe();
         if (topic == null) {
             return Mono.just(ChallengeListDto.builder()
                     .results(new ArrayList<>())
@@ -468,13 +452,13 @@ public class ChallengeServiceImpl implements IChallengeService {
                                     .onErrorResume(throwable -> Mono.error(new InternalServerErrorException(throwable.getMessage())))
                                     .flatMap(isAddedToUsersBookmarks -> {
                                         if (Boolean.TRUE.equals(isAddedToUsersBookmarks) ||
-                                        Optional.ofNullable(challenge.getTimesBookmark()).orElse(0) == 0) {
+                                                Optional.ofNullable(challenge.getTimesBookmark()).orElse(0) == 0) {
                                             challenge.increaseTimesBookmark();
                                             return challengeRepository.save(challenge);
                                         }
                                         return Mono.just(challenge);
                                     })
-                                    .map(savedChallenge -> new BookmarkDto( true, savedChallenge.getTimesBookmark())));
+                                    .map(savedChallenge -> new BookmarkDto(true, savedChallenge.getTimesBookmark())));
                 });
     }
 
@@ -521,7 +505,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                 );
     }
 
-    private SolutionDocument buildSolutionDocument(LanguageDocument language, ChallengeCreateDto challengeCreateDto){
+    private SolutionDocument buildSolutionDocument(LanguageDocument language, ChallengeCreateDto challengeCreateDto) {
         return SolutionDocument.builder()
                 .uuid(UUID.randomUUID())
                 .idLanguage(language.getIdLanguage())
@@ -529,7 +513,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                 .build();
     }
 
-    private static ChallengeDocument updateChallengeDocument (ChallengeDocument currentChallenge, ChallengeCreateDto dto, LanguageDocument language, UUID solutionId){
+    private static ChallengeDocument updateChallengeDocument(ChallengeDocument currentChallenge, ChallengeCreateDto dto, LanguageDocument language, UUID solutionId) {
         currentChallenge.setTitle(dto.getChallengeTitle());
         currentChallenge.setLevel(String.valueOf(dto.getLevel()));
         currentChallenge.setDetail(new DetailDocument(dto.getDescription()));
