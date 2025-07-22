@@ -1,14 +1,15 @@
 package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.config.SpringMongoDBConfig;
 import com.itachallenge.challenge.document.DetailDocument;
 import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.enums.DifficultyLevel;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
-import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.challenge.service.JwtServiceImpl;
+import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.service.*;
+import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,15 +19,23 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.mongo.MongoReactiveDataAutoConfiguration;
+import org.springframework.boot.autoconfigure.mongo.MongoReactiveAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
+import org.springframework.data.mongodb.MongoDatabaseFactory;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
@@ -63,7 +72,22 @@ class ChallengeControllerTest {
     private PropertiesConfig config;
 
     @MockBean
-    private JwtServiceImpl jwtService;
+    private IJwtService jwtService;
+
+    @MockBean
+    private ChallengeRepository challengeRepository;
+
+    @MockBean
+    private ILanguageService languageService;
+
+    @MockBean
+    private IResourceService resourceService;
+
+    @MockBean
+    private IUserService userService;
+
+    @MockBean
+    private MappingMongoConverter mappingMongoConverter;
 
     private List<UUID> tags;
     private String challengeId;
