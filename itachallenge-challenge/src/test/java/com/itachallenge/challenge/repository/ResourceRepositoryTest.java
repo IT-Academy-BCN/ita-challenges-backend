@@ -1,17 +1,26 @@
 package com.itachallenge.challenge.repository;
 
+import com.itachallenge.challenge.controller.ChallengeController;
+import com.itachallenge.challenge.controller.ChallengeSolvedController;
+import com.itachallenge.challenge.controller.FavoriteController;
 import com.itachallenge.challenge.document.ResourceDocument;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
+import com.itachallenge.challenge.service.IChallengeService;
+import com.itachallenge.challenge.service.IUserService;
+import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -43,6 +52,23 @@ class ResourceRepositoryTest {
 
     @Autowired
     private ResourceRepository resourceRepository;
+
+    @MockBean
+    private ChallengeController challengeController;
+    @MockBean
+    private DiscoveryClient discoveryClient;
+    @MockBean
+    private IUserService userService;
+    @MockBean
+    private WebClient.Builder webClientBuilder;
+    @MockBean
+    private ChallengeSolvedController challengeSolvedController;
+    @MockBean
+    private IChallengeService challengeService;
+    @MockBean
+    private IJwtService jwtService;
+    @MockBean
+    private FavoriteController favoriteController;
 
     UUID uuid1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
