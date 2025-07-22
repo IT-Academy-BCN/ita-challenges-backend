@@ -1,5 +1,7 @@
 package com.itachallenge.challenge.config.dbchangelog;
 
+import com.itachallenge.challenge.controller.ChallengeController;
+import com.itachallenge.jwtcore.service.IJwtService;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import org.junit.jupiter.api.AfterEach;
@@ -7,9 +9,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -20,6 +24,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
 @SpringBootTest
+@TestPropertySource(properties = {
+        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
+        "token.expiration.minutes=600"
+})
 class MongockTestContainer {
 
     @Container
@@ -37,6 +45,12 @@ class MongockTestContainer {
 
     @Autowired
     private DatabaseInitializer databaseInitializer;
+
+    @MockBean
+    private ChallengeController challengeController;
+
+    @MockBean
+    private IJwtService jwtService;
 
     @BeforeEach
     void setUp() {
