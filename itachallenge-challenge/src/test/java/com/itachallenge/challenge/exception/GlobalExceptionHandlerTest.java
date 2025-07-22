@@ -1,7 +1,11 @@
 package com.itachallenge.challenge.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.MessageDto;
+import com.itachallenge.challenge.repository.*;
+import com.itachallenge.challenge.service.*;
+import com.itachallenge.jwtcore.service.IJwtService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
@@ -13,12 +17,15 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
@@ -47,6 +54,38 @@ class GlobalExceptionHandlerTest {
     private MessageDto errorMessage;
     @MockBean
     private MethodArgumentNotValidException methodArgumentNotValidException;
+    @MockBean
+    private DiscoveryClient discoveryClient;
+    @MockBean
+    private IChallengeService challengeService;
+    @MockBean
+    private IUserService userService;
+    @MockBean
+    private IFavoriteService favoriteService;
+    @MockBean
+    private ITagService tagService;
+    @MockBean
+    private IResourceService resourceService;
+    @MockBean
+    private ILanguageService languageService;
+    @MockBean
+    private WebClient.Builder webClientBuilder;
+    @MockBean
+    private ChallengeRepository challengeRepository;
+    @MockBean
+    private TagRepository tagRepository;
+    @MockBean
+    private SolutionRepository solutionRepository;
+    @MockBean
+    private ResourceRepository resourceRepository;
+    @MockBean
+    private LanguageRepository languageRepository;
+    @MockBean
+    private PropertiesConfig config;
+    @MockBean
+    private IJwtService jwtService;
+    @MockBean
+    private MappingMongoConverter mappingMongoConverter;
 
     @BeforeEach
     void setUp() {
