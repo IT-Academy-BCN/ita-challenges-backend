@@ -5,12 +5,10 @@ import com.itachallenge.challenge.controller.ChallengeSolvedController;
 import com.itachallenge.challenge.controller.FavoriteController;
 import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.service.ChallengeServiceImpl;
 import com.itachallenge.challenge.service.IChallengeService;
 import com.itachallenge.challenge.service.IUserService;
 import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.*;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -76,7 +74,7 @@ class ChallengeRepositoryTest {
     UUID uuid_3 = UUID.fromString("2f948de0-6f0c-4089-90b9-7f70a0812319");
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         UUID uuidLang1 = UUID.fromString("09fabe32-7362-4bfb-ac05-b7bf854c6e0f");
         UUID uuidLang2 = UUID.fromString("409c9fe8-74de-4db3-81a1-a55280cf92ef");
