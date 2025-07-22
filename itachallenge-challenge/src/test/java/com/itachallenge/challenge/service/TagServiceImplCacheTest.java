@@ -1,10 +1,12 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.config.CacheConfig;
+import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
 import com.itachallenge.challenge.repository.TagRepository;
+import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
 import reactor.core.publisher.Flux;
 
 import java.util.UUID;
@@ -24,6 +27,10 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Import(CacheConfig.class)
+@TestPropertySource(properties = {
+        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
+        "token.expiration.minutes=600"
+})
 class TagServiceImplCacheTest {
 
     @MockBean
@@ -34,6 +41,12 @@ class TagServiceImplCacheTest {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @MockBean
+    private ChallengeController challengeController;
+
+    @MockBean
+    private IJwtService jwtService;
 
     @BeforeEach
     void setup() {
