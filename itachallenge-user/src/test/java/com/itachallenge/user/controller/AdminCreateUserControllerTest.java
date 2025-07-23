@@ -35,9 +35,8 @@ class AdminCreateUserControllerTest {
         request.setUsername("newUser");
 
         AdminCreateUserResponseDto serviceResponse = AdminCreateUserResponseDto.builder()
-                .uuid(UUID.randomUUID().toString())
+                .userId(UUID.randomUUID().toString())
                 .username("newUser")
-                .role("USER")
                 .build();
 
         when(adminCreateUserService.createUser(any(AdminCreateUserRequestDto.class))).thenReturn(Mono.just(serviceResponse));
@@ -51,7 +50,7 @@ class AdminCreateUserControllerTest {
                 .expectBody(AdminCreateUserResponseDto.class)
                 .value(response -> {
                     assertThat(response.getUsername()).isEqualTo("newUser");
-                    assertThat(response.getUuid()).isNotNull();
+                    assertThat(response.getUserId()).isNotNull();
                 });
     }
 

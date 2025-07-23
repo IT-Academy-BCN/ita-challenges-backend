@@ -51,8 +51,7 @@ class AdminCreateUserServiceTest {
                 .expectNextMatches(response -> {
                     // Assertions on the response DTO.
                     return response.getUsername().equals("newUser") &&
-                            response.getRole().equals("USER") &&
-                            response.getUuid() != null;
+                            response.getUserId() != null;
                 })
                 .verifyComplete();
 
