@@ -48,11 +48,8 @@ class AdminCreateUserServiceTest {
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
 
         StepVerifier.create(result)
-                .expectNextMatches(response -> {
-                    // Assertions on the response DTO.
-                    return response.getUsername().equals("newUser") &&
-                            response.getUserId() != null;
-                })
+                .expectNextMatches(response -> response.getUsername().equals("newUser") &&
+                        response.getUserId() != null)
                 .verifyComplete();
 
         verify(userRepository).save(any(UserDocument.class));
