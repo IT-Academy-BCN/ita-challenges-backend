@@ -13,12 +13,12 @@ import static org.mockito.Mockito.*;
 class JwtRoleSwitchServiceTest {
 
     private JwtRoleSwitchService jwtRoleSwitchService;
-    private IJwtService jwtService;
+    private AuthJwtFacade authJwtFacade;
 
     @BeforeEach
     void setUp() {
-        jwtService = mock(IJwtService.class);
-        jwtRoleSwitchService = new JwtRoleSwitchService(jwtService);
+        authJwtFacade = mock(AuthJwtFacade.class);
+        jwtRoleSwitchService = new JwtRoleSwitchService(authJwtFacade);
     }
 
     @Test
@@ -31,17 +31,17 @@ class JwtRoleSwitchServiceTest {
         String newToken = "new.token";
 
         Claims claims = mock(Claims.class);
-        when(jwtService.extractAllClaims(oldToken)).thenReturn(claims);
+        when(authJwtFacade.extractAllClaims(oldToken)).thenReturn(claims);
         when(claims.getSubject()).thenReturn(username);
         when(claims.get("uuid", String.class)).thenReturn(uuid);
         when(claims.get("role", String.class)).thenReturn(currentRole);
-        when(jwtService.generateToken(username, requestedRole.toUpperCase(), uuid)).thenReturn(newToken);
+        when(authJwtFacade.generateToken(username, requestedRole.toUpperCase(), uuid)).thenReturn(newToken);
 
         String result = jwtRoleSwitchService.switchRole(oldToken, requestedRole);
 
         assertThat(result).isEqualTo(newToken);
-        verify(jwtService).extractAllClaims(oldToken);
-        verify(jwtService).generateToken(username, requestedRole.toUpperCase(), uuid);
+        verify(authJwtFacade).extractAllClaims(oldToken);
+        verify(authJwtFacade).generateToken(username, requestedRole.toUpperCase(), uuid);
     }
 
     @Test
@@ -53,7 +53,7 @@ class JwtRoleSwitchServiceTest {
         String requestedRole = "USER";
 
         Claims claims = mock(Claims.class);
-        when(jwtService.extractAllClaims(oldToken)).thenReturn(claims);
+        when(authJwtFacade.extractAllClaims(oldToken)).thenReturn(claims);
         when(claims.getSubject()).thenReturn(username);
         when(claims.get("uuid", String.class)).thenReturn(uuid);
         when(claims.get("role", String.class)).thenReturn(currentRole);
@@ -71,7 +71,7 @@ class JwtRoleSwitchServiceTest {
         String currentRole = "USER";
 
         Claims claims = mock(Claims.class);
-        when(jwtService.extractAllClaims(token)).thenReturn(claims);
+        when(authJwtFacade.extractAllClaims(token)).thenReturn(claims);
         when(claims.getSubject()).thenReturn(username);
         when(claims.get("uuid", String.class)).thenReturn(uuid);
         when(claims.get("role", String.class)).thenReturn(currentRole);
@@ -86,7 +86,7 @@ class JwtRoleSwitchServiceTest {
     void switchRole_InvalidToken_ShouldThrowJwtException() {
         String invalidToken = "not.a.valid.token";
 
-        when(jwtService.extractAllClaims(invalidToken))
+        when(authJwtFacade.extractAllClaims(invalidToken))
                 .thenThrow(new JwtException("Invalid or tampered token"));
 
         assertThatThrownBy(() -> jwtRoleSwitchService.switchRole(invalidToken, "ADMIN"))

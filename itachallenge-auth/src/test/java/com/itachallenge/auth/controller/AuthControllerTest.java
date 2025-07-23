@@ -1,11 +1,12 @@
 package com.itachallenge.auth.controller;
 
+import com.itachallenge.auth.config.TestAuthConfig;
 import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.service.JwtRoleSwitchService;
 import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
-import com.itachallenge.jwtcore.service.IJwtService;
+import com.itachallenge.auth.service.AuthJwtFacade;
 import com.itachallenge.auth.service.IUserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,12 +16,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -31,8 +32,9 @@ import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
 @WebFluxTest(AuthController.class)
+@TestPropertySource(properties = "token.expiration.minutes=60")
+@Import(TestAuthConfig.class)
 @ActiveProfiles("test")
 class AuthControllerTest {
     @Autowired
@@ -50,11 +52,11 @@ class AuthControllerTest {
     @MockBean
     private IUserService userService;
 
-    @MockBean
-    private IJwtService jwtService;
-
     @InjectMocks
     private AuthController authController;
+
+    @MockBean
+    private AuthJwtFacade authJwtFacade;
 
     @Test
     void authenticateWithGithub_ValidCode_ReturnsJwt() {
@@ -72,7 +74,7 @@ class AuthControllerTest {
         when(authService.exchangeCodeForToken(validCode)).thenReturn(Mono.just(accessToken));
         when(authService.validateTokenWithGithub(accessToken)).thenReturn(Mono.just(validationResult));
         when(userService.fetchUserData(githubUsername)).thenReturn(Mono.just(user));
-        when(jwtService.generateToken(user.getUsername(), user.getRole(), user.getUuid())).thenReturn(jwtToken);
+        when(authJwtFacade.generateToken(user.getUsername(), user.getRole(), user.getUuid())).thenReturn(jwtToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/github/authenticate")
@@ -218,7 +220,7 @@ class AuthControllerTest {
     @Test
     void logout_ValidToken_ShouldReturn200() {
         String token = "valid.jwt.token";
-        Mockito.doNothing().when(jwtService).validateToken(token);
+        Mockito.doNothing().when(authJwtFacade).validateToken(token);
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
                 .header("Authorization", "Bearer " + token)
@@ -232,7 +234,7 @@ class AuthControllerTest {
     void logout_ExpiredToken_ShouldReturn200() {
         String expiredToken = "expired.jwt.token";
         Mockito.doThrow(new ExpiredJwtException(null, null, "Token expired but logout successful"))
-                .when(jwtService).validateToken(expiredToken);
+                .when(authJwtFacade).validateToken(expiredToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -248,7 +250,7 @@ class AuthControllerTest {
     @Test
     void logout_TokenJustWithinTry_ShouldReturn200() {
         String token = "any.jwt.token";
-        Mockito.doNothing().when(jwtService).validateToken(token);
+        Mockito.doNothing().when(authJwtFacade).validateToken(token);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -263,7 +265,7 @@ class AuthControllerTest {
     void logout_InvalidToken_ShouldReturn401() {
         String invalidToken = "invalid.jwt.token";
         Mockito.doThrow(new JwtException("Invalid or tampered token: JWT parsing failed"))
-                .when(jwtService).validateToken(invalidToken);
+                .when(authJwtFacade).validateToken(invalidToken);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/auth/logout")
@@ -320,7 +322,7 @@ class AuthControllerTest {
         String newRole = "ADMIN";
         String newToken = "new.jwt.token";
 
-        when(jwtService.extractBearerToken("Bearer " + originalToken)).thenReturn(originalToken);
+        when(authJwtFacade.extractBearerToken("Bearer " + originalToken)).thenReturn(originalToken);
         when(jwtRoleSwitchService.switchRole(originalToken, newRole)).thenReturn(newToken);
 
         webTestClient.post()
@@ -338,7 +340,7 @@ class AuthControllerTest {
         String expiredToken = "expired.jwt.token";
         String newRole = "ADMIN";
 
-        when(jwtService.extractBearerToken("Bearer " + expiredToken)).thenReturn(expiredToken);
+        when(authJwtFacade.extractBearerToken("Bearer " + expiredToken)).thenReturn(expiredToken);
         when(jwtRoleSwitchService.switchRole(expiredToken, newRole))
                 .thenThrow(new ExpiredJwtException(null, null, "Token is expired."));
 
@@ -357,7 +359,7 @@ class AuthControllerTest {
         String invalidToken = "invalid.jwt.token";
         String newRole = "ADMIN";
 
-        when(jwtService.extractBearerToken("Bearer " + invalidToken)).thenReturn(invalidToken);
+        when(authJwtFacade.extractBearerToken("Bearer " + invalidToken)).thenReturn(invalidToken);
         when(jwtRoleSwitchService.switchRole(invalidToken, newRole))
                 .thenThrow(new JwtException("Invalid or tampered token."));
 
@@ -375,7 +377,7 @@ class AuthControllerTest {
     void switchRole_WithSameRole_Throws400() {
         String token = "valid.jwt.token";
 
-        when(jwtService.extractBearerToken("Bearer " + token)).thenReturn(token);
+        when(authJwtFacade.extractBearerToken("Bearer " + token)).thenReturn(token);
         when(jwtRoleSwitchService.switchRole(token, "USER"))
                 .thenThrow(new InvalidRoleChangeRequestException("New role is the same as current role."));
 
@@ -391,7 +393,7 @@ class AuthControllerTest {
 
     @Test
     void switchRole_MissingAuthorizationHeader_Returns401() {
-        when(jwtService.extractBearerToken(null))
+        when(authJwtFacade.extractBearerToken(null))
                 .thenThrow(new JwtException("Authorization header is missing or malformed"));
 
         webTestClient.post()
