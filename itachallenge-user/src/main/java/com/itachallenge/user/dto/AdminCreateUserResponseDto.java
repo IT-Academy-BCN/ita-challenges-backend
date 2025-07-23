@@ -10,12 +10,10 @@ import lombok.*;
 @Setter
 public class AdminCreateUserResponseDto {
 
-    @JsonProperty("uuid")
-    private String uuid;
+    @JsonProperty(value ="uuid_user")
+    private String userId;
 
     @JsonProperty("username")
     private String username;
 
-    @JsonProperty("role")
-    private String role;
 }

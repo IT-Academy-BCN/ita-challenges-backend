@@ -2,7 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.service.AdminCreateUserService;
+import com.itachallenge.user.service.IAdminCreateUserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +13,14 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/itachallenge/api/v1/admin")
 public class AdminCreateUserController {
 
-    private final AdminCreateUserService adminCreateUserService;
-    public AdminCreateUserController(AdminCreateUserService adminCreateUserService) {
+    private final IAdminCreateUserService adminCreateUserService;
+
+    public AdminCreateUserController(IAdminCreateUserService adminCreateUserService) {
         this.adminCreateUserService = adminCreateUserService;
     }
 
     @PostMapping("/users/create")
+    //it has no validation restriction at the moment, it will be added soon.
     public Mono<ResponseEntity<AdminCreateUserResponseDto>> createUser(
             @Valid @RequestBody AdminCreateUserRequestDto request) {
         return adminCreateUserService.createUser(request)
