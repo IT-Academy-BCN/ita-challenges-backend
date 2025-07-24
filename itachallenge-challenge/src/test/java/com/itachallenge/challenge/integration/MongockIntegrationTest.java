@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.integration;
 
+import com.itachallenge.challenge.config.TestChallengeConfig;
 import com.itachallenge.challenge.config.dbchangelog.TestDatabaseInitializer;
 import com.itachallenge.jwtcore.service.IJwtService;
 import com.mongodb.reactivestreams.client.MongoClient;
@@ -13,6 +14,7 @@ import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -30,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
+@Import(TestChallengeConfig.class)
 @TestPropertySource(properties = { // <-- New Annotation
         "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
         "token.expiration.minutes=600"

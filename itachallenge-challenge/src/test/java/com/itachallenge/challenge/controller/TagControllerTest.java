@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.annotation.Import;
+import com.itachallenge.challenge.config.TestChallengeConfig;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,6 +29,7 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = TagController.class)
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
+@Import(TestChallengeConfig.class)
 public class TagControllerTest {
 
     @Autowired

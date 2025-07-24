@@ -3,6 +3,7 @@ package com.itachallenge.challenge.proxy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.challenge.config.TestChallengeConfig;
 import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.helper.ResourceHelper;
 import com.itachallenge.jwtcore.service.IJwtService;
@@ -22,6 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
@@ -40,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
+@Import(TestChallengeConfig.class)
 @TestPropertySource(properties = { // <-- New Annotation
         "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
         "token.expiration.minutes=600"

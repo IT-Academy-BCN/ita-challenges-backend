@@ -1,6 +1,7 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.config.CacheConfig;
+import com.itachallenge.challenge.config.TestChallengeConfig;
 import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
@@ -26,7 +27,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Import(CacheConfig.class)
+@Import({CacheConfig.class, TestChallengeConfig.class})
 @TestPropertySource(properties = {
         "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
         "token.expiration.minutes=600"
