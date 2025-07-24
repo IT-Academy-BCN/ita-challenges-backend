@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-jwtcore-1.0.1-RELEASE] - 2025-07-22
 
 ### Added
-- Added jwt-core module to decouple out of the microservices the token logic of validation, UUID extraction from the Authorization header and Claims extraction  (Taiga [#592], PR [#950])
+- Added jwt-core module to decouple out of the microservices the token logic of validation, UUID extraction from the Authorization header and Claims extraction  (Taiga [#593], PR [#952])
 
 ### [itachallenge-challenge-2.4.1-RELEASE] - 2025-07-21
 
