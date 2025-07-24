@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Refactored
 - Moved all JWT logic to new jwt-core module. (NOTE: Role Switch Service remains in auth)  (Taiga [#593], PR [#952])
 
-### [itachallenge-jwtcore-1.0.0-RELEASE] - 2025-07-22
+### [itachallenge-jwtcore-1.0.1-RELEASE] - 2025-07-22
 
 ### Added
 - Added jwt-core module to decouple out of the microservices the token logic of validation, UUID extraction from the Authorization header and Claims extraction  (Taiga [#592], PR [#950])
