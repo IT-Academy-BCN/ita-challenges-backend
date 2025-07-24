@@ -4,10 +4,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+### [itachallenge-auth-2.0.5-RELEASE] - 2025-07-22
+
+### Refactored
+- Moved all JWT logic to new jwt-core module. (NOTE: Role Switch Service remains in auth)  (Taiga [#593], PR [#952])
+
+### [itachallenge-jwtcore-1.0.1-RELEASE] - 2025-07-22
+
+### Added
+- Added jwt-core module to decouple out of the microservices the token logic of validation, UUID extraction from the Authorization header and Claims extraction  (Taiga [#593], PR [#952])
+
+
 ### [itachallenge-user-1.4.0-RELEASE] - 2025-07-22
 
 ### Added
 - Added user/create endpoint to add an alumnee without role validation. (Taiga [#618], PR [#953])
+
 
 
 ### [itachallenge-challenge-2.4.1-RELEASE] - 2025-07-21

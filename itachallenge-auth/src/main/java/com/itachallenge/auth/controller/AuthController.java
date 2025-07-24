@@ -4,7 +4,8 @@ import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
-import com.itachallenge.auth.service.IJwtService;
+import com.itachallenge.auth.service.JwtRoleSwitchService;
+import com.itachallenge.auth.service.IAuthJwtFacade;
 import com.itachallenge.auth.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,22 +41,25 @@ public class AuthController {
 
     private final IUserService userService;
 
-    private final IJwtService jwtService;
+    private IAuthJwtFacade authJwtFacade;
 
     private final String version;
 
     private final String appName;
 
+    private final JwtRoleSwitchService jwtRoleSwitchService;
+
     public AuthController(IAuthService authService,
                           IUserService userService,
-                          IJwtService jwtService,
+                          IAuthJwtFacade authJwtFacade,
                           @Value("${spring.application.version}") String version,
-                          @Value("${spring.application.name}") String appName) {
+                          @Value("${spring.application.name}") String appName, JwtRoleSwitchService jwtRoleSwitchService) {
         this.authService = authService;
         this.userService = userService;
-        this.jwtService = jwtService;
+        this.authJwtFacade = authJwtFacade;
         this.version = version;
         this.appName = appName;
+        this.jwtRoleSwitchService = jwtRoleSwitchService;
     }
 
     @GetMapping(value = "/test")
@@ -94,7 +98,7 @@ public class AuthController {
     private Mono<ResponseEntity<Map<String, Object>>> getUserDetailsFromGithubUsername(Map<String, Object> response, String githubUsername) {
 
         return userService.fetchUserData(githubUsername)
-                .map(user -> jwtService.generateToken(user.getUsername(), user.getRole(), user.getUuid()))
+                .map(user -> authJwtFacade.generateToken(user.getUsername(), user.getRole(), user.getUuid()))
                 .map(token -> {
                     response.put("token", token);
                     return ResponseEntity.ok()
@@ -158,7 +162,7 @@ public class AuthController {
         }
 
         String token = authHeader.replace("Bearer ", "").trim();
-        jwtService.validateToken(token);
+        authJwtFacade.validateToken(token);
         return Mono.just(ResponseEntity.ok(Map.of(MESSAGE_KEY, "Logout successful")));
     }
 
@@ -177,8 +181,8 @@ public class AuthController {
             @RequestHeader(value = "Authorization", required = false) String authHeader,
             @RequestBody SwitchRoleRequest request) {
 
-        String token = jwtService.extractBearerToken(authHeader);
-        String newToken = jwtService.switchRole(token, request.getNewRole());
+        String token = authJwtFacade.extractBearerToken(authHeader);
+        String newToken = jwtRoleSwitchService.switchRole(token, request.getNewRole());
         log.info("Switch-role successful for token");
         return Mono.just(ResponseEntity.ok(Map.of("token", newToken)));
     }
