@@ -5,7 +5,7 @@ import com.itachallenge.auth.exception.CustomBadRequestException;
 import com.itachallenge.auth.exception.CustomInternalServerErrorException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.JwtRoleSwitchService;
-import com.itachallenge.auth.service.AuthJwtFacade;
+import com.itachallenge.auth.service.IAuthJwtFacade;
 import com.itachallenge.auth.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,7 +41,7 @@ public class AuthController {
 
     private final IUserService userService;
 
-    private final AuthJwtFacade authJwtFacade;
+    private IAuthJwtFacade authJwtFacade;
 
     private final String version;
 
@@ -51,7 +51,7 @@ public class AuthController {
 
     public AuthController(IAuthService authService,
                           IUserService userService,
-                          AuthJwtFacade authJwtFacade,
+                          IAuthJwtFacade authJwtFacade,
                           @Value("${spring.application.version}") String version,
                           @Value("${spring.application.name}") String appName, JwtRoleSwitchService jwtRoleSwitchService) {
         this.authService = authService;

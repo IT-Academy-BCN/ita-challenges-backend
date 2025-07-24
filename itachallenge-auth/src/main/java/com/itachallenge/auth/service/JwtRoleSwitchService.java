@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtRoleSwitchService {
 
-    private AuthJwtFacade authJwtFacade;
+    private final IAuthJwtFacade authJwtFacade;
 
-    public JwtRoleSwitchService(AuthJwtFacade authJwtFacade) {
+    public JwtRoleSwitchService(IAuthJwtFacade authJwtFacade) {
         this.authJwtFacade = authJwtFacade;
     }
 
