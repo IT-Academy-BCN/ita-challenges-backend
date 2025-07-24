@@ -13,11 +13,11 @@ import static org.mockito.Mockito.*;
 class JwtRoleSwitchServiceTest {
 
     private JwtRoleSwitchService jwtRoleSwitchService;
-    private AuthJwtFacade authJwtFacade;
+    private IAuthJwtFacade authJwtFacade;
 
     @BeforeEach
     void setUp() {
-        authJwtFacade = mock(AuthJwtFacade.class);
+        authJwtFacade = mock(IAuthJwtFacade.class);
         jwtRoleSwitchService = new JwtRoleSwitchService(authJwtFacade);
     }
 

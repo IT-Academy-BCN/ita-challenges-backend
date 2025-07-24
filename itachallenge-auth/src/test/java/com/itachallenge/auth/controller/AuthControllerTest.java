@@ -6,13 +6,11 @@ import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.service.JwtRoleSwitchService;
 import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
-import com.itachallenge.auth.service.AuthJwtFacade;
+import com.itachallenge.auth.service.IAuthJwtFacade;
 import com.itachallenge.auth.service.IUserService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -56,7 +54,7 @@ class AuthControllerTest {
     private AuthController authController;
 
     @MockBean
-    private AuthJwtFacade authJwtFacade;
+    private IAuthJwtFacade authJwtFacade;
 
     @Test
     void authenticateWithGithub_ValidCode_ReturnsJwt() {
