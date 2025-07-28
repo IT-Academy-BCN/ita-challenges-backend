@@ -5,10 +5,6 @@ import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@TestPropertySource(properties = { // <-- New Annotation
-        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
-        "token.expiration.minutes=600"
-})
 class SolvedDtoTest {
 
     @Test

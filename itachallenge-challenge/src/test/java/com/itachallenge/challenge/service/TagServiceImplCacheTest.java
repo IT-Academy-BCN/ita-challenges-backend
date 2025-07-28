@@ -28,10 +28,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Import({CacheConfig.class, TestChallengeConfig.class})
-@TestPropertySource(properties = {
-        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
-        "token.expiration.minutes=600"
-})
+
 class TagServiceImplCacheTest {
 
     @MockBean

@@ -35,10 +35,6 @@ import static org.mockito.Mockito.when;
 @Testcontainers
 @Import(TestChallengeConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@TestPropertySource(properties = { // <-- New Annotation
-        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
-        "token.expiration.minutes=600"
-})
 class ChallengeIntegrationTest {
 
     @Container

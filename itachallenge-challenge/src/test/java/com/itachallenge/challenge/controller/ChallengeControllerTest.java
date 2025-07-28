@@ -9,7 +9,7 @@ import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.*;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
-import com.itachallenge.jwtcore.service.IJwtService;
+import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +28,7 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -43,6 +44,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @WebFluxTest(controllers = ChallengeController.class)
+//@TestPropertySource(locations = "classpath:application.yml")
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @Import(TestChallengeConfig.class)
@@ -67,7 +69,7 @@ class ChallengeControllerTest {
     private PropertiesConfig config;
 
     @MockBean
-    private IJwtService jwtService;
+    private IChallengeJwtFacade challengeJwtFacade;
 
     @MockBean
     private ChallengeRepository challengeRepository;
@@ -453,7 +455,7 @@ class ChallengeControllerTest {
 
         ChallengeDto createdChallenge = new ChallengeDto();
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.addChallenge(any())).thenReturn(Mono.just(createdChallenge));
 
         webTestClient.post()
@@ -465,7 +467,7 @@ class ChallengeControllerTest {
                 .expectStatus().isOk()
                 .expectBody(ChallengeDto.class);
 
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
+        verify(challengeJwtFacade, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
         verify(challengeService, times(1)).addChallenge(any(ChallengeCreateDto.class));
     }
 
@@ -498,7 +500,7 @@ class ChallengeControllerTest {
         ChallengeCreateDto formData = new ChallengeCreateDto("títol", "descripció",
                 DifficultyLevel.EASY, "InvalidLanguage", "solució", Topic.LISTS, tags);
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.addChallenge(any())).thenThrow(new BadRequestException("Invalid language"));
 
         webTestClient.post()
@@ -509,7 +511,7 @@ class ChallengeControllerTest {
                 .exchange()
                 .expectStatus().isBadRequest();
 
-        verify(jwtService, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
+        verify(challengeJwtFacade, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
         verify(challengeService, times(1)).addChallenge(any(ChallengeCreateDto.class));
     }
     @Test
@@ -584,7 +586,7 @@ class ChallengeControllerTest {
         BookmarkDto expectedResponse = new BookmarkDto(true, 20);
 
         when(challengeService.addChallengeToBookmarks(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -606,7 +608,7 @@ class ChallengeControllerTest {
         String errorMessage = "ErrorMessage";
 
         when(challengeService.addChallengeToBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -628,7 +630,7 @@ class ChallengeControllerTest {
         String errorMessage = "ErrorMessage";
 
         when(challengeService.addChallengeToBookmarks(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -648,7 +650,7 @@ class ChallengeControllerTest {
         String authHeader = "badHeader";
         String errorMessage = "ErrorMessage";
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -667,7 +669,7 @@ class ChallengeControllerTest {
         String challengeId = "Existing_challengeId";
         String errorMessage = "ErrorMessage";
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -745,7 +747,7 @@ class ChallengeControllerTest {
         String authHeader = "Bearer valid-token";
         String userId = "user123";
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
         when(challengeService.updateChallenge(anyString(), any(ChallengeCreateDto.class)))
                 .thenReturn(Mono.just(new ChallengeDto()));
 
@@ -762,7 +764,7 @@ class ChallengeControllerTest {
 
    @Test
     void updateChallenge_MissingAuthHeader_Returns400() {
-        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException("Missing auth header"));
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException("Missing auth header"));
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
@@ -842,7 +844,7 @@ class ChallengeControllerTest {
         BookmarkDto expectedResponse = new BookmarkDto(false, 20);
 
         when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.just(expectedResponse));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -864,7 +866,7 @@ class ChallengeControllerTest {
         String errorMessage = "ErrorMessage";
 
         when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new ChallengeNotFoundException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -886,7 +888,7 @@ class ChallengeControllerTest {
         String errorMessage = "ErrorMessage";
 
         when(challengeService.removeChallengeFromBookmarks(challengeId, userId)).thenReturn(Mono.error(new InternalServerErrorException(errorMessage)));
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenReturn(userId);
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -906,7 +908,7 @@ class ChallengeControllerTest {
         String authHeader = "BadHeader";
         String errorMessage = "Error message";
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")
@@ -925,7 +927,7 @@ class ChallengeControllerTest {
         String challengeId = "Existing_challengeId";
         String errorMessage = "ErrorMessage";
 
-        when(jwtService.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
+        when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException(errorMessage));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/challenge/challenges/" + challengeId + "/bookmarks")

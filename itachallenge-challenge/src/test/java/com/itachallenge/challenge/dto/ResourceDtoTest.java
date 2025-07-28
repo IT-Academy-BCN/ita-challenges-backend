@@ -23,10 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
-@TestPropertySource(properties = { // <-- New Annotation
-        "token.signing.key=c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0c2VjcmV0",
-        "token.expiration.minutes=600"
-})
+
 class ResourceDtoTest {
 
     @Test
