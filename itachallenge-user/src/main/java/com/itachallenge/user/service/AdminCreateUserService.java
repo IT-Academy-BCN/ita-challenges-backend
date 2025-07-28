@@ -1,6 +1,7 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
@@ -37,12 +38,14 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                     UserDocument newUser = UserDocument.builder()
                             .uuid(UUID.randomUUID())
                             .username(username)
+                            .role(Role.USER)
                             .build();
 
                     return userRepository.save(newUser)
                             .map(savedUser -> AdminCreateUserResponseDto.builder()
                                     .userId(savedUser.getUuid().toString())
                                     .username(savedUser.getUsername())
+                                    .role(savedUser.getRole().toString())
                                     .build());
                 }))
 
