@@ -1,7 +1,6 @@
 package com.itachallenge.challenge.dto;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.*;
 

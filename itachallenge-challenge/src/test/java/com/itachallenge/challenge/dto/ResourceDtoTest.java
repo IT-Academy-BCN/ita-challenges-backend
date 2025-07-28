@@ -9,7 +9,6 @@ import com.itachallenge.challenge.enums.Topic;
 import jakarta.validation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Collections;
 import java.util.Set;

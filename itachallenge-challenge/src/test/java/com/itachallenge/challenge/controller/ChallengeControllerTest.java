@@ -28,7 +28,6 @@ import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -44,7 +43,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @WebFluxTest(controllers = ChallengeController.class)
-//@TestPropertySource(locations = "classpath:application.yml")
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @Import(TestChallengeConfig.class)
