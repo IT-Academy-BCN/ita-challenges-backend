@@ -16,4 +16,7 @@ public class AdminCreateUserResponseDto {
     @JsonProperty("username")
     private String username;
 
+    @JsonProperty("role")
+    private String role;
+
 }
