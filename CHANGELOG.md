@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [itachallenge-user-1.4.1-RELEASE] - 2025-07-28
 
 ### Fixed
-- Added back "roll' to the AdminCrateUserService and to the AdminCreateUserResponseDto due to create the user with USER roll assigned.
+- Added back "roll' to the AdminCrateUserService and to the AdminCreateUserResponseDto due to create the user with USER roll assigned. (Taiga [#634], PR [#956])
 
 ### [itachallenge-auth-2.0.5-RELEASE] - 2025-07-22
 
