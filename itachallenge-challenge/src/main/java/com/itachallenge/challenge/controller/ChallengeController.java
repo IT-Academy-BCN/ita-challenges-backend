@@ -6,7 +6,7 @@ import com.itachallenge.challenge.dto.*;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IChallengeService;
-import com.itachallenge.jwtcore.service.IJwtService;
+import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -53,7 +53,7 @@ public class ChallengeController {
     private IChallengeService challengeService;
 
     @Autowired
-    private IJwtService jwtService;
+    private IChallengeJwtFacade challengeJwtFacade;
 
     @Value("${spring.application.version}")
     private String version;
@@ -246,7 +246,7 @@ public class ChallengeController {
             @Valid @RequestBody ChallengeCreateDto createFormDto,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> challengeService.addChallenge(createFormDto))
                 .doOnError(error -> log.error("Error adding challenge: {}", error.getMessage()))
@@ -303,7 +303,7 @@ public class ChallengeController {
     public Mono<ResponseEntity<BookmarkDto>> addChallengeToBookmarks(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> challengeService.addChallengeToBookmarks(challengeId, userId))
                 .doOnError(error -> log.error("Error adding challenge to bookmarks: {}", error.getMessage()))
@@ -327,7 +327,7 @@ public class ChallengeController {
            @PathVariable String challengeId,
            @Valid @RequestBody ChallengeCreateDto challengeFormDto,
            @RequestHeader(name = "Authorization", required = false) String authHeader) {
-       return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+       return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                .flatMap(userId -> challengeService.updateChallenge(challengeId, challengeFormDto))
                .map(ResponseEntity::ok)
@@ -350,7 +350,7 @@ public class ChallengeController {
     public Mono<ResponseEntity<BookmarkDto>> removeChallengeFromBookmarks(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> challengeService.removeChallengeFromBookmarks(challengeId, userId))
                 .doOnError(error -> log.error("Error removing challenge with id {} from bookmarks: {}", challengeId, error.getMessage()))
