@@ -1279,6 +1279,39 @@
       ]
     },
     {
+      "name": "Admin/Create/User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"UsuarioDePrueba10\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/admin/users/create",
+          "protocol": "http",
+          "host": [
+            "{{ip}}"
+          ],
+          "port": "{{user_port}}",
+          "path": [
+            "itachallenge",
+            "api",
+            "v1",
+            "admin",
+            "users",
+            "create"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Mock",
       "item": [
         {
