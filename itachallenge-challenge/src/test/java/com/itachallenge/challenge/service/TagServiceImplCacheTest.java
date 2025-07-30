@@ -1,13 +1,10 @@
 package com.itachallenge.challenge.service;
 
 import com.itachallenge.challenge.config.CacheConfig;
-import com.itachallenge.challenge.config.TestChallengeConfig;
-import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.TagDocument;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
 import com.itachallenge.challenge.repository.TagRepository;
-import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@Import({CacheConfig.class, TestChallengeConfig.class})
+@Import(CacheConfig.class)
 
 class TagServiceImplCacheTest {
 
@@ -38,12 +35,6 @@ class TagServiceImplCacheTest {
 
     @Autowired
     private CacheManager cacheManager;
-
-    @MockBean
-    private ChallengeController challengeController;
-
-    @MockBean
-    private IJwtService jwtService;
 
     @BeforeEach
     void setup() {
