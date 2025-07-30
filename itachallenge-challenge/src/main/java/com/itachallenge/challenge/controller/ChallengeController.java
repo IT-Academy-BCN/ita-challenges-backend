@@ -52,7 +52,7 @@ public class ChallengeController {
     @Autowired
     private IChallengeService challengeService;
 
-    private IChallengeJwtFacade challengeJwtFacade;
+    private final IChallengeJwtFacade challengeJwtFacade;
 
     @Value("${spring.application.version}")
     private String version;

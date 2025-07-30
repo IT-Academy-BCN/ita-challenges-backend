@@ -1,16 +1,16 @@
 package com.itachallenge.challenge.integration;
 
-import com.itachallenge.challenge.config.TestChallengeConfig;
-import com.itachallenge.challenge.document.*;
+import com.itachallenge.challenge.document.ChallengeDocument;
+import com.itachallenge.challenge.document.DetailDocument;
+import com.itachallenge.challenge.document.LanguageDocument;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.enums.Topic;
-import com.itachallenge.challenge.repository.*;
+import com.itachallenge.challenge.repository.ChallengeRepository;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -22,7 +22,9 @@ import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
@@ -30,7 +32,6 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
 @Testcontainers
-@Import(TestChallengeConfig.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class ChallengeIntegrationTest {
 

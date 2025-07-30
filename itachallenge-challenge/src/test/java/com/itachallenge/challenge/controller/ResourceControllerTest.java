@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.config.TestChallengeConfig;
 import com.itachallenge.challenge.dto.ResourceDto;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,21 +20,17 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-
-
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 @WebFluxTest(ResourceController.class)
 @ActiveProfiles("test")
-@Import(TestChallengeConfig.class)
 class ResourceControllerTest {
 
     @Autowired
