@@ -3,10 +3,7 @@ package com.itachallenge.challenge.proxy;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.itachallenge.challenge.config.TestChallengeConfig;
-import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.helper.ResourceHelper;
-import com.itachallenge.jwtcore.service.IJwtService;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +19,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -41,8 +36,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Import(TestChallengeConfig.class)
-
 public class HttpProxyTest {
 
     @Autowired
@@ -58,12 +51,6 @@ public class HttpProxyTest {
     private static final String TOPIC_JSON_PATH = "json/topic.json";
 
     private static final String USER_RESOURCE_PATH = "json/user-resource.json";
-
-    @MockBean
-    private ChallengeController challengeController;
-
-    @MockBean
-    private IJwtService jwtService;
 
 
     @BeforeAll
