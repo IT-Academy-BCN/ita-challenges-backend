@@ -10,7 +10,6 @@ import jakarta.validation.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
-
 
 class ResourceDtoTest {
 
