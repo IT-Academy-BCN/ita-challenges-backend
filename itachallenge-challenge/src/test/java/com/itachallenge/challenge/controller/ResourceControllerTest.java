@@ -8,7 +8,6 @@ import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.IResourceService;
-import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
@@ -65,13 +64,7 @@ class ResourceControllerTest {
     private ChallengeController challengeController;
 
     @MockBean
-    private FavoriteController favoriteController;
-
-    @MockBean
     private ResourceRepository resourceRepository;
-
-    @MockBean
-    private IJwtService jwtService;
 
     @MockBean
     private MappingMongoConverter mappingMongoConverter;

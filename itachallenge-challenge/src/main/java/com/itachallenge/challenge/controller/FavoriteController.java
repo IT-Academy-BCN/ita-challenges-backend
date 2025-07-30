@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 public class FavoriteController {
 
     private final IFavoriteService favoriteService;
-    private IChallengeJwtFacade challengeJwtFacade;
+    private final IChallengeJwtFacade challengeJwtFacade;
     private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
 
     public FavoriteController(IFavoriteService favoriteService, IChallengeJwtFacade challengeJwtFacade) {

@@ -1,6 +1,5 @@
 package com.itachallenge.challenge.controller;
 
-import com.itachallenge.challenge.config.TestChallengeConfig;
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
 import com.itachallenge.challenge.repository.ChallengeRepository;
@@ -8,15 +7,12 @@ import com.itachallenge.challenge.repository.ResourceRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
 import com.itachallenge.challenge.repository.TagRepository;
 import com.itachallenge.challenge.service.LanguageServiceImpl;
-import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -28,7 +24,6 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = LanguageController.class)
 @ExtendWith(SpringExtension.class)
 @ExtendWith(MockitoExtension.class)
-@Import(TestChallengeConfig.class)
 public class LanguageControllerTest {
 
     @Autowired
@@ -36,9 +31,6 @@ public class LanguageControllerTest {
 
     @MockBean
     private LanguageServiceImpl languageService;
-
-    @MockBean
-    private DiscoveryClient discoveryClient;
 
     @MockBean
     private ChallengeRepository challengeRepository;
@@ -56,13 +48,7 @@ public class LanguageControllerTest {
     private ChallengeController challengeController;
 
     @MockBean
-    private FavoriteController favoriteController;
-
-    @MockBean
     private ResourceRepository resourceRepository;
-
-    @MockBean
-    private IJwtService jwtService;
 
     @MockBean
     private MappingMongoConverter mappingMongoConverter;

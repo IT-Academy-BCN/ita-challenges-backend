@@ -4,15 +4,12 @@ import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.TagDto;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.ITagService;
-import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.context.annotation.Import;
-import com.itachallenge.challenge.config.TestChallengeConfig;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
@@ -29,7 +26,6 @@ import static org.mockito.Mockito.when;
 @WebFluxTest(controllers = TagController.class)
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-@Import(TestChallengeConfig.class)
 public class TagControllerTest {
 
     @Autowired
@@ -61,9 +57,6 @@ public class TagControllerTest {
 
     @MockBean
     private ResourceRepository resourceRepository;
-
-    @MockBean
-    private IJwtService jwtService;
 
     @MockBean
     private MappingMongoConverter mappingMongoConverter;

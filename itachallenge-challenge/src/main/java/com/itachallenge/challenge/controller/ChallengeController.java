@@ -52,7 +52,6 @@ public class ChallengeController {
     @Autowired
     private IChallengeService challengeService;
 
-    @Autowired
     private IChallengeJwtFacade challengeJwtFacade;
 
     @Value("${spring.application.version}")
@@ -61,7 +60,8 @@ public class ChallengeController {
     @Value("${spring.application.name}")
     private String appName;
 
-    public ChallengeController(PropertiesConfig config) {
+    public ChallengeController(PropertiesConfig config, IChallengeJwtFacade challengeJwtFacade) {
+        this.challengeJwtFacade = challengeJwtFacade;
         this.config = config;
     }
 
