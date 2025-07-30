@@ -1,8 +1,6 @@
 package com.itachallenge.challenge.integration;
 
-import com.itachallenge.challenge.config.TestChallengeConfig;
 import com.itachallenge.challenge.config.dbchangelog.TestDatabaseInitializer;
-import com.itachallenge.jwtcore.service.IJwtService;
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
 import com.mongodb.reactivestreams.client.MongoDatabase;
@@ -13,8 +11,6 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MongoDBContainer;
@@ -31,14 +27,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Testcontainers
-@Import(TestChallengeConfig.class)
-
 class MongockIntegrationTest {
     @Mock
     MongoDatabase mongoDatabase;
-
-    @MockBean
-    private IJwtService jwtService;
 
     @Container
     static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest")

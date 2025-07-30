@@ -5,13 +5,11 @@ import com.itachallenge.challenge.document.*;
 import com.itachallenge.challenge.dto.ChallengeDto;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.repository.*;
-import com.itachallenge.jwtcore.service.IJwtService;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -51,9 +49,6 @@ class ChallengeIntegrationTest {
 
     @Autowired
     private ChallengeRepository challengeRepository;
-
-    @MockBean
-    private IJwtService jwtService;
 
     private final String UUID_VALID = "8ecbfe54-fec8-11ed-be56-0242ac120002";
     private final String UUID_INVALID = "dcacb291-b4aa-4029-8e9b-284c8ca80296";
