@@ -54,3 +54,9 @@ messages:
 user:
   service:
     url: http://notreallymatters
+
+token:
+  signing:
+    key: someRandomStringToProtectThisAppFromAttacks
+  expiration:
+    minutes: 600

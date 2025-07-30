@@ -4,7 +4,7 @@ import com.itachallenge.challenge.dto.FavoriteDto;
 import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.JwtException;
 import com.itachallenge.challenge.service.IFavoriteService;
-import com.itachallenge.challenge.service.IJwtService;
+import com.itachallenge.challenge.service.IChallengeJwtFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,12 +21,12 @@ import reactor.core.publisher.Mono;
 public class FavoriteController {
 
     private final IFavoriteService favoriteService;
-    private final IJwtService jwtService;
+    private final IChallengeJwtFacade challengeJwtFacade;
     private static final Logger log = LoggerFactory.getLogger(FavoriteController.class);
 
-    public FavoriteController(IFavoriteService favoriteService, IJwtService jwtService) {
+    public FavoriteController(IFavoriteService favoriteService, IChallengeJwtFacade challengeJwtFacade) {
         this.favoriteService = favoriteService;
-        this.jwtService = jwtService;
+        this.challengeJwtFacade = challengeJwtFacade;
     }
 
     @PostMapping("/{challengeId}")
@@ -44,7 +44,7 @@ public class FavoriteController {
     public Mono<ResponseEntity<FavoriteDto>> addFavorite(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> favoriteService.addChallengeToFavorites(challengeId, userId))
                 .doOnError(e -> log.error("Failed to add favorite for challengeId {}: {}", challengeId, e.getMessage()))
@@ -66,7 +66,7 @@ public class FavoriteController {
     public Mono<ResponseEntity<FavoriteDto>> removeFavorite(
             @PathVariable String challengeId,
             @RequestHeader(name = "Authorization", required = false) String authHeader) {
-        return Mono.fromCallable(() -> jwtService.getUserUuIdFromAuthenticationHeader(authHeader))
+        return Mono.fromCallable(() -> challengeJwtFacade.getUserUuIdFromAuthenticationHeader(authHeader))
                 .onErrorMap(JwtException.class, e -> new BadRequestException(e.getMessage()))
                 .flatMap(userId -> favoriteService.removeChallengeFromFavorites(challengeId, userId))
                 .map(ResponseEntity::ok);

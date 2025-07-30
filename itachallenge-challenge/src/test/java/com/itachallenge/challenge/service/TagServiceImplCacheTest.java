@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Import(CacheConfig.class)
+
 class TagServiceImplCacheTest {
 
     @MockBean

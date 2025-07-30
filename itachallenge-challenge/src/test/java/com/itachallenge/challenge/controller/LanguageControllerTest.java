@@ -2,6 +2,10 @@ package com.itachallenge.challenge.controller;
 
 import com.itachallenge.challenge.dto.GenericResultDto;
 import com.itachallenge.challenge.dto.LanguageDto;
+import com.itachallenge.challenge.repository.ChallengeRepository;
+import com.itachallenge.challenge.repository.ResourceRepository;
+import com.itachallenge.challenge.repository.SolutionRepository;
+import com.itachallenge.challenge.repository.TagRepository;
 import com.itachallenge.challenge.service.LanguageServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,8 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.when;
@@ -25,6 +31,27 @@ public class LanguageControllerTest {
 
     @MockBean
     private LanguageServiceImpl languageService;
+
+    @MockBean
+    private ChallengeRepository challengeRepository;
+
+    @MockBean
+    private SolutionRepository solutionRepository;
+
+    @MockBean
+    private WebClient.Builder webClientBuilder;
+
+    @MockBean
+    private TagRepository tagRepository;
+
+    @MockBean
+    private ChallengeController challengeController;
+
+    @MockBean
+    private ResourceRepository resourceRepository;
+
+    @MockBean
+    private MappingMongoConverter mappingMongoConverter;
 
     @Test
     void getAllLanguages_LanguagesExist_LanguagesReturned() {

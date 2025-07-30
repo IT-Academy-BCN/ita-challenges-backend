@@ -5,28 +5,28 @@ import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
 import com.itachallenge.challenge.exception.ResourceNotFoundException;
+import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.IResourceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.any;
-
-
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 
 @WebFluxTest(ResourceController.class)
@@ -38,6 +38,36 @@ class ResourceControllerTest {
 
     @MockBean
     private IResourceService resourceService;
+
+    @MockBean
+    private DiscoveryClient discoveryClient;
+
+    @MockBean
+    private ChallengeRepository challengeRepository;
+
+    @MockBean
+    private SolutionRepository solutionRepository;
+
+    @MockBean
+    private WebClient.Builder webClientBuilder;
+
+    @MockBean
+    private TagRepository tagRepository;
+
+    @MockBean
+    private ChallengeController challengeController;
+
+    @MockBean
+    private ResourceRepository resourceRepository;
+
+    @MockBean
+    private MappingMongoConverter mappingMongoConverter;
+
+    @MockBean
+    private ChallengeSolvedController challengeSolvedController;
+
+    @MockBean
+    private LanguageRepository languageRepository;
 
     @Test
     void createNewResource_ValidRequest_ReturnsCreatedResource() {

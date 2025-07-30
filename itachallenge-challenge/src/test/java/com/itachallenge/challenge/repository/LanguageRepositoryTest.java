@@ -1,9 +1,12 @@
 package com.itachallenge.challenge.repository;
 
+import com.itachallenge.challenge.controller.ChallengeController;
 import com.itachallenge.challenge.document.*;
+import com.itachallenge.challenge.service.IUserService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -40,6 +43,10 @@ class LanguageRepositoryTest {
 
     @Autowired
     private LanguageRepository languageRepository;
+    @MockBean
+    private ChallengeController challengeController;
+    @MockBean
+    private IUserService userService;
 
     UUID uuid_1 = UUID.fromString("8ecbfe54-fec8-11ed-be56-0242ac120002");
     UUID uuid_2 = UUID.fromString("26977eee-89f8-11ec-a8a3-0242ac120003");
