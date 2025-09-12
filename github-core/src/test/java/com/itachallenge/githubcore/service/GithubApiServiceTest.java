@@ -1,5 +1,7 @@
 package com.itachallenge.githubcore.service;
 
+import com.itachallenge.githubcore.exception.GithubApiException;
+import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
@@ -51,7 +53,7 @@ class GithubApiServiceTest {
                 .addHeader("Content-Type", "application/json"));
 
         StepVerifier.create(githubApiService.userExists("unknownuser"))
-                .expectErrorMessage("User not found")
+                .expectError(GithubUserNotFoundException.class)
                 .verify();
     }
 
@@ -63,7 +65,7 @@ class GithubApiServiceTest {
                 .addHeader("Content-Type", "application/json"));
 
         StepVerifier.create(githubApiService.userExists("unknownuser"))
-                .expectErrorMessage("GitHub API error")
+                .expectError(GithubApiException.class)
                 .verify();
     }
 
