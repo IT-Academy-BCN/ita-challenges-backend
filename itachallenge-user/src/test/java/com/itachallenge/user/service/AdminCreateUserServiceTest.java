@@ -100,4 +100,49 @@ class AdminCreateUserServiceTest {
 
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("Test: GitHub API failure should propagate error")
+    void createUser_whenGithubApiFails_shouldPropagateError() {
+        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
+        request.setUsername("newUser");
+
+        when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.error(new RuntimeException("GitHub API error")));
+
+        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(ex -> ex instanceof RuntimeException &&
+                        ex.getMessage().contains("GitHub API error"))
+                .verify();
+
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Test: New user should always have default USER role")
+    void createUser_shouldAssignDefaultUserRole() {
+        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
+        request.setUsername("newUser");
+
+        UserDocument savedUser = UserDocument.builder()
+                .uuid(UUID.randomUUID())
+                .username("newUser")
+                .role(Role.USER)
+                .build();
+
+        when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(true));
+        when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
+
+        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
+
+        StepVerifier.create(result)
+                .expectNextMatches(response -> response.getUsername().equals("newUser") &&
+                        response.getUserId() != null)
+                .verifyComplete();
+
+        verify(userRepository).save(argThat(user -> user.getRole() == Role.USER));
+    }
 }
