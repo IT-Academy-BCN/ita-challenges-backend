@@ -1,5 +1,7 @@
 package com.itachallenge.githubcore.service;
 
+import com.itachallenge.githubcore.exception.GithubApiException;
+import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatusCode;
@@ -23,11 +25,11 @@ public class GithubApiService implements IGithubApiService{
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, r -> {
                     log.info("GitHub user not found: {}", username);
-                    return Mono.error(new RuntimeException("User not found"));
+                    return Mono.error(new GithubUserNotFoundException(username));
                 })
                 .onStatus(HttpStatusCode::is5xxServerError, r -> {
                     log.info("GitHub API error: {}", username);
-                    return Mono.error(new RuntimeException("GitHub API error"));
+                    return Mono.error(new GithubApiException("GitHub API error"));
                 }
                 )
                 .toBodilessEntity()
