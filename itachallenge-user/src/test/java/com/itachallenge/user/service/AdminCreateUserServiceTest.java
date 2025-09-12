@@ -1,6 +1,7 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.UserDocument;
+import com.itachallenge.githubcore.service.IGithubApiService;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
@@ -26,6 +27,9 @@ class AdminCreateUserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private IGithubApiService githubApiService;
+
     @InjectMocks
     private AdminCreateUserService adminCreateUserService;
 
@@ -43,6 +47,7 @@ class AdminCreateUserServiceTest {
                 .build();
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(true));
         when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
@@ -53,6 +58,7 @@ class AdminCreateUserServiceTest {
                 .verifyComplete();
 
         verify(userRepository).save(any(UserDocument.class));
+        verify(githubApiService).userExists("newUser");
     }
 
     @Test

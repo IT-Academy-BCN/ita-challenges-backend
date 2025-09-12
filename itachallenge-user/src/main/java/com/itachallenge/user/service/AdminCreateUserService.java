@@ -1,5 +1,6 @@
 package com.itachallenge.user.service;
 
+import com.itachallenge.githubcore.service.IGithubApiService;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
@@ -18,9 +19,11 @@ public class AdminCreateUserService implements IAdminCreateUserService {
     private static final Logger log = LoggerFactory.getLogger(AdminCreateUserService.class);
 
     private final UserRepository userRepository;
+    private final IGithubApiService githubApiService;
 
-    public AdminCreateUserService(UserRepository userRepository) {
+    public AdminCreateUserService(UserRepository userRepository, IGithubApiService githubApiService) {
         this.userRepository = userRepository;
+        this.githubApiService = githubApiService;
     }
 
     @Override
@@ -28,12 +31,14 @@ public class AdminCreateUserService implements IAdminCreateUserService {
         final String username = request.getUsername();
         log.info("Attempting to create user with username: {}", username);
 
-        return userRepository.findByUsername(username)
-                .flatMap(existingUser ->
-
-                        Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username))
-                )
-                .switchIfEmpty(Mono.defer(() -> {
+        return userRepository.findByUsername(request.getUsername())
+                .flatMap(existing -> Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username)))
+                .switchIfEmpty(
+                        githubApiService.userExists(username)
+                                .flatMap(exists -> {
+                                    if (!exists) {
+                                        return Mono.error(new RuntimeException("GitHub user does not exist"));
+                                    }
 
                     UserDocument newUser = UserDocument.builder()
                             .uuid(UUID.randomUUID())
