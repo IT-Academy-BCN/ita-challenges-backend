@@ -5,6 +5,7 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
+import com.itachallenge.user.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
@@ -20,9 +21,11 @@ public class AdminCreateUserService implements IAdminCreateUserService {
     private static final Logger log = LoggerFactory.getLogger(AdminCreateUserService.class);
 
     private final UserRepository userRepository;
+    private final IGithubApiService githubApiService;
 
-    public AdminCreateUserService(UserRepository userRepository) {
+    public AdminCreateUserService(UserRepository userRepository, IGithubApiService githubApiService) {
         this.userRepository = userRepository;
+        this.githubApiService = githubApiService;
     }
 
     @Override
