@@ -16,6 +16,7 @@ public class GithubApiService implements IGithubApiService{
         this.webClient = builder.baseUrl(baseUrl).build();
     }
 
+    @Override
     public Mono<Boolean> userExists(String username) {
         return webClient.get()
                 .uri("/users/{username}", username)
