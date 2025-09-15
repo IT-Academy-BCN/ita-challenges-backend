@@ -35,6 +35,11 @@ is added to better reflect the status in wich challenges can be set (Taiga user 
   - After: POST /users/create now calls the GitHub API and rejects the request when the GitHub username does not exist. 
   - Clients that previously relied on creating users with invalid GitHub usernames will now get errors for some requests that used to succeed.
 
+### [itachallenge-challenge-2.4.3-RELEASE] - 2025-09-15
+
+### Added
+- Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
+
 ### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
 
 ### Added
