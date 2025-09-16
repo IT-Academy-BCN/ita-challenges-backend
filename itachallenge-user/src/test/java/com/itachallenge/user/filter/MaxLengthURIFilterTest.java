@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 class MaxLengthURIFilterTest {
@@ -60,4 +61,13 @@ class MaxLengthURIFilterTest {
         verify(response, never()).setStatus(anyInt());
         verify(filterChain).doFilter(request, response);
     }
+    @Test
+    void doFilter_whenURIisNull_thenProceedWithChain() throws ServletException, IOException {
+        when(request.getRequestURL()).thenReturn(null);
+        when(request.getQueryString()).thenReturn(null);
+        when(prpsConfig.getUrlMaxLength()).thenReturn(50);
+
+        assertDoesNotThrow(() -> filter.doFilter(request, response, filterChain));
+        verify(filterChain).doFilter(request, response);
+}
 }

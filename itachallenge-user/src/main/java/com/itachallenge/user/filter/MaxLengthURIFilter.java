@@ -23,11 +23,13 @@ public class MaxLengthURIFilter implements Filter {
         HttpServletRequest requestHttp = (HttpServletRequest) request;
         HttpServletResponse responseHttp = (HttpServletResponse) response;
 
-        // Calculate the max lengt, URL base (p.ex. "/itachallenge/api/v1/user/statistics")
-        // and query (challenge=UUID_1&challenge=UUID_2&...)
-        totalURLLength = requestHttp.getRequestURL().length() +
-                ((requestHttp.getQueryString()==null) ?
-                        0:requestHttp.getQueryString().length());
+        StringBuffer requestURL = requestHttp.getRequestURL();
+        String queryString = requestHttp.getQueryString();
+
+        int urlLength = (requestURL != null) ? requestURL.length() : 0;
+        int queryStringLength = (queryString != null) ? queryString.length() : 0;
+
+        totalURLLength = urlLength + queryStringLength;
 
         if (prpsConfig.getUrlMaxLength() < totalURLLength) {
             responseHttp.setStatus(HttpServletResponse.SC_REQUEST_URI_TOO_LONG);
