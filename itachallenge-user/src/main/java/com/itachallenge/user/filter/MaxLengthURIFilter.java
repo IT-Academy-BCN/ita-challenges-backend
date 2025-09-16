@@ -23,13 +23,13 @@ public class MaxLengthURIFilter implements Filter {
         HttpServletRequest requestHttp = (HttpServletRequest) request;
         HttpServletResponse responseHttp = (HttpServletResponse) response;
 
-        StringBuffer requestURL = requestHttp.getRequestURL();
+
+        String requestURL = (requestHttp.getRequestURL() != null) ? requestHttp.getRequestURL().toString() : "";
         String queryString = requestHttp.getQueryString();
 
-        int urlLength = (requestURL != null) ? requestURL.length() : 0;
         int queryStringLength = (queryString != null) ? queryString.length() : 0;
 
-        totalURLLength = urlLength + queryStringLength;
+        totalURLLength = requestURL.length() + queryStringLength;
 
         if (prpsConfig.getUrlMaxLength() < totalURLLength) {
             responseHttp.setStatus(HttpServletResponse.SC_REQUEST_URI_TOO_LONG);
