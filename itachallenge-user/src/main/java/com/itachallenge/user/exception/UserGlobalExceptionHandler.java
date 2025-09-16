@@ -88,7 +88,6 @@ public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(GithubUserNotFoundException.class)
     public ResponseEntity<String> handleGithubUserNotFound(Exception ex) {
-        log.warn("GitHub user not found: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ex.getMessage());
     }
