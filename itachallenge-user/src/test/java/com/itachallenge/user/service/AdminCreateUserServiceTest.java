@@ -5,7 +5,7 @@ import com.itachallenge.githubcore.service.IGithubApiService;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.GithubUserNotFoundException;
+import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;

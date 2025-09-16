@@ -1,6 +1,6 @@
 package com.itachallenge.user;
 
-import com.itachallenge.githubcore.config.GithubConfig;
+import com.itachallenge.githubcore.config.GithubServiceConfig;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +9,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import(GithubConfig.class)
+@Import(GithubServiceConfig.class)
 @EnableDiscoveryClient
 @OpenAPIDefinition(info = @Info(title = "Ita Backend User", version = "1.0", description = "Description"))
 public class App {

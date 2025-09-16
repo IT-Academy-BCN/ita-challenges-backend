@@ -5,7 +5,7 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.GithubUserNotFoundException;
+import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                 .switchIfEmpty(
                         githubApiService.userExists(username)
                                 .flatMap(exists -> {
-                                    if (!exists) {
+                                    if (Boolean.FALSE.equals(exists)) {
                                         return Mono.error(new GithubUserNotFoundException(username));
                                     }
 
