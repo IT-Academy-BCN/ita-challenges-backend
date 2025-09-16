@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-public class GithubConfig {
+public class GithubServiceConfig {
 
     @Value("${github.user-info-uri}")
     private String githubApiUrl;
