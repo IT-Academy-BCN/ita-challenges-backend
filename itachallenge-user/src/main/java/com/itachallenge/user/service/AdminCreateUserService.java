@@ -1,10 +1,11 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.githubcore.exception.GithubUnavailableException;
+import com.itachallenge.githubcore.service.IGithubApiService;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
+import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;

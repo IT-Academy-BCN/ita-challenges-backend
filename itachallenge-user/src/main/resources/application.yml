@@ -33,7 +33,7 @@ server:
     max-http-form-post-size: 2097152
 
 github:
-  user-info-uri: https://api.github.com/user
+  user-info-uri: https://api.github.com
 
 management:
   endpoints:

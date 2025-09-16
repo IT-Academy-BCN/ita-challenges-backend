@@ -5,6 +5,7 @@ import com.itachallenge.githubcore.service.IGithubApiService;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
+import com.itachallenge.user.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -34,8 +35,8 @@ class AdminCreateUserServiceTest {
     private AdminCreateUserService adminCreateUserService;
 
     @Test
-    @DisplayName("Test: Create user when username does not exist")
-    void createUser_whenUserDoesNotExist_shouldCreateAndReturnUser() {
+    @DisplayName("Test: Create user when username does not exist in DB but in Github does")
+    void createUser_whenUserDoesNotExistInDB_shouldCreateAndReturnUser() {
 
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsername("newUser");
@@ -58,6 +59,25 @@ class AdminCreateUserServiceTest {
                 .verifyComplete();
 
         verify(userRepository).save(any(UserDocument.class));
+        verify(githubApiService).userExists("newUser");
+    }
+
+    @Test
+    @DisplayName("Test: Create user when username does not exist in DB but it's not a real Github username")
+    void createUser_whenUserDoesNotExistInDBAndIsNotAGithubUser_shouldThrowException() {
+        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
+        request.setUsername("newUser");
+
+        when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(false));
+
+        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
+
+        StepVerifier.create(result)
+                .expectError(GithubUserNotFoundException.class)
+                .verify();
+
+        verify(userRepository, never()).save(any());
         verify(githubApiService).userExists("newUser");
     }
 
