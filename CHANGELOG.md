@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [itachallenge-challenge-2.4.3-RELEASE] - 2025-09-15
+### [itachallenge-challenge-2.5.0-RELEASE] - 2025-09-15
 
 ### Added
 - Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
