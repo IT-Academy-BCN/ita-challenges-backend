@@ -1,40 +1,8 @@
 package com.itachallenge.githubcore.service;
 
-import com.itachallenge.githubcore.exception.GithubApiException;
-import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.web.reactive.function.client.WebClient;
+import com.itachallenge.githubcore.document.enums.GithubUserStatus;
 import reactor.core.publisher.Mono;
 
-
-public class GithubApiService implements IGithubApiService{
-
-    private static final Logger log = LoggerFactory.getLogger(GithubApiService.class);
-    private final WebClient webClient;
-
-    public GithubApiService(WebClient.Builder builder, String baseUrl) {
-        this.webClient = builder.baseUrl(baseUrl).build();
-    }
-
-    @Override
-    public Mono<Boolean> userExists(String username) {
-        return webClient.get()
-                .uri("/users/{username}", username)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, r -> {
-                    log.info("GitHub user not found: {}", username);
-                    return Mono.error(new GithubUserNotFoundException(username));
-                })
-                .onStatus(HttpStatusCode::is5xxServerError, r -> {
-                    log.info("GitHub API error: {}", username);
-                    return Mono.error(new GithubApiException("GitHub API error"));
-                }
-                )
-                .toBodilessEntity()
-                .map(response -> true)
-                .defaultIfEmpty(false);
-    }
-
+public interface GithubApiService {
+    Mono<GithubUserStatus> userExists(String username);
 }

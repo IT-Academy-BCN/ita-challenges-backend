@@ -1,7 +1,7 @@
 package com.itachallenge.githubcore.service;
 
-import com.itachallenge.githubcore.exception.GithubApiException;
-import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
+import com.itachallenge.githubcore.document.enums.GithubUserStatus;
+import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
@@ -10,10 +10,10 @@ import reactor.test.StepVerifier;
 
 import java.io.IOException;
 
-class GithubApiServiceTest {
+class GithubApiServiceImplTest {
 
     private static MockWebServer mockWebServer;
-    private GithubApiService githubApiService;
+    private GithubApiServiceImpl githubApiServiceImpl;
 
     @BeforeAll
     static void startServer() throws IOException {
@@ -30,7 +30,7 @@ class GithubApiServiceTest {
     @BeforeEach
     void setup() {
         String mockBaseUrl = mockWebServer.url("/").toString();
-        githubApiService = new GithubApiService(WebClient.builder(), mockBaseUrl);
+        githubApiServiceImpl = new GithubApiServiceImpl(WebClient.builder(), mockBaseUrl);
     }
 
     @Test
@@ -40,8 +40,8 @@ class GithubApiServiceTest {
                 .setBody("{\"login\":\"testUser\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        StepVerifier.create(githubApiService.userExists("testUser"))
-                .expectNext(true)
+        StepVerifier.create(githubApiServiceImpl.userExists("testUser"))
+                .expectNext(GithubUserStatus.FOUND)
                 .verifyComplete();
     }
 
@@ -52,9 +52,9 @@ class GithubApiServiceTest {
                 .setBody("{\"message\":\"Not Found\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        StepVerifier.create(githubApiService.userExists("unknownuser"))
-                .expectError(GithubUserNotFoundException.class)
-                .verify();
+        StepVerifier.create(githubApiServiceImpl.userExists("testuser19"))
+                .expectNext(GithubUserStatus.NOT_FOUND)
+                .verifyComplete();
     }
 
     @Test
@@ -64,8 +64,8 @@ class GithubApiServiceTest {
                 .setBody("{\"message\":\"Server Error\"}")
                 .addHeader("Content-Type", "application/json"));
 
-        StepVerifier.create(githubApiService.userExists("unknownuser"))
-                .expectError(GithubApiException.class)
+        StepVerifier.create(githubApiServiceImpl.userExists("unknownuser"))
+                .expectError(GithubUnavailableException.class)
                 .verify();
     }
 

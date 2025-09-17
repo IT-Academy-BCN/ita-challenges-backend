@@ -1,7 +1,7 @@
 package com.itachallenge.githubcore.config;
 
+import com.itachallenge.githubcore.service.GithubApiServiceImpl;
 import com.itachallenge.githubcore.service.GithubApiService;
-import com.itachallenge.githubcore.service.IGithubApiService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ public class GithubServiceConfig {
     private String githubApiUrl;
 
     @Bean
-    public IGithubApiService githubApiService(WebClient.Builder webClientBuilder) {
-        return new GithubApiService(webClientBuilder, githubApiUrl);
+    public GithubApiService githubApiService(WebClient.Builder webClientBuilder) {
+        return new GithubApiServiceImpl(webClientBuilder, githubApiUrl);
     }
 }
