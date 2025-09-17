@@ -3,7 +3,6 @@ package com.itachallenge.document.controller;
 import com.itachallenge.document.config.OpenApiConfig;
 import com.itachallenge.document.service.DocumentService;
 import io.swagger.v3.oas.models.OpenAPI;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,7 @@ public class DocumentController {
 
     private final OpenApiConfig openApiConfig;
     private final DocumentService documentService;
-
-    @Autowired
-    private Environment env;
+    private final Environment env;
 
     @Value("${spring.application.version}")
     private String version;
@@ -35,10 +32,10 @@ public class DocumentController {
     @Value("${spring.application.name}")
     private String appName;
 
-    @Autowired
-    public DocumentController(OpenApiConfig openApiConfig, DocumentService documentService) {
+    public DocumentController(OpenApiConfig openApiConfig, DocumentService documentService, Environment env) {
         this.openApiConfig = openApiConfig;
         this.documentService = documentService;
+        this.env = env;
     }
 
     @GetMapping(value = "/api-docs/{apiname}", produces = {"application/json"})
