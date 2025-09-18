@@ -1,11 +1,11 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.githubcore.service.IGithubApiService;
+import com.itachallenge.githubcore.document.enums.GithubUserStatus;
+import com.itachallenge.githubcore.service.GithubApiService;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,9 +20,9 @@ public class AdminCreateUserService implements IAdminCreateUserService {
     private static final Logger log = LoggerFactory.getLogger(AdminCreateUserService.class);
 
     private final UserRepository userRepository;
-    private final IGithubApiService githubApiService;
+    private final GithubApiService githubApiService;
 
-    public AdminCreateUserService(UserRepository userRepository, IGithubApiService githubApiService) {
+    public AdminCreateUserService(UserRepository userRepository, GithubApiService githubApiService) {
         this.userRepository = userRepository;
         this.githubApiService = githubApiService;
     }
@@ -38,9 +38,10 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                 )
                 .switchIfEmpty(Mono.defer(() ->
                     githubApiService.userExists(username)
-                            .flatMap(exists -> {
-                                    if (Boolean.FALSE.equals(exists)) {
-                                        return Mono.error(new GithubUserNotFoundException(username));
+                            .flatMap(status -> {
+                                    if (status == GithubUserStatus.NOT_FOUND) {
+                                        log.warn("GitHub user '{}' does not exist", username);
+                                        return Mono.empty();
                                     }
 
                                     UserDocument newUser = UserDocument.builder()
