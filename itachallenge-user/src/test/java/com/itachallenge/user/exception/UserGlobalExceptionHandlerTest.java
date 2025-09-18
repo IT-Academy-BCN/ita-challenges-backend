@@ -106,5 +106,16 @@ class UserGlobalExceptionHandlerTest {
         assertEquals("The username 'alfonso79' is already registered.", response.getBody());
     }
 
+    @Test
+    void testHandleGithubUserNotFoundException() {
+        String username = "alfonso79";
+        String message = username;
+        GithubUserNotFoundException exception = new GithubUserNotFoundException(username);
+        ResponseEntity<String> response = exceptionHandler.handleGithubUserNotFoundException(exception);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(message, response.getBody());
+    }
+
 }
 

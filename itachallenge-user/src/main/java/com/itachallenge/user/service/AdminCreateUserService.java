@@ -6,6 +6,7 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
+import com.itachallenge.user.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -33,15 +34,16 @@ public class AdminCreateUserService implements IAdminCreateUserService {
         log.info("Attempting to create user with username: {}", username);
 
         return userRepository.findByUsername(username)
-                .flatMap(existing ->
-                    Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username))
-                )
+                .flatMap(existing -> {
+                    log.warn("Attempt to create a user that already exists: {}", username);
+                    return Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username));
+                })
                 .switchIfEmpty(Mono.defer(() ->
-                    githubApiService.userExists(username)
-                            .flatMap(status -> {
+                        githubApiService.userExists(username)
+                                .flatMap(status -> {
                                     if (status == GithubUserStatus.NOT_FOUND) {
                                         log.warn("GitHub user '{}' does not exist", username);
-                                        return Mono.empty();
+                                        return Mono.error(new GithubUserNotFoundException("GitHub user not found: " + username));
                                     }
 
                                     UserDocument newUser = UserDocument.builder()
@@ -55,18 +57,13 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                                                     .userId(savedUser.getUuid().toString())
                                                     .username(savedUser.getUsername())
                                                     .role(savedUser.getRole().toString())
-                                                    .build());
-                            })
-
-                .doOnSuccess(responseDto ->
-                        log.info("Successfully created user '{}'", responseDto.getUsername())
-                )
-                .doOnError(UsernameAlreadyExistsException.class, e ->
-                        log.warn("Attempt to create a user that already exists: {}", username)
-                )
-                .doOnError(e -> !(e instanceof UsernameAlreadyExistsException), e ->
-                        log.error("An unexpected error occurred while creating user {}", username, e)
-                )
-    ));
-}
+                                                    .build())
+                                            .doOnSuccess(responseDto ->
+                                                    log.info("Successfully created user '{}'", responseDto.getUsername()));
+                                })
+                                .doOnError(e -> !(e instanceof UsernameAlreadyExistsException || e instanceof GithubUserNotFoundException), e ->
+                                        log.error("An unexpected error occurred while creating user {}", username, e)
+                                )
+                ));
+    }
 }

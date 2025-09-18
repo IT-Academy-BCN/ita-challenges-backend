@@ -6,6 +6,7 @@ import com.itachallenge.githubcore.service.GithubApiService;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
+import com.itachallenge.user.exception.GithubUserNotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +49,7 @@ class AdminCreateUserServiceTest {
                 .build();
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.NOT_FOUND));
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.FOUND));
         when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
@@ -69,12 +70,13 @@ class AdminCreateUserServiceTest {
         request.setUsername("newUser");
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.empty());
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.NOT_FOUND));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
 
         StepVerifier.create(result)
-                .verifyComplete();
+                .expectError(GithubUserNotFoundException.class)
+                .verify();
 
         verify(userRepository, never()).save(any());
         verify(githubApiService).userExists("newUser");
@@ -132,7 +134,7 @@ class AdminCreateUserServiceTest {
                 .build();
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.empty());
+        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.FOUND));
         when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
