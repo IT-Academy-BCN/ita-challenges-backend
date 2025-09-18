@@ -3,6 +3,11 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
+
+### Added
+- Added github-core module to decouple out of the auth and user microservices the verification of the user against github  (Taiga [#649], PR [#959])
+
 ### [itachallenge-document-1.0.2-RELEASE] - 2025-09-17
 
 ### Changed
