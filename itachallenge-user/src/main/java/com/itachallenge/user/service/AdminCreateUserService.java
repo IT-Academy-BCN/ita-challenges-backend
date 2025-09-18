@@ -32,30 +32,30 @@ public class AdminCreateUserService implements IAdminCreateUserService {
         final String username = request.getUsername();
         log.info("Attempting to create user with username: {}", username);
 
-        return userRepository.findByUsername(request.getUsername())
-                .flatMap(existing -> {
-                    return Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username));
-                })
-                .switchIfEmpty(Mono.defer(() -> {
-                    return githubApiService.userExists(username)
+        return userRepository.findByUsername(username)
+                .flatMap(existing ->
+                    Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username))
+                )
+                .switchIfEmpty(Mono.defer(() ->
+                    githubApiService.userExists(username)
                             .flatMap(exists -> {
                                     if (Boolean.FALSE.equals(exists)) {
                                         return Mono.error(new GithubUserNotFoundException(username));
                                     }
 
-                    UserDocument newUser = UserDocument.builder()
-                            .uuid(UUID.randomUUID())
-                            .username(username)
-                            .role(Role.USER)
-                            .build();
+                                    UserDocument newUser = UserDocument.builder()
+                                            .uuid(UUID.randomUUID())
+                                            .username(username)
+                                            .role(Role.USER)
+                                            .build();
 
-                    return userRepository.save(newUser)
-                            .map(savedUser -> AdminCreateUserResponseDto.builder()
-                                    .userId(savedUser.getUuid().toString())
-                                    .username(savedUser.getUsername())
-                                    .role(savedUser.getRole().toString())
-                                    .build());
-                })
+                                    return userRepository.save(newUser)
+                                            .map(savedUser -> AdminCreateUserResponseDto.builder()
+                                                    .userId(savedUser.getUuid().toString())
+                                                    .username(savedUser.getUsername())
+                                                    .role(savedUser.getRole().toString())
+                                                    .build());
+                            })
 
                 .doOnSuccess(responseDto ->
                         log.info("Successfully created user '{}'", responseDto.getUsername())
@@ -65,7 +65,7 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                 )
                 .doOnError(e -> !(e instanceof UsernameAlreadyExistsException), e ->
                         log.error("An unexpected error occurred while creating user {}", username, e)
-                );
-    }));
+                )
+    ));
 }
 }
