@@ -26,6 +26,8 @@ repositories {
 
 dependencies {
 
+    implementation project(':github-core')
+
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
