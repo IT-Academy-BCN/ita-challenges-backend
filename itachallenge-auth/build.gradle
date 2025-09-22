@@ -27,14 +27,13 @@ repositories {
 dependencies {
 
     implementation project(':github-core')
-
     implementation 'org.springframework.boot:spring-boot-autoconfigure:3.0.6'
     implementation 'org.springframework.cloud:spring-cloud-commons:4.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
     implementation 'org.springframework.boot:spring-boot-starter-webflux:3.0.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.0.6'
-    implementation 'org.springframework:spring-context:5.3.13'
+    implementation 'org.springframework:spring-context:5.3\n.13'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-config:4.0.2'
     implementation 'org.springframework.cloud:spring-cloud-starter-consul-discovery:4.0.2'
@@ -61,7 +60,7 @@ dependencies {
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.9.3'
     testImplementation 'org.junit.platform:junit-platform-suite-engine:1.8.1'
     testImplementation project(':jwt-core')
-
+    testImplementation project(':github-core')
 }
 
 test {

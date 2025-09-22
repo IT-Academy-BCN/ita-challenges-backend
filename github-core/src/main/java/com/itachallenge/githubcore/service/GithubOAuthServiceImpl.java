@@ -102,7 +102,6 @@ public class GithubOAuthServiceImpl implements GithubOAuthService {
             if (jsonNode.has(GITHUB_LOGIN_KEY)) {
                 String githubUsername = jsonNode.get(GITHUB_LOGIN_KEY).asText();
                 log.info("GitHub username extracted: {}", githubUsername);
-
                 return Mono.just(createSuccessResult(githubUsername, token));
             } else {
                 log.error("GitHub response does not contain a username: {}", response);
