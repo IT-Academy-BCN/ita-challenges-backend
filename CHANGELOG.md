@@ -5,7 +5,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### [itachallenge-user-1.5.0-RELEASE] - 2025-09-12
 
-### Refactored
+### Changed
 - Added github username validation to user microservice upon creation of a new user  (Taiga [#650], PR [#960])
 
 ### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
