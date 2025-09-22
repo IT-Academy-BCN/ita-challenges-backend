@@ -3,6 +3,7 @@ package com.itachallenge.githubcore.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.githubcore.config.GithubCoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,23 +22,14 @@ public class GithubOAuthServiceImpl implements GithubOAuthService {
 
         private final WebClient.Builder webClientBuilder;
         private final ObjectMapper objectMapper;
-        private final String githubTokenUri;
-        private final String githubUserInfoUri;
-        private final String clientId;
-        private final String clientSecret;
+        private final GithubCoreProperties properties;
 
-        public GithubOAuthServiceImpl(WebClient.Builder webClientBuilder,
-                                    ObjectMapper objectMapper,
-                                    @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
-                                    @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri,
-                                    @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
-                                    @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret) {
-            this.webClientBuilder = webClientBuilder;
-            this.objectMapper = objectMapper;
-            this.githubTokenUri = githubTokenUri;
-            this.githubUserInfoUri = githubUserInfoUri;
-            this.clientId = clientId;
-            this.clientSecret = clientSecret;
+    public GithubOAuthServiceImpl(WebClient.Builder webClientBuilder,
+                                  ObjectMapper objectMapper,
+                                  GithubCoreProperties properties) {
+        this.webClientBuilder = webClientBuilder;
+        this.objectMapper = objectMapper;
+        this.properties = properties;
         }
 
         @Override
@@ -45,12 +37,12 @@ public class GithubOAuthServiceImpl implements GithubOAuthService {
             WebClient webClient = webClientBuilder.build();
 
             Map<String, String> requestBody = new HashMap<>();
-            requestBody.put("client_id", clientId);
-            requestBody.put("client_secret", clientSecret);
+            requestBody.put("client_id", properties.getClientId());
+            requestBody.put("client_secret", properties.getClientSecret());
             requestBody.put("code", code);
 
             return webClient.post()
-                    .uri(githubTokenUri)
+                    .uri(properties.getTokenUri())
                     .header("Accept", "application/json")
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(requestBody)
@@ -83,7 +75,7 @@ public class GithubOAuthServiceImpl implements GithubOAuthService {
             WebClient webClient = webClientBuilder.build();
 
             return webClient.get()
-                    .uri(githubUserInfoUri)
+                    .uri(properties.getUserInfoUri())
                     .header("Authorization", "token " + token)
                     .retrieve()
                     .bodyToMono(String.class)
