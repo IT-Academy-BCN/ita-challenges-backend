@@ -935,4 +935,26 @@ class ChallengeControllerTest {
         verify(challengeService, times(0)).removeChallengeFromBookmarks(anyString(), anyString());
 
     }
+
+    @Test
+    void addChallenge_emptyTags_statusBadRequest() {
+        String challengeWithEmptyTags = """
+                {
+                     "challengeTitle": "title",
+                     "description": "description",
+                     "level": "EASY",
+                     "language": "Java",
+                     "solution": "solution",
+                     "topic": "ALL",
+                     "tags": []
+                 }
+            """;
+
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/challenges")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(challengeWithEmptyTags)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
 }
