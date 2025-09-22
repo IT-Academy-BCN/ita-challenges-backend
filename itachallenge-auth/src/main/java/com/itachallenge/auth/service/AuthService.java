@@ -3,6 +3,9 @@ package com.itachallenge.auth.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.itachallenge.githubcore.document.enums.GithubUserStatus;
+import com.itachallenge.githubcore.service.GithubApiService;
+import com.itachallenge.githubcore.service.GithubOAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,79 +22,27 @@ import java.util.Map;
 public class AuthService implements IAuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
-    private final WebClient.Builder webClientBuilder;
 
     private static final String KEY_IS_VALID = "isValid";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_TOKEN = "token";
-    private static final String CLIENT_ID_KEY = "client_id";
-    private static final String CLIENT_SECRET_KEY = "client_secret";
-    private static final String CODE_KEY = "code";
-    private static final String ACCESS_TOKEN_KEY = "access_token";
-    private static final String GITHUB_LOGIN_KEY = "login";
 
-    private final String githubUserInfoUri;
 
-    private final String githubTokenUri;
+    private final GithubOAuthService githubOAuthService;
+    private final GithubApiService githubApiService;
 
-    private final String clientId;
-
-    private final String clientSecret;
-
-    public AuthService(WebClient.Builder webClientBuilder,
-                       @Value("${spring.security.oauth2.client.provider.github.token-uri}") String githubTokenUri,
-                       @Value("${spring.security.oauth2.client.provider.github.user-info-uri}") String githubUserInfoUri,
-                       @Value("${spring.security.oauth2.client.registration.github.client-id}") String clientId,
-                       @Value("${spring.security.oauth2.client.registration.github.client-secret}") String clientSecret
-                       ) {
-        this.webClientBuilder = webClientBuilder;
-        this.githubTokenUri = githubTokenUri;
-        this.githubUserInfoUri = githubUserInfoUri;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
+    public AuthService(GithubOAuthService githubOAuthService, GithubApiService githubApiService){
+        this.githubOAuthService = githubOAuthService;
+        this.githubApiService = githubApiService;
     }
 
     public Mono<String> exchangeCodeForToken(String code) {
-        WebClient webClient = webClientBuilder.build();
-
-        return webClient
-                .post()
-                .uri(githubTokenUri)
-                .header("Accept", "application/json")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(createRequestBody(clientId, clientSecret, code))
-                .retrieve()
-                .bodyToMono(String.class)
-                .flatMap(this::processTokenResponse)
-                .onErrorResume(this::handleTokenError);
+        return githubOAuthService.exchangeCodeForToken(code)
+                .doOnSuccess(token -> log.info("Access token obtained successfully"))
+                .doOnError(e -> log.error("Error exchanging code for token"));
     }
 
-    private Map<String, String> createRequestBody(String clientId, String clientSecret, String code) {
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put(CLIENT_ID_KEY, clientId);
-        requestBody.put(CLIENT_SECRET_KEY, clientSecret);
-        requestBody.put(CODE_KEY, code);
-        return requestBody;
-    }
 
-    private Mono<String> processTokenResponse(String response) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response);
-
-            if (jsonNode.has(ACCESS_TOKEN_KEY)) {
-                String accessToken = jsonNode.get(ACCESS_TOKEN_KEY).asText();
-                log.info("Access token obtained successfully");
-                return Mono.just(accessToken);
-            } else {
-                log.error("GitHub OAuth error: {}", response);
-                return Mono.error(new IllegalStateException("Failed to obtain access token"));
-            }
-        } catch (JsonProcessingException e) {
-            log.error("Error processing GitHub OAuth response", e);
-            return Mono.error(e);
-        }
-    }
 
     private Mono<String> handleTokenError(Throwable ex) {
         log.error("Error exchanging code for token: {}", ex.getMessage());
@@ -100,38 +51,19 @@ public class AuthService implements IAuthService {
 
     @Override
     public Mono<Map<String, Object>> validateTokenWithGithub(String token) {
-        WebClient webClient = webClientBuilder.build();
-
-        return webClient
-                .get()
-                .uri(githubUserInfoUri)
-                .header("Authorization", "token " + token)
-                .retrieve()
-                .bodyToMono(String.class)
-                .flatMap(response -> processGithubResponse(response, token))
-
-                .onErrorResume(WebClientResponseException.class, this::handleGithubApiError)
-                .onErrorResume(this::handleUnexpectedError);
+        return githubOAuthService.getUsernameFromToken(token)
+                .map(username -> {
+                    log.info("GitHub username extracted: {}", username);
+                    return createSuccessResult(username, token);
+                })
+                .onErrorResume(e -> {
+                    log.error("Error validating GitHub token", e);
+                    return Mono.just(createErrorResult());
+                });
     }
 
-    private Mono<Map<String, Object>> processGithubResponse(String response, String token) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response);
-
-            if (jsonNode.has(GITHUB_LOGIN_KEY)) {
-                String githubUsername = jsonNode.get(GITHUB_LOGIN_KEY).asText();
-                log.info("GitHub username extracted: {}", githubUsername);
-
-                return Mono.just(createSuccessResult(githubUsername, token));
-            } else {
-                log.error("GitHub response does not contain a username: {}", response);
-                return Mono.just(createErrorResult());
-            }
-        } catch (JsonProcessingException e) {
-            log.error("Error processing GitHub response", e);
-            return Mono.error(e);
-        }
+    public Mono<GithubUserStatus> checkUserExists(String username) {
+        return githubApiService.userExists(username);
     }
 
     private Mono<Map<String, Object>> handleGithubApiError(WebClientResponseException ex) {
