@@ -19,6 +19,9 @@ spring:
       max-file-size: 2MB
       max-request-size: 2MB
 
+github-core:
+  user-info-uri: https://api.github.com/user
+
 springdoc:
   swagger-ui:
     path: "/swagger-ui-custom.html"
@@ -31,9 +34,6 @@ server:
   port: 8764
   tomcat:
     max-http-form-post-size: 2097152
-
-github:
-  user-info-uri: https://api.github.com
 
 management:
   endpoints:
