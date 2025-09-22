@@ -6,3 +6,4 @@ include 'itachallenge-auth'
 include 'itachallenge-document'
 
 include 'jwt-core'
+include 'github-core'
