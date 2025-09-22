@@ -30,6 +30,7 @@ is added to better reflect the status in wich challenges can be set (Taiga user 
 ### [itachallenge-challenge-2.4.3-RELEASE] - 2025-09-15
 ### [itachallenge-challenge-2.5.0-RELEASE] - 2025-09-15
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-15
+### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
 - Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
