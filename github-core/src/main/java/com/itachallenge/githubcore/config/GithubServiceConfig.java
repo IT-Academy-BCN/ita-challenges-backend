@@ -5,32 +5,24 @@ import com.itachallenge.githubcore.service.GithubApiServiceImpl;
 import com.itachallenge.githubcore.service.GithubApiService;
 import com.itachallenge.githubcore.service.GithubOAuthService;
 import com.itachallenge.githubcore.service.GithubOAuthServiceImpl;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
+@EnableConfigurationProperties(GithubCoreProperties.class)
 public class GithubServiceConfig {
 
-    @Value("${github.user-info-uri}")
-    private String githubApiUrl;
+    private final GithubCoreProperties properties;
 
-    @Value("${spring.security.oauth2.client.provider.github.token-uri}")
-    private String githubTokenUri;
-
-    @Value("${spring.security.oauth2.client.provider.github.user-info-uri}")
-    private String githubUserInfoUri;
-
-    @Value("${spring.security.oauth2.client.registration.github.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.github.client-secret}")
-    private String clientSecret;
+    public GithubServiceConfig(GithubCoreProperties properties) {
+        this.properties = properties;
+    }
 
     @Bean
     public GithubApiService githubApiService(WebClient.Builder webClientBuilder) {
-        return new GithubApiServiceImpl(webClientBuilder, githubApiUrl);
+        return new GithubApiServiceImpl(webClientBuilder, properties.getUserInfoUri());
     }
 
     @Bean
@@ -39,10 +31,7 @@ public class GithubServiceConfig {
         return new GithubOAuthServiceImpl(
                 webClientBuilder,
                 objectMapper,
-                githubTokenUri,
-                githubUserInfoUri,
-                clientId,
-                clientSecret
+                this.properties
         );
     }
 }
