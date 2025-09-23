@@ -1,4 +1,5 @@
 #### CONTRIBUTORS
+
 * Ismael Tortosa - https://github.com/IsmaTor
 * Carla Blasco Vidal - https://github.com/carlajuani
 * Pau Sansa - https://github.com/PauSansa
@@ -102,4 +103,5 @@
 * Mar Torrijos - https://github.com/MarTorrijos
 * Rio Acosta Lopez - https://github.com/rioacosta
 * Zohra Bellamine - https://github.com/zohra-b
-* Aiden Romero García - https://github.com/itsAidenDev
+* Aiden Romero - https://github.com/itsAidenDev
+* Aurélien Darbellay - https://github.com/aurelien-darbellay
