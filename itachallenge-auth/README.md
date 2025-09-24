@@ -2,18 +2,20 @@
 
 ## Overview
 The ITA Challenge Authentication Microservice is a Spring Boot application that handles user authentication through GitHub OAuth2. It provides secure authentication endpoints and integrates with other microservices in the ITA Challenge ecosystem.
+The microservice delegates all GitHub validation logic to the shared module **github-core**, which centralizes OAuth2 checks and
+is also reused by the User microservice.
 
 ## Authentication Workflow
 
 1. **GitHub OAuth2 Flow**:
     - Client initiates authentication by requesting GitHub authorization
     - GitHub redirects back with an authorization code
-    - Service exchanges code for access token
-    - Service validates token with GitHub
-    - Service verifies user existence in the system
+    - Service exchanges code for access token **via github-core**
+    - `github-core` validates the token with GitHub and retrieves user information
+    - Auth verifies user existence in the system database
 
 2. **Token Validation Process**:
-    - Validates GitHub access token
+    - Calls `GithubOAuthService` from `github-core`
     - Retrieves GitHub user information
     - Verifies user exists in ITA Challenge database
     - Returns authentication status and user details

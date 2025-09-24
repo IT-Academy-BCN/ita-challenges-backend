@@ -42,8 +42,10 @@ This project provides REST API services for the ITA challenges application and c
    * **User.** The user microservice is crafted to efficiently manage and deliver information from user.
    * **Auth**. The auth microservice plays a pivotal role in ensuring the security and integrity of user interactions within the system. It is primarily responsible for validating user authentication tokens, thereby safeguarding access to sensitive resources and functionalities. By validating authentication tokens, this microservice verifies the identity of users and ensures that only authorized individuals can access the system's features and data.
    * **Document**. The document microservice serves as a unified gateway consolidating all documents from various endpoints within the system. Acting as a single entry point, it will be seamlessly redirected by the project's overarching API Gateway. Named itachallenge-document, this microservice is entrusted with aggregating all Swagger documentation from other microservices, ensuring comprehensive access and management of system documentation.
-
+   * **Github-core (shared module).** A reusable module that provides GitHub OAuth2 validation services (e.g., `GithubOAuthService`). It does **not** expose REST endpoints; instead, it is consumed by other microservices like **Auth** and **User**. Properties for `github-core` are configured in each microservice’s `application.yml`, and **Auth** wires the required beans to enable GitHub-based authentication.
 Each microservice exposes REST APIs to interact with it. To use any microservice, you can refer to the [procedure](#procedure) section or start it from the App class in your IDE.
+
+
 
 ### Installation
 

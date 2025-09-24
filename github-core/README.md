@@ -9,6 +9,8 @@
 - ⚠️ **Exceptions**: for when the Username is not found in Github and for when the API is not working.
 - 🧪 **Test Coverage**: Comes with unit tests to ensure reliability and ease of maintenance.
 - 🚫 **No BootJar**: This module is a pure library and not a Spring Boot application.
+- 🔑 **OAuth2 Authentication Support**: Provides `GithubOAuthService` used by the Auth microservice to validate users via GitHub.
+
 
 ## Usage
 
@@ -24,9 +26,9 @@ testImplementation project(':github-core')
 ```markdown
 github-core/
 ├── src/main/java/com/itachallenge/githubcore/
-│   ├── service/      # IGithubApiService & GithubApiService
+│   ├── service/      # IGithubApiService, GithubApiService, GithubOAuthService & GithubOAuthServiceImpl
     ├── exception/    # GithubApiException & GithubUserNotFoundException
-    ├── config/       # GithubServiceConfig
+    ├── config/       # GithubServiceConfig & GithubCoreProperties
 ├── src/test/         # Unit tests
 ├── build.gradle      # Gradle module configuration
 └── readme.md         # This text file           
