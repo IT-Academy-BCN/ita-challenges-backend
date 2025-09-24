@@ -98,3 +98,4 @@
 * Isaac Díez - https://github.com/isaac-diez
 * Vanina Vega - https://github.com/vaninavega
 * Meritxell Ara - https://github.com/Meriekje
+* Aiden Romero García - https://github.com/itsAidenDev
