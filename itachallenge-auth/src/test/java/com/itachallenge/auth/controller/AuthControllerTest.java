@@ -1,6 +1,6 @@
 package com.itachallenge.auth.controller;
 
-import com.itachallenge.auth.config.TestAuthConfig;
+
 import com.itachallenge.auth.dto.SwitchRoleRequest;
 import com.itachallenge.auth.dto.User;
 import com.itachallenge.auth.service.JwtRoleSwitchService;
@@ -8,13 +8,14 @@ import com.itachallenge.auth.exception.InvalidRoleChangeRequestException;
 import com.itachallenge.auth.service.IAuthService;
 import com.itachallenge.auth.service.IAuthJwtFacade;
 import com.itachallenge.auth.service.IUserService;
+import com.itachallenge.githubcore.service.GithubOAuthService;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -30,9 +31,13 @@ import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
-@WebFluxTest(AuthController.class)
+@WebFluxTest(controllers = AuthController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = com.itachallenge.githubcore.config.GithubServiceConfig.class
+        )
+)
 @TestPropertySource(properties = "token.expiration.minutes=60")
-@Import(TestAuthConfig.class)
 @ActiveProfiles("test")
 class AuthControllerTest {
     @Autowired
@@ -45,13 +50,13 @@ class AuthControllerTest {
     private IAuthService authService;
 
     @MockBean
+    private GithubOAuthService githubOAuthService;
+
+    @MockBean
     private JwtRoleSwitchService jwtRoleSwitchService;
 
     @MockBean
     private IUserService userService;
-
-    @InjectMocks
-    private AuthController authController;
 
     @MockBean
     private IAuthJwtFacade authJwtFacade;
