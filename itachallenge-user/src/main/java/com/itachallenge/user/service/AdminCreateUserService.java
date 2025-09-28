@@ -50,7 +50,7 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                                     }
                                 })
                                 .flatMap(exists -> {
-                                    if (!exists) {
+                                    if (Boolean.FALSE.equals(exists)) {
                                         log.warn("GitHub user '{}' does not exist", username);
                                         return Mono.error(new NotFoundException("GitHub user not found: " + username));
                                     }
