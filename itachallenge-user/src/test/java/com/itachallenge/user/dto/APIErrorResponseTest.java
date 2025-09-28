@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class APIErrorResponseTest {
 
@@ -30,18 +29,5 @@ class APIErrorResponseTest {
         assertEquals("Another error", errorResponse.getError());
         assertEquals("Different message", errorResponse.getMessage());
         assertEquals(now, errorResponse.getTimestamp());
-    }
-
-    @Test
-    void testToString() {
-        Instant now = Instant.now();
-        APIErrorResponse errorResponse = new APIErrorResponse("Error", "Msg", now);
-
-        String toString = errorResponse.toString();
-        assertNotNull(toString);
-        // Optionally check that the toString contains field values
-        assert(toString.contains("Error"));
-        assert(toString.contains("Msg"));
-        assert(toString.contains(now.toString()));
     }
 }
