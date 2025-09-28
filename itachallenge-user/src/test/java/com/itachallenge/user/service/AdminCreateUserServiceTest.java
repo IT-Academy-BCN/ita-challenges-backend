@@ -1,12 +1,10 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.githubcore.document.enums.GithubUserStatus;
 import com.itachallenge.user.document.UserDocument;
-import com.itachallenge.githubcore.service.GithubApiService;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.GithubUserNotFoundException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.Duration;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,7 +29,7 @@ class AdminCreateUserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private GithubApiService githubApiService;
+    private ExternalGithubService externalGithubService;
 
     @InjectMocks
     private AdminCreateUserService adminCreateUserService;
@@ -49,7 +48,7 @@ class AdminCreateUserServiceTest {
                 .build();
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.FOUND));
+        when(externalGithubService.userExists("newUser")).thenReturn(Mono.just(true));
         when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
@@ -60,7 +59,7 @@ class AdminCreateUserServiceTest {
                 .verifyComplete();
 
         verify(userRepository).save(any(UserDocument.class));
-        verify(githubApiService).userExists("newUser");
+        verify(externalGithubService).userExists("newUser");
     }
 
     @Test
@@ -70,16 +69,16 @@ class AdminCreateUserServiceTest {
         request.setUsername("newUser");
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.NOT_FOUND));
+        when(externalGithubService.userExists("newUser")).thenReturn(Mono.just(false));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
 
         StepVerifier.create(result)
-                .expectError(GithubUserNotFoundException.class)
+                .expectError(NotFoundException.class)
                 .verify();
 
         verify(userRepository, never()).save(any());
-        verify(githubApiService).userExists("newUser");
+        verify(externalGithubService).userExists("newUser");
     }
 
     @Test
@@ -103,19 +102,39 @@ class AdminCreateUserServiceTest {
     }
 
     @Test
-    @DisplayName("Test: GitHub API failure should propagate error")
-    void createUser_whenGithubApiFails_shouldPropagateError() {
+    @DisplayName("Test: GitHub API timeout should propagate GithubUnavailableException (504)")
+    void createUser_whenGithubApiTimeout_shouldThrowGithubUnavailableException() {
         AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
         request.setUsername("newUser");
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.error(new RuntimeException("GitHub API error")));
+        when(externalGithubService.userExists("newUser"))
+                .thenReturn(Mono.delay(Duration.ofSeconds(5)).thenReturn(true));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
 
         StepVerifier.create(result)
-                .expectErrorMatches(ex -> ex instanceof RuntimeException &&
-                        ex.getMessage().contains("GitHub API error"))
+                .expectErrorMatches(ex -> ex instanceof com.itachallenge.githubcore.exception.GithubUnavailableException)
+                .verify();
+
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("Test: GitHub API immediate failure should propagate GithubUnavailableException (503)")
+    void createUser_whenGithubApiFailsImmediately_shouldThrowGithubUnavailableException() {
+        AdminCreateUserRequestDto request = new AdminCreateUserRequestDto();
+        request.setUsername("newUser");
+
+        when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
+        when(externalGithubService.userExists("newUser"))
+                .thenReturn(Mono.error(new RuntimeException("GitHub API down")));
+
+        Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);
+
+        StepVerifier.create(result)
+                .expectErrorMatches(ex -> ex instanceof com.itachallenge.githubcore.exception.GithubUnavailableException &&
+                        ex.getMessage().equals("GitHub API down"))
                 .verify();
 
         verify(userRepository, never()).save(any());
@@ -134,7 +153,7 @@ class AdminCreateUserServiceTest {
                 .build();
 
         when(userRepository.findByUsername("newUser")).thenReturn(Mono.empty());
-        when(githubApiService.userExists("newUser")).thenReturn(Mono.just(GithubUserStatus.FOUND));
+        when(externalGithubService.userExists("newUser")).thenReturn(Mono.just(true));
         when(userRepository.save(any(UserDocument.class))).thenReturn(Mono.just(savedUser));
 
         Mono<AdminCreateUserResponseDto> result = adminCreateUserService.createUser(request);

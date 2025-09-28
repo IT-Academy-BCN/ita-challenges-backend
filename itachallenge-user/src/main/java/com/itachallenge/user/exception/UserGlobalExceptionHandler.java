@@ -1,8 +1,11 @@
 package com.itachallenge.user.exception;
 
+import com.itachallenge.githubcore.exception.GithubUnavailableException;
+import com.itachallenge.user.dto.APIErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +13,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,9 +86,19 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
-    @ExceptionHandler(GithubUserNotFoundException.class)
-    public ResponseEntity<String> handleGithubUserNotFoundException(GithubUserNotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    @ExceptionHandler(GithubUnavailableException.class)
+    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex) {
+        HttpStatus status;
+
+        if ("timeout".equalsIgnoreCase(ex.getMessage())) {
+            status = HttpStatus.GATEWAY_TIMEOUT; // 504
+        } else {
+            status = HttpStatus.SERVICE_UNAVAILABLE; // 503
+        }
+
+        return ResponseEntity.status(status).body(
+                new APIErrorResponse("GitHub API error", ex.getMessage(), Instant.now())
+        );
     }
 
 }

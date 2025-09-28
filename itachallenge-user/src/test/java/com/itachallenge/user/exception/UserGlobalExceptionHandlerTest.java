@@ -1,9 +1,12 @@
 package com.itachallenge.user.exception;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
+import com.itachallenge.githubcore.exception.GithubUnavailableException;
+import com.itachallenge.user.dto.APIErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -12,7 +15,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.time.Instant;
 import java.util.Objects;
+import java.util.concurrent.TimeoutException;
 
 class UserGlobalExceptionHandlerTest {
 
@@ -106,15 +111,25 @@ class UserGlobalExceptionHandlerTest {
         assertEquals("The username 'alfonso79' is already registered.", response.getBody());
     }
 
-    @Test
-    void testHandleGithubUserNotFoundException() {
-        String username = "alfonso79";
-        String message = username;
-        GithubUserNotFoundException exception = new GithubUserNotFoundException(username);
-        ResponseEntity<String> response = exceptionHandler.handleGithubUserNotFoundException(exception);
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals(message, response.getBody());
+    @Test
+    void handleGithubUnavailable_shouldReturn503() {
+        GithubUnavailableException ex = new GithubUnavailableException("Some 5xx error");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
+
+        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
+        assertEquals("GitHub API error", response.getBody().getError());
+    }
+
+    @Test
+    void handleGithubUnavailable_shouldReturn504() {
+        GithubUnavailableException ex = new GithubUnavailableException("timeout");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
+
+        assertEquals(HttpStatus.GATEWAY_TIMEOUT, response.getStatusCode());
+        assertEquals("GitHub API error", response.getBody().getError());
     }
 
 }

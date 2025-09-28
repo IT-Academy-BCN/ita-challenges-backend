@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
+import com.itachallenge.user.service.ExternalGithubService;
 import com.itachallenge.user.service.IUserSolutionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,9 @@ class UserControllerSpringTest {
 
     @MockBean
     private IUserSolutionService userSolutionService;
+
+    @MockBean
+    private ExternalGithubService externalGithubService;
 
     private String uri;
     private String userId;

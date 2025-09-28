@@ -1,16 +1,17 @@
 package com.itachallenge.user.service;
 
-import com.itachallenge.githubcore.document.enums.GithubUserStatus;
-import com.itachallenge.githubcore.service.GithubApiService;
+import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
-import com.itachallenge.user.exception.GithubUserNotFoundException;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +22,11 @@ public class AdminCreateUserService implements IAdminCreateUserService {
     private static final Logger log = LoggerFactory.getLogger(AdminCreateUserService.class);
 
     private final UserRepository userRepository;
-    private final GithubApiService githubApiService;
+    private final ExternalGithubService externalGithubService;
 
-    public AdminCreateUserService(UserRepository userRepository, GithubApiService githubApiService) {
+    public AdminCreateUserService(UserRepository userRepository, ExternalGithubService externalGithubService) {
         this.userRepository = userRepository;
-        this.githubApiService = githubApiService;
+        this.externalGithubService = externalGithubService;
     }
 
     @Override
@@ -39,11 +40,19 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                     return Mono.<AdminCreateUserResponseDto>error(new UsernameAlreadyExistsException(username));
                 })
                 .switchIfEmpty(Mono.defer(() ->
-                        githubApiService.userExists(username)
-                                .flatMap(status -> {
-                                    if (status == GithubUserStatus.NOT_FOUND) {
+                        externalGithubService.userExists(username)
+                                .timeout(Duration.ofSeconds(3))
+                                .onErrorMap(throwable -> {
+                                    if (throwable instanceof java.util.concurrent.TimeoutException) {
+                                        return new GithubUnavailableException("timeout");
+                                    } else {
+                                        return new GithubUnavailableException(throwable.getMessage());
+                                    }
+                                })
+                                .flatMap(exists -> {
+                                    if (!exists) {
                                         log.warn("GitHub user '{}' does not exist", username);
-                                        return Mono.error(new GithubUserNotFoundException("GitHub user not found: " + username));
+                                        return Mono.error(new NotFoundException("GitHub user not found: " + username));
                                     }
 
                                     UserDocument newUser = UserDocument.builder()
@@ -61,9 +70,6 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                                             .doOnSuccess(responseDto ->
                                                     log.info("Successfully created user '{}'", responseDto.getUsername()));
                                 })
-                                .doOnError(e -> !(e instanceof UsernameAlreadyExistsException || e instanceof GithubUserNotFoundException), e ->
-                                        log.error("An unexpected error occurred while creating user {}", username, e)
-                                )
                 ));
     }
 }
