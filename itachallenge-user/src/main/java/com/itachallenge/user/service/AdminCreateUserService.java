@@ -40,7 +40,6 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                             .uuid(UUID.randomUUID())
                             .username(username)
                             .role(Role.USER)
-                            .points(0)
                             .build();
 
                     return userRepository.save(newUser)
@@ -48,7 +47,6 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                                     .userId(savedUser.getUuid().toString())
                                     .username(savedUser.getUsername())
                                     .role(savedUser.getRole().toString())
-                                    .points(savedUser.getPoints())
                                     .build());
                 }))
 

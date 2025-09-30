@@ -19,7 +19,4 @@ public class AdminCreateUserResponseDto {
     @JsonProperty("role")
     private String role;
 
-    @JsonProperty("points")
-    private Integer points;
-
 }
