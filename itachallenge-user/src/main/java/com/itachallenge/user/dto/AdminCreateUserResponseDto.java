@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 public class AdminCreateUserResponseDto {
 
-    @JsonProperty(value ="uuid_user")
+    @JsonProperty(value = "uuid_user")
     private String userId;
 
     @JsonProperty("username")
@@ -18,5 +18,8 @@ public class AdminCreateUserResponseDto {
 
     @JsonProperty("role")
     private String role;
+
+    @JsonProperty("points")
+    private Integer points;
 
 }
