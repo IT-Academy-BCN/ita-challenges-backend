@@ -30,6 +30,7 @@ public class AdminCreateUserController {
     public Mono<ResponseEntity<AdminCreateUserResponseDto>> createUser(
             @Valid @RequestBody AdminCreateUserRequestDto request) {
         return adminCreateUserService.createUser(request)
+                .doOnNext(userDto -> log.info("User returned: {} with points {}", userDto.getUsername(), userDto.getPoints()))
                 .map(userDto -> new ResponseEntity<>(userDto, HttpStatus.CREATED));
     }
 }
