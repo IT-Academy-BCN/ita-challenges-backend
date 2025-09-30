@@ -33,7 +33,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static final String X_VALIDATION_STATUS = "X-Validation-Status";
-    public static final String X_GITHUB_USERNAME ="X-Github-Username";
+    public static final String X_GITHUB_USERNAME = "X-Github-Username";
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
@@ -150,6 +150,20 @@ public class UserController {
                         return ResponseEntity.status(HttpStatus.CREATED).body(true);
                     } else {
                         log.info("User's '{}' favorites already contain Challenge '{}'", userId, challengeId);
+                        return ResponseEntity.ok().body(false);
+                    }
+                });
+    }
+
+    @PostMapping("/users/{userId}/points/{points}")
+    public Mono<ResponseEntity<Boolean>> addPoints(@PathVariable String userId, @PathVariable Integer points) {
+        return userService.modifyUserPoints(userId, points)
+                .map(added -> {
+                    if (Boolean.TRUE.equals(added)) {
+                        log.info("Points '{}' added to user '{}' points", points, userId);
+                        return ResponseEntity.ok().body(true);
+                    } else {
+                        log.info("User's '{}' points already contain Points '{}'", userId, points);
                         return ResponseEntity.ok().body(false);
                     }
                 });
@@ -400,7 +414,7 @@ public class UserController {
                     return ResponseEntity.ok().body(bookmarks);
                 });
     }
-    
+
     @Operation(
             summary = "Retrieve all solutions for a user.",
             parameters = {
