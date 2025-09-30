@@ -1,20 +1,25 @@
 package com.itachallenge.user.document;
 
 import com.itachallenge.user.document.enums.Role;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.index.Indexed;
 
-import java.util.*;
+import java.util.Set;
+import java.util.StringJoiner;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Data
 @Builder
 @NoArgsConstructor
-@Document(collection="users")
+@Document(collection = "users")
 public class UserDocument {
 
     @Id
@@ -33,6 +38,9 @@ public class UserDocument {
 
     @Field("bookmark_challenges")
     private Set<UUID> bookmarkChallenges;
+
+    @Field("points")
+    private Integer points;
 
     @Override
     public String toString() {

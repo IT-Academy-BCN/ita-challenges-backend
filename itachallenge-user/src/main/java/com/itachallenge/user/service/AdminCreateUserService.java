@@ -6,11 +6,12 @@ import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @Service
 public class AdminCreateUserService implements IAdminCreateUserService {
@@ -39,6 +40,7 @@ public class AdminCreateUserService implements IAdminCreateUserService {
                             .uuid(UUID.randomUUID())
                             .username(username)
                             .role(Role.USER)
+                            .points(0)
                             .build();
 
                     return userRepository.save(newUser)
