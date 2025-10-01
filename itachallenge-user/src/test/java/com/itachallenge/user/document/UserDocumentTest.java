@@ -106,7 +106,7 @@ class UserDocumentTest {
         assertNull(emptyUser.getRole());
         assertNull(emptyUser.getFavoriteChallenges());
         assertNull(emptyUser.getBookmarkChallenges());
-        assertNull(emptyUser.getPoints());
+        assertEquals(0, emptyUser.getPoints());
     }
 
     @Test
@@ -142,6 +142,7 @@ class UserDocumentTest {
         assertTrue(toString.contains(role.toString()), "ToString should contain role");
         assertTrue(toString.contains(favoriteChallenge.toString()), "ToString should contain favorite challenge");
         assertTrue(toString.contains(bookmarkChallenge.toString()), "ToString should contain bookmark challenge");
+        assertTrue(toString.contains(points.toString()), "ToString should contain points");
     }
 
     @Test
@@ -177,6 +178,7 @@ class UserDocumentTest {
         UserDocument userWithNullRole = new UserDocument(uuid, username, null, favoriteChallenges, bookmarkChallenges, points);
         UserDocument userWithNullFavoriteChallenges = new UserDocument(uuid, username, role, null, bookmarkChallenges, points);
         UserDocument userWithNullBookmarkChallenges = new UserDocument(uuid, username, role, favoriteChallenges, null, points);
+        UserDocument userWithNullPoints = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges, null);
         UserDocument completelyNullUser = new UserDocument(null, null, null, null, null, null);
 
         assertNotEquals(userDocument, userWithNullUuid);
@@ -184,6 +186,7 @@ class UserDocumentTest {
         assertNotEquals(userDocument, userWithNullRole);
         assertNotEquals(userDocument, userWithNullFavoriteChallenges);
         assertNotEquals(userDocument, userWithNullBookmarkChallenges);
+        assertNotEquals(userDocument, userWithNullPoints);
         assertNotEquals(userDocument, completelyNullUser);
 
         assertNotEquals(userDocument.hashCode(), userWithNullUuid.hashCode());
@@ -191,6 +194,7 @@ class UserDocumentTest {
         assertNotEquals(userDocument.hashCode(), userWithNullRole.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullFavoriteChallenges.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullBookmarkChallenges.hashCode());
+        assertNotEquals(userDocument.hashCode(), userWithNullPoints.hashCode());
         assertNotEquals(userDocument.hashCode(), completelyNullUser.hashCode());
     }
 
@@ -321,6 +325,7 @@ class UserDocumentTest {
         assertFalse(toString.contains("role="), "ToString should not contain 'role=' when null");
         assertFalse(toString.contains("favoriteChallenges="), "ToString should not contain 'favoriteChallenges=' when null");
         assertFalse(toString.contains("bookmarkChallenges="), "ToString should not contain 'bookmarkChallenges=' when null");
+        assertFalse(toString.contains("points="), "ToString should not contain 'points=' when null");
         assertEquals("UserDocument{}", toString, "ToString should return an empty object representation");
     }
 
