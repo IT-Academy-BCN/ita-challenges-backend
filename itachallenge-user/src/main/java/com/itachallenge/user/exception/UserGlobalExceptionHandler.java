@@ -12,7 +12,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,9 +93,9 @@ public class UserGlobalExceptionHandler {
         } else {
             status = HttpStatus.SERVICE_UNAVAILABLE; // 503
         }
-
+        String path = "path unavailable - WIP";
         return ResponseEntity.status(status).body(
-                new APIErrorResponse("GitHub API error", ex.getMessage(), Instant.now())
+                new APIErrorResponse("GitHub API error", ex.getMessage(), status, path)
         );
     }
 
