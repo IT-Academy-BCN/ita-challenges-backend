@@ -438,6 +438,19 @@ class UserDocumentTest {
     }
 
     @Test
+    void builderHandlesOnlyPoints() {
+        UserDocument user = UserDocument.builder()
+                .points(points)
+                .build();
+
+        assertNotNull(user);
+        assertNull(user.getUuid());
+        assertNull(user.getUsername());
+        assertNull(user.getRole());
+        assertEquals(points, user.getPoints());
+    }
+
+    @Test
     void builderCreatesNewInstances() {
         UserDocument user1 = UserDocument.builder().uuid(uuid).username(username).role(role)
                 .favoriteChallenges(favoriteChallenges)
