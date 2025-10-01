@@ -11,7 +11,6 @@ public class GenericResultDto<T> {
     private int offset;
     private int limit;
     private int count;
-
     private T[] results;
 
     public GenericResultDto() {}
@@ -22,4 +21,5 @@ public class GenericResultDto<T> {
         this.count = count;
         this.results = results;
     }
+
 }

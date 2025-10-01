@@ -11,7 +11,6 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.http.codec.ClientCodecConfigurer;
@@ -37,7 +36,6 @@ public class HttpProxy {
 
     protected static final String MALFORMED_URL_MSG = "Proxy: provided url is not valid: ";
 
-    @Autowired
     public HttpProxy(PropertiesConfig config) {
         this.config = config;
         client = WebClient.builder()
