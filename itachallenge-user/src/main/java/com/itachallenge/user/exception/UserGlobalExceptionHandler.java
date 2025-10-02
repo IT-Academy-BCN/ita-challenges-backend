@@ -2,6 +2,7 @@ package com.itachallenge.user.exception;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,15 @@ import java.util.Map;
 public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAny(Exception e) {
+    public ResponseEntity<APIErrorResponse> handleAny(Exception e, HttpServletRequest request) {
         log.error("Unexpected error happened: {}", e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happened.");
+        APIErrorResponse errorResponse = new APIErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Internal Server Error",
+                "An unexpected error occurred. Please try again later.",
+                request.getRequestURI()
+                );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
