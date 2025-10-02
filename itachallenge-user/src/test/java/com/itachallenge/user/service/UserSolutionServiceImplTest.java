@@ -142,7 +142,7 @@ class UserSolutionServiceImplTest {
 
     @Test
     @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is SUBMITTED_COMPLETED")
-    void addSolutionThrowsExceptionIfEnded() {
+    void addSolutionThrowsExceptionIfSubmitted() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
@@ -166,7 +166,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(userSolutionService.addSolution(request))
                 .expectErrorMatches(throwable ->
                         throwable instanceof UnmodificableSolutionException &&
-                                throwable.getMessage().contains("Existing solution is already SUBMITTED_COMPLETED"))
+                                throwable.getMessage().contains("Existing solution is already submitted and cannot be modified."))
                 .verify();
 
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
