@@ -45,8 +45,16 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleValidationExceptions(ConstraintViolationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<APIErrorResponse> handleValidationExceptions(ConstraintViolationException e, HttpServletRequest request) {
+        log.error("Validation error: {}", e.getMessage(), e);
+        APIErrorResponse errorResponse = new APIErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                "Validation failed for one or more fields. Please check your request.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)

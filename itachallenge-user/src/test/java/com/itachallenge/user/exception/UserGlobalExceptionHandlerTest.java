@@ -67,10 +67,19 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleValidationExceptions() {
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed", null);
-        ResponseEntity<String> response = exceptionHandler.handleValidationExceptions(exception);
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(request.getRequestURI()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, request);
+        APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Validation failed", response.getBody());
+        assertNotNull(body);
+        assertNotNull(body.getTimestamp());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
+        assertEquals("Validation failed", body.getError());
+        assertEquals("Validation failed for one or more fields. Please check your request.", body.getMessage());
+        assertEquals("/api/v1/user/123", body.getPath());
     }
 
     @Test
