@@ -7,7 +7,8 @@ import java.util.Arrays;
 @Getter
 public enum ChallengeStatus {
     SUBMITTED_COMPLETED("SUBMITTED_COMPLETED"),
-    IN_PROGRESS("IN_PROGRESS");
+    IN_PROGRESS("IN_PROGRESS"),
+    SUBMITTED_INCOMPLETE("SUBMITTED_INCOMPLETE");
 
     private final String value;
 
