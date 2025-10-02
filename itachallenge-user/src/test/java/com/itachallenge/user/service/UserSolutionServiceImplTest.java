@@ -324,7 +324,7 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution creates new IN_PROGRESS solution and returns response with status")
+    @DisplayName("addSolution creates new IN_PROGRESS solution and returns response")
     void addSolutionNewInProgressSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
