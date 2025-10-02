@@ -83,6 +83,7 @@ class UserSolutionServiceImplTest {
                     assertEquals(solutionText, dto.getSolutionText());
                     assertTrue(dto.getIsSolved());
                     assertEquals(5, dto.getTimesSolved());
+                    assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
                 })
                 .verifyComplete();
 
@@ -92,7 +93,7 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution updates existing solution when status is not SUBMITTED_COMPLETE")
+    @DisplayName("addSolution updates existing IN_PROGRESS solution successfully")
     void addSolutionUpdatesExistingSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
@@ -132,6 +133,7 @@ class UserSolutionServiceImplTest {
                     assertEquals(solutionText, dto.getSolutionText());
                     assertFalse(dto.getIsSolved());
                     assertNull(dto.getTimesSolved());
+                    assertEquals("IN_PROGRESS", dto.getStatus());
                 })
                 .verifyComplete();
 
@@ -189,6 +191,40 @@ class UserSolutionServiceImplTest {
                 .expectErrorMatches(err -> err instanceof IllegalArgumentException &&
                         err.getMessage().equals("Status null or not allowed"))
                 .verify();
+    }
+
+    @Test
+    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is SUBMITTED_INCOMPLETE")
+    void addSolutionThrowsExceptionIfSubmittedIncomplete() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("IN_PROGRESS")
+                .solutionText(solutionText)
+                .build();
+
+        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
+                .uuid(UUID.randomUUID())
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_INCOMPLETE)
+                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.just(existingSolution));
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .expectErrorMatches(throwable ->
+                        throwable instanceof UnmodificableSolutionException &&
+                                throwable.getMessage().contains("Existing solution is already submitted and cannot be modified."))
+                .verify();
+
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verifyNoMoreInteractions(userSolutionRepository);
+        verifyNoInteractions(challengeService);
     }
 
     @Test
@@ -255,9 +291,40 @@ class UserSolutionServiceImplTest {
                 .verifyComplete();
     }
 
+    @Test
+    @DisplayName("addSolution creates new SUBMITTED_INCOMPLETE solution and returns response")
+    void addSolutionNewSubmittedIncompleteSolution() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("SUBMITTED_INCOMPLETE")
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
+
+        StepVerifier.create(result)
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertFalse(dto.getIsSolved());
+                    assertEquals("SUBMITTED_INCOMPLETE", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verifyNoInteractions(challengeService);
+    }
 
     @Test
-    @DisplayName("addSolution creates new IN_PROGRESS solution and returns response")
+    @DisplayName("addSolution creates new IN_PROGRESS solution and returns response with status")
     void addSolutionNewInProgressSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
