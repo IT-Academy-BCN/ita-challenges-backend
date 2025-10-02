@@ -17,6 +17,7 @@ import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -48,8 +49,8 @@ public class ChallengeServiceImpl implements IChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ILanguageService iLanguageService;
     private final SolutionRepository solutionRepository;
-    private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
-    private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+    private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
+    private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
     private final IUserService userService;
     private final ITagService tagService;
 
