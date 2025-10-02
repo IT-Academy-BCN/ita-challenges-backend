@@ -13,8 +13,8 @@ class APIErrorResponseTest {
 
     @Test
     void testConstructorAndGetters() {
-        Instant now = Instant.now();
-        APIErrorResponse errorResponse = new APIErrorResponse("Some error", "Something went wrong", HttpStatus.NOT_FOUND, "http://localhost:8762/api/v1/user");
+
+        APIErrorResponse errorResponse = new APIErrorResponse(HttpStatus.NOT_FOUND, "Some error", "Something went wrong", "http://localhost:8762/api/v1/user");
 
         assertEquals("Some error", errorResponse.getError());
         assertEquals("Something went wrong", errorResponse.getMessage());
