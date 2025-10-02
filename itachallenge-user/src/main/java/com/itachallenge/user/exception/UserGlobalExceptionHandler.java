@@ -54,12 +54,18 @@ public class UserGlobalExceptionHandler {
                 request.getRequestURI()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e, HttpServletRequest request) {
+        log.error("Bad Request : {}" , e.getMessage(), e);
+       APIErrorResponse errorResponse = new APIErrorResponse(
+               HttpStatus.BAD_REQUEST,
+               "Bad Request",
+               "Invalid input provided. Please check your request.",
+               request.getRequestURI()
+       );
+       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(NotFoundException.class)

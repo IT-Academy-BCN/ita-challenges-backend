@@ -94,10 +94,19 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleBadRequestException() {
         BadRequestException exception = new BadRequestException("Bad request error");
-        ResponseEntity<String> response = exceptionHandler.handleBadRequestException(exception);
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        Mockito.when(request.getRequestURI()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, request);
+        APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Bad request error", response.getBody());
+        assertNotNull(body);
+        assertNotNull(body.getTimestamp());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
+        assertEquals("Bad Request", body.getError());
+        assertEquals("Invalid input provided. Please check your request.", body.getMessage());
+        assertEquals("/api/v1/user/123", body.getPath());
     }
 
     @Test
