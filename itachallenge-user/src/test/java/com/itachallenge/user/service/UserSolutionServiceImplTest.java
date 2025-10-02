@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -35,6 +36,9 @@ class UserSolutionServiceImplTest {
 
     @Mock
     private IChallengeService challengeService;
+
+    @MockBean
+    private ExternalGithubService externalGithubService;
 
     @InjectMocks
     private UserSolutionServiceImpl userSolutionService;
