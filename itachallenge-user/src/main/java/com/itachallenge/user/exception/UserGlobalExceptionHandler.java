@@ -22,7 +22,7 @@ public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIErrorResponse> handleAny(Exception e, HttpServletRequest request) {
-        log.error("Unexpected error happened: {}", e.getMessage());
+        log.error("Unexpected error happened: {}", e.getMessage(), e);
         APIErrorResponse errorResponse = new APIErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal Server Error",
@@ -33,8 +33,15 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleIllegalArgument(IllegalArgumentException e, HttpServletRequest request) {
+        log.error("Illegal argument: {}", e.getMessage(), e);
+        APIErrorResponse errorResponse = new APIErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                "Illegal argument",
+                "Invalid input provided. Please check your request.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
