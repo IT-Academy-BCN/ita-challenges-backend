@@ -57,13 +57,13 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution creates new ENDED solution and returns response")
+    @DisplayName("addSolution creates new SUBMITTED_COMPLETED solution and returns response")
     void addSolutionNewEndedSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("ENDED")
+                .status("SUBMITTED_COMPLETED")
                 .solutionText(solutionText)
                 .build();
 
@@ -92,7 +92,7 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution updates existing solution when status is not ENDED")
+    @DisplayName("addSolution updates existing solution when status is not SUBMITTED_COMPLETED")
     void addSolutionUpdatesExistingSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
@@ -141,13 +141,13 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is ENDED")
+    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is SUBMITTED_COMPLETED")
     void addSolutionThrowsExceptionIfEnded() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("ENDED")
+                .status("SUBMITTED_COMPLETED")
                 .solutionText(solutionText)
                 .build();
 
@@ -156,7 +156,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.ENDED)
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETED)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
                 .build();
 
@@ -166,7 +166,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(userSolutionService.addSolution(request))
                 .expectErrorMatches(throwable ->
                         throwable instanceof UnmodificableSolutionException &&
-                                throwable.getMessage().contains("Existing solution is already ENDED"))
+                                throwable.getMessage().contains("Existing solution is already SUBMITTED_COMPLETED"))
                 .verify();
 
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
@@ -223,14 +223,14 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("getAllSolutionsByUser returns ENDED solution")
+    @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETED solution")
     void getAllSolutionsByUser_returnsEndedSolution() {
         UserSolutionDocument doc = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Ended solution").build())
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.ENDED)
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETED)
                 .build();
 
         when(userSolutionRepository.findAllByUserId(userUuid))
@@ -263,7 +263,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("IN_PROGRESS")  // ⬅️ acá cambiamos ENDED por IN_PROGRESS
+                .status("IN_PROGRESS")
                 .solutionText(solutionText)
                 .build();
 

@@ -55,8 +55,8 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     private Mono<UserSolutionDocument> saveValidSolution(UUID userUuid, UUID challengeUuid, UUID languageUuid, ChallengeStatus challengeStatus, SolutionAttemptDocument solutionAttempt) {
         return userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid)
                 .flatMap(existingSolution -> {
-                    if (ChallengeStatus.ENDED.equals(existingSolution.getStatus())) {
-                        return Mono.error(new UnmodificableSolutionException("Existing solution is already ENDED and cannot be modified."));
+                    if (ChallengeStatus.SUBMITTED_COMPLETED.equals(existingSolution.getStatus())) {
+                        return Mono.error(new UnmodificableSolutionException("Existing solution is already SUBMITTED_COMPLETED and cannot be modified."));
                     }
                     existingSolution.setSolutionAttemptDocument(solutionAttempt);
                     existingSolution.setStatus(challengeStatus);
@@ -79,7 +79,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         String solutionText = savedDocument.getSolutionAttemptDocument().getSolutionText();
         ChallengeStatus status = savedDocument.getStatus();
 
-        if (ChallengeStatus.ENDED.equals(status)) {
+        if (ChallengeStatus.SUBMITTED_COMPLETED.equals(status)) {
             return challengeService.addChallengeToSolved(savedDocument.getChallengeId().toString())
                     .map(solvedDto -> SubmitSolutionResponseDto.builder()
                             .solutionText(solutionText)
