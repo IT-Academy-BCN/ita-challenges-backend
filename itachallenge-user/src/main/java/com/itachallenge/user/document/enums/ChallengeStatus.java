@@ -5,7 +5,8 @@ import lombok.Getter;
 import java.util.Arrays;
 
 @Getter
-public enum ChallengeStatus {ENDED("ENDED"),
+public enum ChallengeStatus {
+    SUBMITTED_COMPLETED("SUBMITTED_COMPLETED"),
     IN_PROGRESS("IN_PROGRESS");
 
     private final String value;

@@ -28,12 +28,12 @@ class SubmitSolutionResponseDtoTest {
                 .solutionText("print('Hola Mundo')")
                 .isSolved(false)
                 .timesSolved(3)
-                .status("ENDED")
+                .status("SUBMITTED_COMPLETED")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dto);
 
-        assertTrue(json.contains("\"status\":\"ENDED\""));
+        assertTrue(json.contains("\"status\":\"SUBMITTED_COMPLETED\""));
     }
 }
