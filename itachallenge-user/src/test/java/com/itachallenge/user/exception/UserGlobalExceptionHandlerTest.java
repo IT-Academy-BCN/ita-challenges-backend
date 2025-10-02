@@ -2,6 +2,7 @@ package com.itachallenge.user.exception;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
@@ -121,11 +122,18 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleNotFoundException() {
         NotFoundException exception = new NotFoundException("Resource not found");
-        ResponseEntity<String> response = exceptionHandler.handleNotFoundException(exception);
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        when(request.getRequestURI()).thenReturn("/api/v1/user/123");
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, request);
+        APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Resource not found", response.getBody());
-    }
+        assertNotNull(body);
+        assertNotNull(body.getTimestamp());
+        assertEquals(HttpStatus.NOT_FOUND.value(), body.getStatus());
+        assertEquals("Not found", body.getError());
+        assertEquals("The requested resource was not found.", body.getMessage());
+        assertEquals("/api/v1/user/123", body.getPath());    }
 
     @Test
     void testHandleUnmodifiableSolutionException(){

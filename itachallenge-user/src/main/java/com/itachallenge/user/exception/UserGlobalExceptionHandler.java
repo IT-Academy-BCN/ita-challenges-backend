@@ -69,8 +69,15 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
+        log.error("Not Found : {}" , e.getMessage(), e);
+        APIErrorResponse errorResponse = new APIErrorResponse(
+                HttpStatus.NOT_FOUND,
+                "Not found",
+                "The requested resource was not found.",
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     /// ******** TO BE REFACTORIZED USING ApiErrorResponse ************
