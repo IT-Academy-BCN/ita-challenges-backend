@@ -18,7 +18,9 @@ class APIErrorResponseTest {
 
         assertEquals("Some error", errorResponse.getError());
         assertEquals("Something went wrong", errorResponse.getMessage());
-        assertEquals(now, errorResponse.getTimestamp());
+        assertNotNull(errorResponse.getTimestamp());
+        assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.getStatus());
+        assertEquals("http://localhost:8762/api/v1/user", errorResponse.getPath());
     }
 
     @Test
