@@ -95,7 +95,7 @@ public class UserGlobalExceptionHandler {
         }
         String path = "path unavailable - WIP";
         return ResponseEntity.status(status).body(
-                new APIErrorResponse("GitHub API error", ex.getMessage(), status, path)
+                new APIErrorResponse(status, "GitHub API error", ex.getMessage(),  path)
         );
     }
 
