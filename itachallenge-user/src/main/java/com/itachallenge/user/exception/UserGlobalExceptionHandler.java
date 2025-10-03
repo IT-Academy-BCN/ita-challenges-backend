@@ -88,15 +88,23 @@ public class UserGlobalExceptionHandler {
     @ExceptionHandler(GithubUnavailableException.class)
     public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex) {
         HttpStatus status;
+        String securedMessage;
 
-        if ("timeout".equalsIgnoreCase(ex.getMessage())) {
-            status = HttpStatus.GATEWAY_TIMEOUT; // 504
+        log.error("GithubUnavailableException occurred: {}", ex.getMessage(), ex);
+
+        if (ex.getCause() instanceof java.net.SocketTimeoutException) {
+            status = HttpStatus.GATEWAY_TIMEOUT;
+            securedMessage = "The external GitHub service timed out.";
+        } else if (ex.getCause() instanceof java.net.ConnectException) {
+            status = HttpStatus.SERVICE_UNAVAILABLE;
+            securedMessage = "The external GitHub service is currently unavailable.";
         } else {
-            status = HttpStatus.SERVICE_UNAVAILABLE; // 503
+            status = HttpStatus.SERVICE_UNAVAILABLE;
+            securedMessage = "An external service error occurred.";
         }
 
         return ResponseEntity.status(status).body(
-                new APIErrorResponse("GitHub API error", ex.getMessage(), Instant.now())
+                new APIErrorResponse("External Service Error", securedMessage, Instant.now())
         );
     }
 
