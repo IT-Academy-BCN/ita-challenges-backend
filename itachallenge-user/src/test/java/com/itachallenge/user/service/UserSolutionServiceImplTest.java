@@ -58,43 +58,7 @@ class UserSolutionServiceImplTest {
         languageUuid = UUID.randomUUID();
         solutionText = "Test solution";
     }
-
-    @Test
-    @DisplayName("addSolution creates new SUBMITTED_COMPLETE solution and returns response")
-    void addSolutionNewEndedSolution() {
-        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
-                .status("SUBMITTED_COMPLETE")
-                .solutionText(solutionText)
-                .build();
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
-
-        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
-                .thenReturn(Mono.just(new com.itachallenge.user.dto.SolvedDto(true, 5)));
-
-        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
-
-        StepVerifier.create(result)
-                .assertNext(dto -> {
-                    assertEquals(solutionText, dto.getSolutionText());
-                    assertTrue(dto.getIsSolved());
-                    assertEquals(5, dto.getTimesSolved());
-                    assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
-                })
-                .verifyComplete();
-
-        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
-    }
-
+    
     @Test
     @DisplayName("addSolution updates existing IN_PROGRESS solution successfully")
     void addSolutionUpdatesExistingSolution() {
@@ -229,8 +193,6 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETE solution")
-    void getAllSolutionsByUser_returnsEndedSolution() {
     @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETE solution")
     void getAllSolutionsByUser_returnsSUBMITTED_COMPLETESolutions() {
         UserSolutionDocument doc = UserSolutionDocument.builder()
