@@ -28,7 +28,7 @@ class UserServiceImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserServiceImpl userService;
+    private com.itachallenge.user.service.UserServiceImpl userService;
 
     private AutoCloseable mocks;
 
@@ -791,7 +791,7 @@ class UserServiceImplTest {
                                 error.getMessage().equals("Invalid ID format"))
                 .verify();
     }
-    
+
     @Test
     @DisplayName("getUserById returns the user when the user exists")
     void getUserById_ShouldReturnUser_WhenUserExists() {
@@ -799,20 +799,20 @@ class UserServiceImplTest {
         UUID userId=UUID.randomUUID();
         UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null, 0);
         when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
-        
+
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectNext(existingUser)
                 .verifyComplete();
-        
+
         verify(userRepository, times(1)).findById(userId);
     }
-    
+
     @Test
     @DisplayName("getUserById throws NotFoundException when the user does not exist")
     void getUserById_ShouldReturnNotFoundException_WhenUserDoesNotExist() {
         UUID userId=UUID.randomUUID();
         when(userRepository.findById(userId)).thenReturn(Mono.empty());
-        
+
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectErrorSatisfies(error -> {
                     assertInstanceOf(NotFoundException.class, error);
@@ -820,5 +820,81 @@ class UserServiceImplTest {
                 })
                 .verify();
         verify(userRepository, times(1)).findById(userId);
+    }
+
+    @Test
+    @DisplayName("addPointsToUser should add points when user exists and has existing points")
+    void addPointsToUser_ShouldAddPoints_WhenUserExistsWithPoints() {
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+        user.setPoints(10);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addPointsToUser(userId.toString(), 5))
+                .expectNext(true)
+                .verifyComplete();
+
+        assertEquals(15, user.getPoints());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("addPointsToUser should initialize points when user has no points")
+    void addPointsToUser_ShouldAddPoints_WhenUserHasNoPoints() {
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+        user.setPoints(null);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+        when(userRepository.save(user)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addPointsToUser(userId.toString(), 7))
+                .expectNext(true)
+                .verifyComplete();
+
+        assertEquals(7, user.getPoints());
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    @DisplayName("addPointsToUser should throw NotFoundException when user does not exist")
+    void addPointsToUser_ShouldThrowNotFoundException_WhenUserNotFound() {
+        UUID userId = UUID.randomUUID();
+
+        when(userRepository.findById(userId)).thenReturn(Mono.empty());
+
+        StepVerifier.create(userService.addPointsToUser(userId.toString(), 5))
+                .expectErrorSatisfies(error -> {
+                    assertInstanceOf(NotFoundException.class, error);
+                    assertEquals("User not found", error.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).save(any());
+    }
+
+    @Test
+    @DisplayName("addPointsToUser should throw IllegalArgumentException when pointsToAdd is null")
+    void addPointsToUser_ShouldThrowIllegalArgumentException_WhenPointsIsNull() {
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument();
+        user.setUuid(userId);
+
+        when(userRepository.findById(userId)).thenReturn(Mono.just(user));
+
+        StepVerifier.create(userService.addPointsToUser(userId.toString(), null))
+                .expectErrorSatisfies(error -> {
+                    assertInstanceOf(IllegalArgumentException.class, error);
+                    assertEquals("Points to add cannot be null", error.getMessage());
+                })
+                .verify();
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(userRepository, times(0)).save(any());
     }
 }
