@@ -52,7 +52,7 @@ class UserControllerSpringTest {
                 .userId(userId)
                 .challengeId(challengeId)
                 .languageId(languageId)
-                .status("SUBMITTED_COMPLETED")
+                .status("SUBMITTED_COMPLETE")
                 .solutionText(solution)
                 .build();
 

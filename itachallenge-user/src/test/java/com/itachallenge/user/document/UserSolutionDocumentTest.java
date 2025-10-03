@@ -13,7 +13,7 @@ class UserSolutionDocumentTest {
     private final UUID userId = UUID.randomUUID();
     private final UUID challengeId = UUID.randomUUID();
     private final UUID languageId  = UUID.randomUUID();
-    private final ChallengeStatus challengeStatus = ChallengeStatus.SUBMITTED_COMPLETED;
+    private final ChallengeStatus challengeStatus = ChallengeStatus.SUBMITTED_COMPLETE;
     UUID solutionId1 = UUID.fromString("1e047ea2-b787-49e7-acea-d79e92be3909");
     String solutionText1 = "Ipsum.. 1";
     SolutionAttemptDocument solutionAttemptDocument1 = new SolutionAttemptDocument(solutionId1, solutionText1);

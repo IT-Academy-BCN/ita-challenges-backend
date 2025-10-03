@@ -57,13 +57,13 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution creates new SUBMITTED_COMPLETED solution and returns response")
+    @DisplayName("addSolution creates new SUBMITTED_COMPLETE solution and returns response")
     void addSolutionNewEndedSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("SUBMITTED_COMPLETED")
+                .status("SUBMITTED_COMPLETE")
                 .solutionText(solutionText)
                 .build();
 
@@ -92,7 +92,7 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution updates existing solution when status is not SUBMITTED_COMPLETED")
+    @DisplayName("addSolution updates existing solution when status is not SUBMITTED_COMPLETE")
     void addSolutionUpdatesExistingSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
@@ -147,7 +147,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("SUBMITTED_COMPLETED")
+                .status("SUBMITTED_COMPLETE")
                 .solutionText(solutionText)
                 .build();
 
@@ -156,7 +156,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETED)
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETE)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
                 .build();
 
@@ -223,14 +223,14 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETED solution")
+    @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETE solution")
     void getAllSolutionsByUser_returnsEndedSolution() {
         UserSolutionDocument doc = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Ended solution").build())
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETED)
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETE)
                 .build();
 
         when(userSolutionRepository.findAllByUserId(userUuid))
