@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-2.3.0-RELEASE] - 2025-10-03
+
+### Changed
+
+- Added method awardPointsForSolvedChallenge to UserSolutionServiceImpl that awards points to users when they solved a
+  challenge (Taiga [#764], PR [#989])
+  - created constant to store the number of points that should be added
+  - injected UserService dependency to UserSolutionService
+
 ### [itachallenge-user-2.2.0-RELEASE] - 2025-10-03
 
 ### Added
