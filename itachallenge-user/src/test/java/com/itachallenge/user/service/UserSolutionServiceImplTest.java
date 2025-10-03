@@ -2,6 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.document.enums.ChallengeStatus;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.exception.BadRequestException;
@@ -23,6 +24,7 @@ import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
+import static com.itachallenge.user.service.UserSolutionServiceImpl.POINTS_PER_SOLVED_CHALLENGE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -36,6 +38,9 @@ class UserSolutionServiceImplTest {
 
     @Mock
     private IChallengeService challengeService;
+
+    @Mock
+    private UserServiceImpl userService;
 
     @MockBean
     private ExternalGithubService externalGithubService;
@@ -287,4 +292,48 @@ class UserSolutionServiceImplTest {
         verify(userSolutionRepository).save(any(UserSolutionDocument.class));
         verifyNoInteractions(challengeService);
     }
+
+
+    @Test
+    @DisplayName("awardsPointsForSolvedChallenge returns document unchanged if status is not ENDED")
+    void awardsPointsForSolvedChallenge_notEnded() {
+        UserSolutionDocument doc = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.IN_PROGRESS)  // not ENDED
+                .build();
+
+        Mono<UserSolutionDocument> result = userSolutionService.awardsPointsForSolvedChallenge(doc);
+
+        StepVerifier.create(result)
+                .assertNext(returnedDoc -> assertEquals(doc, returnedDoc))
+                .verifyComplete();
+
+        // userService should NOT be called
+        verifyNoInteractions(userService);
+    }
+
+    @Test
+    @DisplayName("awardsPointsForSolvedChallenge calls userService when status is ENDED")
+    void awardsPointsForSolvedChallenge_ended() {
+        UserSolutionDocument doc = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .challengeId(challengeUuid)
+                .languageId(languageUuid)
+                .status(ChallengeStatus.ENDED)
+                .build();
+
+        when(userService.addPointsToUser(eq(userUuid.toString()), anyInt()))
+                .thenReturn(Mono.empty());
+
+        Mono<UserSolutionDocument> result = userSolutionService.awardsPointsForSolvedChallenge(doc);
+
+        StepVerifier.create(result)
+                .assertNext(returnedDoc -> assertEquals(doc, returnedDoc))
+                .verifyComplete();
+
+        verify(userService).addPointsToUser(userUuid.toString(), POINTS_PER_SOLVED_CHALLENGE); // assuming POINTS_PER_SOLVED_CHALLENGE = 10
+    }
+
 }
