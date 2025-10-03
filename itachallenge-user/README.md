@@ -119,6 +119,15 @@ both basic and custom user data.
 - The `uuid` field is mapped to the MongoDB `_id`.
 - This model supports extended features like filtering, favoriting, and bookmarking challenges.
 
+### API Contract: Robust Error Handling
+The service now provides more reliable status codes for external connection issues:
+
+- Robust GitHub Status Codes:** Errors related to external GitHub service availability are now accurately mapped based on the type of failure, eliminating fragile string comparisons.
+  - HTTP 504 (Gateway Timeout): Returned when the connection attempt exceeds the configured time limit.
+  - HTTP 503 (Service Unavailable): Returned when a connection is refused or the external service is otherwise unreachable.
+
+This change ensures clients receive accurate status codes for better application recovery.
+
 ##### Spring Boot Actuator
 
 - http://localhost:8762/actuator/health (debe responder {"status":"UP"})
