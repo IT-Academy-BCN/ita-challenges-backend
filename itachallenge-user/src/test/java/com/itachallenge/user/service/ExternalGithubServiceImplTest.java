@@ -47,15 +47,18 @@ class ExternalGithubServiceImplTest {
     }
 
     @Test
-    @DisplayName("Should propagate error when GitHub API fails")
+    @DisplayName("Should wrap API errors in GithubUnavailableException, preserving the cause")
     void testUserExistsPropagatesError() {
+        RuntimeException originalLowLevelError = new RuntimeException("Original low-level API error.");
+
         when(githubApiService.userExists(anyString()))
-                .thenReturn(Mono.error(new GithubUnavailableException("GitHub API down")));
+                .thenReturn(Mono.error(originalLowLevelError));
 
         StepVerifier.create(externalGithubService.userExists("anyUser"))
                 .expectErrorMatches(throwable ->
                         throwable instanceof GithubUnavailableException &&
-                                throwable.getMessage().equals("GitHub API down"))
+                                throwable.getCause() == originalLowLevelError &&
+                                throwable.getMessage().equals("Error connecting to GitHub API."))
                 .verify();
     }
 }
