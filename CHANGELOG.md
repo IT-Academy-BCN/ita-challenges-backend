@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-2.2.0-RELEASE] - 2025-10-03
+
+### Added
+- `addPointsToUser` method added to `UserService` interface.
+- `addPoints` and `addPointsToUser` implemented in `UserServiceImpl`.
+- Unit tests added to `UserServiceImplTest` covering:
+  - Adding points to users with and without existing values.
+  - Handling `null` values for `pointsToAdd`.
+
 ### [itachallenge-user-2.1.0-RELEASE] - 2025-10-03
 
 ### Added
