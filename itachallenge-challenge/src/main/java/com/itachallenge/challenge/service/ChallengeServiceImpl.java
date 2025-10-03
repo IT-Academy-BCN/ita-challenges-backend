@@ -49,8 +49,8 @@ public class ChallengeServiceImpl implements IChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ILanguageService iLanguageService;
     private final SolutionRepository solutionRepository;
-    private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
-    private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
+    private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
+    private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
     private final IUserService userService;
     private final ITagService tagService;
 
