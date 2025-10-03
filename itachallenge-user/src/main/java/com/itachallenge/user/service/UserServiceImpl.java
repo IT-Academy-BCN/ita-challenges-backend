@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements com.itachallenge.user.service.UserService {
 
     private final UserRepository userRepository;
 
@@ -168,11 +168,29 @@ public class UserServiceImpl implements UserService {
                                 .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
                 );
     }
-    
+
     @Override
     public Mono<UserDocument> getUserById(String userId) {
         return userRepository.findById(UUID.fromString(userId))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
-    
+
+    @Override
+    public Mono<Boolean> addPointsToUser(String userId, Integer pointsToAdd) {
+        return parseAndValidateUUID(userId)
+                .flatMap(userUuid -> userRepository.findById(userUuid)
+                        .switchIfEmpty(Mono.error(new NotFoundException("User not found")))
+                        .flatMap(user -> addPoints(user, pointsToAdd))
+                );
+    }
+
+    private Mono<Boolean> addPoints(UserDocument user, Integer pointsToAdd) {
+        if(pointsToAdd == null) {
+            return Mono.error(new IllegalArgumentException("Points to add cannot be null"));
+        }
+        Integer userPoints = Optional.ofNullable(user.getPoints()).orElse(0);
+        user.setPoints(userPoints + pointsToAdd);
+        return userRepository.save(user).thenReturn(true);
+    }
+
 }
