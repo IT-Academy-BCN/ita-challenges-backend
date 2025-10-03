@@ -89,7 +89,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).getUser(githubUsername);
     }
@@ -103,7 +106,11 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                        .jsonPath("$.status").isEqualTo(500)
+                        .jsonPath("$.error").isEqualTo("Internal Server Error")
+                        .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
+
 
         verify(userService, times(1)).getUser(githubUsername);
     }
@@ -183,7 +190,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
@@ -199,7 +209,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");        ;
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
@@ -247,7 +260,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(500)
+                .jsonPath("$.error").isEqualTo("Internal Server Error")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
@@ -263,7 +279,11 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                        .jsonPath("$.status").isEqualTo(500)
+                        .jsonPath("$.error").isEqualTo("Internal Server Error")
+                        .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.")
+                        .jsonPath("$.path").isEqualTo("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId);
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
@@ -343,7 +363,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
@@ -359,7 +382,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
@@ -407,7 +433,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(500)
+                .jsonPath("$.error").isEqualTo("Internal Server Error")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
@@ -423,7 +452,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(500)
+                .jsonPath("$.error").isEqualTo("Internal Server Error")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
+
+
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
@@ -459,7 +493,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).getUserFavorites(userId.toString());
     }
@@ -493,7 +530,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(500)
+                .jsonPath("$.error").isEqualTo("Internal Server Error")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
 
         verify(userService, times(1)).getUserFavorites(userId.toString());
     }
@@ -529,7 +569,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).getUserBookmarks(userId.toString());
     }
@@ -563,7 +606,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(500)
+                .jsonPath("$.error").isEqualTo("Internal Server Error")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
 
         verify(userService, times(1)).getUserBookmarks(userId.toString());
     }
@@ -625,9 +671,11 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(String.class)
-                .isEqualTo("Solutions not found");
-        
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(404)
+                .jsonPath("$.error").isEqualTo("Not found")
+                .jsonPath("$.message").isEqualTo("Solutions not found");
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
     
@@ -661,9 +709,11 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class)
-                .isEqualTo("Unexpected error happened.");
-        
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(500)
+                .jsonPath("$.error").isEqualTo("Internal Server Error")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred. Please try again later.");
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
 }

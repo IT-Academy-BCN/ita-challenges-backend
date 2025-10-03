@@ -11,7 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.RequestPath;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -30,10 +33,16 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleAny() {
         Exception exception = new Exception("Unexpected Error");
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getRequestURI()).thenReturn("/api/v1/user/123");
 
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, request);
+        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
+        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
+        RequestPath requestPath = Mockito.mock(RequestPath.class);
+
+        Mockito.when(exchange.getRequest()).thenReturn(request);
+        Mockito.when(request.getPath()).thenReturn(requestPath);
+        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, exchange);
         APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
@@ -50,10 +59,16 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleIllegalArgument() {
         IllegalArgumentException exception = new IllegalArgumentException("Invalid argument");
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getRequestURI()).thenReturn("/api/v1/user/123");
 
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleIllegalArgument(exception, request);
+        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
+        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
+        RequestPath requestPath = Mockito.mock(RequestPath.class);
+
+        Mockito.when(exchange.getRequest()).thenReturn(request);
+        Mockito.when(request.getPath()).thenReturn(requestPath);
+        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleIllegalArgument(exception, exchange);
         APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -68,10 +83,16 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleValidationExceptions() {
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed", null);
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getRequestURI()).thenReturn("/api/v1/user/123");
 
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, request);
+        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
+        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
+        RequestPath requestPath = Mockito.mock(RequestPath.class);
+
+        Mockito.when(exchange.getRequest()).thenReturn(request);
+        Mockito.when(request.getPath()).thenReturn(requestPath);
+        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, exchange);
         APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -95,10 +116,16 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleBadRequestException() {
         BadRequestException exception = new BadRequestException("Bad request error");
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        Mockito.when(request.getRequestURI()).thenReturn("/api/v1/user/123");
 
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, request);
+        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
+        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
+        RequestPath requestPath = Mockito.mock(RequestPath.class);
+
+        Mockito.when(exchange.getRequest()).thenReturn(request);
+        Mockito.when(request.getPath()).thenReturn(requestPath);
+        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, exchange);
         APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -106,7 +133,7 @@ class UserGlobalExceptionHandlerTest {
         assertNotNull(body.getTimestamp());
         assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
         assertEquals("Bad Request", body.getError());
-        assertEquals("Invalid input provided. Please check your request.", body.getMessage());
+        assertEquals("Bad request error", body.getMessage());
         assertEquals("/api/v1/user/123", body.getPath());
     }
 
@@ -122,9 +149,16 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleNotFoundException() {
         NotFoundException exception = new NotFoundException("Resource not found");
-        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
-        when(request.getRequestURI()).thenReturn("/api/v1/user/123");
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, request);
+
+        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
+        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
+        RequestPath requestPath = Mockito.mock(RequestPath.class);
+
+        Mockito.when(exchange.getRequest()).thenReturn(request);
+        Mockito.when(request.getPath()).thenReturn(requestPath);
+        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, exchange);
         APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -132,7 +166,7 @@ class UserGlobalExceptionHandlerTest {
         assertNotNull(body.getTimestamp());
         assertEquals(HttpStatus.NOT_FOUND.value(), body.getStatus());
         assertEquals("Not found", body.getError());
-        assertEquals("The requested resource was not found.", body.getMessage());
+        assertEquals("Resource not found", body.getMessage());
         assertEquals("/api/v1/user/123", body.getPath());    }
 
     @Test

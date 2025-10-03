@@ -2,7 +2,6 @@ package com.itachallenge.user.exception;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ServerWebExchange;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -21,68 +21,68 @@ import java.util.Map;
 public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIErrorResponse> handleAny(Exception e, HttpServletRequest request) {
+    public ResponseEntity<APIErrorResponse> handleAny(Exception e, ServerWebExchange exchange) {
         log.error("Unexpected error happened: {}", e.getMessage(), e);
         APIErrorResponse errorResponse = new APIErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 "Internal Server Error",
                 "An unexpected error occurred. Please try again later.",
-                request.getRequestURI()
+                exchange.getRequest().getPath().value()
                 );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<APIErrorResponse> handleIllegalArgument(IllegalArgumentException e, HttpServletRequest request) {
+    public ResponseEntity<APIErrorResponse> handleIllegalArgument(IllegalArgumentException e, ServerWebExchange exchange) {
         log.error("Illegal argument: {}", e.getMessage(), e);
         APIErrorResponse errorResponse = new APIErrorResponse(
                 HttpStatus.BAD_REQUEST,
                 "Illegal argument",
                 "Invalid input provided. Please check your request.",
-                request.getRequestURI()
+                exchange.getRequest().getPath().value()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<APIErrorResponse> handleValidationExceptions(ConstraintViolationException e, HttpServletRequest request) {
+    public ResponseEntity<APIErrorResponse> handleValidationExceptions(ConstraintViolationException e, ServerWebExchange exchange) {
         log.error("Validation error: {}", e.getMessage(), e);
         APIErrorResponse errorResponse = new APIErrorResponse(
                 HttpStatus.BAD_REQUEST,
                 "Validation failed",
                 "Validation failed for one or more fields. Please check your request.",
-                request.getRequestURI()
+                exchange.getRequest().getPath().value()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e, HttpServletRequest request) {
+    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e, ServerWebExchange exchange) {
         log.error("Bad Request : {}" , e.getMessage(), e);
        APIErrorResponse errorResponse = new APIErrorResponse(
                HttpStatus.BAD_REQUEST,
                "Bad Request",
-               "Invalid input provided. Please check your request.",
-               request.getRequestURI()
+               e.getMessage(),
+               exchange.getRequest().getPath().value()
        );
        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<APIErrorResponse> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
+    public ResponseEntity<APIErrorResponse> handleNotFoundException(NotFoundException e, ServerWebExchange exchange) {
         log.error("Not Found : {}" , e.getMessage(), e);
         APIErrorResponse errorResponse = new APIErrorResponse(
                 HttpStatus.NOT_FOUND,
                 "Not found",
-                "The requested resource was not found.",
-                request.getRequestURI()
+                e.getMessage(),
+                exchange.getRequest().getPath().value()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
     /// ******** TO BE REFACTORIZED USING ApiErrorResponse ************
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter format.");
     }
 
