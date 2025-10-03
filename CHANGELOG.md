@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-2.0.1-RELEASE] - 2025-10-03
+
+### Changed
+- Improved stability of GitHub connection error handling.
+  - Before: The system guessed the error status (503/504) by comparing the text of the exception message (ex.getMessage()), which was unreliable and fragile.
+  - After: The system now accurately determines the status (HTTP 503 or HTTP 504) by inspecting the underlying network exception cause (e.g., TimeoutException or ConnectException), ensuring the correct error code is returned to the client. (Taiga [#744], PR [#991])
+
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
