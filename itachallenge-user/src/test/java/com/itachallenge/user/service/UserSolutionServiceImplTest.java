@@ -194,7 +194,7 @@ class UserSolutionServiceImplTest {
 
     @Test
     @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETE solution")
-    void getAllSolutionsByUser_returnsSUBMITTED_COMPLETESolutions() {
+    void getAllSolutionsByUser_returnsSubmittedCompleteSolutions() {
         UserSolutionDocument doc = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
