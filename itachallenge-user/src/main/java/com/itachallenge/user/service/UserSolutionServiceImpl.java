@@ -21,10 +21,14 @@ import java.util.UUID;
 public class UserSolutionServiceImpl implements IUserSolutionService {
 
     private static final Logger log = LoggerFactory.getLogger(UserSolutionServiceImpl.class);
+    private final UserService userService;
     private final IUserSolutionRepository userSolutionRepository;
     private final IChallengeService challengeService;
 
-    public UserSolutionServiceImpl(IUserSolutionRepository userSolutionRepository, IChallengeService challengeService) {
+    static final Integer POINTS_PER_SOLVED_CHALLENGE = 5;
+
+    public UserSolutionServiceImpl(UserServiceImpl userService, IUserSolutionRepository userSolutionRepository, IChallengeService challengeService) {
+        this.userService = userService;
         this.userSolutionRepository = userSolutionRepository;
         this.challengeService = challengeService;
     }
@@ -122,4 +126,11 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
             return Mono.error(new BadRequestException("The 'userId' parameter must be a valid UUID: " + userId));
         }
     }
+
+    public Mono<UserSolutionDocument> awardsPointsForSolvedChallenge(UserSolutionDocument document) {
+        if (document.getStatus() != ChallengeStatus.ENDED) return Mono.just(document);
+        return userService.addPointsToUser(document.getUserId().toString(), POINTS_PER_SOLVED_CHALLENGE)
+                .thenReturn(document);
+    }
 }
+
