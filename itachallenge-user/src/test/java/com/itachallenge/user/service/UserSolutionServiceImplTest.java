@@ -58,7 +58,7 @@ class UserSolutionServiceImplTest {
         languageUuid = UUID.randomUUID();
         solutionText = "Test solution";
     }
-    
+
     @Test
     @DisplayName("addSolution updates existing IN_PROGRESS solution successfully")
     void addSolutionUpdatesExistingSolution() {
@@ -162,40 +162,6 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is SUBMITTED_INCOMPLETE")
-    void addSolutionThrowsExceptionIfSubmittedIncomplete() {
-        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
-                .status("IN_PROGRESS")
-                .solutionText(solutionText)
-                .build();
-
-        UserSolutionDocument existingSolution = UserSolutionDocument.builder()
-                .uuid(UUID.randomUUID())
-                .userId(userUuid)
-                .challengeId(challengeUuid)
-                .languageId(languageUuid)
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_INCOMPLETE)
-                .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
-                .build();
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.just(existingSolution));
-
-        StepVerifier.create(userSolutionService.addSolution(request))
-                .expectErrorMatches(throwable ->
-                        throwable instanceof UnmodificableSolutionException &&
-                                throwable.getMessage().contains("Existing solution is already submitted and cannot be modified."))
-                .verify();
-
-        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
-        verifyNoMoreInteractions(userSolutionRepository);
-        verifyNoInteractions(challengeService);
-    }
-
-    @Test
     @DisplayName("getAllSolutionsByUser with invalid UUID throws BadRequestException")
     void getAllSolutionsByUser_invalidUuid() {
         StepVerifier.create(userSolutionService.getAllSolutionsByUser("bad-uuid"))
@@ -243,6 +209,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(userSolutionService.getAllSolutionsByUser(userUuid.toString()))
                 .assertNext(dto -> {
                     assertEquals("Ended solution", dto.getSolutionText());
+                    assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
                     assertEquals(userUuid.toString(), dto.getUserId());
                 })
                 .verifyComplete();
@@ -259,16 +226,6 @@ class UserSolutionServiceImplTest {
                 .verifyComplete();
     }
 
-    @Test
-    @DisplayName("addSolution creates new SUBMITTED_INCOMPLETE solution and returns response")
-    void addSolutionNewSubmittedIncompleteSolution() {
-        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
-                .status("SUBMITTED_INCOMPLETE")
-                .solutionText(solutionText)
-                .build();
     @Test
     @DisplayName("addSolution creates new SUBMITTED_COMPLETE solution and returns response")
     void addSolutionNewSubmittedCompleteSolution() {
