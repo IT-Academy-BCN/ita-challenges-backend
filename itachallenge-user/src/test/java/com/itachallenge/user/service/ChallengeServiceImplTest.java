@@ -24,7 +24,7 @@ public class ChallengeServiceImplTest {
     private MockWebServer mockWebServer;
     private ChallengeServiceImpl challengeService;
 
-    private static final String SOLVED_URL = "/itachallenge/api/v1/challenge/solved/submitted_completed/%s";
+    private static final String SOLVED_URL = "/itachallenge/api/v1/challenge/solved/submitted_complete/%s";
     public static final String X_SOLVED_MESSAGE = "X-Solved-Message";
 
     @BeforeEach

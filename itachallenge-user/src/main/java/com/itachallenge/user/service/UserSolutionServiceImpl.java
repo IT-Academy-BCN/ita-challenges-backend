@@ -81,7 +81,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
         String solutionText = savedDocument.getSolutionAttemptDocument().getSolutionText();
         ChallengeStatus status = savedDocument.getStatus();
 
-        if (ChallengeStatus.SUBMITTED_COMPLETED.equals(status)) {
+        if (ChallengeStatus.SUBMITTED_COMPLETE.equals(status)) {
             return challengeService.addChallengeToSolved(savedDocument.getChallengeId().toString())
                     .map(solvedDto -> SubmitSolutionResponseDto.builder()
                             .solutionText(solutionText)
