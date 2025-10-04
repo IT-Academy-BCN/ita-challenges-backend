@@ -212,7 +212,7 @@ class UserControllerTest {
                 .expectBody()
                 .jsonPath("$.status").isEqualTo(404)
                 .jsonPath("$.error").isEqualTo("Not found")
-                .jsonPath("$.message").isEqualTo("User not found");        ;
+                .jsonPath("$.message").isEqualTo("User not found");
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
