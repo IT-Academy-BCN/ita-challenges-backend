@@ -2,7 +2,6 @@ package com.itachallenge.user.exception;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
@@ -16,10 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-
-import java.util.Objects;
 
 class UserGlobalExceptionHandlerTest {
 

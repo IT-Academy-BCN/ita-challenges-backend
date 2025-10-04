@@ -80,7 +80,7 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
-    /// ******** TO BE REFACTORIZED USING ApiErrorResponse ************
+    // ******** TO BE REFACTORIZED USING ApiErrorResponse ************
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter format.");
