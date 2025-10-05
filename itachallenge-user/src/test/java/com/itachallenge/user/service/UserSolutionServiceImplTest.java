@@ -83,6 +83,9 @@ class UserSolutionServiceImplTest {
         when(userSolutionRepository.save(any(UserSolutionDocument.class)))
                 .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
+        when(userService.addPointsToUser(userUuid.toString(), POINTS_PER_SOLVED_CHALLENGE))
+                .thenReturn(Mono.just(true));
+
         when(challengeService.addChallengeToSolved(challengeUuid.toString()))
                 .thenReturn(Mono.just(new com.itachallenge.user.dto.SolvedDto(true, 5)));
 
@@ -391,6 +394,71 @@ class UserSolutionServiceImplTest {
                         .anyMatch(e -> e.getLevel() == Level.WARN &&
                                 e.getFormattedMessage().contains("Failed to award")),
                 "Expected WARN log for failed awarding");
+    }
+
+    @Test
+    @DisplayName("addSolution awards points when status is ENDED")
+    void addSolutionAwardsPointsWhenEnded() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("ENDED")
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        when(userService.addPointsToUser(userUuid.toString(), POINTS_PER_SOLVED_CHALLENGE))
+                .thenReturn(Mono.just(true));
+
+        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .thenReturn(Mono.just(new com.itachallenge.user.dto.SolvedDto(true, 3)));
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertTrue(dto.getIsSolved());
+                    assertEquals(3, dto.getTimesSolved());
+                    assertEquals("ENDED", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verify(userService).addPointsToUser(userUuid.toString(), POINTS_PER_SOLVED_CHALLENGE);
+        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+    }
+
+    @Test
+    @DisplayName("addSolution does not award points when status is IN_PROGRESS")
+    void addSolutionDoesNotAwardPointsWhenNotEnded() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("IN_PROGRESS")
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        StepVerifier.create(userSolutionService.addSolution(request))
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertFalse(dto.getIsSolved());
+                    assertEquals("IN_PROGRESS", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verifyNoInteractions(userService);
+        verifyNoInteractions(challengeService);
     }
 
 }
