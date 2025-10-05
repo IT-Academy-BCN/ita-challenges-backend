@@ -1,5 +1,6 @@
 package com.itachallenge.user.exception;
 
+
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -10,15 +11,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+
 import jakarta.validation.ConstraintViolationException;
+
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @Slf4j
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAny(Exception e) {
@@ -26,40 +32,48 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happened.");
     }
 
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleValidationExceptions(ConstraintViolationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter format.");
     }
+
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
     }
+
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<String> handleDatabaseException(DatabaseException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database error: " + e.getMessage());
     }
 
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
@@ -70,27 +84,33 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+
     @ExceptionHandler(UnmodificableSolutionException.class)
     public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
 
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
+
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+
     @ExceptionHandler(GithubUnavailableException.class)
-    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex) {
+    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex, HttpServletRequest request) {
         HttpStatus status;
         String securedMessage;
 
+
         log.error("GithubUnavailableException occurred: {}", ex.getMessage(), ex);
+
 
         if (ex.getCause() instanceof java.net.SocketTimeoutException) {
             status = HttpStatus.GATEWAY_TIMEOUT;
@@ -103,9 +123,23 @@ public class UserGlobalExceptionHandler {
             securedMessage = "An external service error occurred.";
         }
 
-        return ResponseEntity.status(status).body(
-                new APIErrorResponse("External Service Error", securedMessage, Instant.now())
+
+        String errorSummary = "GitHub API error";
+
+
+        String requestPath = request.getRequestURI();
+
+
+        APIErrorResponse errorResponse = new APIErrorResponse(
+                status,
+                errorSummary,
+                securedMessage,
+                requestPath
         );
+
+
+        return new ResponseEntity<>(errorResponse, status);
     }
+
 
 }
