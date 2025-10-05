@@ -51,6 +51,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
                 .build();
 
         return saveValidSolution(userUuid, challengeUuid, languageUuid, challengeStatus, solutionAttempt)
+                .flatMap(this::awardsPointsForSolvedChallenge)
                 .flatMap(this::buildSubmitSolutionResponse)
                 .doOnSuccess(response -> log.info("PUT request successfully processed for challenge {} and user {}.", challengeUuid, userUuid))
                 .doOnError(error -> log.error("PUT operation failed: {} for challenge {} and user {}.", error.getMessage(), challengeUuid, userUuid));
