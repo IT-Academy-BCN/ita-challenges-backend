@@ -103,7 +103,7 @@ class GlobalExceptionHandlerTest {
         HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
         ResponseStatusException ex = new ResponseStatusException(expectedStatus, expectedErrorMessage);
 
-        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        GlobalExceptionHandler handler = new GlobalExceptionHandler(messageSource);
 
         // Act
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
@@ -121,7 +121,7 @@ class GlobalExceptionHandlerTest {
         when(ex.getStatusCode()).thenReturn(expectedStatus);
         when(ex.getDetailMessageArguments()).thenReturn(null);
 
-        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        GlobalExceptionHandler handler = new GlobalExceptionHandler(messageSource);
 
         // Act
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
