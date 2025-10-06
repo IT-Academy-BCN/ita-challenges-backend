@@ -5,11 +5,13 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
+import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -400,7 +402,7 @@ public class UserController {
                     return ResponseEntity.ok().body(bookmarks);
                 });
     }
-    
+
     @Operation(
             summary = "Retrieve all solutions for a user.",
             parameters = {
@@ -426,5 +428,59 @@ public class UserController {
                 .body(userSolutionService.getAllSolutionsByUser(userId)
                 )
         );
+    }
+
+    @Operation(
+            summary = "Get solutions by GitHub username",
+            description = "Retrieve all solutions for a specific user by their GitHub username",
+            parameters = {
+                    @Parameter(
+                            name = "githubUsername",
+                            description = "GitHub username of the user",
+                            required = true,
+                            in = ParameterIn.PATH
+                    )
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Solutions found, if none are found, returns an empty array",
+                            content = @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = UserSolutionResponseDto.class)))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid GitHub username",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User not found",
+                            content = @Content(mediaType = "application/json")
+                    ),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Unexpected error",
+                            content = @Content(mediaType = "application/json")
+                    )
+            }
+    )
+    @GetMapping("/users/{githubUsername}/solutions")
+    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getSolutionsByGithubUsername(
+            @PathVariable @ValidGithubUsername String githubUsername) {
+
+        return userService.getUserByGithubUsername(githubUsername)
+                .map(user -> {
+                    log.info("Retrieving solutions for user: {} (ID: {})", githubUsername, user.getUuid());
+                    Flux<UserSolutionResponseDto> solutions = userSolutionService.getAllSolutionsByUser(user.getUuid().toString());
+                    return ResponseEntity.ok()
+                            .header(X_VALIDATION_STATUS, "Success")
+                            .header(X_GITHUB_USERNAME, githubUsername)
+                            .body(solutions);
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.warn("User not found with GitHub username: {}", githubUsername);
+                    return Mono.error(new NotFoundException("User not found with GitHub username: " + githubUsername));
+                }));
     }
 }
