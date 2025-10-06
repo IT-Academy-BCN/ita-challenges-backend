@@ -2,6 +2,7 @@ package com.itachallenge.user.exception;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
@@ -17,6 +18,8 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 
 import jakarta.validation.ConstraintViolationException;
 
+import java.util.Objects;
+
 class UserGlobalExceptionHandlerTest {
 
     private UserGlobalExceptionHandler exceptionHandler;
@@ -26,17 +29,23 @@ class UserGlobalExceptionHandlerTest {
         exceptionHandler = new UserGlobalExceptionHandler();
     }
 
-    @Test
-    void testHandleAny() {
-        Exception exception = new Exception("Unexpected Error");
-
+    private ServerWebExchange mockExchange(String path){
         ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
         ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
         RequestPath requestPath = Mockito.mock(RequestPath.class);
 
-        Mockito.when(exchange.getRequest()).thenReturn(request);
-        Mockito.when(request.getPath()).thenReturn(requestPath);
-        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+        when(exchange.getRequest()).thenReturn(request);
+        when(request.getPath()).thenReturn(requestPath);
+        when(requestPath.value()).thenReturn(path);
+
+        return exchange;
+    }
+
+    @Test
+    void testHandleAny() {
+        Exception exception = new Exception("Unexpected Error");
+
+        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -56,13 +65,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleIllegalArgument() {
         IllegalArgumentException exception = new IllegalArgumentException("Invalid argument");
 
-        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
-        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
-        RequestPath requestPath = Mockito.mock(RequestPath.class);
-
-        Mockito.when(exchange.getRequest()).thenReturn(request);
-        Mockito.when(request.getPath()).thenReturn(requestPath);
-        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleIllegalArgument(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -80,13 +83,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleValidationExceptions() {
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed", null);
 
-        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
-        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
-        RequestPath requestPath = Mockito.mock(RequestPath.class);
-
-        Mockito.when(exchange.getRequest()).thenReturn(request);
-        Mockito.when(request.getPath()).thenReturn(requestPath);
-        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -113,13 +110,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleBadRequestException() {
         BadRequestException exception = new BadRequestException("Bad request error");
 
-        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
-        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
-        RequestPath requestPath = Mockito.mock(RequestPath.class);
-
-        Mockito.when(exchange.getRequest()).thenReturn(request);
-        Mockito.when(request.getPath()).thenReturn(requestPath);
-        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -146,13 +137,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleNotFoundException() {
         NotFoundException exception = new NotFoundException("Resource not found");
 
-        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
-        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
-        RequestPath requestPath = Mockito.mock(RequestPath.class);
-
-        Mockito.when(exchange.getRequest()).thenReturn(request);
-        Mockito.when(request.getPath()).thenReturn(requestPath);
-        Mockito.when(requestPath.value()).thenReturn("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -193,7 +178,7 @@ class UserGlobalExceptionHandlerTest {
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
 
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
-        assertEquals("GitHub API error", response.getBody().getError());
+        assertEquals("GitHub API error", Objects.requireNonNull(response.getBody()).getError());
     }
 
     @Test
