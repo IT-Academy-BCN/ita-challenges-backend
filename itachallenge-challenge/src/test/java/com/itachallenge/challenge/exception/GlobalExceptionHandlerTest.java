@@ -38,7 +38,6 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -145,7 +144,6 @@ class GlobalExceptionHandlerTest {
         when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
         when(bindingResult.getObjectName()).thenReturn("object");
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
-        when(messageSource.getMessage(any(), any())).thenReturn("mock message");
         when(request.getRequestURI()).thenReturn("/test-uri");
 
         // Act
