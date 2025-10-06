@@ -157,7 +157,7 @@ public class GlobalExceptionHandler {
 
         String message = String.format(
                 "Validation failed for one or more fields in %s.",
-                objectName.replace("Dto", "").toLowerCase()
+                objectName
         );
 
         return APIErrorResponse.builder()
