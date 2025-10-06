@@ -142,9 +142,10 @@ class GlobalExceptionHandlerTest {
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
+        when(request.getRequestURI()).thenReturn("/test-uri");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -161,9 +162,10 @@ class GlobalExceptionHandlerTest {
         when(fieldError.getCodes()).thenReturn(new String[]{"message"});
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
+        when(request.getRequestURI()).thenReturn("/test-uri");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
