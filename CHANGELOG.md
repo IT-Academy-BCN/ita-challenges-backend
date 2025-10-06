@@ -3,6 +3,15 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-2.0.1-RELEASE] - 2025-10-06
+
+### Changed
+- Updated UserSolutionServiceImpl.saveValidSolution() logic to enforce immutability for submitted solutions. (Taiga [#728], PR [#984])
+  - Before: Solutions with status `ENDED` could be modified, leading to ambiguity in submission state.
+  - After: Solutions marked as `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE` now throw `UnmodifiableSolutionException` 
+  when updated. Only `IN_PROGRESS` solutions remain editable.
+  - This change ensures consistent behavior and prevents accidental overwrites of finalized submissions.
+
 ### [itachallenge-user-2.0.0-RELEASE] - 2025-09-12
 
 ### Changed
