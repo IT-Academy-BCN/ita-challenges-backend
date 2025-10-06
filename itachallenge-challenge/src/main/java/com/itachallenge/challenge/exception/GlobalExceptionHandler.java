@@ -99,23 +99,11 @@ public class GlobalExceptionHandler {
                         .message(messageSource.getMessage(error, locale))
                         .build())
                 .toList();
-
+        
         // Build unified structured response
         String objectName = ex.getBindingResult().getObjectName();
-        String message = String.format(
-                "Validation failed for one or more fields in %s.",
-                objectName
-        );
-        APIErrorResponse response = APIErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message(message)
-                .errors(fieldErrors)
-                .timestamp(Instant.now())
-                .path(request.getRequestURI())
-                .build();
-
-        return ResponseEntity.badRequest().body(response);
+        return ResponseEntity.badRequest()
+                .body(buildValidationErrorResponse(objectName, fieldErrors, request));
     }
 
     @ExceptionHandler(BadUUIDException.class)
@@ -160,5 +148,25 @@ public class GlobalExceptionHandler {
             }
         }
         return Optional.empty();
+    }
+
+    private APIErrorResponse buildValidationErrorResponse(
+            String objectName,
+            List<FieldErrorDto> fieldErrors,
+            HttpServletRequest request) {
+
+        String message = String.format(
+                "Validation failed for one or more fields in %s.",
+                objectName.replace("Dto", "").toLowerCase()
+        );
+
+        return APIErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(message)
+                .errors(fieldErrors)
+                .timestamp(Instant.now())
+                .path(request.getRequestURI())
+                .build();
     }
 }
