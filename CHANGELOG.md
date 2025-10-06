@@ -3,7 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
+### Changed
+- Added github-core properties in Auth & User microservices (Taiga [#651], PR [#965])
+
+### [itachallenge-auth-2.1.0-RELEASE] - 2025-09-22
+
+### Changed
+- Removed GitHub verification logic from `AuthService` and delegated it to `GithubOAuthService` in `github-core` (Taiga [#651], PR [#965])
+
+### [itachallenge-githubcore-1.0.1-RELEASE] - 2025-09-22
+
 
 ### Added
 - Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
@@ -26,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Added github username validation to user microservice upon creation of a new user  (Taiga [#650], PR [#960])
+
 
 ### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
 
