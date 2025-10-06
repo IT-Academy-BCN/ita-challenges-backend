@@ -7,6 +7,7 @@ import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
 import com.itachallenge.jwtcore.service.IJwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.hamcrest.MatcherAssert;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -89,6 +91,8 @@ class GlobalExceptionHandlerTest {
     private MappingMongoConverter mappingMongoConverter;
     @MockBean
     private MessageSource messageSource;
+    @Mock
+    private HttpServletRequest request;
 
     @BeforeEach
     void setUp() {
