@@ -38,6 +38,7 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -90,7 +91,7 @@ class GlobalExceptionHandlerTest {
     private IJwtService jwtService;
     @MockBean
     private MappingMongoConverter mappingMongoConverter;
-    @MockBean
+    @Mock
     private MessageSource messageSource;
     @Mock
     private HttpServletRequest request;
@@ -143,6 +144,7 @@ class GlobalExceptionHandlerTest {
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
+        when(messageSource.getMessage(any(), any())).thenReturn("mock message");
         when(request.getRequestURI()).thenReturn("/test-uri");
 
         // Act
