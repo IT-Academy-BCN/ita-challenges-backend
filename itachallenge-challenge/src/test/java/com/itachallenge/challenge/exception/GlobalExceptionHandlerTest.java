@@ -143,6 +143,7 @@ class GlobalExceptionHandlerTest {
         // Arrange
         BindingResult bindingResult = mock(BindingResult.class);
         when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
+        when(bindingResult.getObjectName()).thenReturn("object");
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
         when(messageSource.getMessage(any(), any())).thenReturn("mock message");
         when(request.getRequestURI()).thenReturn("/test-uri");
