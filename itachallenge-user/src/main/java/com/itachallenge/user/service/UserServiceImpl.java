@@ -174,5 +174,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(UUID.fromString(userId))
                 .switchIfEmpty(Mono.error(new NotFoundException("User not found")));
     }
-    
+
+    @Override
+    public Mono<UserDocument> getUserByGithubUsername(String githubUsername) {
+        return userRepository.findByUsername(githubUsername)
+                .switchIfEmpty(Mono.error(new NotFoundException("User not found with GitHub username: " + githubUsername)));
+    }
 }

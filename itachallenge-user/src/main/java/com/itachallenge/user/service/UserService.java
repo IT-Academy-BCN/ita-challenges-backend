@@ -22,4 +22,6 @@ public interface UserService {
     Mono<Set<UUID>> getUserBookmarks(String userId);
     
     Mono<UserDocument> getUserById(String userId);
+
+    Mono<UserDocument> getUserByGithubUsername(String githubUsername);
 }
