@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.Instant;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -12,5 +13,9 @@ import java.util.List;
 @Getter
 @Builder
 public class ErrorResponseDto {
+    private Instant timestamp;
+    private int status;
+    String error;
+    String message;
     private final List<FieldErrorDto> errors;
 }
