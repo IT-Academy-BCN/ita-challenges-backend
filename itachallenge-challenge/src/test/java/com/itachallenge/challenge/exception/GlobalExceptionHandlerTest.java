@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.MessageDto;
@@ -18,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.context.MessageSource;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import java.util.*;
 
@@ -86,6 +87,8 @@ class GlobalExceptionHandlerTest {
     private IJwtService jwtService;
     @MockBean
     private MappingMongoConverter mappingMongoConverter;
+    @MockBean
+    private MessageSource messageSource;
 
     @BeforeEach
     void setUp() {
@@ -106,8 +109,8 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-                    assertEquals(expectedStatus, responseEntity.getStatusCode());
-                    assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
     }
 
     @Test
@@ -124,7 +127,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
 
         // Assert
-                    assertEquals(expectedStatus, responseEntity.getStatusCode());
+        assertEquals(expectedStatus, responseEntity.getStatusCode());
         assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
     }
 
@@ -181,7 +184,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
-                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Expected message"));
     }
@@ -236,7 +239,7 @@ class GlobalExceptionHandlerTest {
         ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleBadUUIDException(badUUIDException);
 
         // Assert
-                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
         Assertions.assertTrue(responseBody.contains("Invalid Id format"));
     }
@@ -276,7 +279,7 @@ class GlobalExceptionHandlerTest {
         String responseBody = responseEntity.getBody().getMessage();
         assertTrue(responseBody.contains("Tag not found"));
     }
-    
+
     @Test
     void testHandleInvalidFormat_TagsField() {
         InvalidFormatException ex = InvalidFormatException.from(
@@ -285,18 +288,18 @@ class GlobalExceptionHandlerTest {
                 "invalid-uuid",
                 UUID.class
         );
-        
+
         ex.prependPath(new Reference(null, "tags"));
-        
+
         ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
-        
+
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
         assertEquals(
                 "invalid format UUID tag: invalid-uuid",
                 Objects.requireNonNull(resp.getBody()).getMessage()
         );
     }
-    
+
     @Test
     void testHandleInvalidFormat_OtherFieldFallback() {
         InvalidFormatException ex = InvalidFormatException.from(
@@ -306,9 +309,9 @@ class GlobalExceptionHandlerTest {
                 UUID.class
         );
         ex.prependPath(new Reference(null, "otherField"));
-        
+
         ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
-        
+
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
         assertEquals(
                 ex.getOriginalMessage(),
