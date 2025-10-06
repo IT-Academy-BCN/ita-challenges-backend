@@ -3,6 +3,7 @@ package com.itachallenge.challenge.exception;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.config.PropertiesConfig;
+import com.itachallenge.challenge.dto.APIErrorResponse;
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itachallenge.challenge.repository.*;
 import com.itachallenge.challenge.service.*;
@@ -145,7 +146,7 @@ class GlobalExceptionHandlerTest {
         when(request.getRequestURI()).thenReturn("/test-uri");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
+        ResponseEntity<APIErrorResponse> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -165,7 +166,7 @@ class GlobalExceptionHandlerTest {
         when(request.getRequestURI()).thenReturn("/test-uri");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
+        ResponseEntity<APIErrorResponse> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException, request);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
