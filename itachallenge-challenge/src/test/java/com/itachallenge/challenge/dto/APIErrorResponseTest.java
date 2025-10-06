@@ -12,10 +12,10 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ErrorResponseDtoTest {
+class APIErrorResponseTest {
 
     private ObjectMapper objectMapper;
-    private final Logger log = LoggerFactory.getLogger(ErrorResponseDtoTest.class);
+    private final Logger log = LoggerFactory.getLogger(APIErrorResponseTest.class);
 
     @BeforeEach
     void setUp() {
@@ -26,7 +26,7 @@ class ErrorResponseDtoTest {
     @Test
     @DisplayName("Serializes ErrorResponseDto with multiple FieldErrorDto and metadata correctly")
     void shouldSerializeErrorResponseWithMultipleErrorsAndMetadata() throws Exception {
-        ErrorResponseDto response = ErrorResponseDto.builder()
+        APIErrorResponse response = APIErrorResponse.builder()
                 .status(400)
                 .error("Bad Request")
                 .message("Validation failed")
@@ -61,7 +61,7 @@ class ErrorResponseDtoTest {
     @Test
     @DisplayName("Does not serialize empty error list when using @JsonInclude.NON_EMPTY")
     void shouldOmitEmptyErrorsList() throws Exception {
-        ErrorResponseDto response = ErrorResponseDto.builder()
+        APIErrorResponse response = APIErrorResponse.builder()
                 .status(400)
                 .error("Bad Request")
                 .message("Empty error list")
@@ -80,7 +80,7 @@ class ErrorResponseDtoTest {
     @Test
     @DisplayName("Serializes valid JSON structure with minimal metadata and one FieldErrorDto")
     void shouldSerializeValidJson() throws Exception {
-        ErrorResponseDto response = ErrorResponseDto.builder()
+        APIErrorResponse response = APIErrorResponse.builder()
                 .status(400)
                 .error("Bad Request")
                 .message("Some fields are invalid")
