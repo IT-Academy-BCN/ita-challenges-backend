@@ -29,14 +29,14 @@ class UserGlobalExceptionHandlerTest {
         exceptionHandler = new UserGlobalExceptionHandler();
     }
 
-    private ServerWebExchange mockExchange(String path){
+    private ServerWebExchange mockExchange(){
         ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
         ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
         RequestPath requestPath = Mockito.mock(RequestPath.class);
 
         when(exchange.getRequest()).thenReturn(request);
         when(request.getPath()).thenReturn(requestPath);
-        when(requestPath.value()).thenReturn(path);
+        when(requestPath.value()).thenReturn("/api/v1/user/123");
 
         return exchange;
     }
@@ -45,7 +45,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleAny() {
         Exception exception = new Exception("Unexpected Error");
 
-        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -65,7 +65,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleIllegalArgument() {
         IllegalArgumentException exception = new IllegalArgumentException("Invalid argument");
 
-        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleIllegalArgument(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -83,7 +83,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleValidationExceptions() {
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed", null);
 
-        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -110,7 +110,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleBadRequestException() {
         BadRequestException exception = new BadRequestException("Bad request error");
 
-        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, exchange);
         APIErrorResponse body = response.getBody();
@@ -137,7 +137,7 @@ class UserGlobalExceptionHandlerTest {
     void testHandleNotFoundException() {
         NotFoundException exception = new NotFoundException("Resource not found");
 
-        ServerWebExchange exchange = mockExchange("/api/v1/user/123");
+        ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, exchange);
         APIErrorResponse body = response.getBody();
