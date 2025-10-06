@@ -9,9 +9,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.stereotype.Component;
-import java.util.Objects;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Component
@@ -24,35 +24,35 @@ import java.util.UUID;
 public class ResourceDto {
 
     @JsonProperty(value = "resourceId", index = 0)
-    @NotNull(message = "cannot be null")
+    @NotNull(message = "{resource.id.notNull}")
     private UUID resourceId;
 
     @JsonProperty(value = "title", index = 1)
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{resource.title.notEmpty}")
     private String title;
 
     @JsonProperty(value = "description", index = 2)
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{resource.description.notEmpty}")
     private String description;
 
     @JsonProperty(value = "url", index = 3)
-    @NotEmpty(message = "cannot be empty")
+    @NotEmpty(message = "{resource.url.notEmpty}")
     private String url;
 
     @JsonProperty(value = "topic", index = 4)
-    @NotNull(message = "cannot be empty")
+    @NotNull(message = "{resource.topic.notNull}")
     private Topic topic;
 
     @JsonProperty(value = "contentType", index = 5)
-    @NotNull(message = "cannot be null")
+    @NotNull(message = "{resource.contentType.notNull}")
     private ResourceContentType contentType;
 
     @JsonProperty(value = "challengeIds", index = 6)
-    @NotNull(message = "cannot be empty")
+    @NotNull(message = "{resource.challengeIds.notNull}")
     private List<UUID> challengeIds;
 
     @JsonProperty(value = "associationType", index = 7)
-    @NotNull(message = "cannot be empty")
+    @NotNull(message = "{resource.associationType.notNull}")
     private AssociationType associationType;
 
     @Override
