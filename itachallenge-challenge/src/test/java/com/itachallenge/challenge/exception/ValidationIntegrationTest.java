@@ -42,7 +42,7 @@ class ValidationIntegrationTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("Validation failed for one or more fields in solution.")
+                .jsonPath("$.message").isEqualTo("Validation failed for one or more fields in solutionDto.")
                 .jsonPath("$.errors[0].message").isEqualTo("The solution text cannot be empty.");
     }
 
@@ -65,7 +65,7 @@ class ValidationIntegrationTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("Validation failed for one or more fields in challengecreate.")
+                .jsonPath("$.message").isEqualTo("Validation failed for one or more fields in challengeCreateDto.")
                 .jsonPath("$.errors[?(@.field == 'challengeTitle')].message")
                 .isEqualTo("The challenge title cannot be empty.");
     }
@@ -96,7 +96,7 @@ class ValidationIntegrationTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
-                .jsonPath("$.message").isEqualTo("Validation failed for one or more fields in resource.")
+                .jsonPath("$.message").isEqualTo("Validation failed for one or more fields in resourceDto.")
                 .jsonPath("$.errors[?(@.field == 'resourceId')].message")
                 .isEqualTo("The resource ID cannot be null.")
                 .jsonPath("$.errors.length()").isEqualTo(8);

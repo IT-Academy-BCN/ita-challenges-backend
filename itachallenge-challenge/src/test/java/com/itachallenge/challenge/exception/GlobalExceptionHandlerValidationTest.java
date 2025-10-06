@@ -71,8 +71,8 @@ class GlobalExceptionHandlerValidationTest {
         assertNotNull(body);
         assertEquals(400, body.getStatus());
         assertEquals("/api/test", body.getPath());
-        assertTrue(body.getMessage().contains("test"),
-                "Message should contain lowercased object name");
+        assertTrue(body.getMessage().contains("TestDto"),
+                "Message should contain 'TestDto'");
 
         // Check that field errors are correctly mapped
         assertNotNull(body.getErrors());
