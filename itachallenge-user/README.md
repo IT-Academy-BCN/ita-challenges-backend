@@ -99,6 +99,7 @@ The service now provides more reliable status codes for external connection issu
 - Robust GitHub Status Codes:** Errors related to external GitHub service availability are now accurately mapped based on the type of failure, eliminating fragile string comparisons.
   - HTTP 504 (Gateway Timeout): Returned when the connection attempt exceeds the configured time limit.
   - HTTP 503 (Service Unavailable): Returned when a connection is refused or the external service is otherwise unreachable.
+- Standardized Error Response Body (PR 2/2): All API error responses now adhere to the service-wide APIErrorResponse DTO structure. This ensures clients receive a predictable JSON payload with all necessary fields: `timestamp`, `status`, `error`, `message`, and the request `path`.
 
 This change ensures clients receive accurate status codes for better application recovery.
 
