@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValid(
+    public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
 
@@ -99,7 +99,7 @@ public class GlobalExceptionHandler {
                         .message(messageSource.getMessage(error, locale))
                         .build())
                 .toList();
-        
+
         // Build unified structured response
         String objectName = ex.getBindingResult().getObjectName();
         return ResponseEntity.badRequest()
