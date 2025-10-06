@@ -10,6 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected usages of the UserDocument all-args constructor in tests to account for the new field.
 - Added dedicated test cases to verify the correct behavior of the points field, including default initialization.
 
+### [itachallenge-challenge-3.0.1-RELEASE] - 2025-10-07
+
+### Added
+
+- Added APIErrorResponse and FieldErrorDto. (Taiga [#731], PR [#996])
+- Added message.properties file (Taiga [#734], PR [#997])
+
+### Changed
+
+- validation annotations in SolutionDto, ChallengeCreateDto and ResourceDto to use message.properties (Taiga [#770],
+  PR [#998])
+- GlobalExceptionHandler to return appropriately populated APIErrorResponse when MethodArgumentNotValidException fires (
+  Taiga [#756],
+  PR [#999])
+
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
