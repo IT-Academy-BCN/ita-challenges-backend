@@ -163,6 +163,7 @@ class GlobalExceptionHandlerTest {
         when(fieldError.getDefaultMessage()).thenReturn("default message");
         when(fieldError.getCodes()).thenReturn(new String[]{"message"});
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
+        when(bindingResult.getObjectName()).thenReturn("object");
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
         when(request.getRequestURI()).thenReturn("/test-uri");
 
