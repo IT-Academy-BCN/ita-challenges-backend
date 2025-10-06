@@ -779,7 +779,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"challengeTitle\": \"t\u00edtol\",\r\n    \"description\": \"descripci\u00f3\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"soluci\u00f3\"\r\n}",
+              "raw": "{\r\n    \"challengeTitle\": \"t\u00edtol\",\r\n    \"description\": \"descripci\u00f3\",\r\n    \"level\": \"EASY\",\r\n    \"language\": \"Java\",\r\n    \"solution\": \"soluci\u00f3\",\r\n    \"topic\": \"ALL\",\r\n    \"tags\": []\r\n}",
               "options": {
                 "raw": {
                   "language": "json"

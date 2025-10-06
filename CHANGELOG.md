@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - After: Solutions marked as `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE` now throw `UnmodifiableSolutionException` 
   when updated. Only `IN_PROGRESS` solutions remain editable.
   - This change ensures consistent behavior and prevents accidental overwrites of finalized submissions.
+### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
+
+### Added
+- Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
 
 ### [itachallenge-user-2.0.0-RELEASE] - 2025-09-12
 
