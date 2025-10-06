@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
 
+### [itachallenge-user-2.0.0-RELEASE] - 2025-09-12
+
+### Changed
+- Added github username validation to user microservice upon creation of a new user (Taiga [#650], PR [#960])
+  - Before: POST /users/create accepted any githubUsername value and returned success (201/ok) even if that wasn't a GitHub username. 
+  - After: POST /users/create now calls the GitHub API and rejects the request when the GitHub username does not exist. 
+  - Clients that previously relied on creating users with invalid GitHub usernames will now get errors for some requests that used to succeed.
+
 ### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
 
 ### Added
