@@ -6,22 +6,48 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itachallenge.challenge.enums.AssociationType;
 import com.itachallenge.challenge.enums.ResourceContentType;
 import com.itachallenge.challenge.enums.Topic;
-import jakarta.validation.*;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
+import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.Set;
-import java.util.UUID;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 class ResourceDtoTest {
+
+    private static Validator validator;
+
+    @BeforeAll
+    static void setupValidator() {
+        Locale.setDefault(Locale.ENGLISH);
+        ValidatorFactory factory = Validation.byDefaultProvider()
+                .configure()
+                .messageInterpolator(
+                        new ResourceBundleMessageInterpolator(
+                                new PlatformResourceBundleLocator("messages")
+                        )
+                )
+                .buildValidatorFactory();
+        validator = factory.getValidator();
+    }
+
 
     @Test
     void rightSerializationTest() throws Exception {
@@ -66,19 +92,19 @@ class ResourceDtoTest {
     @Test
     void rightDeserializationTest() throws Exception {
         String jsonContent = """
-    {
-        "resourceId": "123e4567-e89b-12d3-a456-426614174000",
-        "title": "DEBUGGING FOR THE FIRST TIME",
-        "description": "A guide on how to start debugging",
-        "url": "https://youtubetutorial.com/debugging",
-        "topic": "DEBUGGING", 
-        "contentType": "BLOG",
-        "challengeIds": [
-            "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-            "550e8400-e29b-41d4-a716-446655440000"
-        ]
-    }
-    """;
+                {
+                    "resourceId": "123e4567-e89b-12d3-a456-426614174000",
+                    "title": "DEBUGGING FOR THE FIRST TIME",
+                    "description": "A guide on how to start debugging",
+                    "url": "https://youtubetutorial.com/debugging",
+                    "topic": "DEBUGGING", 
+                    "contentType": "BLOG",
+                    "challengeIds": [
+                        "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+                        "550e8400-e29b-41d4-a716-446655440000"
+                    ]
+                }
+                """;
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
@@ -173,9 +199,6 @@ class ResourceDtoTest {
                 .build();
 
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
         Set<ConstraintViolation<ResourceDto>> violations = validator.validate(invalidResource);
 
         assertFalse("ResourceDto invalid", violations.isEmpty());
@@ -226,6 +249,111 @@ class ResourceDtoTest {
         Assertions.assertFalse(jsonContent.contains("\"associationType\":null"), " associationType should not be here");
     }
 
+    @Test
+    @DisplayName("Should fail validation when all required fields are missing or empty")
+    void shouldFailWhenFieldsMissingOrEmpty() {
+        ResourceDto dto = ResourceDto.builder()
+                .resourceId(null)
+                .title("")
+                .description("")
+                .url("")
+                .topic(null)
+                .contentType(null)
+                .challengeIds(null)
+                .associationType(null)
+                .build();
+
+        Set<ConstraintViolation<ResourceDto>> violations = validator.validate(dto);
+
+        assertThat(violations).isNotEmpty()
+                .anyMatch(v -> v.getMessage().equals("The resource ID cannot be null."))
+                .anyMatch(v -> v.getMessage().equals("The resource title cannot be empty."))
+                .anyMatch(v -> v.getMessage().equals("The resource description cannot be empty."))
+                .anyMatch(v -> v.getMessage().equals("The resource URL cannot be empty."))
+                .anyMatch(v -> v.getMessage().equals("The topic must be specified."))
+                .anyMatch(v -> v.getMessage().equals("The content type must be specified."))
+                .anyMatch(v -> v.getMessage().equals("The list of associated challenge IDs cannot be null."))
+                .anyMatch(v -> v.getMessage().equals("The association type must be specified."));
+    }
+
+    @Test
+    @DisplayName("Should fail validation when topic is null")
+    void shouldFailWhenTopicNull() {
+        ResourceDto dto = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Resource title")
+                .description("Resource description")
+                .url("https://example.com")
+                .topic(null)
+                .contentType(ResourceContentType.VIDEO)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.ALLSAMETOPIC)
+                .build();
+
+        Set<ConstraintViolation<ResourceDto>> violations = validator.validate(dto);
+
+        assertThat(violations)
+                .anyMatch(v -> v.getMessage().equals("The topic must be specified."));
+    }
+
+    @Test
+    @DisplayName("Should fail validation when contentType is null")
+    void shouldFailWhenContentTypeNull() {
+        ResourceDto dto = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Title")
+                .description("Description")
+                .url("https://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(null)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.ALLSAMETOPIC)
+                .build();
+
+        Set<ConstraintViolation<ResourceDto>> violations = validator.validate(dto);
+
+        assertThat(violations)
+                .anyMatch(v -> v.getMessage().equals("The content type must be specified."));
+    }
+
+    @Test
+    @DisplayName("Should fail validation when challengeIds list is null")
+    void shouldFailWhenChallengeIdsNull() {
+        ResourceDto dto = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Title")
+                .description("Description")
+                .url("https://example.com")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .challengeIds(null)
+                .associationType(AssociationType.ALLSAMETOPIC)
+                .build();
+
+        Set<ConstraintViolation<ResourceDto>> violations = validator.validate(dto);
+
+        assertThat(violations)
+                .anyMatch(v -> v.getMessage().equals("The list of associated challenge IDs cannot be null."));
+    }
+
+    @Test
+    @DisplayName("Should pass validation when all fields are valid")
+    void shouldPassWhenValid() {
+        ResourceDto dto = ResourceDto.builder()
+                .resourceId(UUID.randomUUID())
+                .title("Intro to Algorithms")
+                .description("Comprehensive guide to algorithmic problem-solving.")
+                .url("https://example.com/resource")
+                .topic(Topic.DEBUGGING)
+                .contentType(ResourceContentType.VIDEO)
+                .challengeIds(List.of(UUID.randomUUID()))
+                .associationType(AssociationType.ALLSAMETOPIC)
+                .build();
+
+        Set<ConstraintViolation<ResourceDto>> violations = validator.validate(dto);
+
+        assertThat(violations).isEmpty();
+    }
 
 
 }
