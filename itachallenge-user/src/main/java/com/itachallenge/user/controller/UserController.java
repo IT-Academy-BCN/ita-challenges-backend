@@ -471,12 +471,32 @@ public class UserController {
     public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getSolutionsByGithubUsername(
             @PathVariable @ValidGithubUsername String githubUsername) {
         return userService.getUserByGithubUsername(githubUsername)
-            .flatMap(user -> Mono.just(ResponseEntity.ok()
-                .header(X_VALIDATION_STATUS, "Success")
-                .header(X_GITHUB_USERNAME, githubUsername)
-                .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
-                .body(userSolutionService.getAllSolutionsByUser(user.getUuid().toString()))
-            ))
+            .flatMap(user -> userSolutionService.getAllSolutionsByUser(user.getUuid().toString())
+                .collectList()
+                .map(list -> ResponseEntity.ok()
+                    .header(X_VALIDATION_STATUS, "Success")
+                    .header(X_GITHUB_USERNAME, githubUsername)
+                    .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                    .body(Flux.fromIterable(list)))
+                .onErrorResume(e -> {
+                    if (e instanceof NotFoundException) {
+                        log.warn("Solution service: not found for user {}", githubUsername);
+                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
+                            .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                            .body(Flux.empty()));
+                    } else if (e instanceof IllegalArgumentException) {
+                        log.warn("Solution service: invalid argument for user {}", githubUsername);
+                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                            .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                            .body(Flux.empty()));
+                    } else {
+                        log.error("Solution service: unexpected error for user {}: {}", githubUsername, e.getMessage());
+                        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                            .body(Flux.empty()));
+                    }
+                })
+            )
             .onErrorResume(e -> {
                 HttpStatus status;
                 if (e instanceof NotFoundException) {

@@ -779,4 +779,27 @@ class UserControllerTest {
         verify(userService, times(1)).getUserByGithubUsername(invalidGithubUsername);
         verify(userSolutionService, never()).getAllSolutionsByUser(anyString());
     }
+
+    @Test
+    @DisplayName("GET /users/github/{githubUsername}/solutions returns 500 when solution service throws unexpected error")
+    void getSolutionsByGithubUsername_WhenSolutionServiceThrowsUnexpectedError_Returns500() {
+        String githubUsername = "testuser";
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
+
+        when(userService.getUserByGithubUsername(githubUsername))
+                .thenReturn(Mono.just(user));
+        when(userSolutionService.getAllSolutionsByUser(userId.toString()))
+                .thenReturn(Flux.error(new RuntimeException("Unexpected error")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
+                .exchange()
+                .expectStatus().is5xxServerError()
+                .expectBodyList(UserSolutionResponseDto.class)
+                .hasSize(0);
+
+        verify(userService, times(1)).getUserByGithubUsername(githubUsername);
+        verify(userSolutionService, times(1)).getAllSolutionsByUser(userId.toString());
+    }
 }
