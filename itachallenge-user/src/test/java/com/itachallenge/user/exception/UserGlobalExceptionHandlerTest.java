@@ -1,6 +1,7 @@
 package com.itachallenge.user.exception;
 
 
+import static com.itachallenge.user.exception.UserGlobalExceptionHandler.GITHUB_ERROR_SUMMARY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -169,8 +170,8 @@ class UserGlobalExceptionHandlerTest {
                 "The handler must return HTTP 503 for a ConnectException cause.");
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), responseBody.getStatus(),
                 "DTO status field must match HTTP 503.");
-        assertEquals("GitHub API error", responseBody.getError(),
-                "DTO error field must be 'GitHub API error'.");
+        assertEquals(GITHUB_ERROR_SUMMARY, responseBody.getError(),
+                "DTO error field must be the defined constant..");
         assertEquals(expectedPath, responseBody.getPath(),
                 "DTO path field must match the request URI.");
         assertTrue(responseBody.getMessage().contains("unavailable"),
@@ -196,8 +197,8 @@ class UserGlobalExceptionHandlerTest {
                 "The handler must return HTTP 504 for a SocketTimeoutException cause.");
         assertEquals(HttpStatus.GATEWAY_TIMEOUT.value(), responseBody.getStatus(),
                 "DTO status field must match HTTP 504.");
-        assertEquals("GitHub API error", responseBody.getError(),
-                "DTO error field must be 'GitHub API error'.");
+        assertEquals(GITHUB_ERROR_SUMMARY, responseBody.getError(),
+                "DTO error field must be the defined constant.");
         assertEquals(expectedPath, responseBody.getPath(),
                 "DTO path field must match the request URI.");
         assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("timed out"),
@@ -222,8 +223,8 @@ class UserGlobalExceptionHandlerTest {
                 "The handler must return HTTP 503 for other types of causes (not recognized or null).");
         assertEquals(HttpStatus.SERVICE_UNAVAILABLE.value(), responseBody.getStatus(),
                 "DTO status field must match HTTP 503.");
-        assertEquals("GitHub API error", responseBody.getError(),
-                "DTO error field must be 'GitHub API error'.");
+        assertEquals(GITHUB_ERROR_SUMMARY, responseBody.getError(),
+                "DTO error field must be the defined constant.");
         assertEquals(expectedPath, responseBody.getPath(),
                 "DTO path field must match the request URI.");
         assertTrue(Objects.requireNonNull(response.getBody()).getMessage().contains("external service error"),

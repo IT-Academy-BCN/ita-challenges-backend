@@ -15,7 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import jakarta.validation.ConstraintViolationException;
 
 
-import java.time.Instant;
+
 import java.util.HashMap;
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @Slf4j
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
-
+    public static final String GITHUB_ERROR_SUMMARY = "GitHub API error";
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAny(Exception e) {
@@ -124,7 +124,7 @@ public class UserGlobalExceptionHandler {
         }
 
 
-        String errorSummary = "GitHub API error";
+        String errorSummary = GITHUB_ERROR_SUMMARY;
 
 
         String requestPath = request.getRequestURI();
