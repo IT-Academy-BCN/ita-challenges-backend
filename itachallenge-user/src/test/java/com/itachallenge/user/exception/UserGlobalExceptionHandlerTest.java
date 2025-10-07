@@ -1,6 +1,5 @@
 package com.itachallenge.user.exception;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -15,9 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import jakarta.validation.ConstraintViolationException;
 
-import java.time.Instant;
 import java.util.Objects;
-import java.util.concurrent.TimeoutException;
 
 class UserGlobalExceptionHandlerTest {
 

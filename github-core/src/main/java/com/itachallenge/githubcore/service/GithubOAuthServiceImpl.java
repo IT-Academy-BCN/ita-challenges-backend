@@ -20,7 +20,7 @@ import java.util.Map;
 @Primary
 public class GithubOAuthServiceImpl implements GithubOAuthService {
 
-    private static final Logger log = LoggerFactory.getLogger(GithubApiServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(GithubOAuthServiceImpl.class);
 
     private final WebClient.Builder webClientBuilder;
     private final ObjectMapper objectMapper;
