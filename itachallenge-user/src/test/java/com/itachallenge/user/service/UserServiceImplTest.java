@@ -821,4 +821,33 @@ class UserServiceImplTest {
                 .verify();
         verify(userRepository, times(1)).findById(userId);
     }
+
+    @Test
+    @DisplayName("getUserByGithubUsername returns the user when it exists")
+    void getUserByGithubUsername_ReturnsUser_WhenExists() {
+        String githubUsername = "testuser";
+        UserDocument user = new UserDocument(UUID.randomUUID(), githubUsername, Role.USER, null, null);
+        when(userRepository.findByUsername(githubUsername)).thenReturn(Mono.just(user));
+
+        Mono<UserDocument> result = userService.getUserByGithubUsername(githubUsername);
+
+        StepVerifier.create(result)
+            .expectNextMatches(u -> u.getUsername().equals(githubUsername))
+            .verifyComplete();
+        verify(userRepository, times(1)).findByUsername(githubUsername);
+    }
+
+    @Test
+    @DisplayName("getUserByGithubUsername throws NotFoundException when the user does not exist")
+    void getUserByGithubUsername_ThrowsNotFound_WhenNotExists() {
+        String githubUsername = "nouser";
+        when(userRepository.findByUsername(githubUsername)).thenReturn(Mono.empty());
+
+        Mono<UserDocument> result = userService.getUserByGithubUsername(githubUsername);
+
+        StepVerifier.create(result)
+            .expectErrorMatches(e -> e instanceof NotFoundException && e.getMessage().contains(githubUsername))
+            .verify();
+        verify(userRepository, times(1)).findByUsername(githubUsername);
+    }
 }
