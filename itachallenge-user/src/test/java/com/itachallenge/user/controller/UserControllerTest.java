@@ -802,4 +802,42 @@ class UserControllerTest {
         verify(userService, times(1)).getUserByGithubUsername(githubUsername);
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId.toString());
     }
+
+    @Test
+    @DisplayName("GET /users/github/{githubUsername}/solutions returns 404 and empty list when solution service throws NotFoundException")
+    void getSolutionsByGithubUsername_Returns404AndEmptyList_WhenSolutionServiceThrowsNotFoundException() {
+        String githubUsername = "testuser404";
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
+
+        when(userService.getUserByGithubUsername(githubUsername)).thenReturn(Mono.just(user));
+        when(userSolutionService.getAllSolutionsByUser(userId.toString())).thenReturn(Flux.error(new NotFoundException("Solutions not found")));
+
+        webTestClient.get()
+            .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
+            .exchange()
+            .expectStatus().isEqualTo(404)
+            .expectHeader().contentType("application/json")
+            .expectBodyList(UserSolutionResponseDto.class)
+            .hasSize(0);
+    }
+
+    @Test
+    @DisplayName("GET /users/github/{githubUsername}/solutions returns 400 and empty list when solution service throws IllegalArgumentException")
+    void getSolutionsByGithubUsername_Returns400AndEmptyList_WhenSolutionServiceThrowsIllegalArgumentException() {
+        String githubUsername = "testuser400";
+        UUID userId = UUID.randomUUID();
+        UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
+
+        when(userService.getUserByGithubUsername(githubUsername)).thenReturn(Mono.just(user));
+        when(userSolutionService.getAllSolutionsByUser(userId.toString())).thenReturn(Flux.error(new IllegalArgumentException("Invalid argument")));
+
+        webTestClient.get()
+            .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
+            .exchange()
+            .expectStatus().isEqualTo(400)
+            .expectHeader().contentType("application/json")
+            .expectBodyList(UserSolutionResponseDto.class)
+            .hasSize(0);
+    }
 }
