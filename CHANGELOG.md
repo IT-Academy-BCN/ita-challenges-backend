@@ -91,8 +91,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added user/create endpoint to add an alumnee without role validation. (Taiga [#618], PR [#953])
 
-
-
 ### [itachallenge-challenge-2.4.1-RELEASE] - 2025-07-21
 
 ### Refactored
