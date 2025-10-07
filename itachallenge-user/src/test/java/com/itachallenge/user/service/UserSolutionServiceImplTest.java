@@ -1,5 +1,9 @@
 package com.itachallenge.user.service;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
 import com.itachallenge.user.document.enums.ChallengeStatus;
@@ -14,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -334,6 +339,58 @@ class UserSolutionServiceImplTest {
                 .verifyComplete();
 
         verify(userService).addPointsToUser(userUuid.toString(), POINTS_PER_SOLVED_CHALLENGE); // assuming POINTS_PER_SOLVED_CHALLENGE = 10
+    }
+
+    @Test
+    @DisplayName("awardsPointsForSolvedChallenge logs INFO when addPointsToUser returns true")
+    void awardsPointsForSolvedChallenge_logsInfoWhenTrue() {
+        UserSolutionDocument doc = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .status(ChallengeStatus.ENDED)
+                .build();
+
+        when(userService.addPointsToUser(anyString(), anyInt()))
+                .thenReturn(Mono.just(true));
+
+        Logger logger = (Logger) LoggerFactory.getLogger(UserSolutionServiceImpl.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+
+        StepVerifier.create(userSolutionService.awardsPointsForSolvedChallenge(doc))
+                .expectNext(doc)
+                .verifyComplete();
+
+        assertTrue(appender.list.stream()
+                        .anyMatch(e -> e.getLevel() == Level.INFO &&
+                                e.getFormattedMessage().contains("Awarded ")),
+                "Expected INFO log for awarded points");
+    }
+
+    @Test
+    @DisplayName("awardsPointsForSolvedChallenge logs WARN when addPointsToUser returns false")
+    void awardsPointsForSolvedChallenge_logsWarnWhenFalse() {
+        UserSolutionDocument doc = UserSolutionDocument.builder()
+                .userId(userUuid)
+                .status(ChallengeStatus.ENDED)
+                .build();
+
+        when(userService.addPointsToUser(anyString(), anyInt()))
+                .thenReturn(Mono.just(false));
+
+        Logger logger = (Logger) LoggerFactory.getLogger(UserSolutionServiceImpl.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+
+        StepVerifier.create(userSolutionService.awardsPointsForSolvedChallenge(doc))
+                .expectNext(doc)
+                .verifyComplete();
+
+        assertTrue(appender.list.stream()
+                        .anyMatch(e -> e.getLevel() == Level.WARN &&
+                                e.getFormattedMessage().contains("Failed to award")),
+                "Expected WARN log for failed awarding");
     }
 
 }
