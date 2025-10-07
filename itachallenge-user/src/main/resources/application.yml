@@ -28,7 +28,7 @@ springdoc:
     path: "/api-docs"
 
 server:
-  port: 8765
+  port: 8764
   tomcat:
     max-http-form-post-size: 2097152
 
