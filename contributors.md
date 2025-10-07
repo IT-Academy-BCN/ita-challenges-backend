@@ -102,3 +102,4 @@
 * Mar Torrijos - https://github.com/MarTorrijos
 * Rio Acosta Lopez - https://github.com/rioacosta
 * Zohra Bellamine - https://github.com/zohra-b
+* Aiden Romero - https://github.com/itsAidenDev
