@@ -1,5 +1,6 @@
 package com.itachallenge.user.exception;
 
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,16 +8,19 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import com.itachallenge.githubcore.exception.GithubUserNotFoundException;
+
 
 import jakarta.validation.ConstraintViolationException;
+
 
 import java.util.HashMap;
 import java.util.Map;
 
+
 @Slf4j
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAny(Exception e) {
@@ -24,40 +28,48 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happened.");
     }
 
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> handleValidationExceptions(ConstraintViolationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter format.");
     }
+
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
 
+
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
     }
+
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<String> handleDatabaseException(DatabaseException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database error: " + e.getMessage());
     }
 
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
@@ -68,25 +80,30 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
+
     @ExceptionHandler(UnmodificableSolutionException.class)
     public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
 
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
+
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
+
     @ExceptionHandler(GithubUserNotFoundException.class)
-    public ResponseEntity<String> handleGithubUserNotFound(Exception ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ex.getMessage());
+    public ResponseEntity<String> handleGithubUserNotFoundException(GithubUserNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+
 }
+
