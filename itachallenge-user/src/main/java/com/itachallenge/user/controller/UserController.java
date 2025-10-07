@@ -36,6 +36,8 @@ public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static final String X_VALIDATION_STATUS = "X-Validation-Status";
     public static final String X_GITHUB_USERNAME ="X-Github-Username";
+    public static final String CONTENT_TYPE_HEADER = "Content-Type";
+    public static final String APPLICATION_JSON = "application/json";
 
     private final UserService userService;
     private final IUserSolutionService userSolutionService;
@@ -465,22 +467,31 @@ public class UserController {
                     )
             }
     )
-    @GetMapping("/users/{githubUsername}/solutions")
+    @GetMapping("/users/github/{githubUsername}/solutions")
     public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getSolutionsByGithubUsername(
             @PathVariable @ValidGithubUsername String githubUsername) {
-
         return userService.getUserByGithubUsername(githubUsername)
-                .map(user -> {
-                    log.info("Retrieving solutions for user: {} (ID: {})", githubUsername, user.getUuid());
-                    Flux<UserSolutionResponseDto> solutions = userSolutionService.getAllSolutionsByUser(user.getUuid().toString());
-                    return ResponseEntity.ok()
-                            .header(X_VALIDATION_STATUS, "Success")
-                            .header(X_GITHUB_USERNAME, githubUsername)
-                            .body(solutions);
-                })
-                .switchIfEmpty(Mono.defer(() -> {
+            .flatMap(user -> Mono.just(ResponseEntity.ok()
+                .header(X_VALIDATION_STATUS, "Success")
+                .header(X_GITHUB_USERNAME, githubUsername)
+                .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                .body(userSolutionService.getAllSolutionsByUser(user.getUuid().toString()))
+            ))
+            .onErrorResume(e -> {
+                HttpStatus status;
+                if (e instanceof NotFoundException) {
                     log.warn("User not found with GitHub username: {}", githubUsername);
-                    return Mono.error(new NotFoundException("User not found with GitHub username: " + githubUsername));
-                }));
+                    status = HttpStatus.NOT_FOUND;
+                } else if (e instanceof IllegalArgumentException) {
+                    log.warn("Invalid GitHub username: {}", githubUsername);
+                    status = HttpStatus.BAD_REQUEST;
+                } else {
+                    log.error("Unexpected error for username {}: {}", githubUsername, e.getMessage());
+                    status = HttpStatus.INTERNAL_SERVER_ERROR;
+                }
+                return Mono.just(ResponseEntity.status(status)
+                    .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
+                    .body(Flux.empty()));
+            });
     }
 }
