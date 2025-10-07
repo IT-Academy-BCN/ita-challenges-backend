@@ -130,6 +130,14 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
     public Mono<UserSolutionDocument> awardsPointsForSolvedChallenge(UserSolutionDocument document) {
         if (document.getStatus() != ChallengeStatus.ENDED) return Mono.just(document);
         return userService.addPointsToUser(document.getUserId().toString(), POINTS_PER_SOLVED_CHALLENGE)
+                .doOnNext(success -> {
+                    if (Boolean.TRUE.equals(success)) {
+                        log.info("Awarded {} points to user {}", POINTS_PER_SOLVED_CHALLENGE, document.getUserId());
+                    } else {
+                        log.warn("Failed to award points to user {}", document.getUserId());
+                    }
+                })
+                .doOnError(error -> log.error("Error awarding points to user {}: {}", document.getUserId(), error.getMessage()))
                 .thenReturn(document);
     }
 }
