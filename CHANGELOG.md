@@ -3,6 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-2.1.0-RELEASE] - 2025-10-08
+
+### Changed
+
+  - Before: SolutionStatus enum only had two options `ENDED` and `IN_PROGRESS`.
+  - After: SolutionStatus enum options can be marked as `IN_PROGRESS`, `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE`.
+  - This change only addresses the options avaible, and it is a first from three sequential changes.
+  - Frontend needs to adjust the type of answer that can be submitted ENDED is replaced by SUBMITTED_COMPLETE and SUBMITTED_INCOMPLETE 
+is added to better reflect the status in wich challenges can be set (Taiga user story [#703], PR [#983])
+
+
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
