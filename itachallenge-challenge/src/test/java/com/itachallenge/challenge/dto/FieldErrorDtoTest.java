@@ -19,27 +19,27 @@ class FieldErrorDtoTest {
     }
 
     @Test
-    @DisplayName("Serializa correctamente un FieldErrorDto completo usando builder")
+    @DisplayName("Serializes a fully populated FieldErrorDto correctly using builder")
     void shouldSerializeFullyPopulatedDto() throws Exception {
         FieldErrorDto dto = FieldErrorDto.builder()
                 .objectName("challengeDto")
                 .field("title")
-                .message("El título no puede estar vacío")
+                .message("The title cannot be empty")
                 .build();
 
         String json = objectMapper.writeValueAsString(dto);
 
         assertThat(json).contains("\"objectName\":\"challengeDto\"")
                 .contains("\"field\":\"title\"")
-                .contains("\"message\":\"El título no puede estar vacío\"");
+                .contains("\"message\":\"The title cannot be empty\"");
     }
 
     @Test
-    @DisplayName("No serializa campos nulos cuando se usa @JsonInclude.NON_EMPTY con builder")
+    @DisplayName("Does not serialize null fields when using @JsonInclude.NON_EMPTY with builder")
     void shouldOmitNullFieldsInJson() throws Exception {
         FieldErrorDto dto = FieldErrorDto.builder()
                 .field("difficulty")
-                .build();  // objectName y message son null
+                .build();  // objectName and message are null
 
         String json = objectMapper.writeValueAsString(dto);
 
@@ -49,12 +49,12 @@ class FieldErrorDtoTest {
     }
 
     @Test
-    @DisplayName("Serializa sin errores al usar builder")
+    @DisplayName("Serializes without errors when using builder")
     void shouldNotThrowExceptionOnSerialization() throws Exception {
         FieldErrorDto dto = FieldErrorDto.builder()
                 .objectName("dtoName")
                 .field("fieldX")
-                .message("Mensaje")
+                .message("Message")
                 .build();
 
         String json = objectMapper.writeValueAsString(dto);
