@@ -470,7 +470,7 @@ public class UserController {
     @GetMapping("/users/github/{githubUsername}/solutions")
     public Mono<ResponseEntity<List<UserSolutionResponseDto>>> getSolutionsByGithubUsername(
             @PathVariable @ValidGithubUsername String githubUsername) {
-        return userService.getUserByGithubUsername(githubUsername)
+        return userService.getUser(githubUsername)
                 .flatMap(user -> userSolutionService.getAllSolutionsByUser(user.getUuid().toString())
                         .collectList()
                         .map(list -> ResponseEntity.ok()
