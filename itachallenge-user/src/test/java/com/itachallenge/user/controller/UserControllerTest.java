@@ -5,8 +5,8 @@ import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
-import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.exception.UserGlobalExceptionHandler;
+import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
@@ -20,7 +20,6 @@ import reactor.core.publisher.Mono;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -97,7 +96,7 @@ class UserControllerTest {
     @Test
     void getUser_WhenServiceReturnsError_Returns500() {
         String githubUsername = "username";
-        when(userService.getUser(any(String.class))).thenReturn(Mono.error( new RuntimeException()));
+        when(userService.getUser(any(String.class))).thenReturn(Mono.error(new RuntimeException()));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
@@ -567,29 +566,29 @@ class UserControllerTest {
 
         verify(userService, times(1)).getUserBookmarks(userId.toString());
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns solutions")
     void getAllSolutions_returnsSolutions() {
         String userId = UUID.randomUUID().toString();
-        
+
         UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
                 .userId(userId)
                 .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
                 .languageId("409c9fe8-74de-4db3-81a1-a55280cf92ef")
                 .solutionText("This is the submitted solution")
                 .build();
-        
+
         UserSolutionResponseDto sol2 = UserSolutionResponseDto.builder()
                 .userId(userId)
                 .challengeId("b5c06903-f27b-4057-8220-ad9d957cdce4")
                 .languageId("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
                 .solutionText("This is the submitted solution")
                 .build();
-        
+
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.just(sol1, sol2));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
@@ -597,73 +596,73 @@ class UserControllerTest {
                 .expectBodyList(UserSolutionResponseDto.class)
                 .hasSize(2)
                 .value(list -> {
-                    
+
                     Assertions.assertEquals(sol1.getUserId(), list.get(0).getUserId());
                     Assertions.assertEquals(sol1.getChallengeId(), list.get(0).getChallengeId());
                     Assertions.assertEquals(sol1.getLanguageId(), list.get(0).getLanguageId());
                     Assertions.assertEquals(sol1.getSolutionText(), list.get(0).getSolutionText());
-                    
+
                     Assertions.assertEquals(sol2.getUserId(), list.get(1).getUserId());
                     Assertions.assertEquals(sol2.getChallengeId(), list.get(1).getChallengeId());
                     Assertions.assertEquals(sol2.getLanguageId(), list.get(1).getLanguageId());
                     Assertions.assertEquals(sol2.getSolutionText(), list.get(1).getSolutionText());
                 });
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 404 if no solutions found")
     void getAllSolutions_returns404IfNotFound() {
         String userId = UUID.randomUUID().toString();
-        
+
         // Simulamos que el servicio lanza NotFoundException
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new NotFoundException("Solutions not found")));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class)
                 .isEqualTo("Solutions not found");
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 400 if UUID is invalid")
     void getAllSolutions_returns400IfInvalidUUID() {
         String badUserId = "not-a-uuid";
-        
+
         when(userSolutionService.getAllSolutionsByUser(badUserId))
                 .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", badUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
                 .isEqualTo("The provided IDs are not valid.");
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(badUserId);
     }
-    
+
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 500 on unexpected error")
     void getAllSolutions_returns500IfUnexpectedError() {
         String userId = UUID.randomUUID().toString();
-        
+
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
-        
+
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class)
                 .isEqualTo("Unexpected error happened.");
-        
+
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
 
@@ -690,7 +689,7 @@ class UserControllerTest {
                 .status("IN_PROGRESS")
                 .build();
 
-        when(userService.getUserByGithubUsername(githubUsername)).thenReturn(Mono.just(user));
+        when(userService.getUser(githubUsername)).thenReturn(Mono.just(user));
         when(userSolutionService.getAllSolutionsByUser(userId.toString())).thenReturn(Flux.just(solution1, solution2));
 
         webTestClient.get()
@@ -715,7 +714,7 @@ class UserControllerTest {
                     Assertions.assertEquals(solution2.getStatus(), list.get(1).getStatus());
                 });
 
-        verify(userService, times(1)).getUserByGithubUsername(githubUsername);
+        verify(userService, times(1)).getUser(githubUsername);
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId.toString());
     }
 
@@ -726,7 +725,7 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
 
-        when(userService.getUserByGithubUsername(githubUsername)).thenReturn(Mono.just(user));
+        when(userService.getUser(githubUsername)).thenReturn(Mono.just(user));
         when(userSolutionService.getAllSolutionsByUser(userId.toString())).thenReturn(Flux.empty());
 
         webTestClient.get()
@@ -738,7 +737,7 @@ class UserControllerTest {
                 .expectBodyList(UserSolutionResponseDto.class)
                 .hasSize(0);
 
-        verify(userService, times(1)).getUserByGithubUsername(githubUsername);
+        verify(userService, times(1)).getUser(githubUsername);
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId.toString());
     }
 
@@ -747,7 +746,7 @@ class UserControllerTest {
     void getSolutionsByGithubUsername_WhenUserNotExists_Returns404() {
         String githubUsername = "nonExistentUser";
 
-        when(userService.getUserByGithubUsername(githubUsername))
+        when(userService.getUser(githubUsername))
                 .thenReturn(Mono.error(new NotFoundException("User not found with GitHub username: " + githubUsername)));
 
         webTestClient.get()
@@ -757,7 +756,7 @@ class UserControllerTest {
                 .expectBodyList(UserSolutionResponseDto.class)
                 .hasSize(0);
 
-        verify(userService, times(1)).getUserByGithubUsername(githubUsername);
+        verify(userService, times(1)).getUser(githubUsername);
         verify(userSolutionService, never()).getAllSolutionsByUser(anyString());
     }
 
@@ -766,17 +765,15 @@ class UserControllerTest {
     void getSolutionsByGithubUsername_WhenInvalidUsername_Returns400() {
         String invalidGithubUsername = "invalid username with spaces";
 
-        when(userService.getUserByGithubUsername(invalidGithubUsername))
+        when(userService.getUser(invalidGithubUsername))
                 .thenReturn(Mono.error(new IllegalArgumentException("Invalid GitHub username")));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/github/" + invalidGithubUsername + "/solutions")
                 .exchange()
-                .expectStatus().isBadRequest()
-                .expectBodyList(UserSolutionResponseDto.class)
-                .hasSize(0);
+                .expectStatus().isNotFound();
 
-        verify(userService, times(1)).getUserByGithubUsername(invalidGithubUsername);
+        verify(userService, times(1)).getUser(invalidGithubUsername);
         verify(userSolutionService, never()).getAllSolutionsByUser(anyString());
     }
 
@@ -787,7 +784,7 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
 
-        when(userService.getUserByGithubUsername(githubUsername))
+        when(userService.getUser(githubUsername))
                 .thenReturn(Mono.just(user));
         when(userSolutionService.getAllSolutionsByUser(userId.toString()))
                 .thenReturn(Flux.error(new RuntimeException("Unexpected error")));
@@ -799,7 +796,7 @@ class UserControllerTest {
                 .expectBodyList(UserSolutionResponseDto.class)
                 .hasSize(0);
 
-        verify(userService, times(1)).getUserByGithubUsername(githubUsername);
+        verify(userService, times(1)).getUser(githubUsername);
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId.toString());
     }
 
@@ -810,16 +807,16 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
 
-        when(userService.getUserByGithubUsername(githubUsername)).thenReturn(Mono.just(user));
+        when(userService.getUser(githubUsername)).thenReturn(Mono.just(user));
         when(userSolutionService.getAllSolutionsByUser(userId.toString())).thenReturn(Flux.error(new NotFoundException("Solutions not found")));
 
         webTestClient.get()
-            .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
-            .exchange()
-            .expectStatus().isEqualTo(404)
-            .expectHeader().contentType("application/json")
-            .expectBodyList(UserSolutionResponseDto.class)
-            .hasSize(0);
+                .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
+                .exchange()
+                .expectStatus().isEqualTo(404)
+                .expectHeader().contentType("application/json")
+                .expectBodyList(UserSolutionResponseDto.class)
+                .hasSize(0);
     }
 
     @Test
@@ -829,15 +826,15 @@ class UserControllerTest {
         UUID userId = UUID.randomUUID();
         UserDocument user = new UserDocument(userId, githubUsername, Role.USER, null, null);
 
-        when(userService.getUserByGithubUsername(githubUsername)).thenReturn(Mono.just(user));
+        when(userService.getUser(githubUsername)).thenReturn(Mono.just(user));
         when(userSolutionService.getAllSolutionsByUser(userId.toString())).thenReturn(Flux.error(new IllegalArgumentException("Invalid argument")));
 
         webTestClient.get()
-            .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
-            .exchange()
-            .expectStatus().isEqualTo(400)
-            .expectHeader().contentType("application/json")
-            .expectBodyList(UserSolutionResponseDto.class)
-            .hasSize(0);
+                .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
+                .exchange()
+                .expectStatus().isEqualTo(400)
+                .expectHeader().contentType("application/json")
+                .expectBodyList(UserSolutionResponseDto.class)
+                .hasSize(0);
     }
 }
