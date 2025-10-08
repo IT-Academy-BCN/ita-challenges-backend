@@ -5,7 +5,6 @@ import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
-import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -35,7 +35,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     public static final String X_VALIDATION_STATUS = "X-Validation-Status";
-    public static final String X_GITHUB_USERNAME ="X-Github-Username";
+    public static final String X_GITHUB_USERNAME = "X-Github-Username";
     public static final String CONTENT_TYPE_HEADER = "Content-Type";
     public static final String APPLICATION_JSON = "application/json";
 
@@ -468,50 +468,15 @@ public class UserController {
             }
     )
     @GetMapping("/users/github/{githubUsername}/solutions")
-    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getSolutionsByGithubUsername(
+    public Mono<ResponseEntity<List<UserSolutionResponseDto>>> getSolutionsByGithubUsername(
             @PathVariable @ValidGithubUsername String githubUsername) {
         return userService.getUserByGithubUsername(githubUsername)
-            .flatMap(user -> userSolutionService.getAllSolutionsByUser(user.getUuid().toString())
-                .collectList()
-                .map(list -> ResponseEntity.ok()
-                    .header(X_VALIDATION_STATUS, "Success")
-                    .header(X_GITHUB_USERNAME, githubUsername)
-                    .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
-                    .body(Flux.fromIterable(list)))
-                .onErrorResume(e -> {
-                    if (e instanceof NotFoundException) {
-                        log.warn("Solution service: not found for user {}", githubUsername);
-                        return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                            .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
-                            .body(Flux.empty()));
-                    } else if (e instanceof IllegalArgumentException) {
-                        log.warn("Solution service: invalid argument for user {}", githubUsername);
-                        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                            .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
-                            .body(Flux.empty()));
-                    } else {
-                        log.error("Solution service: unexpected error for user {}: {}", githubUsername, e.getMessage());
-                        return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
-                            .body(Flux.empty()));
-                    }
-                })
-            )
-            .onErrorResume(e -> {
-                HttpStatus status;
-                if (e instanceof NotFoundException) {
-                    log.warn("User not found with GitHub username: {}", githubUsername);
-                    status = HttpStatus.NOT_FOUND;
-                } else if (e instanceof IllegalArgumentException) {
-                    log.warn("Invalid GitHub username: {}", githubUsername);
-                    status = HttpStatus.BAD_REQUEST;
-                } else {
-                    log.error("Unexpected error for username {}: {}", githubUsername, e.getMessage());
-                    status = HttpStatus.INTERNAL_SERVER_ERROR;
-                }
-                return Mono.just(ResponseEntity.status(status)
-                    .header(CONTENT_TYPE_HEADER, APPLICATION_JSON)
-                    .body(Flux.empty()));
-            });
+                .flatMap(user -> userSolutionService.getAllSolutionsByUser(user.getUuid().toString())
+                        .collectList()
+                        .map(list -> ResponseEntity.ok()
+                                .header(X_VALIDATION_STATUS, "Success")
+                                .header(X_GITHUB_USERNAME, githubUsername)
+                                .body(list)
+                        ));
     }
 }
