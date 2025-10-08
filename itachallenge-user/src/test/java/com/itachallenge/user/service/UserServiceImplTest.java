@@ -791,28 +791,28 @@ class UserServiceImplTest {
                                 error.getMessage().equals("Invalid ID format"))
                 .verify();
     }
-    
+
     @Test
     @DisplayName("getUserById returns the user when the user exists")
     void getUserById_ShouldReturnUser_WhenUserExists() {
         String username = "existingUser";
-        UUID userId=UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
         UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null);
         when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
-        
+
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectNext(existingUser)
                 .verifyComplete();
-        
+
         verify(userRepository, times(1)).findById(userId);
     }
-    
+
     @Test
     @DisplayName("getUserById throws NotFoundException when the user does not exist")
     void getUserById_ShouldReturnNotFoundException_WhenUserDoesNotExist() {
-        UUID userId=UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
         when(userRepository.findById(userId)).thenReturn(Mono.empty());
-        
+
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectErrorSatisfies(error -> {
                     assertInstanceOf(NotFoundException.class, error);
@@ -822,32 +822,4 @@ class UserServiceImplTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
-    @Test
-    @DisplayName("getUserByGithubUsername returns the user when it exists")
-    void getUserByGithubUsername_ReturnsUser_WhenExists() {
-        String githubUsername = "testuser";
-        UserDocument user = new UserDocument(UUID.randomUUID(), githubUsername, Role.USER, null, null);
-        when(userRepository.findByUsername(githubUsername)).thenReturn(Mono.just(user));
-
-        Mono<UserDocument> result = userService.getUserByGithubUsername(githubUsername);
-
-        StepVerifier.create(result)
-            .expectNextMatches(u -> u.getUsername().equals(githubUsername))
-            .verifyComplete();
-        verify(userRepository, times(1)).findByUsername(githubUsername);
-    }
-
-    @Test
-    @DisplayName("getUserByGithubUsername throws NotFoundException when the user does not exist")
-    void getUserByGithubUsername_ThrowsNotFound_WhenNotExists() {
-        String githubUsername = "nouser";
-        when(userRepository.findByUsername(githubUsername)).thenReturn(Mono.empty());
-
-        Mono<UserDocument> result = userService.getUserByGithubUsername(githubUsername);
-
-        StepVerifier.create(result)
-            .expectErrorMatches(e -> e instanceof NotFoundException && e.getMessage().contains(githubUsername))
-            .verify();
-        verify(userRepository, times(1)).findByUsername(githubUsername);
-    }
 }

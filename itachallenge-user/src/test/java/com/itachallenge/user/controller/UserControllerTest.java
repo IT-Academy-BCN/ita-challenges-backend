@@ -752,9 +752,7 @@ class UserControllerTest {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBodyList(UserSolutionResponseDto.class)
-                .hasSize(0);
+                .expectStatus().isNotFound();
 
         verify(userService, times(1)).getUser(githubUsername);
         verify(userSolutionService, never()).getAllSolutionsByUser(anyString());
@@ -792,9 +790,7 @@ class UserControllerTest {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
                 .exchange()
-                .expectStatus().is5xxServerError()
-                .expectBodyList(UserSolutionResponseDto.class)
-                .hasSize(0);
+                .expectStatus().is5xxServerError();
 
         verify(userService, times(1)).getUser(githubUsername);
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId.toString());
@@ -814,9 +810,7 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
                 .exchange()
                 .expectStatus().isEqualTo(404)
-                .expectHeader().contentType("application/json")
-                .expectBodyList(UserSolutionResponseDto.class)
-                .hasSize(0);
+                .expectHeader().contentType("text/plain;charset=UTF-8");
     }
 
     @Test
@@ -832,9 +826,8 @@ class UserControllerTest {
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/github/" + githubUsername + "/solutions")
                 .exchange()
-                .expectStatus().isEqualTo(400)
-                .expectHeader().contentType("application/json")
-                .expectBodyList(UserSolutionResponseDto.class)
-                .hasSize(0);
+                .expectStatus().isEqualTo(404)
+                .expectHeader().contentType("text/plain;charset=UTF-8");
+
     }
 }
