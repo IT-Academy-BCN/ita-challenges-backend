@@ -31,7 +31,8 @@ class FieldErrorDtoTest {
 
         assertThat(json).contains("\"objectName\":\"challengeDto\"")
                 .contains("\"field\":\"title\"")
-                .contains("\"message\":\"The title cannot be empty\"");
+                .contains("\"message\":\"The title cannot be empty\"")
+                .startsWith("{").endsWith("}");
     }
 
     @Test
@@ -48,18 +49,4 @@ class FieldErrorDtoTest {
                 .doesNotContain("message");
     }
 
-    @Test
-    @DisplayName("Serializes without errors when using builder")
-    void shouldNotThrowExceptionOnSerialization() throws Exception {
-        FieldErrorDto dto = FieldErrorDto.builder()
-                .objectName("dtoName")
-                .field("fieldX")
-                .message("Message")
-                .build();
-
-        String json = objectMapper.writeValueAsString(dto);
-
-        assertThat(json).isNotNull()
-                .startsWith("{").endsWith("}");
-    }
 }

@@ -56,6 +56,7 @@ class APIErrorResponseTest {
         log.info(LOG_TEMPLATE, json);
 
         assertThat(json)
+                .startsWith("{").endsWith("}")
                 .contains("\"status\":400")
                 .contains("\"error\":\"Bad Request\"")
                 .contains("\"message\":\"Validation failed\"")
@@ -91,36 +92,5 @@ class APIErrorResponseTest {
                 .contains("\"message\":\"Empty error list\"")
                 .contains("\"path\":\"/api/v1/challenges\"")
                 .contains("\"timestamp\":\"2025-10-06T09:10:00Z\"");
-    }
-
-    @Test
-    @DisplayName("Serializes valid JSON structure with minimal metadata and one FieldErrorDto")
-    void shouldSerializeValidJson() throws Exception {
-        APIErrorResponse response = APIErrorResponse.builder()
-                .status(400)
-                .error("Bad Request")
-                .message("Some fields are invalid")
-                .path("/api/v1/test")
-                .timestamp(Instant.parse("2025-10-06T09:15:00Z"))
-                .errors(List.of(
-                        FieldErrorDto.builder()
-                                .objectName("dtoName")
-                                .field("fieldX")
-                                .message("Some message")
-                                .build()
-                ))
-                .build();
-
-        String json = objectMapper.writeValueAsString(response);
-        log.info(LOG_TEMPLATE, json);
-
-        assertThat(json).isNotNull()
-                .startsWith("{").endsWith("}")
-                .contains("\"status\":400")
-                .contains("\"error\":\"Bad Request\"")
-                .contains("\"message\":\"Some fields are invalid\"")
-                .contains("\"path\":\"/api/v1/test\"")
-                .contains("\"timestamp\":\"2025-10-06T09:15:00Z\"")
-                .contains("\"field\":\"fieldX\"");
     }
 }
