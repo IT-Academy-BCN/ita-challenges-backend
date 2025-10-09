@@ -103,4 +103,21 @@ class ValidationIntegrationTest {
     }
 
     // endregion
+    // region --- Edge Case Validation Tests ---
+
+    @Test
+    @DisplayName("POST /itachallenge/api/v1/challenge/solution - should fail when body is empty JSON")
+    void addSolution_shouldFailWhenBodyEmptyJson() {
+        webTestClient.post()
+                .uri("/itachallenge/api/v1/challenge/solution")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("{}")
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectBody()
+                .jsonPath("$.message")
+                .value(msg -> org.assertj.core.api.Assertions.assertThat((String) msg)
+                        .contains("Validation failed"));
+    }
+    // endregion
 }
