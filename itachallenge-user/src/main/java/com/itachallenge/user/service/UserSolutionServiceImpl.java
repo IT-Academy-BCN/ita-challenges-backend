@@ -27,7 +27,7 @@ public class UserSolutionServiceImpl implements IUserSolutionService {
 
     static final Integer POINTS_PER_SOLVED_CHALLENGE = 5;
 
-    public UserSolutionServiceImpl(UserServiceImpl userService, IUserSolutionRepository userSolutionRepository, IChallengeService challengeService) {
+    public UserSolutionServiceImpl(UserService userService, IUserSolutionRepository userSolutionRepository, IChallengeService challengeService) {
         this.userService = userService;
         this.userSolutionRepository = userSolutionRepository;
         this.challengeService = challengeService;
