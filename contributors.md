@@ -104,4 +104,5 @@
 * Zohra Bellamine - https://github.com/zohra-b
 * Aiden Romero - https://github.com/itsAidenDev
 * Aurélien Darbellay - https://github.com/aurelien-darbellay
+* Adria Vargas - https://github.com/AdriaVH
 * Pablo Federico Gómez San Joaquín - https://github.com/Pablo2203
