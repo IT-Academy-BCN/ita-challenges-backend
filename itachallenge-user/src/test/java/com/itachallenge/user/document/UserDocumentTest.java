@@ -38,7 +38,7 @@ class UserDocumentTest {
                 .role(role)
                 .favoriteChallenges(favoriteChallenges)
                 .bookmarkChallenges(bookmarkChallenges)
-                .points(points)
+                .points(0)
                 .build();
     }
 
@@ -186,7 +186,7 @@ class UserDocumentTest {
         assertNotEquals(userDocument, userWithNullRole);
         assertNotEquals(userDocument, userWithNullFavoriteChallenges);
         assertNotEquals(userDocument, userWithNullBookmarkChallenges);
-        assertNotEquals(userDocument, userWithNullPoints);
+        assertEquals(userDocument, userWithNullPoints);
         assertNotEquals(userDocument, completelyNullUser);
 
         assertNotEquals(userDocument.hashCode(), userWithNullUuid.hashCode());
@@ -194,7 +194,7 @@ class UserDocumentTest {
         assertNotEquals(userDocument.hashCode(), userWithNullRole.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullFavoriteChallenges.hashCode());
         assertNotEquals(userDocument.hashCode(), userWithNullBookmarkChallenges.hashCode());
-        assertNotEquals(userDocument.hashCode(), userWithNullPoints.hashCode());
+        assertEquals(userDocument.hashCode(), userWithNullPoints.hashCode());
         assertNotEquals(userDocument.hashCode(), completelyNullUser.hashCode());
     }
 
@@ -347,7 +347,7 @@ class UserDocumentTest {
         assertNull(user.getRole());
         assertNull(user.getFavoriteChallenges());
         assertNull(user.getBookmarkChallenges());
-        assertNull(user.getPoints());
+        assertEquals(0, user.getPoints());
     }
 
     @Test
