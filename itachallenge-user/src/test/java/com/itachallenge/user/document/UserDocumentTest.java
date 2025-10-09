@@ -178,8 +178,8 @@ class UserDocumentTest {
         UserDocument userWithNullRole = new UserDocument(uuid, username, null, favoriteChallenges, bookmarkChallenges, points);
         UserDocument userWithNullFavoriteChallenges = new UserDocument(uuid, username, role, null, bookmarkChallenges, points);
         UserDocument userWithNullBookmarkChallenges = new UserDocument(uuid, username, role, favoriteChallenges, null, points);
-        UserDocument userWithNullPoints = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges, null);
-        UserDocument completelyNullUser = new UserDocument(null, null, null, null, null, null);
+        UserDocument userWithNullPoints = new UserDocument(uuid, username, role, favoriteChallenges, bookmarkChallenges, 0);
+        UserDocument completelyNullUser = new UserDocument(null, null, null, null, null, 0);
 
         assertNotEquals(userDocument, userWithNullUuid);
         assertNotEquals(userDocument, userWithNullUsername);
@@ -262,8 +262,8 @@ class UserDocumentTest {
 
     @Test
     void equalsWithNullAttributes() {
-        UserDocument user1 = new UserDocument(null, null, null, null, null, null);
-        UserDocument user2 = new UserDocument(null, null, null, null, null, null);
+        UserDocument user1 = new UserDocument(null, null, null, null, null, 0);
+        UserDocument user2 = new UserDocument(null, null, null, null, null, 0);
 
         assertEquals(user1, user2);
         assertEquals(user1.hashCode(), user2.hashCode());
@@ -316,7 +316,7 @@ class UserDocumentTest {
 
     @Test
     void toStringHandlesNullValues() {
-        UserDocument user = new UserDocument(null, null, null, null, null, null);
+        UserDocument user = new UserDocument(null, null, null, null, null, 0);
         String toString = user.toString();
 
         assertTrue(toString.contains("UserDocument"), "ToString should contain class name");
@@ -338,7 +338,7 @@ class UserDocumentTest {
                 .role(null)
                 .favoriteChallenges(null)
                 .bookmarkChallenges(null)
-                .points(null)
+                .points(0)
                 .build();
 
         assertNotNull(user);
