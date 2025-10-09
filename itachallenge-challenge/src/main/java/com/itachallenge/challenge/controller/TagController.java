@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,11 +21,11 @@ import java.util.UUID;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(value = "/itachallenge/api/v1/tags")
 public class TagController {
 
-    @Autowired
-    private ITagService tagService;
+    private final ITagService tagService;
 
     @GetMapping("/{languageId}")
     @Operation(

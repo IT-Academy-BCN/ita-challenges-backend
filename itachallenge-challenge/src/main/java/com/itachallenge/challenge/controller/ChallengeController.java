@@ -12,9 +12,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +29,7 @@ import java.util.Optional;
 
 @RestController
 @Validated
+@RequiredArgsConstructor
 @RequestMapping(value = "/itachallenge/api/v1/challenge")
 public class ChallengeController {
 
@@ -43,14 +44,11 @@ public class ChallengeController {
 
     private static final Logger log = LoggerFactory.getLogger(ChallengeController.class);
 
-    @Autowired
     private final PropertiesConfig config;
 
-    @Autowired
-    private DiscoveryClient discoveryClient;
+    private final DiscoveryClient discoveryClient;
 
-    @Autowired
-    private IChallengeService challengeService;
+    private final IChallengeService challengeService;
 
     private final IChallengeJwtFacade challengeJwtFacade;
 
@@ -59,11 +57,6 @@ public class ChallengeController {
 
     @Value("${spring.application.name}")
     private String appName;
-
-    public ChallengeController(PropertiesConfig config, IChallengeJwtFacade challengeJwtFacade) {
-        this.challengeJwtFacade = challengeJwtFacade;
-        this.config = config;
-    }
 
     @GetMapping(value = "/test")
     public String test() {
