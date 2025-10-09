@@ -4,6 +4,7 @@ import com.itachallenge.challenge.dto.APIErrorResponse;
 import com.itachallenge.challenge.dto.FieldErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,8 +25,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
- * Unit tests for Validation in GlobalExceptionHandler
- * Focused on verifying correct messageSource usage and APIErrorResponse structure.
+ * Unit tests for validation handling in GlobalExceptionHandler.
+ * Verifies messageSource usage and APIErrorResponse structure.
  */
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerValidationTest {
@@ -48,17 +49,18 @@ class GlobalExceptionHandlerValidationTest {
     @BeforeEach
     void setup() {
         when(request.getRequestURI()).thenReturn("/api/test");
-        when(messageSource.getMessage(any(FieldError.class), any(Locale.class)))
-                .thenReturn("mocked validation message");
     }
 
     @Test
+    @DisplayName("Should return 400 Bad Request with structured body and mapped field errors")
     void handleMethodArgumentNotValid_ShouldReturnBadRequestWithStructuredBody() {
         // Arrange
         FieldError fieldError = new FieldError("TestDto", "fieldName", "default message");
         when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
         when(bindingResult.getObjectName()).thenReturn("TestDto");
         when(ex.getBindingResult()).thenReturn(bindingResult);
+        when(messageSource.getMessage(any(FieldError.class), any(Locale.class)))
+                .thenReturn("mocked validation message");
 
         // Act
         ResponseEntity<APIErrorResponse> response =
@@ -71,24 +73,24 @@ class GlobalExceptionHandlerValidationTest {
         assertNotNull(body);
         assertEquals(400, body.getStatus());
         assertEquals("/api/test", body.getPath());
-        assertTrue(body.getMessage().contains("TestDto"),
-                "Message should contain 'TestDto'");
+        assertTrue(body.getMessage().contains("TestDto"));
 
-        // Check that field errors are correctly mapped
+        // Field errors
         assertNotNull(body.getErrors());
         assertEquals(1, body.getErrors().size());
 
-        FieldErrorDto errorDto = body.getErrors().get(0);
+        FieldErrorDto errorDto = body.getErrors().getFirst();
         assertEquals("TestDto", errorDto.getObjectName());
         assertEquals("fieldName", errorDto.getField());
         assertEquals("mocked validation message", errorDto.getMessage());
 
-        // Verify messageSource was called properly
+        // Verify messageSource usage
         verify(messageSource, times(1))
                 .getMessage(any(FieldError.class), any(Locale.class));
     }
 
     @Test
+    @DisplayName("Should handle multiple field errors and map each with messageSource")
     void handleMethodArgumentNotValid_ShouldHandleMultipleFieldErrors() {
         // Arrange
         FieldError f1 = new FieldError("Object", "first", "error1");
@@ -110,5 +112,24 @@ class GlobalExceptionHandlerValidationTest {
         verify(messageSource, times(2))
                 .getMessage(any(FieldError.class), any(Locale.class));
     }
-}
 
+    @Test
+    @DisplayName("Should handle empty fieldErrors gracefully and still return BAD_REQUEST")
+    void handleMethodArgumentNotValid_ShouldHandleEmptyFieldErrors() {
+        // Arrange
+        when(bindingResult.getFieldErrors()).thenReturn(List.of());
+        when(bindingResult.getObjectName()).thenReturn("EmptyDto");
+        when(ex.getBindingResult()).thenReturn(bindingResult);
+
+        // Act
+        ResponseEntity<APIErrorResponse> response =
+                globalExceptionHandler.handleMethodArgumentNotValidException(ex, request);
+
+        // Assert
+        APIErrorResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(body.getErrors());
+        assertTrue(body.getErrors().isEmpty());
+    }
+}
