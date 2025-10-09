@@ -29,11 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - After: POST /users/create now calls the GitHub API and rejects the request when the GitHub username does not exist. 
   - Clients that previously relied on creating users with invalid GitHub usernames will now get errors for some requests that used to succeed.
 
-### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
-
-### Added
-- Added the @NotEmpty annotation to the tags field in the ChallengeCreateDto.java DTO to make it a mandatory field. (Taiga [#654], PR [#961])
-
 ### [itachallenge-githubcore-1.0.0-RELEASE] - 2025-09-11
 
 ### Added
