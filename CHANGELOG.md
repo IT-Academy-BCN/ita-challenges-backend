@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-2.1.0-RELEASE] - 2025-10-09
+
+### Added
+- Added endpoint to retrieve user solutions on the basis of their Github username (Taiga [#721], PR [#995])
+  - Modified UserControllerTest to test the new endpoint
+
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
