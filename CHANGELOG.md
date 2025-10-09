@@ -29,9 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - After: POST /users/create now calls the GitHub API and rejects the request when the GitHub username does not exist. 
   - Clients that previously relied on creating users with invalid GitHub usernames will now get errors for some requests that used to succeed.
 
-### [itachallenge-challenge-2.4.3-RELEASE] - 2025-09-15
-### [itachallenge-challenge-2.5.0-RELEASE] - 2025-09-15
-### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-15
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
