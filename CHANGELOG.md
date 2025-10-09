@@ -16,14 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   by users ENDED is replaced with SUBMITTED_COMPLETE and SUBMITTED_INCOMPLETE has to be added to better reflect the status 
   in which challenges can be set (Taiga user story [#703])
 
-### [itachallenge-user-2.0.1-RELEASE] - 2025-10-06
-
-### Changed
-- Updated UserSolutionServiceImpl.saveValidSolution() logic to enforce immutability for submitted solutions. (Taiga [#728], PR [#984])
-  - Before: Solutions with status `ENDED` could be modified, leading to ambiguity in submission state.
-  - After: Solutions marked as `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE` now throw `UnmodifiableSolutionException` 
-  when updated. Only `IN_PROGRESS` solutions remain editable.
-  - This change ensures consistent behavior and prevents accidental overwrites of finalized submissions.
 ### [itachallenge-challenge-3.0.0-RELEASE] - 2025-09-22
 
 ### Added
