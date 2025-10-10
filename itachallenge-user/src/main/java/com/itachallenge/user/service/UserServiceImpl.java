@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements com.itachallenge.user.service.UserService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
