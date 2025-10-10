@@ -799,7 +799,7 @@ class UserServiceImplTest {
         UUID userId=UUID.randomUUID();
         UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null, 0);
         when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
-
+    
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectNext(existingUser)
                 .verifyComplete();
