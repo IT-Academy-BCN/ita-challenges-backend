@@ -106,7 +106,7 @@ class ChallengeControllerTest {
 
     }
 
-            private boolean isValidUUID(String id) {
+        private boolean isValidUUID(String id) {
             try {
                 UUID.fromString(id);
                 return true;
