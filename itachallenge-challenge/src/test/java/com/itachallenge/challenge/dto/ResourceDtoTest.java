@@ -92,19 +92,19 @@ class ResourceDtoTest {
     @Test
     void rightDeserializationTest() throws Exception {
         String jsonContent = """
-                {
-                    "resourceId": "123e4567-e89b-12d3-a456-426614174000",
-                    "title": "DEBUGGING FOR THE FIRST TIME",
-                    "description": "A guide on how to start debugging",
-                    "url": "https://youtubetutorial.com/debugging",
-                    "topic": "DEBUGGING", 
-                    "contentType": "BLOG",
-                    "challengeIds": [
-                        "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-                        "550e8400-e29b-41d4-a716-446655440000"
-                    ]
-                }
-                """;
+    {
+        "resourceId": "123e4567-e89b-12d3-a456-426614174000",
+        "title": "DEBUGGING FOR THE FIRST TIME",
+        "description": "A guide on how to start debugging",
+        "url": "https://youtubetutorial.com/debugging",
+        "topic": "DEBUGGING", 
+        "contentType": "BLOG",
+        "challengeIds": [
+            "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+            "550e8400-e29b-41d4-a716-446655440000"
+        ]
+    }
+    """;
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
