@@ -90,7 +90,7 @@ class ChallengeControllerTest {
 
 
     @BeforeEach
-    void setup() {
+    void setup(){
         tags = List.of(UUID.randomUUID());
         challengeId = String.valueOf(UUID.randomUUID());
         formData = new ChallengeCreateDto("títol", "descripció",
@@ -527,7 +527,6 @@ class ChallengeControllerTest {
         verify(challengeJwtFacade, times(1)).getUserUuIdFromAuthenticationHeader(authHeader);
         verify(challengeService, times(1)).addChallenge(any(ChallengeCreateDto.class));
     }
-
     @Test
     void addChallenge_test_invalidLevel_statusBadRequest() {
         String invalidFormData = """
@@ -560,7 +559,6 @@ class ChallengeControllerTest {
                 .jsonPath("$.application_name").isEqualTo("itachallenge-challenge")
                 .jsonPath("$.version").isEqualTo(expectedVersion);
     }
-
     @Test
     void deleteOneChallenge_success() {
         String id = "existing_id";
@@ -833,16 +831,16 @@ class ChallengeControllerTest {
     private static Stream<Arguments> provideInvalidEnumValues() {
 
         String baseJson = """
-                {
-                  "challengeTitle": "Title",
-                  "description": "Description",
-                  "level": "%s",
-                  "language": "Java",
-                  "solution": "valid solution",
-                  "topic": "%s",
-                  "tags": {}
-                }
-                """;
+        {
+            "challengeTitle": "Title",
+            "description": "Description",
+            "level": "%s",
+            "language": "Java",
+            "solution": "valid solution",
+            "topic": "%s",
+            "tags": {}
+        }
+        """;
 
         return Stream.of(
                 Arguments.of(String.format(baseJson, "invalidLevel", "ALL")),
@@ -959,16 +957,16 @@ class ChallengeControllerTest {
     @Test
     void addChallenge_emptyTags_statusBadRequest() {
         String challengeWithEmptyTags = """
-                    {
-                         "challengeTitle": "title",
-                         "description": "description",
-                         "level": "EASY",
-                         "language": "Java",
-                         "solution": "solution",
-                         "topic": "ALL",
-                         "tags": []
-                     }
-                """;
+                {
+                    "challengeTitle": "title",
+                    "description": "description",
+                    "level": "EASY",
+                    "language": "Java",
+                    "solution": "solution",
+                    "topic": "ALL",
+                    "tags": []
+                }
+            """;
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
