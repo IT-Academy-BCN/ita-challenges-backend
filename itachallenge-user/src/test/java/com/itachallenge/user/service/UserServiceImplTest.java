@@ -28,7 +28,7 @@ class UserServiceImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private com.itachallenge.user.service.UserServiceImpl userService;
+    private UserServiceImpl userService;
 
     private AutoCloseable mocks;
 
