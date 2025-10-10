@@ -106,14 +106,14 @@ class ChallengeControllerTest {
 
     }
 
-    private boolean isValidUUID(String id) {
-        try {
-            UUID.fromString(id);
-            return true;
-        } catch (IllegalArgumentException e) {
-            return false;
+            private boolean isValidUUID(String id) {
+            try {
+                UUID.fromString(id);
+                return true;
+            } catch (IllegalArgumentException e) {
+                return false;
+            }
         }
-    }
 
 
     @Test
