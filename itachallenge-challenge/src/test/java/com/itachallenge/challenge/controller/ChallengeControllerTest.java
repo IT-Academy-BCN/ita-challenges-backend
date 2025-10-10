@@ -841,7 +841,7 @@ class ChallengeControllerTest {
           "tags": {}
         }
         """;
-        
+
         return Stream.of(
                 Arguments.of(String.format(baseJson, "invalidLevel", "ALL")),
                 Arguments.of(String.format(baseJson, "EASY", "invalidTopic"))
@@ -967,7 +967,7 @@ class ChallengeControllerTest {
                      "tags": []
                  }
             """;
-        
+
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
                 .contentType(MediaType.APPLICATION_JSON)
