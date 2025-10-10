@@ -168,7 +168,7 @@ public class UserServiceImpl implements UserService {
                                 .map(user -> Optional.ofNullable(user.getBookmarkChallenges()).orElseGet(HashSet::new))
                 );
     }
-
+    
     @Override
     public Mono<UserDocument> getUserById(String userId) {
         return userRepository.findById(UUID.fromString(userId))
