@@ -832,13 +832,13 @@ class ChallengeControllerTest {
 
         String baseJson = """
         {
-            "challengeTitle": "Title",
-            "description": "Description",
-            "level": "%s",
-            "language": "Java",
-            "solution": "valid solution",
-            "topic": "%s",
-            "tags": {}
+        "challengeTitle": "Title",
+        "description": "Description",
+        "level": "%s",
+        "language": "Java",
+        "solution": "valid solution",
+        "topic": "%s",
+        "tags": {}
         }
         """;
 
