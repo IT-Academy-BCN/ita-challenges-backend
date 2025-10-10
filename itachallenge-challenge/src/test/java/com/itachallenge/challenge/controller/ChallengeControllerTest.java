@@ -775,7 +775,7 @@ class ChallengeControllerTest {
         verify(challengeService, times(1)).updateChallenge(anyString(), any(ChallengeCreateDto.class));
     }
 
-    @Test
+   @Test
     void updateChallenge_MissingAuthHeader_Returns400() {
         when(challengeJwtFacade.getUserUuIdFromAuthenticationHeader(null)).thenThrow(new JwtException("Missing auth header"));
 
@@ -832,16 +832,16 @@ class ChallengeControllerTest {
 
         String baseJson = """
         {
-        "challengeTitle": "Title",
-        "description": "Description",
-        "level": "%s",
-        "language": "Java",
-        "solution": "valid solution",
-        "topic": "%s",
-        "tags": {}
+          "challengeTitle": "Title",
+          "description": "Description",
+          "level": "%s",
+          "language": "Java",
+          "solution": "valid solution",
+          "topic": "%s",
+          "tags": {}
         }
         """;
-
+        
         return Stream.of(
                 Arguments.of(String.format(baseJson, "invalidLevel", "ALL")),
                 Arguments.of(String.format(baseJson, "EASY", "invalidTopic"))
@@ -958,16 +958,16 @@ class ChallengeControllerTest {
     void addChallenge_emptyTags_statusBadRequest() {
         String challengeWithEmptyTags = """
                 {
-                    "challengeTitle": "title",
-                    "description": "description",
-                    "level": "EASY",
-                    "language": "Java",
-                    "solution": "solution",
-                    "topic": "ALL",
-                    "tags": []
-                }
+                     "challengeTitle": "title",
+                     "description": "description",
+                     "level": "EASY",
+                     "language": "Java",
+                     "solution": "solution",
+                     "topic": "ALL",
+                     "tags": []
+                 }
             """;
-
+        
         webTestClient.post()
                 .uri("/itachallenge/api/v1/challenge/challenges")
                 .contentType(MediaType.APPLICATION_JSON)
