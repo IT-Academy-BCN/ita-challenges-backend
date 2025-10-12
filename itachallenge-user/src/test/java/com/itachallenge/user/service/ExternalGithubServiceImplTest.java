@@ -50,7 +50,6 @@ class ExternalGithubServiceImplTest {
     @DisplayName("Should wrap API errors in GithubUnavailableException, preserving the cause")
     void testUserExistsPropagatesError() {
         RuntimeException originalLowLevelError = new RuntimeException("Original low-level API error.");
-
         when(githubApiService.userExists(anyString()))
                 .thenReturn(Mono.error(originalLowLevelError));
 
