@@ -100,7 +100,6 @@ class UserGlobalExceptionHandlerTest {
         assertEquals("Resource not found", response.getBody());
     }
 
-
     @Test
     void testHandleUnmodifiableSolutionException(){
         String message = "There's an existing solution with status 'ENDED'.";
