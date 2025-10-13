@@ -566,26 +566,26 @@ class UserControllerTest {
 
         verify(userService, times(1)).getUserBookmarks(userId.toString());
     }
-
+    
     @Test
     @DisplayName("GET /users/{userId}/solutions returns solutions")
     void getAllSolutions_returnsSolutions() {
         String userId = UUID.randomUUID().toString();
-
+        
         UserSolutionResponseDto sol1 = UserSolutionResponseDto.builder()
                 .userId(userId)
                 .challengeId("d43a1a4d-ee8f-432d-8f9c-68eda2547dae")
                 .languageId("409c9fe8-74de-4db3-81a1-a55280cf92ef")
                 .solutionText("This is the submitted solution")
                 .build();
-
+        
         UserSolutionResponseDto sol2 = UserSolutionResponseDto.builder()
                 .userId(userId)
                 .challengeId("b5c06903-f27b-4057-8220-ad9d957cdce4")
                 .languageId("09fabe32-7362-4bfb-ac05-b7bf854c6e0f")
                 .solutionText("This is the submitted solution")
                 .build();
-
+        
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.just(sol1, sol2));
         
@@ -634,7 +634,7 @@ class UserControllerTest {
     @DisplayName("GET /users/{userId}/solutions returns 400 if UUID is invalid")
     void getAllSolutions_returns400IfInvalidUUID() {
         String badUserId = "not-a-uuid";
-
+        
         when(userSolutionService.getAllSolutionsByUser(badUserId))
                 .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
         
@@ -655,14 +655,14 @@ class UserControllerTest {
         
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
-
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
                 .expectBody(String.class)
                 .isEqualTo("Unexpected error happened.");
-
+        
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
 
