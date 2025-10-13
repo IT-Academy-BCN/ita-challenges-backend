@@ -791,7 +791,7 @@ class UserServiceImplTest {
                                 error.getMessage().equals("Invalid ID format"))
                 .verify();
     }
-
+    
     @Test
     @DisplayName("getUserById returns the user when the user exists")
     void getUserById_ShouldReturnUser_WhenUserExists() {
@@ -799,20 +799,20 @@ class UserServiceImplTest {
         UUID userId = UUID.randomUUID();
         UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null);
         when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
-
+        
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectNext(existingUser)
                 .verifyComplete();
-
+        
         verify(userRepository, times(1)).findById(userId);
     }
-
+    
     @Test
     @DisplayName("getUserById throws NotFoundException when the user does not exist")
     void getUserById_ShouldReturnNotFoundException_WhenUserDoesNotExist() {
         UUID userId = UUID.randomUUID();
         when(userRepository.findById(userId)).thenReturn(Mono.empty());
-
+        
         StepVerifier.create(userService.getUserById(userId.toString()))
                 .expectErrorSatisfies(error -> {
                     assertInstanceOf(NotFoundException.class, error);
@@ -821,5 +821,4 @@ class UserServiceImplTest {
                 .verify();
         verify(userRepository, times(1)).findById(userId);
     }
-
 }
