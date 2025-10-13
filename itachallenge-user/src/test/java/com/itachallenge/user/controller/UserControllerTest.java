@@ -96,7 +96,7 @@ class UserControllerTest {
     @Test
     void getUser_WhenServiceReturnsError_Returns500() {
         String githubUsername = "username";
-        when(userService.getUser(any(String.class))).thenReturn(Mono.error(new RuntimeException()));
+        when(userService.getUser(any(String.class))).thenReturn(Mono.error( new RuntimeException()));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
