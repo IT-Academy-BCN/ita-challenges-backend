@@ -796,7 +796,7 @@ class UserServiceImplTest {
     @DisplayName("getUserById returns the user when the user exists")
     void getUserById_ShouldReturnUser_WhenUserExists() {
         String username = "existingUser";
-        UUID userId = UUID.randomUUID();
+        UUID userId=UUID.randomUUID();
         UserDocument existingUser = new UserDocument(userId, username, Role.ADMIN, null, null);
         when(userRepository.findById(userId)).thenReturn(Mono.just(existingUser));
         
@@ -810,7 +810,7 @@ class UserServiceImplTest {
     @Test
     @DisplayName("getUserById throws NotFoundException when the user does not exist")
     void getUserById_ShouldReturnNotFoundException_WhenUserDoesNotExist() {
-        UUID userId = UUID.randomUUID();
+        UUID userId=UUID.randomUUID();
         when(userRepository.findById(userId)).thenReturn(Mono.empty());
         
         StepVerifier.create(userService.getUserById(userId.toString()))
