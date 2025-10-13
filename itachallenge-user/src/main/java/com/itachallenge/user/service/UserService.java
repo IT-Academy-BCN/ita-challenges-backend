@@ -22,5 +22,4 @@ public interface UserService {
     Mono<Set<UUID>> getUserBookmarks(String userId);
     
     Mono<UserDocument> getUserById(String userId);
-
 }
