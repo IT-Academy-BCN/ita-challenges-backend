@@ -588,7 +588,7 @@ class UserControllerTest {
 
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.just(sol1, sol2));
-
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
@@ -596,40 +596,40 @@ class UserControllerTest {
                 .expectBodyList(UserSolutionResponseDto.class)
                 .hasSize(2)
                 .value(list -> {
-
+                    
                     Assertions.assertEquals(sol1.getUserId(), list.get(0).getUserId());
                     Assertions.assertEquals(sol1.getChallengeId(), list.get(0).getChallengeId());
                     Assertions.assertEquals(sol1.getLanguageId(), list.get(0).getLanguageId());
                     Assertions.assertEquals(sol1.getSolutionText(), list.get(0).getSolutionText());
-
+                    
                     Assertions.assertEquals(sol2.getUserId(), list.get(1).getUserId());
                     Assertions.assertEquals(sol2.getChallengeId(), list.get(1).getChallengeId());
                     Assertions.assertEquals(sol2.getLanguageId(), list.get(1).getLanguageId());
                     Assertions.assertEquals(sol2.getSolutionText(), list.get(1).getSolutionText());
                 });
-
+        
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-
+    
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 404 if no solutions found")
     void getAllSolutions_returns404IfNotFound() {
         String userId = UUID.randomUUID().toString();
-
+        
         // Simulamos que el servicio lanza NotFoundException
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new NotFoundException("Solutions not found")));
-
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(String.class)
                 .isEqualTo("Solutions not found");
-
+        
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-
+    
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 400 if UUID is invalid")
     void getAllSolutions_returns400IfInvalidUUID() {
@@ -637,22 +637,22 @@ class UserControllerTest {
 
         when(userSolutionService.getAllSolutionsByUser(badUserId))
                 .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
-
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", badUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody(String.class)
                 .isEqualTo("The provided IDs are not valid.");
-
+        
         verify(userSolutionService, times(1)).getAllSolutionsByUser(badUserId);
     }
-
+    
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 500 on unexpected error")
     void getAllSolutions_returns500IfUnexpectedError() {
         String userId = UUID.randomUUID().toString();
-
+        
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
 
