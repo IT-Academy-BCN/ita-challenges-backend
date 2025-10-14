@@ -91,7 +91,33 @@ When you execute the redis-cli command to import the data, make sure you are in 
 
 Ensure that your Redis server is running and accessible on the specified host and port
 
-For more info check [Import Data into Redis](https://developer.redis.com/guides/import/)
+For more info check [Import Data into Redis](https://developer.redis.com/guides/import/
+
+### Model
+
+#### UserDocument
+
+The `UserDocument` represents a user within the system. It is stored in the `users` collection in MongoDB and contains
+both basic and custom user data.
+
+##### Document Structure:
+
+| Field                | Type          | Description                                                          |
+|----------------------|---------------|----------------------------------------------------------------------|
+| `uuid`               | `UUID`        | Unique identifier for the user (used as the primary key in MongoDB). |
+| `username`           | `String`      | GitHub Username, used for authentication.                            |
+| `role`               | `Role (enum)` | User role (`ADMIN`, `USER`, etc.), used for access control.          |
+| `favoriteChallenges` | `Set<UUID>`   | Set of challenge IDs the user has marked as favorites.               |
+| `bookmarkChallenges` | `Set<UUID>`   | Set of challenge IDs the user has bookmarked.                        |
+| `points`             | `Integer`     | Number of points the user has earned by solving challenges.          |
+
+##### Additional Notes:
+
+- The class is annotated with `@Document(collection = "users")` to map it to a MongoDB collection.
+- `@Indexed(unique = true)` is used on `username` to ensure uniqueness.
+- Lombok is used to automatically generate getters, setters, `toString()`, and other boilerplate code.
+- The `uuid` field is mapped to the MongoDB `_id`.
+- This model supports extended features like filtering, favoriting, and bookmarking challenges.
 
 ##### Spring Boot Actuator
 
