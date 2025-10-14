@@ -1089,6 +1089,30 @@
           "response": []
         },
         {
+          "name": "User/profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/users/shakira",
+              "protocol": "http",
+              "host": [
+                "{{ip}}"
+              ],
+              "port": "{{user_port}}",
+              "path": [
+                "itachallenge",
+                "api",
+                "v1",
+                "user",
+                "users",
+                "shakira"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "User/bookmarks",
           "request": {
             "method": "GET",
