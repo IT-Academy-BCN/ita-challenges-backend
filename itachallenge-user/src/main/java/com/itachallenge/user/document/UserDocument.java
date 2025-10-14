@@ -34,6 +34,10 @@ public class UserDocument {
     @Field("bookmark_challenges")
     private Set<UUID> bookmarkChallenges;
 
+    @Builder.Default
+    @Field
+    private Integer points = 0;
+
     @Override
     public String toString() {
         StringJoiner joiner = new StringJoiner(", ", "UserDocument{", "}");
