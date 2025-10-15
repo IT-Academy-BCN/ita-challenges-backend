@@ -63,7 +63,6 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
@@ -84,10 +83,21 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
-
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleNotFoundException(
+            NotFoundException e,
+            ServerWebExchange exchange) {
+
+        log.error("Not Found: {}", e.getMessage(), e);
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("Not Found")
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
