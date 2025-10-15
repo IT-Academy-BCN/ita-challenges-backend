@@ -2,6 +2,7 @@ package com.itachallenge.user.exception;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
+import com.itachallenge.user.dto.FieldErrorDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +19,11 @@ import jakarta.validation.ConstraintViolationException;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,7 +40,7 @@ public class UserGlobalExceptionHandler {
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .error("Internal Server Error")
+                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                 .message("An unexpected error occurred.")
                 .path(exchange.getRequest().getPath().value())
                 .build();
@@ -50,7 +55,7 @@ public class UserGlobalExceptionHandler {
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Illegal argument")
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .message("Invalid input provided. Please check your request.")
                 .path(exchange.getRequest().getPath().value())
                 .build();
@@ -59,8 +64,28 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleValidationExceptions(ConstraintViolationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<APIErrorResponse> handleValidationExceptions(ConstraintViolationException ex, ServerWebExchange exchange) {
+        log.error("Validation error: {}",ex.getMessage());
+
+        List<FieldErrorDto> fieldErrors = ex.getConstraintViolations()
+                .stream()
+                .map(cv -> FieldErrorDto.builder()
+                        .objectName(cv.getRootBeanClass().getSimpleName())
+                        .field(cv.getPropertyPath().toString())
+                        .message(cv.getMessage())
+                        .build())
+                .toList();
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message("Validation failed")
+                .path(exchange.getRequest().getPath().value())
+                .errors(fieldErrors)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
