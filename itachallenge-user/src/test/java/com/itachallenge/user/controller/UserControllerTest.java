@@ -20,8 +20,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
