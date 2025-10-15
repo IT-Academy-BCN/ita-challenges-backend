@@ -64,7 +64,6 @@ public class UserGlobalExceptionHandler {
     }
 
 
-
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<APIErrorResponse> handleBadUUIDException(BadUUIDException e, ServerWebExchange exchange) {
         log.error("Bad UUID: {}", e.getMessage(), e);
