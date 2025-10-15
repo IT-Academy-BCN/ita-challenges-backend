@@ -1,17 +1,19 @@
 package com.itachallenge.user.exception;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 
 import java.util.Objects;
@@ -20,18 +22,28 @@ class UserGlobalExceptionHandlerTest {
 
     private UserGlobalExceptionHandler exceptionHandler;
 
+    @Mock
+    private HttpServletRequest request;
+
     @BeforeEach
     void setUp() {
         exceptionHandler = new UserGlobalExceptionHandler();
+
+        when(request.getRequestURI()).thenReturn("/itachallenge/api/v1/user");
     }
 
     @Test
     void testHandleAny() {
         Exception exception = new Exception("Unexpected Error");
-        ResponseEntity<String> response = exceptionHandler.handleAny(exception);
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, request);
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertTrue(Objects.requireNonNull(response.getBody()).contains("Unexpected error happened."));
+        APIErrorResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getStatus());
+        assertEquals("Internal Servor Error", body.getError());
+        assertEquals("An unexpected error occurred.", body.getMessage());
+        assertEquals("/itachallenge/api/v1/user", body.getPath());
+        assertNotNull(body.getTimestamp());
     }
 
     @Test
