@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
 
-import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 
@@ -20,9 +20,7 @@ import org.springframework.http.server.RequestPath;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.util.pattern.PathPattern;
 
-import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.FieldErrorDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -55,6 +53,7 @@ class UserGlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("should return 500 Internal Server Error response when an unexpected exception occurs")
     void testHandleAny() {
         Exception exception = new Exception("Unexpected Error");
         ServerWebExchange exchange = mockExchange();
@@ -71,6 +70,7 @@ class UserGlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("should return 400 Bad Request response when an IllegalArgumentException is thrown")
     void testHandleIllegalArgument() {
         IllegalArgumentException exception = new IllegalArgumentException("Invalid argument");
         ServerWebExchange exchange = mockExchange();
@@ -89,6 +89,7 @@ class UserGlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("should return 400 Bad Request with detailed field errors when validation fails")
     void handleValidationExceptions_shouldReturnBadRequestWithFieldErrors() {
         ServerWebExchange exchange = mockExchange();
 
