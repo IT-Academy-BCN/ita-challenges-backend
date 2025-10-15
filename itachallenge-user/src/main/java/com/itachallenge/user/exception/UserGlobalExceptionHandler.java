@@ -64,7 +64,6 @@ public class UserGlobalExceptionHandler {
     }
 
 
-
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
