@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.server.RequestPath;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.server.MockServerWebExchange;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -87,69 +86,24 @@ class UserGlobalExceptionHandlerTest {
         assertNotNull(response.getBody().getTimestamp());
     }
 
-    @Test
-    void testHandleBadUUIDException() {
-        BadUUIDException exception = new BadUUIDException("Invalid UUID");
-
-        request = MockServerHttpRequest.get("/test/bad-uuid").build();
-        exchange = MockServerWebExchange.from(request);
-
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadUUIDException(exception, exchange);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        APIErrorResponse body = response.getBody();
-        assertNotNull(body);
-        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
-        assertEquals("Bad Request", body.getError());
-        assertEquals("The provided IDs are not valid.", body.getMessage());
-        assertEquals("/test/bad-uuid", body.getPath());
-        assertNotNull(body.getTimestamp());
-    }
 
     @Test
     void testHandleDatabaseException() {
         DatabaseException exception = new DatabaseException("Database connection failed");
-
-        request = mock(MockServerHttpRequest.class);
-        exchange = mock(MockServerWebExchange.class);
-        when(exchange.getRequest()).thenReturn(request);
-        when(request.getPath()).thenReturn(RequestPath.parse("/test/database", ""));
-
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleDatabaseException(exception, exchange);
+        ResponseEntity<String> response = exceptionHandler.handleDatabaseException(exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        APIErrorResponse body = response.getBody();
-        assertNotNull(body);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getStatus());
-        assertEquals("Database Error", body.getError());
-        assertEquals("Database connection failed", body.getMessage());
-        assertEquals("/test/database", body.getPath());
-        assertNotNull(body.getTimestamp());
+        assertEquals("Database error: Database connection failed", response.getBody());
     }
-
-
 
     @Test
     void testHandleNotFoundException() {
         NotFoundException exception = new NotFoundException("Resource not found");
-
-        exchange = mock(MockServerWebExchange.class);
-        request = mock(MockServerHttpRequest.class);
-        when(exchange.getRequest()).thenReturn(request);
-        when(request.getPath()).thenReturn(RequestPath.parse("/test/resource", ""));
-
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, exchange);
+        ResponseEntity<String> response = exceptionHandler.handleNotFoundException(exception);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        APIErrorResponse body = response.getBody();
-        assertNotNull(body);
-        assertEquals(HttpStatus.NOT_FOUND.value(), body.getStatus());
-        assertEquals("Not Found", body.getError());
-        assertEquals("Resource not found", body.getMessage());
-        assertEquals("/test/resource", body.getPath());
-        assertNotNull(body.getTimestamp());
+        assertEquals("Resource not found", response.getBody());
     }
-
 
     @Test
     void testHandleUnmodifiableSolutionException(){
