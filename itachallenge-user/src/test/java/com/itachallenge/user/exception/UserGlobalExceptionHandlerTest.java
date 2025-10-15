@@ -8,12 +8,14 @@ import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+
+import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.RequestPath;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.server.ServerWebExchange;
 import jakarta.validation.ConstraintViolationException;
 
 import java.util.Objects;
@@ -22,25 +24,33 @@ class UserGlobalExceptionHandlerTest {
 
     private UserGlobalExceptionHandler exceptionHandler;
 
-    @Mock
-    private HttpServletRequest request;
-
     @BeforeEach
     void setUp() {
         exceptionHandler = new UserGlobalExceptionHandler();
-
-        when(request.getRequestURI()).thenReturn("/itachallenge/api/v1/user");
     }
 
+    private ServerWebExchange mockExchange(){
+        ServerWebExchange exchange = Mockito.mock(ServerWebExchange.class);
+        ServerHttpRequest request = Mockito.mock(ServerHttpRequest.class);
+        RequestPath requestPath = Mockito.mock(RequestPath.class);
+
+        when(exchange.getRequest()).thenReturn(request);
+        when(request.getPath()).thenReturn(requestPath);
+        when(requestPath.value()).thenReturn("/api/v1/user/123");
+
+        return exchange;
+    }
     @Test
     void testHandleAny() {
         Exception exception = new Exception("Unexpected Error");
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, request);
+        ServerWebExchange exchange = mockExchange();
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, exchange);
 
         APIErrorResponse body = response.getBody();
         assertNotNull(body);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getStatus());
-        assertEquals("Internal Servor Error", body.getError());
+        assertEquals("Internal Server Error", body.getError());
         assertEquals("An unexpected error occurred.", body.getMessage());
         assertEquals("/itachallenge/api/v1/user", body.getPath());
         assertNotNull(body.getTimestamp());

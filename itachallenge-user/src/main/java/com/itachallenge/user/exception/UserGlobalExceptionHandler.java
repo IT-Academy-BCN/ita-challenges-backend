@@ -2,7 +2,6 @@ package com.itachallenge.user.exception;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ServerWebExchange;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -22,25 +22,23 @@ import java.util.Map;
 public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<APIErrorResponse> handleAny(Exception e,
-                                            HttpServletRequest request) {
-        log.error("Unexpected error happened: {}", e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleAny(Exception e, ServerWebExchange exchange) {
 
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        log.error("Unexpected error happened: {}", e.getMessage());
 
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(status.value())
-                .error(status.getReasonPhrase())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Internal Server Error")
                 .message("An unexpected error occurred.")
-                .path(request.getRequestURI())
+                .path(exchange.getRequest().getPath().value())
                 .build();
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
+    public ResponseEntity<APIErrorResponse> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
