@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
+import com.itachallenge.user.dto.APIErrorResponse;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
@@ -20,6 +21,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.UUID;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -40,10 +43,8 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
-        MessageSource messageSource = mock(MessageSource.class);
-
         webTestClient = WebTestClient.bindToController(userController)
-                .controllerAdvice(new UserGlobalExceptionHandler(messageSource))
+                .controllerAdvice(new UserGlobalExceptionHandler())
                 .build();
     }
 
