@@ -48,9 +48,19 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e) {
+        log.error("Bad Request: {}", e.getMessage(), e);
+
+        APIErrorResponse errorResponse = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Bad Request")
+                .message(e.getMessage())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
+
 
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
