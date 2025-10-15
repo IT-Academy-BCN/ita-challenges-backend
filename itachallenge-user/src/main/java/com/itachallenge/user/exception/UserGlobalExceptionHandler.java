@@ -2,7 +2,10 @@ package com.itachallenge.user.exception;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,8 +20,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
+
+    private final MessageSource messageSource;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleAny(Exception e) {
