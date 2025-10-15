@@ -59,10 +59,19 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleIllegalArgument() {
         IllegalArgumentException exception = new IllegalArgumentException("Invalid argument");
-        ResponseEntity<String> response = exceptionHandler.handleIllegalArgument(exception);
+        ServerWebExchange exchange = mockExchange();
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Invalid argument", response.getBody());
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleIllegalArgument(exception, exchange);
+
+        APIErrorResponse body = response.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(body);
+        assertNotNull(body.getTimestamp());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
+        assertEquals("Illegal argument", body.getError());
+        assertEquals("Invalid input provided. Please check your request.", body.getMessage());
+        assertEquals("/api/v1/user/123", body.getPath());
     }
 
     @Test
