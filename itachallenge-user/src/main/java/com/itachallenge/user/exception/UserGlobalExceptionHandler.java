@@ -74,13 +74,13 @@ public class UserGlobalExceptionHandler {
 
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .error("Internal Server Error")
                 .message("An unexpected error occurred.")
                 .path(exchange.getRequest().getPath().value())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(UnmodificableSolutionException.class)
