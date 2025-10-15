@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 public class AdminCreateUserRequestDto {
 
-    @NotBlank(message = "Username must not be blank")
+    @NotBlank(message = "{adminCreateUser.username.notBlank}")
     private String username;
 
 }
