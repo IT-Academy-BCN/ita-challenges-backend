@@ -91,19 +91,19 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
 
-    @ExceptionHandler(GithubUnavailableException.class)
-    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex) {
-        HttpStatus status;
-
-        if ("timeout".equalsIgnoreCase(ex.getMessage())) {
-            status = HttpStatus.GATEWAY_TIMEOUT; // 504
-        } else {
-            status = HttpStatus.SERVICE_UNAVAILABLE; // 503
-        }
-
-        return ResponseEntity.status(status).body(
-                new APIErrorResponse("GitHub API error", ex.getMessage(), Instant.now())
-        );
-    }
+//    @ExceptionHandler(GithubUnavailableException.class)
+//    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex) {
+//        HttpStatus status;
+//
+//        if ("timeout".equalsIgnoreCase(ex.getMessage())) {
+//            status = HttpStatus.GATEWAY_TIMEOUT; // 504
+//        } else {
+//            status = HttpStatus.SERVICE_UNAVAILABLE; // 503
+//        }
+//
+//        return ResponseEntity.status(status).body(
+//                new APIErrorResponse("GitHub API error", ex.getMessage(), Instant.now())
+//        );
+//    }
 
 }
