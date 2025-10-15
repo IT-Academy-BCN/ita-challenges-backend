@@ -1,8 +1,10 @@
 package com.itachallenge.user.exception;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
@@ -11,15 +13,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
+import org.springframework.mock.web.server.MockServerWebExchange;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.server.ServerWebExchange;
 
 import java.util.Objects;
 
 class UserGlobalExceptionHandlerTest {
 
     private UserGlobalExceptionHandler exceptionHandler;
+    private ServerWebExchange exchange;
+    private MockServerHttpRequest request;
 
     @BeforeEach
     void setUp() {
@@ -66,11 +73,19 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleBadRequestException() {
         BadRequestException exception = new BadRequestException("Bad request error");
-        ResponseEntity<String> response = exceptionHandler.handleBadRequestException(exception);
+
+        request = MockServerHttpRequest.get("/test-path").build();
+        exchange = MockServerWebExchange.from(request);
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, exchange);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Bad request error", response.getBody());
+        assertEquals("Bad request error", response.getBody().getMessage());
+        assertEquals("Bad Request", response.getBody().getError());
+        assertEquals("/test-path", response.getBody().getPath());
+        assertNotNull(response.getBody().getTimestamp());
     }
+
 
     @Test
     void testHandleDatabaseException() {
