@@ -73,7 +73,7 @@ class UserGlobalExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
         assertEquals("Illegal argument", body.getError());
         assertEquals("Invalid input provided. Please check your request.", body.getMessage());
-        assertEquals("/api/v1/user/123", body.getPath());
+        assertEquals("/api/v1/user", body.getPath());
     }
 
     @Test
