@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -44,9 +43,8 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
-        MessageSource messageSource = mock(MessageSource.class);
         webTestClient = WebTestClient.bindToController(userController)
-                .controllerAdvice(new UserGlobalExceptionHandler(messageSource))
+                .controllerAdvice(new UserGlobalExceptionHandler())
                 .build();
     }
 
@@ -85,23 +83,15 @@ class UserControllerTest {
     }
 
     @Test
-    void getUser_WhenUserNotExists_Returns404_JSON() {
+    void getUser_WhenUserNotExists_Returns404() {
         String githubUsername = "nonExistentUser";
-        when(userService.getUser(githubUsername))
-                .thenReturn(Mono.error(new NotFoundException("User not found")));
+        when(userService.getUser(githubUsername)).thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("User not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + githubUsername, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectBody(String.class).isEqualTo("User not found");
 
         verify(userService, times(1)).getUser(githubUsername);
     }
@@ -185,7 +175,7 @@ class UserControllerTest {
     }
 
     @Test
-    void addToFavorites_WhenUserNotExists_Returns404_JSON() {
+    void addToFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.addChallengeToFavorites(userId, challengeId))
@@ -195,21 +185,13 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("User not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectBody(String.class).isEqualTo("User not found");
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
-
     @Test
-    void addToBookmarks_WhenUserNotExists_Returns404_JSON() {
+    void addToBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.addChallengeToBookmarks(userId, challengeId))
@@ -218,67 +200,43 @@ class UserControllerTest {
         webTestClient.post()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("User not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
+                .expectBody(String.class).isEqualTo("User not found");
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
-
 
     @Test
     void addToFavorites_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(userService.addChallengeToFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
 
-
     @Test
-    void addToBookmarks_WhenBadFormattedId_Returns400_JSON() {
+    void addToBookmarks_WhenBadFormattedId_Returns400() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(userService.addChallengeToBookmarks(userId, challengeId))
-                .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
-
 
     @Test
     void addToFavorites_WhenUnexpectedError_Returns500() {
@@ -377,7 +335,7 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteFromFavorites_WhenUserNotExists_Returns404_JSON() {
+    void deleteFromFavorites_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.deleteChallengeFromFavorites(userId, challengeId))
@@ -386,21 +344,14 @@ class UserControllerTest {
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("User not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
+                .expectBody(String.class).isEqualTo("User not found");
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
-    void deleteFromBookmarks_WhenUserNotExists_Returns404_JSON() {
+    void deleteFromBookmarks_WhenUserNotExists_Returns404() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
         when(userService.deleteChallengeFromBookmarks(userId, challengeId))
@@ -409,61 +360,40 @@ class UserControllerTest {
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
-                .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("User not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectStatus().isEqualTo(HttpStatus.NOT_FOUND)
+                .expectBody(String.class).isEqualTo("User not found");
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
 
     @Test
-    void deleteFromFavorites_WhenBadFormattedId_Returns400_JSON() {
+    void deleteFromFavorites_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(userService.deleteChallengeFromFavorites(userId, challengeId))
-                .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
 
     @Test
-    void deleteFromBookmarks_WhenBadFormattedId_Returns400_JSON() {
+    void deleteFromBookmarks_WhenBadFormattedId_Returns404() {
         String userId = "invalidUuid";
         String challengeId = "invalidUUid";
         when(userService.deleteChallengeFromBookmarks(userId, challengeId))
-                .thenReturn(Mono.error(new BadUUIDException("The provided IDs are not valid.")));
+                .thenReturn(Mono.error(new BadUUIDException("Error message")));
 
         webTestClient.delete()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId, response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectStatus().isEqualTo(HttpStatus.BAD_REQUEST)
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
@@ -520,29 +450,21 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("GET /users/{userId}/bookmarks returns 404 if user not found")
-    void getUserBookmarks_returns404IfUserNotFound_JSON() {
+    @DisplayName("GET /users/{userId}/favorites returns 404 if user not found")
+    void getUserFavorites_returns404IfUserNotFound() {
         UUID userId = UUID.randomUUID();
 
-        when(userService.getUserBookmarks(userId.toString()))
+        when(userService.getUserFavorites(userId.toString()))
                 .thenReturn(Mono.error(new NotFoundException("User not found")));
 
         webTestClient.get()
-                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("User not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/bookmarks", response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectBody(String.class).isEqualTo("User not found");
 
-        verify(userService, times(1)).getUserBookmarks(userId.toString());
+        verify(userService, times(1)).getUserFavorites(userId.toString());
     }
-
 
     @Test
     @DisplayName("GET /users/{userId}/favorites returns 400 if UUID is invalid")
@@ -556,18 +478,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", invalidUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + invalidUserId + "/favorites", response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).getUserFavorites(invalidUserId);
     }
-
 
     @Test
     @DisplayName("GET /users/{userId}/favorites returns 500 if there is an internal error")
@@ -606,6 +520,23 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("GET /users/{userId}/bookmarks returns 404 if user not found")
+    void getUserBookmarks_returns404IfUserNotFound() {
+        UUID userId = UUID.randomUUID();
+
+        when(userService.getUserBookmarks(userId.toString()))
+                .thenReturn(Mono.error(new NotFoundException("User not found")));
+
+        webTestClient.get()
+                .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(String.class).isEqualTo("User not found");
+
+        verify(userService, times(1)).getUserBookmarks(userId.toString());
+    }
+
+    @Test
     @DisplayName("GET /users/{userId}/bookmarks returns 400 if UUID is invalid")
     void getUserBookmarks_returns400IfInvalidUUID() {
         String invalidUserId = "invalid-uuid";
@@ -617,18 +548,10 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", invalidUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + invalidUserId + "/bookmarks", response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
+                .expectBody(String.class).isEqualTo("The provided IDs are not valid.");
 
         verify(userService, times(1)).getUserBookmarks(invalidUserId);
     }
-
 
     @Test
     @DisplayName("GET /users/{userId}/bookmarks returns 500 if there is an internal error")
@@ -690,52 +613,41 @@ class UserControllerTest {
         
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-
+    
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 404 if no solutions found")
-    void getAllSolutions_returns404IfNotFound_JSON() {
+    void getAllSolutions_returns404IfNotFound() {
         String userId = UUID.randomUUID().toString();
-
+        
+        // Simulamos que el servicio lanza NotFoundException
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new NotFoundException("Solutions not found")));
-
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
-                    assertEquals("Not Found", response.getError());
-                    assertEquals("Solutions not found", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/solutions", response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
-
+                .expectBody(String.class)
+                .isEqualTo("Solutions not found");
+        
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
-
+    
     @Test
     @DisplayName("GET /users/{userId}/solutions returns 400 if UUID is invalid")
-    void getAllSolutions_returns400IfInvalidUUID_JSON() {
+    void getAllSolutions_returns400IfInvalidUUID() {
         String badUserId = "not-a-uuid";
-
+        
         when(userSolutionService.getAllSolutionsByUser(badUserId))
-                .thenReturn(Flux.error(new BadUUIDException("The provided IDs are not valid.")));
-
+                .thenReturn(Flux.error(new BadUUIDException("Bad UUID")));
+        
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", badUserId)
                 .exchange()
                 .expectStatus().isBadRequest()
-                .expectBody(APIErrorResponse.class)
-                .value(response -> {
-                    assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-                    assertEquals("Bad Request", response.getError());
-                    assertEquals("The provided IDs are not valid.", response.getMessage());
-                    assertEquals("/itachallenge/api/v1/user/users/" + badUserId + "/solutions", response.getPath());
-                    assertNotNull(response.getTimestamp());
-                });
-
+                .expectBody(String.class)
+                .isEqualTo("The provided IDs are not valid.");
+        
         verify(userSolutionService, times(1)).getAllSolutionsByUser(badUserId);
     }
     
