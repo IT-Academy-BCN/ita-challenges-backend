@@ -12,6 +12,7 @@ import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
@@ -19,8 +20,6 @@ import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -41,8 +40,10 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
+        MessageSource messageSource = mock(MessageSource.class);
+
         webTestClient = WebTestClient.bindToController(userController)
-                .controllerAdvice(new UserGlobalExceptionHandler())
+                .controllerAdvice(new UserGlobalExceptionHandler(messageSource))
                 .build();
     }
 
