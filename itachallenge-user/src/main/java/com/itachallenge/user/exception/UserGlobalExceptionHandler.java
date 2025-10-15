@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.server.ServerWebExchange;
 
 import java.time.Instant;
 import java.util.HashMap;
@@ -48,18 +49,20 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e) {
+    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e, ServerWebExchange exchange) {
         log.error("Bad Request: {}", e.getMessage(), e);
 
-        APIErrorResponse errorResponse = APIErrorResponse.builder()
+        APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Bad Request")
                 .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
                 .build();
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
 
 
     @ExceptionHandler(BadUUIDException.class)
