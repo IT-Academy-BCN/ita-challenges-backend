@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 
 import org.mockito.Mockito;
-import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.RequestPath;
@@ -143,27 +142,17 @@ class UserGlobalExceptionHandlerTest {
         when(exception.getValue()).thenReturn(123);
         when(exception.getRequiredType()).thenReturn((Class) String.class);
 
-        MethodParameter methodParameter = mock(MethodParameter.class);
-        when(exception.getParameter()).thenReturn(methodParameter);
-
-
-        when(methodParameter.getContainingClass()).thenReturn((Class) Object.class);
-
-
         ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleTypeMismatchException(exception, exchange);
         APIErrorResponse body = response.getBody();
-        List<FieldErrorDto> errors = Objects.requireNonNull(response.getBody()).getErrors();
+        List<FieldErrorDto> errors = Objects.requireNonNull(body).getErrors();
 
-        assertNotNull(body);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("MethodArgumentTypeMismatchException", body.getMessage());
         assertEquals("/api/v1/user", body.getPath());
 
-        assertNotNull(errors);
         assertFalse(errors.isEmpty());
-
 
         FieldErrorDto fieldError = errors.getFirst();
         assertEquals("Solution", fieldError.getField());
