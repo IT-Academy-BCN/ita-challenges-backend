@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -462,10 +463,18 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isNotFound()
-                .expectBody(String.class).isEqualTo("User not found");
+                .expectBody(APIErrorResponse.class)
+                .value(response -> {
+                    assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+                    assertEquals("Not Found", response.getError());
+                    assertEquals("User not found", response.getMessage());
+                    assertEquals("/itachallenge/api/v1/user/users/" + userId + "/favorites", response.getPath());
+                    assertNotNull(response.getTimestamp());
+                });
 
         verify(userService, times(1)).getUserFavorites(userId.toString());
     }
+
 
     @Test
     @DisplayName("GET /users/{userId}/favorites returns 400 if UUID is invalid")
