@@ -76,7 +76,7 @@ public class UserGlobalExceptionHandler {
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error("Internal Server Error")
-                .message("An unexpected error occurred.")
+                .message(e.getMessage())
                 .path(exchange.getRequest().getPath().value())
                 .build();
 
@@ -84,8 +84,19 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnmodificableSolutionException.class)
-    public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleUnmodifiableSolutionException(UnmodificableSolutionException e,  ServerWebExchange exchange) {
+        log.error("Unexpected error happened: {}", e.getMessage());
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error("Internal Server Error")
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
