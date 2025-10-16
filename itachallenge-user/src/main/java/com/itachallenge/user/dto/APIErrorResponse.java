@@ -9,6 +9,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor
+@NoArgsConstructor(force = true)
 @Getter
 @Builder
 public class APIErrorResponse {
