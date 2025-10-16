@@ -114,11 +114,24 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleNotFoundException() {
         NotFoundException exception = new NotFoundException("Resource not found");
-        ResponseEntity<String> response = exceptionHandler.handleNotFoundException(exception);
+
+        exchange = mock(MockServerWebExchange.class);
+        request = mock(MockServerHttpRequest.class);
+        when(exchange.getRequest()).thenReturn(request);
+        when(request.getPath()).thenReturn(RequestPath.parse("/test/resource", ""));
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleNotFoundException(exception, exchange);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertEquals("Resource not found", response.getBody());
+        APIErrorResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(HttpStatus.NOT_FOUND.value(), body.getStatus());
+        assertEquals("Not Found", body.getError());
+        assertEquals("Resource not found", body.getMessage());
+        assertEquals("/test/resource", body.getPath());
+        assertNotNull(body.getTimestamp());
     }
+
 
     @Test
     void testHandleUnmodifiableSolutionException(){
