@@ -87,6 +87,24 @@ class UserGlobalExceptionHandlerTest {
         assertNotNull(response.getBody().getTimestamp());
     }
 
+    @Test
+    void testHandleBadUUIDException() {
+        BadUUIDException exception = new BadUUIDException("Invalid UUID");
+
+        request = MockServerHttpRequest.get("/test/bad-uuid").build();
+        exchange = MockServerWebExchange.from(request);
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadUUIDException(exception, exchange);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        APIErrorResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
+        assertEquals("Bad Request", body.getError());
+        assertEquals("The provided IDs are not valid.", body.getMessage());
+        assertEquals("/test/bad-uuid", body.getPath());
+        assertNotNull(body.getTimestamp());
+    }
 
     @Test
     void testHandleDatabaseException() {
