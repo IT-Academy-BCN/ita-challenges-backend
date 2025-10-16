@@ -63,6 +63,8 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
+
+
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
@@ -97,6 +99,7 @@ public class UserGlobalExceptionHandler {
                 .message(e.getMessage())
                 .path(exchange.getRequest().getPath().value())
                 .build();
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
