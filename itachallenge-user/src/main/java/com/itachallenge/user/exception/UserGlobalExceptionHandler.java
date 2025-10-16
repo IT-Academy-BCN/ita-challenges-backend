@@ -116,8 +116,19 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e, ServerWebExchange exchange) {
+        log.error("Resource already exists: {}", e.getMessage());
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
 //    @ExceptionHandler(GithubUnavailableException.class)
