@@ -70,12 +70,12 @@ public class UserGlobalExceptionHandler {
 //
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, ServerWebExchange exchange){
-        log.error("Unexpected error happened: {}", e.getMessage());
+        log.error("Invalid request: {}", e.getMessage());
 
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .error("Internal Server Error")
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .message(e.getMessage())
                 .path(exchange.getRequest().getPath().value())
                 .build();
