@@ -70,9 +70,20 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(DatabaseException.class)
-    public ResponseEntity<String> handleDatabaseException(DatabaseException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Database error: " + e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleDatabaseException(DatabaseException e, ServerWebExchange exchange) {
+        log.error("Database error: {}", e.getMessage(), e);
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Database Error")
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
+
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
