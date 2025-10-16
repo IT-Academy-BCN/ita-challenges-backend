@@ -101,6 +101,7 @@ public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e, ServerWebExchange exchange) {
+        log.error("Unexpected error happened: {}", e.getMessage(), e);
 
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
