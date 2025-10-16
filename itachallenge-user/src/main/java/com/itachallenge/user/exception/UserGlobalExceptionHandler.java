@@ -85,12 +85,12 @@ public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(UnmodificableSolutionException.class)
     public ResponseEntity<APIErrorResponse> handleUnmodifiableSolutionException(UnmodificableSolutionException e,  ServerWebExchange exchange) {
-        log.error("Unexpected error happened: {}", e.getMessage());
+        log.error("Resource already exists: {}", e.getMessage());
 
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.CONFLICT.value())
-                .error("Internal Server Error")
+                .error(HttpStatus.CONFLICT.getReasonPhrase())
                 .message(e.getMessage())
                 .path(exchange.getRequest().getPath().value())
                 .build();
@@ -100,7 +100,17 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
+    public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e, ServerWebExchange exchange) {
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
 
