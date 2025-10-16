@@ -95,6 +95,7 @@ public class UserGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleNotFoundException(
             NotFoundException e,
