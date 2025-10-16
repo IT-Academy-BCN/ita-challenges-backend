@@ -66,9 +66,20 @@ public class UserGlobalExceptionHandler {
 
 
     @ExceptionHandler(BadUUIDException.class)
-    public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
+    public ResponseEntity<APIErrorResponse> handleBadUUIDException(BadUUIDException e, ServerWebExchange exchange) {
+        log.error("Bad UUID: {}", e.getMessage(), e);
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Bad Request")
+                .message("The provided IDs are not valid.")
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
 
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<APIErrorResponse> handleDatabaseException(DatabaseException e, ServerWebExchange exchange) {
