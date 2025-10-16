@@ -93,7 +93,7 @@ class UserGlobalExceptionHandlerTest {
         DatabaseException exception = new DatabaseException("Database connection failed");
 
         request = mock(MockServerHttpRequest.class);
-        exchange = mock(ServerWebExchange.class);
+        exchange = mock(MockServerWebExchange.class);
         when(exchange.getRequest()).thenReturn(request);
         when(request.getPath()).thenReturn(RequestPath.parse("/test/database", ""));
 
