@@ -89,14 +89,20 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<APIErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex, ServerWebExchange exchange) {
+    public ResponseEntity<APIErrorResponse> handleTypeMismatchException(
+            MethodArgumentTypeMismatchException ex, ServerWebExchange exchange) {
+
         log.error("MethodArgumentTypeMismatchException: parameter '{}' with value '{}' could not be converted to type '{}'",
                 ex.getName(),
                 ex.getValue(),
                 ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown");
 
+        String containingClassName = (ex.getParameter() != null && ex.getParameter().getContainingClass() != null)
+                ? ex.getParameter().getContainingClass().getSimpleName()
+                : "UnknownClass";
+
         FieldErrorDto fieldError = new FieldErrorDto(
-                ex.getParameter().getContainingClass().getSimpleName(),
+                containingClassName,
                 ex.getName(),
                 String.format("Value '%s' could not be converted to %s",
                         ex.getValue(),
