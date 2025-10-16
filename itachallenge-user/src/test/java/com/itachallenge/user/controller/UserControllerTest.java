@@ -43,8 +43,9 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         mocks = MockitoAnnotations.openMocks(this);
+        MessageSource messageSource = mock(MessageSource.class);
         webTestClient = WebTestClient.bindToController(userController)
-                .controllerAdvice(new UserGlobalExceptionHandler())
+                .controllerAdvice(new UserGlobalExceptionHandler(messageSource))
                 .build();
     }
 
