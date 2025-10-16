@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.RequestPath;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.server.MockServerWebExchange;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -90,11 +91,25 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleDatabaseException() {
         DatabaseException exception = new DatabaseException("Database connection failed");
-        ResponseEntity<String> response = exceptionHandler.handleDatabaseException(exception);
+
+        request = mock(MockServerHttpRequest.class);
+        exchange = mock(ServerWebExchange.class);
+        when(exchange.getRequest()).thenReturn(request);
+        when(request.getPath()).thenReturn(RequestPath.parse("/test/database", ""));
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleDatabaseException(exception, exchange);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-        assertEquals("Database error: Database connection failed", response.getBody());
+        APIErrorResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getStatus());
+        assertEquals("Database Error", body.getError());
+        assertEquals("Database connection failed", body.getMessage());
+        assertEquals("/test/database", body.getPath());
+        assertNotNull(body.getTimestamp());
     }
+
+
 
     @Test
     void testHandleNotFoundException() {
