@@ -99,7 +99,6 @@ public class UserGlobalExceptionHandler {
                 .message(e.getMessage())
                 .path(exchange.getRequest().getPath().value())
                 .build();
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
