@@ -112,23 +112,22 @@ class UserGlobalExceptionHandlerTest {
         APIErrorResponse body = response.getBody();
         List<FieldErrorDto> errors = Objects.requireNonNull(response.getBody()).getErrors();
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody()).isNotNull();
-
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(body);
-        assertThat(body.getStatus()).isEqualTo(400);
-        assertThat(body.getError()).isEqualTo("Bad Request");
-        assertThat(body.getMessage()).isEqualTo("Validation failed");
-        assertThat(body.getPath()).isEqualTo("/api/v1/user");
+
+        assertEquals(400, body.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(),body.getError());
+        assertEquals("Validation failed",body.getMessage());
+        assertEquals("/api/v1/user", body.getPath());
         assertThat(body.getTimestamp()).isBeforeOrEqualTo(Instant.now());
 
         Set<String> fields = errors.stream().map(FieldErrorDto::getField).collect(Collectors.toSet());
-        assertThat(fields.contains("email")).isTrue();
-        assertThat(fields.contains("name")).isTrue();
+        assertTrue(fields.contains("email"));
+        assertTrue(fields.contains("name"));
 
         Set<String> messages = errors.stream().map(FieldErrorDto::getMessage).collect(Collectors.toSet());
-        assertThat(messages.contains("must be a valid email")).isTrue();
-        assertThat(messages.contains("must not be blank")).isTrue();
+        assertTrue(messages.contains("must be a valid email"));
+        assertTrue(messages.contains("must not be blank"));
 
         boolean allTestEntity = errors.stream()
                 .allMatch(e -> "TestEntity".equals(e.getObjectName()));
@@ -138,10 +137,14 @@ class UserGlobalExceptionHandlerTest {
     @Test
     void testHandleTypeMismatchException() {
         MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
-        ResponseEntity<String> response = exceptionHandler.handleTypeMismatchException(exception);
+        ServerWebExchange exchange = mockExchange();
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleTypeMismatchException(exception, exchange);
+        APIErrorResponse body = response.getBody();
+        List<FieldErrorDto> errors = Objects.requireNonNull(response.getBody()).getErrors();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid parameter format.", response.getBody());
+        assertEquals("Invalid parameter format.", body);
     }
 
     @Test

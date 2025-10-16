@@ -89,8 +89,30 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter format.");
+    public ResponseEntity<APIErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex, ServerWebExchange exchange) {
+        log.error("MethodArgumentTypeMismatchException: parameter '{}' with value '{}' could not be converted to type '{}'",
+                ex.getName(),
+                ex.getValue(),
+                ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown");
+
+        FieldErrorDto fieldError = new FieldErrorDto(
+                ex.getParameter().getContainingClass().getSimpleName(),
+                ex.getName(),
+                String.format("Value '%s' could not be converted to %s",
+                        ex.getValue(),
+                        ex.getRequiredType() != null ? ex.getRequiredType().getSimpleName() : "Unknown")
+        );
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message("MethodArgumentTypeMismatchException")
+                .path(exchange.getRequest().getPath().value())
+                .errors(List.of(fieldError))
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(BadRequestException.class)
