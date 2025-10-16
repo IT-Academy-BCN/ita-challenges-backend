@@ -117,14 +117,13 @@ public class UserGlobalExceptionHandler {
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
     public ResponseEntity<APIErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e, ServerWebExchange exchange) {
-        String message = messageSource.getMessage("exception.username.alreadyExists", null, exchange.getLocaleContext().getLocale());
         log.error("The username already exists: {}", e.getMessage());
 
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.CONFLICT.value())
-                .error(HttpStatus.CONFLICT.getReasonPhrase())
-                .message(e.getMessage())
+                .error("The username already exists")
+                .message("The username already exists")
                 .path(exchange.getRequest().getPath().value())
                 .build();
 
