@@ -4,10 +4,16 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
+
+import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
+import org.hibernate.validator.resourceloading.PlatformResourceBundleLocator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale;
 import java.util.Set;
+
+import org.springframework.context.MessageSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -15,11 +21,18 @@ class AdminCreateUserRequestDtoTest {
 
     private static Validator validator;
 
+
     @BeforeAll
-    static void setUpValidator() {
-        try (ValidatorFactory factory = Validation.buildDefaultValidatorFactory()) {
-            validator = factory.getValidator();
-        }
+    static void setupValidator() {
+        ValidatorFactory factory = Validation.byDefaultProvider()
+                .configure()
+                .messageInterpolator(
+                        new ResourceBundleMessageInterpolator(
+                                new PlatformResourceBundleLocator("messages")
+                        )
+                )
+                .buildValidatorFactory();
+        validator = factory.getValidator();
     }
 
     @Test
@@ -30,6 +43,6 @@ class AdminCreateUserRequestDtoTest {
         Set<ConstraintViolation<AdminCreateUserRequestDto>> violations = validator.validate(request);
 
         assertEquals(1, violations.size());
-        assertEquals("Username must not be blank", violations.iterator().next().getMessage());
+        assertEquals("The username must not be blank.", violations.iterator().next().getMessage());
     }
 }
