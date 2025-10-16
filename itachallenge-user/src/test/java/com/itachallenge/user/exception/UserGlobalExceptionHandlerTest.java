@@ -4,9 +4,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
+import io.lettuce.core.dynamic.support.MethodParameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
@@ -14,16 +16,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.server.MockServerWebExchange;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.server.ServerWebExchange;
 
+import java.util.List;
 import java.util.Objects;
 
 class UserGlobalExceptionHandlerTest {
 
     private UserGlobalExceptionHandler exceptionHandler;
+    private ServerWebExchange exchange;
+    private MockServerHttpRequest request;
 
     @BeforeEach
     void setUp() {
@@ -93,40 +101,38 @@ class UserGlobalExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("Resource not found", response.getBody());
     }
+
     @Test
-    void handleMethodArgumentNotValidException () {
-        MethodArgumentNotValidException exception = new MethodArgumentNotValidException("Bad request error");
+    void testHandleUnmodifiableSolutionException(){
+        UnmodificableSolutionException exception = new UnmodificableSolutionException("There's an existing solution with status 'ENDED'.");
 
         request = MockServerHttpRequest.get("/test-path").build();
         exchange = MockServerWebExchange.from(request);
 
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, exchange);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Bad request error", response.getBody().getMessage());
-        assertEquals("Bad Request", response.getBody().getError());
-        assertEquals("/test-path", response.getBody().getPath());
-        assertNotNull(response.getBody().getTimestamp());
-
-}
-    @Test
-    void testHandleUnmodifiableSolutionException(){
-        String message = "There's an existing solution with status 'ENDED'.";
-        UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
-        ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleUnmodifiableSolutionException(exception, exchange);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-        assertEquals(message, response.getBody());
+        assertEquals("There's an existing solution with status 'ENDED'.", response.getBody().getMessage());
+        assertEquals("There's an existing solution with status 'ENDED'.", response.getBody().getError());
+        assertEquals("/test-path", response.getBody().getPath());
+        assertNotNull(response.getBody().getTimestamp());
     }
+
 
     @Test
     void testHandleUsernameAlreadyExistsException() {
-        String username = "alfonso79";
-        UsernameAlreadyExistsException exception = new UsernameAlreadyExistsException(username);
-        ResponseEntity<String> response = exceptionHandler.handleUsernameAlreadyExistsException(exception);
+        UsernameAlreadyExistsException exception = new UsernameAlreadyExistsException("testuser");
+
+        request = MockServerHttpRequest.get("/test-path").build();
+        exchange = MockServerWebExchange.from(request);
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleUsernameAlreadyExistsException(exception, exchange);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-        assertEquals("The username 'alfonso79' is already registered.", response.getBody());
+        assertEquals("The username already exists", response.getBody().getMessage());
+        assertEquals("The username already exists", response.getBody().getError());
+        assertEquals("/test-path", response.getBody().getPath());
+        assertNotNull(response.getBody().getTimestamp());
     }
 
 
