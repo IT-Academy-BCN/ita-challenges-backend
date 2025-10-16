@@ -1,5 +1,6 @@
 package com.itachallenge.user.exception;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -11,6 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
+import org.springframework.mock.web.server.MockServerWebExchange;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolationException;
@@ -89,7 +93,22 @@ class UserGlobalExceptionHandlerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals("Resource not found", response.getBody());
     }
+    @Test
+    void handleMethodArgumentNotValidException () {
+        MethodArgumentNotValidException exception = new MethodArgumentNotValidException("Bad request error");
 
+        request = MockServerHttpRequest.get("/test-path").build();
+        exchange = MockServerWebExchange.from(request);
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadRequestException(exception, exchange);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Bad request error", response.getBody().getMessage());
+        assertEquals("Bad Request", response.getBody().getError());
+        assertEquals("/test-path", response.getBody().getPath());
+        assertNotNull(response.getBody().getTimestamp());
+
+}
     @Test
     void testHandleUnmodifiableSolutionException(){
         String message = "There's an existing solution with status 'ENDED'.";
