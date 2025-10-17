@@ -2,6 +2,7 @@ package com.itachallenge.user.controller;
 
 import com.itachallenge.user.document.UserDocument;
 import com.itachallenge.user.document.enums.Role;
+import com.itachallenge.user.dto.APIErrorResponse;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
@@ -20,6 +21,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {
@@ -98,16 +101,24 @@ class UserControllerTest {
     @Test
     void getUser_WhenServiceReturnsError_Returns500() {
         String githubUsername = "username";
+        String expectedPath = "/itachallenge/api/v1/user/users/" + githubUsername;
+
         when(userService.getUser(any(String.class))).thenReturn(Mono.error( new RuntimeException()));
 
         webTestClient.get()
                 .uri("/itachallenge/api/v1/user/users/" + githubUsername)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
-
+                .expectBody(APIErrorResponse.class)
+                .value(response -> {
+                            assertThat(response.getStatus()).isEqualTo(500);
+                            assertThat(response.getError()).isEqualTo("Internal Server Error");
+                            assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                            assertThat(response.getPath()).isEqualTo(expectedPath);
+                        });
         verify(userService, times(1)).getUser(githubUsername);
     }
+
 
     @Test
     void addToFavorites_WhenAdded_Returns201() {
@@ -241,14 +252,20 @@ class UserControllerTest {
     void addToFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
-        when(userService.addChallengeToFavorites(userId, challengeId))
+        String expectedPath = "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
+                when(userService.addChallengeToFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
         webTestClient.post()
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody(APIErrorResponse.class).value(response -> {
+                            assertThat(response.getStatus()).isEqualTo(500);
+                            assertThat(response.getError()).isEqualTo("Internal Server Error");
+                            assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                            assertThat(response.getPath()).isEqualTo(expectedPath);
+                        });
 
         verify(userService, times(1)).addChallengeToFavorites(userId, challengeId);
     }
@@ -257,6 +274,7 @@ class UserControllerTest {
     void addToBookmarks_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
+        String expectedPath = "/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId;
         when(userService.addChallengeToBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
@@ -264,7 +282,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody(APIErrorResponse.class).value(response -> {
+                    assertThat(response.getStatus()).isEqualTo(500);
+                    assertThat(response.getError()).isEqualTo("Internal Server Error");
+                    assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                    assertThat(response.getPath()).isEqualTo(expectedPath);
+                });
 
         verify(userService, times(1)).addChallengeToBookmarks(userId, challengeId);
     }
@@ -401,6 +424,7 @@ class UserControllerTest {
     void deleteFromFavorites_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
+        String expectedPath = "/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId;
         when(userService.deleteChallengeFromFavorites(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
@@ -408,7 +432,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/favorites/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody(APIErrorResponse.class).value(response -> {
+                    assertThat(response.getStatus()).isEqualTo(500);
+                    assertThat(response.getError()).isEqualTo("Internal Server Error");
+                    assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                    assertThat(response.getPath()).isEqualTo(expectedPath);
+                });
 
         verify(userService, times(1)).deleteChallengeFromFavorites(userId, challengeId);
     }
@@ -417,6 +446,7 @@ class UserControllerTest {
     void deleteFromBookmarks_WhenUnexpectedError_Returns500() {
         String userId = UUID.randomUUID().toString();
         String challengeId = UUID.randomUUID().toString();
+        String expectedPath = "/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId;
         when(userService.deleteChallengeFromBookmarks(userId, challengeId))
                 .thenReturn(Mono.error(new Exception()));
 
@@ -424,7 +454,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/" + userId + "/bookmarks/" + challengeId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody(APIErrorResponse.class).value(response -> {
+                    assertThat(response.getStatus()).isEqualTo(500);
+                    assertThat(response.getError()).isEqualTo("Internal Server Error");
+                    assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                    assertThat(response.getPath()).isEqualTo(expectedPath);
+                });
 
         verify(userService, times(1)).deleteChallengeFromBookmarks(userId, challengeId);
     }
@@ -486,7 +521,7 @@ class UserControllerTest {
     @DisplayName("GET /users/{userId}/favorites returns 500 if there is an internal error")
     void getUserFavorites_returns500IfUnexpectedError() {
         UUID userId = UUID.randomUUID();
-
+        String expectedPath = "/itachallenge/api/v1/user/users/" +userId + "/favorites";
         when(userService.getUserFavorites(userId.toString()))
                 .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
 
@@ -494,7 +529,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/favorites", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
+                .expectBody(APIErrorResponse.class).value(response -> {
+                    assertThat(response.getStatus()).isEqualTo(500);
+                    assertThat(response.getError()).isEqualTo("Internal Server Error");
+                    assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                    assertThat(response.getPath()).isEqualTo(expectedPath);
+                });
 
         verify(userService, times(1)).getUserFavorites(userId.toString());
     }
@@ -556,7 +596,7 @@ class UserControllerTest {
     @DisplayName("GET /users/{userId}/bookmarks returns 500 if there is an internal error")
     void getUserBookmarks_returns500IfUnexpectedError() {
         UUID userId = UUID.randomUUID();
-
+        String expectedPath = "/itachallenge/api/v1/user/users/" + userId +"/bookmarks";
         when(userService.getUserBookmarks(userId.toString()))
                 .thenReturn(Mono.error(new RuntimeException("Unexpected error")));
 
@@ -564,8 +604,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/bookmarks", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class).isEqualTo("Unexpected error happened.");
-
+                .expectBody(APIErrorResponse.class).value(response -> {
+                    assertThat(response.getStatus()).isEqualTo(500);
+                    assertThat(response.getError()).isEqualTo("Internal Server Error");
+                    assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                    assertThat(response.getPath()).isEqualTo(expectedPath);
+                });
         verify(userService, times(1)).getUserBookmarks(userId.toString());
     }
     
@@ -654,7 +698,7 @@ class UserControllerTest {
     @DisplayName("GET /users/{userId}/solutions returns 500 on unexpected error")
     void getAllSolutions_returns500IfUnexpectedError() {
         String userId = UUID.randomUUID().toString();
-        
+        String expectedPath = "/itachallenge/api/v1/user/users/"+userId+"/solutions";
         when(userSolutionService.getAllSolutionsByUser(userId))
                 .thenReturn(Flux.error(new RuntimeException("Boom")));
         
@@ -662,8 +706,12 @@ class UserControllerTest {
                 .uri("/itachallenge/api/v1/user/users/{userId}/solutions", userId)
                 .exchange()
                 .expectStatus().isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR)
-                .expectBody(String.class)
-                .isEqualTo("Unexpected error happened.");
+                .expectBody(APIErrorResponse.class).value(response -> {
+                    assertThat(response.getStatus()).isEqualTo(500);
+                    assertThat(response.getError()).isEqualTo("Internal Server Error");
+                    assertThat(response.getMessage()).isEqualTo("An unexpected error occurred.");
+                    assertThat(response.getPath()).isEqualTo(expectedPath);
+                });
         
         verify(userSolutionService, times(1)).getAllSolutionsByUser(userId);
     }
