@@ -80,7 +80,7 @@ public class UserGlobalExceptionHandler {
                 .timestamp(Instant.now())
                 .status(HttpStatus.BAD_REQUEST.value())
                 .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message("Validation failed")
+                .message("Validation failed.")
                 .path(exchange.getRequest().getPath().value())
                 .errors(fieldErrors)
                 .build();

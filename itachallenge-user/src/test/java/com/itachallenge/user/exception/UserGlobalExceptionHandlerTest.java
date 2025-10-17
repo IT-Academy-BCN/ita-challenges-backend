@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
+import com.itachallenge.user.controller.UserController;
 import com.itachallenge.user.dto.APIErrorResponse;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
 
 import org.mockito.Mockito;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.RequestPath;
@@ -59,14 +61,18 @@ class UserGlobalExceptionHandlerTest {
         ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleAny(exception, exchange);
-
         APIErrorResponse body = response.getBody();
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
         assertNotNull(body);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getStatus());
-        assertEquals("Internal Server Error", body.getError());
-        assertEquals("An unexpected error occurred.", body.getMessage());
-        assertEquals("/api/v1/user", body.getPath());
-        assertNotNull(body.getTimestamp());
+
+        assertAll(
+                () -> assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), body.getStatus()),
+                () -> assertEquals("Internal Server Error", body.getError()),
+                () -> assertEquals("An unexpected error occurred.", body.getMessage()),
+                () -> assertEquals("/api/v1/user", body.getPath()),
+                () -> assertTrue(body.getTimestamp().isBefore(Instant.now().plusSeconds(1)))
+                );
     }
 
     @Test
@@ -76,16 +82,18 @@ class UserGlobalExceptionHandlerTest {
         ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleIllegalArgument(exception, exchange);
-
         APIErrorResponse body = response.getBody();
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(body);
-        assertNotNull(body.getTimestamp());
-        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
-        assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), body.getError());
-        assertEquals("Invalid input provided. Please check your request.", body.getMessage());
-        assertEquals("/api/v1/user", body.getPath());
+
+        assertAll(
+                () -> assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus()),
+                () -> assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), body.getError()),
+                () -> assertEquals("Invalid input provided. Please check your request.", body.getMessage()),
+                () -> assertEquals("/api/v1/user", body.getPath()),
+                () -> assertTrue(body.getTimestamp().isBefore(Instant.now().plusSeconds(1)))
+        );
     }
 
 @Test
@@ -112,57 +120,81 @@ void handleValidationExceptions_shouldReturnBadRequestWithFieldErrors() {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     APIErrorResponse body = response.getBody();
-    assertThat(body).isNotNull();
 
-    assertAll(
-            () -> assertThat(body.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
-            () -> assertThat(body.getError()).isEqualTo(HttpStatus.BAD_REQUEST.getReasonPhrase()),
-            () -> assertThat(body.getMessage()).isEqualTo("Validation failed"),
-            () -> assertThat(body.getPath()).isEqualTo("/api/v1/user"),
-            () -> assertThat(body.getTimestamp()).isBeforeOrEqualTo(Instant.now())
+    assertNotNull(body);
+    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+    assertAll("APIErrorResponse validation",
+            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus()),
+            () -> assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), body.getError()),
+            () -> assertEquals("Validation failed.", body.getMessage()),
+            () -> assertEquals("/api/v1/user", body.getPath()),
+            () -> assertTrue(body.getTimestamp().isBefore(Instant.now().plusSeconds(1)))
     );
 
     List<FieldErrorDto> errors = body.getErrors();
-    assertThat(errors).hasSize(2);
+    assertNotNull(errors);
+    assertEquals(2, errors.size());
 
-    assertThat(errors)
-            .extracting(FieldErrorDto::getField)
-            .containsExactlyInAnyOrder("email", "name");
+    assertAll("Field errors validation",
+            () -> {
+                Set<String> fields = errors.stream()
+                        .map(FieldErrorDto::getField)
+                        .collect(Collectors.toSet());
+                assertEquals(Set.of("email", "name"), fields);
+            },
 
-    assertThat(errors)
-            .extracting(FieldErrorDto::getMessage)
-            .containsExactlyInAnyOrder("must be a valid email", "must not be blank");
+            () -> {
+                Set<String> messages = errors.stream()
+                        .map(FieldErrorDto::getMessage)
+                        .collect(Collectors.toSet());
+                assertEquals(Set.of("must be a valid email", "must not be blank"), messages);
+            },
 
-    assertThat(errors)
-            .extracting(FieldErrorDto::getObjectName)
-            .allMatch("TestEntity"::equals);
+            () -> assertTrue(errors.stream()
+                            .allMatch(error -> "TestEntity".equals(error.getObjectName())))
+    );
 }
-
 
     @Test
     @DisplayName("Should return bad request when method argument type mismatch occurs")
     void testHandleTypeMismatchException() {
+        MethodParameter methodParameter = mock(MethodParameter.class);
+        when(methodParameter.getContainingClass()).thenReturn((Class) UserController.class);
+
         MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
         when(exception.getName()).thenReturn("Solution");
         when(exception.getValue()).thenReturn(123);
         when(exception.getRequiredType()).thenReturn((Class) String.class);
+        when(exception.getParameter()).thenReturn(methodParameter);
 
         ServerWebExchange exchange = mockExchange();
 
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleTypeMismatchException(exception, exchange);
         APIErrorResponse body = response.getBody();
-        List<FieldErrorDto> errors = Objects.requireNonNull(body).getErrors();
 
+        assertNotNull(body);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("MethodArgumentTypeMismatchException", body.getMessage());
-        assertEquals("/api/v1/user", body.getPath());
 
-        assertFalse(errors.isEmpty());
+        assertAll("APIErrorResponse validation",
+                () -> assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus()),
+                () -> assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), body.getError()),
+                () -> assertEquals("MethodArgumentTypeMismatchException", body.getMessage()),
+                () -> assertEquals("/api/v1/user", body.getPath()),
+                () -> assertTrue(body.getTimestamp().isBefore(Instant.now().plusSeconds(1)))
+        );
 
-        FieldErrorDto fieldError = errors.getFirst();
-        assertEquals("Solution", fieldError.getField());
-        assertTrue(fieldError.getMessage().contains("'123'"));
-        assertTrue(fieldError.getMessage().contains("String"));
+        List<FieldErrorDto> errors = body.getErrors();
+        assertNotNull(errors);
+        assertEquals(1, errors.size());
+
+        FieldErrorDto errorDto = errors.get(0);
+        assertAll("FieldErrorDto validation",
+                () -> assertEquals("Solution", errorDto.getField()),
+                () -> assertEquals("UserController", errorDto.getObjectName()),
+                () -> assertTrue(errorDto.getMessage().contains("'123'")),
+                () -> assertTrue(errorDto.getMessage().contains("String"))
+        );
     }
 
     @Test
