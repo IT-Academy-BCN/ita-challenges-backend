@@ -5,10 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
-import io.lettuce.core.dynamic.support.MethodParameter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
@@ -20,10 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.web.server.ServerWebExchange;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -167,20 +162,15 @@ class UserGlobalExceptionHandlerTest {
 
     }
 
-
-
 @Test
 void testHandleInternalServerErrorException() {
-    // Arrange
     InternalServerErrorException exception = new InternalServerErrorException("Unexpected internal error");
 
     request = MockServerHttpRequest.get("/test-path").build();
     exchange = MockServerWebExchange.from(request);
 
-    // Act
     ResponseEntity<APIErrorResponse> response = exceptionHandler.handleInternalServerErrorException(exception, exchange);
 
-    // Assert
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     assertNotNull(response.getBody());
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getBody().getStatus());
