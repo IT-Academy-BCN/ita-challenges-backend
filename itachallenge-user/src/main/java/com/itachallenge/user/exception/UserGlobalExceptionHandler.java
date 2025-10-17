@@ -67,9 +67,9 @@ public class UserGlobalExceptionHandler {
     public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
-//
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, ServerWebExchange exchange){
+        public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, ServerWebExchange exchange){
         log.error("Invalid request: {}", e.getMessage());
 
         APIErrorResponse response = APIErrorResponse.builder()

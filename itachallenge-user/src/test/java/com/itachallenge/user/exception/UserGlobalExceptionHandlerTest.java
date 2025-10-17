@@ -103,7 +103,7 @@ class UserGlobalExceptionHandlerTest {
     }
 
     @Test
-    void testHandleUnmodifiableSolutionException(){
+    void testHandleUnmodifiableSolutionException() {
         UnmodificableSolutionException exception = new UnmodificableSolutionException("There's an existing solution with status 'ENDED'.");
 
         request = MockServerHttpRequest.get("/test-path").build();
@@ -135,6 +135,60 @@ class UserGlobalExceptionHandlerTest {
         assertNotNull(response.getBody().getTimestamp());
     }
 
+    @Test
+    void testHandleMethodArgumentNotValidException() {
+        BindingResult bindingResult = mock(BindingResult.class);
+        org.springframework.core.MethodParameter methodParameter = mock(org.springframework.core.MethodParameter.class);
+
+        FieldError fieldError1 = new FieldError("userRequest", "username", "Username must not be blank");
+        FieldError fieldError2 = new FieldError("userRequest", "email", "Email must be valid");
+
+        when(bindingResult.getAllErrors()).thenReturn(List.of(fieldError1, fieldError2));
+        when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError1, fieldError2));
+
+        java.lang.reflect.Method mockMethod = mock(java.lang.reflect.Method.class);
+        when(mockMethod.toGenericString()).thenReturn("mockMethod()");
+        when(methodParameter.getExecutable()).thenReturn(mockMethod);
+
+        MethodArgumentNotValidException exception = new MethodArgumentNotValidException(methodParameter, bindingResult);
+
+        request = MockServerHttpRequest.get("/test-path").build();
+        exchange = MockServerWebExchange.from(request);
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleMethodArgumentNotValidException(exception, exchange);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getBody().getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), response.getBody().getError());
+        assertEquals("/test-path", response.getBody().getPath());
+        assertNotNull(response.getBody().getTimestamp());
+        assertNotNull(response.getBody().getMessage());
+
+    }
+
+
+
+@Test
+void testHandleInternalServerErrorException() {
+    // Arrange
+    InternalServerErrorException exception = new InternalServerErrorException("Unexpected internal error");
+
+    request = MockServerHttpRequest.get("/test-path").build();
+    exchange = MockServerWebExchange.from(request);
+
+    // Act
+    ResponseEntity<APIErrorResponse> response = exceptionHandler.handleInternalServerErrorException(exception, exchange);
+
+    // Assert
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    assertNotNull(response.getBody());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getBody().getStatus());
+    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), response.getBody().getError());
+    assertEquals("Unexpected internal error", response.getBody().getMessage());
+    assertEquals("/test-path", response.getBody().getPath());
+    assertNotNull(response.getBody().getTimestamp());
+}
 
 //    @Test
 //    void handleGithubUnavailable_shouldReturn503() {
