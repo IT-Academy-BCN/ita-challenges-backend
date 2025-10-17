@@ -1,6 +1,6 @@
 package com.itachallenge.user.exception;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -88,51 +88,56 @@ class UserGlobalExceptionHandlerTest {
         assertEquals("/api/v1/user", body.getPath());
     }
 
-    @Test
-    @DisplayName("should return 400 Bad Request with detailed field errors when validation fails")
-    void handleValidationExceptions_shouldReturnBadRequestWithFieldErrors() {
-        ServerWebExchange exchange = mockExchange();
+@Test
+@DisplayName("should return 400 Bad Request with detailed field errors when validation fails")
+void handleValidationExceptions_shouldReturnBadRequestWithFieldErrors() {
+    ServerWebExchange exchange = mockExchange();
 
-        ConstraintViolation<?> violation1 = createMockViolation(
-                "email",
-                "must be a valid email",
-                TestEntity.class
-        );
+    ConstraintViolation<?> violation1 = createMockViolation(
+            "email",
+            "must be a valid email",
+            TestEntity.class
+    );
 
-        ConstraintViolation<?> violation2 = createMockViolation(
-                "name",
-                "must not be blank",
-                TestEntity.class
-        );
+    ConstraintViolation<?> violation2 = createMockViolation(
+            "name",
+            "must not be blank",
+            TestEntity.class
+    );
 
-        Set<ConstraintViolation<?>> violations = Set.of(violation1, violation2);
-        ConstraintViolationException exception = new ConstraintViolationException(violations);
+    Set<ConstraintViolation<?>> violations = Set.of(violation1, violation2);
+    ConstraintViolationException exception = new ConstraintViolationException(violations);
 
-        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, exchange);
-        APIErrorResponse body = response.getBody();
-        List<FieldErrorDto> errors = Objects.requireNonNull(response.getBody()).getErrors();
+    ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, exchange);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertNotNull(body);
+    APIErrorResponse body = response.getBody();
+    assertThat(body).isNotNull();
 
-        assertEquals(400, body.getStatus());
-        assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(),body.getError());
-        assertEquals("Validation failed",body.getMessage());
-        assertEquals("/api/v1/user", body.getPath());
-        assertThat(body.getTimestamp()).isBeforeOrEqualTo(Instant.now());
+    assertAll(
+            () -> assertThat(body.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value()),
+            () -> assertThat(body.getError()).isEqualTo(HttpStatus.BAD_REQUEST.getReasonPhrase()),
+            () -> assertThat(body.getMessage()).isEqualTo("Validation failed"),
+            () -> assertThat(body.getPath()).isEqualTo("/api/v1/user"),
+            () -> assertThat(body.getTimestamp()).isBeforeOrEqualTo(Instant.now())
+    );
 
-        Set<String> fields = errors.stream().map(FieldErrorDto::getField).collect(Collectors.toSet());
-        assertTrue(fields.contains("email"));
-        assertTrue(fields.contains("name"));
+    List<FieldErrorDto> errors = body.getErrors();
+    assertThat(errors).hasSize(2);
 
-        Set<String> messages = errors.stream().map(FieldErrorDto::getMessage).collect(Collectors.toSet());
-        assertTrue(messages.contains("must be a valid email"));
-        assertTrue(messages.contains("must not be blank"));
+    assertThat(errors)
+            .extracting(FieldErrorDto::getField)
+            .containsExactlyInAnyOrder("email", "name");
 
-        boolean allTestEntity = errors.stream()
-                .allMatch(e -> "TestEntity".equals(e.getObjectName()));
-        assertThat(allTestEntity).isTrue();
-    }
+    assertThat(errors)
+            .extracting(FieldErrorDto::getMessage)
+            .containsExactlyInAnyOrder("must be a valid email", "must not be blank");
+
+    assertThat(errors)
+            .extracting(FieldErrorDto::getObjectName)
+            .allMatch("TestEntity"::equals);
+}
+
 
     @Test
     @DisplayName("Should return bad request when method argument type mismatch occurs")
@@ -242,9 +247,6 @@ class UserGlobalExceptionHandlerTest {
 
     // Test entity class for mocking
     static class TestEntity {
-        private String email;
-        private String name;
-        private Integer age;
     }
 }
 
