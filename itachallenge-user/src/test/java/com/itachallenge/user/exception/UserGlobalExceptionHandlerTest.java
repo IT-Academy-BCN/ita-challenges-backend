@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.controller.UserController;
 import com.itachallenge.user.dto.APIErrorResponse;
 
