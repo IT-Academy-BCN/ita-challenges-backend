@@ -1,42 +1,23 @@
 package com.itachallenge.user.dto;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
+import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(force = true)
 @Getter
-@Setter
+@Builder
 public class APIErrorResponse {
-
-    @JsonProperty("timestamp")
-    private Instant timestamp;
-
-    @JsonProperty("status")
-    private int status;
-
-    @JsonProperty("error")
-    private String error;
-
-    @JsonProperty("message")
-    private String message;
-
-    @JsonProperty("path")
-    private String path;
-
-    public APIErrorResponse(HttpStatus status, String error, String message, String path){
-        this.timestamp = Instant.now();
-        this.status = status.value();
-        this.error = error;
-        this.message = message;
-        this.path = path;
-    }
-
-
+    private final Instant timestamp;
+    private final int status;
+    private final String error;
+    private final String message;
+    private final String path;
+    private final List<FieldErrorDto> errors;
 }

@@ -1,42 +1,85 @@
 package com.itachallenge.user.dto;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.time.Instant;
+import java.util.List;
 
-import org.springframework.http.HttpStatus;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class APIErrorResponseTest {
+    private ObjectMapper objectMapper;
 
-    @Test
-    void testConstructorAndGetters() {
-
-        APIErrorResponse errorResponse = new APIErrorResponse(HttpStatus.NOT_FOUND, "Some error", "Something went wrong", "http://localhost:8762/api/v1/user");
-
-        assertEquals("Some error", errorResponse.getError());
-        assertEquals("Something went wrong", errorResponse.getMessage());
-        assertNotNull(errorResponse.getTimestamp());
-        assertEquals(HttpStatus.NOT_FOUND.value(), errorResponse.getStatus());
-        assertEquals("http://localhost:8762/api/v1/user", errorResponse.getPath());
+    @BeforeEach
+    void setUp(){
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
     @Test
-    void testNoArgsConstructorAndSetters() {
+    void shouldBuildAPIErrorResponse(){
         Instant now = Instant.now();
-        APIErrorResponse errorResponse = new APIErrorResponse();
-        errorResponse.setError("Another error");
-        errorResponse.setMessage("Different message");
-        errorResponse.setTimestamp(now);
-        errorResponse.setStatus(404);
-        errorResponse.setPath("http://localhost:8762/api/v1/user");
+        FieldErrorDto fieldError = new FieldErrorDto("AdminCreateUserRequestDto","username", "must not be empty");
 
-        assertEquals("Another error", errorResponse.getError());
-        assertEquals("Different message", errorResponse.getMessage());
-        assertNotNull(errorResponse.getTimestamp());
-        assertEquals(404, errorResponse.getStatus());
-        assertEquals("http://localhost:8762/api/v1/user", errorResponse.getPath());
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(now)
+                .status(400)
+                .error("Bad Request")
+                .message("Validation failed")
+                .path("api/v1/user")
+                .errors(List.of(fieldError))
+                .build();
+
+        assertThat(response.getTimestamp()).isEqualTo(now);
+        assertThat(response.getStatus()).isEqualTo(400);
+        assertThat(response.getError()).isEqualTo("Bad Request");
+        assertThat(response.getMessage()).isEqualTo("Validation failed");
+        assertThat(response.getPath()).isEqualTo("api/v1/user");
+        assertThat(response.getErrors()).containsExactly(fieldError);
+    }
+
+    @Test
+    void shouldSerializeToJsonWithoutEmptyFields() throws JsonProcessingException {
+        Instant now = Instant.parse("2025-10-15T10:00:00Z");
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(now)
+                .status(404)
+                .error("Not Found")
+                .message("User not found")
+                .path("/api/v1/user")
+                .build();
+
+        String json = objectMapper.writeValueAsString(response);
+        assertThat(json).contains("\"status\":404");
+        assertThat(json).contains("\"error\":\"Not Found\"");
+        assertThat(json).contains("\"path\":\"/api/v1/user\"");
+        assertThat(json).doesNotContain("errors");
+    }
+
+    @Test
+    void shouldIncludeErrorsWhenPresent() throws JsonProcessingException {
+        Instant now = Instant.parse("2025-10-15T10:00:00Z");
+        FieldErrorDto fieldError = new FieldErrorDto("AdminCreateUserRequestDto","username", "must not be empty");
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(now)
+                .status(400)
+                .error("Bad Request")
+                .message("Validation failed")
+                .path("/api/register")
+                .errors(List.of(fieldError))
+                .build();
+        String json = objectMapper.writeValueAsString(response);
+        assertThat(json).contains("\"errors\"");
+        assertThat(json).contains("username");
+        assertThat(json).contains("not be empty");
     }
 }
