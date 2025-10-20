@@ -80,9 +80,10 @@ class APIErrorResponseTest {
                 .errors(List.of(fieldError))
                 .build();
         String json = objectMapper.writeValueAsString(response);
-        assertThat(json).contains("\"errors\"");
-        assertThat(json).contains("username");
-        assertThat(json).contains("not be empty");
+        assertThat(json)
+            .contains("\"errors\"")
+            .contains("username")
+            .contains("not be empty");
     }
 
 
