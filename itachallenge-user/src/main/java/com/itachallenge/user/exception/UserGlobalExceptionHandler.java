@@ -2,7 +2,10 @@ package com.itachallenge.user.exception;
 
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,14 +14,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.web.server.ServerWebExchange;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.servlet.http.HttpServletRequest;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class UserGlobalExceptionHandler {
+
+    private final MessageSource messageSource;
     public static final String GITHUB_ERROR_SUMMARY = "GitHub API error";
 
     @ExceptionHandler(Exception.class)
@@ -63,31 +70,70 @@ public class UserGlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
-        Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach(error ->
-                errors.put(error.getField(), error.getDefaultMessage())
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e, ServerWebExchange exchange){
+        log.error("Invalid request: {}", e.getMessage());
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(UnmodificableSolutionException.class)
-    public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleUnmodifiableSolutionException(UnmodificableSolutionException e,  ServerWebExchange exchange) {
+        log.error("Resource already exists: {}", e.getMessage());
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error("There's an existing solution with status 'ENDED'.")
+                .message("There's an existing solution with status 'ENDED'.")
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleInternalServerErrorException(InternalServerErrorException e, ServerWebExchange exchange) {
+        log.error("Unexpected error happened: {}", e.getMessage());
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                .message(e.getMessage())
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e, ServerWebExchange exchange) {
+        log.error("The username already exists: {}", e.getMessage());
+
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(HttpStatus.CONFLICT.value())
+                .error("The username already exists")
+                .message("The username already exists")
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(GithubUnavailableException.class)
-    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex, HttpServletRequest request) {
+    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex, ServerWebExchange exchange) {
         HttpStatus status;
         String securedMessage;
 
@@ -104,17 +150,15 @@ public class UserGlobalExceptionHandler {
             securedMessage = "An external service error occurred.";
         }
 
-        String errorSummary = GITHUB_ERROR_SUMMARY;
+        APIErrorResponse response = APIErrorResponse.builder()
+                .timestamp(Instant.now())
+                .status(status.value())
+                .error(GITHUB_ERROR_SUMMARY)
+                .message(securedMessage)
+                .path(exchange.getRequest().getPath().value())
+                .build();
 
-        String requestPath = request.getRequestURI();
-
-        APIErrorResponse errorResponse = new APIErrorResponse(
-                status,
-                errorSummary,
-                securedMessage,
-                requestPath
-        );
-        return new ResponseEntity<>(errorResponse, status);
+        return ResponseEntity.status(status).body(response);
     }
 
 }
