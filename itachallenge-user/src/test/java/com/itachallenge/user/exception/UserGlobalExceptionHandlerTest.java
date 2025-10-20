@@ -1,6 +1,5 @@
 package com.itachallenge.user.exception;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -116,15 +115,14 @@ void handleValidationExceptions_shouldReturnBadRequestWithFieldErrors() {
     ConstraintViolationException exception = new ConstraintViolationException(violations);
 
     ResponseEntity<APIErrorResponse> response = exceptionHandler.handleValidationExceptions(exception, exchange);
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     APIErrorResponse body = response.getBody();
 
     assertNotNull(body);
+    assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 
     assertAll("APIErrorResponse validation",
-            () -> assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus()),
             () -> assertEquals(HttpStatus.BAD_REQUEST.getReasonPhrase(), body.getError()),
             () -> assertEquals("Validation failed.", body.getMessage()),
             () -> assertEquals("/api/v1/user", body.getPath()),
