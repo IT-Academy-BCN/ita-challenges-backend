@@ -2,6 +2,7 @@ package com.itachallenge.user.service;
 
 import com.itachallenge.user.document.SolutionAttemptDocument;
 import com.itachallenge.user.document.UserSolutionDocument;
+import com.itachallenge.user.document.enums.ChallengeStatus;
 import com.itachallenge.user.dto.SubmitSolutionResponseDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import com.itachallenge.user.exception.BadRequestException;
@@ -11,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
@@ -57,42 +60,7 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("addSolution creates new ENDED solution and returns response")
-    void addSolutionNewEndedSolution() {
-        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
-                .userId(userUuid.toString())
-                .challengeId(challengeUuid.toString())
-                .languageId(languageUuid.toString())
-                .status("ENDED")
-                .solutionText(solutionText)
-                .build();
-
-        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
-                .thenReturn(Mono.empty());
-
-        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
-                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
-
-        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
-                .thenReturn(Mono.just(new com.itachallenge.user.dto.SolvedDto(true, 5)));
-
-        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
-
-        StepVerifier.create(result)
-                .assertNext(dto -> {
-                    assertEquals(solutionText, dto.getSolutionText());
-                    assertTrue(dto.getIsSolved());
-                    assertEquals(5, dto.getTimesSolved());
-                })
-                .verifyComplete();
-
-        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
-        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
-        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
-    }
-
-    @Test
-    @DisplayName("addSolution updates existing solution when status is not ENDED")
+    @DisplayName("addSolution updates existing IN_PROGRESS solution successfully")
     void addSolutionUpdatesExistingSolution() {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
@@ -132,6 +100,7 @@ class UserSolutionServiceImplTest {
                     assertEquals(solutionText, dto.getSolutionText());
                     assertFalse(dto.getIsSolved());
                     assertNull(dto.getTimesSolved());
+                    assertEquals("IN_PROGRESS", dto.getStatus());
                 })
                 .verifyComplete();
 
@@ -140,14 +109,15 @@ class UserSolutionServiceImplTest {
         verifyNoInteractions(challengeService);
     }
 
-    @Test
-    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is ENDED")
-    void addSolutionThrowsExceptionIfEnded() {
+    @ParameterizedTest
+    @ValueSource(strings = {"SUBMITTED_COMPLETE", "SUBMITTED_INCOMPLETE"})
+    @DisplayName("addSolution throws UnmodificableSolutionException if existing solution status is submitted")
+    void addSolutionThrowsExceptionIfSubmitted(String status) {
         UserSolutionRequestDto request = UserSolutionRequestDto.builder()
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("ENDED")
+                .status("IN_PROGRESS")
                 .solutionText(solutionText)
                 .build();
 
@@ -156,7 +126,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.ENDED)
+                .status(ChallengeStatus.valueOf(status))
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Old solution").build())
                 .build();
 
@@ -166,7 +136,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(userSolutionService.addSolution(request))
                 .expectErrorMatches(throwable ->
                         throwable instanceof UnmodificableSolutionException &&
-                                throwable.getMessage().contains("Existing solution is already ENDED"))
+                                throwable.getMessage().contains("Existing solution is already submitted and cannot be modified."))
                 .verify();
 
         verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
@@ -223,14 +193,14 @@ class UserSolutionServiceImplTest {
     }
 
     @Test
-    @DisplayName("getAllSolutionsByUser returns ENDED solution")
-    void getAllSolutionsByUser_returnsEndedSolution() {
+    @DisplayName("getAllSolutionsByUser returns SUBMITTED_COMPLETE solution")
+    void getAllSolutionsByUser_returnsSubmittedCompleteSolutions() {
         UserSolutionDocument doc = UserSolutionDocument.builder()
                 .userId(userUuid)
                 .challengeId(challengeUuid)
                 .languageId(languageUuid)
                 .solutionAttemptDocument(SolutionAttemptDocument.builder().solutionText("Ended solution").build())
-                .status(com.itachallenge.user.document.enums.ChallengeStatus.ENDED)
+                .status(com.itachallenge.user.document.enums.ChallengeStatus.SUBMITTED_COMPLETE)
                 .build();
 
         when(userSolutionRepository.findAllByUserId(userUuid))
@@ -239,6 +209,7 @@ class UserSolutionServiceImplTest {
         StepVerifier.create(userSolutionService.getAllSolutionsByUser(userUuid.toString()))
                 .assertNext(dto -> {
                     assertEquals("Ended solution", dto.getSolutionText());
+                    assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
                     assertEquals(userUuid.toString(), dto.getUserId());
                 })
                 .verifyComplete();
@@ -255,6 +226,73 @@ class UserSolutionServiceImplTest {
                 .verifyComplete();
     }
 
+    @Test
+    @DisplayName("addSolution creates new SUBMITTED_COMPLETE solution and returns response")
+    void addSolutionNewSubmittedCompleteSolution() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("SUBMITTED_COMPLETE")
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        when(challengeService.addChallengeToSolved(challengeUuid.toString()))
+                .thenReturn(Mono.just(new com.itachallenge.user.dto.SolvedDto(true, 5)));
+
+        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
+
+        StepVerifier.create(result)
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertTrue(dto.getIsSolved());
+                    assertEquals(5, dto.getTimesSolved());
+                    assertEquals("SUBMITTED_COMPLETE", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verify(challengeService).addChallengeToSolved(challengeUuid.toString());
+    }
+
+    @Test
+    @DisplayName("addSolution creates new SUBMITTED_INCOMPLETE solution and returns response")
+    void addSolutionNewSubmittedIncompleteSolution() {
+        UserSolutionRequestDto request = UserSolutionRequestDto.builder()
+                .userId(userUuid.toString())
+                .challengeId(challengeUuid.toString())
+                .languageId(languageUuid.toString())
+                .status("SUBMITTED_INCOMPLETE")
+                .solutionText(solutionText)
+                .build();
+
+        when(userSolutionRepository.findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid))
+                .thenReturn(Mono.empty());
+
+        when(userSolutionRepository.save(any(UserSolutionDocument.class)))
+                .thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        Mono<SubmitSolutionResponseDto> result = userSolutionService.addSolution(request);
+
+        StepVerifier.create(result)
+                .assertNext(dto -> {
+                    assertEquals(solutionText, dto.getSolutionText());
+                    assertFalse(dto.getIsSolved());
+                    assertEquals("SUBMITTED_INCOMPLETE", dto.getStatus());
+                })
+                .verifyComplete();
+
+        verify(userSolutionRepository).findByUserIdAndChallengeIdAndLanguageId(userUuid, challengeUuid, languageUuid);
+        verify(userSolutionRepository).save(any(UserSolutionDocument.class));
+        verifyNoInteractions(challengeService);
+    }
 
     @Test
     @DisplayName("addSolution creates new IN_PROGRESS solution and returns response")
@@ -263,7 +301,7 @@ class UserSolutionServiceImplTest {
                 .userId(userUuid.toString())
                 .challengeId(challengeUuid.toString())
                 .languageId(languageUuid.toString())
-                .status("IN_PROGRESS")  // ⬅️ acá cambiamos ENDED por IN_PROGRESS
+                .status("IN_PROGRESS")
                 .solutionText(solutionText)
                 .build();
 
