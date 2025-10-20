@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.user.dto.APIErrorResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,6 +86,26 @@ class UserGlobalExceptionHandlerTest {
         assertNotNull(response.getBody().getTimestamp());
     }
 
+    @Test
+    void testHandleBadUUIDException() {
+        BadUUIDException exception = new BadUUIDException("Invalid UUID format");
+
+        request = mock(MockServerHttpRequest.class);
+        exchange = mock(MockServerWebExchange.class);
+        when(exchange.getRequest()).thenReturn(request);
+        when(request.getPath()).thenReturn(RequestPath.parse("/test/uuid", ""));
+
+        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleBadUUIDException(exception, exchange);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        APIErrorResponse body = response.getBody();
+        assertNotNull(body);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), body.getStatus());
+        assertEquals("Bad Request", body.getError());
+        assertEquals("The provided IDs are not valid.", body.getMessage());
+        assertEquals("/test/uuid", body.getPath());
+        assertNotNull(body.getTimestamp());
+    }
 
     @Test
     void testHandleDatabaseException() {
@@ -152,27 +171,5 @@ class UserGlobalExceptionHandlerTest {
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
         assertEquals("The username 'alfonso79' is already registered.", response.getBody());
     }
-
-
-//    @Test
-//    void handleGithubUnavailable_shouldReturn503() {
-//        GithubUnavailableException ex = new GithubUnavailableException("Some 5xx error");
-//
-//        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
-//
-//        assertEquals(HttpStatus.SERVICE_UNAVAILABLE, response.getStatusCode());
-//        assertEquals("GitHub API error", response.getBody().getError());
-//    }
-//
-//    @Test
-//    void handleGithubUnavailable_shouldReturn504() {
-//        GithubUnavailableException ex = new GithubUnavailableException("timeout");
-//
-//        ResponseEntity<APIErrorResponse> response = exceptionHandler.handleGithubUnavailable(ex);
-//
-//        assertEquals(HttpStatus.GATEWAY_TIMEOUT, response.getStatusCode());
-//        assertEquals("GitHub API error", response.getBody().getError());
-//    }
-
 }
 
