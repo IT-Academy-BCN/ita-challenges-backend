@@ -3,18 +3,31 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-### [itachallenge-user-2.2.0-RELEASE] - 2025-10-20
+### [itachallenge-user-3.2.0-RELEASE] - 2025-10-20
 
 ### Changed
 - Standardized Error Handler: The GithubUnavailableException handler is updated to use the final standardized APIErrorResponse DTO and the reactive WebFlux architecture. (Taiga [#791], PR [1008])
 
-### [itachallenge-user-2.0.1-RELEASE] - 2025-10-03
+### [itachallenge-user-3.1.0-RELEASE] - 2025-10-03
 
 ### Changed
 - Improved stability of GitHub connection error handling.
  - Before: The system guessed the error status (503/504) by comparing the text of the exception message (ex.getMessage()), which was unreliable and fragile.
  - After: The system now accurately determines the status (HTTP 503 or HTTP 504) by inspecting the underlying network exception cause (e.g., TimeoutException or ConnectException), ensuring the correct error code is returned to the client. (Taiga [#744], PR [#991])
 
+### [itachallenge-user-3.0.0-RELEASE] - 2025-10-09
+
+### Changed
+- Before: SolutionStatus enum only had two options `ENDED` and `IN_PROGRESS`, solutions with status `ENDED` could be modified, 
+  leading to ambiguity in submission state.
+- After: SolutionStatus enum options can be marked as `IN_PROGRESS`, `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE`.
+  Solutions marked as `SUBMITTED_COMPLETE` or `SUBMITTED_INCOMPLETE` now throw `UnmodifiableSolutionException`
+  when updated. Only `IN_PROGRESS` solutions remain editable.
+- This changes prevents accidental overwrites of finalized submissions.
+- this changes will break the communication between back and frontend, it is required to adjust the type of answer that can be submitted
+  by users ENDED is replaced with SUBMITTED_COMPLETE and SUBMITTED_INCOMPLETE has to be added to better reflect the status 
+  in which challenges can be set (Taiga user story [#703])
+  
 ### [itachallenge-user-2.1.0-RELEASE] - 2025-10-03
 
 ### Added
