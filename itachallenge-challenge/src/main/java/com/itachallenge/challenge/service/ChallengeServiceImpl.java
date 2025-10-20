@@ -14,6 +14,7 @@ import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.repository.SolutionRepository;
 import io.micrometer.common.util.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.function.UnaryOperator;
 
-
+@RequiredArgsConstructor
 @Service
 public class ChallengeServiceImpl implements IChallengeService {
 
@@ -45,20 +46,13 @@ public class ChallengeServiceImpl implements IChallengeService {
 
     private static final String NOT_FOUND = "not found";
 
-    @Autowired
-    private ChallengeRepository challengeRepository;
-    @Autowired
-    private ILanguageService ILanguageService;
-    @Autowired
-    private SolutionRepository solutionRepository;
-    @Autowired
-    private DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter = new DocumentToDtoConverter<>();
-    @Autowired
-    private IUserService userService;
-    @Autowired
-    private ITagService tagService;
+    private final ChallengeRepository challengeRepository;
+    private final ILanguageService iLanguageService;
+    private final SolutionRepository solutionRepository;
+    private final DocumentToDtoConverter<ChallengeDocument, ChallengeDto> challengeConverter;
+    private final DocumentToDtoConverter<SolutionDocument, SolutionDto> solutionConverter;
+    private final IUserService userService;
+    private final ITagService tagService;
 
     @Cacheable(value = "challenges", key = "#id", unless = "#result==null")
     public Mono<ChallengeDto> getChallengeById(String id) {
@@ -221,7 +215,7 @@ public class ChallengeServiceImpl implements IChallengeService {
                     UUID languageId = tuple.getT2();
 
 
-                    return ILanguageService.findByIdLanguage(languageId)
+                    return iLanguageService.findByIdLanguage(languageId)
                             .switchIfEmpty(Mono.error(new LanguageNotFoundException(String.format(LANGUAGE_NOT_FOUND_ERROR, languageId))))
                             .flatMap(language -> challengeRepository.findByUuid(challengeId))
                             .switchIfEmpty(Mono.error(new ChallengeNotFoundException(String.format(CHALLENGE_NOT_FOUND_ERROR, challengeId))))
@@ -285,7 +279,7 @@ public class ChallengeServiceImpl implements IChallengeService {
             return Mono.error(new IllegalArgumentException("Invalid topic provided: " + challengeCreateDto.getTopic()));
         }
 
-        return ILanguageService.findFirstByLanguageName(codingLanguage)
+        return iLanguageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(existingLanguage -> {
                     SolutionDocument solution = SolutionDocument.builder()
@@ -400,7 +394,7 @@ public class ChallengeServiceImpl implements IChallengeService {
     public Mono<ChallengeDto> updateChallenge(String challengeId, ChallengeCreateDto challengeCreateDto) {
         validateUUID(String.valueOf(challengeId));
         String codingLanguage = challengeCreateDto.getLanguage();
-        return ILanguageService.findFirstByLanguageName(codingLanguage)
+        return iLanguageService.findFirstByLanguageName(codingLanguage)
                 .switchIfEmpty(Mono.error(new LanguageNotFoundException("Language " + codingLanguage + " is not valid")))
                 .flatMap(newLanguage -> validateUUID(String.valueOf(challengeId))
                         .flatMap(validId -> challengeRepository.findByUuid(validId)
