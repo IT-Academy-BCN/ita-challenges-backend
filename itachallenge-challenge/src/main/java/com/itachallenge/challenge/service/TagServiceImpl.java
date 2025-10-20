@@ -7,9 +7,9 @@ import com.itachallenge.challenge.exception.BadRequestException;
 import com.itachallenge.challenge.exception.TagNotFoundException;
 import com.itachallenge.challenge.helper.DocumentToDtoConverter;
 import com.itachallenge.challenge.repository.TagRepository;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -21,15 +21,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class TagServiceImpl implements ITagService {
 
     private static final Logger log = LoggerFactory.getLogger(TagServiceImpl.class);
 
-    @Autowired
-    TagRepository tagRepository;
-
-    @Autowired
-    private DocumentToDtoConverter<TagDocument, TagDto> tagConverter = new DocumentToDtoConverter<>();
+    private final TagRepository tagRepository;
+    private final DocumentToDtoConverter<TagDocument, TagDto> tagConverter;
 
     @Cacheable(value = "tagsByLanguage")
     @Override
