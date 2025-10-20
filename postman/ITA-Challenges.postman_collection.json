@@ -552,6 +552,10 @@
                   "value": "660e1b18-0c0a-4262-a28a-85de9df6ac5f"
                 },
                 {
+                  "key": "status",
+                  "value": "SUBMITTED_COMPLETE"
+                },
+                {
                   "key": "offset",
                   "value": "1"
                 },
@@ -954,38 +958,6 @@
       "name": "User",
       "item": [
         {
-          "name": "User/solution",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n\"uuid_challenge\": \"dcacb291-b4aa-4029-8e9b-284c8ca80296\",\n\"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n\"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n\"status\": \"ENDED\",\n\"solution_text\": \"ANOTHER SOLUTION\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
-              "protocol": "http",
-              "host": [
-                "{{ip}}"
-              ],
-              "port": "{{user_port}}",
-              "path": [
-                "itachallenge",
-                "api",
-                "v1",
-                "user",
-                "solution"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "User/bookmark",
           "request": {
             "method": "PUT",
@@ -1164,13 +1136,77 @@
           "response": []
         },
         {
+          "name": "User/solution - SUBMITTED_COMPLETE",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"uuid_challenge\": \"8cd0fbc2-d940-4d41-ab95-7749f0382f6a\",\n\"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n\"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n\"status\": \"SUBMITTED_COMPLETE\",\n\"solution_text\": \"ANOTHER SOLUTION\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
+              "protocol": "http",
+              "host": [
+                "{{ip}}"
+              ],
+              "port": "{{user_port}}",
+              "path": [
+                "itachallenge",
+                "api",
+                "v1",
+                "user",
+                "solution"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "User/solution - IN_PROGRESS",
           "request": {
             "method": "PUT",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"uuid_challenge\": \"dcacb291-b4aa-4029-8e9b-284c8ca80296\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n  \"status\": \"IN_PROGRESS\",\n  \"solution_text\": \"This is a solution still in progress.\"\n}",
+              "raw": "{\n  \"uuid_challenge\": \"2044f0b7-ccef-429b-a8d3-7a2168a5dafe\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"c3a92f9d-5d10-4f76-8c0b-6d884c549b1c\",\n  \"status\": \"IN_PROGRESS\",\n  \"solution_text\": \"This is a solution still in progress.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://{{ip}}:{{user_port}}/itachallenge/api/v1/user/solution",
+              "protocol": "http",
+              "host": [
+                "{{ip}}"
+              ],
+              "port": "{{user_port}}",
+              "path": [
+                "itachallenge",
+                "api",
+                "v1",
+                "user",
+                "solution"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User/solution - SUBMITTED_INCOMPLETE",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uuid_challenge\": \"6e237137-3567-4585-9a21-5a6d4f5f037b\",\n  \"uuid_language\": \"660e1b18-0c0a-4262-a28a-85de9df6ac5f\",\n  \"uuid_user\": \"7a8d03f6-5489-417d-a736-777be159eab5\",\n  \"status\": \"SUBMITTED_INCOMPLETE\",\n  \"solution_text\": \"Partial solution submitted\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
