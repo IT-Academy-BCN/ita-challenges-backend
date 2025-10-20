@@ -222,8 +222,9 @@ void handleValidationExceptions_shouldReturnBadRequestWithFieldErrors() {
     }
 
     @Test
-    void testHandleUnmodifiableSolutionException() {
-        String message = "There's an existing solution with status 'ENDED'.";
+
+    void testHandleUnmodifiableSolutionException(){
+        String message = "There's an existing solution with status 'SUBMITTED_COMPLETE'.";
         UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
         ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
 

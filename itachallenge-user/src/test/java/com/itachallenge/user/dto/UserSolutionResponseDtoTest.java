@@ -87,13 +87,13 @@ class UserSolutionResponseDtoTest {
                 .challengeId("validChallengeId")
                 .languageId("validLanguageId")
                 .solutionText("Valid solution text")
-                .status("ENDED")
+                .status("SUBMITTED_COMPLETE")
                 .build();
 
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dto);
 
-        assertTrue(json.contains("\"status\":\"ENDED\""));
+        assertTrue(json.contains("\"status\":\"SUBMITTED_COMPLETE\""));
     }
 
     @Test
