@@ -59,10 +59,11 @@ class APIErrorResponseTest {
 
 
         String json = objectMapper.writeValueAsString(response);
-        assertThat(json).contains("\"status\":404");
-        assertThat(json).contains("\"error\":\"Not Found\"");
-        assertThat(json).contains("\"path\":\"/api/v1/user\"");
-        assertThat(json).doesNotContain("errors");
+        assertThat(json)
+                .contains("\"status\":404")
+                .contains("\"error\":\"Not Found\"")
+                .contains("\"path\":\"/api/v1/user\"")
+                .doesNotContain("errors");
     }
 
     @Test
