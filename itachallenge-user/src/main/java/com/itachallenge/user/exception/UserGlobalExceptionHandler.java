@@ -90,8 +90,8 @@ public class UserGlobalExceptionHandler {
         APIErrorResponse response = APIErrorResponse.builder()
                 .timestamp(Instant.now())
                 .status(HttpStatus.CONFLICT.value())
-                .error("There's an existing solution with status 'ENDED'.")
-                .message("There's an existing solution with status 'ENDED'.")
+                .error("There's an existing solution with status 'SUBMITTED'.")
+                .message("There's an existing solution with status 'SUBMITTED'.")
                 .path(exchange.getRequest().getPath().value())
                 .build();
 
