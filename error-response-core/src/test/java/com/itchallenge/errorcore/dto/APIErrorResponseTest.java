@@ -1,4 +1,4 @@
-package com.itchallenge.errorcore;
+package com.itchallenge.errorcore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
