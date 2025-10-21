@@ -18,7 +18,6 @@ class AdminCreateUserRequestDtoTest {
 
     private static Validator validator;
 
-
     @BeforeAll
     static void setupValidator() {
         ValidatorFactory factory = Validation.byDefaultProvider()
