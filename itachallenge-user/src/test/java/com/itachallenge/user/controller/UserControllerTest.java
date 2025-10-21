@@ -119,7 +119,6 @@ class UserControllerTest {
         verify(userService, times(1)).getUser(githubUsername);
     }
 
-
     @Test
     void addToFavorites_WhenAdded_Returns201() {
         String userId = UUID.randomUUID().toString();
