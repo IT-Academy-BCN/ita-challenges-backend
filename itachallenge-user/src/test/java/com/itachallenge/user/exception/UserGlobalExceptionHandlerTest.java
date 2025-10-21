@@ -100,7 +100,7 @@ class UserGlobalExceptionHandlerTest {
 
     @Test
     void testHandleUnmodifiableSolutionException() {
-        UnmodificableSolutionException exception = new UnmodificableSolutionException("There's an existing solution with status 'ENDED'.");
+        UnmodificableSolutionException exception = new UnmodificableSolutionException("There's an existing solution with status 'SUBMITTED'.");
 
         request = MockServerHttpRequest.get("/test-path").build();
         exchange = MockServerWebExchange.from(request);
@@ -108,8 +108,8 @@ class UserGlobalExceptionHandlerTest {
         ResponseEntity<APIErrorResponse> response = exceptionHandler.handleUnmodifiableSolutionException(exception, exchange);
 
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
-        assertEquals("There's an existing solution with status 'ENDED'.", response.getBody().getMessage());
-        assertEquals("There's an existing solution with status 'ENDED'.", response.getBody().getError());
+        assertEquals("There's an existing solution with status 'SUBMITTED'.", response.getBody().getMessage());
+        assertEquals("There's an existing solution with status 'SUBMITTED'.", response.getBody().getError());
         assertEquals("/test-path", response.getBody().getPath());
         assertNotNull(response.getBody().getTimestamp());
     }
