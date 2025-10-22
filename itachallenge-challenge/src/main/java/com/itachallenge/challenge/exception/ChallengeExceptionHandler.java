@@ -2,7 +2,6 @@ package com.itachallenge.challenge.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.itachallenge.challenge.dto.MessageDto;
 import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itchallenge.errorcore.dto.APIErrorResponse;
 import com.itchallenge.errorcore.exceptionhandler.BaseExceptionHandler;
@@ -28,73 +27,69 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleChallengeNotFoundException(ChallengeNotFoundException ex, HttpServletRequest request) {
         log.error("ChallengeNotFound Exception happened:{}",ex.getMessage());
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(responseBuilder
-                        .buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request)
-                );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(TagNotFoundException.class)
-    public ResponseEntity<MessageDto> handleTagNotFoundException(TagNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleTagNotFoundException(TagNotFoundException ex,HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<MessageDto> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(LanguageNotFoundException.class)
-    public ResponseEntity<MessageDto> handleLanguageNotFoundException(LanguageNotFoundException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleLanguageNotFoundException(LanguageNotFoundException ex, HttpServletRequest request) {
+        return ResponseEntity.badRequest().body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<MessageDto> handleNotFoundException(NotFoundException ex) {
-        return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
+        return ResponseEntity.ok().body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(BadUUIDException.class)
-    public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleBadUUIDException(BadUUIDException ex, HttpServletRequest request) {
+        return ResponseEntity.badRequest()
+                .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request));
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<MessageDto> handleCustomBadRequestException(BadRequestException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleCustomBadRequestException(BadRequestException ex,HttpServletRequest request) {
+        return ResponseEntity.badRequest()
+                .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request));
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(InternalServerErrorException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleCustomInternalServerErrorException(InternalServerErrorException ex,HttpServletRequest request) {
+        return ResponseEntity.internalServerError()
+                .body(responseBuilder.buildError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request));
     }
 
     @ExceptionHandler(InvalidFormatException.class)
-    public ResponseEntity<MessageDto> handleInvalidFormat(InvalidFormatException ex) {
-        return buildTagUuidError(ex)
+    public ResponseEntity<APIErrorResponse> handleInvalidFormat(InvalidFormatException ex, HttpServletRequest request) {
+        return buildTagUuidError(ex, request)
                 .orElseGet(() ->
-        ResponseEntity.badRequest().body(new MessageDto(ex.getOriginalMessage()))
+                        ResponseEntity.badRequest()
+                                .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request))
                 );
     }
     
-    private Optional<ResponseEntity<MessageDto>> buildTagUuidError(InvalidFormatException ex) {
+    private Optional<ResponseEntity<APIErrorResponse>> buildTagUuidError(InvalidFormatException ex,HttpServletRequest request) {
         if (UUID.class.equals(ex.getTargetType())) {
             String badValue = ex.getValue().toString();
             boolean fromTags = ex.getPath().stream()
                     .map(Reference::getFieldName)
                     .anyMatch("tags"::equals);
             if (fromTags) {
-                MessageDto body = new MessageDto("invalid format UUID tag: " + badValue);
+                APIErrorResponse body = responseBuilder.buildError(HttpStatus.BAD_REQUEST,"invalid format UUID tag: " + badValue,request);
                 return Optional.of(ResponseEntity
                         .badRequest()
                         .body(body));
             }
         }
         return Optional.empty();
-    }
-
-    private APIErrorResponse buildNotFoundError(RuntimeException ex, HttpServletRequest request){
-        return responseBuilder.buildError(HttpStatus.NOT_FOUND,ex.getMessage(),request);
     }
 }
