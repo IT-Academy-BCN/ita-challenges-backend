@@ -1,118 +1,81 @@
 package com.itchallenge.errorcore.testapp;
 
-import com.itchallenge.errorcore.dto.APIErrorResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-import reactor.core.publisher.Mono;
+import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(
-        classes = TestApplication.class,
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
-)
-@ActiveProfiles("test")
-class TestAppWebClientIntegrationTest {
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+class TestAppIntegrationTest {
 
-    @LocalServerPort
-    private int port;
-
-    private WebClient client;
-
-    @BeforeEach
-    void setup() {
-        client = WebClient.builder()
-                .baseUrl("http://localhost:" + port)
-                .build();
-    }
-
-    // --- Utility for invoking endpoints ---
-    private APIErrorResponse getErrorResponse(String uri) {
-        try {
-            return client.get()
-                    .uri(uri)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .retrieve()
-                    .bodyToMono(APIErrorResponse.class)
-                    .block();
-        } catch (WebClientResponseException e) {
-            // Deserialize manually in case of non-2xx responses
-            return WebClient.builder().build()
-                    .get()
-                    .uri("http://localhost:" + port + uri)
-                    .retrieve()
-                    .bodyToMono(APIErrorResponse.class)
-                    .onErrorResume(ex -> Mono.empty())
-                    .block();
-        }
-    }
+    @Autowired
+    private MockMvc mockMvc;
 
     // 1️⃣ MethodArgumentTypeMismatchException
     @Test
-    void shouldHandleTypeMismatch() {
-        APIErrorResponse response = getErrorResponse("/test/mismatch?age=notANumber");
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(response.getMessage()).contains("Parameter");
-        assertThat(response.getErrors().get(0).getField()).isEqualTo("age");
+    void shouldHandleTypeMismatch() throws Exception {
+        mockMvc.perform(get("/test/mismatch").param("age", "notANumber"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", containsString("Parameter")))
+                .andExpect(jsonPath("$.errors[0].field", is("age")));
     }
 
     // 2️⃣ ConstraintViolationException
     @Test
-    void shouldHandleConstraintViolation() {
-        APIErrorResponse response = getErrorResponse("/test/violation?age=5");
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(response.getMessage()).contains("validation");
+    void shouldHandleConstraintViolation() throws Exception {
+        mockMvc.perform(get("/test/mismatch").param("age", "5"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", containsString("validation")));
     }
 
     // 3️⃣ MethodArgumentNotValidException
     @Test
-    void shouldHandleInvalidBody() {
-        APIErrorResponse response = client.post()
-                .uri("/test/invalid")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue("{}")
-                .retrieve()
-                .bodyToMono(APIErrorResponse.class)
-                .block();
-
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(response.getMessage()).contains("Validation failed");
-        assertThat(response.getErrors()).isNotEmpty();
+    void shouldHandleInvalidBody() throws Exception {
+        mockMvc.perform(post("/test/validate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", containsString("Validation failed")))
+                .andExpect(jsonPath("$.errors").isArray());
     }
 
     // 4️⃣ IllegalArgumentException
     @Test
-    void shouldHandleIllegalArgument() {
-        APIErrorResponse response = getErrorResponse("/test/illegal");
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(response.getMessage()).contains("Invalid parameter");
+    void shouldHandleIllegalArgument() throws Exception {
+        mockMvc.perform(get("/test/illegal"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.message", containsString("Invalid parameter")));
     }
 
     // 5️⃣ ResponseStatusException
     @Test
-    void shouldHandleResponseStatusException() {
-        APIErrorResponse response = getErrorResponse("/test/status");
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(404);
-        assertThat(response.getMessage()).contains("Resource not found");
+    void shouldHandleResponseStatusException() throws Exception {
+        mockMvc.perform(get("/test/status"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message", containsString("Not Found")));
     }
 
     // 6️⃣ Generic Exception
     @Test
-    void shouldHandleGenericException() {
-        APIErrorResponse response = getErrorResponse("/test/any");
-        assertThat(response).isNotNull();
-        assertThat(response.getStatus()).isEqualTo(500);
-        assertThat(response.getMessage()).contains("terribly wrong");
+    void shouldHandleGenericException() throws Exception {
+        mockMvc.perform(get("/test/any"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.status").value(500))
+                .andExpect(jsonPath("$.message", containsString("terribly wrong")));
     }
 }

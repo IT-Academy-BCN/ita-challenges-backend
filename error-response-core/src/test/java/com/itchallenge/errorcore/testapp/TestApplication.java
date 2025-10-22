@@ -1,4 +1,7 @@
 package com.itchallenge.errorcore.testapp;
 
-public class TestApplication {
-}
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication(scanBasePackages = "com.itchallenge.errorcore")
+public class TestApplication {}
+
