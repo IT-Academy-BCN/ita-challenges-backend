@@ -17,9 +17,9 @@ import java.util.UUID;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler extends BaseExceptionHandler {
+public class ChallengeExceptionHandler extends BaseExceptionHandler {
 
-    public GlobalExceptionHandler(ErrorResponseBuilder responseBuilder) {
+    public ChallengeExceptionHandler(ErrorResponseBuilder responseBuilder) {
         super(responseBuilder);
     }
 

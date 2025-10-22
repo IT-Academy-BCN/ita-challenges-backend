@@ -1,5 +1,6 @@
 package com.itachallenge.challenge.exception;
 
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.config.PropertiesConfig;
 import com.itachallenge.challenge.dto.MessageDto;
@@ -27,7 +28,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import java.util.*;
 
@@ -38,8 +38,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest(controllers = GlobalExceptionHandlerTest.class)
-class GlobalExceptionHandlerTest {
+@WebFluxTest(controllers = ChallengeExceptionHandlerTest.class)
+class ChallengeExceptionHandlerTest {
     //VARIABLES
     String REQUEST = "Invalid request";
     private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
@@ -47,7 +47,7 @@ class GlobalExceptionHandlerTest {
     private final HttpStatus NOT_FOUND_REQUEST = HttpStatus.NOT_FOUND;
 
     @InjectMocks
-    private GlobalExceptionHandler globalExceptionHandler;
+    private ChallengeExceptionHandler challengeExceptionHandler;
     @MockBean
     private ResponseStatusException responseStatusException;
     @MockBean
@@ -100,7 +100,7 @@ class GlobalExceptionHandlerTest {
         HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
         ResponseStatusException ex = new ResponseStatusException(expectedStatus, expectedErrorMessage);
 
-        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        ChallengeExceptionHandler handler = new ChallengeExceptionHandler();
 
         // Act
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
@@ -118,7 +118,7 @@ class GlobalExceptionHandlerTest {
         when(ex.getStatusCode()).thenReturn(expectedStatus);
         when(ex.getDetailMessageArguments()).thenReturn(null);
 
-        GlobalExceptionHandler handler = new GlobalExceptionHandler();
+        ChallengeExceptionHandler handler = new ChallengeExceptionHandler();
 
         // Act
         ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
@@ -137,7 +137,7 @@ class GlobalExceptionHandlerTest {
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -156,7 +156,7 @@ class GlobalExceptionHandlerTest {
         when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
 
         // Assert
         MatcherAssert.assertThat(responseEntity, notNullValue());
@@ -178,7 +178,7 @@ class GlobalExceptionHandlerTest {
         ConstraintViolationException exception = new ConstraintViolationException("Validation failed.", constraints);
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleConstraintViolation(exception);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleConstraintViolation(exception);
 
         // Assert
                     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
@@ -193,7 +193,7 @@ class GlobalExceptionHandlerTest {
         ChallengeNotFoundException challengeNotFoundException = new ChallengeNotFoundException("Challenge not found");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
 
         // Assert
         assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
@@ -206,7 +206,7 @@ class GlobalExceptionHandlerTest {
         // Testgi
         ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
 
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
@@ -219,7 +219,7 @@ class GlobalExceptionHandlerTest {
         NotFoundException notFoundException = new NotFoundException("Whatever not found");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleNotFoundException(notFoundException);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleNotFoundException(notFoundException);
 
         // Assert
         assertEquals(OK_REQUEST, responseEntity.getStatusCode());
@@ -233,7 +233,7 @@ class GlobalExceptionHandlerTest {
         BadUUIDException badUUIDException = new BadUUIDException("Invalid Id format");
 
         // Act
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleBadUUIDException(badUUIDException);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleBadUUIDException(badUUIDException);
 
         // Assert
                     assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
@@ -246,7 +246,7 @@ class GlobalExceptionHandlerTest {
 
         LanguageNotFoundException exception = new LanguageNotFoundException("Language not found");
 
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleLanguageNotFoundException(exception);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleLanguageNotFoundException(exception);
 
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
@@ -258,7 +258,7 @@ class GlobalExceptionHandlerTest {
 
         InternalServerErrorException exception = new InternalServerErrorException("Error message");
 
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleCustomInternalServerErrorException(exception);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleCustomInternalServerErrorException(exception);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
@@ -270,7 +270,7 @@ class GlobalExceptionHandlerTest {
 
         TagNotFoundException exception = new TagNotFoundException("Tag not found");
 
-        ResponseEntity<MessageDto> responseEntity = globalExceptionHandler.handleTagNotFoundException(exception);
+        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleTagNotFoundException(exception);
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
         String responseBody = responseEntity.getBody().getMessage();
@@ -288,7 +288,7 @@ class GlobalExceptionHandlerTest {
         
         ex.prependPath(new Reference(null, "tags"));
         
-        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
+        ResponseEntity<MessageDto> resp = challengeExceptionHandler.handleInvalidFormat(ex);
         
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
         assertEquals(
@@ -307,7 +307,7 @@ class GlobalExceptionHandlerTest {
         );
         ex.prependPath(new Reference(null, "otherField"));
         
-        ResponseEntity<MessageDto> resp = globalExceptionHandler.handleInvalidFormat(ex);
+        ResponseEntity<MessageDto> resp = challengeExceptionHandler.handleInvalidFormat(ex);
         
         assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
         assertEquals(
