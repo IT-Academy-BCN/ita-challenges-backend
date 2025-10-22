@@ -49,7 +49,7 @@ class ErrorResponseBuilderTest {
     void setUp() {
         // Use the *real* global messages.properties file
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:message"); // points to src/main/resources/messages.properties
+        messageSource.setBasename("classpath:messages"); // points to src/main/resources/messages.properties
         messageSource.setDefaultEncoding("UTF-8");
 
         builder = new ErrorResponseBuilder(messageSource);
@@ -152,9 +152,7 @@ class ErrorResponseBuilderTest {
         ResponseStatusException ex = mock(ResponseStatusException.class);
         when(ex.getStatusCode()).thenReturn(HttpStatus.BAD_REQUEST);
         when(ex.getDetailMessageArguments()).thenReturn(new Object[]{"x", "a", "b", "c"});
-
         APIErrorResponse response = builder.buildStatusErrorResponse(ex, request);
-
         assertThat(response.getMessage()).isEqualTo("a, b, c");
         assertThat(response.getStatus()).isEqualTo(400);
     }
