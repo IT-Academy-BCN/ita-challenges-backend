@@ -3,48 +3,57 @@ package com.itchallenge.errorcore.builder;
 import com.itchallenge.errorcore.dto.APIErrorResponse;
 import com.itchallenge.errorcore.dto.FieldErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.*;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.MessageSource;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+/**
+ * Integration-style tests for ErrorResponseBuilder using the real message.properties file.
+ */
 class ErrorResponseBuilderTest {
 
-    @Mock
-    private MessageSource messageSource;
-
-    @Mock
+    private ErrorResponseBuilder builder;
     private HttpServletRequest request;
 
-    private ErrorResponseBuilder builder;
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private static class DummyController {
+    static class DummyController {
         public void testMethod(Integer age) {}
+        public void acceptTestDto(@Valid TestDto dto) {}
+    }
+
+    static class TestDto {
+        @NotNull(message = "email cannot be null")
+        private final String email;
+        public TestDto(String email) { this.email = email; }
+        public String getEmail() { return email; }
     }
 
     @BeforeEach
     void setUp() {
+        // Use the *real* global message.properties file
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasename("classpath:message"); // points to src/main/resources/message.properties
+        messageSource.setDefaultEncoding("UTF-8");
+
         builder = new ErrorResponseBuilder(messageSource);
+        request = mock(HttpServletRequest.class);
         when(request.getRequestURI()).thenReturn("/api/test");
     }
 
@@ -52,15 +61,12 @@ class ErrorResponseBuilderTest {
     // buildError
     // ------------------------------------------------------------
     @Test
-    void buildError_shouldBuildBasicResponse() {
-        when(messageSource.getMessage(eq("some.message"), any(), any(Locale.class)))
-                .thenReturn("Resolved message");
-
-        APIErrorResponse response = builder.buildError(HttpStatus.BAD_REQUEST, "some.message", request);
+    void buildError_shouldBuildBasicResponseWithRealMessage() {
+        APIErrorResponse response = builder.buildError(HttpStatus.BAD_REQUEST, "validation.bad_request", request);
 
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getError()).isEqualTo("Bad Request");
-        assertThat(response.getMessage()).isEqualTo("Resolved message");
+        assertThat(response.getMessage()).contains("Invalid or malformed request");
         assertThat(response.getPath()).isEqualTo("/api/test");
     }
 
@@ -68,29 +74,21 @@ class ErrorResponseBuilderTest {
     // buildTypeMismatchErrorResponse
     // ------------------------------------------------------------
     @Test
-    void buildTypeMismatchErrorResponse_shouldIncludeFieldInformation() {
-        // Mock MethodParameter and containing class
-        Method method = DummyController.class.getDeclaredMethods()[0];
+    void buildTypeMismatchErrorResponse_shouldIncludeFieldInformation() throws Exception {
+        Method method = DummyController.class.getDeclaredMethod("testMethod", Integer.class);
         MethodParameter methodParameter = new MethodParameter(method, 0);
 
-        // Create the exception with the mocked MethodParameter
         MethodArgumentTypeMismatchException ex = new MethodArgumentTypeMismatchException(
                 "abc", Integer.class, "age", methodParameter, new IllegalArgumentException("type mismatch")
         );
 
-        // Mock message resolution
-        when(messageSource.getMessage(eq("validation.type_mismatch"), any(), any(Locale.class)))
-                .thenReturn("Parameter 'age' has invalid value 'abc'. Expected type: Integer.");
-
-        // Execute
         APIErrorResponse response = builder.buildTypeMismatchErrorResponse(ex, request);
 
-        // Assert
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getErrors()).hasSize(1);
         FieldErrorDto error = response.getErrors().getFirst();
         assertThat(error.getField()).isEqualTo("age");
-        assertThat(error.getMessage()).contains("Parameter 'age'");
+        assertThat(error.getMessage()).contains("Parameter 'age' has invalid value 'abc'. Expected type: Integer");
         assertThat(error.getObjectName()).isEqualTo("DummyController");
     }
 
@@ -99,53 +97,41 @@ class ErrorResponseBuilderTest {
     // ------------------------------------------------------------
     @Test
     void buildConstraintViolationErrorResponse_shouldBuildWithViolations() {
-        ConstraintViolation<?> violation = mock(ConstraintViolation.class);
-
-        jakarta.validation.Path path = mock(jakarta.validation.Path.class);
-        when(path.toString()).thenReturn("user.email");
-        when(violation.getPropertyPath()).thenReturn(path);
-        when(violation.getMessage()).thenReturn("must not be null");
-        when(violation.getRootBeanClass()).thenReturn((Class) String.class);
-
+        // Create a real constraint violation manually
+        ConstraintViolation<?> violation = validator.validate(new TestDto(null)).iterator().next();
         ConstraintViolationException ex = new ConstraintViolationException(Set.of(violation));
-        when(messageSource.getMessage(eq("validation.constraint.detailed"), any(), any(Locale.class)))
-                .thenReturn("Validation failed for parameter 'email': must not be null");
-        when(messageSource.getMessage(eq("validation.constraint"), any(), any(Locale.class)))
-                .thenReturn("One or more request parameters failed validation.");
 
         APIErrorResponse response = builder.buildConstraintViolationErrorResponse(ex, request);
 
         assertThat(response.getStatus()).isEqualTo(400);
-        assertThat(response.getErrors()).hasSize(1);
-        assertThat(response.getMessage()).contains("or more request parameters failed");
-        assertThat(response.getErrors().getFirst().getField()).isEqualTo("email");
-        assertThat(response.getErrors().getFirst().getMessage()).isEqualTo("Validation failed for parameter 'email': must not be null");
+        assertThat(response.getMessage()).contains("One or more request parameters failed validation");
+        assertThat(response.getErrors()).isNotEmpty();
+        assertThat(response.getErrors().getFirst().getMessage()).contains("Validation failed for parameter");
     }
 
     // ------------------------------------------------------------
     // buildArgumentNotValidErrorResponse
     // ------------------------------------------------------------
     @Test
-    void buildArgumentNotValidErrorResponse_shouldExtractFieldErrors() throws Exception {
-        FieldError fieldError = new FieldError("userDto", "email", "must not be null");
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.getObjectName()).thenReturn("userDto");
-        when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
+    void buildArgumentNotValidErrorResponse_shouldExtractFieldErrorsWithRealMessageSource() throws Exception {
+        TestDto invalidDto = new TestDto(null);
+        BindingResult bindingResult = new BeanPropertyBindingResult(invalidDto, "testDto");
 
-        Method method = getClass().getMethod("setUp");
-        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
+        // Manually perform validation and fill the BindingResult
+        validator.validate(invalidDto).forEach(v ->
+                bindingResult.rejectValue("email", null, v.getMessage()));
 
-        when(messageSource.getMessage(any(FieldError.class), any(Locale.class)))
-                .thenReturn("Email must not be null");
-        when(messageSource.getMessage(eq("validation.argument_not_valid"), any(), any(Locale.class)))
-                .thenReturn("Validation failed for object 'userDto'.");
+        Method method = DummyController.class.getDeclaredMethod("acceptTestDto", TestDto.class);
+        MethodParameter parameter = new MethodParameter(method, 0);
+        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(parameter, bindingResult);
 
         APIErrorResponse response = builder.buildArgumentNotValidErrorResponse(ex, request);
 
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getErrors()).hasSize(1);
-        assertThat(response.getErrors().get(0).getField()).isEqualTo("email");
-        assertThat(response.getMessage()).contains("userDto");
+        assertThat(response.getErrors().getFirst().getField()).isEqualTo("email");
+        assertThat(response.getErrors().getFirst().getMessage()).isEqualTo("email cannot be null");
+        assertThat(response.getMessage()).contains("object 'testDto'");
     }
 
     // ------------------------------------------------------------
@@ -158,7 +144,7 @@ class ErrorResponseBuilderTest {
         APIErrorResponse response = builder.buildStatusErrorResponse(ex, request);
 
         assertThat(response.getStatus()).isEqualTo(404);
-        assertThat(response.getMessage()).isEqualTo("Validation failed");
+        assertThat(response.getMessage()).isEqualTo("Not Found");
     }
 
     @Test

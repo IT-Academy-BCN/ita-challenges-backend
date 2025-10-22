@@ -81,7 +81,7 @@ public class ErrorResponseBuilder {
         String errorMessage;
 
         if (detailMessageArguments == null || detailMessageArguments.length == 0) {
-            errorMessage = "Validation failed";
+            errorMessage = status.getReasonPhrase();
         } else {
             errorMessage = Arrays.stream(detailMessageArguments)
                     .skip(1)
