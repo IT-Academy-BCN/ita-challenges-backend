@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [error-response-core-1.0.0-RELEASE] - 2025-10-22
+
+### Added
+- Error Response module (error-response-core) to generate consistent error through the whole application. (Taiga [#796], PR [#1010])
+  - APIErrorResponse and FieldErrorDto for consistent error structure.
+  - ErrorResponseBuilder and BaseExceptionHandler for general error handling.
+
 ### [itachallenge-user-3.0.1-RELEASE] - 2025-10-22
 
 ### Fixed
