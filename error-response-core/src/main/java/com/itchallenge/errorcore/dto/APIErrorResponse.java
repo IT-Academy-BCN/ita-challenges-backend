@@ -13,7 +13,8 @@ import java.util.List;
 @Getter
 @Builder
 public class APIErrorResponse {
-    private final Instant timestamp;
+    @Builder.Default
+    private final Instant timestamp = Instant.now();
     private final int status;
     private final String error;
     private final String message;
