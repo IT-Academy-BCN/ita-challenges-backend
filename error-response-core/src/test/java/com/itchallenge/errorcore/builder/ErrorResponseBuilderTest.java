@@ -34,16 +34,14 @@ class ErrorResponseBuilderTest {
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     static class DummyController {
-        /**
-         * Test endpoint used only for type-mismatch validation.
-         * Intentionally left blank — no behavior needed.
-         */
-        public void testMethod(Integer age) {}
-        /**
-         * Test endpoint to trigger @Valid handling.
-         * Intentionally left blank — no behavior needed.
-         */
-        public void acceptTestDto(@Valid TestDto dto) {}
+
+        public void testMethod(Integer age) {
+            // Intentionally left blank: this method is only used for reflection-based testing of type mismatches.
+        }
+
+        public void acceptTestDto(@Valid TestDto dto) {
+            // Intentionally empty: used to trigger @Valid validation in tests.
+        }
     }
 
     static class TestDto {
@@ -163,4 +161,21 @@ class ErrorResponseBuilderTest {
         assertThat(response.getMessage()).isEqualTo("a, b, c");
         assertThat(response.getStatus()).isEqualTo(400);
     }
+
+    @Test
+    void buildNotFoundError_shouldReturnNotFoundResponse() {
+        // Given
+        RuntimeException ex = new RuntimeException("Resource not found");
+
+        // When
+        APIErrorResponse response = builder.buildNotFoundError(ex, request);
+
+        // Then
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+        assertThat(response.getError()).isEqualTo("Not Found");
+        assertThat(response.getMessage()).isEqualTo("Resource not found");
+        assertThat(response.getPath()).isEqualTo("/api/test");
+        assertThat(response.getTimestamp()).isNotNull();
+    }
+
 }

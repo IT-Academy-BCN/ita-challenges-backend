@@ -40,6 +40,10 @@ public class ErrorResponseBuilder {
                 .build();
     }
 
+    public APIErrorResponse buildNotFoundError(RuntimeException ex, HttpServletRequest request){
+        return buildError(HttpStatus.NOT_FOUND,ex.getMessage(),request);
+    }
+
     public APIErrorResponse buildArgumentNotValidErrorResponse(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String objectName = ex.getBindingResult().getObjectName();
         return buildValidationErrorResponse(
