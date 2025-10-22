@@ -108,7 +108,6 @@ class ErrorResponseBuilderTest {
         assertThat(response.getErrors()).isNotEmpty();
         assertThat(response.getErrors().getFirst().getMessage()).contains("Validation failed for parameter");
     }
-
     // ------------------------------------------------------------
     // buildArgumentNotValidErrorResponse
     // ------------------------------------------------------------
