@@ -41,7 +41,6 @@ public class ErrorResponseBuilder {
     }
 
     public APIErrorResponse buildArgumentNotValidErrorResponse(MethodArgumentNotValidException ex, HttpServletRequest request) {
-        List<FieldErrorDto> fieldErrors = extractFieldErrors(ex);
         String objectName = ex.getBindingResult().getObjectName();
         return buildValidationErrorResponse(
                 resolveMessage("validation.argument_not_valid",objectName),
@@ -51,16 +50,14 @@ public class ErrorResponseBuilder {
     }
 
     public APIErrorResponse buildConstraintViolationErrorResponse(ConstraintViolationException ex, HttpServletRequest request) {
-        List<FieldErrorDto> fieldErrors = extractConstraintViolations(ex);
         return buildValidationErrorResponse(
                 resolveMessage("validation.constraint"),
-                fieldErrors,
+                extractConstraintViolations(ex),
                 request
         );
     }
 
     public APIErrorResponse buildTypeMismatchErrorResponse(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
-        List<FieldErrorDto> fieldErrors = singleFieldErrorList(ex);
         return buildValidationErrorResponse(
                 resolveMessage(
                         "validation.type_mismatch",
@@ -70,7 +67,7 @@ public class ErrorResponseBuilder {
                                 ? ex.getRequiredType().getSimpleName()
                                 : "unknown"                                 // {2} expected type
                 ),
-                fieldErrors,
+                singleFieldErrorList(ex),
                 request
         );
     }
@@ -132,11 +129,10 @@ public class ErrorResponseBuilder {
 
     /** Extracts constraint violations from @Validated annotated method parameters. */
     private List<FieldErrorDto> extractConstraintViolations(ConstraintViolationException ex) {
-        Locale locale = LocaleContextHolder.getLocale();
         return ex.getConstraintViolations()
                 .stream()
                 .map(this::toFieldErrorDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** Creates a singleton list of FieldErrorDto for type mismatch or single-parameter errors. */
