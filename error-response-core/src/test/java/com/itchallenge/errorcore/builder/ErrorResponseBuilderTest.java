@@ -24,7 +24,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Integration-style tests for ErrorResponseBuilder using the real message.properties file.
+ * Integration-style tests for ErrorResponseBuilder using the real messages.properties file.
  */
 class ErrorResponseBuilderTest {
 
@@ -47,9 +47,9 @@ class ErrorResponseBuilderTest {
 
     @BeforeEach
     void setUp() {
-        // Use the *real* global message.properties file
+        // Use the *real* global messages.properties file
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-        messageSource.setBasename("classpath:message"); // points to src/main/resources/message.properties
+        messageSource.setBasename("classpath:message"); // points to src/main/resources/messages.properties
         messageSource.setDefaultEncoding("UTF-8");
 
         builder = new ErrorResponseBuilder(messageSource);
