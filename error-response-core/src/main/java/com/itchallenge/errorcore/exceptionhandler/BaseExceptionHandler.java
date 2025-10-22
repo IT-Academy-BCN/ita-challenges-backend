@@ -53,6 +53,7 @@ public abstract class BaseExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<APIErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        log.error("Type mismatch error happened: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(responseBuilder
@@ -63,6 +64,7 @@ public abstract class BaseExceptionHandler {
     public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
+        log.error("Method argument not valid error happened: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(responseBuilder
@@ -71,11 +73,10 @@ public abstract class BaseExceptionHandler {
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<APIErrorResponse> handleResponseStatusException(ResponseStatusException ex, HttpServletRequest request) {
+        log.error("Status error happened: {}", ex.getMessage());
         return ResponseEntity
                 .status(ex.getStatusCode())
                 .body(responseBuilder
                         .buildStatusErrorResponse(ex, request));
     }
-
-
 }
