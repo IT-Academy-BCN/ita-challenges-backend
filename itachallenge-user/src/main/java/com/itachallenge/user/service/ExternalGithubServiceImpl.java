@@ -1,6 +1,7 @@
 package com.itachallenge.user.service;
 
 import com.itachallenge.githubcore.document.enums.GithubUserStatus;
+import com.itachallenge.githubcore.exception.GithubUnavailableException;
 import com.itachallenge.githubcore.service.GithubApiService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -17,6 +18,9 @@ public class ExternalGithubServiceImpl implements ExternalGithubService {
     @Override
     public Mono<Boolean> userExists(String username) {
         return githubApiService.userExists(username)
-                .map(status -> status != GithubUserStatus.NOT_FOUND);
+                .map(status -> status != GithubUserStatus.NOT_FOUND)
+                .onErrorMap(throwable ->
+                    new GithubUnavailableException("Error connecting to GitHub API.", throwable)
+                );
     }
 }

@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.0.1-RELEASE] - 2025-10-22
+
+### Fixed
+- Improved error handling when GitHub API is down or unresponsive. (Taiga [#744], PR [#991])
+  - Now returns 503 Service Unavailable or 504 Gateway Timeout instead of a generic 500.
+  - Introduced `GithubUnavailableException` to encapsulate timeout and unavailability causes.
+  - Updated `UserGlobalExceptionHandler` to map these cases accordingly.
+  - 
 ### [itachallenge-user-3.0.0-RELEASE] - 2025-10-09
 
 ### Changed
