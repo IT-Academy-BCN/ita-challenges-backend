@@ -65,7 +65,7 @@ class UserControllerTest {
     @Test
     void getUser_WhenUserExists_Returns200() {
         String githubUsername = "existingUser";
-        UserDocument expectedUser = new UserDocument(UUID.randomUUID(), githubUsername, Role.ADMIN, null, null);
+        UserDocument expectedUser = new UserDocument(UUID.randomUUID(), githubUsername, Role.ADMIN, null, null, 0);
         when(userService.getUser(githubUsername)).thenReturn(Mono.just(expectedUser));
 
         webTestClient.get()

@@ -92,7 +92,7 @@ class UserGlobalExceptionHandlerTest {
 
     @Test
     void testHandleUnmodifiableSolutionException(){
-        String message = "There's an existing solution with status 'ENDED'.";
+        String message = "There's an existing solution with status 'SUBMITTED_COMPLETE'.";
         UnmodificableSolutionException exception = new UnmodificableSolutionException(message);
         ResponseEntity<String> response = exceptionHandler.handleUnmodifiableSolutionException(exception);
 
