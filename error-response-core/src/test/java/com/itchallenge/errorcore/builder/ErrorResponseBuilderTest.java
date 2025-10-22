@@ -34,7 +34,15 @@ class ErrorResponseBuilderTest {
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     static class DummyController {
+        /**
+         * Test endpoint used only for type-mismatch validation.
+         * Intentionally left blank — no behavior needed.
+         */
         public void testMethod(Integer age) {}
+        /**
+         * Test endpoint to trigger @Valid handling.
+         * Intentionally left blank — no behavior needed.
+         */
         public void acceptTestDto(@Valid TestDto dto) {}
     }
 
