@@ -3,48 +3,24 @@ package com.itachallenge.challenge.exception;
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
+import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itchallenge.errorcore.exceptionhandler.BaseExceptionHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends BaseExceptionHandler {
 
-    @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<MessageDto> handleResponseStatusException(ResponseStatusException ex) {
-        HttpStatus statusCode = (HttpStatus) ex.getStatusCode();
-        String errorMessage;
-        Object[] detailMessageArguments = ex.getDetailMessageArguments();
-        if (detailMessageArguments == null || detailMessageArguments.length == 0) {
-            errorMessage = "Validation failed";
-        } else {
-            errorMessage = Arrays.stream(detailMessageArguments)
-                    .skip(1)
-                    .map(Object::toString)
-                    .collect(Collectors.joining(", "));
-            errorMessage = errorMessage.replace("[", "").replace("]", "");
-        }
-        MessageDto errorResponseMessage = new MessageDto(errorMessage);
-        return ResponseEntity.status(statusCode).body(errorResponseMessage);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<MessageDto> handleConstraintViolation(ConstraintViolationException ex) {
-        String constraintMessage = ex.getConstraintViolations()
-                .stream().findFirst().map(ConstraintViolation::getMessage).orElse("Invalid value");
-        return ResponseEntity.badRequest().body(new MessageDto(constraintMessage));
+    public GlobalExceptionHandler(ErrorResponseBuilder responseBuilder) {
+        super(responseBuilder);
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
@@ -72,11 +48,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok().body(new MessageDto(ex.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<MessageDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
-    }
-
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<MessageDto> handleBadUUIDException(BadUUIDException ex) {
         return ResponseEntity.badRequest().body(new MessageDto(ex.getMessage()));
@@ -90,11 +61,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<MessageDto> handleCustomInternalServerErrorException(InternalServerErrorException ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageDto(ex.getMessage()));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<MessageDto> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageDto(e.getMessage()));
     }
 
     @ExceptionHandler(InvalidFormatException.class)
