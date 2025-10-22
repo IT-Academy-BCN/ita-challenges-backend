@@ -73,44 +73,44 @@ class BaseExceptionHandlerUnitTest {
     @Test
     void handleValidationExceptions_shouldDelegateToBuilder() {
         ConstraintViolationException ex = mock(ConstraintViolationException.class);
-        when(builder.buildConstraintViolationErrorResponse(eq(ex), eq(request))).thenReturn(dummyResponse);
+        when(builder.buildConstraintViolationErrorResponse(ex, request)).thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleValidationExceptions(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildConstraintViolationErrorResponse(eq(ex), eq(request));
+        verify(builder).buildConstraintViolationErrorResponse(ex, request);
     }
 
     @Test
     void handleTypeMismatchException_shouldDelegateToBuilder() {
         MethodArgumentTypeMismatchException ex = mock(MethodArgumentTypeMismatchException.class);
-        when(builder.buildTypeMismatchErrorResponse(eq(ex), eq(request))).thenReturn(dummyResponse);
+        when(builder.buildTypeMismatchErrorResponse(ex, request)).thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleTypeMismatchException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildTypeMismatchErrorResponse(eq(ex), eq(request));
+        verify(builder).buildTypeMismatchErrorResponse(ex, request);
     }
 
     @Test
     void handleMethodArgumentNotValidException_shouldDelegateToBuilder() {
         MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
-        when(builder.buildArgumentNotValidErrorResponse(eq(ex), eq(request))).thenReturn(dummyResponse);
+        when(builder.buildArgumentNotValidErrorResponse(ex, request)).thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleMethodArgumentNotValidException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildArgumentNotValidErrorResponse(eq(ex), eq(request));
+        verify(builder).buildArgumentNotValidErrorResponse(ex, request);
     }
 
     @Test
     void handleResponseStatusException_shouldUseStatusFromException() {
         ResponseStatusException ex = new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
-        when(builder.buildStatusErrorResponse(eq(ex), eq(request))).thenReturn(dummyResponse);
+        when(builder.buildStatusErrorResponse(ex, request)).thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleResponseStatusException(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        verify(builder).buildStatusErrorResponse(eq(ex), eq(request));
+        verify(builder).buildStatusErrorResponse(ex, request);
     }
 }
