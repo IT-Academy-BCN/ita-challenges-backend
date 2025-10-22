@@ -19,7 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestControllerAdvice
 public abstract class BaseExceptionHandler {
 
-    private final ErrorResponseBuilder responseBuilder;
+    protected final ErrorResponseBuilder responseBuilder;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIErrorResponse> handleAny(Exception e, HttpServletRequest request) {
