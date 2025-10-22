@@ -1,105 +1,81 @@
 package com.itchallenge.errorcore.exceptionhandler;
 
+import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itchallenge.errorcore.dto.APIErrorResponse;
-import com.itchallenge.errorcore.dto.FieldErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.BadRequestException;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-
-import java.time.Instant;
-import java.util.List;
-import java.util.Locale;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
 public abstract class BaseExceptionHandler {
 
-    private final MessageSource messageSource;
+    private final ErrorResponseBuilder responseBuilder;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleAny(Exception e) {
+    public ResponseEntity<APIErrorResponse> handleAny(Exception e, HttpServletRequest request) {
         log.error("Unexpected error happened: {}", e.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error happened.");
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(responseBuilder
+                        .buildError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request)
+                );
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleIllegalArgument(IllegalArgumentException e, HttpServletRequest request) {
+        log.error("Illegal argument happened: {}", e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(responseBuilder
+                        .buildError(HttpStatus.BAD_REQUEST, e.getMessage(), request)
+                );
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleValidationExceptions(ConstraintViolationException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    public ResponseEntity<APIErrorResponse> handleValidationExceptions(ConstraintViolationException ex, HttpServletRequest request) {
+        log.error("Validation error happened: {}", ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(responseBuilder
+                        .buildConstraintViolationErrorResponse(ex,request)
+                );
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<String> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid parameter format.");
-    }
-
-    @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(responseBuilder
+                        .buildTypeMismatchErrorResponse(ex, request));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<APIErrorResponse> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
-
-        Locale locale = LocaleContextHolder.getLocale();
-
-        // Build list of field-level errors
-        List<FieldErrorDto> fieldErrors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> FieldErrorDto.builder()
-                        .objectName(error.getObjectName())
-                        .field(error.getField())
-                        .message(messageSource.getMessage(error, locale))
-                        .build())
-                .toList();
-
-        // Build unified structured response
-        String objectName = ex.getBindingResult().getObjectName();
-        return ResponseEntity.badRequest()
-                .body(buildValidationErrorResponse(objectName, fieldErrors, request));
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(responseBuilder
+                        .buildArgumentNotValidErrorResponse(ex, request));
     }
 
-
-
-
-    private APIErrorResponse buildValidationErrorResponse(
-            String objectName,
-            List<FieldErrorDto> fieldErrors,
-            HttpServletRequest request) {
-
-        String message = String.format(
-                "Validation failed for one or more fields in %s.",
-                objectName
-        );
-
-        return APIErrorResponse.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message(message)
-                .errors(fieldErrors)
-                .timestamp(Instant.now())
-                .path(request.getRequestURI())
-                .build();
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<APIErrorResponse> handleResponseStatusException(ResponseStatusException ex, HttpServletRequest request) {
+        return ResponseEntity
+                .status(ex.getStatusCode())
+                .body(responseBuilder
+                        .buildStatusErrorResponse(ex, request));
     }
-
 
 
 }
