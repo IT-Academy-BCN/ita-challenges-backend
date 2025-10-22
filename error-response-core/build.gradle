@@ -1,8 +1,17 @@
 plugins {
+    id 'org.springframework.boot' version '3.0.6'
+    id 'io.spring.dependency-management' version '1.1.6'
     id 'java-library'
 }
 
-group = 'com.barrisense.common'
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+
+group = 'com.itchallenge.errorcore'
 version = '1.0.0'
 
 java {
@@ -27,11 +36,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation:3.3.3'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.0' // optional explicit import
 
-    // --- Testing ---
+    // --- Testing
+    testImplementation platform('org.springframework.boot:spring-boot-dependencies:3.3.3')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.assertj:assertj-core:3.26.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
 }
 
 tasks.test {
