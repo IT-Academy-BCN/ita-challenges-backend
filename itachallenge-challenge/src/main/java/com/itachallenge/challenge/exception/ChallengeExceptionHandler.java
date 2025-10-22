@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.challenge.dto.MessageDto;
 import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itchallenge.errorcore.dto.APIErrorResponse;
 import com.itchallenge.errorcore.exceptionhandler.BaseExceptionHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,13 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
     }
 
     @ExceptionHandler(ChallengeNotFoundException.class)
-    public ResponseEntity<MessageDto> handleChallengeNotFoundException(ChallengeNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageDto(ex.getMessage()));
+    public ResponseEntity<APIErrorResponse> handleChallengeNotFoundException(ChallengeNotFoundException ex, HttpServletRequest request) {
+        log.error("ChallengeNotFound Exception happened:{}",ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(responseBuilder
+                        .buildError(HttpStatus.NOT_FOUND, ex.getMessage(), request)
+                );
     }
 
     @ExceptionHandler(TagNotFoundException.class)
@@ -85,5 +92,9 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
             }
         }
         return Optional.empty();
+    }
+
+    private APIErrorResponse buildNotFoundError(RuntimeException ex, HttpServletRequest request){
+        return responseBuilder.buildError(HttpStatus.NOT_FOUND,ex.getMessage(),request);
     }
 }
