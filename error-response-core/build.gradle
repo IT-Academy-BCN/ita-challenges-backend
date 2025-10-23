@@ -12,7 +12,7 @@ jar {
     enabled = true
 }
 
-group = 'com.itchallenge.errorcore'
+group = 'com.itachallenge.errorcore'
 version = '1.0.0'
 
 java {
