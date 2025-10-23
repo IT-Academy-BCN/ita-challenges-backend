@@ -2,9 +2,9 @@ package com.itachallenge.challenge.exception;
 
 import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
-import com.itchallenge.errorcore.dto.APIErrorResponse;
-import com.itchallenge.errorcore.exceptionhandler.BaseExceptionHandler;
+import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.exceptionhandler.BaseExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -42,7 +42,7 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler(LanguageNotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleLanguageNotFoundException(LanguageNotFoundException ex, HttpServletRequest request) {
-        return ResponseEntity.badRequest().body(responseBuilder.buildNotFoundError(ex,request));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(NotFoundException.class)
