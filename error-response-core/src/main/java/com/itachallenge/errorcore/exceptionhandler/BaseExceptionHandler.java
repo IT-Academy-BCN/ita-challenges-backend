@@ -1,7 +1,7 @@
-package com.itchallenge.errorcore.exceptionhandler;
+package com.itachallenge.errorcore.exceptionhandler;
 
-import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
-import com.itchallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itachallenge.errorcore.dto.APIErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;

@@ -20,12 +20,12 @@ It centralizes error handling logic into a reusable component, ensuring all serv
 
 ### **Main Components**
 
-| Package | Class | Description |
-|----------|--------|-------------|
-| `com.itchallenge.errorcore.builder` | **`ErrorResponseBuilder`** | Core utility for building structured `APIErrorResponse` objects. Handles argument validation, type mismatches, constraint violations, and general exceptions. |
-| `com.itchallenge.errorcore.dto` | **`APIErrorResponse`** | DTO representing the unified error payload returned to clients (includes timestamp, status, message, error details, path). |
-|  | **`FieldErrorDto`** | DTO for detailed field-level validation errors (`field`, `objectName`, `message`). |
-| `com.itchallenge.errorcore.exceptionhandler` | **`BaseExceptionHandler`** | Abstract `@RestControllerAdvice` that defines centralized exception handling methods. Can be extended by any microservice. |
+| Package                                       | Class | Description |
+|-----------------------------------------------|--------|-------------|
+| `com.itachallenge.errorcore.builder`          | **`ErrorResponseBuilder`** | Core utility for building structured `APIErrorResponse` objects. Handles argument validation, type mismatches, constraint violations, and general exceptions. |
+| `com.itachallenge.errorcore.dto`              | **`APIErrorResponse`** | DTO representing the unified error payload returned to clients (includes timestamp, status, message, error details, path). |
+|                                               | **`FieldErrorDto`** | DTO for detailed field-level validation errors (`field`, `objectName`, `message`). |
+| `com.itachallenge.errorcore.exceptionhandler` | **`BaseExceptionHandler`** | Abstract `@RestControllerAdvice` that defines centralized exception handling methods. Can be extended by any microservice. |
 
 ### **Supporting Resources**
 
@@ -95,8 +95,8 @@ In your microservice, create a simple subclass of BaseExceptionHandler:
 ```java
 package com.itachallenge.user.exception;
 
-import com.itchallenge.errorcore.builder.ErrorResponseBuilder;
-import com.itchallenge.errorcore.exceptionhandler.BaseExceptionHandler;
+import builder.com.itachallenge.errorcore.ErrorResponseBuilder;
+import exceptionhandler.com.itachallenge.errorcore.BaseExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice

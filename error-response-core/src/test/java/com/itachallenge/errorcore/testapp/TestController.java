@@ -1,4 +1,4 @@
-package com.itchallenge.errorcore.testapp;
+package com.itachallenge.errorcore.testapp;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;

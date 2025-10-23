@@ -1,4 +1,4 @@
-package com.itchallenge.errorcore.dto;
+package com.itachallenge.errorcore.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

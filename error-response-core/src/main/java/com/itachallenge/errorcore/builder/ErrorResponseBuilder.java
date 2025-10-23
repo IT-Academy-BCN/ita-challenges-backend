@@ -1,8 +1,8 @@
-package com.itchallenge.errorcore.builder;
+package com.itachallenge.errorcore.builder;
 
 
-import com.itchallenge.errorcore.dto.APIErrorResponse;
-import com.itchallenge.errorcore.dto.FieldErrorDto;
+import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.dto.FieldErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
