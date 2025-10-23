@@ -9,7 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {
         "com.itachallenge.challenge",
-        "com.itachallenge.jwtcore"
+        "com.itachallenge.jwtcore",
+        "com.itachallenge.errorcore"
 })
 
 public class App {
