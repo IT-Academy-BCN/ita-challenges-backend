@@ -3,6 +3,13 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.1.0-RELEASE] - 2025-10-23
+
+### Changed
+- Refactor GlobalExceptionHandler in itachallenge-challenge service. (Taiga [#799], PR [#1011])
+  - Added Spring configuration to expose ErrorResponseBuilder from the core module (@ComponentScan on com.itachallenge.errorcore).
+  - All service-level exception methods (NotFound, InternalServerError, etc.) delegate to ErrorResponseBuilder.
+
 ### [itachallenge-user-3.0.5-RELEASE] - 2025-11-13
 
 ### Added
