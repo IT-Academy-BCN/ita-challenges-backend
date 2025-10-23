@@ -1,318 +1,166 @@
 package com.itachallenge.challenge.exception;
 
-import com.fasterxml.jackson.databind.JsonMappingException.Reference;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.itachallenge.challenge.config.PropertiesConfig;
-import com.itachallenge.challenge.dto.MessageDto;
-import com.itachallenge.challenge.repository.*;
-import com.itachallenge.challenge.service.*;
-import com.itachallenge.jwtcore.service.IJwtService;
-import jakarta.validation.ConstraintViolation;
+import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itachallenge.errorcore.dto.APIErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.List;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@WebFluxTest(controllers = ChallengeExceptionHandlerTest.class)
 class ChallengeExceptionHandlerTest {
-    //VARIABLES
-    String REQUEST = "Invalid request";
-    private final HttpStatus BAD_REQUEST = HttpStatus.BAD_REQUEST;
-    private final HttpStatus OK_REQUEST = HttpStatus.OK;
-    private final HttpStatus NOT_FOUND_REQUEST = HttpStatus.NOT_FOUND;
+
+    @Mock
+    private ErrorResponseBuilder responseBuilder;
+
+    @Mock
+    private HttpServletRequest request;
 
     @InjectMocks
-    private ChallengeExceptionHandler challengeExceptionHandler;
-    @MockBean
-    private ResponseStatusException responseStatusException;
-    @MockBean
-    private MessageDto errorMessage;
-    @MockBean
-    private MethodArgumentNotValidException methodArgumentNotValidException;
-    @MockBean
-    private DiscoveryClient discoveryClient;
-    @MockBean
-    private IChallengeService challengeService;
-    @MockBean
-    private IUserService userService;
-    @MockBean
-    private IFavoriteService favoriteService;
-    @MockBean
-    private ITagService tagService;
-    @MockBean
-    private IResourceService resourceService;
-    @MockBean
-    private ILanguageService languageService;
-    @MockBean
-    private WebClient.Builder webClientBuilder;
-    @MockBean
-    private ChallengeRepository challengeRepository;
-    @MockBean
-    private TagRepository tagRepository;
-    @MockBean
-    private SolutionRepository solutionRepository;
-    @MockBean
-    private ResourceRepository resourceRepository;
-    @MockBean
-    private LanguageRepository languageRepository;
-    @MockBean
-    private PropertiesConfig config;
-    @MockBean
-    private IJwtService jwtService;
-    @MockBean
-    private MappingMongoConverter mappingMongoConverter;
+    private ChallengeExceptionHandler handler;
+
+    private APIErrorResponse fakeResponse(int status, String message) {
+        return APIErrorResponse.builder()
+                .status(status)
+                .error(HttpStatus.valueOf(status).getReasonPhrase())
+                .message(message)
+                .path("/fake-path")
+                .errors(List.of())
+                .build();
+    }
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    void testHandleResponseStatusException() {
+    void handleConstraintViolation_ShouldReturn400() {
+        ConstraintViolationException ex = new ConstraintViolationException("Validation failed", null);
 
-        // Arrange
-        String expectedErrorMessage = "Validation failed";
-        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
-        ResponseStatusException ex = new ResponseStatusException(expectedStatus, expectedErrorMessage);
+        when(responseBuilder.buildConstraintViolationErrorResponse(eq(ex), any()))
+                .thenReturn(fakeResponse(400, "Validation failed"));
 
-        ChallengeExceptionHandler handler = new ChallengeExceptionHandler();
+        ResponseEntity<APIErrorResponse> response = handler.handleValidationExceptions(ex, request);
 
-        // Act
-        ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
-
-        // Assert
-                    assertEquals(expectedStatus, responseEntity.getStatusCode());
-                    assertEquals(expectedErrorMessage, responseEntity.getBody().getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).contains("Validation failed");
     }
 
     @Test
-    void testHandleResponseStatusException_NullDetailMessageArguments() {
-        // Arrange
-        HttpStatus expectedStatus = HttpStatus.BAD_REQUEST;
-        ResponseStatusException ex = mock(ResponseStatusException.class);
-        when(ex.getStatusCode()).thenReturn(expectedStatus);
-        when(ex.getDetailMessageArguments()).thenReturn(null);
+    void handleMethodArgumentNotValid_ShouldReturn400() {
+        MethodArgumentNotValidException ex = org.mockito.Mockito.mock(MethodArgumentNotValidException.class);
 
-        ChallengeExceptionHandler handler = new ChallengeExceptionHandler();
+        when(responseBuilder.buildArgumentNotValidErrorResponse(eq(ex), any()))
+                .thenReturn(fakeResponse(400, "Argument not valid"));
 
-        // Act
-        ResponseEntity<MessageDto> responseEntity = handler.handleResponseStatusException(ex);
+        ResponseEntity<APIErrorResponse> response = handler.handleMethodArgumentNotValidException(ex, request);
 
-        // Assert
-                    assertEquals(expectedStatus, responseEntity.getStatusCode());
-        assertEquals("Validation failed", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).contains("Argument not valid");
     }
 
     @Test
-    void TestHandleMethodArgumentNotValidException() {
+    void handleResponseStatusException_ShouldReturnStatusFromBuilder() {
+        ResponseStatusException ex = new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
 
-        // Arrange
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.getFieldErrors()).thenReturn(List.of(new FieldError("object", "field", "message")));
-        when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
+        when(responseBuilder.buildStatusErrorResponse(eq(ex), any()))
+                .thenReturn(fakeResponse(404, "Not found"));
 
-        // Act
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<APIErrorResponse> response = handler.handleResponseStatusException(ex, request);
 
-        // Assert
-        MatcherAssert.assertThat(responseEntity, notNullValue());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).contains("Not found");
     }
 
     @Test
-    void TestHandleMethodArgumentNotValidException_Return_DefaultMessage() {
+    void handleInternalServerError_ShouldReturn500() {
+        InternalServerErrorException ex = new InternalServerErrorException("Internal error");
 
-        // Arrange
-        BindingResult bindingResult = mock(BindingResult.class);
-        FieldError fieldError = mock(FieldError.class);
-        when(fieldError.getField()).thenReturn("name");
-        when(fieldError.getDefaultMessage()).thenReturn("default message");
-        when(fieldError.getCodes()).thenReturn(new String[]{"message"});
-        when(bindingResult.getFieldErrors()).thenReturn(List.of(fieldError));
-        when(methodArgumentNotValidException.getBindingResult()).thenReturn(bindingResult);
+        when(responseBuilder.buildError(eq(HttpStatus.INTERNAL_SERVER_ERROR), eq("Internal error"), any()))
+                .thenReturn(fakeResponse(500, "Internal error"));
 
-        // Act
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleMethodArgumentNotValidException(methodArgumentNotValidException);
+        ResponseEntity<APIErrorResponse> response = handler.handleCustomInternalServerErrorException(ex, request);
 
-        // Assert
-        MatcherAssert.assertThat(responseEntity, notNullValue());
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(response.getBody().getMessage()).contains("Internal error");
     }
 
     @Test
-    void handleConstraintViolation() {
-        // Arrange
-        Set<ConstraintViolation<?>> constraints = new HashSet<>();
+    void handleChallengeNotFound_ShouldReturn404() {
+        ChallengeNotFoundException ex = new ChallengeNotFoundException("Challenge not found");
 
-        ConstraintViolation<?> constraint1 = mock(ConstraintViolation.class);
-        when(constraint1.getMessage()).thenReturn("Expected message");
-        constraints.add(constraint1);
+        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+                .thenReturn(fakeResponse(404, "Challenge not found"));
 
-        ConstraintViolation<?> constraint2 = mock(ConstraintViolation.class);
-        when(constraint2.getMessage()).thenReturn("Expected message");
-        constraints.add(constraint2);
+        ResponseEntity<APIErrorResponse> response = handler.handleChallengeNotFoundException(ex, request);
 
-        ConstraintViolationException exception = new ConstraintViolationException("Validation failed.", constraints);
-
-        // Act
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleConstraintViolation(exception);
-
-        // Assert
-                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Expected message"));
-    }
-
-
-    @Test
-    void testHandleChallengeNotFoundException() {
-        // Arrange
-        ChallengeNotFoundException challengeNotFoundException = new ChallengeNotFoundException("Challenge not found");
-
-        // Act
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleChallengeNotFoundException(challengeNotFoundException);
-
-        // Assert
-        assertEquals(NOT_FOUND_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Challenge not found"));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).contains("Challenge not found");
     }
 
     @Test
-    void testHandleResourceNotFoundException() {
-        // Testgi
-        ResourceNotFoundException resourceNotFoundException = new ResourceNotFoundException("Resource not found");
+    void handleTagNotFound_ShouldReturn404() {
+        TagNotFoundException ex = new TagNotFoundException("Tag not found");
 
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleResourceNotFoundException(resourceNotFoundException);
+        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+                .thenReturn(fakeResponse(404, "Tag not found"));
 
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Resource not found"));
+        ResponseEntity<APIErrorResponse> response = handler.handleTagNotFoundException(ex, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).contains("Tag not found");
     }
 
     @Test
-    void testHandleNotFoundException() {
-        // Arrange
-        NotFoundException notFoundException = new NotFoundException("Whatever not found");
+    void handleLanguageNotFound_ShouldReturn404() {
+        LanguageNotFoundException ex = new LanguageNotFoundException("Language not found");
 
-        // Act
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleNotFoundException(notFoundException);
+        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+                .thenReturn(fakeResponse(404, "Language not found"));
 
-        // Assert
-        assertEquals(OK_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Whatever not found"));
+        ResponseEntity<APIErrorResponse> response = handler.handleLanguageNotFoundException(ex, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).contains("Language not found");
     }
 
     @Test
-    void test_HandleBadUUIDException() {
-        // Arrange
-        BadUUIDException badUUIDException = new BadUUIDException("Invalid Id format");
+    void handleResourceNotFound_ShouldReturn404() {
+        ResourceNotFoundException ex = new ResourceNotFoundException("Resource not found");
 
-        // Act
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleBadUUIDException(badUUIDException);
+        when(responseBuilder.buildNotFoundError(eq(ex), any()))
+                .thenReturn(fakeResponse(404, "Resource not found"));
 
-        // Assert
-                    assertEquals(BAD_REQUEST, responseEntity.getStatusCode());
-        String responseBody = Objects.requireNonNull(responseEntity.getBody()).getMessage();
-        Assertions.assertTrue(responseBody.contains("Invalid Id format"));
+        ResponseEntity<APIErrorResponse> response = handler.handleResourceNotFoundException(ex, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).contains("Resource not found");
     }
 
     @Test
-    void testHandleLanguageNotFoundException() {
+    void handleBadUUID_ShouldReturn400() {
+        BadUUIDException ex = new BadUUIDException("Invalid UUID");
 
-        LanguageNotFoundException exception = new LanguageNotFoundException("Language not found");
+        when(responseBuilder.buildError(eq(HttpStatus.BAD_REQUEST), eq("Invalid UUID"), any()))
+                .thenReturn(fakeResponse(400, "Invalid UUID"));
 
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleLanguageNotFoundException(exception);
+        ResponseEntity<APIErrorResponse> response = handler.handleBadUUIDException(ex, request);
 
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        String responseBody = responseEntity.getBody().getMessage();
-        assertTrue(responseBody.contains("Language not found"));
-    }
-
-    @Test
-    void testHandleCustomInternalServerErrorException() {
-
-        InternalServerErrorException exception = new InternalServerErrorException("Error message");
-
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleCustomInternalServerErrorException(exception);
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        String responseBody = responseEntity.getBody().getMessage();
-        assertTrue(responseBody.contains("Error message"));
-    }
-
-    @Test
-    void testHandleTagNotFoundException() {
-
-        TagNotFoundException exception = new TagNotFoundException("Tag not found");
-
-        ResponseEntity<MessageDto> responseEntity = challengeExceptionHandler.handleTagNotFoundException(exception);
-
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-        String responseBody = responseEntity.getBody().getMessage();
-        assertTrue(responseBody.contains("Tag not found"));
-    }
-    
-    @Test
-    void testHandleInvalidFormat_TagsField() {
-        InvalidFormatException ex = InvalidFormatException.from(
-                null,
-                "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
-                "invalid-uuid",
-                UUID.class
-        );
-        
-        ex.prependPath(new Reference(null, "tags"));
-        
-        ResponseEntity<MessageDto> resp = challengeExceptionHandler.handleInvalidFormat(ex);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
-        assertEquals(
-                "invalid format UUID tag: invalid-uuid",
-                Objects.requireNonNull(resp.getBody()).getMessage()
-        );
-    }
-    
-    @Test
-    void testHandleInvalidFormat_OtherFieldFallback() {
-        InvalidFormatException ex = InvalidFormatException.from(
-                null,
-                "cannot deserialize value of type java.util.UUID from String \"invalid-uuid\"",
-                "invalid-uuid",
-                UUID.class
-        );
-        ex.prependPath(new Reference(null, "otherField"));
-        
-        ResponseEntity<MessageDto> resp = challengeExceptionHandler.handleInvalidFormat(ex);
-        
-        assertEquals(HttpStatus.BAD_REQUEST, resp.getStatusCode());
-        assertEquals(
-                ex.getOriginalMessage(),
-                Objects.requireNonNull(resp.getBody()).getMessage()
-        );
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody().getMessage()).contains("Invalid UUID");
     }
 }
