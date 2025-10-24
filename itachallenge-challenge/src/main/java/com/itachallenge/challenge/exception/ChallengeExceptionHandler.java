@@ -68,6 +68,7 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
                 .body(responseBuilder.buildError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request));
     }
 
+    @Override
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<APIErrorResponse> handleInvalidFormat(InvalidFormatException ex, HttpServletRequest request) {
         return buildTagUuidError(ex, request)
