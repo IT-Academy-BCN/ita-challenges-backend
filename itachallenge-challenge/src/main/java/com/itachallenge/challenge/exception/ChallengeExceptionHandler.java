@@ -76,7 +76,7 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
                                 .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request))
                 );
     }
-    
+
     private Optional<ResponseEntity<APIErrorResponse>> buildTagUuidError(InvalidFormatException ex,HttpServletRequest request) {
         if (UUID.class.equals(ex.getTargetType())) {
             String badValue = ex.getValue().toString();
