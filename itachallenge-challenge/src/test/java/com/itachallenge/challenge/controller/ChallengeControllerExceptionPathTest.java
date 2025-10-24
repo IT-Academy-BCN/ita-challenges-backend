@@ -32,37 +32,7 @@ import static org.mockito.Mockito.when;
  * Purpose:
  * - This suite covers ONLY the unhappy/exceptional flows from the original ChallengeControllerTest.
  *   The “happy path” tests are covered separately in the WebFlux-based suite.
- *
- * Runtime model:
- * - We run with @WebMvcTest (servlet stack) because our global exception handler
- *   (BaseExceptionHandler in com.itachallenge.errorcore) depends on HttpServletRequest.
- *   In production under Tomcat, that works. We mirror that here.
- *
- * Client model:
- * - Even though we’re on the servlet stack, we still drive requests using WebTestClient.
- *   Spring Boot will auto-configure WebTestClient for @WebMvcTest, backed by MockMvc internally.
- *   That gives us a fluent, reactive-style test client, while still exercising the MVC stack.
- *
- * Strategy:
- * - For validation errors (@Valid DTOs, enum binding issues, missing fields),
- *   we do NOT mock the service. Validation/binding fails before service is called.
- *
- * - For domain/business errors that come from inside the controller method flow
- *   (ChallengeNotFoundException, BadUUIDException, InternalServerErrorException),
- *   we mock the service (or jwtFacade) to return Mono.error(...) or throw,
- *   and assert the translated HTTP status + body.
- *
- * Message resolution:
- * - We use the app's own MessageSource bean (from errorcore + local message bundles).
- *   So we can assert dynamic, i18n’d messages:
- *      - validation.argument_not_valid=Validation failed for object ''{0}''.
- *      - validation.bad_request=Invalid or malformed request.
- *      - solution.text.notEmpty=...
- *      - etc.
- *
- * Assertions:
- * - We assert status, the top-level "message", numeric "status",
- *   and in validation scenarios we also assert a field-level message under $.errors[0].message.
+ * - This split is recommended because of the hybrid system in place in itachallenge-challenge, mixing blocking and reactive stacks.
  */
 @WebMvcTest(controllers = ChallengeController.class)
 @ComponentScan(basePackages = {
@@ -406,7 +376,7 @@ class ChallengeControllerExceptionTest {
 
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
-                new Object[]{"createFormDto"},
+                new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
         String expectedFieldMessage = messageSource.getMessage(
@@ -427,14 +397,6 @@ class ChallengeControllerExceptionTest {
                 .jsonPath("$.errors[0].message").value(containsString(expectedFieldMessage));
     }
 
-    // -------------------------------------------------------------------------
-    // deleteOneChallenge() unhappy path
-    // Controller method:
-    //   public Mono<ResponseEntity<DeleteResponseDto>> deleteOneChallenge(String id)
-    //
-    // We simulate service throwing ChallengeNotFoundException.
-    // -------------------------------------------------------------------------
-
     @Test
     @DisplayName("DELETE /challenges/{id} where service throws ChallengeNotFoundException → 404 Not Found")
     void deleteOneChallenge_notFound() {
@@ -452,21 +414,6 @@ class ChallengeControllerExceptionTest {
                 .jsonPath("$.status").isEqualTo(404)
                 .jsonPath("$.message").isEqualTo("Challenge with id: non_existing_id not found");
     }
-
-    // -------------------------------------------------------------------------
-    // addChallengeToBookmarks() unhappy paths
-    // Controller method:
-    //   public Mono<ResponseEntity<BookmarkDto>> addChallengeToBookmarks(
-    //        @PathVariable String challengeId,
-    //        @RequestHeader(name="Authorization", required=false) String authHeader)
-    //
-    // Flow:
-    //   1. jwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)
-    //      - may throw JwtException → mapped to BadRequestException → 400
-    //   2. challengeService.addChallengeToBookmarks(challengeId, userId)
-    //      - may emit ChallengeNotFoundException → 404
-    //      - may emit InternalServerErrorException → 500
-    // -------------------------------------------------------------------------
 
     @Test
     @DisplayName("POST /challenges/{id}/bookmarks → ChallengeNotFoundException → 404")
@@ -555,23 +502,6 @@ class ChallengeControllerExceptionTest {
                 .jsonPath("$.message").isEqualTo(errorMessage);
     }
 
-    // -------------------------------------------------------------------------
-    // updateChallenge() unhappy paths
-    // Controller method:
-    //   public Mono<ResponseEntity<ChallengeDto>> updateChallenge(
-    //        @PathVariable String challengeId,
-    //        @Valid @RequestBody ChallengeCreateDto challengeFormDto,
-    //        @RequestHeader(name="Authorization", required=false) String authHeader)
-    //
-    // First: jwtFacade.getUserUuIdFromAuthenticationHeader(authHeader)
-    //   - may throw JwtException → mapped to BadRequestException → 400
-    //
-    // Second: validation on challengeFormDto (@Valid) can fail before facade is called,
-    //   returning 400 with validation.argument_not_valid and field errors.
-    //
-    // Third: body enum binding can fail → HttpMessageNotReadableException → validation.bad_request
-    // -------------------------------------------------------------------------
-
     @Test
     @DisplayName("PUT /challenge/{id}/update with MISSING Authorization header → 400 (JwtException mapped to BadRequestException)")
     void updateChallenge_MissingAuthHeader_Returns400() {
@@ -623,7 +553,7 @@ class ChallengeControllerExceptionTest {
 
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
-                new Object[]{"challengeFormDto"},
+                new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
         String expectedFieldMessage = messageSource.getMessage(
@@ -661,7 +591,7 @@ class ChallengeControllerExceptionTest {
 
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
-                new Object[]{"challengeFormDto"},
+                new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
         String expectedFieldMessage = messageSource.getMessage(
@@ -699,7 +629,7 @@ class ChallengeControllerExceptionTest {
 
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
-                new Object[]{"challengeFormDto"},
+                new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
         String expectedFieldMessage = messageSource.getMessage(
@@ -737,7 +667,7 @@ class ChallengeControllerExceptionTest {
 
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
-                new Object[]{"challengeFormDto"},
+                new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
         String expectedFieldMessage = messageSource.getMessage(
@@ -775,7 +705,7 @@ class ChallengeControllerExceptionTest {
 
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
-                new Object[]{"challengeFormDto"},
+                new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
         String expectedFieldMessage = messageSource.getMessage(
@@ -799,7 +729,6 @@ class ChallengeControllerExceptionTest {
     @Test
     @DisplayName("PUT /challenge/{id}/update with invalid level enum → 400 (validation.bad_request)")
     void updateChallenge_InvalidLevelEnum_Returns400() {
-        // level invalidLevel, topic "ALL" (assuming ALL is valid Topic)
         String body = """
                 {
                   "challengeTitle": "Title",
@@ -832,7 +761,7 @@ class ChallengeControllerExceptionTest {
     @Test
     @DisplayName("PUT /challenge/{id}/update with invalid topic enum → 400 (validation.bad_request)")
     void updateChallenge_InvalidTopicEnum_Returns400() {
-        // topic invalidTopic, level EASY (valid enum)
+
         String body = """
                 {
                   "challengeTitle": "Title",
@@ -861,16 +790,6 @@ class ChallengeControllerExceptionTest {
                 .jsonPath("$.status").isEqualTo(400)
                 .jsonPath("$.message").isEqualTo(expectedBadRequestMsg);
     }
-
-    // -------------------------------------------------------------------------
-    // removeChallengeFromBookmarks() unhappy paths
-    // Controller method:
-    //   public Mono<ResponseEntity<BookmarkDto>> removeChallengeFromBookmarks(
-    //        @PathVariable String challengeId,
-    //        @RequestHeader(name="Authorization", required=false) String authHeader)
-    //
-    // Flow mirrors addChallengeToBookmarks()
-    // -------------------------------------------------------------------------
 
     @Test
     @DisplayName("DELETE /challenges/{id}/bookmarks → ChallengeNotFoundException → 404")
