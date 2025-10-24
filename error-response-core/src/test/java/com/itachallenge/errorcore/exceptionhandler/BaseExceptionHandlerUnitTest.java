@@ -1,5 +1,6 @@
 package com.itachallenge.errorcore.exceptionhandler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,11 +10,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerWebInputException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -112,5 +117,47 @@ class BaseExceptionHandlerUnitTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         verify(builder).buildStatusErrorResponse(ex, request);
+    }
+
+    @Test
+    void handleInvalidFormat_shouldReturnBadRequestAndDelegateToBuilder() {
+        InvalidFormatException ex = mock(InvalidFormatException.class);
+        when(ex.getOriginalMessage()).thenReturn("Invalid enum value");
+        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid enum value", request))
+                .thenReturn(dummyResponse);
+
+        ResponseEntity<APIErrorResponse> response = handler.handleInvalidFormat(ex, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(response.getBody()).isEqualTo(dummyResponse);
+        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid enum value", request);
+    }
+
+    @Test
+    void handleWebFluxBindingErrors_withInvalidFormatCause_shouldDelegateToHandleInvalidFormat() {
+        InvalidFormatException rootCause = mock(InvalidFormatException.class);
+        when(rootCause.getOriginalMessage()).thenReturn("Bad UUID");
+        HttpInputMessage mockInput = new MockHttpInputMessage("{}".getBytes());
+        HttpMessageNotReadableException ex =
+                new HttpMessageNotReadableException("invalid", rootCause, mockInput);
+        when(builder.buildError(HttpStatus.BAD_REQUEST, "Bad UUID", request))
+                .thenReturn(dummyResponse);
+
+        ResponseEntity<APIErrorResponse> response = handler.handleWebFluxBindingErrors(ex, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Bad UUID", request);
+    }
+
+    @Test
+    void handleWebFluxBindingErrors_withoutInvalidFormatCause_shouldReturnGenericBadRequest() {
+        ServerWebInputException ex = new ServerWebInputException("Bad JSON");
+        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
+                .thenReturn(dummyResponse);
+
+        ResponseEntity<APIErrorResponse> response = handler.handleWebFluxBindingErrors(ex, request);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request);
     }
 }

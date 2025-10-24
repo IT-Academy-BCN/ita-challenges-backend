@@ -1,18 +1,22 @@
 package com.itachallenge.errorcore.exceptionhandler;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerWebInputException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -78,5 +82,40 @@ public abstract class BaseExceptionHandler {
                 .status(ex.getStatusCode())
                 .body(responseBuilder
                         .buildStatusErrorResponse(ex, request));
+    }
+
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<APIErrorResponse> handleInvalidFormat(
+            InvalidFormatException ex, HttpServletRequest request) {
+
+        return ResponseEntity.badRequest()
+                .body(responseBuilder.buildError(
+                                        HttpStatus.BAD_REQUEST,
+                                        ex.getOriginalMessage(),
+                                        request));
+    }
+
+    @ExceptionHandler({
+            HttpMessageNotReadableException.class,
+            ServerWebInputException.class,
+            DecodingException.class
+    })
+    public ResponseEntity<APIErrorResponse> handleWebFluxBindingErrors(
+            Exception ex, HttpServletRequest request) {
+
+        Throwable root = ex.getCause();
+        while (root != null) {
+            if (root instanceof InvalidFormatException invalid) {
+                return handleInvalidFormat(invalid, request);
+            }
+            root = root.getCause();
+        }
+
+        log.debug("Unhandled binding exception type: {}", ex.getClass().getSimpleName());
+        return ResponseEntity.badRequest()
+                .body(responseBuilder.buildError(
+                        HttpStatus.BAD_REQUEST,
+                        "Invalid or malformed request.",
+                        request));
     }
 }

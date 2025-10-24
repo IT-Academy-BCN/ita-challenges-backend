@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -77,12 +78,12 @@ public class ErrorResponseBuilder {
     }
 
     public APIErrorResponse buildStatusErrorResponse(ResponseStatusException ex, HttpServletRequest request) {
-        HttpStatus status = (HttpStatus) ex.getStatusCode();
+        HttpStatusCode statusCode = ex.getStatusCode();
         Object[] detailMessageArguments = ex.getDetailMessageArguments();
         String errorMessage;
 
         if (detailMessageArguments == null || detailMessageArguments.length == 0) {
-            errorMessage = status.getReasonPhrase();
+            errorMessage = ex.getMessage();
         } else {
             errorMessage = Arrays.stream(detailMessageArguments)
                     .skip(1)
@@ -92,11 +93,12 @@ public class ErrorResponseBuilder {
                     .replace("]", "");
         }
         // Build the APIErrorResponse using your builder (same message text)
-        return buildError(
-                status,
-                errorMessage,
-                request
-        );
+        return APIErrorResponse.builder()
+                .status(statusCode.value())
+                .error(ex.getReason())
+                .message(errorMessage)
+                .path(request != null ? request.getRequestURI() : null)
+                .build();
     }
 
 
