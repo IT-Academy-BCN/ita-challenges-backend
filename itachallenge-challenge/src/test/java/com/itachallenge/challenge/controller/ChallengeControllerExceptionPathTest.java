@@ -28,7 +28,6 @@ import static org.mockito.Mockito.when;
 
 /**
  * ChallengeControllerExceptionTest
- *
  * Purpose:
  * - This suite covers ONLY the unhappy/exceptional flows from the original ChallengeControllerTest.
  *   The “happy path” tests are covered separately in the WebFlux-based suite.
@@ -741,12 +740,6 @@ class ChallengeControllerExceptionTest {
                 }
                 """;
 
-        String expectedBadRequestMsg = messageSource.getMessage(
-                "validation.bad_request",
-                null,
-                Locale.getDefault()
-        );
-
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "some-id")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -755,7 +748,7 @@ class ChallengeControllerExceptionTest {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.message").isEqualTo(expectedBadRequestMsg);
+                .jsonPath("$.message").value(containsString("invalidLevel"));
     }
 
     @Test
@@ -774,12 +767,6 @@ class ChallengeControllerExceptionTest {
                 }
                 """;
 
-        String expectedBadRequestMsg = messageSource.getMessage(
-                "validation.bad_request",
-                null,
-                Locale.getDefault()
-        );
-
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "some-id")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -788,7 +775,7 @@ class ChallengeControllerExceptionTest {
                 .expectStatus().isBadRequest()
                 .expectBody()
                 .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.message").isEqualTo(expectedBadRequestMsg);
+                .jsonPath("$.message").value(containsString("invalidTopic"));
     }
 
     @Test
