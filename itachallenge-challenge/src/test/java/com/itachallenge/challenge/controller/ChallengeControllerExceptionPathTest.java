@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
         "com.itachallenge.challenge.exception"  // If you have ChallengeExceptionHandler extending BaseExceptionHandler
 })
 @ActiveProfiles("test")
-class ChallengeControllerExceptionTest {
+class ChallengeControllerExceptionPathTest {
 
     @Autowired
     private WebTestClient webTestClient;
