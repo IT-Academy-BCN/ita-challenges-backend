@@ -149,7 +149,7 @@ class ErrorResponseBuilderTest {
         APIErrorResponse response = builder.buildStatusErrorResponse(ex, request);
 
         assertThat(response.getStatus()).isEqualTo(404);
-        assertThat(response.getMessage()).isEqualTo("Not Found");
+        assertThat(response.getMessage()).isEqualTo("404 NOT_FOUND \"Not found\"");
     }
 
     @Test

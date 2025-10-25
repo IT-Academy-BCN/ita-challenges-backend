@@ -67,7 +67,7 @@ class TestAppIntegrationTest {
         mockMvc.perform(get("/test/status"))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.message", containsString("Not Found")));
+                .andExpect(jsonPath("$.message", containsString("404 NOT_FOUND \"Resource not found\"")));
     }
 
     // 6️⃣ Generic Exception
