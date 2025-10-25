@@ -7,6 +7,8 @@ import com.itachallenge.challenge.repository.ChallengeRepository;
 import com.itachallenge.challenge.service.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +23,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Locale;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,6 +61,90 @@ class ChallengeControllerExceptionTest {
     @MockBean private IResourceService resourceService;
     @MockBean private IUserService userService;
     @MockBean private MappingMongoConverter mappingMongoConverter;
+
+    //For parametrized test
+    static Stream<TestCase> invalidUpdateCases() {
+        return Stream.of(
+                new TestCase(
+                        "Empty challengeTitle",
+                        """
+                        {
+                          "challengeTitle": "",
+                          "description": "desc",
+                          "level": "EASY",
+                          "language": "Java",
+                          "solution": "solution",
+                          "topic": "LISTS",
+                          "tags": ["11111111-1111-1111-1111-111111111111"]
+                        }
+                        """,
+                        "challenge.title.notEmpty"
+                ),
+                new TestCase(
+                        "Empty description",
+                        """
+                        {
+                          "challengeTitle": "Title",
+                          "description": "",
+                          "level": "EASY",
+                          "language": "Java",
+                          "solution": "solution",
+                          "topic": "LISTS",
+                          "tags": ["11111111-1111-1111-1111-111111111111"]
+                        }
+                        """,
+                        "challenge.description.notEmpty"
+                ),
+                new TestCase(
+                        "Empty language",
+                        """
+                        {
+                          "challengeTitle": "Title",
+                          "description": "Desc",
+                          "level": "EASY",
+                          "language": "",
+                          "solution": "solution",
+                          "topic": "LISTS",
+                          "tags": ["11111111-1111-1111-1111-111111111111"]
+                        }
+                        """,
+                        "challenge.language.notEmpty"
+                ),
+                new TestCase(
+                        "Null solution",
+                        """
+                        {
+                          "challengeTitle": "Title",
+                          "description": "Desc",
+                          "level": "EASY",
+                          "language": "Java",
+                          "solution": null,
+                          "topic": "LISTS",
+                          "tags": ["11111111-1111-1111-1111-111111111111"]
+                        }
+                        """,
+                        "challenge.solution.notEmpty"
+                ),
+                new TestCase(
+                        "Null topic",
+                        """
+                        {
+                          "challengeTitle": "Title",
+                          "description": "Desc",
+                          "level": "EASY",
+                          "language": "Java",
+                          "solution": "solution",
+                          "topic": null,
+                          "tags": ["11111111-1111-1111-1111-111111111111"]
+                        }
+                        """,
+                        "challenge.topic.notNull"
+                )
+        );
+    }
+
+    private record TestCase(String display, String body, String messageKey) {}
+
 
 
     @Test
@@ -535,28 +622,18 @@ class ChallengeControllerExceptionTest {
                 .jsonPath("$.message").isEqualTo(errorMessage);
     }
 
-    @Test
-    @DisplayName("PUT /challenge/{id}/update with empty challengeTitle → 400 (challenge.title.notEmpty)")
-    void updateChallenge_EmptyTitle_Returns400() {
-        String body = """
-                {
-                  "challengeTitle": "",
-                  "description": "desc",
-                  "level": "EASY",
-                  "language": "Java",
-                  "solution": "solution",
-                  "topic": "LISTS",
-                  "tags": ["11111111-1111-1111-1111-111111111111"]
-                }
-                """;
-
+    @ParameterizedTest(name = "PUT /challenge/update → 400 when {0}")
+    @MethodSource("invalidUpdateCases")
+    @DisplayName("PUT /challenge/{id}/update with invalid field → 400 (MethodArgumentNotValidException)")
+    void updateChallenge_InvalidField_Returns400(TestCase testCase) {
         String expectedTopMessage = messageSource.getMessage(
                 "validation.argument_not_valid",
                 new Object[]{"challengeCreateDto"},
                 Locale.getDefault()
         );
+
         String expectedFieldMessage = messageSource.getMessage(
-                "challenge.title.notEmpty",
+                testCase.messageKey(),
                 null,
                 Locale.getDefault()
         );
@@ -564,159 +641,7 @@ class ChallengeControllerExceptionTest {
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "any-id")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(body)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo(expectedTopMessage)
-                .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.errors[0].message").value(containsString(expectedFieldMessage));
-    }
-
-    @Test
-    @DisplayName("PUT /challenge/{id}/update with empty description → 400 (challenge.description.notEmpty)")
-    void updateChallenge_EmptyDescription_Returns400() {
-        String body = """
-                {
-                  "challengeTitle": "Title",
-                  "description": "",
-                  "level": "EASY",
-                  "language": "Java",
-                  "solution": "solution",
-                  "topic": "LISTS",
-                  "tags": ["11111111-1111-1111-1111-111111111111"]
-                }
-                """;
-
-        String expectedTopMessage = messageSource.getMessage(
-                "validation.argument_not_valid",
-                new Object[]{"challengeCreateDto"},
-                Locale.getDefault()
-        );
-        String expectedFieldMessage = messageSource.getMessage(
-                "challenge.description.notEmpty",
-                null,
-                Locale.getDefault()
-        );
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "any-id")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(body)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo(expectedTopMessage)
-                .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.errors[0].message").value(containsString(expectedFieldMessage));
-    }
-
-    @Test
-    @DisplayName("PUT /challenge/{id}/update with empty language → 400 (challenge.language.notEmpty)")
-    void updateChallenge_EmptyLanguage_Returns400() {
-        String body = """
-                {
-                  "challengeTitle": "Title",
-                  "description": "Desc",
-                  "level": "EASY",
-                  "language": "",
-                  "solution": "solution",
-                  "topic": "LISTS",
-                  "tags": ["11111111-1111-1111-1111-111111111111"]
-                }
-                """;
-
-        String expectedTopMessage = messageSource.getMessage(
-                "validation.argument_not_valid",
-                new Object[]{"challengeCreateDto"},
-                Locale.getDefault()
-        );
-        String expectedFieldMessage = messageSource.getMessage(
-                "challenge.language.notEmpty",
-                null,
-                Locale.getDefault()
-        );
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "any-id")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(body)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo(expectedTopMessage)
-                .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.errors[0].message").value(containsString(expectedFieldMessage));
-    }
-
-    @Test
-    @DisplayName("PUT /challenge/{id}/update with null solution → 400 (challenge.solution.notEmpty)")
-    void updateChallenge_NullSolution_Returns400() {
-        String body = """
-                {
-                  "challengeTitle": "Title",
-                  "description": "Desc",
-                  "level": "EASY",
-                  "language": "Java",
-                  "solution": null,
-                  "topic": "LISTS",
-                  "tags": ["11111111-1111-1111-1111-111111111111"]
-                }
-                """;
-
-        String expectedTopMessage = messageSource.getMessage(
-                "validation.argument_not_valid",
-                new Object[]{"challengeCreateDto"},
-                Locale.getDefault()
-        );
-        String expectedFieldMessage = messageSource.getMessage(
-                "challenge.solution.notEmpty",
-                null,
-                Locale.getDefault()
-        );
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "any-id")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(body)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectBody()
-                .jsonPath("$.message").isEqualTo(expectedTopMessage)
-                .jsonPath("$.status").isEqualTo(400)
-                .jsonPath("$.errors[0].message").value(containsString(expectedFieldMessage));
-    }
-
-    @Test
-    @DisplayName("PUT /challenge/{id}/update with null topic → 400 (challenge.topic.notNull)")
-    void updateChallenge_NullTopic_Returns400() {
-        String body = """
-                {
-                  "challengeTitle": "Title",
-                  "description": "Desc",
-                  "level": "EASY",
-                  "language": "Java",
-                  "solution": "solution",
-                  "topic": null,
-                  "tags": ["11111111-1111-1111-1111-111111111111"]
-                }
-                """;
-
-        String expectedTopMessage = messageSource.getMessage(
-                "validation.argument_not_valid",
-                new Object[]{"challengeCreateDto"},
-                Locale.getDefault()
-        );
-        String expectedFieldMessage = messageSource.getMessage(
-                "challenge.topic.notNull",
-                null,
-                Locale.getDefault()
-        );
-
-        webTestClient.put()
-                .uri("/itachallenge/api/v1/challenge/challenge/{challengeId}/update", "any-id")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(body)
+                .bodyValue(testCase.body())
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectBody()
