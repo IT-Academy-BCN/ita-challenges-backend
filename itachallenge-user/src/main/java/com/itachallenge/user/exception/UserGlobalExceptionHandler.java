@@ -1,10 +1,10 @@
 package com.itachallenge.user.exception;
 
+import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
-import com.itachallenge.user.dto.APIErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import jakarta.validation.ConstraintViolationException;
-
-import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -110,7 +107,7 @@ public class UserGlobalExceptionHandler {
         }
 
         return ResponseEntity.status(status).body(
-                new APIErrorResponse("External Service Error", securedMessage, Instant.now())
+                APIErrorResponse.builder().message(securedMessage).error("External Service Error").build()
         );
     }
 
