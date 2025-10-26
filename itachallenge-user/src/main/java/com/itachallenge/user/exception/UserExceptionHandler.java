@@ -4,6 +4,7 @@ import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.errorcore.exceptionhandler.BaseExceptionHandler;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,40 +20,45 @@ public class UserExceptionHandler extends BaseExceptionHandler {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<String> handleBadRequestException(BadRequestException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST,e.getMessage(),request));
     }
 
     @ExceptionHandler(BadUUIDException.class)
-    public ResponseEntity<String> handleBadUUIDException(BadUUIDException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The provided IDs are not valid.");
+    public ResponseEntity<APIErrorResponse> handleBadUUIDException(BadUUIDException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST,"validation.uuid.invalid",request));
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleNotFoundException(NotFoundException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(responseBuilder.buildError(HttpStatus.NOT_FOUND,e.getMessage(),request));
     }
 
     @ExceptionHandler(UnmodificableSolutionException.class)
-    public ResponseEntity<String> handleUnmodifiableSolutionException(UnmodificableSolutionException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleUnmodifiableSolutionException(UnmodificableSolutionException e,HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(responseBuilder.buildError(HttpStatus.CONFLICT, e.getMessage(), request));
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<String> handleInternalServerErrorException(InternalServerErrorException e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleInternalServerErrorException(InternalServerErrorException e, HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(responseBuilder.buildError(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage(),request));
     }
 
     @ExceptionHandler(UsernameAlreadyExistsException.class)
-    public ResponseEntity<String> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    public ResponseEntity<APIErrorResponse> handleUsernameAlreadyExistsException(UsernameAlreadyExistsException e,HttpServletRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(responseBuilder.buildError(HttpStatus.CONFLICT,e.getMessage(), request));
     }
 
     @ExceptionHandler(GithubUnavailableException.class)
-    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex) {
+    public ResponseEntity<APIErrorResponse> handleGithubUnavailable(GithubUnavailableException ex, HttpServletRequest request) {
         HttpStatus status;
         String securedMessage;
-
         log.error("GithubUnavailableException occurred: {}", ex.getMessage(), ex);
 
         if (ex.getCause() instanceof java.net.SocketTimeoutException) {
@@ -67,8 +73,6 @@ public class UserExceptionHandler extends BaseExceptionHandler {
         }
 
         return ResponseEntity.status(status).body(
-                APIErrorResponse.builder().message(securedMessage).error("External Service Error").build()
-        );
+                responseBuilder.buildError(status,securedMessage,request));
     }
-
 }
