@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-class UserGlobalExceptionHandlerTest {
+class UserExceptionHandlerTest {
 
-    private UserGlobalExceptionHandler exceptionHandler;
+    private UserExceptionHandler exceptionHandler;
 
     @BeforeEach
     void setUp() {
         MessageSource messageSource = mock(MessageSource.class);
-        exceptionHandler = new UserGlobalExceptionHandler(messageSource);
+        exceptionHandler = new UserExceptionHandler(messageSource);
     }
 
     @Test

@@ -1,7 +1,8 @@
 package com.itachallenge.user.controller;
-import com.itachallenge.user.exception.UserGlobalExceptionHandler;
+
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.AdminCreateUserResponseDto;
+import com.itachallenge.user.exception.UserExceptionHandler;
 import com.itachallenge.user.exception.UsernameAlreadyExistsException;
 import com.itachallenge.user.service.AdminCreateUserService;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
 
 @WebFluxTest(controllers = AdminCreateUserController.class)
 @ContextConfiguration(classes = { AdminCreateUserController.class })
-@Import(UserGlobalExceptionHandler.class)
+@Import(UserExceptionHandler.class)
 class AdminCreateUserControllerTest {
 
     @Autowired
