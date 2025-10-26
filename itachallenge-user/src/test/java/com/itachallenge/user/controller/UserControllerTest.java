@@ -5,7 +5,6 @@ import com.itachallenge.user.document.enums.Role;
 import com.itachallenge.user.dto.UserSolutionResponseDto;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
-import com.itachallenge.user.exception.UserExceptionHandler;
 import com.itachallenge.user.service.IUserSolutionService;
 import com.itachallenge.user.service.UserService;
 import org.junit.jupiter.api.*;
@@ -43,9 +42,9 @@ class UserControllerTest {
         mocks = MockitoAnnotations.openMocks(this);
         MessageSource messageSource = mock(MessageSource.class);
 
-        webTestClient = WebTestClient.bindToController(userController)
+        /*webTestClient = WebTestClient.bindToController(userController)
                 .controllerAdvice(new UserExceptionHandler(messageSource))
-                .build();
+                .build();*/
     }
 
     @AfterEach

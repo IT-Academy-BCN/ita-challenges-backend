@@ -71,7 +71,6 @@ public class UserExceptionHandler extends BaseExceptionHandler {
             status = HttpStatus.SERVICE_UNAVAILABLE;
             securedMessage = "An external service error occurred.";
         }
-
         return ResponseEntity.status(status).body(
                 responseBuilder.buildError(status,securedMessage,request));
     }
