@@ -14,9 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -62,7 +63,7 @@ class UserControllerSpringTest {
                 .timesSolved(42)
                 .build();
 
-        when(userSolutionService.addSolution(org.mockito.ArgumentMatchers.any(UserSolutionRequestDto.class)))
+        when(userSolutionService.addSolution(any(UserSolutionRequestDto.class)))
                 .thenReturn(Mono.just(responseDto));
 
         webTestClient.put()
