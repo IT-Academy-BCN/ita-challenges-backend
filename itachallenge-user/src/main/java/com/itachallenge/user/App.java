@@ -1,21 +1,18 @@
 package com.itachallenge.user;
 
+import com.itachallenge.errorcore.config.ErrorHandlingConfig;
 import com.itachallenge.githubcore.config.GithubServiceConfig;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import(GithubServiceConfig.class)
+@Import({GithubServiceConfig.class, ErrorHandlingConfig.class})
 @EnableDiscoveryClient
 @OpenAPIDefinition(info = @Info(title = "Ita Backend User", version = "1.0", description = "Description"))
-@ComponentScan(basePackages =
-        {"com.itachallenge.user",
-                "com.itachallenge.errorcore"})
 public class App {
 
     public static void main(String[] args) {
