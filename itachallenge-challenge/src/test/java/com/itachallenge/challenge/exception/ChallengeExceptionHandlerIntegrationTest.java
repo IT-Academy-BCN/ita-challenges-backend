@@ -81,7 +81,7 @@ class ChallengeExceptionHandlerIntegrationTest {
 
         // Bonus: check one of the actual field errors
         assertThat(response.getErrors().getFirst().getField()).isIn(
-                "challengeTitle", "description", "language", "solution", "tags"
+                "challengeTitle", "description", "language", "solution", "tags","topic"
         );
     }
 

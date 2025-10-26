@@ -86,6 +86,7 @@ class ResourceControllerExceptionPathTest {
     void createResource_MissingRequiredField_Returns400() {
         String invalidJson = """
                 {
+                  "resourceId": "11111111-1111-1111-1111-111111111111",
                   "title": "",
                   "description": "Some description",
                   "url": "https://example.com",
