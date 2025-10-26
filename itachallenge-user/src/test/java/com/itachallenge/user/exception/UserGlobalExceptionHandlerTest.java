@@ -1,22 +1,22 @@
 package com.itachallenge.user.exception;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-
+import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.githubcore.exception.GithubUnavailableException;
-import com.itachallenge.user.dto.APIErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import jakarta.validation.ConstraintViolationException;
-
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 class UserGlobalExceptionHandlerTest {
 
@@ -24,7 +24,8 @@ class UserGlobalExceptionHandlerTest {
 
     @BeforeEach
     void setUp() {
-        exceptionHandler = new UserGlobalExceptionHandler();
+        MessageSource messageSource = mock(MessageSource.class);
+        exceptionHandler = new UserGlobalExceptionHandler(messageSource);
     }
 
     @Test

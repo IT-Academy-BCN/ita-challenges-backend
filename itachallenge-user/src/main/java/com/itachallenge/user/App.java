@@ -13,7 +13,9 @@ import org.springframework.context.annotation.Import;
 @Import(GithubServiceConfig.class)
 @EnableDiscoveryClient
 @OpenAPIDefinition(info = @Info(title = "Ita Backend User", version = "1.0", description = "Description"))
-@ComponentScan(basePackages = {"com.itachallenge.errorcore"})
+@ComponentScan(basePackages =
+        {"com.itachallenge.user",
+                "com.itachallenge.errorcore"})
 public class App {
 
     public static void main(String[] args) {
