@@ -1,0 +1,38 @@
+package com.itachallenge.errorcore.config;
+
+import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itachallenge.errorcore.exceptionhandler.BaseExceptionHandler;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+
+/**
+ * Manual configuration exposing shared error-handling components.
+ */
+@Configuration
+public class ErrorHandlingConfig {
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource src = new ReloadableResourceBundleMessageSource();
+        src.setBasenames("classpath:core-messages", "classpath:messages");
+        src.setDefaultEncoding("UTF-8");
+        src.setFallbackToSystemLocale(false);
+        return src;
+    }
+
+    @Bean
+    public ErrorResponseBuilder errorResponseBuilder(MessageSource messageSource) {
+        return new ErrorResponseBuilder(messageSource);
+    }
+
+    // This is abstract, so we don't instantiate it.
+    // But exposing it as a bean definition allows Spring to process its metadata
+    // if you ever have non-abstract variants in your shared module.
+    @Bean
+    public BaseExceptionHandler baseExceptionHandler(ErrorResponseBuilder builder) {
+        // Anonymous subclass to register handler logic, if needed
+        return new BaseExceptionHandler(builder) {};
+    }
+}

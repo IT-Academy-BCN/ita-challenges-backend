@@ -11,7 +11,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-@Component
 @RequiredArgsConstructor
 public class ErrorResponseBuilder {
 
