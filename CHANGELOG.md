@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+### [itachallenge-user-3.0.2-RELEASE] - 2025-10-27
+
+### Refactor
+- Refactored user GlobalExceptionHandler (now renamed UserExceptionHandler) using the error-response-core module. (Taiga [#801], PR [#1012])
+  
+
 ### [error-response-core-1.0.0-RELEASE] - 2025-10-22
 
 ### Added
