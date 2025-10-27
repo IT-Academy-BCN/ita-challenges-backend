@@ -1,6 +1,7 @@
 package com.itachallenge.user.controller;
 
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
+import com.itachallenge.user.exception.BadRequestException;
 import com.itachallenge.user.exception.BadUUIDException;
 import com.itachallenge.user.exception.NotFoundException;
 import com.itachallenge.user.service.IUserSolutionService;
@@ -224,7 +225,7 @@ class UserControllerExceptionPathTest {
     void getSolutions_InvalidUUID_Returns400() {
         String badUserId = "not-a-uuid";
         when(userSolutionService.getAllSolutionsByUser(any()))
-                .thenReturn(Flux.error(new BadUUIDException("Invalid")));
+                .thenReturn(Flux.error(new BadRequestException("The 'userId' parameter cannot be null or empty.")));
 
         webTestClient.get().uri("/itachallenge/api/v1/user/users/{userId}/solutions",badUserId)
                 .exchange().expectStatus().isBadRequest();
