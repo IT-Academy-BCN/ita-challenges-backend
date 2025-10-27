@@ -20,9 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -416,15 +416,10 @@ public class UserController {
                     @ApiResponse(responseCode = "500", description = "Unexpected error")
             }
     )
-    @GetMapping(
-            path = "/users/{userId}/solutions"
-    )
-    public Mono<ResponseEntity<Flux<UserSolutionResponseDto>>> getAllSolutionsByUser(
-            @PathVariable String userId
-    ) {
-        return Mono.just(ResponseEntity.ok()
-                .body(userSolutionService.getAllSolutionsByUser(userId)
-                )
-        );
+    @GetMapping("/users/{userId}/solutions")
+    public Mono<ResponseEntity<List<UserSolutionResponseDto>>> getAllSolutionsByUser(@PathVariable String userId) {
+        return userSolutionService.getAllSolutionsByUser(userId)
+                .collectList()
+                .map(ResponseEntity::ok);
     }
 }
