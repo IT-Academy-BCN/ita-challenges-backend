@@ -33,16 +33,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     // --- Spring Boot Core + Validation ---
-    implementation 'org.springframework.boot:spring-boot-starter-web:3.0.6'
-    implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.6'
-    implementation 'jakarta.validation:jakarta.validation-api:3.1.0' // optional explicit import
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // --- Testing
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
     testImplementation 'org.assertj:assertj-core:3.26.3'
-    testImplementation 'org.mockito:mockito-core:4.11.0'
-    testImplementation 'org.mockito:mockito-junit-jupiter:4.11.0'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.6'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 }
 
