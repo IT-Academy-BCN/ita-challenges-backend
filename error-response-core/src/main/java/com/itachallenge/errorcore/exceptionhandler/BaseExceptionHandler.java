@@ -89,7 +89,7 @@ public abstract class BaseExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(responseBuilder.buildError(
                                         HttpStatus.BAD_REQUEST,
-                                        ex.getOriginalMessage(),
+                                        responseBuilder.resolveMessage("validation.bad_request"),
                                         request));
     }
 
@@ -113,7 +113,7 @@ public abstract class BaseExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(responseBuilder.buildError(
                         HttpStatus.BAD_REQUEST,
-                        "Invalid or malformed request.",
+                        responseBuilder.resolveMessage("validation.bad_request"),
                         request));
     }
 }

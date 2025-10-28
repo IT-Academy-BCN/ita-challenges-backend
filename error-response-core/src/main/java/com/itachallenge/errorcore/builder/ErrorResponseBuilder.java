@@ -180,7 +180,7 @@ public class ErrorResponseBuilder {
     }
 
     /** Resolve message from message source. */
-    private String resolveMessage(String messageKey) {
+    public String resolveMessage(String messageKey) {
         return resolveMessage(messageKey, new Object[]{});
     }
     private String resolveMessage(String messageKey, Object arg1) {

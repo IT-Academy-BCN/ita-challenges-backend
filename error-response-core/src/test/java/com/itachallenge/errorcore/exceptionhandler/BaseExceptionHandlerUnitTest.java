@@ -122,31 +122,31 @@ class BaseExceptionHandlerUnitTest {
     @Test
     void handleInvalidFormat_shouldReturnBadRequestAndDelegateToBuilder() {
         InvalidFormatException ex = mock(InvalidFormatException.class);
-        when(ex.getOriginalMessage()).thenReturn("Invalid enum value");
-        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid enum value", request))
+        when(builder.resolveMessage(any())).thenReturn("Invalid or malformed request.");
+        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
                 .thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleInvalidFormat(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).isEqualTo(dummyResponse);
-        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid enum value", request);
+        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request);
     }
 
     @Test
     void handleWebFluxBindingErrors_withInvalidFormatCause_shouldDelegateToHandleInvalidFormat() {
         InvalidFormatException rootCause = mock(InvalidFormatException.class);
-        when(rootCause.getOriginalMessage()).thenReturn("Bad UUID");
+        when(builder.resolveMessage(any())).thenReturn("Invalid or malformed request.");
         HttpInputMessage mockInput = new MockHttpInputMessage("{}".getBytes());
         HttpMessageNotReadableException ex =
                 new HttpMessageNotReadableException("invalid", rootCause, mockInput);
-        when(builder.buildError(HttpStatus.BAD_REQUEST, "Bad UUID", request))
+        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
                 .thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleWebFluxBindingErrors(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Bad UUID", request);
+        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request);
     }
 
     @Test
@@ -154,7 +154,7 @@ class BaseExceptionHandlerUnitTest {
         ServerWebInputException ex = new ServerWebInputException("Bad JSON");
         when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
                 .thenReturn(dummyResponse);
-
+        when(builder.resolveMessage(any())).thenReturn("Invalid or malformed request.");
         ResponseEntity<APIErrorResponse> response = handler.handleWebFluxBindingErrors(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
