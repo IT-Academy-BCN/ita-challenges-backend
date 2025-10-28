@@ -128,7 +128,7 @@ public class ErrorResponseBuilder {
                         .field(error.getField())
                         .message(messageSource.getMessage(error, locale))
                         .build())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /** Extracts constraint violations from @Validated annotated method parameters. */
