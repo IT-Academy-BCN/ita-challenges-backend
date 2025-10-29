@@ -5,6 +5,7 @@ import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.codec.DecodingException;
@@ -19,9 +20,10 @@ import org.springframework.web.server.ServerWebInputException;
 
 @Slf4j
 @RequiredArgsConstructor
+@Getter
 public abstract class BaseExceptionHandler {
 
-    protected final ErrorResponseBuilder responseBuilder;
+    private final ErrorResponseBuilder responseBuilder;
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<APIErrorResponse> handleAny(Exception e, HttpServletRequest request) {
