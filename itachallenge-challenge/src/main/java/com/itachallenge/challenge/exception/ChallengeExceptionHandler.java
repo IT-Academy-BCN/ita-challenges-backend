@@ -32,38 +32,45 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
 
     @ExceptionHandler(TagNotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleTagNotFoundException(TagNotFoundException ex,HttpServletRequest request) {
+        log.error("TagNotFound Exception happened: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex, HttpServletRequest request) {
+        log.error("ResourceNotFound Exception happened: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(LanguageNotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleLanguageNotFoundException(LanguageNotFoundException ex, HttpServletRequest request) {
+        log.error("LanguageNotFound Exception happened: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
-        return ResponseEntity.ok().body(responseBuilder.buildNotFoundError(ex,request));
+        log.error("NotFound Exception happened: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBuilder.buildNotFoundError(ex,request));
     }
 
     @ExceptionHandler(BadUUIDException.class)
     public ResponseEntity<APIErrorResponse> handleBadUUIDException(BadUUIDException ex, HttpServletRequest request) {
+        log.error("BadUUID Exception happened: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<APIErrorResponse> handleCustomBadRequestException(BadRequestException ex,HttpServletRequest request) {
+        log.error("BadRequest Exception happened: {}", ex.getMessage());
         return ResponseEntity.badRequest()
                 .body(responseBuilder.buildError(HttpStatus.BAD_REQUEST, ex.getMessage(), request));
     }
 
     @ExceptionHandler(InternalServerErrorException.class)
     public ResponseEntity<APIErrorResponse> handleCustomInternalServerErrorException(InternalServerErrorException ex,HttpServletRequest request) {
+        log.error("InternalServerError Exception happened: {}", ex.getMessage());
         return ResponseEntity.internalServerError()
                 .body(responseBuilder.buildError(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request));
     }
@@ -71,6 +78,7 @@ public class ChallengeExceptionHandler extends BaseExceptionHandler {
     @Override
     @ExceptionHandler(InvalidFormatException.class)
     public ResponseEntity<APIErrorResponse> handleInvalidFormat(InvalidFormatException ex, HttpServletRequest request) {
+        log.error("InvalidFormat Exception happened: {}", ex.getMessage());
         return buildTagUuidError(ex, request)
                 .orElseGet(() ->
                         ResponseEntity.badRequest()
