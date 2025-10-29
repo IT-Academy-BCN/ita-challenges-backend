@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class UserExceptionHandler extends BaseExceptionHandler {
 
-    public UserExceptionHandler(ErrorResponseBuilder responseBuilder) {
-        super(responseBuilder);
+    public UserExceptionHandler(ErrorResponseBuilder builder) {
+        super(builder);
     }
+
+    private final ErrorResponseBuilder responseBuilder = getResponseBuilder();
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<APIErrorResponse> handleBadRequestException(BadRequestException e, HttpServletRequest request) {
