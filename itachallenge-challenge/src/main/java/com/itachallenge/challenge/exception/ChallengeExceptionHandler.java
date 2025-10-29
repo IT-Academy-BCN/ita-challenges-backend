@@ -20,9 +20,11 @@ import java.util.UUID;
 @RestControllerAdvice
 public class ChallengeExceptionHandler extends BaseExceptionHandler {
 
-    public ChallengeExceptionHandler(ErrorResponseBuilder responseBuilder) {
-        super(responseBuilder);
+    public ChallengeExceptionHandler(ErrorResponseBuilder builder) {
+        super(builder);
     }
+
+    private final ErrorResponseBuilder responseBuilder = getResponseBuilder();
 
     @ExceptionHandler(ChallengeNotFoundException.class)
     public ResponseEntity<APIErrorResponse> handleChallengeNotFoundException(ChallengeNotFoundException ex, HttpServletRequest request) {
