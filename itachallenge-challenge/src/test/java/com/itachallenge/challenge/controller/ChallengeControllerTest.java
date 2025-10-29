@@ -710,7 +710,7 @@ class ChallengeControllerTest {
                 .timesFavorite(5)
                 .build();
 
-        ChallengeDto[] challengeArray = new ChallengeDto[]{challenge};
+        ChallengeDto[] challengeArray = new ChallengeDto[] { challenge };
         GenericResultDto<ChallengeDto> resultDto = new GenericResultDto<>(0, 10, 1, challengeArray);
 
 
@@ -806,7 +806,7 @@ class ChallengeControllerTest {
 
     @ParameterizedTest
     @MethodSource("provideInvalidEnumValues")
-    void updateChallengeInvalidEnumValue_returnsBadRequest_test(String jsonBody) {
+    void updateChallengeInvalidEnumValue_returnsBadRequest_test(String jsonBody){
 
         webTestClient.put()
                 .uri("/itachallenge/api/v1/challenge/challenge/" + challengeId + "/update")
