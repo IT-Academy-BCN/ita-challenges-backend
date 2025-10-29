@@ -19,7 +19,7 @@ public class TestController {
     public String mismatch(@RequestParam("age") @Min(10) int age) {
         log.debug("Made it to /mismatch path. " +
                 "To trigger mismatch type, pass an unconvertible string as param; " +
-                "to trigger constrain violation, pass a number smalle than 10"
+                "To trigger constraint violation, pass a number smaller than 10"
         );
         return "OK";
     }
