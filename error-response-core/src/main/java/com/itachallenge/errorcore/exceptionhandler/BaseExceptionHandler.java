@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import org.springframework.web.server.ServerWebInputException;
 @Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
+@Order(Ordered.LOWEST_PRECEDENCE)
 public class BaseExceptionHandler {
 
     private final ErrorResponseBuilder responseBuilder;
