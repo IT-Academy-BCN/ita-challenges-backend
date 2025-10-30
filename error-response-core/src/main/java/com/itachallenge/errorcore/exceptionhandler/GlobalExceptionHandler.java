@@ -34,7 +34,7 @@ public final class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(responseBuilder
-                        .buildError(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage(), request)
+                        .buildError(HttpStatus.INTERNAL_SERVER_ERROR, "internal.server_error", request)
                 );
     }
 
@@ -44,7 +44,7 @@ public final class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(responseBuilder
-                        .buildError(HttpStatus.BAD_REQUEST, e.getMessage(), request)
+                        .buildError(HttpStatus.BAD_REQUEST, "validation.illegal_argument", request)
                 );
     }
 
