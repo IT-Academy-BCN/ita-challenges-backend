@@ -25,13 +25,13 @@ It centralizes error handling logic into a reusable component, ensuring all serv
 | `com.itachallenge.errorcore.builder`          | **`ErrorResponseBuilder`** | Core utility for building structured `APIErrorResponse` objects. Handles argument validation, type mismatches, constraint violations, and general exceptions. |
 | `com.itachallenge.errorcore.dto`              | **`APIErrorResponse`** | DTO representing the unified error payload returned to clients (includes timestamp, status, message, error details, path). |
 |                                               | **`FieldErrorDto`** | DTO for detailed field-level validation errors (`field`, `objectName`, `message`). |
-| `com.itachallenge.errorcore.exceptionhandler` | **`BaseExceptionHandler`** | Abstract `@RestControllerAdvice` that defines centralized exception handling methods. Can be extended by any microservice. |
+| `com.itachallenge.errorcore.exceptionhandler` | **GlobalExceptionHandler** | RestControllerAdvice managing validation, type mismatch, and generic exceptions. Will be registered as standalone bean in microservices. |
 
 ### **Supporting Resources**
 
 | File                                     | Purpose |
 |------------------------------------------|----------|
-| `src/main/resources/messages.properties` | Contains localized message templates for error and validation responses (e.g., `validation.type_mismatch`, `validation.constraint`). |
+| `src/main/resources/core-messages.properties` | Contains localized message templates for error and validation responses (e.g., `validation.type_mismatch`, `validation.constraint`). |
 
 ---
 
@@ -45,8 +45,8 @@ It centralizes error handling logic into a reusable component, ensuring all serv
 - `ResponseStatusException`
 - Generic and unexpected exceptions
 
-✅ Localization-ready messages via `MessageSource` and `message.properties`  
-✅ Integration-tested with embedded Spring Boot Tomcat (`@SpringBootTest + MockMvc`)  
+✅ Localization-ready messages via `MessageSource` and `core-message.properties`  
+✅ Unit-tested
 ✅ 100% independent — no persistence or service dependencies
 
 ---
@@ -88,29 +88,31 @@ Ensure the module is declared in your root settings.gradle:
 include(":error-response-core", ":user-service", ":challenge-service")
 ```
 
-### 2. Extend the Base Exception Handler
+### 2. Ensure Spring register the pacakge's beans:
 
-In your microservice, create a simple subclass of BaseExceptionHandler:
+In your microservice spring App class, add:
 
 ```java
-package com.itachallenge.user.exception;
-
-import builder.com.itachallenge.errorcore.ErrorResponseBuilder;
-import exceptionhandler.com.itachallenge.errorcore.BaseExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-@RestControllerAdvice
-public class UserExceptionHandler extends BaseExceptionHandler {
-public UserExceptionHandler(ErrorResponseBuilder responseBuilder) {
-super(responseBuilder);
-}
-}
+@Import(ErrorHandlingConfig.class)
 ```
-That’s it! All exceptions in the service will now be intercepted and formatted using ErrorResponseBuilder.
+That’s it! All framework exceptions in the service will now be intercepted by the GlobalExceptionHandler, and formatted with ErrorResponseBuilder.
+
+If you need to handler locally defined exception, you can create a local Exception Handler (e.g. UserExceptionHandler) and inject ErrorResponseBuilder to build structured and consistent error messages:
+
+```java
+@RestControllerAdvice
+    @RequiredArgsConstructor
+    public class UserExceptionHandler {
+        private final ErrorResponseBuilder responseBuilder; 
+    }
+```
+
+To override the way in which the GlobalExceptionHandler handles certain exception, use @Order(Ordered.HIGHEST_PRECEDENCE) on your local handler and explicitly handles the target exception in your local handler.
+
 
 ### 3. Messages and Localization
 
-You can override the default message.properties in your microservice by adding one under:
+You can override the default core-message.properties in your microservice by adding one under:
 
 ```css
 src/main/resources/message.properties
