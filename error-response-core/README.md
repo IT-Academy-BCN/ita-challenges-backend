@@ -10,9 +10,9 @@
 
 ## 📘 Overview
 
-`error-response-core` is a **shared Spring Boot library** that provides a consistent, standardized way to handle and serialize REST API exceptions across all ITA Challenge microservices.
+`error-response-core` is a **shared Spring Boot library** providing a consistent, standardized way to handle and serialize REST API exceptions across all ITA Challenge microservices.
 
-It centralizes error handling logic into a reusable component, ensuring all services return the same structured JSON format when errors occur — improving maintainability, observability, and client-side debugging.
+It centralizes error-handling logic into a reusable component, ensuring every service returns the same structured JSON format when errors occur — improving maintainability, observability, and client-side debugging.
 
 ---
 
@@ -20,34 +20,30 @@ It centralizes error handling logic into a reusable component, ensuring all serv
 
 ### **Main Components**
 
-| Package                                       | Class | Description |
-|-----------------------------------------------|--------|-------------|
-| `com.itachallenge.errorcore.builder`          | **`ErrorResponseBuilder`** | Core utility for building structured `APIErrorResponse` objects. Handles argument validation, type mismatches, constraint violations, and general exceptions. |
-| `com.itachallenge.errorcore.dto`              | **`APIErrorResponse`** | DTO representing the unified error payload returned to clients (includes timestamp, status, message, error details, path). |
-|                                               | **`FieldErrorDto`** | DTO for detailed field-level validation errors (`field`, `objectName`, `message`). |
-| `com.itachallenge.errorcore.exceptionhandler` | **GlobalExceptionHandler** | RestControllerAdvice managing validation, type mismatch, and generic exceptions. Will be registered as standalone bean in microservices. |
+| Package | Class | Description |
+|----------|--------|-------------|
+| `com.itachallenge.errorcore.builder` | **`ErrorResponseBuilder`** | Core utility that builds `APIErrorResponse` objects. Interprets validation errors, type mismatches, and generic exceptions, mapping them to localized messages and HTTP status codes. |
+| `com.itachallenge.errorcore.dto` | **`APIErrorResponse`** | DTO representing the unified error payload returned to clients (ISO-8601 `timestamp`, status, error, message, path, and optional field errors). |
+|  | **`FieldErrorDto`** | DTO containing per-field validation details (`field`, `objectName`, `message`). |
+| `com.itachallenge.errorcore.exception` | **`BaseApiException`** | Abstract base class for user-facing, service-defined exceptions. Encapsulates `HttpStatus`, a message key for i18n, and optional arguments. |
+| `com.itachallenge.errorcore.exceptionhandler` | **`GlobalExceptionHandler`** | `@RestControllerAdvice` that catches framework exceptions and delegates to `ErrorResponseBuilder`. |
 
 ### **Supporting Resources**
 
-| File                                     | Purpose |
-|------------------------------------------|----------|
-| `src/main/resources/core-messages.properties` | Contains localized message templates for error and validation responses (e.g., `validation.type_mismatch`, `validation.constraint`). |
+| File | Purpose |
+|------|----------|
+| `src/main/resources/core-messages.properties` | Default localized message templates (e.g., `validation.type_mismatch`, `error.internal`). |
 
 ---
 
 ## ⚙️ Features
 
-✅ Standardized JSON error responses across microservices  
-✅ Full support for:
-- `ConstraintViolationException`
-- `MethodArgumentNotValidException`
-- `MethodArgumentTypeMismatchException`
-- `ResponseStatusException`
-- Generic and unexpected exceptions
-
-✅ Localization-ready messages via `MessageSource` and `core-message.properties`  
-✅ Unit-tested
-✅ 100% independent — no persistence or service dependencies
+✅ Unified JSON error format across all microservices  
+✅ Handles framework and custom exceptions (`BaseApiException`)  
+✅ Localization via Spring `MessageSource`  
+✅ ISO-8601 timestamps (`Instant`) — auto-configured by Spring Boot 3.x  
+✅ Fully stateless and reusable library  
+✅ Comprehensive JUnit 5 / Mockito test coverage
 
 ---
 
@@ -69,96 +65,129 @@ It centralizes error handling logic into a reusable component, ensuring all serv
   "path": "/api/users"
 }
 ```
+
 ---
 
 ## 🚀 Integration Guide
 
-### 1. Include the module in your microservice
-
-In your service’s `build.gradle`:
+### 1. Include the module
 
 ```groovy
 dependencies {
     implementation project(":error-response-core")
 }
 ```
-Ensure the module is declared in your root settings.gradle:
+
+In your root `settings.gradle`:
 
 ```groovy
 include(":error-response-core", ":user-service", ":challenge-service")
 ```
 
-### 2. Ensure Spring register the pacakge's beans:
+---
 
-In your microservice spring App class, add:
+### 2. Register the error-handling package
+
+In your microservice’s main Spring application class:
 
 ```java
 @Import(ErrorHandlingConfig.class)
 ```
-That’s it! All framework exceptions in the service will now be intercepted by the GlobalExceptionHandler, and formatted with ErrorResponseBuilder.
 
-If you need to handler locally defined exception, you can create a local Exception Handler (e.g. UserExceptionHandler) and inject ErrorResponseBuilder to build structured and consistent error messages:
+All framework exceptions are now intercepted by `GlobalExceptionHandler` and serialized using `ErrorResponseBuilder`.
+
+To handle **service-specific** exceptions, create a local `@RestControllerAdvice` and inject `ErrorResponseBuilder`:
 
 ```java
 @RestControllerAdvice
-    @RequiredArgsConstructor
-    public class UserExceptionHandler {
-        private final ErrorResponseBuilder responseBuilder; 
+@RequiredArgsConstructor
+public class UserExceptionHandler {
+    private final ErrorResponseBuilder responseBuilder;
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<APIErrorResponse> handle(UserNotFoundException ex, HttpServletRequest req) {
+        return ResponseEntity.status(ex.getStatus())
+                             .body(responseBuilder.buildError(ex, req));
     }
+}
 ```
 
-To override the way in which the GlobalExceptionHandler handles certain exception, use @Order(Ordered.HIGHEST_PRECEDENCE) on your local handler and explicitly handles the target exception in your local handler.
-
-
-### 3. Messages and Localization
-
-You can override the default core-message.properties in your microservice by adding one under:
-
-```css
-src/main/resources/message.properties
+To override default behavior, annotate your local handler with:
+```java
+@Order(Ordered.HIGHEST_PRECEDENCE)
 ```
-Spring will automatically merge and prioritize your local file.
+
+---
+
+### 3. Define your custom exceptions
+
+Extend `BaseApiException` in your service:
+
+```java
+public class UserNotFoundException extends BaseApiException {
+    public UserNotFoundException(String username) {
+        super(HttpStatus.NOT_FOUND, "error.user.notFound", username);
+    }
+}
+```
+
+Add a message to your local `messages.properties`:
+
+```properties
+error.user.notFound=No user found with username "{0}".
+```
+
+---
+
+### 4. Messages and Localization
+
+To override or extend the default messages, add your own file:
+
+```
+src/main/resources/messages.properties
+```
+
+Spring automatically merges it, prioritizing local entries over the shared defaults.
 
 ---
 
 ## 🧪 Testing
 
-To run all unit and integration tests with coverage:
+Run all unit and integration tests:
 
-```
+```bash
 ./gradlew clean test jacocoTestReport
 ```
 
-The coverage report is available at:
-```
-build/reports/jacoco/test/html/index.html
-```
+Coverage report:  
+`build/reports/jacoco/test/html/index.html`
+
 ---
 
 ## 📊 SonarQube Integration
 
-This module enforces a minimum 70% line coverage threshold through Jacoco and integrates seamlessly with SonarQube.
-
-The configuration is already compatible with CI/CD workflows (e.g. GitHub Actions).
+- Enforces minimum 70 % line coverage (Jacoco).
+- Fully compatible with CI/CD pipelines (GitHub Actions).
+- Quality gate passes automatically when thresholds are met.
 
 ---
 
 ## 🛠️ Development Notes
 
-- The module disables bootJar since it’s not a standalone Spring Boot app — it’s a shared library.
-- SonarQube quality gate compliance is enforced with Jacoco reports.
-- Uses Spring Boot 3.0.6 and Jakarta Validation API 3.1.0.
+- `bootJar` is **disabled** (this is a shared library, not an executable app).
+- Uses Spring Boot 3.0.6 and Jakarta Validation 3.0.2.
+- `jakarta.servlet-api` is declared as `compileOnly` — the runtime provides it.
+- Timestamps use `Instant` in ISO-8601; Boot 3.x automatically registers `jackson-datatype-jsr310`.
+- `messageArgs` in `BaseApiException` is marked `transient` to satisfy SonarQube.
 - Tested with JUnit 5, Mockito, AssertJ, and Spring Test.
-- This library is versioned and updated in sync with other ITA Challenge microservices.
 
 ---
 
 ## 📦 Versioning
 
-Version	Description	Compatible Spring Boot
--
-1.0.0	Initial release with unified error handling	3.0.x
-
+| Version | Description | Spring Boot |
+|----------|--------------|-------------|
+| 1.0.0 | Initial release with unified error handling | 3.0.x |
 
 
 
