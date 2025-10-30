@@ -15,10 +15,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class ErrorResponseBuilder {
@@ -79,19 +77,7 @@ public class ErrorResponseBuilder {
 
     public APIErrorResponse buildStatusErrorResponse(ResponseStatusException ex, HttpServletRequest request) {
         HttpStatusCode statusCode = ex.getStatusCode();
-        Object[] detailMessageArguments = ex.getDetailMessageArguments();
-        String errorMessage;
-
-        if (detailMessageArguments == null || detailMessageArguments.length == 0) {
-            errorMessage = ex.getMessage();
-        } else {
-            errorMessage = Arrays.stream(detailMessageArguments)
-                    .skip(1)
-                    .map(Object::toString)
-                    .collect(Collectors.joining(", "))
-                    .replace("[", "")
-                    .replace("]", "");
-        }
+        String errorMessage = resolveMessage("status.exception." + statusCode.value());
         // Build the APIErrorResponse using your builder (same message text)
         return APIErrorResponse.builder()
                 .status(statusCode.value())
@@ -199,7 +185,7 @@ public class ErrorResponseBuilder {
         try {
             return messageSource.getMessage(messageKey, args, locale);
         } catch (Exception e) {
-            return messageKey; // fallback to literal if no translation found
+            return "An unexpected error ocurred"; // fallback to literal if no translation found
         }
     }
 
