@@ -5,7 +5,6 @@ import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.codec.DecodingException;
@@ -14,14 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
 
 @Slf4j
+@RestControllerAdvice
 @RequiredArgsConstructor
-@Getter
-public abstract class BaseExceptionHandler {
+public class BaseExceptionHandler {
 
     private final ErrorResponseBuilder responseBuilder;
 
