@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class BaseExceptionHandlerUnitTest {
+class GlobalExceptionHandlerUnitTest {
 
     @Mock
     private ErrorResponseBuilder builder;
@@ -36,7 +36,7 @@ class BaseExceptionHandlerUnitTest {
     private HttpServletRequest request;
 
     @InjectMocks
-    private BaseExceptionHandler handler;
+    private GlobalExceptionHandler handler;
 
     private final APIErrorResponse dummyResponse = APIErrorResponse.builder()
             .status(400)

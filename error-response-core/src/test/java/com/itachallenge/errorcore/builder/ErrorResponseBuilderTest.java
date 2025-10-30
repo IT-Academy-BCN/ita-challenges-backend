@@ -168,7 +168,7 @@ class ErrorResponseBuilderTest {
         RuntimeException ex = new RuntimeException("Resource not found");
 
         // When
-        APIErrorResponse response = builder.buildNotFoundError(ex, request);
+        APIErrorResponse response = builder.buildNotFoundError(request,ex.getMessage());
 
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());

@@ -39,8 +39,10 @@ public class ErrorResponseBuilder {
                 .build();
     }
 
-    public APIErrorResponse buildNotFoundError(RuntimeException ex, HttpServletRequest request){
-        return buildError(HttpStatus.NOT_FOUND,ex.getMessage(),request);
+    public APIErrorResponse buildNotFoundError(HttpServletRequest request, String customMessage){
+        return buildError(HttpStatus.NOT_FOUND,
+                resolveMessage("error.notFound",customMessage),
+                request);
     }
 
     public APIErrorResponse buildArgumentNotValidErrorResponse(MethodArgumentNotValidException ex, HttpServletRequest request) {

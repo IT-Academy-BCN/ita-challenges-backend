@@ -24,7 +24,7 @@ import org.springframework.web.server.ServerWebInputException;
 @RestControllerAdvice
 @RequiredArgsConstructor
 @Order(Ordered.LOWEST_PRECEDENCE)
-public class BaseExceptionHandler {
+public final class GlobalExceptionHandler {
 
     private final ErrorResponseBuilder responseBuilder;
 
