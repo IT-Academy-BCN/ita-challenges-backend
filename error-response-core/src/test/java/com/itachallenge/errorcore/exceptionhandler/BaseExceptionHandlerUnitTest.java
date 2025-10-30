@@ -5,9 +5,9 @@ import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpInputMessage;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebInputException;
+
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -33,7 +35,8 @@ class BaseExceptionHandlerUnitTest {
     @Mock
     private HttpServletRequest request;
 
-    private TestExceptionHandler handler;
+    @InjectMocks
+    private BaseExceptionHandler handler;
 
     private final APIErrorResponse dummyResponse = APIErrorResponse.builder()
             .status(400)
@@ -41,16 +44,6 @@ class BaseExceptionHandlerUnitTest {
             .message("dummy")
             .build();
 
-    static class TestExceptionHandler extends BaseExceptionHandler {
-        public TestExceptionHandler(ErrorResponseBuilder responseBuilder) {
-            super(responseBuilder);
-        }
-    }
-
-    @BeforeEach
-    void setUp() {
-        handler = new TestExceptionHandler(builder);
-    }
 
     @Test
     void handleAny_shouldReturnInternalServerError() {
@@ -77,7 +70,7 @@ class BaseExceptionHandlerUnitTest {
 
     @Test
     void handleValidationExceptions_shouldDelegateToBuilder() {
-        ConstraintViolationException ex = mock(ConstraintViolationException.class);
+        ConstraintViolationException ex = new ConstraintViolationException(Set.of());
         when(builder.buildConstraintViolationErrorResponse(ex, request)).thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleValidationExceptions(ex, request);
