@@ -1,23 +1,29 @@
 package com.itachallenge.errorcore.builder;
 
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.errorcore.dto.FieldErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.server.ServerWebInputException;
 
 import java.util.List;
 import java.util.Locale;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ErrorResponseBuilder {
 
@@ -25,14 +31,14 @@ public class ErrorResponseBuilder {
 
     /** Build general error response.*/
     public APIErrorResponse buildError(
-            HttpStatus status,
-            String message,
+            Exception e,
             HttpServletRequest request
     ) {
+        HttpStatus status = mapToStatus(e);
         return APIErrorResponse.builder()
                 .status(status.value())
                 .error(status.getReasonPhrase())
-                .message(resolveMessage(message))
+                .message(resolveMessage(mapToMessageKey(e)))
                 .path(request != null ? request.getRequestURI() : null)
                 .build();
     }
@@ -46,7 +52,7 @@ public class ErrorResponseBuilder {
     public APIErrorResponse buildArgumentNotValidErrorResponse(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String objectName = ex.getBindingResult().getObjectName();
         return buildValidationErrorResponse(
-                resolveMessage("validation.argument_not_valid",objectName),
+                resolveMessage(mapToMessageKey(ex),objectName),
                 extractFieldErrors(ex),
                 request
         );
@@ -54,7 +60,7 @@ public class ErrorResponseBuilder {
 
     public APIErrorResponse buildConstraintViolationErrorResponse(ConstraintViolationException ex, HttpServletRequest request) {
         return buildValidationErrorResponse(
-                resolveMessage("validation.constraint"),
+                resolveMessage(mapToMessageKey(ex)),
                 extractConstraintViolations(ex),
                 request
         );
@@ -63,7 +69,7 @@ public class ErrorResponseBuilder {
     public APIErrorResponse buildTypeMismatchErrorResponse(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         return buildValidationErrorResponse(
                 resolveMessage(
-                        "validation.type_mismatch",
+                        mapToMessageKey(ex),
                         ex.getName(),                                   // {0} parameter name
                         ex.getValue(),                                  // {1} invalid value
                         ex.getRequiredType() != null
@@ -77,7 +83,7 @@ public class ErrorResponseBuilder {
 
     public APIErrorResponse buildStatusErrorResponse(ResponseStatusException ex, HttpServletRequest request) {
         HttpStatusCode statusCode = ex.getStatusCode();
-        String errorMessage = resolveMessage("status.exception." + statusCode.value());
+        String errorMessage = resolveMessage(mapToMessageKey(ex));
         // Build the APIErrorResponse using your builder (same message text)
         return APIErrorResponse.builder()
                 .status(statusCode.value())
@@ -136,7 +142,7 @@ public class ErrorResponseBuilder {
         FieldErrorDto fieldError = FieldErrorDto.builder()
                 .objectName(ex.getParameter().getContainingClass().getSimpleName())
                 .field(field)
-                .message(resolveMessage("validation.type_mismatch",
+                .message(resolveMessage(mapToMessageKey(ex),
                         field,
                         rejectedValue,
                         requiredType)
@@ -185,8 +191,56 @@ public class ErrorResponseBuilder {
         try {
             return messageSource.getMessage(messageKey, args, locale);
         } catch (Exception e) {
-            return "An unexpected error ocurred"; // fallback to literal if no translation found
+            log.debug("No message found for key '{}', using literal", messageKey);
+            return messageKey; // fallback to literal if no translation found
         }
     }
+
+    // --- PRIVATE HELPERS ----------------------------------------------------
+
+    /**
+     * Maps known exception types to message keys for i18n lookup.
+     * Used to ensure consistent error localization across handlers.
+     */
+    private String mapToMessageKey(Exception e) {
+
+        // Validation & argument-related
+        if (e instanceof MethodArgumentNotValidException) return "validation.argument_not_valid";
+        if (e instanceof ConstraintViolationException)   return "validation.constraint";
+        if (e instanceof MethodArgumentTypeMismatchException) return "validation.type_mismatch";
+        if (e instanceof IllegalArgumentException)       return "validation.illegal_argument";
+        if (e instanceof InvalidFormatException)         return "validation.bad_request";
+        if (e instanceof HttpMessageNotReadableException
+                || e instanceof ServerWebInputException
+                || e instanceof DecodingException)       return "validation.bad_request";
+
+        // HTTP / status-driven
+        if (e instanceof ResponseStatusException ex) {
+            return "status.exception." + ex.getStatusCode().value();
+        }
+
+        // Fallback / uncategorized
+        return "internal.server_error";
+    }
+
+    private HttpStatus mapToStatus(Exception e) {
+        if (e instanceof MethodArgumentNotValidException
+                || e instanceof ConstraintViolationException
+                || e instanceof MethodArgumentTypeMismatchException
+                || e instanceof IllegalArgumentException
+                || e instanceof InvalidFormatException
+                || e instanceof HttpMessageNotReadableException
+                || e instanceof ServerWebInputException
+                || e instanceof DecodingException) {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        if (e instanceof ResponseStatusException rse) {
+            return HttpStatus.valueOf(rse.getStatusCode().value());
+        }
+
+        return HttpStatus.INTERNAL_SERVER_ERROR;
+    }
+
 
 }

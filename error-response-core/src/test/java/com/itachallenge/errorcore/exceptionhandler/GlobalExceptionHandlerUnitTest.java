@@ -53,7 +53,7 @@ class GlobalExceptionHandlerUnitTest {
         ResponseEntity<APIErrorResponse> response = handler.handleAny(new Exception("boom"), request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        verify(builder).buildError(eq(HttpStatus.INTERNAL_SERVER_ERROR), contains("boom"), eq(request));
+        verify(builder).buildError(eq(HttpStatus.INTERNAL_SERVER_ERROR), contains("server_error"), eq(request));
     }
 
     @Test
@@ -65,7 +65,7 @@ class GlobalExceptionHandlerUnitTest {
                 new IllegalArgumentException("invalid input"), request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildError(eq(HttpStatus.BAD_REQUEST), contains("invalid input"), eq(request));
+        verify(builder).buildError(eq(HttpStatus.BAD_REQUEST), contains("illegal_argument"), eq(request));
     }
 
     @Test

@@ -34,7 +34,7 @@ public final class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(responseBuilder
-                        .buildError(HttpStatus.INTERNAL_SERVER_ERROR, "internal.server_error", request)
+                        .buildError(e, request)
                 );
     }
 
@@ -44,7 +44,7 @@ public final class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(responseBuilder
-                        .buildError(HttpStatus.BAD_REQUEST, "validation.illegal_argument", request)
+                        .buildError(e, request)
                 );
     }
 
@@ -92,10 +92,7 @@ public final class GlobalExceptionHandler {
             InvalidFormatException ex, HttpServletRequest request) {
 
         return ResponseEntity.badRequest()
-                .body(responseBuilder.buildError(
-                                        HttpStatus.BAD_REQUEST,
-                                        responseBuilder.resolveMessage("validation.bad_request"),
-                                        request));
+                .body(responseBuilder.buildError(ex,request));
     }
 
     @ExceptionHandler({
@@ -116,9 +113,6 @@ public final class GlobalExceptionHandler {
 
         log.debug("Unhandled binding exception type: {}", ex.getClass().getSimpleName());
         return ResponseEntity.badRequest()
-                .body(responseBuilder.buildError(
-                        HttpStatus.BAD_REQUEST,
-                        responseBuilder.resolveMessage("validation.bad_request"),
-                        request));
+                .body(responseBuilder.buildError(ex,request));
     }
 }

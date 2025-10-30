@@ -143,24 +143,25 @@ class ErrorResponseBuilderTest {
     // buildStatusErrorResponse (ResponseStatusException)
     // ------------------------------------------------------------
     @Test
-    void buildStatusErrorResponse_shouldUseValidationFailedWhenNoArgs() {
+    void buildStatusErrorResponse_shouldUseAppropriateMessageWhen404() {
         ResponseStatusException ex = new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found");
 
         APIErrorResponse response = builder.buildStatusErrorResponse(ex, request);
 
         assertThat(response.getStatus()).isEqualTo(404);
-        assertThat(response.getMessage()).isEqualTo("404 NOT_FOUND \"Not found\"");
+        assertThat(response.getMessage()).isEqualTo("The requested resource could not be found.");
     }
 
     @Test
-    void buildStatusErrorResponse_shouldJoinDetailMessageArguments() {
-        ResponseStatusException ex = mock(ResponseStatusException.class);
-        when(ex.getStatusCode()).thenReturn(HttpStatus.BAD_REQUEST);
-        when(ex.getDetailMessageArguments()).thenReturn(new Object[]{"x", "a", "b", "c"});
+    void buildStatusErrorResponse_shouldUseAppropriateMessageWhen400() {
+        ResponseStatusException ex = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bad request");
+
         APIErrorResponse response = builder.buildStatusErrorResponse(ex, request);
-        assertThat(response.getMessage()).isEqualTo("a, b, c");
+
         assertThat(response.getStatus()).isEqualTo(400);
+        assertThat(response.getMessage()).isEqualTo("The request could not be understood by the server.");
     }
+
 
     @Test
     void buildNotFoundError_shouldReturnNotFoundResponse() {
