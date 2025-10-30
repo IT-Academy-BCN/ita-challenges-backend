@@ -31,13 +31,13 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
     // --- Spring (minimal) ---
-            implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-context'
     implementation 'org.springframework:spring-web'
-    implementation 'org.springframework:spring-webmvc'
+
 
     // --- Jakarta APIs ---
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
-    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
     // --- Jackson ---
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
@@ -56,7 +56,7 @@ dependencies {
     testImplementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
     testImplementation 'jakarta.el:jakarta.el-api:5.0.0'      // optional but recommended
     testImplementation 'org.glassfish.expressly:expressly:5.0.0' // EL implementation (for @NotNull(message=...) eval)
-
+    testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 
 }
 

@@ -2,6 +2,7 @@ package com.itachallenge.errorcore.builder;
 
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.errorcore.dto.FieldErrorDto;
+import com.itachallenge.errorcore.exception.BaseApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.*;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.codec.DecodingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -68,7 +70,7 @@ class ErrorResponseBuilderTest {
     // ------------------------------------------------------------
     @Test
     void buildError_shouldBuildBasicResponseWithRealMessage() {
-        APIErrorResponse response = builder.buildError(HttpStatus.BAD_REQUEST, "validation.bad_request", request);
+        APIErrorResponse response = builder.buildError(new DecodingException("failure decoding"), request);
 
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getError()).isEqualTo("Bad Request");
@@ -165,11 +167,16 @@ class ErrorResponseBuilderTest {
 
     @Test
     void buildNotFoundError_shouldReturnNotFoundResponse() {
+        class GenericNotFoundException extends BaseApiException{
+            GenericNotFoundException(String arg){
+                super(HttpStatus.NOT_FOUND,"error.notFound",arg);
+            }
+        }
         // Given
-        RuntimeException ex = new RuntimeException("Resource not found");
+        GenericNotFoundException ex = new GenericNotFoundException("Resource not found");
 
         // When
-        APIErrorResponse response = builder.buildNotFoundError(request,ex.getMessage());
+        APIErrorResponse response = builder.buildCustomExceptionError(ex,request);
 
         // Then
         assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());

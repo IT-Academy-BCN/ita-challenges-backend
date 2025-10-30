@@ -23,7 +23,8 @@ import org.springframework.web.server.ServerWebInputException;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,25 +48,25 @@ class GlobalExceptionHandlerUnitTest {
 
     @Test
     void handleAny_shouldReturnInternalServerError() {
-        when(builder.buildError(eq(HttpStatus.INTERNAL_SERVER_ERROR), anyString(), eq(request)))
+        when(builder.buildError(any(Exception.class),eq(request)))
                 .thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleAny(new Exception("boom"), request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
-        verify(builder).buildError(eq(HttpStatus.INTERNAL_SERVER_ERROR), contains("server_error"), eq(request));
+        verify(builder).buildError(any(Exception.class), eq(request));
     }
 
     @Test
     void handleIllegalArgument_shouldReturnBadRequest() {
-        when(builder.buildError(eq(HttpStatus.BAD_REQUEST), anyString(), eq(request)))
+        when(builder.buildError(any(IllegalArgumentException.class), eq(request)))
                 .thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleIllegalArgument(
                 new IllegalArgumentException("invalid input"), request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildError(eq(HttpStatus.BAD_REQUEST), contains("illegal_argument"), eq(request));
+        verify(builder).buildError(any(IllegalArgumentException.class), eq(request));
     }
 
     @Test
@@ -115,42 +116,39 @@ class GlobalExceptionHandlerUnitTest {
     @Test
     void handleInvalidFormat_shouldReturnBadRequestAndDelegateToBuilder() {
         InvalidFormatException ex = mock(InvalidFormatException.class);
-        when(builder.resolveMessage(any())).thenReturn("Invalid or malformed request.");
-        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
+        when(builder.buildError(ex, request))
                 .thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleInvalidFormat(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).isEqualTo(dummyResponse);
-        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request);
+        verify(builder).buildError(ex, request);
     }
 
     @Test
     void handleWebFluxBindingErrors_withInvalidFormatCause_shouldDelegateToHandleInvalidFormat() {
         InvalidFormatException rootCause = mock(InvalidFormatException.class);
-        when(builder.resolveMessage(any())).thenReturn("Invalid or malformed request.");
         HttpInputMessage mockInput = new MockHttpInputMessage("{}".getBytes());
         HttpMessageNotReadableException ex =
                 new HttpMessageNotReadableException("invalid", rootCause, mockInput);
-        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
+        when(builder.buildError(rootCause, request))
                 .thenReturn(dummyResponse);
 
         ResponseEntity<APIErrorResponse> response = handler.handleWebFluxBindingErrors(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request);
+        verify(builder).buildError(rootCause, request);
     }
 
     @Test
     void handleWebFluxBindingErrors_withoutInvalidFormatCause_shouldReturnGenericBadRequest() {
         ServerWebInputException ex = new ServerWebInputException("Bad JSON");
-        when(builder.buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request))
+        when(builder.buildError(ex, request))
                 .thenReturn(dummyResponse);
-        when(builder.resolveMessage(any())).thenReturn("Invalid or malformed request.");
         ResponseEntity<APIErrorResponse> response = handler.handleWebFluxBindingErrors(ex, request);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(builder).buildError(HttpStatus.BAD_REQUEST, "Invalid or malformed request.", request);
+        verify(builder).buildError(ex, request);
     }
 }

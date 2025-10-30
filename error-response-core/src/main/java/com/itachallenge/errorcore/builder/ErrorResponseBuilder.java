@@ -4,6 +4,7 @@ package com.itachallenge.errorcore.builder;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.errorcore.dto.FieldErrorDto;
+import com.itachallenge.errorcore.exception.BaseApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -34,25 +35,33 @@ public class ErrorResponseBuilder {
             Exception e,
             HttpServletRequest request
     ) {
-        HttpStatus status = mapToStatus(e);
+        ExceptionMapping mapping = mapException(e);
         return APIErrorResponse.builder()
-                .status(status.value())
-                .error(status.getReasonPhrase())
-                .message(resolveMessage(mapToMessageKey(e)))
+                .status(mapping.status.value())
+                .error(mapping.status.getReasonPhrase())
+                .message(resolveMessage(mapping.messageKey))
                 .path(request != null ? request.getRequestURI() : null)
                 .build();
     }
 
-    public APIErrorResponse buildNotFoundError(HttpServletRequest request, String customMessage){
-        return buildError(HttpStatus.NOT_FOUND,
-                resolveMessage("error.notFound",customMessage),
-                request);
+    public APIErrorResponse buildCustomExceptionError(
+            BaseApiException e,
+            HttpServletRequest request
+    ) {
+        ExceptionMapping mapping = mapException(e);
+        return APIErrorResponse.builder()
+                .status(mapping.status.value())
+                .error(mapping.status.getReasonPhrase())
+                .message(resolveMessage(mapping.messageKey,e.getMessageArgs()))
+                .path(request != null ? request.getRequestURI() : null)
+                .build();
     }
+
 
     public APIErrorResponse buildArgumentNotValidErrorResponse(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String objectName = ex.getBindingResult().getObjectName();
         return buildValidationErrorResponse(
-                resolveMessage(mapToMessageKey(ex),objectName),
+                resolveMessage(mapException(ex).messageKey,objectName),
                 extractFieldErrors(ex),
                 request
         );
@@ -60,7 +69,7 @@ public class ErrorResponseBuilder {
 
     public APIErrorResponse buildConstraintViolationErrorResponse(ConstraintViolationException ex, HttpServletRequest request) {
         return buildValidationErrorResponse(
-                resolveMessage(mapToMessageKey(ex)),
+                resolveMessage(mapException(ex).messageKey),
                 extractConstraintViolations(ex),
                 request
         );
@@ -69,7 +78,7 @@ public class ErrorResponseBuilder {
     public APIErrorResponse buildTypeMismatchErrorResponse(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         return buildValidationErrorResponse(
                 resolveMessage(
-                        mapToMessageKey(ex),
+                        mapException(ex).messageKey,
                         ex.getName(),                                   // {0} parameter name
                         ex.getValue(),                                  // {1} invalid value
                         ex.getRequiredType() != null
@@ -83,7 +92,7 @@ public class ErrorResponseBuilder {
 
     public APIErrorResponse buildStatusErrorResponse(ResponseStatusException ex, HttpServletRequest request) {
         HttpStatusCode statusCode = ex.getStatusCode();
-        String errorMessage = resolveMessage(mapToMessageKey(ex));
+        String errorMessage = resolveMessage(mapException(ex).messageKey);
         // Build the APIErrorResponse using your builder (same message text)
         return APIErrorResponse.builder()
                 .status(statusCode.value())
@@ -142,7 +151,7 @@ public class ErrorResponseBuilder {
         FieldErrorDto fieldError = FieldErrorDto.builder()
                 .objectName(ex.getParameter().getContainingClass().getSimpleName())
                 .field(field)
-                .message(resolveMessage(mapToMessageKey(ex),
+                .message(resolveMessage(mapException(ex).messageKey,
                         field,
                         rejectedValue,
                         requiredType)
@@ -196,51 +205,46 @@ public class ErrorResponseBuilder {
         }
     }
 
-    // --- PRIVATE HELPERS ----------------------------------------------------
+    // --- Exception Mapping----------------------------------------------------
 
-    /**
-     * Maps known exception types to message keys for i18n lookup.
-     * Used to ensure consistent error localization across handlers.
-     */
-    private String mapToMessageKey(Exception e) {
+    /** Internal record representing the mapping of an exception to a message key and HTTP status. */
+    private record ExceptionMapping(HttpStatus status, String messageKey) {}
 
-        // Validation & argument-related
-        if (e instanceof MethodArgumentNotValidException) return "validation.argument_not_valid";
-        if (e instanceof ConstraintViolationException)   return "validation.constraint";
-        if (e instanceof MethodArgumentTypeMismatchException) return "validation.type_mismatch";
-        if (e instanceof IllegalArgumentException)       return "validation.illegal_argument";
-        if (e instanceof InvalidFormatException)         return "validation.bad_request";
-        if (e instanceof HttpMessageNotReadableException
-                || e instanceof ServerWebInputException
-                || e instanceof DecodingException)       return "validation.bad_request";
+    /** Determines the appropriate message key and HTTP status for a given exception. */
+    private ExceptionMapping mapException(Exception e) {
 
-        // HTTP / status-driven
-        if (e instanceof ResponseStatusException ex) {
-            return "status.exception." + ex.getStatusCode().value();
-        }
+        // --- Validation & argument errors ---
+        if (e instanceof BaseApiException bae)
+            return new ExceptionMapping(bae.getStatus(), bae.getMessageKey());
 
-        // Fallback / uncategorized
-        return "internal.server_error";
-    }
+        if (e instanceof MethodArgumentNotValidException)
+            return new ExceptionMapping(HttpStatus.BAD_REQUEST, "validation.argument_not_valid");
 
-    private HttpStatus mapToStatus(Exception e) {
-        if (e instanceof MethodArgumentNotValidException
-                || e instanceof ConstraintViolationException
-                || e instanceof MethodArgumentTypeMismatchException
-                || e instanceof IllegalArgumentException
-                || e instanceof InvalidFormatException
+        if (e instanceof ConstraintViolationException)
+            return new ExceptionMapping(HttpStatus.BAD_REQUEST, "validation.constraint");
+
+        if (e instanceof MethodArgumentTypeMismatchException)
+            return new ExceptionMapping(HttpStatus.BAD_REQUEST, "validation.type_mismatch");
+
+        if (e instanceof IllegalArgumentException)
+            return new ExceptionMapping(HttpStatus.BAD_REQUEST, "validation.illegal_argument");
+
+        if (e instanceof InvalidFormatException
                 || e instanceof HttpMessageNotReadableException
                 || e instanceof ServerWebInputException
-                || e instanceof DecodingException) {
-            return HttpStatus.BAD_REQUEST;
-        }
+                || e instanceof DecodingException)
+            return new ExceptionMapping(HttpStatus.BAD_REQUEST, "validation.bad_request");
 
-        if (e instanceof ResponseStatusException rse) {
-            return HttpStatus.valueOf(rse.getStatusCode().value());
-        }
+        // --- ResponseStatusException (explicit HTTP semantics) ---
+        if (e instanceof ResponseStatusException rse)
+            return new ExceptionMapping(HttpStatus.valueOf(rse.getStatusCode().value()),
+                    "status.exception." + rse.getStatusCode().value());
 
-        return HttpStatus.INTERNAL_SERVER_ERROR;
+        // --- Default / fallback case ---
+        log.warn("Unhandled exception type in ErrorResponseBuilder: {}", e.getClass().getName());
+        return new ExceptionMapping(HttpStatus.INTERNAL_SERVER_ERROR, "internal.server_error");
     }
+
 
 
 }
