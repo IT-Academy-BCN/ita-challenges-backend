@@ -1,137 +1,263 @@
+# 🧩 ITA User Microservice
 
-## ITA User
+The **ITA User Microservice** manages user information, authentication data, and user-related interactions (favorites, bookmarks, etc.).  
+It connects to **MongoDB** for persistent storage and **Redis** for caching and quick data access.
 
-* Para habilitar / deshabilitar el registro Consul, modificar el valor de la propiedad `spring.cloud.consul.enabled` en el fichero `bootstrap.yml` (true/false)
+---
 
-#### Inicialización de MongoDB
+## ⚙️ Consul Registration
 
-Es necesario realizar los siguientes pasos para inicializar la base de datos MongoDB local:
-[^1] Crear un usuario administrador Mongo (véase https://www.mongodb.com/docs/manual/tutorial/configure-scram-client-authentication/), que deberá autenticarse sobre bd admin (por defecto usa test)
-- Securizar la db (por defecto no trae usuario ni password). Editar mongod.conf y añadir:
+To enable or disable Consul service registration, modify the following property in the `bootstrap.yml` file:
+
+```
+spring.cloud.consul.enabled: true # or false
+```
+
+
+
+## 🍃 MongoDB Initialization
+
+To initialize the local MongoDB database, follow these steps:
+
+### 1. Secure MongoDB by enabling authentication in your mongod.conf:
+
 ```
 security:
     authorization: enabled
 ```
-- Conectar con usuario root Mongo con authenticationDatabase admin
+
+### 2. Connect as the root user:
+
 ```
 mongosh --port 27017 --authenticationDatabase "admin" -u "rootMongoDb" -p
 ```
-- Cambiar a db admin
+
+### 3. Switch to the admin database:
+
 ```
 use admin
 ```
-- Crear un usuario administrador con permisos sobre la base de datos `users`, con el comando existente en el file mongo-init.js
+
+### 4. Create an administrative user with permissions for the users database:
+
 ```
 db.createUser({
     user: "admin_user",
     pwd: "mypassword",
     roles: [
-      { role: "dbOwner", db: "users" }
+        { role: "dbOwner", db: "users" }
     ]
-  });
+});
 ```
-- Conectar con el nuevo usuario creado
+
+### 5. Connect using the new user:
+
 ```
 mongosh --port 27017 -u admin_user --authenticationDatabase "admin" -p
 ```
-- Crear la nueva collection
+
+### 6. Create the users collection:
+
 ```
 db.createCollection("users");
 ```
-- Desde fuera de db, importar el/los files de test en la base de datos `users`
+
+### 7. Import test data from users.json:
+
 ```
 mongoimport --db=users --username admin_user --authenticationDatabase admin --password mypassword --collection=users --jsonArray --file=users.json
 ```
 
-### Configuración local de Redis 
+---
 
-##### Windows
+## 🧱 Redis Local Configuration
 
-- Instalar BBDD redis en la maquina y establecer PATH de contexto
-- Crear redis-ITA.conf con las siguientes lineas de seguridad:
-  - Para establecer una autenticación obligatoria para acceder a la bbdd  
+### 🪟 Windows
 
-```
-  requirepass << password >>
-```    
+#### 1. Install Redis and add it to your system PATH.
 
-  - Establecer una seguridad adicional al renombrar algunos comandos considerados peligrosos (si se quiere usar el comando config se tiene que escribir ita_config)
+#### 2. Create a configuration file redis-ITA.conf with the following content:
 
 ```
-  rename-command CONFIG ITA_CONFIG
-```   
-
-- Levantar el servidor de redis con el fichero de configuración creado indicando donde se encuentra
-
-```
-redis-server c:/.../redis-ITA.conf
+requirepass <<password>>
+rename-command CONFIG ITA_CONFIG
 ```
 
-##### UNIX based (Mac / Linux)
+`requirepass`: enforces authentication
 
-- Modificar redis.conf en directorio de instalación
-- Añadir autenticación obligatoria
+`rename-command`: provides additional security by renaming sensitive commands
+
+#### 3. Start Redis using your custom configuration:
+
 ```
-  requirepass << password >>
-``` 
-- Reinicio del servicio
+redis-server c:/path/to/redis-ITA.conf
+```
+
+### 🐧 macOS / Linux
+
+#### 1. Edit the default redis.conf file in the installation directory.
+
+#### 2. Add authentication:
+
+```
+requirepass <<password>>
+```
+
+#### 3. Restart Redis:
+
 ```
 sudo systemctl restart redis
 ```
 
-#### Import data to Redis
+---
 
-### Use redis-cli to Execute the Script:
-* redis-cli -h localhost -p 6379 < usersRedis.txt
+## 💾 Importing Data into Redis
 
-### **Important**
-When you execute the redis-cli command to import the data, make sure you are in the same directory as the ### 'usersRedis' file or provide the full path to the file in the command:
-* cd /path/to/my_project/
-* redis-cli -h localhost -p 6379 < users
+Use the Redis CLI to import your test data:
 
-Ensure that your Redis server is running and accessible on the specified host and port
+```
+redis-cli -h localhost -p 6379 < usersRedis.txt
+```
 
-For more info check [Import Data into Redis](https://developer.redis.com/guides/import/
+## ⚠️ Important
 
-### Model
+Ensure you are in the same directory as the usersRedis.txt file or use the full path:
 
-#### UserDocument
+- cd /path/to/my_project/
+- redis-cli -h localhost -p 6379 < usersRedis.txt
+- Verify that your Redis server is running and reachable at the specified host and port.
 
-The `UserDocument` represents a user within the system. It is stored in the `users` collection in MongoDB and contains
-both basic and custom user data.
+For more details, see the Redis Import Guide.
 
-##### Document Structure:
+---
 
-| Field                | Type          | Description                                                          |
-|----------------------|---------------|----------------------------------------------------------------------|
-| `uuid`               | `UUID`        | Unique identifier for the user (used as the primary key in MongoDB). |
-| `username`           | `String`      | GitHub Username, used for authentication.                            |
-| `role`               | `Role (enum)` | User role (`ADMIN`, `USER`, etc.), used for access control.          |
-| `favoriteChallenges` | `Set<UUID>`   | Set of challenge IDs the user has marked as favorites.               |
-| `bookmarkChallenges` | `Set<UUID>`   | Set of challenge IDs the user has bookmarked.                        |
-| `points`             | `Integer`     | Number of points the user has earned by solving challenges.          |
+## 👤 Data Model
 
-##### Additional Notes:
+### UserDocument
 
-- The class is annotated with `@Document(collection = "users")` to map it to a MongoDB collection.
-- `@Indexed(unique = true)` is used on `username` to ensure uniqueness.
-- Lombok is used to automatically generate getters, setters, `toString()`, and other boilerplate code.
-- The `uuid` field is mapped to the MongoDB `_id`.
-- This model supports extended features like filtering, favoriting, and bookmarking challenges.
+The UserDocument represents a user entity within the system.
+It is stored in the users collection in MongoDB and includes both core and custom user data.
 
-##### Spring Boot Actuator
+| **Field**                | **Type**       | **Description**                                                   |
+|--------------------------|----------------|-------------------------------------------------------------------|
+| `uuid`                   | `UUID`         | Unique identifier for the user (primary key in MongoDB).          |
+| `username`               | `String`       | GitHub username used for authentication.                          |
+| `role`                   | `Role (enum)`  | User role (`ADMIN`, `USER`, etc.), used for access control.       |
+| `favoriteChallenges`     | `Set<UUID>`    | Set of challenge IDs marked as favorites.                         |
+| `bookmarkChallenges`     | `Set<UUID>`    | Set of challenge IDs bookmarked by the user.                      |
+| `points`                 | `Integer`      | Number of points earned from solving challenges.                  |
 
-- http://localhost:8762/actuator/health (debe responder {"status":"UP"})
-- http://localhost:8762/actuator/auditevents
-- http://localhost:8762/actuator/beans
-- http://localhost:8762/actuator/conditions
-- http://localhost:8762/actuator/configprops
-- http://localhost:8762/actuator/env
-- http://localhost:8762/actuator/heapdump (genera volcado de heap para descarga)
-- http://localhost:8762/actuator/httptrace
-- http://localhost:8762/actuator/info
-- http://localhost:8762/actuator/loggers
-- http://localhost:8762/actuator/metrics
-- http://localhost:8762/actuator/mappings
-- http://localhost:8762/actuator/scheduledtasks
-- http://localhost:8762/actuator/threaddump
+
+### Notes
+
+- Annotated with @Document(collection = "users") for MongoDB mapping.
+- @Indexed(unique = true) ensures unique usernames.
+- Lombok annotations generate getters, setters, and boilerplate methods.
+- uuid is mapped to MongoDB’s _id field.
+
+---
+
+## 📊 Spring Boot Actuator Endpoints
+
+The following endpoints are available for system monitoring and diagnostics:
+
+| **Endpoint**                 | **Description**                                   |
+|------------------------------|---------------------------------------------------|
+| `/actuator/health`           | Health check (should return `{"status": "UP"}`)  |
+| `/actuator/auditevents`      | Audit events                                     |
+| `/actuator/beans`            | Loaded beans overview                            |
+| `/actuator/conditions`       | Auto-configuration report                        |
+| `/actuator/configprops`      | Configuration properties                         |
+| `/actuator/env`              | Environment variables                            |
+| `/actuator/heapdump`         | Heap dump (downloadable)                         |
+| `/actuator/httptrace`        | HTTP request trace                               |
+| `/actuator/info`             | Application information                          |
+| `/actuator/loggers`          | Logger configuration                             |
+| `/actuator/metrics`          | Performance metrics                              |
+| `/actuator/mappings`         | Request mappings                                 |
+| `/actuator/scheduledtasks`   | Scheduled tasks overview                         |
+| `/actuator/threaddump`       | Thread dump report                               |
+
+
+---
+
+## 🔄 Interactions Module (New - Sprint 15)
+
+As part of Sprint 15, a new module named interactions was introduced inside the User microservice.
+This module handles user-specific actions such as favourites and bookmarks, separating them from the Challenge microservice.
+
+### 📦 Package Overview
+
+```
+src/main/java/com/itachallenge/user/interactions/
+├── controller/
+│ ├── bookmark/
+│ │ └── BookmarkController.java
+│ └── favourite/
+│ └── FavouriteController.java
+│
+├── service/
+│ ├── bookmark/
+│ │ ├── BookmarkService.java
+│ │ └── IBookmarkService.java
+│ └── favourite/
+│ ├── FavouriteService.java
+│ └── IFavouriteService.java
+│
+├── repository/
+│ ├── bookmark/
+│ │ └── BookmarkRepository.java
+│ └── favourite/
+│ └── FavouriteRepository.java
+│
+├── common/
+│ ├── dto/
+│ │ ├── ErrorResponse.java
+│ │ ├── PageResponse.java
+│ │ └── ToggleRequest.java
+│ ├── error/
+│ │ └── InteractionsGlobalHandler.java
+│ └── validation/
+│ └── ValidationUtils.java
+│
+└── events/
+├── contract/
+│ ├── EventMetadata.java
+│ ├── InteractionEvent.java
+│ ├── UserBookmarkedToggledV1.java
+│ └── UserFavouriteChangedV1.java
+└── publisher/
+├── InteractionEventPublisher.java
+├── StubEventPublisher.java
+├── UserBookmarkEventPublisher.java
+└── UserFavouriteEventPublisher.java
+```
+
+### 🧩 Purpose
+
+- Decouple user actions from the Challenge domain.
+- Establish a foundation for future event-driven communication (e.g., via Kafka).
+- Maintain current API behavior (AS-IS) while allowing scalable future development.
+- Improve maintainability and ensure clear domain ownership.
+
+### 🧱 Current State
+
+- Classes are placeholders (// TODO) — no business logic implemented yet.
+- Includes minimal placeholder tests to maintain SonarQube coverage.
+- No new endpoints or DB interactions have been introduced.
+- The README was updated to reflect the new module and structure.
+
+### 🚀 Next Steps
+
+- Implement logic migration for /favourites and /bookmarks.
+- Add event publishing to synchronize metrics with the Challenge microservice.
+- Expand test coverage with integration and unit tests once logic is implemented.
+
+### ✅ Summary
+
+The User Microservice now provides:
+
+- Secure connections to MongoDB and Redis.
+- A clearly defined UserDocument model.
+- A modular Interactions layer for handling favourites and bookmarks.
+- A modern, scalable architecture aligned with future event-driven integrations.
