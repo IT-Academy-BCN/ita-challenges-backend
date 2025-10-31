@@ -2,6 +2,7 @@ package com.itachallenge.errorcore.builder;
 
 import com.itachallenge.errorcore.dto.APIErrorResponse;
 import com.itachallenge.errorcore.dto.FieldErrorDto;
+import com.itachallenge.errorcore.exception.ApiCustomErrorInfo;
 import com.itachallenge.errorcore.exception.BaseApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.*;
@@ -169,7 +170,7 @@ class ErrorResponseBuilderTest {
     void buildNotFoundError_shouldReturnNotFoundResponse() {
         class GenericNotFoundException extends BaseApiException{
             GenericNotFoundException(String arg){
-                super(HttpStatus.NOT_FOUND,"error.notFound",arg);
+                super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"error.notFound",new Object[]{arg}));
             }
         }
         // Given

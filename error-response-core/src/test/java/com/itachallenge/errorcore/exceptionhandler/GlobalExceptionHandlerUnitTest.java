@@ -3,6 +3,8 @@ package com.itachallenge.errorcore.exceptionhandler;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.exception.ApiCustomErrorInfo;
+import com.itachallenge.errorcore.exception.BaseApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
@@ -150,5 +152,21 @@ class GlobalExceptionHandlerUnitTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         verify(builder).buildError(ex, request);
+    }
+    @Test
+    void handleCustomError_shouldDelegateAndToCustomBuildAndReturnExceptionStatusCode(){
+
+        class GenericNotFoundException extends BaseApiException {
+            GenericNotFoundException(String arg){
+                super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"error.notFound",new Object[]{arg}));
+            }
+        }
+        GenericNotFoundException ex = new GenericNotFoundException("GenericNotFound");
+        when (builder.buildCustomExceptionError(ex,request))
+                .thenReturn(dummyResponse);
+
+        ResponseEntity<APIErrorResponse> response = handler.handleApiCustomException(ex, request);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        verify(builder).buildCustomExceptionError(ex,request);
     }
 }
