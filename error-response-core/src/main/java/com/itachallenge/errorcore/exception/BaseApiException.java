@@ -2,7 +2,6 @@ package com.itachallenge.errorcore.exception;
 
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 /**
  * Base class for all user-facing API exceptions.
@@ -11,15 +10,11 @@ import org.springframework.http.HttpStatus;
 @Getter
 public abstract class BaseApiException extends RuntimeException {
 
-    private final HttpStatus status;
-    private final String messageKey;
-    private final transient Object[] messageArgs;
+    private final ApiCustomErrorInfo info;
 
-    protected BaseApiException(HttpStatus status, String messageKey, Object... messageArgs) {
-        super(messageKey); // ensures the message field in Throwable is set
-        this.status = status;
-        this.messageKey = messageKey;
-        this.messageArgs = messageArgs;
+    protected BaseApiException(ApiCustomErrorInfo info) {
+        super(info.messageKey());
+        this.info = info;// ensures the message field in Throwable is set
     }
 }
 

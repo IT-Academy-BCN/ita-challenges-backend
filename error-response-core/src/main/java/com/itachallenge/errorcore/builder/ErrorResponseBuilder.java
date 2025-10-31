@@ -52,11 +52,10 @@ public class ErrorResponseBuilder {
         return APIErrorResponse.builder()
                 .status(mapping.status.value())
                 .error(mapping.status.getReasonPhrase())
-                .message(resolveMessage(mapping.messageKey,e.getMessageArgs()))
+                .message(resolveMessage(mapping.messageKey,e.getInfo().messageArgs()))
                 .path(request != null ? request.getRequestURI() : null)
                 .build();
     }
-
 
     public APIErrorResponse buildArgumentNotValidErrorResponse(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String objectName = ex.getBindingResult().getObjectName();
@@ -102,9 +101,7 @@ public class ErrorResponseBuilder {
                 .build();
     }
 
-
     // --- PRIVATE HELPERS ----------------------------------------------------
-
     /** Converts a validation violation into a detailed field error DTO. */
     private FieldErrorDto toFieldErrorDto(ConstraintViolation<?> violation) {
         String fieldName = extractFieldName(violation);
@@ -212,10 +209,9 @@ public class ErrorResponseBuilder {
 
     /** Determines the appropriate message key and HTTP status for a given exception. */
     private ExceptionMapping mapException(Exception e) {
-
         // --- Validation & argument errors ---
         if (e instanceof BaseApiException bae)
-            return new ExceptionMapping(bae.getStatus(), bae.getMessageKey());
+            return new ExceptionMapping(bae.getInfo().status(), bae.getInfo().messageKey());
 
         if (e instanceof MethodArgumentNotValidException)
             return new ExceptionMapping(HttpStatus.BAD_REQUEST, "validation.argument_not_valid");
@@ -239,7 +235,6 @@ public class ErrorResponseBuilder {
         if (e instanceof ResponseStatusException rse)
             return new ExceptionMapping(HttpStatus.valueOf(rse.getStatusCode().value()),
                     "status.exception." + rse.getStatusCode().value());
-
         // --- Default / fallback case ---
         log.warn("Unhandled exception type in ErrorResponseBuilder: {}", e.getClass().getName());
         return new ExceptionMapping(HttpStatus.INTERNAL_SERVER_ERROR, "internal.server_error");
