@@ -3,6 +3,7 @@ package com.itachallenge.errorcore.exceptionhandler;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.exception.BaseApiException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,17 @@ public final class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(responseBuilder
                         .buildError(e, request)
+                );
+    }
+
+    @ExceptionHandler(BaseApiException.class)
+    public ResponseEntity<APIErrorResponse> handleApiCustomException(BaseApiException e, HttpServletRequest request){
+        String exceptionName = e.getClass().getSimpleName();
+        log.error("Custom exception happened [{}]: {}", exceptionName, e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(responseBuilder
+                        .buildCustomExceptionError(e, request)
                 );
     }
 
