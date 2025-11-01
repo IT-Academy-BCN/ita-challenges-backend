@@ -1,0 +1,2 @@
+# contract
+Shared event definitions.
