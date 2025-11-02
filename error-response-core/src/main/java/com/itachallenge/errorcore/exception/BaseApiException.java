@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public abstract class BaseApiException extends RuntimeException {
 
-    private final ApiCustomErrorInfo info;
+    private final transient ApiCustomErrorInfo info;
 
     protected BaseApiException(ApiCustomErrorInfo info) {
         super(info.messageKey());

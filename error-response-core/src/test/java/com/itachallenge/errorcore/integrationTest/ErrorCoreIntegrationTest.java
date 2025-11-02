@@ -181,7 +181,7 @@ class ErrorCoreIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getErrors().size()).isEqualTo(1);
+        assertThat(response.getBody().getErrors()).hasSize(1);
         assertThat(response.getBody().getErrors().getFirst().getMessage()).isEqualTo("Invalid or malformed request.");
     }
 
