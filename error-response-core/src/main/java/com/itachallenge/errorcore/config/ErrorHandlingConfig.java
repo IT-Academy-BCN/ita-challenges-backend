@@ -2,6 +2,7 @@ package com.itachallenge.errorcore.config;
 
 import com.itachallenge.errorcore.builder.ErrorResponseBuilder;
 import com.itachallenge.errorcore.exceptionhandler.GlobalExceptionHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +29,7 @@ public class ErrorHandlingConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(GlobalExceptionHandler.class)
     public GlobalExceptionHandler globalExceptionHandler(ErrorResponseBuilder builder) {
         // Anonymous subclass to register handler logic, if needed
         return new GlobalExceptionHandler(builder);
