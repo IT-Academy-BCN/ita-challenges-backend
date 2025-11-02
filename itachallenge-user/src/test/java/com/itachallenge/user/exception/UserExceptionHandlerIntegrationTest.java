@@ -1,6 +1,7 @@
 package com.itachallenge.user.exception;
 
 import com.itachallenge.errorcore.dto.APIErrorResponse;
+import com.itachallenge.errorcore.exceptionhandler.GlobalExceptionHandler;
 import com.itachallenge.user.dto.AdminCreateUserRequestDto;
 import com.itachallenge.user.dto.UserSolutionRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,8 +30,9 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 class UserExceptionHandlerIntegrationTest {
 
+
     @Autowired
-    private UserExceptionHandler handler;
+    private GlobalExceptionHandler globalExceptionHandler;
 
     @Autowired
     private Validator validator;
@@ -65,7 +67,7 @@ class UserExceptionHandlerIntegrationTest {
                 .getMethod("dummyAdminMethod", AdminCreateUserRequestDto.class);
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(method, bindingResult);
 
-        APIErrorResponse response = handler.handleMethodArgumentNotValidException(ex, mockRequest).getBody();
+        APIErrorResponse response = globalExceptionHandler.handleMethodArgumentNotValidException(ex, mockRequest).getBody();
 
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -106,7 +108,7 @@ class UserExceptionHandlerIntegrationTest {
                 .getMethod("dummyUserMethod", UserSolutionRequestDto.class);
         MethodArgumentNotValidException ex = new MethodArgumentNotValidException(method, bindingResult);
 
-        APIErrorResponse response = handler.handleMethodArgumentNotValidException(ex, mockRequest).getBody();
+        APIErrorResponse response = globalExceptionHandler.handleMethodArgumentNotValidException(ex, mockRequest).getBody();
 
         assertThat(response).isNotNull();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());

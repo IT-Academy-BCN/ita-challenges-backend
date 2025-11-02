@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 
 public class UnmodificableSolutionException extends BaseApiException {
     public UnmodificableSolutionException(String message) {
-        super(message, ApiCustomErrorInfo.of(HttpStatus.BAD_REQUEST,"custom.bad.request",new Object[]{message}));
+        super(message, ApiCustomErrorInfo.of(HttpStatus.CONFLICT,"custom.bad.request",new Object[]{message}));
     }
 }
