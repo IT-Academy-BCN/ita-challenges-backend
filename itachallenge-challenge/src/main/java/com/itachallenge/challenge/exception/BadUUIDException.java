@@ -8,4 +8,8 @@ public class BadUUIDException extends BaseApiException {
     public BadUUIDException(String msg){
         super(ApiCustomErrorInfo.of(HttpStatus.BAD_REQUEST,"custom.bad.uuid", new Object[]{msg}));
     }
+    @Override
+    public String getMessage(){
+        return getInfo().messageArgs()[0].toString();
+    }
 }
