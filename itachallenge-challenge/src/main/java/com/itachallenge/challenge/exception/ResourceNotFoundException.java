@@ -6,10 +6,6 @@ import org.springframework.http.HttpStatus;
 
 public class ResourceNotFoundException extends BaseApiException {
     public ResourceNotFoundException(String message) {
-        super(ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"custom.resource.not.found", new Object[]{message}));
-    }
-    @Override
-    public String getMessage(){
-        return getInfo().messageArgs()[0].toString();
+        super(message, ApiCustomErrorInfo.of(HttpStatus.NOT_FOUND,"custom.resource.not.found", new Object[]{message}));
     }
 }
