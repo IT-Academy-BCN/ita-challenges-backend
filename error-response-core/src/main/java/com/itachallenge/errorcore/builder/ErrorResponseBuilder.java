@@ -240,6 +240,4 @@ public class ErrorResponseBuilder {
         return new ExceptionMapping(HttpStatus.INTERNAL_SERVER_ERROR, "internal.server_error");
     }
 
-
-
 }

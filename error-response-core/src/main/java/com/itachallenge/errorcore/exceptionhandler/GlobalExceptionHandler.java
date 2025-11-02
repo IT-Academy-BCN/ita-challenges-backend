@@ -44,7 +44,7 @@ public final class GlobalExceptionHandler {
         String exceptionName = e.getClass().getSimpleName();
         log.error("Custom exception happened [{}]: {}", exceptionName, e.getMessage());
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(e.getInfo().status())
                 .body(responseBuilder
                         .buildCustomExceptionError(e, request)
                 );

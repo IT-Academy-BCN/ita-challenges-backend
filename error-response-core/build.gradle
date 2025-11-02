@@ -57,6 +57,7 @@ dependencies {
     testImplementation 'jakarta.el:jakarta.el-api:5.0.0'      // optional but recommended
     testImplementation 'org.glassfish.expressly:expressly:5.0.0' // EL implementation (for @NotNull(message=...) eval)
     testImplementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.9'
 
 }
 
